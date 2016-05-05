@@ -1,0 +1,144 @@
+.table {
+  width: auto;
+}
+
+th, td {
+  text-align: left;
+/*  padding-top: "0px";
+  padding-top: "0px"; */
+}
+
+table.dataTable tfoot td, table.dataTable thead td {
+  padding: 0 0 0 0;
+}
+
+.well {
+  padding: 8px;
+  margin-bottom: 5px;
+}
+
+.col-sm-4 {
+  max-width: 300px;
+}
+
+.checkbox {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.form-group {
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.radio-inline+.radio-inline, .checkbox-inline+.checkbox-inline {
+  margin-left: 0;
+}
+
+.radio-inline, .checkbox-inline {
+  margin-right: 10px;
+}
+
+.modal-dialog {
+  padding-top: 80px;
+  padding-left: 80px;
+  width: 800px;
+  overflow-y: initial !important
+}
+
+.modal-body{
+  height: 600px;
+  overflow-y: auto;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+pre {
+  /* overflow: auto; */
+  word-wrap: normal;
+  white-space: pre;
+}
+
+#data_filter, #tr_transform, #tr_recode, #tr_rename, #tr_paste {
+  max-width: 234px;
+}
+
+.alignleft {
+  float: left;
+}
+
+.alignright {
+  float: right;
+}
+
+.color_bar {
+  background-color: blue;
+}
+
+/* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
+#rmd_report, #rmd_code {
+  position: absolute;
+  top: 100px;
+  bottom: 0;
+  left: 0;
+  right: 50%;
+  padding-right: 10px;
+}
+
+/* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
+#rmd_knitted, #rmd_code_output {
+  position: absolute;
+  top: 95px;
+  bottom: 0;
+  left: 50%;
+  right: 0;
+  padding-left: 10px;
+  overflow-y: scroll;
+}
+
+.navbar {
+  margin-bottom: 5px;
+}
+
+.navbar .nav > li > a {
+  padding-left: 7px;
+  padding-right: 8px;
+}
+
+.nav-tabs {
+  margin-bottom: 10px;
+}
+
+/* from http://stackoverflow.com/a/23786766/1974918 */
+@media (min-width: 768px) {
+    /* don't show full menu at 768 */
+    .navbar-header {
+        float: none; }
+    .navbar-toggle {
+        display: block; }
+    .navbar-fixed-top .navbar-collapse,
+    .navbar-static-top .navbar-collapse,
+    .navbar-fixed-bottom .navbar-collapse {
+        padding-right: 15px;
+        padding-left: 15px; }
+    .navbar-collapse.collapse {
+        display: none !important; }
+        .navbar-collapse.collapse.in {
+        display: block!important;
+        margin-top: 0; }
+}
+
+/* from http://stackoverflow.com/a/23786766/1974918 */
+@media (min-width: 1000px) {
+    .navbar-header {
+        float: left; }
+    .navbar-toggle {
+        display: none; }
+    .navbar-fixed-top .navbar-collapse,
+    .navbar-static-top .navbar-collapse,
+    .navbar-fixed-bottom .navbar-collapse {
+        display: block !important; }
+}

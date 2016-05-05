@@ -1,0 +1,41 @@
+Package: radiant.base
+Title: Business Analytics using R and Shiny
+Version: 0.5
+Date: 2016-5-2
+Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
+Description: A platform-independent browser-based interface for business
+    analytics in R, based on the Shiny package.
+Depends:
+    R (>= 3.2.0),
+    magrittr (>= 1.5),
+    ggplot2 (>= 2.0.0),
+    lubridate (>= 1.5.0),
+    tidyr (>= 0.4.1),
+    dplyr (>= 0.4.3)
+Imports:
+    car (>= 2.1.1),
+    gridExtra (>= 2.0.0),
+    markdown (>= 0.7.7),
+    knitr (>= 1.12.3),
+    broom (>= 0.4.0),
+    pryr (>= 0.1.2),
+    shiny (>= 0.13.1.9000),
+    jsonlite (>= 0.9.17),
+    shinyAce (>= 0.2.1),
+    psych (>= 1.5.8),
+    DT (>= 0.1.55),
+    readr (>= 0.2.2),
+    scales (>= 0.3.0),
+    curl (>= 0.9.4),
+    rmarkdown(>= 0.9.5),
+    rstudioapi (>= 0.5),
+    base64enc
+Suggests:
+    devtools (>= 1.8.0),
+    testthat (>= 0.10.0),
+    covr (>= 1.2.0)
+URL: https://github.com/radiant-rstats/radiant, http://vnijs.github.io/radiant/
+BugReports: https://github.com/radiant-rstats/radiant/issues
+License: AGPL-3 | file LICENSE
+LazyData: true
+RoxygenNote: 5.0.1
