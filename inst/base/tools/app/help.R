@@ -55,15 +55,17 @@ output$help_data <- reactive(append_help("help_data", file.path(r_path,"base/too
 observeEvent(input$help_data_all, {help_switch(input$help_data_all, "help_data")})
 observeEvent(input$help_data_none, {help_switch(input$help_data_none, "help_data", help_on = FALSE)})
 
+help_base_ui <-
+  wellPanel(
+    HTML("<label>Data menu: <i id='help_data_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+          <i id='help_data_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
+    checkboxGroupInput("help_data", "Data menu:", help_data, selected = state_init("help_data"), inline = TRUE)
+  )
+
 output$help_base <- renderUI({
   sidebarLayout(
     sidebarPanel(
-      wellPanel(
-          HTML("<label>Data menu: <i id='help_data_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
-       <i id='help_data_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
-        checkboxGroupInput("help_data", "Data menu:", help_data,
-          selected = state_init("help_data"), inline = TRUE)
-      ),
+      help_base_ui,
       uiOutput("help_text")
     ),
     mainPanel(
@@ -72,7 +74,7 @@ output$help_base <- renderUI({
   )
 })
 
-if ("radiant" %in% (installed.packages()[,'Package'])) {
+if ("radiant.base" %in% (installed.packages()[,'Package'])) {
   r_version <- packageVersion("radiant")
 } else {
   r_version <- "unknown"

@@ -271,7 +271,7 @@ if (!is.null(r_state$nav_radiant)) {
 }
 
 ## 'sourcing' radiant's package functions in the server.R environment
-if (!"package:radiant" %in% search()) {
+if (!"package:radiant.base" %in% search()) {
   ## for shiny-server
   if (r_path == "..") {
     for (file in list.files("../../R",
@@ -282,13 +282,13 @@ if (!"package:radiant" %in% search()) {
     }
   } else {
     ## for shinyapps.io
-    radiant.base::copy_all(radiant)
+    radiant.base::copy_all(radiant.base)
     set_class <- radiant.base::set_class         ## needed but not clear why
     environment(set_class) <- environment() ## needed but not clear why
   }
 } else {
   ## for use with launcher
-  radiant.base::copy_all(radiant)
+  radiant.base::copy_all(radiant.base)
   set_class <- radiant.base::set_class         ## needed but not clear why
   environment(set_class) <- environment() ## needed but not clear why
 }
