@@ -5,15 +5,12 @@ document(roclets = c('rd', 'collate', 'namespace'))
 
 # install('../shiny')
 # build('../shiny', binary = TRUE)
-#
-# install('../knitr')
-# build('../knitr', binary = TRUE)
 
 # install('../DT')
 # build('../DT', binary = TRUE)
 
-build('../radiant', binary = TRUE)
+build('../radiant.data', binary = TRUE)
 
 setwd('../')
 rfile <- Sys.glob("*zip")
-setwd('radiant')
+setwd('radiant.data')

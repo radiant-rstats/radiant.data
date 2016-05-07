@@ -253,7 +253,7 @@ output$ui_Transform <- renderUI({
 	  )),
     help_and_report(modal_title = "Transform",
                     fun_name = "transform",
-                    help_file = inclMD(file.path(r_path, "base/tools/help/transform.md")))
+                    help_file = inclMD(file.path(r_path, "radiant.data/tools/help/transform.md")))
 	)
 })
 
@@ -497,9 +497,9 @@ observeEvent(input$tr_change_type, {
 
   if (!store && !is.character(dataset)) {
     if (is.na(bins) || !is.integer(bins)) return("Please specify the (integer) number of bins to use")
-    xt <- function(x, bins, rev) radiant.base::xtile(x, bins, rev = rev)
+    xt <- function(x, bins, rev) radiant.data::xtile(x, bins, rev = rev)
     select_(dataset, .dots = vars) %>%
-    # mutate_each(funs(radiant.base::xtile(.,bins, rev = rev))) %>%
+    # mutate_each(funs(radiant.data::xtile(.,bins, rev = rev))) %>%
     mutate_each(funs(xt(., bins, rev = rev))) %>%
     set_colnames(paste0(vars, ext))
   } else {

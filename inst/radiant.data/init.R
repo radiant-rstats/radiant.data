@@ -29,7 +29,7 @@ init_state <- function(r_data) {
   ## Therefore, the data need to be a reactive value so the other reactive
   ## functions and outputs that depend on these datasets will know when they
   ## are changed."
-  df <- data("diamonds", package = "radiant.base") %>% get
+  df <- data("diamonds", package = "radiant.data") %>% get
   r_data[["diamonds"]] <- df
   r_data[["diamonds_descr"]] <- attr(df,'description')
   r_data$datasetlist <- c("diamonds")
@@ -271,7 +271,7 @@ if (!is.null(r_state$nav_radiant)) {
 }
 
 ## 'sourcing' radiant's package functions in the server.R environment
-if (!"package:radiant.base" %in% search()) {
+if (!"package:radiant.data" %in% search()) {
   ## for shiny-server
   if (r_path == "..") {
     for (file in list.files("../../R",
@@ -282,13 +282,13 @@ if (!"package:radiant.base" %in% search()) {
     }
   } else {
     ## for shinyapps.io
-    radiant.base::copy_all(radiant.base)
-    set_class <- radiant.base::set_class         ## needed but not clear why
+    radiant.data::copy_all(radiant.data)
+    set_class <- radiant.data::set_class         ## needed but not clear why
     environment(set_class) <- environment() ## needed but not clear why
   }
 } else {
   ## for use with launcher
-  radiant.base::copy_all(radiant.base)
-  set_class <- radiant.base::set_class         ## needed but not clear why
+  radiant.data::copy_all(radiant.data)
+  set_class <- radiant.data::set_class         ## needed but not clear why
   environment(set_class) <- environment() ## needed but not clear why
 }

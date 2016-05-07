@@ -1,11 +1,11 @@
-Name: Radiant - Base
-Description: Start Radiant - Base app
-Binding: radiant.base
+Name: Radiant - Data
+Description: Start Radiant - Data
+Binding: radiant.data
 Interactive: true
 
-Name: Update Radiant
-Description: Update Radiant to the latest version
-Binding: update_radiant
+Name: Update radiant.data
+Description: Update radiant.data to the latest version
+Binding: update_radiant_data
 Interactive: true
 
 Name: Webshot - Install

@@ -1,11 +1,11 @@
 library(shinyapps)
 devtools::install_github("rich-iannone/DiagrammeR")
-devtools::install_github("vnijs/radiant")
+devtools::install_github("vnijs/radiant.data")
 
 ## update as needed
-fpath <- "~/gh/radiant/inst/base"
+fpath <- "~/gh/radiant.data/inst/radiant.data"
 account <- "vnijs"
-app <- "analytics"
+app <- "radiant.data"
 setwd(fpath)
 
 for (file in list.files("../../../shinyapps/R", pattern = "\\.(r|R)$", full.names = TRUE))

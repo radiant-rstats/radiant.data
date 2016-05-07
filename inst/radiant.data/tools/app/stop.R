@@ -43,7 +43,7 @@ stop_radiant <- function(rmd = FALSE) {
       ## removing r_env and r_sessions
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
       unlink("~/r_figures/", recursive = TRUE)
-      sshh(try(rm(js_head, nav_ui, r_encoding, r_functions, r_help, r_local, r_path, r_pkgs, shared_ui, envir = .GlobalEnv), silent = TRUE))
+      sshh(try(rm(js_head, nav_ui, r_encoding, r_functions, r_local, r_path, r_pkgs, shared_ui, envir = .GlobalEnv), silent = TRUE))
       sshh(try(rm(quant_ui, envir = .GlobalEnv), silent = TRUE))
       message(stop_message)
 

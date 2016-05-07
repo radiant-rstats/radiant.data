@@ -34,7 +34,7 @@ output$rcode <- renderUI({
     with(tags,
       table(
             td(help_modal('Code','code_help',
-                       inclMD(file.path(r_path,"base/tools/help/code.md")))),
+                       inclMD(file.path(r_path,"radiant.data/tools/help/code.md")))),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("rEval", "Run code")),
             td(downloadButton("save2HTML", "Save HTML")),

@@ -11,9 +11,7 @@ output$ui_filter_error <- renderUI({
 ## data ui and tabs
 output$ui_data <- renderUI({
   tagList(
-    includeCSS(file.path(r_path,"base/www/style.css")),
-    # includeScript(file.path(r_path,"base/www/js/returnTextAreaBinding.js")),
-    # includeScript(file.path(r_path,"base/www/js/returnTextInputBinding.js")),
+    includeCSS(file.path(r_path,"radiant.data/www/style.css")),
     sidebarLayout(
       sidebarPanel(
         ## based on https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/PzlSAmAxxwo

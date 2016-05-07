@@ -3,21 +3,21 @@
 #' @details See \url{http://vnijs.github.io/radiant} for documentation and tutorials
 #'
 #' @export
-radiant.base <- function() {
-  if (!"package:radiant.base" %in% search())
-    if (!require(radiant.base)) stop("Calling radiant.base start function but radiant.base is not installed.")
-  runApp(system.file("base", package = "radiant.base"), launch.browser = TRUE)
+radiant.data <- function() {
+  if (!"package:radiant.data" %in% search())
+    if (!require(radiant.data)) stop("Calling radiant.data start function but radiant.data is not installed.")
+  runApp(system.file("radiant.data", package = "radiant.data"), launch.browser = TRUE)
 }
 
 #' Update Radiant
 #' @export
-update_radiant <- function() {
+update_radiant_data <- function() {
   # if ("package:radiant" %in% search())
   # if (isNamespaceLoaded("radiant")) unloadNamespace("radiant")
   unlink("~/r_sessions/*.rds", force = TRUE)
 
   ## avoid problems with loaded packages
-  system(paste0(Sys.which("R"), " -e \"install.packages('radiant.base', repos = 'http://vnijs.github.io/radiant_miniCRAN/', type = 'binary')\""))
+  system(paste0(Sys.which("R"), " -e \"install.packages('radiant.data', repos = 'http://vnijs.github.io/radiant_miniCRAN/', type = 'binary')\""))
   # install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/", type = "binary")
 
   ## Restarting Rstudio session from http://stackoverflow.com/a/25934774/1974918
@@ -438,7 +438,7 @@ viewdata <- function(dataset,
 
   shinyApp(
     ui = fluidPage(title = title,
-      includeCSS(file.path(system.file(package = "radiant"),"base/www/style.css")),
+      includeCSS(file.path(system.file(package = "radiant.data"),"radiant.data/www/style.css")),
       fluidRow(DT::dataTableOutput("tbl")),
       tags$button(id = "stop", type = "button",
                   class = "btn btn-danger action-button shiny-bound-input",

@@ -2,8 +2,8 @@
 library(devtools)
 document(roclets = c('rd', 'collate', 'namespace'))
 
-build('../radiant')
-build('../radiant', binary = TRUE)
+build('../radiant.data')
+build('../radiant.data', binary = TRUE)
 
 # devtools::install('~/gh/DT')
 # packageVersion("DT")
@@ -13,4 +13,3 @@ build('../radiant', binary = TRUE)
 # install('../shiny')
 # build('../shiny')
 # build('../shiny', binary = TRUE)
-#

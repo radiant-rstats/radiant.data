@@ -76,7 +76,7 @@ output$report <- renderUI({
     with(tags,
       table(
             td(help_modal('Report','report_help',
-                       inclMD(file.path(r_path,"base/tools/help/report.md")))),
+                       inclMD(file.path(r_path,"radiant.data/tools/help/report.md")))),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("evalRmd", "Knit report"), style= "padding-top:5px;"),
             td(uiOutput("ui_rmd_manual")),
@@ -119,7 +119,7 @@ scrub <-
 knitIt <- function(text) {
   knitr::knit2html(text = text, quiet = TRUE, envir = r_knitr,
                    options = c("mathjax", "base64_images"),
-                   stylesheet = file.path(r_path,"base/www/bootstrap.min.css")) %>%
+                   stylesheet = file.path(r_path,"radiant.data/www/bootstrap.min.css")) %>%
   scrub %>% HTML
 }
 
@@ -167,12 +167,12 @@ knitIt3 <- function(text) {
   # Render the HTML, and then restore the preserved chunks
   # knitr::knit2html(text = gsub("\\\\\\\\","\\\\",preserved$value), header = dep_html, quiet = TRUE, envir = r_knitr,
   #                  options = c("mathjax", "base64_images"),
-  #                  stylesheet = file.path(r_path,"base/www/bootstrap.min.css")) %>%
+  #                  stylesheet = file.path(r_path,"radiant.data/www/bootstrap.min.css")) %>%
   # htmltools::restorePreserveChunks(preserved$chunks)
   markdown::markdownToHTML(text = gsub("\\\\\\\\","\\\\",preserved$value),
                            header = dep_html,
                            options = c("mathjax", "base64_images"),
-                           stylesheet = file.path(r_path,"base/www/bootstrap.min.css")) %>%
+                           stylesheet = file.path(r_path,"radiant.data/www/bootstrap.min.css")) %>%
   htmltools::restorePreserveChunks(preserved$chunks)
 }
 

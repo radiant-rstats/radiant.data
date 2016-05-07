@@ -113,7 +113,7 @@ output$ui_Manage <- renderUI({
         actionButton('removeDataButton', 'Remove data')
       )
     ),
-    help_modal('Manage','manage_help',inclMD(file.path(r_path,"base/tools/help/manage.md")))
+    help_modal('Manage','manage_help',inclMD(file.path(r_path,"radiant.data/tools/help/manage.md")))
   )
 })
 
@@ -280,12 +280,12 @@ observeEvent(input$url_csv_load, {
 ## loading all examples files (linked to help files)
 observeEvent(input$loadExampleData, {
   ## loading data bundled with Radiant
-  dat_list <- data(package = "radiant.base")
+  dat_list <- data(package = "radiant.data")
   ## names of data sets in the package
   examples <- dat_list$results[, "Item"]
 
   for (ex in examples) {
-    r_data[[ex]] <- data(list = ex, package = "radiant.base") %>% get
+    r_data[[ex]] <- data(list = ex, package = "radiant.data") %>% get
     r_data[[paste0(ex,"_descr")]] <- attr(r_data[[ex]], "description")
     r_data[['datasetlist']] <<- c(ex, r_data[['datasetlist']]) %>% unique
   }

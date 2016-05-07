@@ -5,7 +5,7 @@
 r_encoding = "UTF-8"
 
 ## path to use for local and server use
-r_path <- ifelse (file.exists("../../inst/base"), "..", system.file(package = "radiant.base"))
+r_path <- ifelse (file.exists("../../inst/radiant.data"), "..", system.file(package = "radiant.data"))
 
 # r_path <- ifelse (file.exists("../base")), "..",
                   # system.file(package = "radiant"))
@@ -62,15 +62,13 @@ r_sessions <- new.env(parent = emptyenv())
 file.path(normalizePath("~"),"r_sessions") %>% {if (!file.exists(.)) dir.create(.)}
 
 ## adding the figures path to avoid making a copy of all figures in www/figures
-addResourcePath("figures", file.path(r_path,"base/tools/help/figures/"))
-addResourcePath("imgs", file.path(r_path,"base/www/imgs/"))
-addResourcePath("js", file.path(r_path,"base/www/js/"))
+addResourcePath("figures", file.path(r_path,"radiant.data/tools/help/figures/"))
+addResourcePath("imgs", file.path(r_path,"radiant.data/www/imgs/"))
+addResourcePath("js", file.path(r_path,"radiant.data/www/js/"))
 
 nav_ui <-
   list(windowTitle = "Radiant", id = "nav_radiant", inverse = TRUE,
        collapsible = TRUE, tabPanel("Data", withMathJax(), uiOutput("ui_data")))
-
-r_help <- "help_base"
 
 shared_ui <-
   tagList(
