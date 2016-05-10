@@ -7,10 +7,6 @@ r_encoding = "UTF-8"
 ## path to use for local and server use
 r_path <- ifelse (file.exists("../../inst/radiant.data"), "..", system.file(package = "radiant.data"))
 
-# r_path <- ifelse (file.exists("../base")), "..",
-                  # system.file(package = "radiant"))
-# options(r_path = r_path); rm(r_path)
-
 ## reactive programming in Shiny requires (some) use of global variables
 ## global across all users: r_sessions
 ## global for a user: r_data, r_state, r_ssuid
@@ -120,3 +116,17 @@ js_head <-
   )
 
 
+help_menu <- function(hlp) {
+  tagList(
+    navbarMenu("", icon = icon("question-circle"),
+      tabPanel("Help", uiOutput(hlp), icon = icon("question")),
+      tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
+      tabPanel("About", uiOutput("help_about"), icon = icon("info")),
+      tabPanel(tags$a("", href = "http://vnijs.github.io/radiant/", target = "_blank",
+               list(icon("globe"), "Radiant docs"))),
+      tabPanel(tags$a("", href = "https://github.com/vnijs/radiant/issues", target = "_blank",
+               list(icon("github"), "Report issue")))
+    ),
+    js_head
+  )
+}

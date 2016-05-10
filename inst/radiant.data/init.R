@@ -29,7 +29,7 @@ init_state <- function(r_data) {
   ## Therefore, the data need to be a reactive value so the other reactive
   ## functions and outputs that depend on these datasets will know when they
   ## are changed."
-  df <- data("diamonds", package = "radiant.data") %>% get
+  df <- data("diamonds", package = "radiant.data", envir = environment()) %>% get
   r_data[["diamonds"]] <- df
   r_data[["diamonds_descr"]] <- attr(df,'description')
   r_data$datasetlist <- c("diamonds")

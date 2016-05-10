@@ -1,4 +1,3 @@
-
 library(devtools)
 library(magrittr)
 setwd("~/gh/radiant.data")

@@ -285,7 +285,7 @@ observeEvent(input$loadExampleData, {
   examples <- dat_list$results[, "Item"]
 
   for (ex in examples) {
-    r_data[[ex]] <- data(list = ex, package = "radiant.data") %>% get
+    r_data[[ex]] <- data(list = ex, package = "radiant.data", envir = environment()) %>% get
     r_data[[paste0(ex,"_descr")]] <- attr(r_data[[ex]], "description")
     r_data[['datasetlist']] <<- c(ex, r_data[['datasetlist']]) %>% unique
   }
