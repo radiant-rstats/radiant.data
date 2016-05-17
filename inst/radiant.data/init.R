@@ -152,21 +152,21 @@ r_env <- environment()
 vk <- options("vim_keys")[[1]]
 r_data$vim_keys <- ifelse (!is.null(vk) && vk, TRUE, FALSE)
 
-if (r_local) {
-  ## adding any data.frame from the global environment to r_data should not affect
-  ## memory usage ... at least until the entry in r_data is changed
-  df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>%
-    { names(.[.]) }
+# if (r_local) {
+#   ## adding any data.frame from the global environment to r_data should not affect
+#   ## memory usage ... at least until the entry in r_data is changed
+#   df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>%
+#     { names(.[.]) }
 
-  for (df in df_list) {
-    isolate({
-      r_data[[df]] <- get(df, envir = .GlobalEnv)
-      r_data[[paste0(df,"_descr")]] <- attr(r_data[[df]],'description') %>%
-        { if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else . }
-      r_data$datasetlist %<>% c(df, .) %>% unique
-    })
-  }
-}
+#   for (df in df_list) {
+#     isolate({
+#       r_data[[df]] <- get(df, envir = .GlobalEnv)
+#       r_data[[paste0(df,"_descr")]] <- attr(r_data[[df]],'description') %>%
+#         { if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else . }
+#       r_data$datasetlist %<>% c(df, .) %>% unique
+#     })
+#   }
+# }
 
 #####################################
 ## url processing to share results

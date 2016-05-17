@@ -56,13 +56,45 @@ output$ui_clipboard_save <- renderUI({
   }
 })
 
+output$ui_from_global <- renderUI({
+  req(input$dataType)
+  df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>%
+    { names(.[.]) }
+
+  tagList(
+    selectInput("from_global", label = "Data.frames in Global Env:",
+      df_list, selected = df_list, multiple = TRUE, selectize = FALSE,
+      size = min(5, length(df_list))),
+    radioButtons('from_global_move', NULL, c("copy" = "copy", "move" = "move"), selected = "move", inline = TRUE),
+    br(),
+    actionButton("from_global_load", "Load")
+  )
+})
+
+observeEvent(input$from_global_load, {
+  dfs <- input$from_global
+  req(dfs)
+  r_data$datasetlist %<>% c(dfs, .) %>% unique
+  for (df in dfs) {
+    r_data[[df]] <- get(df, envir = .GlobalEnv)
+    if (input$from_global_move == "move") rm(list = df, envir = .GlobalEnv)
+    r_data[[paste0(df,"_descr")]] <- attr(r_data[[df]],'description') %>%
+      { if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else . }
+  }
+  updateSelectInput(session, "dataset", label = "Datasets:",
+                    choices = r_data$datasetlist,
+                    selected = r_data$datasetlist[1])
+  updateSelectInput(session, "dataType", selected = "rda")
+})
+
 output$ui_Manage <- renderUI({
   tagList(
     wellPanel(
       selectInput("dataType", label = "Load data of type:",
         c("rda" = "rda", "rds" = "rds", "state" = "state", "csv" = "csv",
-          "clipboard" = "clipboard","examples" = "examples",
-          "rda (url)" = "url_rda", "csv (url)" = "url_csv"),
+          "clipboard" = "clipboard", "from global" = "from_global",
+          "examples" = "examples", "rda (url)" = "url_rda",
+          "csv (url)" = "url_csv"),
         selected = "rda"),
       conditionalPanel(condition = "input.dataType != 'clipboard' &&
                                     input.dataType != 'examples'",
@@ -80,6 +112,9 @@ output$ui_Manage <- renderUI({
       ),
       conditionalPanel(condition = "input.dataType == 'clipboard'",
         uiOutput("ui_clipboard_load")
+      ),
+      conditionalPanel(condition = "input.dataType == 'from_global'",
+        uiOutput("ui_from_global")
       ),
       conditionalPanel(condition = "input.dataType == 'examples'",
         actionButton('loadExampleData', 'Load examples')
