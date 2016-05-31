@@ -6,7 +6,7 @@
 radiant.data <- function() {
   if (!"package:radiant.data" %in% search())
     if (!require(radiant.data)) stop("Calling radiant.data start function but radiant.data is not installed.")
-  runApp(system.file("radiant.data", package = "radiant.data"), launch.browser = TRUE)
+  runApp(system.file("app", package = "radiant.data"), launch.browser = TRUE)
 }
 
 #' Update Radiant
@@ -129,21 +129,18 @@ getdata <- function(dataset,
   filt %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
   { if (!is_string(dataset)) {
       dataset
-    } else if (exists("r_env") && !is.null(r_env$r_data[[dataset]])) {
-      r_env$r_data[[dataset]]
+    } else if (exists("r_environment") && !is.null(r_environment$r_data[[dataset]])) {
+      r_environment$r_data[[dataset]]
     } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
-      if (exists("r_local")) { if (r_local) message("Dataset ", dataset, " loaded from r_data list\n") }
+      if (isTRUE(getOption("radiant.local"))) message("Dataset ", dataset, " loaded from r_data list\n")
       r_data[[dataset]]
     } else if (exists(dataset)) {
       d_env <- pryr::where(dataset)
-      # message("Dataset ", dataset, " loaded from ", environmentName(d_env), " environment\n")
       d_env[[dataset]]
     } else {
-      # stop(message("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call"))
-      stop(paste("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call"))
+      stop(message("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call"))
     }
   } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%     # ungroup data if needed
-        # { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter
         { if (filt == "") . else filterdata(., filt) } %>%     # apply data_filter
         { if (is.null(rows)) . else slice(., rows) } %>%
         { if (vars[1] == "" || is.null(vars)) . else select_(., .dots = vars) } %>%
@@ -206,9 +203,9 @@ loadr <- function(fn, objname = "") {
     loadfun <- function(fn) load(fn) %>% get
   }
 
-  if (exists("r_env") || exists("r_data")) {
-    if (exists("r_env")) {
-      env <- r_env
+  if (exists("r_environment") || exists("r_data")) {
+    if (exists("r_environment")) {
+      env <- r_environment
     } else if (exists("r_data")) {
       env <- pryr::where("r_data")
     }
@@ -379,11 +376,11 @@ changedata <- function(dataset,
   if (!is.character(dataset)) {
     dataset[,var_names] <- vars
     return(dataset)
-  } else if (exists("r_env")) {
-    message("Dataset ", dataset, " changed in r_env\n")
-    r_env$r_data[[dataset]][,var_names] <- vars
+  } else if (exists("r_environment")) {
+    message("Dataset ", dataset, " changed in r_environment\n")
+    r_environment$r_data[[dataset]][,var_names] <- vars
   } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
-    if (exists("r_local")) { if (r_local) message("Dataset ", dataset, " changed in r_data list\n") }
+    if (isTRUE(getOption("radiant.local"))) message("Dataset ", dataset, " loaded from r_data list\n")
     d_env <- pryr::where("r_data")
     d_env$r_data[[dataset]][,var_names] <- vars
   } else if (exists(dataset)) {
@@ -438,7 +435,7 @@ viewdata <- function(dataset,
 
   shinyApp(
     ui = fluidPage(title = title,
-      includeCSS(file.path(system.file(package = "radiant.data"),"radiant.data/www/style.css")),
+      includeCSS(file.path(system.file(package = "radiant.data"),"app/www/style.css")),
       fluidRow(DT::dataTableOutput("tbl")),
       tags$button(id = "stop", type = "button",
                   class = "btn btn-danger action-button shiny-bound-input",

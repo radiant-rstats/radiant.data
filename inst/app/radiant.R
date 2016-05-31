@@ -24,7 +24,7 @@ saveSession <- function(session = session) {
 }
 
 observeEvent(input$refresh_radiant, {
-  if (r_local) {
+  if (isTRUE(getOption("radiant.local"))) {
     fn <- normalizePath("~/r_sessions")
     file.remove(list.files(fn, full.names = TRUE))
   } else {
@@ -391,17 +391,18 @@ inclMD <- function(path) {
                            stylesheet = "")
 }
 
-inclRmd <- function(path, r_env = parent.frame()) {
+# inclRmd <- function(path, r_environment = parent.frame()) {
+inclRmd <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = '\n') %>%
   knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE,
-    envir = r_env, options = "", stylesheet = "") %>%
+    envir = r_environment, options = "", stylesheet = "") %>%
     HTML %>% withMathJax
 }
 
 ## used by View - remove or use more broadly
 find_env <- function(dataset) {
-  if (exists("r_env")) {
-    r_env
+  if (exists("r_environment")) {
+    r_environment
   } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
     pryr::where("r_data")
   } else if (exists(dataset)) {
@@ -417,10 +418,10 @@ save2env <- function(dat, dataset,
   env <- find_env(dataset)
   env$r_data[[dat_name]] <- dat
   if (dataset != dat_name) {
-    cat(paste0("Dataset r_data$", dat_name, " created in ", environmentName(env), " environment\n"))
+    message(paste0("Dataset r_data$", dat_name, " created in ", environmentName(env), " environment\n"))
     env$r_data[['datasetlist']] <- c(dat_name, env$r_data[['datasetlist']]) %>% unique
   } else {
-    cat(paste0("Dataset r_data$", dataset, " changed in ", environmentName(env), " environment\n"))
+    message(paste0("Dataset r_data$", dataset, " changed in ", environmentName(env), " environment\n"))
   }
 
   ## set to previous description
@@ -498,6 +499,22 @@ state_multiple <- function(var, vals, init = character(0)) {
   rs <- r_state[[var]]
   ## "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)
   if (is_empty(rs)) vals[vals %in% init] else vals[vals %in% rs]
+}
+
+make_url_patterns <- function(url_list = r_url_list, url_patterns = r_url_patterns) {
+  for (i in names(url_list)) {
+    res <- url_list[[i]]
+    if (!is.list(res)) {
+      url_patterns[[res]] <- list("nav_radiant" = i)
+    } else {
+      tabs <- names(res)
+      for (j in names(res[[tabs]])) {
+        url <- res[[tabs]][[j]]
+        url_patterns[[url]] <- setNames(list(i,j), c("nav_radiant",tabs))
+      }
+    }
+  }
+  url_patterns
 }
 
 ## cat to file

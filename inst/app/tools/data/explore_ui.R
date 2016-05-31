@@ -70,12 +70,13 @@ output$ui_expl_byvar <- renderUI({
 })
 
 output$ui_expl_fun <- renderUI({
+  r_funs <- getOption("radiant.functions")
   isolate({
-    sel <- if (is_empty(input$expl_fun))  state_multiple("expl_fun", r_functions, default_funs)
+    sel <- if (is_empty(input$expl_fun))  state_multiple("expl_fun", r_funs, default_funs)
            else input$expl_fun
   })
   selectizeInput("expl_fun", label = "Apply function(s):",
-                 choices = r_functions, selected = sel, multiple = TRUE,
+                 choices = r_funs, selected = sel, multiple = TRUE,
                  options = list(placeholder = 'Select functions',
                                 plugins = list('remove_button', 'drag_drop'))
     )
@@ -114,7 +115,7 @@ output$ui_Explore <- renderUI({
     ),
     help_and_report(modal_title = "Explore",
                     fun_name = "explore",
-                    help_file = inclMD(file.path(r_path,"radiant.data/tools/help/explore.md")))
+                    help_file = inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/explore.md")))
   )
 })
 
@@ -206,9 +207,9 @@ observeEvent(input$expl_store, {
       tab[[i]] %<>% factor(., levels = unique(.))
   }
 
-  env <- if (exists("r_env")) r_env else pryr::where("r_data")
+  env <- if (exists("r_environment")) r_environment else pryr::where("r_data")
   env$r_data[[name]] <- tab
-  cat(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
+  message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
 
   env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
   updateSelectInput(session, "dataset", selected = name)

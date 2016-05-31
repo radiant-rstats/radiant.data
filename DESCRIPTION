@@ -16,7 +16,7 @@ Imports:
     car (>= 2.1.1),
     gridExtra (>= 2.0.0),
     markdown (>= 0.7.7),
-    knitr (>= 1.12.3),
+    knitr (>= 1.13),
     broom (>= 0.4.0),
     pryr (>= 0.1.2),
     shiny (>= 0.13.2),
@@ -29,7 +29,8 @@ Imports:
     curl (>= 0.9.4),
     rmarkdown(>= 0.9.5),
     rstudioapi (>= 0.5),
-    base64enc
+    base64enc,
+    methods
 Suggests:
     devtools (>= 1.8.0),
     testthat (>= 0.10.0),

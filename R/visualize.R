@@ -398,7 +398,8 @@ visualize <- function(dataset, xvar,
   }
 
   if ("flip" %in% axes) {
-    for (i in 1:length(plot_list)) plot_list[[i]] <- plot_list[[i]] + coord_flip()
+    for (i in 1:length(plot_list))
+      plot_list[[i]] <- plot_list[[i]] + coord_flip()
   }
 
  if (custom)

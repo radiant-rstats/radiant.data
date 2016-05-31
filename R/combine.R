@@ -32,7 +32,6 @@ combinedata <- function(dataset, cmb_dataset,
     name <- if (is_string(dataset)) paste0("cmb_",dataset) else "cmb_data"
 
   dat1 <- getdata(dataset, na.rm = FALSE)
-  # dat2 <- getdata(cmb_dataset, unique(c(by, add)), na.rm = FALSE)
   if (all(add == ""))
     dat2 <- getdata(cmb_dataset, na.rm = FALSE)
   else
@@ -42,11 +41,9 @@ combinedata <- function(dataset, cmb_dataset,
   descr2 <- attr(dat2, "description")
 
   if (is_join) {
-    # dat <- get(type)(getdata(dataset, na.rm = FALSE), getdata(cmb_dataset, na.rm = FALSE), by = by)
     dat <- get(type)(dat1, dat2, by = by)
     madd <- paste0("\n\nBy: ", paste0(by, collapse = ", "))
   } else {
-    # dat <- get(type)(getdata(dataset, na.rm = FALSE), getdata(cmb_dataset, na.rm = FALSE))
     dat <- get(type)(dat1, dat2)
     madd <- ""
   }
@@ -59,25 +56,16 @@ combinedata <- function(dataset, cmb_dataset,
            " (", type, ")", madd, "\n\nOn: ", lubridate::now(), "\n\n",
            descr1, "\n\n", descr2)
 
-  if (exists("r_env")) {
-    env <- r_env
+  if (exists("r_environment")) {
+    env <- r_environment
   } else if (exists("r_data")) {
     env <- pryr::where("r_data")
   } else {
     return(dat)
   }
 
-  ## why?
-  # mess <- env$r_data[[paste0(name,"_descr")]] <- mess
-
   env$r_data[[name]] <- dat
   env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
   env$r_data[[paste0(name,"_descr")]] <- mess
-  cat("\nCombined data added as", name, "\n")
+  message("\nCombined data added as", name, "\n")
 }
-
-## something strange going on with bind_cols when there are duplicate names
-# if (type == "bind_cols") {
-#   if ((intersect(names(getdata(dataset)),names(getdata(cmb_dataset))) %>% length) > 0)
-#     return("Error: found duplicated column name")
-# }

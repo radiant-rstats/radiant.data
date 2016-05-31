@@ -253,7 +253,7 @@ output$ui_Transform <- renderUI({
 	  )),
     help_and_report(modal_title = "Transform",
                     fun_name = "transform",
-                    help_file = inclMD(file.path(r_path, "radiant.data/tools/help/transform.md")))
+                    help_file = inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/transform.md")))
 	)
 })
 
@@ -331,7 +331,7 @@ observeEvent(input$tr_change_type, {
       nvar <- try(do.call(within, list(dataset, parse(text = cmd))), silent = TRUE)
       # nvar <- try(mutate_(dataset, .dots = setNames(dots, vars)), silent = TRUE)
     } else {
-      dots <- sub("^","~",dots) %>% lapply(as.formula, env = r_env)
+      dots <- sub("^","~",dots) %>% lapply(as.formula, env = r_environment)
       nvar <- try(group_by_(dataset, .dots = byvar) %>% mutate_(.dots = setNames(dots, vars)), silent = TRUE)
     }
     if (is(nvar, 'try-error')) {
@@ -754,7 +754,8 @@ transform_main <- reactive({
       } else if (nrow(cpdat) != nrow(dat)) {
         return("The pasted data does not have the correct number of rows. Please make sure **\n** the number of rows in the data in Radiant and in the spreadsheet are the **\n** same and try again.")
       } else {
-        return(cpdat)
+        return(as.data.frame(cpdat, check.names = FALSE) %>% factorizer)
+        # return(cpdat)
       }
     }
   }
@@ -910,7 +911,10 @@ output$transform_summary <- renderPrint({
           cat("** Results are grouped by", paste(input$tr_vars, collapse = ", "), "**\n\n")
       }
 
-      cat(paste0(capture.output(getsummary(dat)), collapse = "\n"))
+      if (input$tr_change_type == "reorg_vars")
+        cat("** Drag-and-drop to change ordering. Click the x to remove a variable **")
+      else
+        cat(paste0(capture.output(getsummary(dat)), collapse = "\n"))
     }
   }
 })

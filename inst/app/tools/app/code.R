@@ -33,8 +33,7 @@ output$rcode <- renderUI({
   tagList(
     with(tags,
       table(
-            td(help_modal('Code','code_help',
-                       inclMD(file.path(r_path,"radiant.data/tools/help/code.md")))),
+            td(help_modal('Code','code_help', inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/code.md")))),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("rEval", "Run code")),
             td(downloadButton("save2HTML", "Save HTML")),
@@ -67,14 +66,14 @@ output$rmd_code_output <- renderUI({
 
   if (valsCode$code == 1) return()
   isolate({
-    if (r_local) {
+    if (isTRUE(getOption("radiant.local"))) {
       rmd_code <- if (is_empty(input$rmd_code_selection)) input$rmd_code
                   else input$rmd_code_selection
 
       paste0("```{r cache = FALSE, echo = TRUE}\n", rmd_code ,"\n```") %>%
-        ## need r_env so changes are reflected in the shiny environment
+        ## need r_environment so changes are reflected in the shiny environment
         ## does mean user can mess things up pretty good so not a good idea on a server
-        knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_env) %>%
+        knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_environment) %>%
         HTML
     } else {
       HTML("<h2>Code is not evaluated when running Radiant on a server</h2>")
@@ -105,14 +104,14 @@ observe({
 output$save2HTML <- downloadHandler(
   filename = function() {"code.html"},
   content = function(file) {
-    if (r_local) {
+    if (isTRUE(getOption("radiant.local"))) {
       isolate({
         withProgress(message = "Knitting report", value = 0, {
           rmd_code <- if (is_empty(input$rmd_code_selection)) input$rmd_code
                       else input$rmd_code_selection
           paste0("```{r cache = FALSE, echo = TRUE}\n", rmd_code ,"\n```") %>%
           knitIt %>% cat(file=file,sep="\n")
-          # knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_env) %>%
+          # knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_environment) %>%
           # HTML %>% cat(file=file,sep="\n")
         })
       })

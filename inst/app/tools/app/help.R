@@ -2,11 +2,11 @@
 ## Other elements in help menu
 #######################################
 output$help_videos <- renderUI({
-  file.path(r_path,"radiant.data/tools/app/tutorials.md") %>% inclMD %>% HTML
+  file.path(getOption("radiant.path.data"),"app/tools/app/tutorials.md") %>% inclMD %>% HTML
 })
 
 output$help_about <- renderUI({
-  file.path(r_path,"radiant.data/tools/app/about.md") %>% inclMD %>% HTML
+  file.path(getOption("radiant.path.data"),"app/tools/app/about.md") %>% inclMD %>% HTML
 })
 
 output$help_text <- renderUI({
@@ -50,7 +50,7 @@ help_switch <- function(help_all, help_str, help_on = TRUE) {
 help_data <- c("Manage" = "manage.md","View" = "view.md", "Visualize" = "visualize.md",
                "Pivot" = "pivotr.md", "Explore" = "explore.md", "Transform" = "transform.md",
                "Combine" = "combine.md")
-output$help_data <- reactive(append_help("help_data", file.path(r_path,"radiant.data/tools/help/")))
+output$help_data <- reactive(append_help("help_data", file.path(getOption("radiant.path.data"),"app/tools/help/")))
 
 observeEvent(input$help_data_all, {help_switch(input$help_data_all, "help_data")})
 observeEvent(input$help_data_none, {help_switch(input$help_data_none, "help_data", help_on = FALSE)})

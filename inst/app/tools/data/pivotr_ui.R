@@ -53,9 +53,10 @@ output$ui_pvt_nvar <- renderUI({
 })
 
 output$ui_pvt_fun <- renderUI({
+  r_funs <- isTRUE(getOption("radiant.local"))
   selectizeInput("pvt_fun", label = "Apply function:",
-                 choices = r_functions,
-                 selected = state_single("pvt_fun", r_functions, "mean_rm"),
+                 choices = r_funs,
+                 selected = state_single("pvt_fun", r_funs, "mean_rm"),
                  multiple = FALSE)
 })
 
@@ -114,7 +115,7 @@ output$ui_Pivotr <- renderUI({
     ),
     help_and_report(modal_title = "Pivotr",
                     fun_name = "pivotr",
-                    help_file = inclMD(file.path(r_path,"radiant.data/tools/help/pivotr.md")))
+                    help_file = inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/pivotr.md")))
   )
 })
 

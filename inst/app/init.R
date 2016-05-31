@@ -69,7 +69,7 @@ most_recent_session_file <- function() {
 
 ## set the session id
 r_ssuid <-
-  if (r_local) {
+  if (getOption("radiant.local")) {
     if (is.null(prevSSUID)) {
       mrsf <- most_recent_session_file()
       paste0("local-",shiny:::createUniqueId(3))
@@ -114,7 +114,8 @@ if (exists("r_state") && exists("r_data")) {
 
   unlink(fn, force = TRUE)
   rm(rs)
-} else if (r_local && file.exists(paste0("~/r_sessions/r_", mrsf, ".rds"))) {
+# } else if (r_local && file.exists(paste0("~/r_sessions/r_", mrsf, ".rds"))) {
+} else if (isTRUE(getOption("radiant.local")) && file.exists(paste0("~/r_sessions/r_", mrsf, ".rds"))) {
 
   ## restore from local folder but assign new ssuid
   fn <- paste0(normalizePath("~/r_sessions"),"/r_", mrsf, ".rds")
@@ -146,11 +147,13 @@ if (exists("r_state") && exists("r_data")) {
 }
 
 ## identify the shiny environment
-r_env <- environment()
+r_environment <- environment()
 
 ## turning of vim_keys on load unless it is set in options
-vk <- options("vim_keys")[[1]]
-r_data$vim_keys <- ifelse (!is.null(vk) && vk, TRUE, FALSE)
+# vk <- options("vim_keys")[[1]]
+# r_data$vim_keys <- ifelse (!is.null(vk) && vk, TRUE, FALSE)
+r_data$vim_keys <- ifelse (isTRUE(options("vim_keys")[[1]]), TRUE, FALSE)
+
 
 # if (r_local) {
 #   ## adding any data.frame from the global environment to r_data should not affect
@@ -168,6 +171,10 @@ r_data$vim_keys <- ifelse (!is.null(vk) && vk, TRUE, FALSE)
 #   }
 # }
 
+## environment to use for knitr
+if (!exists("r_knitr_environment"))
+  r_knitr_environment <- if (exists("r_environment")) new.env(parent = r_environment) else new.env()
+
 #####################################
 ## url processing to share results
 #####################################
@@ -178,7 +185,7 @@ r_data$vim_keys <- ifelse (!is.null(vk) && vk, TRUE, FALSE)
 # https://gist.github.com/jcheng5/5427d6f264408abf3049
 
 ## try http://127.0.0.1:3174/?url=decide/simulate/&SSUID=local
-url_list <-
+r_url_list =
   list("Data" = list("tabs_data" = list("Manage"    = "data/",
                                         "View"      = "data/view/",
                                         "Visualize" = "data/visualize/",
@@ -186,30 +193,12 @@ url_list <-
                                         "Explore"   = "data/explore/",
                                         "Transform" = "data/transform/",
                                         "Combine"   = "data/combine/"))
-
   )
 
-## generate url patterns for navigation
-url_patterns <- list()
-for (i in names(url_list)) {
-  res <- url_list[[i]]
-  if (!is.list(res)) {
-    url_patterns[[res]] <- list("nav_radiant" = i)
-  } else {
-    tabs <- names(res)
-    for (j in names(res[[tabs]])) {
-      url <- res[[tabs]][[j]]
-      url_patterns[[url]] <- setNames(list(i,j), c("nav_radiant",tabs))
-    }
-  }
-}
-
-if (!exists("r_knitr")) {
-  r_knitr <- if (exists("r_env")) new.env(parent = r_env) else new.env()
-}
+## initial list for url patterns, generate with function call in server.R
+r_url_patterns <- list()
 
 ## parse the url and use updateTabsetPanel to navigate to the desired tab
-# observe({
 observeEvent(session$clientData$url_search, {
   url_query <- parseQueryString(session$clientData$url_search)
   if ("url" %in% names(url_query)) {
@@ -260,7 +249,7 @@ if (!is.null(r_state$nav_radiant)) {
     ## check if shiny set the main tab to the desired value
     if (is.null(input$nav_radiant)) return()
     if (input$nav_radiant != r_state$nav_radiant) return()
-    nav_radiant_tab <- url_list[[r_state$nav_radiant]] %>% names
+    nav_radiant_tab <- r_url_list[[r_state$nav_radiant]] %>% names
 
     if (!is.null(nav_radiant_tab) && !is.null(r_state[[nav_radiant_tab]]))
       updateTabsetPanel(session, nav_radiant_tab, selected = r_state[[nav_radiant_tab]])
@@ -271,24 +260,13 @@ if (!is.null(r_state$nav_radiant)) {
 }
 
 ## 'sourcing' radiant's package functions in the server.R environment
-if (!"package:radiant.data" %in% search()) {
-  ## for shiny-server
-  if (r_path == "..") {
-    for (file in list.files("../../R",
-        pattern="\\.(r|R)$",
-        full.names = TRUE)) {
-
-      source(file, encoding = r_encoding, local = TRUE)
-    }
-  } else {
-    ## for shinyapps.io
-    radiant.data::copy_all(radiant.data)
-    set_class <- radiant.data::set_class         ## needed but not clear why
-    environment(set_class) <- environment() ## needed but not clear why
-  }
+if (!"package:radiant.data" %in% search() && getOption("radiant.path.data") == "..") {
+  ## for shiny-server and development
+  for (file in list.files("../../R", pattern="\\.(r|R)$", full.names = TRUE))
+    source(file, encoding = getOption("radiant.encoding"), local = TRUE)
 } else {
   ## for use with launcher
   radiant.data::copy_all(radiant.data)
-  set_class <- radiant.data::set_class         ## needed but not clear why
+  set_class <- radiant.data::set_class    ## needed but not clear why
   environment(set_class) <- environment() ## needed but not clear why
 }

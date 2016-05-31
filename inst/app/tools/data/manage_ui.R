@@ -31,7 +31,7 @@ output$ui_fileUpload <- renderUI({
 })
 
 output$ui_clipboard_load <- renderUI({
-  if (r_local) {
+  if (isTRUE(getOption("radiant.local"))) {
     actionButton('loadClipData', 'Paste data')
   } else {
     tagList(
@@ -42,7 +42,7 @@ output$ui_clipboard_load <- renderUI({
 })
 
 output$ui_clipboard_save <- renderUI({
-  if (r_local) {
+  if (isTRUE(getOption("radiant.local"))) {
     actionButton('saveClipData', 'Copy data')
   } else {
     tagList(
@@ -148,7 +148,7 @@ output$ui_Manage <- renderUI({
         actionButton('removeDataButton', 'Remove data')
       )
     ),
-    help_modal('Manage','manage_help',inclMD(file.path(r_path,"radiant.data/tools/help/manage.md")))
+    help_modal('Manage','manage_help',inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/manage.md")))
   )
 })
 

@@ -10,7 +10,7 @@ output$view_state <- renderUI({
         checkboxInput('show_state', 'Show state', FALSE),
         checkboxInput('show_session', 'Show session', FALSE)
       ),
-      help_modal('View state','state_help',inclMD(file.path(r_path,"radiant.data/tools/help/state.md")))
+      help_modal('View state','state_help',inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/state.md")))
     ),
     mainPanel(
       conditionalPanel(condition = "input.show_input == true",

@@ -2,11 +2,11 @@
 # Stop menu
 #######################################
 observeEvent(input$stop_radiant, {
-  if (r_local) stop_radiant()
+  if (isTRUE(getOption("radiant.local"))) stop_radiant()
 })
 
 observeEvent(input$stop_radiant_rmd, {
-  if (r_local) stop_radiant(rmd = TRUE)
+  if (isTRUE(getOption("radiant.local"))) stop_radiant(rmd = TRUE)
 })
 
 stop_radiant <- function(rmd = FALSE) {
@@ -40,10 +40,11 @@ stop_radiant <- function(rmd = FALSE) {
           }
         }
       }
-      ## removing r_env and r_sessions
+      ## removing r_environment and r_sessions
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
       unlink("~/r_figures/", recursive = TRUE)
-      sshh(try(rm(js_head, nav_ui, r_encoding, r_functions, r_local, r_path, r_pkgs, shared_ui, help_menu, envir = .GlobalEnv), silent = TRUE))
+      # sshh(try(rm(shared_ui, help_menu, envir = .GlobalEnv), silent = TRUE))
+      # sshh(try(rm(list = ls(pattern = "r_path_*", envir = .GlobalEnv), envir = .GlobalEnv), silent = TRUE))
       message(stop_message)
 
       if (rstudioapi::isAvailable() && !is_empty(input$rmd_report) && rmd) {

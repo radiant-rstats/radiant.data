@@ -2,11 +2,12 @@
 # Create dynamic reports using Radiant and the shinyAce editor
 ################################################################
 rmd_switch <- c("Switch tab", "Don't switch tab")
-
-
 rmd_manual <- c("Manual paste", "Auto paste")
-if (rstudioapi::isAvailable())
+rmd_report_choices <- "HTML"
+if (rstudioapi::isAvailable()) {
   rmd_manual <- c(rmd_manual, "To Rmd", "To R")
+  rmd_report_choices <- c("HTML","PDF","Word")
+}
 
 rmd_example <- "## Sample report
 
@@ -68,6 +69,19 @@ observeEvent(input$rmd_manual, {
     updateSelectInput(session, "rmd_switch", select = "Don't switch tab")
 })
 
+output$ui_rmd_save_report <- renderUI({
+  selectInput(inputId = "rmd_save_report", label = NULL,
+    choices = rmd_report_choices,
+    selected = state_init("rmd_save_report", "HTML"),
+    multiple = FALSE, selectize = FALSE,
+    width = "80px")
+})
+
+output$ui_rmd_save_button <- renderUI({
+  bname <- ifelse (rstudioapi::isAvailable(), "saveReport", "saveHTML")
+  downloadButton(bname, "Save report")
+})
+
 esc_slash <- function(x) gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2",x)
 
 output$report <- renderUI({
@@ -76,13 +90,13 @@ output$report <- renderUI({
     with(tags,
       table(
             td(help_modal('Report','report_help',
-                       inclMD(file.path(r_path,"radiant.data/tools/help/report.md")))),
+               inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/report.md")))),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("evalRmd", "Knit report"), style= "padding-top:5px;"),
             td(uiOutput("ui_rmd_manual")),
             td(uiOutput("ui_rmd_switch")),
-            td(downloadButton("saveHTML", "Save HTML"), style= "padding-top:5px;"),
-            # td(downloadButton("saveWord", "Save Word"), style= "padding-top:5px;"),
+            td(uiOutput("ui_rmd_save_report")),
+            td(uiOutput("ui_rmd_save_button"), style= "padding-top:5px;"),
             td(downloadButton("saveRmd", "Save Rmd"), style= "padding-top:5px;"),
             td(HTML("<div class='form-group shiny-input-container'>
                 <input id='load_rmd' name='load_rmd' type='file' accept='.rmd,.Rmd,.md'/>
@@ -115,14 +129,6 @@ scrub <-
   gsub("&lt;!&ndash;html_preserve&ndash;&gt;","",.) %>%
   gsub("&lt;!&ndash;/html_preserve&ndash;&gt;","",.)  ## knitr adds this
 
-## Knit to save html
-knitIt <- function(text) {
-  knitr::knit2html(text = text, quiet = TRUE, envir = r_knitr,
-                   options = c("mathjax", "base64_images"),
-                   stylesheet = file.path(r_path,"radiant.data/www/bootstrap.min.css")) %>%
-  scrub %>% HTML
-}
-
 ## cleanout widgets not needed outside shiny apps
 cleanout <- function(x) {
   gsub("DiagrammeR::renderDiagrammeR", "", x) %>%
@@ -130,10 +136,10 @@ cleanout <- function(x) {
 }
 
 ## Based on http://stackoverflow.com/a/31797947/1974918
-knitIt3 <- function(text) {
+knitItSave <- function(text) {
 
   ## Read input and convert to Markdown
-  md <- knit(text = cleanout(text), envir = r_knitr)
+  md <- knit(text = cleanout(text), envir = r_knitr_environment)
 
   ## Get dependencies from knitr
   deps <- knit_meta()
@@ -165,29 +171,29 @@ knitIt3 <- function(text) {
   preserved <- htmltools::extractPreserveChunks(md)
 
   # Render the HTML, and then restore the preserved chunks
-  # knitr::knit2html(text = gsub("\\\\\\\\","\\\\",preserved$value), header = dep_html, quiet = TRUE, envir = r_knitr,
+  # knitr::knit2html(text = gsub("\\\\\\\\","\\\\",preserved$value), header = dep_html, quiet = TRUE, envir = r_knitr_environment,
   #                  options = c("mathjax", "base64_images"),
-  #                  stylesheet = file.path(r_path,"radiant.data/www/bootstrap.min.css")) %>%
+  #                  stylesheet = file.path(getOption("radiant.path.data"),"app/www/bootstrap.min.css")) %>%
   # htmltools::restorePreserveChunks(preserved$chunks)
   markdown::markdownToHTML(text = gsub("\\\\\\\\","\\\\",preserved$value),
                            header = dep_html,
                            options = c("mathjax", "base64_images"),
-                           stylesheet = file.path(r_path,"radiant.data/www/bootstrap.min.css")) %>%
+                           stylesheet = file.path(getOption("radiant.path.data"),"app/www/bootstrap.min.css")) %>%
   htmltools::restorePreserveChunks(preserved$chunks)
 }
 
 ## Knit for report in Radiant
-knitIt2 <- function(text) {
+knitIt <- function(text) {
   ## fragment now also available with rmarkdown
   ## http://rmarkdown.rstudio.com/html_fragment_format.html
 
-  md <- knit(text = text, envir = r_knitr)
+  md <- knit(text = text, envir = r_knitr_environment)
   paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
 
   # paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE,
-  #       envir = r_knitr, stylesheet = ""),
+  #       envir = r_knitr_environment, stylesheet = ""),
   #       "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
   #       "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
 }
@@ -196,15 +202,15 @@ output$rmd_knitted <- renderUI({
   req(valsRmd$knit != 1)
   # req(input$evalRmd || (input$evalRmd >= 0 && !is.null(input$runKeyRmd$randNum)))
   isolate({
-    if (!r_local) {
+    if (!isTRUE(getOption("radiant.local")))
       return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
-    }
+
     if (input$rmd_report != "") {
       withProgress(message = "Knitting report", value = 0, {
         if (is_empty(input$rmd_selection))
-          knitIt2(input$rmd_report)
+          knitIt(input$rmd_report)
         else
-          knitIt2(input$rmd_selection)
+          knitIt(input$rmd_selection)
       })
     }
   })
@@ -213,40 +219,47 @@ output$rmd_knitted <- renderUI({
 output$saveHTML <- downloadHandler(
   filename = function() {"report.html"},
   content = function(file) {
-    if (r_local) {
+    if (isTRUE(getOption("radiant.local"))) {
       isolate({
         withProgress(message = "Knitting report", value = 0, {
           ifelse (is_empty(input$rmd_selection), input$rmd_report,
                   input$rmd_selection) %>%
-            knitIt3 %>% cat(file=file,sep="\n")
-            # knitIt %>% cat(file=file,sep="\n")
+            knitItSave %>% cat(file = file,sep = "\n")
         })
       })
     }
   }
 )
 
-# output$saveWord <- downloadHandler(
-#   filename = function() {"report.doc"},
-#   content = function(file) {
-#     if (r_local) {
-#       isolate({
-#         withProgress(message = "Knitting report", value = 0, {
-#           # fp <- tempdir()
-#           fp <- "~/Desktop"
-#           fn <- file.path(fp, "temp.Rmd")
-#           paste0("---\ntitle: \"Radiant Report\"\noutput:\n  word_document:\n    highlight: \"tango\"\n---\n\n```{r}\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n") %>%
-#           paste0(., ifelse (is_empty(input$rmd_selection), input$rmd_report,
-#                   input$rmd_selection)) %T>%
-#           print %>%
-#           cat(file = fn,sep="\n")
-#           rmarkdown::render(fn, envir = r_knitr)
-#         })
-#       })
-#     }
-#   },
-#   contentType = "application/Word"
-# )
+## based on http://shiny.rstudio.com/gallery/download-knitr-reports.html
+output$saveReport <- downloadHandler(
+  filename = function() {
+    paste('report', sep = '.', switch(
+      input$rmd_save_report, HTML = 'html', PDF = 'pdf', Word = 'docx'
+    ))
+  },
+  content = function(file) {
+    if (isTRUE(getOption("radiant.local"))) {
+      isolate({
+        # temporarily switch to the temp dir, in case you do not have write
+        # permission to the current working directory
+        owd <- setwd(tempdir())
+        on.exit(setwd(owd))
+
+        ifelse (is_empty(input$rmd_selection), input$rmd_report, input$rmd_selection) %>%
+        gsub("\\\\\\\\","\\\\",.) %>%
+        cleanout(.) %>%
+        cat(file = "report.Rmd", sep = "\n")
+
+        out <- render('report.Rmd', switch(
+          input$rmd_save_report,
+          PDF = pdf_document(), HTML = html_document(), Word = word_document()
+        ))
+        file.rename(out, file)
+      })
+    }
+  }
+)
 
 output$saveRmd <- downloadHandler(
   filename = function() {"report.zip"},
@@ -257,7 +270,7 @@ output$saveRmd <- downloadHandler(
       fbase <- "report"
       fnames <- c("report.Rmd", "r_data.rda")
 
-      paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\nload(\"", fnames[2], "\")\n```\n\n") %>%
+      paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\nload(\"", fnames[2], "\")\n```\n\n") %>%
         paste0(., input$rmd_report) %>% gsub("\\\\\\\\","\\\\",.) %>%
         cleanout(.) %>%
         cat(., file = fnames[1],sep="\n")
