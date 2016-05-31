@@ -105,7 +105,7 @@ output$report <- renderUI({
     ),
 
     shinyAce::aceEditor("rmd_report", mode = "markdown",
-              vimKeyBinding = ifelse (is.null(r_data$vim_keys), FALSE, r_data$vim_keys),
+              vimKeyBinding = r_data$vim_keys,
               wordWrap = TRUE,
               height = "auto",
               selectionId = "rmd_selection",

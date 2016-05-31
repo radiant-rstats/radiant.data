@@ -4,8 +4,9 @@ shinyServer(function(input, output, session) {
 	source("init.R", encoding = getOption("radiant.encoding"), local = TRUE)
 	source("radiant.R", encoding = getOption("radiant.encoding"), local = TRUE)
 
-  ## generate url patterns
-  r_url_patterns <- make_url_patterns()
+  ## packages to use for example data
+  options(radiant.example.data = "radiant.data")
+  # r_example_data = "radiant.data"
 
 	## source data & analysis tools
   for (file in list.files(c("tools/app","tools/data"), pattern="\\.(r|R)$", full.names = TRUE))

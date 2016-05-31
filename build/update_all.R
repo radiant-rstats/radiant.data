@@ -7,12 +7,13 @@ system("git add --all .")
 system("git commit -m 'Update [ci skip]'")
 system("git push")
 
-devtools::install_github("vnijs/radiant.data")
-#devtools::install_github("rstudio/shiny")
-#devtools::install_github("rstudio/DT")
-#devtools::install_github("yihui/knitr")
+devtools::install_github("radiant-rstats/radiant.data")
+devtools::install_github("rstudio/shiny")
+devtools::install_github("rstudio/DT")
+
+# devtools::install_github("rstudio/shinyapps")
 library(shinyapps)
-fpath <- "~/gh/radiant.data/inst/radiant.data"
+fpath <- "~/gh/radiant.data/inst/app"
 setwd(fpath)
 
 for (file in list.files("../../../shinyapps/R", pattern = "\\.(r|R)$", full.names = TRUE))

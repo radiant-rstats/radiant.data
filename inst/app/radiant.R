@@ -501,22 +501,6 @@ state_multiple <- function(var, vals, init = character(0)) {
   if (is_empty(rs)) vals[vals %in% init] else vals[vals %in% rs]
 }
 
-make_url_patterns <- function(url_list = r_url_list, url_patterns = r_url_patterns) {
-  for (i in names(url_list)) {
-    res <- url_list[[i]]
-    if (!is.list(res)) {
-      url_patterns[[res]] <- list("nav_radiant" = i)
-    } else {
-      tabs <- names(res)
-      for (j in names(res[[tabs]])) {
-        url <- res[[tabs]][[j]]
-        url_patterns[[url]] <- setNames(list(i,j), c("nav_radiant",tabs))
-      }
-    }
-  }
-  url_patterns
-}
-
 ## cat to file
 ## use with tail -f ~/r_cat.txt in a terminal
 cf <- function(...) {

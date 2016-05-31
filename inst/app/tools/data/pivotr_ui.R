@@ -53,7 +53,7 @@ output$ui_pvt_nvar <- renderUI({
 })
 
 output$ui_pvt_fun <- renderUI({
-  r_funs <- isTRUE(getOption("radiant.local"))
+  r_funs <- getOption("radiant.functions")
   selectizeInput("pvt_fun", label = "Apply function:",
                  choices = r_funs,
                  selected = state_single("pvt_fun", r_funs, "mean_rm"),

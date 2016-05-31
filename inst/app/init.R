@@ -149,54 +149,12 @@ if (exists("r_state") && exists("r_data")) {
 ## identify the shiny environment
 r_environment <- environment()
 
-## turning of vim_keys on load unless it is set in options
-# vk <- options("vim_keys")[[1]]
-# r_data$vim_keys <- ifelse (!is.null(vk) && vk, TRUE, FALSE)
-r_data$vim_keys <- ifelse (isTRUE(options("vim_keys")[[1]]), TRUE, FALSE)
-
-
-# if (r_local) {
-#   ## adding any data.frame from the global environment to r_data should not affect
-#   ## memory usage ... at least until the entry in r_data is changed
-#   df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>%
-#     { names(.[.]) }
-
-#   for (df in df_list) {
-#     isolate({
-#       r_data[[df]] <- get(df, envir = .GlobalEnv)
-#       r_data[[paste0(df,"_descr")]] <- attr(r_data[[df]],'description') %>%
-#         { if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else . }
-#       r_data$datasetlist %<>% c(df, .) %>% unique
-#     })
-#   }
-# }
+## turning off vim_keys unless it set in options
+r_data$vim_keys <- getOption("radiant.vim.keys", default = FALSE)
 
 ## environment to use for knitr
 if (!exists("r_knitr_environment"))
   r_knitr_environment <- if (exists("r_environment")) new.env(parent = r_environment) else new.env()
-
-#####################################
-## url processing to share results
-#####################################
-
-## relevant links
-# http://stackoverflow.com/questions/25306519/shiny-saving-url-state-subpages-and-tabs/25385474#25385474
-# https://groups.google.com/forum/#!topic/shiny-discuss/Xgxq08N8HBE
-# https://gist.github.com/jcheng5/5427d6f264408abf3049
-
-## try http://127.0.0.1:3174/?url=decide/simulate/&SSUID=local
-r_url_list =
-  list("Data" = list("tabs_data" = list("Manage"    = "data/",
-                                        "View"      = "data/view/",
-                                        "Visualize" = "data/visualize/",
-                                        "Pivot"     = "data/pivot/",
-                                        "Explore"   = "data/explore/",
-                                        "Transform" = "data/transform/",
-                                        "Combine"   = "data/combine/"))
-  )
-
-## initial list for url patterns, generate with function call in server.R
-r_url_patterns <- list()
 
 ## parse the url and use updateTabsetPanel to navigate to the desired tab
 observeEvent(session$clientData$url_search, {
@@ -210,7 +168,7 @@ observeEvent(session$clientData$url_search, {
   ## create an observer and suspend when done
   url_observe <- observe({
     if (is.null(input$dataset)) return()
-    url <- url_patterns[[r_data$url]]
+    url <- getOption("radiant.url.patterns")[[r_data$url]]
     if (is.null(url)) {
       ## if pattern not found suspend observer
       url_observe$suspend()
@@ -229,7 +187,8 @@ observeEvent(session$clientData$url_search, {
 ## keeping track of the main tab we are on
 observeEvent(input$nav_radiant, {
   # if (is_empty(input$nav_radiant)) return()
-  if (input$nav_radiant != "Stop" && input$nav_radiant != "Refresh")
+  # if (input$nav_radiant != "Stop" && input$nav_radiant != "Refresh")
+  if (!input$nav_radiant %in% c("Refresh", "Stop"))
     r_data$nav_radiant <- input$nav_radiant
 })
 
@@ -249,7 +208,7 @@ if (!is.null(r_state$nav_radiant)) {
     ## check if shiny set the main tab to the desired value
     if (is.null(input$nav_radiant)) return()
     if (input$nav_radiant != r_state$nav_radiant) return()
-    nav_radiant_tab <- r_url_list[[r_state$nav_radiant]] %>% names
+    nav_radiant_tab <- getOption("radiant.url.list")[[r_state$nav_radiant]] %>% names
 
     if (!is.null(nav_radiant_tab) && !is.null(r_state[[nav_radiant_tab]]))
       updateTabsetPanel(session, nav_radiant_tab, selected = r_state[[nav_radiant_tab]])

@@ -5,26 +5,20 @@
 tmp <-
   c("knitr", "lubridate", "ggplot2", "pryr", "shiny", "magrittr", "tidyr",
     "dplyr", "broom", "htmlwidgets", "readr", "rmarkdown", "shinyAce")
-tmp <- sapply(tmp, require, character.only = TRUE)
+tmp <- sapply(tmp, library, character.only = TRUE)
 rm(tmp)
 
 ## encoding
-# r_encoding = "UTF-8"
 options(radiant.encoding = "UTF-8")
-# .Options$radiant.encoding
-# getOption("radiant.encoding")
 
 ## path to use for local or server use
-# getOption("radiant.path.data") <- "../../../radiant.data/inst/"
-# getOption("radiant.path.data") <- ifelse (file.exists(getOption("radiant.path.data")), getOption("radiant.path.data"), system.file(package = "radiant.data"))
-ifelse (grepl("radiant.data", getwd()) && file.exists("../../../radiant.data/inst/") , "..", system.file(package = "radiant.data")) %>%
+ifelse (grepl("radiant.data", getwd()) && file.exists("../inst") , "..", system.file(package = "radiant.data")) %>%
   options(radiant.path.data = .)
 
 ## print options
 options(width  = 250, scipen = 100)
 
 ## list of function arguments
-# r_functions <-
 list("n" = "length", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
      "mean" = "mean_rm", "median" = "median_rm", "sum" = "sum_rm",
      "var" = "var_rm", "sd" = "sd_rm", "se" = "serr", "cv" = "cv", "varp" = "varp_rm",
@@ -32,7 +26,6 @@ list("n" = "length", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
      "10%" = "p10", "25%" = "p25", "75%" = "p75", "90%" = "p90", "95%" = "p95",
      "skew" = "skew","kurtosis" = "kurtosi") %>%
 options(radiant.functions = .)
-# getOption("radiant.functions")
 
 ## for report and code in menu R
 knitr::opts_knit$set(progress = TRUE)
@@ -42,13 +35,11 @@ knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = FALSE,
 
 ## running local or on a server
 if (Sys.getenv('SHINY_PORT') == "") {
-  # r_local <- TRUE
   options(radiant.local = TRUE)
 
   ## no limit to filesize locally
   options(shiny.maxRequestSize = -1)
 } else {
-  # r_local <- FALSE
   options(radiant.local = FALSE)
   ## limit upload filesize on server (5MB)
   options(shiny.maxRequestSize = 10 * 1024^2)
@@ -131,3 +122,54 @@ help_menu <- function(hlp) {
     )
   )
 }
+
+#####################################
+## url processing to share results
+#####################################
+
+## relevant links
+# http://stackoverflow.com/questions/25306519/shiny-saving-url-state-subpages-and-tabs/25385474#25385474
+# https://groups.google.com/forum/#!topic/shiny-discuss/Xgxq08N8HBE
+# https://gist.github.com/jcheng5/5427d6f264408abf3049
+
+## try http://127.0.0.1:3174/?url=decide/simulate/&SSUID=local
+options(radiant.url.list =
+  list("Data" = list("tabs_data" = list("Manage"    = "data/",
+                                        "View"      = "data/view/",
+                                        "Visualize" = "data/visualize/",
+                                        "Pivot"     = "data/pivot/",
+                                        "Explore"   = "data/explore/",
+                                        "Transform" = "data/transform/",
+                                        "Combine"   = "data/combine/"))
+  ))
+
+make_url_patterns <- function(url_list = getOption("radiant.url.list"),
+                              url_patterns = list()) {
+  for (i in names(url_list)) {
+    res <- url_list[[i]]
+    if (!is.list(res)) {
+      url_patterns[[res]] <- list("nav_radiant" = i)
+    } else {
+      tabs <- names(res)
+      for (j in names(res[[tabs]])) {
+        url <- res[[tabs]][[j]]
+        url_patterns[[url]] <- setNames(list(i,j), c("nav_radiant",tabs))
+      }
+    }
+  }
+  url_patterns
+}
+
+## generate url patterns
+options(radiant.url.patterns = make_url_patterns())
+
+## installed packages versions
+tmp <- grep("radiant.", installed.packages()[,"Package"], value = TRUE)
+radiant.versions <- "Unknown"
+if (length(tmp) > 0) {
+  radiant.versions <- sapply(names(tmp), function(x) paste(x, paste(packageVersion(x), sep = ".")))
+}
+options(radiant.versions = paste(radiant.versions, collapse = ", "))
+rm(tmp, radiant.versions)
+
+

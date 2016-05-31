@@ -46,7 +46,7 @@ output$rcode <- renderUI({
     ),
 
     shinyAce::aceEditor("rmd_code", mode = "r",
-      vimKeyBinding = ifelse (is.null(r_data$vim_keys), FALSE, r_data$vim_keys),
+      vimKeyBinding = r_data$vim_keys,
       height="auto",
       selectionId = "rmd_code_selection",
       value = state_init("rmd_code",r_example),

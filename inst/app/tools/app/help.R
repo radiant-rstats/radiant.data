@@ -11,7 +11,7 @@ output$help_about <- renderUI({
 
 output$help_text <- renderUI({
   wellPanel(
-    HTML("Help is available on each page by clicking the <i title='Help' class='fa fa-question'></i> icon on the bottom left of your screen.")
+    HTML("Help is available on each page by clicking the <i title='Help' class='fa fa-question'></i> icon on the bottom left of your screen.<br><br>Versions: ",getOption("radiant.versions", default = "Unknown"))
   )
 })
 
@@ -69,13 +69,8 @@ output$help_data_ui <- renderUI({
       uiOutput("help_text")
     ),
     mainPanel(
+      HTML(paste0("<h2>Select help files to show and search</h2><hr>")),
       htmlOutput("help_data")
     )
   )
 })
-
-if ("radiant.data" %in% (installed.packages()[,'Package'])) {
-  r_version <- packageVersion("radiant.data")
-} else {
-  r_version <- "unknown"
-}

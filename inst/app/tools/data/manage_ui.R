@@ -314,15 +314,16 @@ observeEvent(input$url_csv_load, {
 
 ## loading all examples files (linked to help files)
 observeEvent(input$loadExampleData, {
-  ## loading data bundled with Radiant
-  dat_list <- data(package = "radiant.data")
-  ## names of data sets in the package
-  examples <- dat_list$results[, "Item"]
+  ## data.frame of example datasets
+  exdat <- data(package = getOption("radiant.example.data"))$results[, c("Package","Item")]
+  # exdat <- data(package = r_example_data)$results[, c("Package","Item")]
 
-  for (ex in examples) {
-    r_data[[ex]] <- data(list = ex, package = "radiant.data", envir = environment()) %>% get
-    r_data[[paste0(ex,"_descr")]] <- attr(r_data[[ex]], "description")
-    r_data[['datasetlist']] <<- c(ex, r_data[['datasetlist']]) %>% unique
+  for (i in 1:nrow(exdat)) {
+    pack <-
+    item <- exdat[i,"Item"]
+    r_data[[item]] <- data(list = item, package = exdat[i,"Package"], envir = environment()) %>% get
+    r_data[[paste0(item,"_descr")]] <- attr(r_data[[item]], "description")
+    r_data[['datasetlist']] <<- c(item, r_data[['datasetlist']]) %>% unique
   }
 
   ## sorting files alphabetically
