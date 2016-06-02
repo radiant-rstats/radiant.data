@@ -1,13 +1,13 @@
 # use https://github.com/jimhester/covr
 if (!require(covr)) {
- 	devtools::install_github("jimhester/covr")
+ 	install.packages("covr")
  	library(covr)
 }
 
 setwd("~/gh/radiant.data")
 
-# cov <- package_coverage(type = "example")
-cov <- package_coverage(type = "all")
+#cov <- package_coverage(type = "all")
+cov <- package_coverage(type = "example")
 shine(cov)
 
 # after_success:

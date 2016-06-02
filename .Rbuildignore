@@ -1,2 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+coverage.R
+cran-comments.md
+^.*\.sublime-project$
