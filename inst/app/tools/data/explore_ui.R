@@ -235,14 +235,14 @@ observeEvent(input$explore_report, {
   order <- input$explorer_state$order
   if (all(is_empty(order))) order <- "''"
 
-  xcmd <- paste0("DT::renderDataTable(make_expl(result, dec = ", input$expl_dec,
+  id <- sample(seq_len(1000000),1)
+  xcmd <- paste0("#extab",id," <- make_expl(result, dec = ", input$expl_dec,
                  ", search = '", search,
                  "', order = ", order,
                  # "', searchCols = ", searchCols,
                  # ", order = ", order,
-                 "))")
-
-  xcmd <- ""
+                 ")\n#DT::renderDataTable(extab",id,")")
+  # xcmd <- ""
 
   inp_out <- list(clean_args(expl_sum_inputs(), expl_sum_args[-1]))
   update_report(inp_main = c(clean_args(expl_inputs(), expl_args), tabsort = "", tabfilt = ""),

@@ -327,16 +327,13 @@ observeEvent(input$pivotr_report, {
   order <- input$pivotr_state$order[1]
   # if (all(is.null(order))) order <- "''"
 
-  xcmd <- paste0("DT::renderDataTable(make_dt(result, format = '", input$pvt_format,
-                 "', perc = ", input$pvt_perc,
-                 ", dec = ", input$pvt_dec,
-                 ", search = '", search,
-                 "', order = ", order,
-                 # "', searchCols = ", searchCols,
-                 # ", order = ", order,
-                 "))")
-
-  xcmd <- ""
+  id <- sample(seq_len(1000000),1)
+  xcmd <- paste0("#pvtab",id," <- make_dt(result, format = '", input$pvt_format,
+                 "', perc = ", input$pvt_perc, ", dec = ", input$pvt_dec,
+                 ", search = '", search,"', order = ", order,
+                 # "', searchCols = ", searchCols, ", order = ", order,
+                 ")\n#DT::renderDataTable(pvtab",id,")")
+  # xcmd <- "
 
   update_report(inp_main = c(clean_args(pvt_inputs(), pvt_args), tabsort = "", tabfilt = ""),
                 fun_name = "pivotr",

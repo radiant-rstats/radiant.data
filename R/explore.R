@@ -314,9 +314,8 @@ make_expl <- function(expl,
   dt_tab <- tab %>% dfround(dec) %>%
     DT::datatable(container = sketch, selection = "none",
       rownames = FALSE,
-      # filter = if (nrow(.) > 100) "none" else list(position = "top"),
       filter = fbox,
-      style = ifelse (expl$shiny, "bootstrap", "default"),
+      style = "bootstrap",
       options = list(
         stateSave = TRUE,
         search = list(search = search, regex = TRUE),
@@ -335,9 +334,6 @@ make_expl <- function(expl,
   )
 
   dt_tab
-
-  ## can use this in R > Report inside Radiant but doesn't export
-  # renderDataTable({make_dt(result)})
 }
 
 ###########################################

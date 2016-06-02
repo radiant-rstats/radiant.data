@@ -274,11 +274,7 @@ make_dt <- function(pvt,
   cn_nt <- if ("Total" %in% cn) cn[-which(cn == "Total")] else cn
 
   tot <- tail(tab,1)[-(1:length(cvars))]
-  if (perc)
-    # tot <- nrprint(tot * 100, dec = dec, perc = perc)
-    tot <- sprintf(paste0("%.", dec ,"f%%"), tot * 100)
-  else
-    tot <- round(tot, dec)
+  tot <- ifelse (isTRUE(perc), sprintf(paste0("%.", dec ,"f%%"), tot * 100), round(tot,dec))
 
   if (length(cvars) == 1 && cvar == cvars) {
     sketch = shiny::withTags(table(
@@ -317,7 +313,6 @@ make_dt <- function(pvt,
   dt_tab <- tab %>% {if (!perc) dfround(.,dec) else .} %>%
   DT::datatable(container = sketch, selection = "none", rownames = FALSE,
     filter = fbox,
-    # style = ifelse (pvt$shiny, "bootstrap", "default"),
     style = "bootstrap",
     options = list(
       stateSave = TRUE,
@@ -358,9 +353,6 @@ make_dt <- function(pvt,
   )
 
   dt_tab
-
-  ## can use this in R > Report inside Radiant but doesn't export
-  # renderDataTable({make_dt(result)})
 }
 
 #' Plot method for the pivotr function
