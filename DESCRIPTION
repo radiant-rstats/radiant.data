@@ -29,6 +29,7 @@ Imports:
     curl (>= 0.9.4),
     rmarkdown(>= 0.9.5),
     rstudioapi (>= 0.5),
+    import (>= 1.1.0),
     base64enc,
     methods
 Suggests:

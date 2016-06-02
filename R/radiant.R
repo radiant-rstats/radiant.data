@@ -12,13 +12,13 @@ radiant.data <- function() {
 #' Update Radiant
 #' @export
 update_radiant_data <- function() {
-  # if ("package:radiant" %in% search())
-  # if (isNamespaceLoaded("radiant")) unloadNamespace("radiant")
+  # if ("package:radiant.data" %in% search())
+  # if (isNamespaceLoaded("radiant.data")) unloadNamespace("radiant.data")
   unlink("~/r_sessions/*.rds", force = TRUE)
 
   ## avoid problems with loaded packages
   system(paste0(Sys.which("R"), " -e \"install.packages('radiant.data', repos = 'http://vnijs.github.io/radiant_miniCRAN/', type = 'binary')\""))
-  # install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/", type = "binary")
+  # install.packages("radiant.data", repos = "http://vnijs.github.io/radiant_miniCRAN/", type = "binary")
 
   ## Restarting Rstudio session from http://stackoverflow.com/a/25934774/1974918
   ret <- .rs.restartR()
@@ -551,7 +551,7 @@ iterms <- function(vars, nway, sep = ":") {
 #'
 #' @examples
 #'
-#' copy_from(radiant, getdata)
+#' copy_from(radiant.data, getdata)
 #'
 #' @export
 copy_from <- function(.from, ...) {
@@ -578,38 +578,29 @@ copy_from <- function(.from, ...) {
   invisible(NULL)
 }
 
-#' Import all functions that a package imports for use with Shiny
-#'
-#' @param .from The package to pull the function from
-#'
-#' @examples
-#' \dontrun{
-#' copy_imported(radiant)
-#' }
-#' @export
-copy_imported <- function(.from) {
-
-  ## not yet working as intended
-  # from <- as.character(substitute(.from))
-
-  # import_list <- getNamespaceImports(from)
-  # parent  <- parent.frame()
+# Import functions required for use in a shiny app
+#
+# @param ns Namespace to extract information from
+# @param libs Packages to load using library
+#
+# @examples
+# import_fs("radiant.data",c("dplyr","ggplot2","shiny"))
+#
+# import_fsn <- function(ns, libs = c()) {
+  # tmp <- sapply(libs, library, character.only = TRUE); rm(tmp)
+  # import_list <- getNamespaceImports(ns)
+  # import_list[c("base", "import", libs)] <- NULL
   # import_names <- names(import_list)
+  # parent <- parent.frame()
 
-  # for (i in unique(import_names)) {
-  #   if (i %in% c("base","shiny","magrittr")) next
-
-  #   symbols <- unlist(import_list[which(i == import_names)])
-
-  #   for (j in symbols) {
-  #     # do.call(import::from, list(i = as.symbol(i), j = as.symbol(j)))
-  #     fn <- get(j, envir = asNamespace(i), inherits = TRUE)
-  #     assign(j, eval.parent(call("function", formals(fn), body(fn))), parent)
-  #   }
+  # for (i in seq_len(length(import_list))) {
+  #   fun <- import_list[[i]]
+  #   lib <- import_names[[i]]
+  #   eval(parse(text = paste0("import::from(",lib,", '",paste0(fun,collapse="', '"),"')")))
+  #   # eval(parse(text = paste0("import::from(",lib,", '",paste0(fun,collapse="', '"),"', .into = .GlobalEnv)")))
   # }
-
-  invisible(NULL)
-}
+  # invisible(NULL)
+# }
 
 #' Source all package functions
 #'
@@ -618,8 +609,7 @@ copy_imported <- function(.from) {
 #' @param .from The package to pull the function from
 #'
 #' @examples
-#'
-#' copy_all(radiant)
+#' copy_all(radiant.data)
 #'
 #' @export
 copy_all <- function(.from) {

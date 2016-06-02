@@ -139,7 +139,7 @@ cleanout <- function(x) {
 knitItSave <- function(text) {
 
   ## Read input and convert to Markdown
-  md <- knit(text = cleanout(text), envir = r_knitr_environment)
+  md <- knitr::knit(text = cleanout(text), envir = r_knitr_environment)
 
   ## Get dependencies from knitr
   deps <- knit_meta()
@@ -187,7 +187,7 @@ knitIt <- function(text) {
   ## fragment now also available with rmarkdown
   ## http://rmarkdown.rstudio.com/html_fragment_format.html
 
-  md <- knit(text = text, envir = r_knitr_environment)
+  md <- knitr::knit(text = text, envir = r_knitr_environment)
   paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML

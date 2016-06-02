@@ -1,12 +1,25 @@
 ## turn off warnings globally
 # options(warn=-1)
 
-## pkgs used, needed but clunky
-tmp <-
-  c("knitr", "lubridate", "ggplot2", "pryr", "shiny", "magrittr", "tidyr",
-    "dplyr", "broom", "htmlwidgets", "readr", "rmarkdown", "shinyAce")
-tmp <- sapply(tmp, library, character.only = TRUE)
-rm(tmp)
+import_fs <- function(ns, libs = c()) {
+  tmp <- sapply(libs, library, character.only = TRUE); rm(tmp)
+  import_list <- getNamespaceImports(ns)
+  import_list[c("base", "import", "methods", "stats", "utils", libs)] <- NULL
+  import_names <- names(import_list)
+
+  for (i in seq_len(length(import_list))) {
+    fun <- import_list[[i]]
+    lib <- import_names[[i]]
+    eval(parse(text = paste0("import::from(",lib,", '",paste0(fun,collapse="', '"),"')")))
+  }
+  invisible()
+}
+
+## import required functions and packages
+# radiant.data::import_fs("radiant.data", c("dplyr","ggplot2","shiny"))
+import_fs("radiant.data", c("dplyr","ggplot2","shiny"))
+# ns <- "radiant.data"
+# libs <- c("dplyr","ggplot2","shiny")
 
 ## encoding
 options(radiant.encoding = "UTF-8")
