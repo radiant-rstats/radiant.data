@@ -17,7 +17,7 @@ import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
 }
 
 ## import required functions and packages
-import_fs("radiant.data", incl = c("magrittr","ggplot2","lubridate","tidyr","dplyr"))
+import_fs("radiant.data", incl = c("magrittr","ggplot2","lubridate","tidyr","dplyr","broom"))
 
 ## encoding
 options(radiant.encoding = "UTF-8")
