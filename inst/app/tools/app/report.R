@@ -251,9 +251,9 @@ output$saveReport <- downloadHandler(
         cleanout(.) %>%
         cat(file = "report.Rmd", sep = "\n")
 
-        out <- render('report.Rmd', switch(
+        out <- rmarkdown::render('report.Rmd', switch(
           input$rmd_save_report,
-          PDF = pdf_document(), HTML = html_document(), Word = word_document()
+          PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(), Word = rmarkdown::word_document()
         ))
         file.rename(out, file)
       })

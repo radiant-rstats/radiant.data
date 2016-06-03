@@ -1,10 +1,11 @@
-## turn off warnings globally
-# options(warn=-1)
-
-import_fs <- function(ns, libs = c()) {
+## function to load/import required packages and functions
+import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
   tmp <- sapply(libs, library, character.only = TRUE); rm(tmp)
   import_list <- getNamespaceImports(ns)
-  import_list[c("base", "import", "methods", "stats", "utils", libs)] <- NULL
+  if (length(incl) == 0)
+    import_list[names(import_list) %in% c("base", "methods", "stats", "utils", libs, excl)] <- NULL
+  else
+    import_list <- import_list[names(import_list) %in% incl]
   import_names <- names(import_list)
 
   for (i in seq_len(length(import_list))) {
@@ -16,10 +17,7 @@ import_fs <- function(ns, libs = c()) {
 }
 
 ## import required functions and packages
-# radiant.data::import_fs("radiant.data", c("dplyr","ggplot2","shiny"))
-import_fs("radiant.data", c("dplyr","ggplot2","shiny"))
-# ns <- "radiant.data"
-# libs <- c("dplyr","ggplot2","shiny")
+import_fs("radiant.data", incl = c("magrittr","ggplot2","lubridate","tidyr","dplyr"))
 
 ## encoding
 options(radiant.encoding = "UTF-8")
