@@ -153,8 +153,9 @@ r_environment <- environment()
 r_data$vim_keys <- getOption("radiant.vim.keys", default = FALSE)
 
 ## environment to use for knitr
-if (!exists("r_knitr_environment"))
-  r_knitr_environment <- if (exists("r_environment")) new.env(parent = r_environment) else new.env()
+## should be the same as r_environment
+# if (!exists("r_knitr_environment"))
+#   r_knitr_environment <- if (exists("r_environment")) new.env(parent = r_environment) else new.env()
 
 ## parse the url and use updateTabsetPanel to navigate to the desired tab
 observeEvent(session$clientData$url_search, {

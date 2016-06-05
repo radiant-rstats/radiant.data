@@ -237,18 +237,17 @@ output$downloadData <- downloadHandler(
 observeEvent(input$uploadfile, {
   ## loading files from disk
   inFile <- input$uploadfile
-  if (is.null(inFile)) return()
-    ## iterating through the files to upload
-    for (i in 1:(dim(inFile)[1]))
-      loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType,
-                   .csv = input$man_read.csv,
-                   header = input$man_header,
-                   man_str_as_factor = input$man_str_as_factor,
-                   sep = input$man_sep, dec = input$man_dec)
+  ## iterating through the files to upload
+  for (i in 1:(dim(inFile)[1]))
+    loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType,
+                 .csv = input$man_read.csv,
+                 header = input$man_header,
+                 man_str_as_factor = input$man_str_as_factor,
+                 sep = input$man_sep, dec = input$man_dec)
 
-    updateSelectInput(session, "dataset", label = "Datasets:",
-                      choices = r_data$datasetlist,
-                      selected = r_data$datasetlist[1])
+  updateSelectInput(session, "dataset", label = "Datasets:",
+                    choices = r_data$datasetlist,
+                    selected = r_data$datasetlist[1])
 })
 
 observeEvent(input$url_rda_load, {
@@ -345,26 +344,22 @@ observeEvent(input$loadClipData, {
 #######################################
 # Load previous state
 #######################################
-observe({
+observeEvent(input$uploadState, {
   inFile <- input$uploadState
-  if (!is.null(inFile)) {
-    isolate({
-      tmpEnv <- new.env(parent = emptyenv())
-      load(inFile$datapath, envir=tmpEnv)
+  tmpEnv <- new.env(parent = emptyenv())
+  load(inFile$datapath, envir = tmpEnv)
 
-      ## remove characters that may cause problems in shinyAce
-      if (!is.null(tmpEnv$r_state$rmd_report))
-        tmpEnv$r_state$rmd_report %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
+  ## remove characters that may cause problems in shinyAce
+  if (!is.null(tmpEnv$r_state$rmd_report))
+    tmpEnv$r_state$rmd_report %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
 
-      r_sessions[[r_ssuid]] <- list(
-        r_data = tmpEnv$r_data,
-        r_state = tmpEnv$r_state,
-        timestamp = Sys.time()
-      )
+  r_sessions[[r_ssuid]] <- list(
+    r_data = tmpEnv$r_data,
+    r_state = tmpEnv$r_state,
+    timestamp = Sys.time()
+  )
 
-      rm(tmpEnv)
-    })
-  }
+  rm(tmpEnv)
 })
 
 output$refreshOnUpload <- renderUI({

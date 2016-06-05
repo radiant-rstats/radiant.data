@@ -57,6 +57,15 @@ NULL
 #' @format A data frame with 3000 rows and 10 variables
 NULL
 
+#' Survival data for the Titanic
+#' @details Survival data for the Titanic. Description provided in attr(titanic,"description")
+#' @docType data
+#' @keywords datasets
+#' @name titanic
+#' @usage data(titanic)
+#' @format A data frame with 1043 rows and 10 variables
+NULL
+
 #' Comic publishers
 #' @details List of comic publishers from \url{http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html}. The dataset is used to illustrate data merging / joining. Description provided in attr(publishers,"description")
 #' @docType data

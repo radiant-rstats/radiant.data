@@ -1,29 +1,44 @@
 ## function to load/import required packages and functions
 import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
   tmp <- sapply(libs, library, character.only = TRUE); rm(tmp)
-  import_list <- getNamespaceImports(ns)
-  if (length(incl) == 0)
-    import_list[names(import_list) %in% c("base", "methods", "stats", "utils", libs, excl)] <- NULL
-  else
-    import_list <- import_list[names(import_list) %in% incl]
-  import_names <- names(import_list)
+  if (length(incl) != 0 || length(excl) != 0) {
+    import_list <- getNamespaceImports(ns)
+    if (length(incl) == 0)
+      import_list[names(import_list) %in% c("base", "methods", "stats", "utils", libs, excl)] <- NULL
+    else
+      import_list <- import_list[names(import_list) %in% incl]
+    import_names <- names(import_list)
 
-  for (i in seq_len(length(import_list))) {
-    fun <- import_list[[i]]
-    lib <- import_names[[i]]
-    eval(parse(text = paste0("import::from(",lib,", '",paste0(fun,collapse="', '"),"')")))
+    for (i in seq_len(length(import_list))) {
+      fun <- import_list[[i]]
+      lib <- import_names[[i]]
+      eval(parse(text = paste0("import::from(",lib,", '",paste0(fun,collapse="', '"),"')")))
+    }
   }
   invisible()
 }
 
 ## import required functions and packages
-import_fs("radiant.data", libs = c("magrittr","ggplot2","lubridate","tidyr","dplyr"), incl = "broom")
+if (!"package:radiant.data" %in% search()) {
+  import_fs("radiant.data", libs = c("magrittr","ggplot2","lubridate","tidyr","dplyr","broom"))
+}
+
+## running local or on a server
+if (Sys.getenv('SHINY_PORT') == "") {
+  options(radiant.local = TRUE)
+  ## no limit to filesize locally
+  options(shiny.maxRequestSize = -1)
+} else {
+  options(radiant.local = FALSE)
+  ## limit upload filesize on server (10MB)
+  options(shiny.maxRequestSize = 10 * 1024^2)
+}
 
 ## encoding
 options(radiant.encoding = "UTF-8")
 
 ## path to use for local or server use
-ifelse (grepl("radiant.data", getwd()) && file.exists("../inst") , "..", system.file(package = "radiant.data")) %>%
+ifelse (grepl("radiant.data", getwd()) && file.exists("../../inst") , "..", system.file(package = "radiant.data")) %>%
   options(radiant.path.data = .)
 
 ## print options
@@ -41,21 +56,9 @@ options(radiant.functions = .)
 ## for report and code in menu R
 knitr::opts_knit$set(progress = TRUE)
 knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = FALSE,
-  message = FALSE, warning = FALSE,
-  # message = FALSE, warning = FALSE, screenshot.force = FALSE,
+  message = FALSE, warning = FALSE, error = TRUE,
+  # screenshot.force = FALSE,
   fig.path = "~/r_figures/")
-
-## running local or on a server
-if (Sys.getenv('SHINY_PORT') == "") {
-  options(radiant.local = TRUE)
-
-  ## no limit to filesize locally
-  options(shiny.maxRequestSize = -1)
-} else {
-  options(radiant.local = FALSE)
-  ## limit upload filesize on server (5MB)
-  options(shiny.maxRequestSize = 10 * 1024^2)
-}
 
 options(radiant.nav_ui =
   list(windowTitle = "Radiant", id = "nav_radiant", inverse = TRUE,

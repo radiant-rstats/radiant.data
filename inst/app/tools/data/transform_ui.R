@@ -155,23 +155,38 @@ type_options <- list("None" = "none", "As factor" = "as_factor",
                      "As date/time (ymd_hms)" = "as_ymd_hms",
                      "As date/time (ymd_hm)" = "as_ymd_hm")
 
-trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
-                    "Create" = "create", "Bin" = "bin", "Clipboard" = "clip",
+trans_types <- list("None" = "none",
+                    `Change variable(s)` = c(
+                    "Bin" = "bin",
+                    "Change type" = "type"),
                     "Normalize" = "normalize",
                     "Recode" = "recode",
-                    "Rename" = "rename", "Replace" = "replace",
-                    "Reorder/remove levels" = "reorg_levs",
-                    "Reorder/remove variables" = "reorg_vars",
-                    "Remove missing values" = "remove_na",
-                    "Remove duplicates" = "remove_dup",
-                    "Show duplicates" = "show_dup",
-                    "Training variable" = "training",
-                    "Holdout sample" = "holdout",
-                    "Gather columns" = "gather",
-                    "Spread column" = "spread",
-                    "Table-to-data" = "tab2dat",
-                    "Expand grid" = "expand")
+                    "Remove/reorder levels" = "reorg_levs",
+                    "Rename" = "rename",
+                    "Replace" = "replace",
+                    "Transform" = "transform",
 
+                    `Create new variable(s)` = c(
+                    "Clipboard" = "clip",
+                    "Create" = "create"),
+
+                    `Clean data` = c(
+                    "Remove missing values" = "remove_na",
+                    "Remove/reorder variables" = "reorg_vars",
+                    "Remove duplicates" = "remove_dup",
+                    "Show duplicates" = "show_dup"),
+
+                    `Expand data` = c(
+                    "Expand grid" = "expand",
+                    "Table-to-data" = "tab2dat"),
+
+                    `Split data` = c(
+                    "Holdout sample" = "holdout",
+                    "Training variable" = "training"),
+
+                    `Tidy data` = c(
+                    "Gather columns" = "gather",
+                    "Spread column" = "spread"))
 
 output$ui_Transform <- renderUI({
 	## Inspired by Ian Fellow's transform ui in JGR/Deducer
