@@ -19,9 +19,8 @@ import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
 }
 
 ## import required functions and packages
-if (!"package:radiant.data" %in% search()) {
+if (!"package:radiant.data" %in% search())
   import_fs("radiant.data", libs = c("magrittr","ggplot2","lubridate","tidyr","dplyr","broom"))
-}
 
 ## running local or on a server
 if (Sys.getenv('SHINY_PORT') == "") {
