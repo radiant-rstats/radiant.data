@@ -8,8 +8,8 @@ system("git commit -m 'Update [ci skip]'")
 system("git push")
 
 devtools::install_github("radiant-rstats/radiant.data")
-devtools::install_github("rstudio/shiny")
-devtools::install_github("rstudio/DT")
+# devtools::install_github("rstudio/shiny")
+# devtools::install_github("rstudio/DT")
 
 # devtools::install_github("rstudio/shinyapps")
 library(shinyapps)
@@ -21,13 +21,13 @@ for (file in list.files("../../../shinyapps/R", pattern = "\\.(r|R)$", full.name
 
 source("../../build/deployapp.R", local = TRUE)
 
-deployApp(account = "vnijs", launch.browser = FALSE)
+deployApp(account = "vnijs", launch.browser = FALSE, lint = FALSE)
 
 setwd("~/gh/radiant.data/")
 system("sh build/build_mac_win.sh")
 
 ## in case of problems
-# shinyapps::showLogs(entries=1000)
+shinyapps::showLogs(entries=1000)
 
 ## for major pull problems
 # git fetch --all

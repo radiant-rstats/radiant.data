@@ -49,6 +49,14 @@ table.dataTable tfoot td, table.dataTable thead td {
   overflow-y: auto;
 }
 
+.modal {
+  background: rgba(255, 255, 255, 0.8); /* The color depends on your template */
+}
+
+.modal-backdrop {
+  display: none;
+}
+
 img {
   max-width: 100%;
   height: auto;

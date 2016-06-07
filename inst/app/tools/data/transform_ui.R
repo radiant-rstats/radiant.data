@@ -155,8 +155,7 @@ type_options <- list("None" = "none", "As factor" = "as_factor",
                      "As date/time (ymd_hms)" = "as_ymd_hms",
                      "As date/time (ymd_hm)" = "as_ymd_hm")
 
-trans_types <- list("None" = "none",
-                    `Change variable(s)` = c(
+trans_types <- list(`Change variable(s)` = c(
                     "Bin" = "bin",
                     "Change type" = "type"),
                     "Normalize" = "normalize",
@@ -165,25 +164,20 @@ trans_types <- list("None" = "none",
                     "Rename" = "rename",
                     "Replace" = "replace",
                     "Transform" = "transform",
-
                     `Create new variable(s)` = c(
                     "Clipboard" = "clip",
                     "Create" = "create"),
-
                     `Clean data` = c(
                     "Remove missing values" = "remove_na",
                     "Remove/reorder variables" = "reorg_vars",
                     "Remove duplicates" = "remove_dup",
                     "Show duplicates" = "show_dup"),
-
                     `Expand data` = c(
                     "Expand grid" = "expand",
                     "Table-to-data" = "tab2dat"),
-
                     `Split data` = c(
                     "Holdout sample" = "holdout",
                     "Training variable" = "training"),
-
                     `Tidy data` = c(
                     "Gather columns" = "gather",
                     "Spread column" = "spread"))
@@ -193,7 +187,7 @@ output$ui_Transform <- renderUI({
   tagList(wellPanel(
     checkboxInput("tr_hide", "Hide summaries", state_init("tr_hide", FALSE)),
     uiOutput("ui_tr_vars"),
-    selectInput("tr_change_type", "Transformation type:", trans_types, selected = "none"),
+    selectizeInput("tr_change_type", "Transformation type:", trans_types, selected = "create"),
     conditionalPanel(condition = "input.tr_change_type == 'type'",
 	    selectInput("tr_typefunction", "Change variable type:", type_options, selected = "none")
     ),
@@ -729,7 +723,7 @@ transform_main <- reactive({
   dat <- .getdata_transform()
 
   ## what data to pass on ...
-	if (input$tr_change_type == "none")
+	if (input$tr_change_type %in% c("","none"))
  		return(select_(dat, .dots = input$tr_vars))
 
   ## reorganize variables
@@ -918,7 +912,7 @@ output$transform_summary <- renderPrint({
     if (min(dim(dat)) == 0) {
       cat("** The selected operation resulted in an empty data frame and cannot be executed **\n\n")
     } else {
-      if (input$tr_change_type == "none") {
+      if (input$tr_change_type %in% c("","none")) {
         cat("** Select a transformation type **\n\n")
       } else {
         cat("** Press the 'Store' button to add your changes to the data **\n\n")
@@ -1021,7 +1015,7 @@ observeEvent(input$tr_store, {
   updateTextInput(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd,ncmd)))
 
 	## reset input values once the changes have been applied
-	updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")
+	updateSelectInput(session = session, inputId = "tr_change_type", selected = "create")
 	updateSelectInput(session = session, inputId = "dataset", select = dataset)
 })
 

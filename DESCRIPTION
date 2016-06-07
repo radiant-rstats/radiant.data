@@ -12,8 +12,8 @@ Depends:
     lubridate (>= 1.5.0),
     tidyr (>= 0.4.1),
     dplyr (>= 0.4.3),
-    broom (>= 0.4.0)
 Imports:
+    broom (>= 0.4.0),
     car (>= 2.1.1),
     gridExtra (>= 2.0.0),
     knitr (>= 1.13),

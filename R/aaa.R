@@ -34,6 +34,20 @@ NULL
 #' @export
 NULL
 
+#' Exporting the tidy from broom
+#' @importFrom broom tidy
+#' @name tidy
+#' @rdname tidy
+#' @export
+NULL
+
+#' Exporting the glance from broom
+#' @importFrom broom glance
+#' @name glance
+#' @rdname glance
+#' @export
+NULL
+
 #' Exporting the kurtosi function from the psych package
 #' @importFrom psych kurtosi
 #' @name kurtosi
