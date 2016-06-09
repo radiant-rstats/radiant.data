@@ -266,21 +266,11 @@ saver <- function(objname, file) {
 #' @export
 loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", saf = TRUE, safx = 20) {
 
-  # cn <- try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
-  # try(read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
-  #   {if (is(., 'try-error') || nrow(readr::problems(.)) > 0)
-  #      try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE)
-  #    else . } %>%
-  #   {if (is(., 'try-error'))
-  #      return("### There was an error loading the data. Please make sure the data are in either rda or csv format.")
-  #    else .} %>%
-  #   {if (saf) factorizer(., safx) else . } %>% as.data.frame
-
-
   rprob <- ""
-  cn <- try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
-  if (!.csv) {
-    dat <- try(read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE)
+  # cn <- try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
+  cn <- read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1)
+  if (.csv == FALSE) {
+    dat <- try(readr::read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE)
     if (!is(dat, 'try-error')) {
       prb <- readr::problems(dat)
       if (nrow(prb) > 0) {
@@ -294,7 +284,7 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", saf =
     rprob <- "Used read.csv to load file"
   }
 
-  if (is(dat, 'try-error')) return("### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+  if (is(dat, 'try-error')) return("### There was an error loading the data. Please make sure the data are in csv format.")
   if (saf) dat <- factorizer(dat, safx)
   dat <- as.data.frame(dat)
   attr(dat, "description") <- rprob

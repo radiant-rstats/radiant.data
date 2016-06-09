@@ -3,28 +3,26 @@
 #######################################
 
 output$ui_fileUpload <- renderUI({
-  # if (is.null(input$dataType)) return()
   req(input$dataType)
   if (input$dataType == "csv") {
-    fileInput('uploadfile', '', multiple=TRUE,
-              accept = c('text/csv','text/comma-separated-values',
-                         'text/tab-separated-values',
-                         'text/plain','.csv','.tsv'))
+    fileInput('uploadfile', '', multiple = TRUE,
+      accept = c('text/csv','text/comma-separated-values',
+                 'text/tab-separated-values', 'text/plain','.csv','.tsv'))
   } else if (input$dataType %in% c("rda","rds")) {
-    fileInput('uploadfile', '', multiple=TRUE,
-              accept = c(".rda",".rds",".rdata"))
+    fileInput('uploadfile', '', multiple = TRUE,
+      accept = c(".rda",".rds",".rdata"))
   } else if (input$dataType == "url_rda") {
     with(tags, table(
       tr(
         td(textInput("url_rda", NULL, "")),
-        td(actionButton("url_rda_load", "Load"), style="padding-top:5px;")
+        td(actionButton("url_rda_load", "Load"), style = "padding-top:5px;")
       )
     ))
   } else if (input$dataType == "url_csv") {
     with(tags, table(
       tr(
         td(textInput("url_csv", NULL, "")),
-        td(actionButton("url_csv_load", "Load"), style="padding-top:5px;")
+        td(actionButton("url_csv_load", "Load"), style = "padding-top:5px;")
       )
     ))
   }
@@ -35,7 +33,7 @@ output$ui_clipboard_load <- renderUI({
     actionButton('loadClipData', 'Paste data')
   } else {
     tagList(
-      tags$textarea(class="form-control", id="load_cdata", rows="5"),
+      tags$textarea(class = "form-control", id = "load_cdata", rows = "5"),
       actionButton('loadClipData', 'Paste data')
     )
   }
@@ -280,35 +278,32 @@ observeEvent(input$url_rda_load, {
 })
 
 observeEvent(input$url_csv_load, {
-  ## loading csv file from url
-  ## https://vnijs.github.io/radiant/examples/houseprices.csv
+  ## loading csv file from url, example https://vnijs.github.io/radiant/examples/houseprices.csv
   objname <- "csv_url"
   if (input$url_csv == "") return()
-  con <- curl::curl(input$url_csv)
-  try(open(con), silent = TRUE)
-  if (is(con, 'try-error')) {
+
+  con <- tempfile()
+  ret <- try(curl::curl_download(input$url_csv, con), silent = TRUE)
+
+  if (is(ret, 'try-error')) {
     upload_error_handler(objname, "### There was an error loading the csv file from the provided url.")
   } else {
+    dat <- loadcsv(con, .csv = input$man_read.csv, header = input$man_header,
+                   sep = input$man_sep, dec = input$man_dec,
+                   saf = input$man_str_as_factor)
 
-    dat <- try(read.table(con, header = input$man_header, comment.char = "",
-               quote = "\"", fill = TRUE, stringsAsFactors = input$man_str_as_factor,
-               sep = input$man_sep, dec = input$man_dec), silent = TRUE)
-
-    if (is(dat, 'try-error')) {
-      upload_error_handler(objname, "### There was an error loading the csv file from the provided url.")
+    if (is.character(dat)) {
+      upload_error_handler(objname, dat)
     } else {
-      dat <- {if (input$man_str_as_factor) factorizer(dat) else dat} %>% as.data.frame
-      r_data[[paste0(objname,"_descr")]] <- ""
+      r_data[[objname]] <- dat
+      r_data[[paste0(objname,"_descr")]] <- attr(dat, "description") %>% paste("\n\nUrl:", input$url_csv)
+      r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
     }
-
-    r_data[[objname]] <- dat
-    r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
 
     updateSelectInput(session, "dataset", label = "Datasets:",
                       choices = r_data$datasetlist,
                       selected = r_data$datasetlist[1])
   }
-  close(con)
 })
 
 ## loading all examples files (linked to help files)

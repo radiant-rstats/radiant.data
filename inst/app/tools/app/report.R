@@ -81,45 +81,49 @@ output$ui_rmd_save_report <- renderUI({
 
 esc_slash <- function(x) gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2",x)
 
+## Thanks to @timelyportfolio for this comment/fix
+## https://github.com/timelyportfolio/functionplotR/issues/1#issuecomment-224369431
+getdeps <- function() {
+  htmltools::attachDependencies(
+    htmltools::tagList(),
+    c(htmlwidgets:::getDependency("DiagrammeR","DiagrammeR"))
+  )
+}
+
 output$report <- renderUI({
   init <- isolate(if (is_empty(input$rmd_report)) rmd_example else esc_slash(input$rmd_report))
   tagList(
     with(tags,
       table(
-            td(help_modal('Report','report_help',
-               inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/report.md")))),
-            td(HTML("&nbsp;&nbsp;")),
-            td(actionButton("evalRmd", "Knit report"), style= "padding-top:5px;"),
-            td(uiOutput("ui_rmd_manual")),
-            td(uiOutput("ui_rmd_switch")),
-            td(uiOutput("ui_rmd_save_report")),
-            td(downloadButton("saveReport", "Save report"), style= "padding-top:5px;"),
-            td(HTML("<div class='form-group shiny-input-container'>
-                <input id='load_rmd' name='load_rmd' type='file' accept='.rmd,.Rmd,.md'/>
-              </div>"))
+        td(help_modal('Report','report_help',
+           inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/report.md")))),
+        td(HTML("&nbsp;&nbsp;")),
+        td(actionButton("evalRmd", "Knit report"), style= "padding-top:5px;"),
+        td(uiOutput("ui_rmd_manual")),
+        td(uiOutput("ui_rmd_switch")),
+        td(uiOutput("ui_rmd_save_report")),
+        td(downloadButton("saveReport", "Save report"), style= "padding-top:5px;"),
+        td(HTML("<div class='form-group shiny-input-container'>
+            <input id='load_rmd' name='load_rmd' type='file' accept='.rmd,.Rmd,.md'/>
+          </div>"))
       )
     ),
-
-    shinyAce::aceEditor("rmd_report", mode = "markdown",
-              vimKeyBinding = r_data$vim_keys,
-              wordWrap = TRUE,
-              height = "auto",
-              selectionId = "rmd_selection",
-              value = state_init("rmd_report", init) %>% esc_slash,
-              hotkeys = list(runKeyRmd = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
-    htmlOutput("rmd_knitted")
+    shinyAce::aceEditor("rmd_report", mode = "markdown", vimKeyBinding = r_data$vim_keys,
+      wordWrap = TRUE, height = "auto", selectionId = "rmd_selection",
+      value = state_init("rmd_report", init) %>% esc_slash,
+      hotkeys = list(runKeyRmd = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
+    htmlOutput("rmd_knitted"),
+    getdeps()
   )
 })
 
 valsRmd <- reactiveValues(knit = 0)
-
 observe({
   input$runKeyRmd
-  if (!is.null(input$evalRmd)) isolate(valsRmd$knit %<>% add(1))
+  if (!is.null(input$evalRmd)) isolate(valsRmd$knit <- valsRmd$knit + 1)
 })
 
-scrub <-
-  . %>%
+scrub <- . %>%
   gsub("&lt;!--/html_preserve--&gt;","",.) %>%
   gsub("&lt;!--html_preserve--&gt;","",.) %>%
   gsub("&lt;!&ndash;html_preserve&ndash;&gt;","",.) %>%
@@ -178,7 +182,6 @@ knitItSave <- function(text) {
 knitIt <- function(text) {
   ## fragment now also available with rmarkdown
   ## http://rmarkdown.rstudio.com/html_fragment_format.html
-  # md <- knitr::knit(text = text, envir = r_environment)
   md <- knitr::knit(text = text, envir = r_environment)
   paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",

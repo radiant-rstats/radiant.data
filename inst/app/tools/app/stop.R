@@ -43,7 +43,7 @@ stop_radiant <- function(rmd = FALSE) {
       ## removing r_environment and r_sessions
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
       unlink("~/r_figures/", recursive = TRUE)
-      rm(help_menu, make_url_patterns, envir = .GlobalEnv)
+      rm(help_menu, make_url_patterns, import_fs, envir = .GlobalEnv)
       message(stop_message)
 
       if (rstudioapi::isAvailable() && !is_empty(input$rmd_report) && rmd) {

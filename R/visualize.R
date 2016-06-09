@@ -292,7 +292,8 @@ visualize <- function(dataset, xvar,
           if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
             tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(make_funs(fun))
-            plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j)) + geom_point() + geom_line(aes(group = 1))
+            plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j)) + geom_line(aes(group = 1))
+            if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point()
           } else {
             plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line()
           }
@@ -301,7 +302,8 @@ visualize <- function(dataset, xvar,
           if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
             tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j, color) %>% summarise_each(make_funs(fun))
-            plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color, group = color)) + geom_point() + geom_line()
+            plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color, group = color)) + geom_line()
+            if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point()
           } else {
             plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = color, group = color)) + geom_line()
           }
