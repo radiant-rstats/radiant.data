@@ -29,7 +29,6 @@ rm $dirwin/radiant.data*
 # rm $dirmac_mav/shiny*
 # rm $dirwin/shiny*
 
-
 # build source and mac version
 R --save < build/build_mac_source.R 2>&1
 
