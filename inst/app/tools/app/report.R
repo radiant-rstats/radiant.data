@@ -55,7 +55,7 @@ output$ui_rmd_manual <- renderUI({
 
 output$ui_rmd_switch <- renderUI({
   req(input$rmd_manual)
-  if(!input$rmd_manual %in% c("Manual paste","Auto paste"))
+  if (!input$rmd_manual %in% c("Manual paste","Auto paste"))
     init <- "Don't switch tab"
   else
     init <- "Switch tab"
@@ -72,11 +72,25 @@ observeEvent(input$rmd_manual, {
 })
 
 output$ui_rmd_save_report <- renderUI({
-  selectInput(inputId = "rmd_save_report", label = NULL,
-    choices = rmd_report_choices,
-    selected = state_init("rmd_save_report", "HTML"),
-    multiple = FALSE, selectize = FALSE,
-    width = "105px")
+  local <- getOption("radiant.local")
+  if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+    selectInput(inputId = "rmd_save_report", label = NULL,
+      choices = rmd_report_choices,
+      selected = state_init("rmd_save_report", "HTML"),
+      multiple = FALSE, selectize = FALSE,
+      width = "105px")
+  } else {
+    invisible()
+  }
+})
+
+output$ui_saveReport <- renderUI({
+  local <- getOption("radiant.local")
+  if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+    downloadButton("saveReport", "Save report")
+  } else {
+    invisible()
+  }
 })
 
 esc_slash <- function(x) gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2",x)
@@ -102,7 +116,7 @@ output$report <- renderUI({
         td(uiOutput("ui_rmd_manual")),
         td(uiOutput("ui_rmd_switch")),
         td(uiOutput("ui_rmd_save_report")),
-        td(downloadButton("saveReport", "Save report"), style= "padding-top:5px;"),
+        td(uiOutput("ui_saveReport"), style= "padding-top:5px;"),
         td(HTML("<div class='form-group shiny-input-container'>
             <input id='load_rmd' name='load_rmd' type='file' accept='.rmd,.Rmd,.md'/>
           </div>"))
@@ -214,7 +228,8 @@ output$saveReport <- downloadHandler(
     ))
   },
   content = function(file) {
-    if (isTRUE(getOption("radiant.local"))) {
+    local <- getOption("radiant.local")
+    if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
       isolate({
         ## temporarily switch to the temp dir, in case you do not have write
         ## permission to the current working directory
