@@ -192,10 +192,10 @@ output$rmd_knitted <- renderUI({
   req(valsRmd$knit != 1)
   # req(input$evalRmd || (input$evalRmd >= 0 && !is.null(input$runKeyRmd$randNum)))
   isolate({
-    if (!isTRUE(getOption("radiant.local")))
-      return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
-
-    if (input$rmd_report != "") {
+    # if (!isTRUE(getOption("radiant.local")))
+    if (!isTRUE(getOption("radiant.local")) && is.null(session$user)) {
+      HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>")
+    } else if (input$rmd_report != "") {
       withProgress(message = "Knitting report", value = 0, {
         if (is_empty(input$rmd_selection))
           knitIt(input$rmd_report)

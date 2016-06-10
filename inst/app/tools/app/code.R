@@ -8,7 +8,8 @@ if (rstudioapi::isAvailable())
 if (Sys.getenv("R_ZIPCMD") != "")
   rcode_choices %<>% c(.,"R-code & Data (zip)")
 
-rcode_example <- "## get the active dataset and show the first few observations
+rcode_example <-
+"## get the active dataset and show the first few observations
 .getdata() %>% head
 
 ## access a specific dataset by name
@@ -24,8 +25,9 @@ dat %>% select(price, log_price) %>% head
 ## create a histogram of prices
 dat %>% ggplot(aes(x = price)) + geom_histogram()
 
-## and a histogram of log-prices
-dat %>% ggplot(aes(x = log_price)) + geom_histogram()
+## and a histogram of log-prices using radiant.data::visualize
+dat %>% visualize(xvar = \"log_price\", custom = TRUE)
+
 
 ## open help in the R-studio viewer from Radiant
 help(package = 'radiant')
@@ -80,17 +82,17 @@ output$rcode_output <- renderUI({
 
   if (valsCode$code == 1) return()
   isolate({
-    if (isTRUE(getOption("radiant.local"))) {
-      rcode_edit <- if (is_empty(input$rcode_selection)) input$rcode_edit
-                  else input$rcode_selection
+
+    if (!isTRUE(getOption("radiant.local")) && is.null(session$user)) {
+      HTML("<h2>Code is not evaluated when running Radiant on a server</h2>")
+    } else {
+      rcode_edit <-
+        ifelse (is_empty(input$rcode_selection), input$rcode_edit, input$rcode_selection)
 
       paste0("```{r cache = FALSE, echo = TRUE}\n", rcode_edit ,"\n```") %>%
         ## need r_environment so changes are reflected in the shiny environment
-        ## does mean user can mess things up pretty good so not a good idea on a server
         knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_environment) %>%
         HTML
-    } else {
-      HTML("<h2>Code is not evaluated when running Radiant on a server</h2>")
     }
   })
 })
