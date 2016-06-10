@@ -3,8 +3,8 @@
 library(devtools)
 document(roclets = c('rd', 'collate', 'namespace'))
 
-# install('../shiny')
-# build('../shiny', binary = TRUE)
+install('../shiny')
+build('../shiny', binary = TRUE)
 
 # install('../DT')
 # build('../DT', binary = TRUE)

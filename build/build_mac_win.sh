@@ -2,10 +2,10 @@
 
 # set directories
 cd ~/Desktop/GitHub/radiant.data
-dirsource=../radiant_miniCRAN/src/contrib/
-dirmac=../radiant_miniCRAN/bin/macosx/contrib/3.2/
-dirmac_mav=../radiant_miniCRAN/bin/macosx/mavericks/contrib/3.2/
-dirwin=../radiant_miniCRAN/bin/windows/contrib/3.2/
+dirsource=../radiant_miniCRAN/src/contrib
+dirmac=../radiant_miniCRAN/bin/macosx/contrib/3.3
+dirmac_mav=../radiant_miniCRAN/bin/macosx/mavericks/contrib/3.3
+dirwin=../radiant_miniCRAN/bin/windows/contrib/3.3
 
 # removing all files in miniCRAN
 # rm $dirsource/*

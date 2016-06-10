@@ -7,7 +7,7 @@ system("git add --all .")
 system("git commit -m 'Update [ci skip]'")
 system("git push")
 
-devtools::install_github("radiant-rstats/radiant.data")
+# devtools::install_github("radiant-rstats/radiant.data")
 # devtools::install_github("rstudio/shiny")
 # devtools::install_github("rstudio/DT")
 
