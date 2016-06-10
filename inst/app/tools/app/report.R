@@ -243,11 +243,11 @@ output$saveReport <- downloadHandler(
         if (input$rmd_save_report == "Rmd & Data (zip)") {
           r_data <- reactiveValuesToList(r_data)
           save(r_data, file = "r_data.rda")
-          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\nload(\"r_data.rda\")\n```\n\n",report) %>%
+          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\nload(\"r_data.rda\")\n```\n\n", report) %>%
             cat(file = "report.Rmd", sep = "\n")
-          zip(file, c("report.Rmd","r_data.rda"))
+          zip(file, c("report.Rmd", "r_data.rda"))
         } else if (input$rmd_save_report == "Rmd") {
-          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n\n",report) %>%
+          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n\n", report) %>%
             cat(file = file, sep = "\n")
         } else {
           if (rstudioapi::isAvailable()) {
@@ -257,7 +257,7 @@ output$saveReport <- downloadHandler(
             ), envir = r_environment)
             file.rename(out, file)
           } else {
-            knitItSave %>% cat(file = file,sep = "\n")
+            knitItSave(report) %>% cat(file = file, sep = "\n")
           }
         }
       })
