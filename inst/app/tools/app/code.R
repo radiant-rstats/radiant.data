@@ -56,6 +56,16 @@ output$ui_rcode_save <- renderUI({
   }
 })
 
+output$ui_saveCodeReport <- renderUI({
+  local <- getOption("radiant.local")
+  if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+    downloadButton("saveCodeReport", "Save")
+  } else {
+    invisible()
+  }
+})
+
+
 output$rcode <- renderUI({
   tagList(
     with(tags,
@@ -64,7 +74,7 @@ output$rcode <- renderUI({
         td(HTML("&nbsp;&nbsp;")),
         td(actionButton("rEval", "Run code"), style= "padding-top:5px;"),
         td(uiOutput("ui_rcode_save")),
-        td(downloadButton("saveCodeReport", "Save"), style= "padding-top:5px;"),
+        td(uiOutput("ui_saveCodeReport"), style= "padding-top:5px;"),
         td(HTML("<div class='form-group shiny-input-container'>
             <input id='load_code' name='load_code' type='file' accept='.r,.R'/>
           </div>"))
