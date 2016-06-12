@@ -3,8 +3,13 @@
 ################################################################
 
 rcode_choices <- c("HTML","R-code")
-if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user)))
-  rcode_choices <- c("HTML","PDF","Word","R-code")
+if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user))) {
+  if (rstudioapi::isAvailable()) {
+    rcode_choices <- c("HTML","PDF","Word","R-code")
+  } else {
+    rcode_choices <- c("HTML","Word","R-code")
+  }
+}
 if (Sys.getenv("R_ZIPCMD") != "")
   rcode_choices %<>% c(.,"R-code & Data (zip)")
 

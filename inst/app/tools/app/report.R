@@ -6,11 +6,15 @@ rmd_manual <- c("Manual paste", "Auto paste")
 rmd_report_choices <- c("HTML","Rmd")
 if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user))) {
   rmd_manual <- c(rmd_manual, "To Rmd", "To R")
-  rmd_report_choices <- c("HTML","PDF","Word","Rmd")
+  if (rstudioapi::isAvailable()) {
+    rmd_report_choices <- c("HTML","PDF","Word","Rmd")
+  } else {
+    rmd_report_choices <- c("HTML","Word","Rmd")
+  }
 }
 
+# z <- system("which zip", intern = TRUE)
 if (Sys.getenv("R_ZIPCMD") != "")
-  z <- system("which zip", intern = TRUE)
   rmd_report_choices %<>% c(.,"Rmd & Data (zip)")
 
 rmd_example <- "## Sample report
@@ -254,7 +258,7 @@ output$saveReport <- downloadHandler(
           if (rstudioapi::isAvailable() || !isTRUE(local)) {
             cat(report, file = "report.Rmd", sep = "\n")
             out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
-              PDF = rmarkdown::pdf_document(latex_engine='xelatex'), HTML = rmarkdown::html_document(), Word = rmarkdown::word_document()
+              PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(), Word = rmarkdown::word_document()
             ), envir = r_environment)
             file.rename(out, file)
           } else {
