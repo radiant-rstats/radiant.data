@@ -4,11 +4,13 @@
 rmd_switch <- c("Switch tab", "Don't switch tab")
 rmd_manual <- c("Manual paste", "Auto paste")
 rmd_report_choices <- c("HTML","Rmd")
-if (rstudioapi::isAvailable()) {
+if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user))) {
   rmd_manual <- c(rmd_manual, "To Rmd", "To R")
   rmd_report_choices <- c("HTML","PDF","Word","Rmd")
 }
+
 if (Sys.getenv("R_ZIPCMD") != "")
+  z <- system("which zip", intern = TRUE)
   rmd_report_choices %<>% c(.,"Rmd & Data (zip)")
 
 rmd_example <- "## Sample report
@@ -206,9 +208,8 @@ output$rmd_knitted <- renderUI({
   req(valsRmd$knit != 1)
   # req(input$evalRmd || (input$evalRmd >= 0 && !is.null(input$runKeyRmd$randNum)))
   isolate({
-    # if (!isTRUE(getOption("radiant.local")))
     if (!isTRUE(getOption("radiant.local")) && is.null(session$user)) {
-      HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>")
+      HTML("<h2>Rmd file is not evaluated when running Radiant on open-source Shiny Server</h2>")
     } else if (input$rmd_report != "") {
       withProgress(message = "Knitting report", value = 0, {
         if (is_empty(input$rmd_selection))
@@ -250,7 +251,7 @@ output$saveReport <- downloadHandler(
           paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n\n", report) %>%
             cat(file = file, sep = "\n")
         } else {
-          if (rstudioapi::isAvailable()) {
+          if (rstudioapi::isAvailable() || !isTRUE(local)) {
             cat(report, file = "report.Rmd", sep = "\n")
             out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
               PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(), Word = rmarkdown::word_document()

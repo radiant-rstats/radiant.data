@@ -12,13 +12,11 @@ radiant.data <- function() {
 #' Update Radiant
 #' @export
 update_radiant_data <- function() {
-  # if ("package:radiant.data" %in% search())
-  # if (isNamespaceLoaded("radiant.data")) unloadNamespace("radiant.data")
+  ## cleanup old session files
   unlink("~/r_sessions/*.rds", force = TRUE)
 
   ## avoid problems with loaded packages
   system(paste0(Sys.which("R"), " -e \"install.packages('radiant.data', repos = 'http://vnijs.github.io/radiant_miniCRAN/', type = 'binary')\""))
-  # install.packages("radiant.data", repos = "http://vnijs.github.io/radiant_miniCRAN/", type = "binary")
 
   ## Restarting Rstudio session from http://stackoverflow.com/a/25934774/1974918
   ret <- .rs.restartR()

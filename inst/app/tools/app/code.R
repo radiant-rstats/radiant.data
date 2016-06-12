@@ -3,7 +3,7 @@
 ################################################################
 
 rcode_choices <- c("HTML","R-code")
-if (rstudioapi::isAvailable())
+if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user)))
   rcode_choices <- c("HTML","PDF","Word","R-code")
 if (Sys.getenv("R_ZIPCMD") != "")
   rcode_choices %<>% c(.,"R-code & Data (zip)")
@@ -39,11 +39,16 @@ help(package = 'radiant')
 # transform_main() %>% head"
 
 output$ui_rcode_save <- renderUI({
-  selectInput(inputId = "rcode_save", label = NULL,
-    choices = rcode_choices,
-    selected = state_init("rcode_save", "HTML"),
-    multiple = FALSE, selectize = FALSE,
-    width = "120px")
+  local <- getOption("radiant.local")
+  if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+    selectInput(inputId = "rcode_save", label = NULL,
+      choices = rcode_choices,
+      selected = state_init("rcode_save", "HTML"),
+      multiple = FALSE, selectize = FALSE,
+      width = "120px")
+  } else {
+    invisible()
+  }
 })
 
 output$rcode <- renderUI({
@@ -79,12 +84,10 @@ observe({
 })
 
 output$rcode_output <- renderUI({
-
   if (valsCode$code == 1) return()
   isolate({
-
     if (!isTRUE(getOption("radiant.local")) && is.null(session$user)) {
-      HTML("<h2>Code is not evaluated when running Radiant on a server</h2>")
+      HTML("<h2>Rmd file is not evaluated when running Radiant on open-source Shiny Server</h2>")
     } else {
       rcode_edit <-
         ifelse (is_empty(input$rcode_selection), input$rcode_edit, input$rcode_selection)
@@ -104,7 +107,8 @@ output$saveCodeReport <- downloadHandler(
     ))
   },
   content = function(file) {
-    if (isTRUE(getOption("radiant.local"))) {
+    local <- getOption("radiant.local")
+    if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
       isolate({
         ## temporarily switch to the temp dir, in case you do not have write
         ## permission to the current working directory
@@ -123,7 +127,7 @@ output$saveCodeReport <- downloadHandler(
           paste0("## Load radiant package if needed\n#suppressMessages(library(radiant))\n\n", rcode,"\n") %>%
             cat(file = file, sep = "\n")
         } else {
-          if (rstudioapi::isAvailable()) {
+          if (rstudioapi::isAvailable() || !isTRUE(local)) {
             paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}\n\n", rcode,"\n```") %>%
               cat(file = "rcode.Rmd", sep = "\n")
             out <- rmarkdown::render("rcode.Rmd", switch(input$rcode_save,
