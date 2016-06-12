@@ -254,7 +254,7 @@ output$saveReport <- downloadHandler(
           if (rstudioapi::isAvailable() || !isTRUE(local)) {
             cat(report, file = "report.Rmd", sep = "\n")
             out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
-              PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(), Word = rmarkdown::word_document()
+              PDF = rmarkdown::pdf_document(latex_engine='xelatex'), HTML = rmarkdown::html_document(), Word = rmarkdown::word_document()
             ), envir = r_environment)
             file.rename(out, file)
           } else {
