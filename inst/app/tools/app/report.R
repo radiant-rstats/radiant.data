@@ -128,7 +128,8 @@ output$report <- renderUI({
           </div>"))
       )
     ),
-    shinyAce::aceEditor("rmd_report", mode = "markdown", vimKeyBinding = r_data$vim_keys,
+    shinyAce::aceEditor("rmd_report", mode = "markdown",
+      vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
       wordWrap = TRUE, height = "auto", selectionId = "rmd_selection",
       value = state_init("rmd_report", init) %>% esc_slash,
       hotkeys = list(runKeyRmd = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
@@ -159,7 +160,7 @@ cleanout <- function(x) {
 knitItSave <- function(text) {
 
   ## Read input and convert to Markdown
-  md <- knitr::knit(text = cleanout(text), envir = r_environment)
+  md <- knitr::knit(text = paste0("\n`r options(width = 250)`\n",cleanout(text)), envir = r_environment)
 
   ## Get dependencies from knitr
   deps <- knitr::knit_meta()
@@ -202,7 +203,7 @@ knitItSave <- function(text) {
 knitIt <- function(text) {
   ## fragment now also available with rmarkdown
   ## http://rmarkdown.rstudio.com/html_fragment_format.html
-  md <- knitr::knit(text = text, envir = r_environment)
+  md <- knitr::knit(text = paste0("\n`r options(width = 250)`\n",text), envir = r_environment)
   paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
@@ -248,17 +249,18 @@ output$saveReport <- downloadHandler(
         if (input$rmd_save_report == "Rmd & Data (zip)") {
           r_data <- reactiveValuesToList(r_data)
           save(r_data, file = "r_data.rda")
-          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\nload(\"r_data.rda\")\n```\n\n", report) %>%
+          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(radiant)))\nload(\"r_data.rda\")\n```\n\n", report) %>%
             cat(file = "report.Rmd", sep = "\n")
           zip(file, c("report.Rmd", "r_data.rda"))
         } else if (input$rmd_save_report == "Rmd") {
-          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n\n", report) %>%
+          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n\n", report) %>%
             cat(file = file, sep = "\n")
         } else {
           if (rstudioapi::isAvailable() || !isTRUE(local)) {
-            cat(report, file = "report.Rmd", sep = "\n")
+            cat(paste0("\n`r options(width = 250)`\n\n",report), file = "report.Rmd", sep = "\n")
             out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
-              PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(), Word = rmarkdown::word_document()
+              PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(),
+              Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"),"app/www/style.docx"))
             ), envir = r_environment)
             file.rename(out, file)
           } else {
@@ -313,7 +315,8 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
   if (xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
 
   if (figs)
-    cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,", dpi = 72}\n",cmd,"\n```\n")
+    # cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,", dpi = 72}\n",cmd,"\n```\n")
+    cmd <- paste0("\n```{r fig.width=", round(7*fig.width/650,2),", fig.height=",round(6*fig.height/650,2),", dpi = 72}\n",cmd,"\n```\n")
   else
     cmd <- paste0("\n```{r}\n",cmd,"\n```\n")
 

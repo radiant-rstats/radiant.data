@@ -468,6 +468,6 @@ observeEvent(input$visualize_report, {
   update_report(inp_main = inp_main,
                 fun_name = "visualize", outputs = character(0),
                 pre_cmd = "", figs = TRUE,
-                fig.width = round(7 * viz_plot_width()/600,2),
-                fig.height = round(7 * viz_plot_height()/600,2))
+                fig.width = viz_plot_width(),
+                fig.height = viz_plot_height())
 })

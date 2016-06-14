@@ -22,9 +22,6 @@ init_state <- function(r_data) {
   r_data$plot_height <- 600
   r_data$plot_width <- 600
 
-  # r_data$manual <- FALSE
-  r_data$vim_keys <- FALSE
-
   ## Joe Cheng: "Datasets can change over time (i.e., the .changedata function).
   ## Therefore, the data need to be a reactive value so the other reactive
   ## functions and outputs that depend on these datasets will know when they
@@ -148,9 +145,6 @@ if (exists("r_state") && exists("r_data")) {
 
 ## identify the shiny environment
 r_environment <- environment()
-
-## turning off vim_keys unless it set in options
-r_data$vim_keys <- getOption("radiant.vim.keys", default = FALSE)
 
 ## environment to use for knitr
 ## should be the same as r_environment

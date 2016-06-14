@@ -62,10 +62,10 @@ img {
   height: auto;
 }
 
-pre {
-  /* overflow: auto; */
-  word-wrap: normal;
+pre, code, pre code {
+  overflow: auto;
   white-space: pre;
+  background-color: #ffffff;
 }
 
 #data_filter, #tr_transform, #tr_recode, #tr_rename, #tr_paste {

@@ -65,7 +65,6 @@ output$ui_saveCodeReport <- renderUI({
   }
 })
 
-
 output$rcode <- renderUI({
   tagList(
     with(tags,
@@ -82,7 +81,7 @@ output$rcode <- renderUI({
     ),
 
     shinyAce::aceEditor("rcode_edit", mode = "r",
-      vimKeyBinding = r_data$vim_keys,
+      vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
       height="auto",
       selectionId = "rcode_selection",
       value = state_init("rcode_edit",rcode_example),

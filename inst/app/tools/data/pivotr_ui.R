@@ -340,7 +340,7 @@ observeEvent(input$pivotr_report, {
                 outputs = outputs,
                 inp_out = inp_out,
                 figs = figs,
-                fig.width = round(7 * pvt_plot_width()/650,2),
-                fig.height = round(7 * pvt_plot_height()/650,2),
+                fig.width = pvt_plot_width(),
+                fig.height = pvt_plot_height(),
                 xcmd = xcmd)
 })

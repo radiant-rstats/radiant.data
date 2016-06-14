@@ -55,7 +55,7 @@ list("n" = "length", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
 options(radiant.functions = .)
 
 ## for report and code in menu R
-knitr::opts_knit$set(progress = TRUE)
+knitr::opts_knit$set(progress = TRUE )
 knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = FALSE,
   message = FALSE, warning = FALSE, error = TRUE,
   # screenshot.force = FALSE,
