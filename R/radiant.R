@@ -13,7 +13,7 @@ radiant.data <- function() {
 #' @export
 update_radiant_data <- function() {
   ## cleanup old session files
-  unlink("~/r_sessions/*.rds", force = TRUE)
+  unlink("~/radiant.sessions/*.rds", force = TRUE)
 
   ## avoid problems with loaded packages
   system(paste0(Sys.which("R"), " -e \"install.packages('radiant.data', repos = 'http://vnijs.github.io/radiant_miniCRAN/', type = 'binary')\""))
@@ -482,9 +482,15 @@ getclass <- function(dat) {
 #' @examples
 #' is_empty("")
 #' is_empty(NULL)
+#' is_empty(NA)
+#' is_empty(c())
+#' is_empty("none", empty = "none")
+#' is_empty("")
+#' is_empty("   ")
+#' is_empty(" something  ")
 #'
 #' @export
-is_empty <- function(x, empty = "") if (length(x) == 0 || is.na(x) || x == empty) TRUE else FALSE
+is_empty <- function(x, empty = "\\s*") if (is_not(x) || grepl(paste0("^",empty,"$"), x)) TRUE else FALSE
 
 #' Is input a string?
 #'
@@ -495,14 +501,13 @@ is_empty <- function(x, empty = "") if (length(x) == 0 || is.na(x) || x == empty
 #' @return TRUE if string, else FALSE
 #'
 #' @examples
-#' is_string("")
+#' is_string("   ")
 #' is_string("data")
 #' is_string(c("data","data"))
 #' is_string(NULL)
 #'
 #' @export
-is_string <- function(x)
-  if (is.character(x) && length(x) == 1 && !is_empty(x)) TRUE else FALSE
+is_string <- function(x) if (length(x) == 1 && is.character(x) && !is_empty(x)) TRUE else FALSE
 
 #' Create a vector of interaction terms
 #'
@@ -692,6 +697,7 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #' @param tbl Data.frame
 #' @param dec Number of decimal places
 #' @param perc Display numbers as percentages (TRUE or FALSE)
+#' @param mark Thousand separator
 #'
 #' @return Data.frame for printing
 #'
@@ -700,26 +706,40 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #'   dfprint(dec = 3)
 #'
 #' @export
-dfprint <- function(tbl, dec = 3, perc = FALSE) {
+dfprint <- function(tbl, dec = 3, perc = FALSE, mark = "") {
   if (perc) {
     tbl %<>% mutate_each(
       funs(if (is.numeric(.)) . * 100L else .)
     )
   }
 
-  frm <- if (perc) "f%%" else "f"
+  frm <- function(x) {
+    if (is.double(x)) {
+      nrprint(x, dec = dec, perc = perc, mark = mark)
+    } else if (is.integer(x)) {
+      nrprint(x, dec = 0, mark = mark)
+    } else {
+      x
+    }
+  }
+
+
+  # frm <- if (perc) "f%%" else "f"
   tbl %>%
   mutate_each(
-    funs(if (is.double(.)) sprintf(paste0("%.", dec ,frm), .) else .)
+    # funs(if (is.double(.)) sprintf(paste0("%.", dec ,frm), .) else .)
+    # funs(if (is.double(.)) nrprint(., dec = dec, perc = perc, mark = mark) else .)
+    funs(frm)
   )
 }
 
 #' Print a number with a specified number of decimal places, thousand sep, and a symbol
 #'
 #' @param x Number or vector
-#' @param dec Number of decimal places
 #' @param sym Symbol to use
+#' @param dec Number of decimal places
 #' @param perc Display number as a percentage
+#' @param mark Thousand separator
 #'
 #' @return Character (vector) in the desired format
 #'
@@ -732,12 +752,12 @@ dfprint <- function(tbl, dec = 3, perc = FALSE) {
 #' nrprint(data.frame(a = 1000), sym = "$", dec = 0)
 #'
 #' @export
-nrprint <- function(x, sym = "", dec = 2, perc = FALSE) {
+nrprint <- function(x, sym = "", dec = 2, perc = FALSE, mark = ",") {
   if ("data.frame" %in% class(x)) x <- x[[1]]
   if (perc)
-    paste0(sym, formatC(100 * x, digits = dec, big.mark = ",", format = "f"), "%")
+    paste0(sym, formatC(100 * x, digits = dec, big.mark = mark, format = "f"), "%")
   else
-    paste0(sym, formatC(x, digits = dec, big.mark = ",", format = "f"))
+    paste0(sym, formatC(x, digits = dec, big.mark = mark, format = "f"))
 }
 
 #' Round double in a data.frame to a specified number of decimal places
@@ -851,7 +871,8 @@ indexr <- function(dataset, vars = "", filt = "") {
 #' @examples
 #' is_not(NA)
 #' is_not(NULL)
+#' is_not(c())
 #'
 #' @export
-is_not <- function(x) is.null(x) || is.na(x)
+is_not <- function(x) length(x) == 0 || is.na(x)
 

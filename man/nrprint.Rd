@@ -4,7 +4,7 @@
 \alias{nrprint}
 \title{Print a number with a specified number of decimal places, thousand sep, and a symbol}
 \usage{
-nrprint(x, sym = "", dec = 2, perc = FALSE)
+nrprint(x, sym = "", dec = 2, perc = FALSE, mark = ",")
 }
 \arguments{
 \item{x}{Number or vector}
@@ -14,6 +14,8 @@ nrprint(x, sym = "", dec = 2, perc = FALSE)
 \item{dec}{Number of decimal places}
 
 \item{perc}{Display number as a percentage}
+
+\item{mark}{Thousand separator}
 }
 \value{
 Character (vector) in the desired format

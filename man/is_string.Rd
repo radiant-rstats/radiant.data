@@ -19,7 +19,7 @@ Is input a string?
 Is input a string
 }
 \examples{
-is_string("")
+is_string("   ")
 is_string("data")
 is_string(c("data","data"))
 is_string(NULL)

@@ -4,7 +4,7 @@
 \alias{dfprint}
 \title{Print a data.frame with a specified number of decimal places}
 \usage{
-dfprint(tbl, dec = 3, perc = FALSE)
+dfprint(tbl, dec = 3, perc = FALSE, mark = "")
 }
 \arguments{
 \item{tbl}{Data.frame}
@@ -12,6 +12,8 @@ dfprint(tbl, dec = 3, perc = FALSE)
 \item{dec}{Number of decimal places}
 
 \item{perc}{Display numbers as percentages (TRUE or FALSE)}
+
+\item{mark}{Thousand separator}
 }
 \value{
 Data.frame for printing

@@ -15,6 +15,7 @@ Convenience function for is.null or is.na
 \examples{
 is_not(NA)
 is_not(NULL)
+is_not(c())
 
 }
 

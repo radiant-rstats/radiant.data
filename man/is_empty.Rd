@@ -4,7 +4,7 @@
 \alias{is_empty}
 \title{Is a character variable defined}
 \usage{
-is_empty(x, empty = "")
+is_empty(x, empty = "\\\\s*")
 }
 \arguments{
 \item{x}{Character value to evaluate}
@@ -23,6 +23,12 @@ Is a variable NULL or an empty string
 \examples{
 is_empty("")
 is_empty(NULL)
+is_empty(NA)
+is_empty(c())
+is_empty("none", empty = "none")
+is_empty("")
+is_empty("   ")
+is_empty(" something  ")
 
 }
 
