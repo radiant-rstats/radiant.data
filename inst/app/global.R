@@ -59,7 +59,8 @@ knitr::opts_knit$set(progress = TRUE )
 knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = FALSE,
   message = FALSE, warning = FALSE, error = TRUE,
   # screenshot.force = FALSE,
-  fig.path = "~/r_figures/")
+  fig.path = tempdir())
+  # fig.path = "~/r_figures/")
 
 options(radiant.nav_ui =
   list(windowTitle = "Radiant", id = "nav_radiant", inverse = TRUE,
@@ -109,7 +110,7 @@ options(radiant.shared_ui =
 r_sessions <- new.env(parent = emptyenv())
 
 ## create directory to hold session files
-file.path(normalizePath("~"),"r_sessions") %>% {if (!file.exists(.)) dir.create(.)}
+file.path(normalizePath("~"),"radiant.sessions") %>% {if (!file.exists(.)) dir.create(.)}
 
 ## adding the figures path to avoid making a copy of all figures in www/figures
 addResourcePath("figures", file.path(getOption("radiant.path.data"), "app/tools/help/figures/"))

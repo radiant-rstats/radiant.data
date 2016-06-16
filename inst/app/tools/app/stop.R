@@ -24,7 +24,7 @@ stop_radiant <- function(rmd = FALSE) {
 
       if (!is_empty(input$rmd_report)) {
         rmd_report <-
-          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\nloadr('~/r_sessions/r_data.rda')\n```\n\n") %>%
+          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\nloadr('~/radiant.sessions/r_data.rda')\n```\n\n") %>%
           paste0(., input$rmd_report) %>% gsub("\\\\\\\\","\\\\",.) %>%
           cleanout(.)
         if (!rmd) {
@@ -47,7 +47,7 @@ stop_radiant <- function(rmd = FALSE) {
       message(stop_message)
 
       if (rstudioapi::isAvailable() && !is_empty(input$rmd_report) && rmd) {
-        path <- file.path(normalizePath("~"),"r_sessions")
+        path <- file.path(normalizePath("~"),"radiant.sessions")
         saver(get("r_data", envir = .GlobalEnv), file = file.path(path, "r_data.rda"))
         stopApp(rstudioapi::insertText(rmd_report))
       } else {
