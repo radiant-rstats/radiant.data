@@ -270,9 +270,6 @@ register_print_output <- function(fun_name, rfun_name,
     get(rfun_name)() %>%
       {if (is.character(.)) cat(.,"\n") else .} %>%
       rm(.)
-    # ret <- get(rfun_name)()
-    # if (is.character(ret)) cat(ret,"\n") else rm(ret)
-    # rm(ret)
   })
   return(invisible())
 }
