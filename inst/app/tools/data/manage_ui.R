@@ -30,11 +30,11 @@ output$ui_fileUpload <- renderUI({
 
 output$ui_clipboard_load <- renderUI({
   if (isTRUE(getOption("radiant.local"))) {
-    actionButton('loadClipData', 'Paste data')
+    actionButton("loadClipData", "Paste", icon = icon("upload"))
   } else {
     tagList(
       tags$textarea(class = "form-control", id = "load_cdata", rows = "5"),
-      actionButton('loadClipData', 'Paste data')
+      actionButton("loadClipData", "Paste", icon = icon("upload"))
     )
   }
 })
@@ -65,7 +65,15 @@ output$ui_from_global <- renderUI({
       size = min(5, length(df_list))),
     radioButtons('from_global_move', NULL, c("copy" = "copy", "move" = "move"), selected = "move", inline = TRUE),
     br(),
-    actionButton("from_global_load", "Load")
+    actionButton("from_global_load", "Load", icon = icon("upload"))
+  )
+})
+
+output$ui_to_global <- renderUI({
+  tagList(
+    radioButtons('to_global_move', NULL, c("copy" = "copy", "move" = "move"), selected = "move", inline = TRUE),
+    br(),
+    actionButton("to_global_save", "Save", icon = icon("download"))
   )
 })
 
@@ -85,26 +93,45 @@ observeEvent(input$from_global_load, {
   updateSelectInput(session, "dataType", selected = "rda")
 })
 
+observeEvent(input$to_global_save, {
+  df <- input$dataset; req(df)
+  assign(df, r_data[[df]], envir = .GlobalEnv)
+  if (input$to_global_move == "move" && length(r_data$datasetlist) > 1) {
+    r_data$datasetlist %<>% setdiff(df)
+    r_data[[paste0(df,"_descr")]] <- NULL
+  }
+  updateSelectInput(session, "dataset", label = "Datasets:",
+                    choices = r_data$datasetlist,
+                    selected = r_data$datasetlist[1])
+  updateSelectInput(session, "saveAs", selected = "rda")
+})
+
 output$ui_Manage <- renderUI({
+  data_types_in <- c("rda" = "rda", "rds" = "rds", "state" = "state", "csv" = "csv",
+                  "clipboard" = "clipboard", "from global workspace" = "from_global",
+                  "examples" = "examples", "rda (url)" = "url_rda",
+                  "csv (url)" = "url_csv")
+  data_types_out <- c("rda" = "rda", "rds" = "rds", "state" = "state", "csv" = "csv",
+                  "clipboard" = "clipboard", "to global workspace" = "to_global")
+  if (!isTRUE(getOption("radiant.local"))) {
+    data_types_in <- data_types_in[-which(data_types_in == "from_global")]
+    data_types_out <- data_types_out[-which(data_types_out == "to_global")]
+  }
+
   tagList(
     wellPanel(
-      selectInput("dataType", label = "Load data of type:",
-        c("rda" = "rda", "rds" = "rds", "state" = "state", "csv" = "csv",
-          "clipboard" = "clipboard", "from global" = "from_global",
-          "examples" = "examples", "rda (url)" = "url_rda",
-          "csv (url)" = "url_csv"),
-        selected = "rda"),
+      selectInput("dataType", label = "Load data of type:", data_types_in, selected = "rda"),
       conditionalPanel(condition = "input.dataType != 'clipboard' &&
                                     input.dataType != 'examples'",
         conditionalPanel("input.dataType == 'csv' | input.dataType == 'url_csv'",
           with(tags, table(td(checkboxInput('man_header', 'Header', TRUE)),
             td(HTML("&nbsp;&nbsp;")),
-            td(checkboxInput('man_str_as_factor', 'Str. as Factor', TRUE)))),
-          checkboxInput('man_read.csv', 'use read.csv', FALSE),
-          radioButtons('man_sep', "Separator:", c(Comma=',', Semicolon=';', Tab='\t'),
-                       ',', inline = TRUE),
-          radioButtons('man_dec', "Decimal:", c(Period='.', Comma=','),
-                       '.', inline = TRUE)
+            td(checkboxInput("man_str_as_factor", "Str. as Factor", TRUE)))),
+          checkboxInput("man_read.csv", "use read.csv", FALSE),
+          radioButtons("man_sep", "Separator:", c(Comma=",", Semicolon=";", Tab="\t"),
+                       ",", inline = TRUE),
+          radioButtons("man_dec", "Decimal:", c(Period=".", Comma=","),
+                       ".", inline = TRUE)
         ),
         uiOutput("ui_fileUpload")
       ),
@@ -115,38 +142,39 @@ output$ui_Manage <- renderUI({
         uiOutput("ui_from_global")
       ),
       conditionalPanel(condition = "input.dataType == 'examples'",
-        actionButton('loadExampleData', 'Load examples')
+        actionButton("loadExampleData", "Load examples", icon = icon("upload"))
       ),
       conditionalPanel(condition = "input.dataType == 'state'",
-        fileInput('uploadState', 'Load previous app state:',  accept = ".rda"),
+        fileInput("uploadState", "Load previous app state:",  accept = ".rda"),
         uiOutput("refreshOnUpload")
       )
     ),
     wellPanel(
-      selectInput("saveAs", label = "Save data:",
-                   c("rda" = "rda", "rds" = "rds", "csv" = "csv",
-                     "clipboard" = "clipboard", "state" = "state"),
-                   selected = "rda"),
+      selectInput("saveAs", label = "Save data to type:", data_types_out, selected = "rda"),
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
         uiOutput("ui_clipboard_save")
       ),
-      conditionalPanel(condition = "input.saveAs != 'clipboard' &&
-                                    input.saveAs != 'state'",
-        downloadButton('downloadData', 'Save')
-      ),
       conditionalPanel(condition = "input.saveAs == 'state'",
         HTML("<label>Save current app state:</label><br/>"),
-        downloadButton('saveState', 'Save')
+        downloadButton("saveState", "Save")
+      ),
+      conditionalPanel(condition = "input.saveAs == 'to_global'",
+        uiOutput("ui_to_global")
+      ),
+      conditionalPanel(condition = "input.saveAs != 'clipboard' &&
+                                    input.saveAs != 'state' &&
+                                    input.saveAs != 'to_global'",
+        downloadButton("downloadData", "Save")
       )
     ),
     wellPanel(
-      checkboxInput('man_show_remove', 'Remove data from memory', FALSE),
+      checkboxInput("man_show_remove", "Remove data from memory", FALSE),
       conditionalPanel(condition = "input.man_show_remove == true",
         uiOutput("uiRemoveDataset"),
-        actionButton('removeDataButton', 'Remove data')
+        actionButton("removeDataButton", "Remove data")
       )
     ),
-    help_modal('Manage','manage_help',inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/manage.md")))
+    help_modal("Manage","manage_help",inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/manage.md")))
   )
 })
 
@@ -160,7 +188,7 @@ observeEvent(input$updateDescr, {
 
 output$dataDescriptionHTML <- renderUI({
   r_data[[paste0(input$dataset,"_descr")]] %>%
-    descr_out('html') %>%
+    descr_out("html") %>%
     HTML
 })
 
@@ -169,7 +197,7 @@ output$dataDescriptionMD <- renderUI({
     "<label>Add data description:</label><br>" %>% HTML,
     tags$textarea(class="form-control", id="man_data_descr",
                   rows="15", style="width:650px;",
-                  descr_out(r_data[[paste0(input$dataset,"_descr")]], 'md'))
+                  descr_out(r_data[[paste0(input$dataset,"_descr")]], "md"))
   )
 })
 
@@ -186,7 +214,7 @@ observeEvent(input$removeDataButton, {
   # only remove datasets if 1 or more were selected - without this line
   # all files would be removed when the removeDataButton is pressed
   if (is.null(input$removeDataset)) return()
-  datasets <- r_data[['datasetlist']]
+  datasets <- r_data[["datasetlist"]]
   if (length(datasets) > 1) {  # have to leave at least one dataset
     removeDataset <- input$removeDataset
     if (length(datasets) == length(removeDataset))
@@ -197,7 +225,7 @@ observeEvent(input$removeDataButton, {
       r_data[[rem]] <- NULL
       r_data[[paste0(rem,"_descr")]] <- NULL
     }
-    r_data[['datasetlist']] <- datasets[-which(datasets %in% removeDataset)]
+    r_data[["datasetlist"]] <- datasets[-which(datasets %in% removeDataset)]
   }
 })
 
