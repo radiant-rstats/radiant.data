@@ -274,7 +274,7 @@ make_dt <- function(pvt,
   cn_nt <- if ("Total" %in% cn) cn[-which(cn == "Total")] else cn
 
   tot <- tail(tab,1)[-(1:length(cvars))]
-  tot <- ifelse (isTRUE(perc), sprintf(paste0("%.", dec ,"f%%"), tot * 100), round(tot,dec))
+  tot <- if (isTRUE(perc)) sprintf(paste0("%.", dec ,"f%%"), tot * 100) else round(tot,dec)
 
   if (length(cvars) == 1 && cvar == cvars) {
     sketch = shiny::withTags(table(
