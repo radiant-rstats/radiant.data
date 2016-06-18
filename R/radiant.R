@@ -876,3 +876,10 @@ indexr <- function(dataset, vars = "", filt = "") {
 #' @export
 is_not <- function(x) length(x) == 0 || is.na(x)
 
+#' Don't try to plot strings
+#'
+#' @param x A character returned from a function
+#' @param ... Any additional arguments
+#'
+#' @export
+plot.character <- function(x, ...) return(invisible())
