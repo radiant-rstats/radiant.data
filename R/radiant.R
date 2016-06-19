@@ -30,6 +30,14 @@ install_webshot <- function() {
   if (Sys.which("phantomjs") == "") eval(parse(text = "webshot::install_phantomjs()"))
 }
 
+#' Alias used to add an attribute (from github version of magrittr)
+#'
+#' @examples
+#' foo <- data.frame(price = 1:5) %>% set_attr("desc", "price set in experiment ...")
+#'
+#' @export
+set_attr <- `attr<-`
+
 #' Alias used to set the class for analysis function return
 #'
 #' @examples
@@ -37,6 +45,18 @@ install_webshot <- function() {
 #'
 #' @export
 set_class <- `class<-`
+
+#' Convenience function to add a class
+#'
+#' @param x Object
+#' @param cl Vector of class labels to add
+#'
+#' @examples
+#' foo <- "some text" %>% add_class("text")
+#' foo <- "some text" %>% add_class(c("text","another class"))
+#'
+#' @export
+add_class <- function(x, cl) set_class(x, c(cl, class(x)))
 
 #' Add stars '***' to a data.frame (from broom's `tidy` function) based on p.values
 #'
