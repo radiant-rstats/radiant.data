@@ -1,6 +1,6 @@
 #' Explore data
 #'
-#' @details See \url{http://vnijs.github.io/radiant/base/explore.html} for an example in Radiant
+#' @details See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param vars (Numerical) variables to summaries
@@ -169,11 +169,7 @@ explore <- function(dataset,
   if (!identical(tabsort, "")) {
     if (grepl(",", tabsort))
       tabsort <- strsplit(tabsort,",")[[1]] %>% gsub(" ", "", .)
-    tab[-nrow(tab),] %<>% arrange_(.dots = tabsort)
-
-    # isFct <- tab %>% getclass %>% {.[. == "factor"]} %>% names
-    # for (i in isFct)
-    #   tab[[i]] %<>% factor(., levels = unique(.))
+    tab %<>% arrange_(.dots = tabsort)
   }
 
   ## dat no longer needed
@@ -184,7 +180,7 @@ explore <- function(dataset,
 
 #' Summary method for the explore function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/base/explore.html} for an example in Radiant
+#' @details See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{explore}}
 #' @param top The variable (type) to display at the top of the table
@@ -219,14 +215,14 @@ summary.explore <- function(object, top = "fun", dec = 3, ...) {
   # cn_num <- cn_all[sapply(tab, is.numeric)]
   # tab[,cn_num] %<>% round(dec)
 
-  print(dfprint(tab, dec), row.names = FALSE)
+  print(formatdf(tab, dec), row.names = FALSE)
 
   invisible()
 }
 
 #' Flip the DT table to put Function, Variable, or Group by on top
 #'
-#' @details See \url{http://vnijs.github.io/radiant/base/explore.html} for an example in Radiant
+#' @details See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
 #' @param expl Return value from \code{\link{explore}}
 #' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by. "fun" is the default
@@ -256,7 +252,7 @@ flip <- function(expl, top = "fun") {
 
 #' Make a tabel of summary statistics in DT
 #'
-#' @details See \url{http://vnijs.github.io/radiant/base/explore.html} for an example in Radiant
+#' @details See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
 #' @param expl Return value from \code{\link{explore}}
 #' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by
