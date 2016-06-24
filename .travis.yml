@@ -1,0 +1,10 @@
+language: r
+warnings_are_errors: false
+sudo: required
+
+r_github_packages:
+  - jimhester/covr
+  - rstudio/DT
+  - rstudio/shiny
+  - rich-iannone/DiagrammeR
+  - fawda123/NeuralNetTools
