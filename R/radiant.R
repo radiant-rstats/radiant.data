@@ -9,19 +9,6 @@ radiant.data <- function() {
   runApp(system.file("app", package = "radiant.data"), launch.browser = TRUE)
 }
 
-#' Update Radiant
-#' @export
-update_radiant <- function() {
-  ## cleanup old session files
-  unlink("~/radiant.sessions/*.rds", force = TRUE)
-
-  ## avoid problems with loaded packages
-  system(paste0(Sys.which("R"), " -e \"update.packages(repos = 'http://radiant-rstats.github.io/minicran/', ask = FALSE, type = 'binary')\""))
-
-  ## Restarting Rstudio session from http://stackoverflow.com/a/25934774/1974918
-  ret <- .rs.restartR()
-}
-
 #' Install webshot and phantomjs
 #' @export
 install_webshot <- function() {
