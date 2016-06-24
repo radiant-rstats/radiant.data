@@ -1,6 +1,6 @@
 #' Create a pivot table using dplyr
 #'
-#' @details Create a pivot-table. See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radiant
+#' @details Create a pivot-table. See \url{http://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
 #' @param dataset Name of the dataframe to change
 #' @param cvars Categorical variables
@@ -171,7 +171,7 @@ pivotr <- function(dataset,
 
 #' Summary method for pivotr
 #'
-#' @details See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radiant
+#' @details See \url{http://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{pivotr}}
 #' @param perc Display numbers as percentages (TRUE or FALSE)
@@ -211,7 +211,7 @@ summary.pivotr <- function(object,
       cat("Function    :", object$fun, "\n")
     }
     cat("\n")
-    print(dfprint(object$tab, dec, perc), row.names = FALSE)
+    print(formatdf(object$tab, dec, perc), row.names = FALSE)
     cat("\n")
   }
 
@@ -227,7 +227,7 @@ summary.pivotr <- function(object,
     if (dec < 4)
       if (res$p.value < .001) res$p.value  <- "< .001"
     else
-      res$p.value  <- nrprint(res$p.value, dec = dec)
+      res$p.value  <- formatnr(res$p.value, dec = dec)
 
     l1 <- paste0("Chi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value, "\n")
     l2 <- paste0(sprintf("%.1f",100 * (sum(cst$expected < 5) / length(cst$expected))),"% of cells have expected values below 5")
@@ -237,7 +237,7 @@ summary.pivotr <- function(object,
 
 #' Make a pivot tabel in DT
 #'
-#' @details See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radiant
+#' @details See \url{http://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
 #' @param pvt Return value from \code{\link{pivotr}}
 #' @param format Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")
@@ -357,7 +357,7 @@ make_dt <- function(pvt,
 
 #' Plot method for the pivotr function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/base/pivotr} for an example in Radiant
+#' @details See \url{http://radiant-rstats.github.io/docs/data/pivotr} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{pivotr}}
 #' @param type Plot type to use ("fill" or "dodge" (default))

@@ -3,9 +3,9 @@ Description: Start Radiant - Data
 Binding: radiant.data
 Interactive: true
 
-Name: Update radiant.data
-Description: Update radiant.data to the latest version
-Binding: update_radiant_data
+Name: Update radiant
+Description: Update radiant to the latest version
+Binding: update_radiant
 Interactive: true
 
 Name: Webshot - Install

@@ -40,7 +40,7 @@ table.dataTable tfoot td, table.dataTable thead td {
 .modal-dialog {
   padding-top: 80px;
   padding-left: 80px;
-  width: 800px;
+  width: 850px;
   overflow-y: initial !important
 }
 
@@ -58,7 +58,7 @@ table.dataTable tfoot td, table.dataTable thead td {
 }
 
 img {
-  max-width: 100%;
+  max-width: 85% !important;
   height: auto;
 }
 

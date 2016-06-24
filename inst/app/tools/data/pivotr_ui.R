@@ -10,7 +10,6 @@ pvt_type <- c("Dodge" = "dodge","Fill" = "fill")
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
   vars <- groupable_vars()
-  # if (not_available(vars)) return("")
   req(available(vars))
 
   isolate({
@@ -23,13 +22,9 @@ output$ui_pvt_cvars <- renderUI({
         names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
       }
     }
-
-    ## keep the same n-variable 'active' if possible
-    # sel <- use_input("pvt_cvars", vars, "", fun = "state_multiple")
   })
 
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
-    # selected = state_multipl("pvt_cvars", vars, "", fun = "state_multiple"),
     selected = state_multiple("pvt_cvars", vars),
     multiple = TRUE,
     options = list(placeholder = 'Select categorical variables',
@@ -322,18 +317,21 @@ observeEvent(input$pivotr_report, {
 
   search <- input$pivotr_state$search$search
   if (is.null(search)) search <- ""
+  order <- input$pivotr_state$order[1]
+
   # r_state$pivotr_search_columns <<- rep("", ncol(pvt$tab))
   # searchCols <- lapply(input$pivotr_search_columns, function(x) list(search = x))
-  order <- input$pivotr_state$order[1]
   # if (all(is.null(order))) order <- "''"
+  # id <- sample(seq_len(1000000),1)
+  # xcmd <- paste0("#pvtab",id," <- make_dt(result, format = '", input$pvt_format,
+  #                "', perc = ", input$pvt_perc, ", dec = ", input$pvt_dec,
+  #                ", search = '", search,"', order = ", order,
+  #                # "', searchCols = ", searchCols, ", order = ", order,
+  #                ")\n#render(pvtab",id,")")
 
-  id <- sample(seq_len(1000000),1)
-  xcmd <- paste0("#pvtab",id," <- make_dt(result, format = '", input$pvt_format,
+  xcmd <- paste0("#render(make_dt(result, format = '", input$pvt_format,
                  "', perc = ", input$pvt_perc, ", dec = ", input$pvt_dec,
-                 ", search = '", search,"', order = ", order,
-                 # "', searchCols = ", searchCols, ", order = ", order,
-                 ")\n#DT::renderDataTable(pvtab",id,")")
-  # xcmd <- "
+                 ", search = '", search,"', order = ", order, "))")
 
   update_report(inp_main = c(clean_args(pvt_inputs(), pvt_args), tabsort = "", tabfilt = ""),
                 fun_name = "pivotr",

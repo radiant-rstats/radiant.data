@@ -31,7 +31,7 @@ pivotr(dataset, cvars = "", nvar = "None", fun = "mean_rm",
 Create a pivot table using dplyr
 }
 \details{
-Create a pivot-table. See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radiant
+Create a pivot-table. See \url{http://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 }
 \examples{
 result <- pivotr("diamonds", cvars = "cut")$tab

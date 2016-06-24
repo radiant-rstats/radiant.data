@@ -106,7 +106,10 @@ esc_slash <- function(x) gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2",x)
 getdeps <- function() {
   htmltools::attachDependencies(
     htmltools::tagList(),
-    c(htmlwidgets:::getDependency("DiagrammeR","DiagrammeR"))
+    c(
+      htmlwidgets:::getDependency("DiagrammeR","DiagrammeR"),
+      htmlwidgets:::getDependency("datatables","DT")
+    )
   )
 }
 
@@ -151,10 +154,21 @@ scrub <- . %>%
   gsub("&lt;!&ndash;/html_preserve&ndash;&gt;","",.)  ## knitr adds this
 
 ## cleanout widgets not needed outside shiny apps
-cleanout <- function(x) {
-  gsub("DiagrammeR::renderDiagrammeR", "", x) %>%
-  gsub("DT::renderDataTable", "", .)
-}
+# cleanout <- function(x) {
+#   gsub("%>%\\s*render\\(\\.\\)", "", x) %>%
+#   gsub("%>%\\s*render", "", .) %>%
+#   gsub("[^A-Za-z]render\\((.*)\\)", "\\1", .) %>%
+#   gsub("^render\\((.*)\\)", "\\1", .)
+# }
+# "test = render(lklklk)" %>% cleanout
+# "%>% render" %>% cleanout
+# "%>% render(.)" %>% cleanout
+# "render(lklklk)" %>% cleanout
+
+cleanout <- . %>%
+  gsub("DiagrammeR::renderDiagrammeR", "", .) %>%
+  gsub("DT::renderDataTable", "", .) %>%
+  gsub("render(", "(", ., fixed = TRUE)
 
 ## Based on http://stackoverflow.com/a/31797947/1974918
 knitItSave <- function(text) {

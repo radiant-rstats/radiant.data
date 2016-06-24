@@ -18,7 +18,7 @@ Radiant is a platform-independent browser-based interface for business analytics
 
 #### Explore
 
-Radiant is interactive. Results update immediately when inputs are changed (i.e., no separate dialog boxes) and/or when a button is pressed (e.g., `Estimate` in _Regression > Logistic regression (GLM)_). This greatly facilitates exploration and understanding of the data.
+Radiant is interactive. Results update immediately when inputs are changed (i.e., no separate dialog boxes) and/or when a button is pressed (e.g., `Estimate` in _Model > Logistic regression (GLM)_). This greatly facilitates exploration and understanding of the data.
 
 #### Cross-platform
 

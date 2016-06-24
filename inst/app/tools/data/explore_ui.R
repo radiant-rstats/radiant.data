@@ -223,26 +223,14 @@ output$expl_summary <- renderPrint({
 })
 
 observeEvent(input$explore_report, {
-  # if (input$expl_top != "fun")
-  #   inp_out <- list(list(top = input$expl_top))
-  # else
-  #   inp_out <- list("")
-
   search <- input$explorer_state$search$search
   if (is.null(search)) search <- ""
   # r_state$pivotr_search_columns <<- rep("", ncol(pvt$tab))
   # searchCols <- lapply(input$pivotr_search_columns, function(x) list(search = x))
   order <- input$explorer_state$order
   if (all(is_empty(order))) order <- "''"
-
-  id <- sample(seq_len(1000000),1)
-  xcmd <- paste0("#extab",id," <- make_expl(result, dec = ", input$expl_dec,
-                 ", search = '", search,
-                 "', order = ", order,
-                 # "', searchCols = ", searchCols,
-                 # ", order = ", order,
-                 ")\n#DT::renderDataTable(extab",id,")")
-  # xcmd <- ""
+  xcmd <- paste0("#render(make_expl(result, dec = ", input$expl_dec,
+                 ", search = '", search, "', order = ", order, "))")
 
   inp_out <- list(clean_args(expl_sum_inputs(), expl_sum_args[-1]))
   update_report(inp_main = c(clean_args(expl_inputs(), expl_args), tabsort = "", tabfilt = ""),

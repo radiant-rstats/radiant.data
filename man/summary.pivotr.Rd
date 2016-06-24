@@ -24,7 +24,7 @@
 Summary method for pivotr
 }
 \details{
-See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radiant
+See \url{http://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 }
 \examples{
 pivotr("diamonds", cvars = "cut") \%>\% summary

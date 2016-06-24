@@ -24,7 +24,7 @@ make_expl(expl, top = "fun", dec = 3, search = "", searchCols = NULL,
 Make a tabel of summary statistics in DT
 }
 \details{
-See \url{http://vnijs.github.io/radiant/base/explore.html} for an example in Radiant
+See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 }
 \examples{
 tab <- explore("diamonds", "price:x") \%>\% make_expl

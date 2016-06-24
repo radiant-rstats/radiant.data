@@ -23,7 +23,6 @@ output$ui_tr_normalizer <- renderUI({
 output$ui_tr_tab2dat <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
-  # if (length(vars) == 0) return(NULL)
   selectInput("tr_tab2dat", "Frequency variable:", c("None" = "none", vars),
               selected = "none")
 })
@@ -48,8 +47,6 @@ output$ui_tr_spread <- renderUI({
 })
 
 output$ui_tr_reorg_vars <- renderUI({
-  ## need a dependency to reset list of variables
-  # if (is_empty(input$tr_change_type)) return()
   req(input$tr_change_type)
   vars <- varnames()
   selectizeInput("tr_reorg_vars", "Reorder/remove variables:", choices  = vars,
@@ -59,8 +56,6 @@ output$ui_tr_reorg_vars <- renderUI({
 })
 
 output$ui_tr_reorg_levs <- renderUI({
-  ## need a dependency to reset levels
-  # if (is_empty(input$tr_change_type)) return()
   req(input$tr_change_type)
 	if (not_available(input$tr_vars)) return()
   fctCol <- input$tr_vars[1]
@@ -187,7 +182,7 @@ output$ui_Transform <- renderUI({
   tagList(wellPanel(
     checkboxInput("tr_hide", "Hide summaries", state_init("tr_hide", FALSE)),
     uiOutput("ui_tr_vars"),
-    selectizeInput("tr_change_type", "Transformation type:", trans_types, selected = "create"),
+    selectizeInput("tr_change_type", "Transformation type:", trans_types, selected = "type"),
     conditionalPanel(condition = "input.tr_change_type == 'type'",
 	    selectInput("tr_typefunction", "Change variable type:", type_options, selected = "none")
     ),
@@ -1015,7 +1010,7 @@ observeEvent(input$tr_store, {
   updateTextInput(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd,ncmd)))
 
 	## reset input values once the changes have been applied
-	updateSelectInput(session = session, inputId = "tr_change_type", selected = "create")
+	updateSelectInput(session = session, inputId = "tr_change_type", selected = NULL)
 	updateSelectInput(session = session, inputId = "dataset", select = dataset)
 })
 

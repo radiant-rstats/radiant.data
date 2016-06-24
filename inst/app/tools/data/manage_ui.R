@@ -15,14 +15,14 @@ output$ui_fileUpload <- renderUI({
     with(tags, table(
       tr(
         td(textInput("url_rda", NULL, "")),
-        td(actionButton("url_rda_load", "Load"), style = "padding-top:5px;")
+        td(actionButton("url_rda_load", "Load", icon = icon("upload")), style = "padding-top:5px;")
       )
     ))
   } else if (input$dataType == "url_csv") {
     with(tags, table(
       tr(
         td(textInput("url_csv", NULL, "")),
-        td(actionButton("url_csv_load", "Load"), style = "padding-top:5px;")
+        td(actionButton("url_csv_load", "Load", icon = icon("upload")), style = "padding-top:5px;")
       )
     ))
   }
@@ -30,18 +30,18 @@ output$ui_fileUpload <- renderUI({
 
 output$ui_clipboard_load <- renderUI({
   if (isTRUE(getOption("radiant.local"))) {
-    actionButton("loadClipData", "Paste", icon = icon("upload"))
+    actionButton("loadClipData", "Paste", icon = icon("paste"))
   } else {
     tagList(
       tags$textarea(class = "form-control", id = "load_cdata", rows = "5"),
-      actionButton("loadClipData", "Paste", icon = icon("upload"))
+      actionButton("loadClipData", "Paste", icon = icon("paste"))
     )
   }
 })
 
 output$ui_clipboard_save <- renderUI({
   if (isTRUE(getOption("radiant.local"))) {
-    actionButton('saveClipData', 'Copy data')
+    actionButton("saveClipData", "Copy data", icon = icon("copy"))
   } else {
     tagList(
       "<label>Add data description:</label><br>" %>% HTML,
@@ -142,7 +142,7 @@ output$ui_Manage <- renderUI({
         uiOutput("ui_from_global")
       ),
       conditionalPanel(condition = "input.dataType == 'examples'",
-        actionButton("loadExampleData", "Load examples", icon = icon("upload"))
+        actionButton("loadExampleData", "Load", icon = icon("upload"))
       ),
       conditionalPanel(condition = "input.dataType == 'state'",
         fileInput("uploadState", "Load previous app state:",  accept = ".rda"),

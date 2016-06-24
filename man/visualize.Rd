@@ -56,7 +56,7 @@ Generated plots
 Visualize data using ggplot2 \url{http://docs.ggplot2.org/current/}
 }
 \details{
-See \url{http://vnijs.github.io/radiant/base/visualize.html} for an example in Radiant
+See \url{http://radiant-rstats.github.io/docs/data/visualize.html} for an example in Radiant
 }
 \examples{
 visualize("diamonds", "carat", "price", type = "scatter", check = "loess")

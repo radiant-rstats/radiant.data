@@ -11,3 +11,7 @@ body {
   padding: 1em;
   line-height: 20px;
 }
+
+img {
+  max-width: 85% !important;
+}

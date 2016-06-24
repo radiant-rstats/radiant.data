@@ -49,16 +49,15 @@ output$ui_cmb_add <- renderUI({
     multiple = TRUE, size = min(5,length(vars)), selectize = FALSE)
 })
 
-cmb_type <- c("inner_join","left_join","right_join","full_join","semi_join",
-              "anti_join","bind_rows","bind_cols","intersect","union","setdiff")
+# cmb_type <- c("inner_join","left_join","right_join","full_join","semi_join",
+              # "anti_join","bind_rows","bind_cols","intersect","union","setdiff")
 
-# post nested renderui issue to github
-# isolate(input$cmb_type) return an empty string
-# output$ui_cmb_type <- renderUI({
-#   selectInput("cmb_type", "Combine type:", choices  = cmb_type,
-#     selected = state_single("cmb_type",cmb_type, "inner_join"),
-#     multiple = FALSE)
-# })
+cmb_type <- c("Inner join" = "inner_join", "Left join" = "left_join",
+              "Right join" = "right_join", "Full join" = "full_join",
+              "Semi join" = "semi_join", "Anti join" = "anti_join",
+              "Bind rows" = "bind_rows", "Bind columns" = "bind_cols",
+              "Intersect" = "intersect", "Union" = "union",
+              "Set difference" = "setdiff")
 
 output$ui_Combine <- renderUI({
   tagList(
