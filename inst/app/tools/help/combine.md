@@ -1,15 +1,12 @@
 > Combine two datasets
 
-There are six _join_ (or _merge_) options available in Radiant from the [dplyr](http://www.rdocumentation.org/packages/dplyr) package developed by Hadley Wickham and Romain Francois on [GitHub](https://github.com/hadley/dplyr).
+There are six _join_ (or _merge_) options available in Radiant from the [dplyr](http://www.rdocumentation.org/packages/dplyr) package developed by Hadley Wickham and Romain Francois.
 
-The examples below are adapted from [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html) by Jenny Bryan and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and other ways to combine datasets in R and Radiant. The data is also available in csv format through the links below:
+The examples below are adapted from the [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html) by [Jenny Bryan](http://www.stat.ubc.ca/~jenny/) and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and other ways to combine datasets in R and Radiant. The data are also available in csv format through the links below:
 
-<a href="https://github.com/vnijs/radiant/blob/gh-pages/examples/superheroes.csv" target = "_blank">superheroes.csv</a>
-
-<a href="https://github.com/vnijs/radiant/blob/gh-pages/examples/publishers.csv" target = "_blank">publishers.csv</a>
-
-<a href="https://github.com/vnijs/radiant/blob/gh-pages/examples/avengers.csv" target = "_blank">avengers.csv</a>
-
+* <a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/superheroes.csv" target = "_blank">superheroes.csv</a>
+* <a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/publishers.csv" target = "_blank">publishers.csv</a>
+* <a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/avengers.csv" target = "_blank">avengers.csv</a>
 
 <table class='table table-condensed table-hover' style='width:70%;'>
 <caption>Superheroes</caption>
@@ -93,7 +90,7 @@ The examples below are adapted from [Cheatsheet for dplyr join functions](http:/
 
 In the screen-shot of the _Data > Combine_ tab below we see the two datasets. The tables share the variable _publisher_ which is automatically selected for the join. Different join options are available from the `Combine type` dropdown. You can also specify a name for the combined dataset in the `Data name` text input box.
 
-![join](figures/join_superheroes_publishers.png)
+<p align="center"><img src="figures/join_superheroes_publishers.png"></p>
 
 <br>
 
@@ -161,7 +158,7 @@ If x = superheroes and y = publishers:
 
 In the table above we lose _Hellboy_ because, although this hero does appear in `superheroes`, the publisher (_Dark Horse Comics_) does not appear in `publishers`. The join result has all variables from `superheroes`, plus _yr\_founded_, from `publishers`. We can visualize an inner join with the venn-diagram below:
 
-![inner_join](figures/inner_join.png)
+<p align="center"><img src="figures/inner_join.png"></p>
 
 The R(adiant) commands are:
 
@@ -244,7 +241,7 @@ inner_join(superheroes, publishers, by = "publisher")
 
 The join result contains `superheroes` with variable `yr_founded` from `publishers`. _Hellboy_, whose publisher does not appear in `publishers`, has an `NA` for _yr_founded_. We can visualize a left join with the venn-diagram below:
 
-![left_join](figures/left_join.png)
+<p align="center"><img src="figures/left_join.png"></p>
 
 The R(adiant) commands are:
 
@@ -327,7 +324,7 @@ left_join(superheroes, publishers, by = "publisher")
 
 The join result contains all rows and columns from `publishers` and all variables from `superheroes`. We lose _Hellboy_, whose publisher does not appear in `publishers`. _Image_ is retained in the table but has `NA` values for the variables _name_, _alignment_, and _gender_ from `superheroes`. Notice that a join can change both the row and variable order so you should not rely on these in your analysis. We can visualize a right join with the venn-diagram below:
 
-![right_join](figures/right_join.png)
+<p align="center"><img src="figures/right_join.png"></p>
 
 The R(adiant) commands are:
 
@@ -417,7 +414,7 @@ right_join(superheroes, publishers, by = "publisher")
 
 In this table we keep _Hellboy_ (even though _Dark Horse Comics_ is not in `publishers`) and _Image_ (even though the publisher is not listed in `superheroes`) and get variables from both datasets. Observations without a match are assigned the value NA for variables from the _other_ dataset. We can visualize a full join with the venn-diagram below:
 
-![full_join](figures/full_join.png)
+<p align="center"><img src="figures/full_join.png"></p>
 
 The R(adiant) commands are:
 
@@ -519,7 +516,7 @@ semi_join(superheroes, publishers, by = "publisher")
 
 We now get **only** _Hellboy_, the only superhero not in `publishers` and we do not get the variable _yr\_founded_ either. We can visualize an anti join with the venn-diagram below:
 
-![anti_join](figures/anti_join.png)
+<p align="center"><img src="figures/anti_join.png"></p>
 
 <br>
 
@@ -527,7 +524,7 @@ We now get **only** _Hellboy_, the only superhero not in `publishers` and we do 
 
 Note that the order of the datasets selected may matter for a join. If we setup the _Data > Combine_ tab as below the results are as follows:
 
-![join order](figures/join_publishers_superheroes.png)
+<p align="center"><img src="figures/join_publishers_superheroes.png"></p>
 
 <br>
 
@@ -657,7 +654,7 @@ When two datasets have the same columns (or rows) there are additional ways in w
 
 In the screen-shot of the _Data > Combine_ tab below we see the two datasets. There is no need to select variables to combine the datasets here. Any variables in `Select variables` are ignored in the commands below. Again, you can specify a name for the combined dataset in the `Data name` text input box.
 
-![combine](figures/combine_avengers_superheroes.png)
+<p align="center"><img src="figures/combine_avengers_superheroes.png"></p>
 
 <br>
 
@@ -1187,11 +1184,11 @@ The R(adiant) commands are the same as shown above, except you will need to repl
 </tbody>
 </table>
 
-Finally, a `setdiff` will keep rows from `avengers` that are not in `superheroes`. If we reverse the inputs (i.e., choose `superheroes` from the `Datasets` dropdown and `superheroes` from the `Combine with` dropdown) we will end up with all rows from `superheroes` that are not in `avengers`. In both cases the entry for _Magneto_ will be omitted.
+Finally, a `setdiff` will keep rows from `avengers` that are _not_ in `superheroes`. If we reverse the inputs (i.e., choose `superheroes` from the `Datasets` dropdown and `superheroes` from the `Combine with` dropdown) we will end up with all rows from `superheroes` that are not in `avengers`. In both cases the entry for _Magneto_ will be omitted.
 
 The R(adiant) commands are the same as shown above, except you will need to replace `bind_rows` by `setdiff`.
 
 <br>
 
 --------
-For additional discussion see <http://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html>
+For additional discussion see the chapter on relational data in <a href="http://r4ds.had.co.nz/relational-data.html" target="_blank">R for data science</a>.

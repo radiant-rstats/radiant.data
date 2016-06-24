@@ -1,10 +1,10 @@
 > Run R-code
 
-The code feature allows you to enter and run R-code with access to all functions and data in Radiant. By clicking the `Run` button, the code will be evaluated and the output will be shown on the right of the R > Code page. To evaluate only a part of the code use the cursor to select a section and press CTRL-return (CMD-return on mac) to create the (partial) output.
+The code feature allows you to run R-code with access to all functions and data in Radiant. By clicking the `Run code` button, the code will be evaluated and the output will be shown on the right of the _R > Code_ page. To evaluate only a part of the code use the cursor to select a section and press CTRL-return (CMD-return on mac).
 
-You can load an R-code file into Radiant by clicking the `Choose File` button and selecting an .r or .R file or save the R-code shown in the editor by pressing the `Save` button.
+You can load an R-code file into Radiant by clicking the `Choose File` button and selecting an .r or .R file. If you started Radiant from Rstudio you can save a report in HTML, Word, or PDF format by selecting the desired format from the drop-down manu and clicking `Save`. To save just the code choose `R-code` from the dropdown and press the `Save` button.
 
-As an example you can copy-and-paste the text below into the editor and press `Run` to generate results.
+As an example you can copy-and-paste the code below into the editor and press `Run code` to generate results.
 
 <pre>## get the active dataset and show the first few observations
 .getdata() %>% head
@@ -32,5 +32,5 @@ help(package = 'radiant')
 ## for example, if you just transformed some variables in Data > Transform
 ## you can call the transform_main reacive to see the latest result
 ## this can very useful for debugging
-transform_main() %>% head
+# transform_main() %>% head
 </pre>
