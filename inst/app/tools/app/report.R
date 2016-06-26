@@ -6,11 +6,11 @@ rmd_manual <- c("Manual paste", "Auto paste")
 rmd_report_choices <- c("HTML","Rmd")
 if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user))) {
   rmd_manual <- c(rmd_manual, "To Rmd", "To R")
-  if (rstudioapi::isAvailable()) {
+  # if (rstudioapi::isAvailable()) {
     rmd_report_choices <- c("HTML","PDF","Word","Rmd")
-  } else {
+  # } else {
     rmd_report_choices <- c("HTML","Word","Rmd")
-  }
+  # }
 }
 
 # z <- system("which zip", intern = TRUE)
