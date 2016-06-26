@@ -275,7 +275,7 @@ output$saveReport <- downloadHandler(
             out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
               # PDF = rmarkdown::pdf_document(latex_engine="xelatex"), HTML = rmarkdown::html_document(),
               PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(),
-              Word = rmarkdown::word_document()))
+              Word = rmarkdown::word_document()
               # Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"),"app/www/style.docx"))
             ), envir = r_environment)
             file.rename(out, file)
