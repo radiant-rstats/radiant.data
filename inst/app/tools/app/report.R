@@ -9,7 +9,7 @@ if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.nul
   # if (rstudioapi::isAvailable()) {
     rmd_report_choices <- c("HTML","PDF","Word","Rmd")
   # } else {
-    rmd_report_choices <- c("HTML","Word","Rmd")
+    # rmd_report_choices <- c("HTML","Word","Rmd")
   # }
 }
 
