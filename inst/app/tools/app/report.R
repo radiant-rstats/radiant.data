@@ -270,10 +270,12 @@ output$saveReport <- downloadHandler(
           paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n\n", report) %>%
             cat(file = file, sep = "\n")
         } else {
+          ## on linux ensure you have you have pandoc > 1.14 installed
+          ## you may need to use http://pandoc.org/installing.html#installing-from-source
+          ## also check the logs to make sure its not complaining about missing files
           if (rstudioapi::isAvailable() || !isTRUE(local)) {
             cat(paste0("\n`r options(width = 250)`\n\n",report), file = "report.Rmd", sep = "\n")
             out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
-              # PDF = rmarkdown::pdf_document(latex_engine="xelatex"), HTML = rmarkdown::html_document(),
               PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(),
               Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"),"app/www/style.docx"))
             ), envir = r_environment)
