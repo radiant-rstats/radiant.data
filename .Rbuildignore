@@ -4,3 +4,4 @@ coverage.R
 cran-comments.md
 ^.*\.sublime-project$
 ^\.travis\.yml$
+^build$
