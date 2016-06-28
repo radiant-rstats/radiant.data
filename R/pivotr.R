@@ -16,6 +16,7 @@
 #' result <- pivotr("diamonds", cvars = "cut")$tab
 #' result <- pivotr("diamonds", cvars = c("cut","clarity","color"))$tab
 #' result <- pivotr("diamonds", cvars = "cut:clarity", nvar = "price")$tab
+#' result <- pivotr("diamonds", cvars = "cut", nvar = "price")$tab
 #' result <- pivotr("diamonds", cvars = "cut", normalize = "total")$tab
 #'
 #' @export
@@ -29,6 +30,17 @@ pivotr <- function(dataset,
                    data_filter = "",
                    shiny = FALSE) {
 
+  # dataset = "diamonds"
+  # # cvars = "cut"
+  # cvars = c("cut","clarity","color")
+  # nvar = "price"
+  # # nvar = "None"
+  # fun = "mean_rm"
+  # normalize = "None"
+  # tabfilt = ""
+  # tabsort = ""
+  # data_filter = ""
+  # shiny = FALSE
 
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   dat <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
@@ -67,20 +79,25 @@ pivotr <- function(dataset,
 
   dat[,cvars] <- select_(dat, .dots = cvars) %>% mutate_each(funs(empty_level(.)))
 
-  sel <- function(x, nvar) if (nvar == "n") x else select_(x, .dots = nvar)
+  sel <- function(x, nvar, cvar = c()) if (nvar == "n") x else select_(x, .dots = c(nvar,cvar))
   sfun <- function(x, nvar, cvars = "", fun = fun) {
-    if (nvar == "n")
+    if (nvar == "n") {
       if (all(cvars == "")) count_(x) else count_(x, cvars)
-    else
-      mutate_each_(x, "as.numeric", vars = nvar) %>%
-      summarise_each_(make_funs(fun), vars = nvar)
+    } else {
+      dat <-
+        mutate_each_(x, funs_("as.numeric"), vars = nvar) %>%
+        summarise_each_(make_funs(fun), vars = nvar)
+      colnames(dat)[ncol(dat)] <- nvar
+      dat
+    }
   }
 
   ## main tab
   tab <-
     dat %>%
     group_by_(.dots = cvars) %>%
-    sfun(nvar, cvars, fun)
+    sfun(nvar, cvars, fun) %>%
+    mutate_each_(funs(as.character), vars = cvars)
 
   ## total
   total <-
@@ -99,19 +116,21 @@ pivotr <- function(dataset,
     col_total <-
       dat %>%
       group_by_(.dots = cvars[1]) %>%
-      sel(nvar) %>%
-      sfun(nvar, cvars[1], fun)
+      sel(nvar,cvars[1]) %>%
+      sfun(nvar, cvars[1], fun) %>%
+      mutate_each_(funs(as.character), vars = cvars[1])
 
     row_total <-
       dat %>%
       group_by_(.dots = cvars[-1]) %>%
       sfun(nvar, cvars[-1], fun) %>%
       ungroup %>%
-      select_(Total = nvar) %>%
-      bind_rows(total %>% set_colnames("Total"))
+      select(ncol(.)) %>%
+      bind_rows(total) %>%
+      set_colnames("Total")
 
     ## creating cross tab
-    tab <- spread_(tab, cvars[1], nvar)
+    tab <- spread_(tab, cvars[1], nvar) %>% ungroup %>% mutate_each_(funs(as.character), vars = cvars[-1])
     tab <-
       bind_rows(
         tab,
@@ -124,7 +143,6 @@ pivotr <- function(dataset,
       rm(col_total, row_total)
   }
 
-  # tab %>% getclass
   ## resetting factor levels
   ind <- ifelse (length(cvars) > 1, -1, 1)
   levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
@@ -143,7 +161,7 @@ pivotr <- function(dataset,
       tab[,isNum] %<>% {. / select(., Total)[[1]]} #%>% round(dec)
   } else if (length(cvars) > 1 && normalize == "column") {
     tab[,isNum] %<>% apply(2, function(.) . / .[which(tab[,1] == "Total")]) # %>% round(dec)
-    ## mutate_each has issues for spaces in variable names
+    ## mutate_each has issues with spaces in variable names
     # tab[,isNum] %<>% mutate_each_(funs(h = . / .[which(tab[,1] == "Total")]), vars = colnames(.)) %>% round(3)
   }
 
@@ -153,13 +171,9 @@ pivotr <- function(dataset,
 
   ## sorting the table if desired
   if (!identical(tabsort, "")) {
-
     if (grepl(",", tabsort))
       tabsort <- strsplit(tabsort,",")[[1]] %>% gsub(" ", "", .)
     tab[-nrow(tab),] %<>% arrange_(.dots = tabsort)
-
-    # for (i in cvars)
-    #   tab[[i]] %<>% factor(., levels = unique(.))
   }
 
   if (!shiny) tab <- as.data.frame(tab, as.is = TRUE)

@@ -27,13 +27,6 @@ globalVariables(c("r_environment", "r_data", "r_state", ".", ".rs.restartR",
 #' @importFrom import from
 NULL
 
-#' Exporting the recode function from the car package
-#' @importFrom car recode
-#' @name recode
-#' @rdname recode
-#' @export
-NULL
-
 #' Exporting the tidy from broom
 #' @importFrom broom tidy
 #' @name tidy

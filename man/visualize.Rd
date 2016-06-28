@@ -62,8 +62,10 @@ See \url{http://radiant-rstats.github.io/docs/data/visualize.html} for an exampl
 visualize("diamonds", "carat", "price", type = "scatter", check = "loess")
 visualize("diamonds", "price:x", type = "hist")
 visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
-visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"), type = "bar",
-  fun = "median")
+visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
+  type = "bar", fun = "median")
+visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
+  type = "line", fun = "max")
 visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
   ggtitle("A scatterplot") + xlab("price in $")
 visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) \%>\%

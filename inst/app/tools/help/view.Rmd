@@ -10,7 +10,7 @@ There are several ways to select a subset of the data to view. The `Filter` box 
 
 It is also possible to filter using dates. For example, to select rows with dates before June 1st, 2014 enter `date < "2014-6-1"` into the filter box and press return.
 
-You can also use string matching to select rows. For example, type `grepl("ood", cut)` to select rows with `Good` or `Very good` cut. This search is case sensitive by default. For case insensitive search use `grepl("GOOD", cut, ignore.case = TRUE)`. Type your statement in the `Filter`  box and press return to see the result on screen or an error below the box if the expression is invalid.
+You can also use string matching to select rows. For example, type `grepl('ood', cut)` to select rows with `Good` or `Very good` cut. This search is case sensitive by default. For case insensitive search use `grepl("GOOD", cut, ignore.case = TRUE)`. Type your statement in the `Filter`  box and press return to see the result on screen or an error below the box if the expression is invalid.
 
 It is important to note that these filters are _persistent_ and will be applied to any analysis conducted through in Radiant. To deactivate a filter un-check the `Filter` check-box. To remove a filter simply delete it.
 

@@ -4,14 +4,14 @@
 
 All transformations applied in the _Data > Transform_ tab can be logged. If, for example, you apply a `log` transformation to numeric variables the following code is generated and put in the `Transform command log` window at the bottom of your screen when you click the `Store` button.
 
-<pre>
+```r
 ## transform variable
-r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log", price, carat)
-</pre>
+r_data[['diamonds']] <- mutate_each(r_data[['diamonds']], funs(log), ext = '_log', price, carat)
+```
 
 This is an important feature if you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to transform the data and to generate results, i.e., your work is now reproducible.
 
-To add commands contained in the command log window to a report in <a href="/docs/data/report.html" target="_blank">_R Report_</a> click the <i title='Report results' class='fa fa-edit'></i> icon.
+To add commands contained in the command log window to a report in <a href="/docs/data/report.html" target="_blank">_R Report_</a> click the <i title="report results" class="fa fa-edit"></i> icon.
 
 ### Filter
 
@@ -26,7 +26,7 @@ For larger datasets, or when summaries are not needed, it can useful to click `H
 
 #### Bin
 
-The `Bin` command is a convenience function for the `xtile` command discussed below when you want to create multiple quitile/decile/... variables. To calculate quintiles enter "5" as the `Nr bins`. The `reverse` option replaces 1 by 5, 2 by 4, ..., 5 by 1. Choose an appropriate extension for the new variable(s).
+The `Bin` command is a convenience function for the `xtile` command discussed below when you want to create multiple quitile/decile/... variables. To calculate quintiles enter `5` as the `Nr bins`. The `reverse` option replaces 1 by 5, 2 by 4, ..., 5 by 1. Choose an appropriate extension for the new variable(s).
 
 #### Change type
 
@@ -54,31 +54,45 @@ Choose `Normalize` from the `Transformation type` drop-down to standardize one o
 
 To use the recode feature select the variable you want to change and choose `Recode` from the `Transformation type` drop-down. Provide one or more recode commands, separated by a `;`, and press return to see information about the changed variable. Note that you can specify a name for the recoded variable in the `Recoded variable name` input box (press return to submit changes). Finally, click `Store` to add the recoded variable to the data. Some examples are given below.
 
-1. Set values below 20 to 'Low' and all others to 'High'
+1. Set values below 20 to `Low` and all others to `High`
 
-	lo:20 = 'Low'; else = 'High'
+```r
+lo:20 = 'Low'; else = 'High'
+```
 
-2. Set above 20 to 'High' and all others to 'Low'
+2. Set above 20 to `High` and all others to `Low`
 
-	20:hi = 'High'; else = 'Low'
+```r
+20:hi = 'High'; else = 'Low'
+```
 
-2. Set values 1 through 12 to 'A', 13:24 to 'B', and the remainder to 'C'
+2. Set values 1 through 12 to `A`, 13:24 to `B`, and the remainder to `C`
 
-	1:12 = 'A'; 13:24 = 'B'; else = 'C'
+```r
+1:12 = 'A'; 13:24 = 'B'; else = 'C'
+```
 
-3. Collapse age categories for a <a href="/docs/basics/cross_tabs.html" target="_blank">_Basics > Cross-tabs_</a>cross-tab analysis. In the example below '<25' and '25-34' are recoded to '<35', '35-44' and '35-44' are recoded to '35-54', and '55-64' and '>64' are recoded to '>54'
+3. Collapse age categories for a <a href="/docs/basics/cross_tabs.html" target="_blank">_Basics > Tables > Cross-tabs_</a> cross-tab analysis. In the example below `<25` and `25-34` are recoded to `<35`, `35-44` and `35-44` are recoded to `35-54`, and `55-64` and `>64` are recoded to `>54`
 
-	'<25' = '<35'; '25-34' = '<35'; '35-44' = '35-54'; '45-54' = '35-54'; '55-64' = '>54'; '>64' = '>54'
+
+```r
+'<25' = '<35'; '25-34' = '<35'; '35-44' = '35-54'; '45-54' = '35-54'; '55-64' = '>54'; '>64' = '>54'
+```
 
 4. To exclude a particular value (e.g., an outlier in the data) for subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we would (1) select the variable `sales` in the `Select variable(s)` box and enter the command below in the `Recode` box. Press `return` and `Store` to add the recoded variable to the data
 
-	400 = NA
+
+```r
+400 = NA
+```
 
 5. To recode specific numeric values (e.g., carat) to a new value (1) select the variable `carat` in the `Select variable(s)` box and enter the command below in the `Recode` box to set the value for carat to 2 in all rows where carat is currently larger than or equal to 2. Press `return` and `Store` to add the recoded variable to the data
 
-	2:hi = 2
+```r
+2:hi = 2
+```
 
-**Note:** Do not use `=` in a variable label when using the recode function (e.g., 50:hi = '>= 50') as this will cause an error.
+**Note:** Do not use `=` in a variable label when using the recode function (e.g., `50:hi = '>= 50'`) as this will cause an error.
 
 #### Reorder or remove levels
 
@@ -94,7 +108,7 @@ Choose `Replace` from the `Transformation type` drop-down if you want to replace
 
 #### Transform
 
-When you select `Transform` from the `Transformation type` drop-down another drop-down menu is shown you can use to apply common transformations to one or more variables in the data. For example, to take the (natural) log of a variable select the variable(s) you want to transform and choose `Ln (natural log)` from the `Apply function` drop-down. The transformed variable will have the extension specified in the 'Variable name extension` input (e.g,. `_ln`). Make sure to press `return` after changing the extension. Click the `Store` button to add the (changed) variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
+When you select `Transform` from the `Transformation type` drop-down another drop-down menu is shown you can use to apply common transformations to one or more variables in the data. For example, to take the (natural) log of a variable select the variable(s) you want to transform and choose `Ln (natural log)` from the `Apply function` drop-down. The transformed variable will have the extension specified in the `Variable name extension` input (e.g,. `_ln`). Make sure to press `return` after changing the extension. Click the `Store` button to add the (changed) variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
 
 1. Ln: create a natural log-transformed version of the selected variable (i.e., log(x) or ln(x))
 2. Square: multiply a variable by itself (i.e., x^2 or square(x))
@@ -120,71 +134,105 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
 1. Create a new variable `z` that is equal to the mean of price. To calculate the mean of price per group (e.g., per level of clarity) select `clarity` from the `Select variables` list before creating `z`
 
-	z = mean(price)
+```r
+z = mean(price)
+```
 
 2. Create a new variable `z` that is the difference between variables x and y
 
-	z = x - y
+```r
+z = x - y
+```
 
 3. Create a new variable `z` that is a transformation of variable `x` with mean equal to zero (see also `Transform > Center`):
 
-	z = x - mean(x)
+```r
+z = x - mean(x)
+```
 
 4. Create a new _logical) variable `z` that takes on the value TRUE when `x > y` and FALSE otherwise
 
-	z = x > y
+```r
+z = x > y
+```
 
 5. Create a new _logical_ `z` that takes on the value TRUE when `x` is equal to `y` and FALSE otherwise
 
-	z = x == y
+```r
+z = x == y
+```
 
 6. Create a variable `z` that is equal to `x` lagged by 3 periods
 
-	z = lag(x,3)
+```r
+z = lag(x,3)
+```
 
-7. Create a categorical variable with two levels (i.e., 'smaller' and 'bigger')
+7. Create a categorical variable with two levels (i.e., `smaller` and `bigger`)
 
-	z = ifelse(x < y, 'smaller', 'bigger')
+```r
+z = ifelse(x < y, 'smaller', 'bigger')
+```
 
 8. Create a categorical variable with three levels. An alternative approach would be to use the `Recode` function described below
 
-	z = ifelse(x < 60, '< 60', ifelse(x > 65, '> 65', '60-65'))
+```r
+z = ifelse(x < 60, '< 60', ifelse(x > 65, '> 65', '60-65'))
+```
 
 9. Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we could use an `ifelse` statement and enter the command below in the `Create` box. Press `return` and `Store` to add the `sales_rc` to the data. Note that if we had entered `sales` on the left-hand side of the `=` sign the original variable would have been overwritten
 
-	sales_rc = ifelse(sales > 400, NA, sales)
+```r
+sales_rc = ifelse(sales > 400, NA, sales)
+```
 
 10. If a respondent with ID 3 provided information on the wrong scale in a survey (e.g., income in \$1s rather than in \$1000s) we could use an `ifelse` statement and enter the command below in the `Create` box. As before, press `return` and `Store` to add `sales_rc` to the data
 
-	income_rc = ifelse(ID == 3, income/1000, income)
+```r
+income_rc = ifelse(ID == 3, income/1000, income)
+```
 
 11. If multiple respondents made the same scaling mistake (e.g., those with ID 1, 3, and 15) we again use `Create` and enter:
 
-	income_rc = ifelse(ID %in% c(1, 3, 15), income/1000, income)
+```r
+income_rc = ifelse(ID %in% c(1, 3, 15), income/1000, income)
+```
 
-12. If a date variable is in a format not available through the `Type` menu you can use the `parse_date_time` function. For a date formated as "2-1-14" you would specify the command below (note that this format will also be parsed correctly by the `mdy` function in the `Type` menu)
+12. If a date variable is in a format not available through the `Type` menu you can use the `parse_date_time` function. For a date formated as `2-1-14` you would specify the command below (note that this format will also be parsed correctly by the `mdy` function in the `Type` menu)
 
-	date = parse\_date\_time(x, "%m%d%y")
+```r
+date = parse_date_time(x, '%m%d%y')
+```
 
 13. Determine the time difference between two dates/times in seconds
 
-	tdiff = as\_duration(time2 - time1)
+```r
+tdiff = as_duration(time2 - time1)
+```
 
 14. Extract the month from a date variable
 
-	m = month(date)
+```r
+m = month(date)
+```
 
 15. Other attributes that can be extracted from a date or date-time variable are `minute`, `hour`, `day`, `week`, `quarter`, `year`, `wday` (for weekday). For `wday` and `month` it can be convenient to add `label = TRUE` to the call. For example, to extract the weekday from a date variable and use a label rather than a number
 
-	wd = wday(date, label = TRUE)
+```r
+wd = wday(date, label = TRUE)
+```
 
 16. Calculate the distance between two locations using lat-long information
 
-	dist = as_distance(lat1, long1, lat2, long2)
+```r
+dist = as_distance(lat1, long1, lat2, long2)
+```
 
 17. Calculate quintiles for a variable `recency` by using the `xtile` command. To create deciles replace `5` by `10`.
 
-	rec\_iq = xtile(recency, 5)
+```r
+rec_iq = xtile(recency, 5)
+```
 
 Note: For examples 7, 8, and 15 above you may need to change the new variable to type `factor` before using it for further analysis (see also `Type` above)
 
@@ -202,7 +250,7 @@ Choose `Reorder/Remove variables` from the `Transformation type` drop-down. Drag
 
 #### Remove duplicates
 
-It is common to have one or more variables in a dataset that **should** have only unique values (i.e., no duplicates). Customers id's, for example, should be unique unless the dataset contains multiple orders for the same customer. To remove duplicates select one or more variables to determine _uniqueness_. Choose `Remove duplicates` from the `Transformation type` drop-down and check how the summary statistics change. Press `Store` to change the data. If there are duplicate rows you will see the number of observations in the data summary change (i.e., the value of _n_ and _n\_distinct_ will change).
+It is common to have one or more variables in a dataset that **should** have only unique values (i.e., no duplicates). Customers IDs, for example, should be unique unless the dataset contains multiple orders for the same customer. To remove duplicates select one or more variables to determine _uniqueness_. Choose `Remove duplicates` from the `Transformation type` drop-down and check how the summary statistics change. Press `Store` to change the data. If there are duplicate rows you will see the number of observations in the data summary change (i.e., the value of _n_ and _n\_distinct_ will change).
 
 #### Show duplicates
 
@@ -225,11 +273,11 @@ Turn a frequency table into a dataset. The number of rows will equal the sum of 
 
 #### Holdout sample
 
-To create a holdout sample based on a filter, select `Holdout sample` from the `Transformation type` dropdown. By default the _opposite_ of the active filter is used. For example, if analysis is conducted on observations with `date < "2014-12-13"` then the holdout sample will contain rows with `date >= "2014-12-13"` if the `Reverse filter` box is checked.
+To create a holdout sample based on a filter, select `Holdout sample` from the `Transformation type` dropdown. By default the _opposite_ of the active filter is used. For example, if analysis is conducted on observations with `date < '2014-12-13'` then the holdout sample will contain rows with `date >= '2014-12-13'` if the `Reverse filter` box is checked.
 
 #### Training variable
 
-To create a variable that can be used to (randomly) filter a dataset for training and validation, select `Training variable` from the `Transformation type` dropdown. Specify either the number of observations to use for training (e.g., set `Size` to 2000) or a proportion of observations to select (e.g., set `Size` to .7). The new variable will have a value "1" for training and "0" holdout.
+To create a variable that can be used to (randomly) filter a dataset for training and validation, select `Training variable` from the `Transformation type` dropdown. Specify either the number of observations to use for training (e.g., set `Size` to 2000) or a proportion of observations to select (e.g., set `Size` to .7). The new variable will have a value `1` for training and `0` holdout.
 
 
 ### Tidy data

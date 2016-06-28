@@ -6,7 +6,7 @@ You can load an R-code file into Radiant by clicking the `Choose File` button an
 
 As an example you can copy-and-paste the code below into the editor and press `Run code` to generate results.
 
-<pre>## get the active dataset and show the first few observations
+```r## get the active dataset and show the first few observations
 .getdata() %>% head
 
 ## access a specific dataset by name
@@ -33,4 +33,4 @@ help(package = 'radiant')
 ## you can call the transform_main reacive to see the latest result
 ## this can very useful for debugging
 # transform_main() %>% head
-</pre>
+```

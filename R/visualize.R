@@ -28,8 +28,10 @@
 #' visualize("diamonds", "carat", "price", type = "scatter", check = "loess")
 #' visualize("diamonds", "price:x", type = "hist")
 #' visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
-#' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"), type = "bar",
-#'   fun = "median")
+#' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
+#'   type = "bar", fun = "median")
+#' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
+#'   type = "line", fun = "max")
 #' visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
 #'   ggtitle("A scatterplot") + xlab("price in $")
 #' visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) %>%
@@ -55,6 +57,27 @@ visualize <- function(dataset, xvar,
                       data_filter = "",
                       shiny = FALSE,
                       custom = FALSE) {
+
+  # dataset = "diamonds"
+  # yvar = "price"
+  # xvar = "cut"
+  # type <- "bar"
+  # comby = FALSE
+  # combx = FALSE
+  # type = "hist"
+  # facet_row = "."
+  # facet_col = "."
+  # color = "none"
+  # fill = "none"
+  # bins = 10
+  # smooth = 1
+  # fun = "mean"
+  # check = ""
+  # axes = ""
+  # alpha = .5
+  # data_filter = ""
+  # shiny = FALSE
+  # custom = FALSE
 
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- xvar
@@ -133,7 +156,6 @@ visualize <- function(dataset, xvar,
   }
 
   ## 1 of first level of factor, else 0
-  # if (type %in% c("bar","scatter")) {
   if (type == "bar") {
     isFctY <- "factor" == dc & names(dc) %in% yvar
     if (sum(isFctY)) {
@@ -218,7 +240,6 @@ visualize <- function(dataset, xvar,
         hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% {diff(.)/bins}
       }
 
-      # plot_list[[i]] <- plot_list[[i]] + do.call(geom_histogram, hist_par)
       plot_list[[i]] <- plot_list[[i]] + do.call(plot_fun, hist_par)
       if ("log_x" %in% axes) plot_list[[i]] <- plot_list[[i]] + xlab(paste("log", i))
     }
@@ -288,20 +309,20 @@ visualize <- function(dataset, xvar,
       for (j in yvar) {
         flab <- ""
         if (color == 'none') {
-          # if ("factor" %in% dc[i]) {
           if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
-            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(make_funs(fun))
+            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(tbv, j) %>% summarise_each(make_funs(fun))
+            colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j)) + geom_line(aes(group = 1))
             if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point()
           } else {
             plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line()
           }
         } else {
-          # if ("factor" %in% dc[i]) {
           if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
-            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j, color) %>% summarise_each(make_funs(fun))
+            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(tbv, j, color) %>% summarise_each(make_funs(fun))
+            colnames(tmp)[ncol(tmp)-1] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color, group = color)) + geom_line()
             if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point()
           } else {
@@ -310,7 +331,6 @@ visualize <- function(dataset, xvar,
         }
         if ("log_x" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + xlab(paste("log", i))
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
-        # if ("factor" %in% dc[i]) plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
         if (dc[i] %in% c("factor","date")) plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
 
         itt <- itt + 1
@@ -319,13 +339,13 @@ visualize <- function(dataset, xvar,
   } else if (type == "bar") {
     itt <- 1
     for (i in xvar) {
-      if (!"factor" %in% dc[i]) dat[[i]] %<>% as_factor
 
+      if (!"factor" %in% dc[i]) dat[[i]] %<>% as_factor
       if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       for (j in yvar) {
         tbv <- if (is.null(byvar)) i else c(i, byvar)
-        tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(make_funs(fun))
-
+        tmp <- dat %>% group_by_(.dots = tbv) %>% select_(tbv, j) %>% summarise_each(make_funs(fun))
+        colnames(tmp)[ncol(tmp)] <- j
 
         if ("sort" %in% axes && facet_row == "." && facet_col == ".") {
           tmp <- arrange_(ungroup(tmp), j)

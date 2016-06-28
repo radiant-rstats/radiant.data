@@ -37,6 +37,7 @@ Create a pivot-table. See \url{http://radiant-rstats.github.io/docs/data/pivotr.
 result <- pivotr("diamonds", cvars = "cut")$tab
 result <- pivotr("diamonds", cvars = c("cut","clarity","color"))$tab
 result <- pivotr("diamonds", cvars = "cut:clarity", nvar = "price")$tab
+result <- pivotr("diamonds", cvars = "cut", nvar = "price")$tab
 result <- pivotr("diamonds", cvars = "cut", normalize = "total")$tab
 
 }
