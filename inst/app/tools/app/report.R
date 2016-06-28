@@ -14,7 +14,7 @@ if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.nul
 }
 
 # z <- system("which zip", intern = TRUE)
-if (Sys.getenv("R_ZIPCMD") != "")
+#if (Sys.getenv("R_ZIPCMD") != "")
   rmd_report_choices %<>% c(.,"Rmd & Data (zip)")
 
 rmd_example <- "## Sample report
