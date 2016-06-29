@@ -71,6 +71,10 @@ visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter"
 visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) \%>\%
   {.[[1]] + ggtitle("A histogram") + xlab("price in $")}
 diamonds \%>\% visualize(c("price","carat","depth"), type = "density")
+visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "bar",
+  facet_row = "cut", fill = "cut", custom = FALSE)
+visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "line",
+  facet_row = "cut", color = "cut", custom = FALSE)
 
 }
 

@@ -37,6 +37,10 @@
 #' visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) %>%
 #'   {.[[1]] + ggtitle("A histogram") + xlab("price in $")}
 #' diamonds %>% visualize(c("price","carat","depth"), type = "density")
+#' visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "bar",
+#'   facet_row = "cut", fill = "cut", custom = FALSE)
+#' visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "line",
+#'   facet_row = "cut", color = "cut", custom = FALSE)
 #'
 #' @export
 visualize <- function(dataset, xvar,
@@ -58,17 +62,19 @@ visualize <- function(dataset, xvar,
                       shiny = FALSE,
                       custom = FALSE) {
 
+  # library(radiant.data)
   # dataset = "diamonds"
   # yvar = "price"
   # xvar = "cut"
-  # type <- "bar"
+  # # type <- "bar"
+  # type <- "line"
   # comby = FALSE
   # combx = FALSE
-  # type = "hist"
+  # # type = "hist"
   # facet_row = "."
   # facet_col = "."
-  # color = "none"
-  # fill = "none"
+  # color = "cut"
+  # fill = "cut"
   # bins = 10
   # smooth = 1
   # fun = "mean"
@@ -320,9 +326,9 @@ visualize <- function(dataset, xvar,
           }
         } else {
           if (dc[i] %in% c("factor","date")) {
-            tbv <- if (is.null(byvar)) i else c(i, byvar)
-            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(tbv, j, color) %>% summarise_each(make_funs(fun))
-            colnames(tmp)[ncol(tmp)-1] <- j
+            tbv <- if (is.null(byvar)) i else unique(c(i, byvar))
+            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(tbv, color, j) %>% summarise_each(make_funs(fun))
+            colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color, group = color)) + geom_line()
             if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point()
           } else {
@@ -424,8 +430,8 @@ visualize <- function(dataset, xvar,
       plot_list[[i]] <- plot_list[[i]] + coord_flip()
   }
 
- if (custom)
-   if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
+  if (custom)
+    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
  sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list), 2)))) ) %>%
    { if (shiny) . else print(.) }

@@ -683,7 +683,6 @@ inp_vars <- function(inp, rval = "")
 transform_main <- reactive({
 
   req(input$tr_change_type)
-	# if (is.null(input$tr_change_type)) return()
 
   if (not_available(input$tr_vars)) {
     if (input$tr_change_type == "none") {

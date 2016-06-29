@@ -570,7 +570,7 @@ does_vary <- function(x) {
     FALSE
   } else {
     if (is.factor(x) || is.character(x)) {
-      n_distinct(x, na_rm = TRUE) > 1
+      n_distinct(x, na.rm = TRUE) > 1
     } else {
       abs(max_rm(x) - min_rm(x)) > .Machine$double.eps^0.5
     }
