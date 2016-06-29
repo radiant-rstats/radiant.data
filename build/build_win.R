@@ -1,3 +1,3 @@
 ## build for windows
-devtools::install("~/gh/radiant.data")
-devtools::build("~/gh/radiant.data", binary = TRUE)
+devtools::install("../radiant.data")
+devtools::build("../radiant.data", binary = TRUE)
