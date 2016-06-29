@@ -242,7 +242,7 @@ output$downloadData <- downloadHandler(
     ext <- input$saveAs
 
     if (ext == 'csv') {
-      write_csv(.getdata_transform(), file)
+      readr::write_csv(.getdata_transform(), file)
     } else {
 
       robj <- input$dataset
