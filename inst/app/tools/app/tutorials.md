@@ -3,7 +3,7 @@
 
 ## Introduction to Radiant
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/kFVxcpdoKi8" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/7L3hDpLw53I" frameborder="0" allowfullscreen></iframe>
 
 ## Installing Radiant
 
@@ -29,19 +29,19 @@ For a step-by-step tutorial see the `Install Radiant on Windows` or `Install Rad
 
 ## Starting and stopping
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/P7MCwnjdYjc" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/rNPnnqJhmD4" frameborder="0" allowfullscreen></iframe>
 
 ## Getting help
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/G4lHfWDnJSQ" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/9qAQio9Hb7k" frameborder="0" allowfullscreen></iframe>
 
 ## Getting data in and out
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/DdzKqcGxz14" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/PuoMc1x4MD8" frameborder="0" allowfullscreen></iframe>
 
 ## Fast and efficient analysis
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/UClNhiXJqFM" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/wtHIz-umoME" frameborder="0" allowfullscreen></iframe>
 
 ## Reproducible analysis
 
