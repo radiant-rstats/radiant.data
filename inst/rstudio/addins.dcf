@@ -2,8 +2,3 @@ Name: Radiant - Data
 Description: Start Radiant - Data
 Binding: radiant.data
 Interactive: true
-
-Name: Webshot - Install
-Description: Install Webshot
-Binding: install_webshot
-Interactive: true
