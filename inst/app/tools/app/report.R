@@ -13,9 +13,8 @@ if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.nul
   # }
 }
 
-# z <- system("which zip", intern = TRUE)
 #if (Sys.getenv("R_ZIPCMD") != "")
-  rmd_report_choices %<>% c(.,"Rmd & Data (zip)")
+rmd_report_choices %<>% c(.,"Rmd & Data (zip)")
 
 rmd_example <- "## Sample report
 
@@ -215,11 +214,12 @@ knitItSave <- function(text) {
 
 ## Knit for report in Radiant
 knitIt <- function(text) {
-  ## fragment now also available with rmarkdown
+  ## fragment also available with rmarkdown
   ## http://rmarkdown.rstudio.com/html_fragment_format.html
   md <- knitr::knit(text = paste0("\n`r options(width = 250)`\n",text), envir = r_environment)
   paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
-        "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
+        # "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
+        paste0("<script type='text/javascript' src='", getOption("radiant.mathjax.path"),"/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
         "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
 }
 
@@ -265,7 +265,19 @@ output$saveReport <- downloadHandler(
           save(r_data, file = "r_data.rda")
           paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(radiant)))\nload(\"r_data.rda\")\n```\n\n", report) %>%
             cat(file = "report.Rmd", sep = "\n")
-          zip(file, c("report.Rmd", "r_data.rda"))
+
+          zip_util = Sys.getenv("R_ZIPCMD", "zip")
+          os_type <- Sys.info()["sysname"]
+          if (os_type == 'Windows') {
+            wz <- suppressWarnings(system("where zip", intern = TRUE))
+            if (!grepl("zip", wz)) {
+              wz <- suppressWarnings(system("where 7z", intern = TRUE))
+              if (grepl("7z", wz)) zip_util = "7z"
+            }
+          }
+
+          zip(file, c("report.Rmd", "r_data.rda"), zip = zip_util)
+
         } else if (input$rmd_save_report == "Rmd") {
           paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n\n", report) %>%
             cat(file = file, sep = "\n")
