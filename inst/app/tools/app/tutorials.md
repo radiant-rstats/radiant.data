@@ -7,7 +7,7 @@
 
 ## Installing Radiant
 
-The first step is to install R. For mac go to <a href="https://cran.rstudio.com/bin/macosx/" target="_blank">https://cran.rstudio.com/bin/macosx/</a>. For windows get the latest release from <a href="https://cran.rstudio.com/bin/windows/base/release.htm" target="_blank">https://cran.rstudio.com/bin/windows/base/release.htm</a> 
+The first step is to install R. For mac go to <a href="https://cran.rstudio.com/bin/macosx/" target="_blank">https://cran.rstudio.com/bin/macosx/</a>. For windows get the latest release from <a href="https://cran.rstudio.com/bin/windows/base/release.htm" target="_blank">https://cran.rstudio.com/bin/windows/base/release.htm</a>
 
 > **Important:** Windows users **must** install R in directory C:\\R\\R-3.3.1
 
@@ -21,7 +21,7 @@ For a step-by-step tutorial see the `Install Radiant on Windows` or `Install Rad
 
 **Install Radiant on Windows**
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/DEHfYBWtUjY" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/efQM6WqrHG0" frameborder="0" allowfullscreen></iframe>
 
 **Install Radiant on Mac**
 
