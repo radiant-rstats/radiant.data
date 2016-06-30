@@ -117,6 +117,21 @@ addResourcePath("figures", file.path(getOption("radiant.path.data"), "app/tools/
 addResourcePath("imgs", file.path(getOption("radiant.path.data"), "app/www/imgs/"))
 addResourcePath("js", file.path(getOption("radiant.path.data"), "app/www/js/"))
 
+options(radiant.mathjax.path = "https://cdn.mathjax.org/mathjax/latest")
+
+## using mathjax bundeled with Rstudio if available
+# if (Sys.getenv("RMARKDOWN_MATHJAX_PATH") == "") {
+#   options(radiant.mathjax.path = "https://cdn.mathjax.org/mathjax/latest")
+# } else {
+#   options(radiant.mathjax.path = Sys.getenv("RMARKDOWN_MATHJAX_PATH"))
+# }
+
+# withMathJaxR <- function (...)  {
+#   path <- paste0(getOption("radiant.mathjax.path"),"/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
+#   tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
+#           ..., tags$script(HTML("if (window.MathJax) MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);")))
+# }
+
 ## function to generate help, must be in global because used in ui.R
 help_menu <- function(hlp) {
   tagList(

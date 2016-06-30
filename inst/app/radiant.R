@@ -380,6 +380,7 @@ help_and_report <- function(modal_title, fun_name, help_file) {
            <div style='clear: both;'></div>",
           fun_name, fun_name, fun_name, modal_title, help_file, fun_name, fun_name, fun_name) %>%
   enc2utf8 %>% HTML %>% withMathJax
+  # enc2utf8 %>% HTML %>% withMathJaxR
 }
 
 ## function to render .md files to html
@@ -394,6 +395,7 @@ inclRmd <- function(path) {
   knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE,
     envir = r_environment, options = "", stylesheet = "") %>%
     HTML %>% withMathJax
+    # HTML %>% withMathJaxR
 }
 
 ## used by View - remove or use more broadly
