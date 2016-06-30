@@ -267,16 +267,20 @@ output$saveReport <- downloadHandler(
             cat(file = "report.Rmd", sep = "\n")
 
           zip_util = Sys.getenv("R_ZIPCMD", "zip")
+          flags = "-r9X"
           os_type <- Sys.info()["sysname"]
           if (os_type == 'Windows') {
             wz <- suppressWarnings(system("where zip", intern = TRUE))
             if (!grepl("zip", wz)) {
               wz <- suppressWarnings(system("where 7z", intern = TRUE))
-              if (grepl("7z", wz)) zip_util = "7z"
+              if (grepl("7z", wz)) {
+                zip_util = "7z"
+                flags = "a"
+              }
             }
           }
 
-          zip(file, c("report.Rmd", "r_data.rda"), zip = zip_util)
+          zip(file, c("report.Rmd", "r_data.rda"), flags = flags, zip = zip_util)
 
         } else if (input$rmd_save_report == "Rmd") {
           paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n\n", report) %>%
