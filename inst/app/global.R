@@ -1,5 +1,5 @@
 ## based on https://github.com/rstudio/shiny/issues/1237
-sshhr(rm("registerShinyDebugHook", envir = as.environment("tools:rstudio")))
+suppressWarnings(rm("registerShinyDebugHook", envir = as.environment("tools:rstudio")))
 
 ## function to load/import required packages and functions
 import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
@@ -63,7 +63,6 @@ knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = FALSE,
   message = FALSE, warning = FALSE, error = TRUE,
   # screenshot.force = FALSE,
   fig.path = tempdir())
-  # fig.path = "~/r_figures/")
 
 options(radiant.nav_ui =
   list(windowTitle = "Radiant", id = "nav_radiant", inverse = TRUE,
