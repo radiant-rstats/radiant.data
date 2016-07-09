@@ -1,5 +1,6 @@
 ## based on https://github.com/rstudio/shiny/issues/1237
-suppressWarnings(rm("registerShinyDebugHook", envir = as.environment("tools:rstudio")))
+if (exists("registerShinyDebugHook"))
+  suppressWarnings(rm("registerShinyDebugHook", envir = as.environment("tools:rstudio")))
 
 ## function to load/import required packages and functions
 import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
