@@ -1,3 +1,6 @@
+## based on https://github.com/rstudio/shiny/issues/1237
+sshhr(rm("registerShinyDebugHook", envir = as.environment("tools:rstudio")))
+
 ## function to load/import required packages and functions
 import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
   tmp <- sapply(libs, library, character.only = TRUE); rm(tmp)
