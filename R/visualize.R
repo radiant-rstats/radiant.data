@@ -349,6 +349,10 @@ visualize <- function(dataset, xvar,
       if (!"factor" %in% dc[i]) dat[[i]] %<>% as_factor
       if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       for (j in yvar) {
+
+        if (i == j && "integer" %in% dc[i])
+          return("When the X-variable is of type integer it cannot also be included\nas a Y-variable in a barplot")
+
         tbv <- if (is.null(byvar)) i else c(i, byvar)
         tmp <- dat %>% group_by_(.dots = tbv) %>% select_(tbv, j) %>% summarise_each(make_funs(fun))
         colnames(tmp)[ncol(tmp)] <- j
@@ -373,6 +377,10 @@ visualize <- function(dataset, xvar,
     for (i in xvar) {
       if (!"factor" %in% dc[i]) dat[[i]] %<>% as_factor
       for (j in yvar) {
+
+        if (i == j && "integer" %in% dc[i])
+          return("When the X-variable is of type integer it cannot also be included\nas a Y-variable in a boxplot")
+
         plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, fill=i)) +
                           geom_boxplot(alpha = alpha) +
                           theme(legend.position = "none")
