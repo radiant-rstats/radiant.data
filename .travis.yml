@@ -7,4 +7,5 @@ r_github_packages:
   - rstudio/DT
   - rstudio/shiny
   - rich-iannone/DiagrammeR
+  - rich-iannone/DiagrammeRsvg
   - fawda123/NeuralNetTools
