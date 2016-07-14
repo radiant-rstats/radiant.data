@@ -6,6 +6,6 @@ r_github_packages:
   - jimhester/covr
   - rstudio/DT
   - rstudio/shiny
-  - rich-iannone/DiagrammeR
   - rich-iannone/DiagrammeRsvg
+  - rich-iannone/DiagrammeR
   - fawda123/NeuralNetTools
