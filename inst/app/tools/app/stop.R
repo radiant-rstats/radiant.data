@@ -14,11 +14,11 @@ stop_radiant <- function(rmd = FALSE) {
   if (interactive()) {
     ## flush input and r_data into Rgui or Rstudio
     isolate({
-      reactiveValuesToList(input) %>%
+      toList(input) %>%
         {.$nav_radiant <- r_data$nav_radiant; .} %>%
         assign("r_state", ., envir = .GlobalEnv)
 
-      assign("r_data", reactiveValuesToList(r_data), envir = .GlobalEnv)
+      assign("r_data", toList(r_data), envir = .GlobalEnv)
 
       stop_message <- "\nStopped Radiant. State available as r_state and r_data.\n"
 

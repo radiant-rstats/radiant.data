@@ -44,7 +44,7 @@ output$show_session <- renderPrint({
   input$show_session ## only update when you toggle the checkbox
   isolate({
     cat("Session list:\n")
-    s <- reactiveValuesToList(session$clientData)
+    s <- toList(session$clientData)
     str(s[sort(names(s))])
   })
 })
@@ -53,7 +53,7 @@ output$show_input <- renderPrint({
   input$show_input ## only update when you toggle the checkbox
   isolate({
     cat("Input list:\n")
-    inp <- reactiveValuesToList(input)
+    inp <- toList(input)
     str(inp[sort(names(inp))])
   })
 })
@@ -62,8 +62,7 @@ output$show_data <- renderPrint({
   input$show_data ## only update when you toggle the checkbox
   isolate({
     cat("r_data list:\n")
-    reactiveValuesToList(r_data) %>%
-      {str(.[sort(names(.))])}
+    toList(r_data) %>% {str(.[sort(names(.))])}
   })
 })
 

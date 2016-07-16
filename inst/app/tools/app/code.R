@@ -132,7 +132,7 @@ output$saveCodeReport <- downloadHandler(
         rcode <- ifelse (is_empty(input$rcode_selection), input$rcode_edit, input$rcode_selection)
 
         if (input$rcode_save == "R-code & Data (zip)") {
-          r_data <- reactiveValuesToList(r_data)
+          r_data <- toList(r_data)
           save(r_data, file = "r_data.rda")
           paste0("## Load radiant package if needed\n#suppressMessages(library(radiant))\n\n## Load data\nload(\"r_data.rda\")\n\n", rcode,"\n") %>%
             cat(file = "rcode.R", sep = "\n")

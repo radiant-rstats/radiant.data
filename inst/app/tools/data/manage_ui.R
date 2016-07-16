@@ -398,9 +398,9 @@ output$refreshOnUpload <- renderUI({
 #######################################
 saveState <- function(filename) {
   isolate({
-    LiveInputs <- reactiveValuesToList(input)
+    LiveInputs <- toList(input)
     r_state[names(LiveInputs)] <- LiveInputs
-    r_data <- reactiveValuesToList(r_data)
+    r_data <- toList(r_data)
     save(r_state, r_data , file = filename)
   })
 }

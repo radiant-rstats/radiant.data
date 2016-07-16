@@ -261,7 +261,7 @@ output$saveReport <- downloadHandler(
           gsub("\\\\\\\\","\\\\",.) %>% cleanout(.)
 
         if (input$rmd_save_report == "Rmd & Data (zip)") {
-          r_data <- reactiveValuesToList(r_data)
+          r_data <- toList(r_data)
           save(r_data, file = "r_data.rda")
           paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(radiant)))\nload(\"r_data.rda\")\n```\n\n", report) %>%
             cat(file = "report.Rmd", sep = "\n")

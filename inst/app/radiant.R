@@ -2,18 +2,21 @@
 ## function to save app state on refresh or crash
 ################################################################################
 
+## drop NULLs in list
+toList <- function(x) reactiveValuesToList(x) %>% .[!sapply(., is.null)]
+
 saveSession <- function(session = session) {
   if (!exists("r_sessions")) return()
   if (exists("r_state") && !is_empty(r_state)) {
     rs <- r_state
-    rs_input <- reactiveValuesToList(input)
+    rs_input <- toList(input)
     rs[names(rs_input)] <- rs_input
   } else {
-    rs <- reactiveValuesToList(input)
+    rs <- toList(input)
   }
 
   r_sessions[[r_ssuid]] <- list(
-    r_data    = reactiveValuesToList(r_data),
+    r_data    = toList(r_data),
     r_state = rs,
     timestamp = Sys.time()
   )
@@ -61,8 +64,6 @@ saveStateOnRefresh <- function(session = session) {
 ## get active dataset and apply data-filter if available
 .getdata <- reactive({
   req(input$dataset)
-  # if (is.null(input$dataset)) return()
-
   selcom <- input$data_filter %>% gsub("\\n","", .) %>% gsub("\"","\'",.)
   if (is_empty(selcom) || input$show_filter == FALSE) {
     isolate(r_data$filter_error <- "")
