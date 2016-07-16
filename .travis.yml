@@ -15,6 +15,7 @@ addons:
 r_github_packages:
   - jimhester/covr
   - rstudio/DT
+  - kevinushey/sourcetools
   - rstudio/shiny
   - jeroenooms/V8
   - rich-iannone/DiagrammeRsvg
