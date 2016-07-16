@@ -4,13 +4,13 @@
 \alias{find_dropbox}
 \title{Find a users dropbox directory}
 \usage{
-find_dropbox(folder = 1)
+find_dropbox(account = 1)
 }
 \arguments{
-\item{folder}{If multiple folders are present select which one to use. The first folder listed is used by default.}
+\item{account}{If multiple accounts exist select the one to use. By default, the first account listed is used}
 }
 \value{
-Path to users personal dropbox directory
+Path to Dropbox account
 }
 \description{
 Find a users dropbox directory

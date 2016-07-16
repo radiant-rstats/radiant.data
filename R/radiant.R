@@ -776,32 +776,35 @@ dfround <- function(tbl, dec = 3) {
   )
 }
 
-#' Find a users dropbox directory
+#' Find a user's dropbox directory
 #'
-#' @param folder If multiple folders are present select which one to use. The first folder listed is used by default.
+#' @param account If multiple accounts exist specifies the one to use. By default, the first account listed is used
 #'
-#' @return Path to users personal dropbox directory
+#' @return Path to Dropbox account
 #'
 #' @importFrom jsonlite fromJSON
 #'
 #' @export
-find_dropbox <- function(folder = 1) {
+find_dropbox <- function(account = 1) {
   if (file.exists("~/.dropbox/info.json")) {
     fp <- normalizePath("~/.dropbox/info.json", winslash = "/")
     dbinfo <- jsonlite::fromJSON(fp)
-    ldb <- length(dbinom)
+    ldb <- length(dbinfo)
     if (ldb > 1)
-      message("Multiple dropbox folders found. By default the first folder is used.\nTo select, for example, the third folder use 'find_dropbox(3)'")
-    if (folder > ldb) stop(paste0("Invalid folder number. Choose a folder number between 1 and ", ldb))
-    normalizePath(jsonlite::fromJSON(fp)[[folder]]$path)
+      message("Multiple dropbox folders found. By default the first folder is used.\nTo select, for example, the third dropbox folder use find_dropbox(3).\nAlternatively, specify the type of dropbox account, e.g., find_dropbox('personal')")
+    if (is.numeric(account)) {
+      if (account > ldb) stop(paste0("Invalid account number. Choose a number between 1 and ", ldb))
+    } else {
+      if (!account %in% names(dbinfo)) stop(paste0("Invalid account type. Choose ", paste0(names(dbinfo), collapse = " or ")))
+      names(ldb)
+    }
+    normalizePath(dbinfo[[account]]$path, winslash = "/")
   } else if (file.exists("~/Dropbox")) {
     normalizePath("~/Dropbox", winslash = "/")
   } else if (file.exists("~/../Dropbox")) {
     normalizePath("~/../Dropbox", winslash = "/")
-  } else if (file.exists("~/../gmail/Dropbox")) {
-    normalizePath("~/../gmail/Dropbox", winslash = "/")
   } else {
-    stop("Could not find a Drobox folder")
+    stop("Failed to uncover the path to a Dropbox account")
   }
 }
 
@@ -897,3 +900,25 @@ render <- function(object, ...) UseMethod("render", object)
 #' @export
 render.datatables <- function(object, ...) DT::renderDataTable(object)
 
+#' Show dataset desription, if available, in html form in Rstudio viewer or default browser
+#'
+#' @param name Dataset name or a dataframe
+#'
+#' @export
+describe <- function(name) {
+  dat <- getdata(name)
+  description <- attr(dat, "description")
+  if (is_empty(description))
+    return(str(dat))
+
+  owd <- setwd(tempdir())
+  on.exit(owd)
+
+  ## generate html and open on the Rstudio viewer or in the default browser
+  # description %>% knitr::knit2html(text = .) %>% cat(file = "index.html")
+  description %>% cat(file = "index.Rmd")
+  rmarkdown::render("index.Rmd", quiet = TRUE)
+  ## based on https://support.rstudio.com/hc/en-us/articles/202133558-Extending-RStudio-with-the-Viewer-Pane
+  viewer <- getOption("viewer", default = browseURL)
+  viewer("index.html")
+}
