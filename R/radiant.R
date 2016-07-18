@@ -17,21 +17,17 @@ install_webshot <- function() {
   if (Sys.which("phantomjs") == "") eval(parse(text = "webshot::install_phantomjs()"))
 }
 
-#' Alias used to add an attribute (from github version of magrittr)
+#' Alias used to add an attribute
 #'
+#' @param x Object
+#' @param which Attribute name
+#' @param value Value to set
+#
 #' @examples
 #' foo <- data.frame(price = 1:5) %>% set_attr("desc", "price set in experiment ...")
 #'
 #' @export
-set_attr <- `attr<-`
-
-#' Alias used to set the class for analysis function return
-#'
-#' @examples
-#' foo <- function(x) x^2 %>% set_class(c("foo", class(.)))
-#'
-#' @export
-set_class <- `class<-`
+set_attr <- function(x, which, value) `attr<-`(x, which, value)
 
 #' Convenience function to add a class
 #'
@@ -43,7 +39,7 @@ set_class <- `class<-`
 #' foo <- "some text" %>% add_class(c("text","another class"))
 #'
 #' @export
-add_class <- function(x, cl) set_class(x, c(cl, class(x)))
+add_class <- function(x, cl) `class<-`(x, c(cl, class(x)))
 
 #' Add stars '***' to a data.frame (from broom's `tidy` function) based on p.values
 #'
@@ -578,30 +574,6 @@ copy_from <- function(.from, ...) {
   invisible(NULL)
 }
 
-# Import functions required for use in a shiny app
-#
-# @param ns Namespace to extract information from
-# @param libs Packages to load using library
-#
-# @examples
-# import_fs("radiant.data",c("dplyr","ggplot2","shiny"))
-#
-# import_fsn <- function(ns, libs = c()) {
-  # tmp <- sapply(libs, library, character.only = TRUE); rm(tmp)
-  # import_list <- getNamespaceImports(ns)
-  # import_list[c("base", "import", libs)] <- NULL
-  # import_names <- names(import_list)
-  # parent <- parent.frame()
-
-  # for (i in seq_len(length(import_list))) {
-  #   fun <- import_list[[i]]
-  #   lib <- import_names[[i]]
-  #   eval(parse(text = paste0("import::from(",lib,", '",paste0(fun,collapse="', '"),"')")))
-  #   # eval(parse(text = paste0("import::from(",lib,", '",paste0(fun,collapse="', '"),"', .into = .GlobalEnv)")))
-  # }
-  # invisible(NULL)
-# }
-
 #' Source all package functions
 #'
 #' @details Equivalent of source with local=TRUE for all package functions. Adapted from functions by smbache, author of the import package. See \url{https://github.com/smbache/import/issues/4} for a discussion. This function will be depracated when (if) it is included in \url{https://github.com/smbache/import}
@@ -621,7 +593,6 @@ copy_all <- function(.from) {
     set_names(.,.) -> symbols
 
   parent  <- parent.frame()
-  # from    <- as.character(substitute(.from))
 
   for (s in seq_along(symbols)) {
     fn <- get(symbols[s], envir = asNamespace(from), inherits = TRUE)
@@ -776,7 +747,7 @@ dfround <- function(tbl, dec = 3) {
   )
 }
 
-#' Find a user's dropbox directory
+#' Find a user's dropbox folder
 #'
 #' @param account If multiple accounts exist specifies the one to use. By default, the first account listed is used
 #'
@@ -904,9 +875,13 @@ render.datatables <- function(object, ...) DT::renderDataTable(object)
 #'
 #' @param name Dataset name or a dataframe
 #'
+#' @importFrom utils browseURL str
+#' @importFrom knitr knit2html
+#'
 #' @export
 describe <- function(name) {
-  dat <- getdata(name)
+  dat <- if (is.character(name)) getdata(name) else name
+
   description <- attr(dat, "description")
   if (is_empty(description))
     return(str(dat))
@@ -915,9 +890,8 @@ describe <- function(name) {
   on.exit(owd)
 
   ## generate html and open on the Rstudio viewer or in the default browser
-  # description %>% knitr::knit2html(text = .) %>% cat(file = "index.html")
-  description %>% cat(file = "index.Rmd")
-  rmarkdown::render("index.Rmd", quiet = TRUE)
+  description %>% knitr::knit2html(text = .) %>% cat(file = "index.html")
+  # description %>% cat(file = "index.Rmd"); rmarkdown::render("index.Rmd", quiet = TRUE)
   ## based on https://support.rstudio.com/hc/en-us/articles/202133558-Extending-RStudio-with-the-Viewer-Pane
   viewer <- getOption("viewer", default = browseURL)
   viewer("index.html")
