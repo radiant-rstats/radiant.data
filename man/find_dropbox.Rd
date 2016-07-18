@@ -2,17 +2,17 @@
 % Please edit documentation in R/radiant.R
 \name{find_dropbox}
 \alias{find_dropbox}
-\title{Find a users dropbox directory}
+\title{Find a user's dropbox folder}
 \usage{
 find_dropbox(account = 1)
 }
 \arguments{
-\item{account}{If multiple accounts exist select the one to use. By default, the first account listed is used}
+\item{account}{If multiple accounts exist specifies the one to use. By default, the first account listed is used}
 }
 \value{
 Path to Dropbox account
 }
 \description{
-Find a users dropbox directory
+Find a user's dropbox folder
 }
 

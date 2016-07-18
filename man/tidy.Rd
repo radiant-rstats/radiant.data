@@ -2,8 +2,8 @@
 % Please edit documentation in R/aaa.R
 \name{tidy}
 \alias{tidy}
-\title{Exporting the tidy from broom}
+\title{Exporting tidy from broom}
 \description{
-Exporting the tidy from broom
+Exporting tidy from broom
 }
 

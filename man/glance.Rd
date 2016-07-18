@@ -2,8 +2,8 @@
 % Please edit documentation in R/aaa.R
 \name{glance}
 \alias{glance}
-\title{Exporting the glance from broom}
+\title{Exporting glance from broom}
 \description{
-Exporting the glance from broom
+Exporting glance from broom
 }
 

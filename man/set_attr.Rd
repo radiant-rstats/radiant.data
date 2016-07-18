@@ -2,12 +2,19 @@
 % Please edit documentation in R/radiant.R
 \name{set_attr}
 \alias{set_attr}
-\title{Alias used to add an attribute (from github version of magrittr)}
+\title{Alias used to add an attribute}
 \usage{
-set_attr()
+set_attr(x, which, value)
+}
+\arguments{
+\item{x}{Object}
+
+\item{which}{Attribute name}
+
+\item{value}{Value to set}
 }
 \description{
-Alias used to add an attribute (from github version of magrittr)
+Alias used to add an attribute
 }
 \examples{
 foo <- data.frame(price = 1:5) \%>\% set_attr("desc", "price set in experiment ...")
