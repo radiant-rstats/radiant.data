@@ -15,7 +15,7 @@ globalVariables(c("r_environment", "r_data", "r_state", ".", ".rs.restartR",
 #' @importFrom pryr where object_size
 #' @importFrom magrittr %<>% %T>% %$% set_rownames set_colnames set_names divide_by add extract2
 #' @importFrom lubridate is.Date is.POSIXt now year month wday week hour minute second ymd mdy dmy ymd_hms hms hm as.duration parse_date_time
-#' @importFrom broom tidy glance
+#' @importFrom tibble rownames_to_column
 #' @importFrom tidyr gather_ gather spread spread_ separate
 #' @importFrom gridExtra arrangeGrob
 #' @importFrom shinyAce aceEditor updateAceEditor
@@ -27,14 +27,21 @@ globalVariables(c("r_environment", "r_data", "r_state", ".", ".rs.restartR",
 #' @importFrom import from
 NULL
 
-#' Exporting the tidy from broom
+#' Exporting rownames_to_column from tibble
+#' @importFrom tibble rownames_to_column
+#' @name rownames_to_column
+#' @rdname rownames_to_column
+#' @export
+NULL
+
+#' Exporting tidy from broom
 #' @importFrom broom tidy
 #' @name tidy
 #' @rdname tidy
 #' @export
 NULL
 
-#' Exporting the glance from broom
+#' Exporting glance from broom
 #' @importFrom broom glance
 #' @name glance
 #' @rdname glance
