@@ -1,6 +1,6 @@
 descr_out <- function(descr, ret_type = 'html') {
    ## if there is no data description
-  if (descr %>% is_empty) return("")
+  if (is_empty(descr)) return("")
 
   ## if there is a data description and we want html output
   if (ret_type == 'html')
@@ -9,11 +9,9 @@ descr_out <- function(descr, ret_type = 'html') {
   descr
 }
 
-upload_error_handler <- function(objname, ret) {
-  ## create an empty data.frame and return error message as description
-  # r_data[[paste0(objname,"_descr")]] <<- ret
-  r_data[[objname]] <<- data.frame(matrix(rep("",12), nrow = 2)) %>% {attr(.,"description") <- ret; .}
-}
+## create an empty data.frame and return error message as description
+upload_error_handler <- function(objname, ret)
+  r_data[[objname]] <<- data.frame(matrix(rep("", 12), nrow = 2)) %>% set_attr("description", ret)
 
 loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRUE, sep = "\t") {
 

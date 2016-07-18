@@ -1,9 +1,14 @@
 
 context("Radiant functions")
 
-test_that("set_class", {
-  foo <- . %>% .^2 %>% set_class(c("foo", class(.)))
-  expect_equal(3 %>% foo %>% class,c("foo","numeric"))
+test_that("set_attr", {
+  foo <- . %>% set_attr("foo", "something")
+  expect_equal(3 %>% foo %>% attr("foo"), "something")
+})
+
+test_that("add_class", {
+  foo <- . %>% .^2 %>% add_class("foo")
+  expect_equal(3 %>% foo %>% class, c("foo","numeric"))
 })
 
 test_that("sig_star", {
