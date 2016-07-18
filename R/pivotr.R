@@ -180,7 +180,7 @@ pivotr <- function(dataset,
 
   rm(isNum, dat, sfun, sel, i, levs, total, ind)
 
-  environment() %>% as.list %>% set_class(c("pivotr",class(.)))
+  as.list(environment()) %>% add_class("pivotr")
 }
 
 #' Summary method for pivotr

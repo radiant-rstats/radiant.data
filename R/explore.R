@@ -175,7 +175,7 @@ explore <- function(dataset,
   ## dat no longer needed
   rm(dat)
 
-  environment() %>% as.list %>% set_class(c("explore", class(.)))
+  as.list(environment()) %>% add_class("explore")
 }
 
 #' Summary method for the explore function
@@ -211,12 +211,7 @@ summary.explore <- function(object, top = "fun", dec = 3, ...) {
   cat("\n")
 
   tab <- object %>% flip(top) %>% as.data.frame
-  # cn_all <- colnames(tab)
-  # cn_num <- cn_all[sapply(tab, is.numeric)]
-  # tab[,cn_num] %<>% round(dec)
-
   print(formatdf(tab, dec), row.names = FALSE)
-
   invisible()
 }
 
