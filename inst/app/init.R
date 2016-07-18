@@ -16,24 +16,6 @@
 # options("autoreload")[[1]] %>%
 #   {options(shiny.autoreload = ifelse (!is.null(.) && ., TRUE, FALSE))}
 
-init_state <- function(r_data) {
-
-  ## initial plot height and width
-  r_data$plot_height <- 600
-  r_data$plot_width <- 600
-
-  ## Joe Cheng: "Datasets can change over time (i.e., the .changedata function).
-  ## Therefore, the data need to be a reactive value so the other reactive
-  ## functions and outputs that depend on these datasets will know when they
-  ## are changed."
-  df <- data("diamonds", package = "radiant.data", envir = environment()) %>% get
-  r_data[["diamonds"]] <- df
-  r_data[["diamonds_descr"]] <- attr(df,'description')
-  r_data$datasetlist <- c("diamonds")
-  r_data$url <- NULL
-  r_data
-}
-
 remove_session_files <- function(st = Sys.time()) {
   fl <- list.files(normalizePath("~/radiant.sessions/"), pattern = "*.rds",
                    full.names = TRUE)
@@ -95,11 +77,11 @@ if (exists("r_state") && exists("r_data")) {
 
   rs <- try(readRDS(fn), silent = TRUE)
   if (is(rs, 'try-error')) {
-    r_data  <- init_state(reactiveValues())
+    r_data  <- init_data()
     r_state <- list()
   } else {
     if (length(rs$r_data) == 0)
-      r_data  <- init_state(reactiveValues())
+      r_data  <- init_data()
     else
       r_data  <- do.call(reactiveValues, rs$r_data)
 
@@ -118,11 +100,11 @@ if (exists("r_state") && exists("r_data")) {
 
   rs <- try(readRDS(fn), silent = TRUE)
   if (is(rs, 'try-error')) {
-    r_data  <- init_state(reactiveValues())
+    r_data  <- init_data()
     r_state <- list()
   } else {
     if (length(rs$r_data) == 0)
-      r_data  <- init_state(reactiveValues())
+      r_data  <- init_data()
     else
       r_data  <- do.call(reactiveValues, rs$r_data)
 
@@ -138,17 +120,12 @@ if (exists("r_state") && exists("r_data")) {
   unlink(fn, force = TRUE)
   rm(rs)
 } else {
-  r_data  <- init_state(reactiveValues())
+  r_data  <- init_data()
   r_state <- list()
 }
 
 ## identify the shiny environment
 r_environment <- environment()
-
-## environment to use for knitr
-## should be the same as r_environment
-# if (!exists("r_knitr_environment"))
-#   r_knitr_environment <- if (exists("r_environment")) new.env(parent = r_environment) else new.env()
 
 ## parse the url and use updateTabsetPanel to navigate to the desired tab
 observeEvent(session$clientData$url_search, {
@@ -180,8 +157,6 @@ observeEvent(session$clientData$url_search, {
 
 ## keeping track of the main tab we are on
 observeEvent(input$nav_radiant, {
-  # if (is_empty(input$nav_radiant)) return()
-  # if (input$nav_radiant != "Stop" && input$nav_radiant != "Refresh")
   if (!input$nav_radiant %in% c("Refresh", "Stop"))
     r_data$nav_radiant <- input$nav_radiant
 })
@@ -212,6 +187,11 @@ if (!is.null(r_state$nav_radiant)) {
   })
 }
 
+isolate({
+  if (is.null(r_data$plot_height)) r_data$plot_height <- 600
+  if (is.null(r_data$plot_width)) r_data$plot_width <- 600
+})
+
 ## 'sourcing' radiant's package functions in the server.R environment
 if (!"package:radiant.data" %in% search() && getOption("radiant.path.data") == "..") {
   ## for shiny-server and development
@@ -220,6 +200,4 @@ if (!"package:radiant.data" %in% search() && getOption("radiant.path.data") == "
 } else {
   ## for use with launcher
   radiant.data::copy_all(radiant.data)
-  set_class <- radiant.data::set_class    ## needed but not clear why
-  environment(set_class) <- environment() ## needed but not clear why
 }

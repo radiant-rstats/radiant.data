@@ -28,9 +28,32 @@ import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
   invisible()
 }
 
+init_data <- function() {
+
+  ## Joe Cheng: "Datasets can change over time (i.e., the changedata function).
+  ## Therefore, the data need to be a reactive value so the other reactive
+  ## functions and outputs that depend on these datasets will know when they
+  ## are changed."
+  r_data <- reactiveValues()
+
+  df_name <- getOption("radiant.init.data", default = "diamonds")
+  if (file.exists(df_name)) {
+    df <- load(df_name) %>% get
+    df_name <- basename(df_name) %>% {gsub(paste0(".",tools::file_ext(.)),"",., fixed = TRUE)}
+  } else {
+    df <- data(list = df_name, package = "radiant.data", envir = environment()) %>% get
+  }
+
+  r_data[[df_name]] <- df
+  r_data[[paste0(df_name, "_descr")]] <- attr(df, "description")
+  r_data$datasetlist <- df_name
+  r_data$url <- NULL
+  r_data
+}
+
 ## import required functions and packages
 if (!"package:radiant.data" %in% search())
-  import_fs("radiant.data", libs = c("magrittr","ggplot2","lubridate","tidyr","dplyr","broom"))
+  import_fs("radiant.data", libs = c("magrittr","ggplot2","lubridate","tidyr","dplyr","broom","tibble"))
 
 ## running local or on a server
 if (Sys.getenv('SHINY_PORT') == "") {
