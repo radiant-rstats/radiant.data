@@ -411,9 +411,9 @@ getsummary <- function(dat, dc = getclass(dat)) {
     min_time <- function(x) sort(x) %>% head(1)
 
     cat("Earliest time:\n")
-    select(dat, which(isPeriod)) %>% summarise_each(funs(min_time)) %>% print
+    select(dat, which(isPeriod)) %>% summarise_each(funs(min_time)) %>% as.data.frame %>% print
     cat("\nFinal time:\n")
-    select(dat, which(isPeriod)) %>% summarise_each(funs(max_time)) %>% print
+    select(dat, which(isPeriod)) %>% summarise_each(funs(max_time)) %>% as.data.frame %>% print
     cat("\n")
   }
 
