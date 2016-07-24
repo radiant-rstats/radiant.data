@@ -254,7 +254,7 @@ visualize <- function(dataset, xvar,
         if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       } else {
         plot_fun <- get("geom_histogram")
-        hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% {diff(.)/bins}
+        hist_par[["binwidth"]] <- select_(dat, .dots = i) %>% range %>% {diff(.)/bins}
       }
 
       plot_list[[i]] <- plot_list[[i]] + do.call(plot_fun, hist_par)
@@ -328,7 +328,7 @@ visualize <- function(dataset, xvar,
         if (color == 'none') {
           if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
-            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(tbv, j) %>% summarise_each(make_funs(fun))
+            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, j)) %>% summarise_each(make_funs(fun))
             colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j)) + geom_line(aes(group = 1))
             if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point()
@@ -338,7 +338,7 @@ visualize <- function(dataset, xvar,
         } else {
           if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else unique(c(i, byvar))
-            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(tbv, color, j) %>% summarise_each(make_funs(fun))
+            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, color, j)) %>% summarise_each(make_funs(fun))
             colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j, color = color, group = color)) + geom_line()
             if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point()
@@ -361,7 +361,7 @@ visualize <- function(dataset, xvar,
       if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       for (j in yvar) {
         tbv <- if (is.null(byvar)) i else c(i, byvar)
-        tmp <- dat %>% group_by_(.dots = tbv) %>% select_(tbv, j) %>% summarise_each(make_funs(fun))
+        tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, j)) %>% summarise_each(make_funs(fun))
         colnames(tmp)[ncol(tmp)] <- j
 
         if ("sort" %in% axes && facet_row == "." && facet_col == ".") {
