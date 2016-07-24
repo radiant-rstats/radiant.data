@@ -15,9 +15,8 @@ viz_inputs <- reactive({
   viz_args$shiny <- input$shiny
   for (i in r_drop(names(viz_args)))
     viz_args[[i]] <- input[[paste0("viz_",i)]]
-  # print(paste0(names(viz_args), viz_args, collapse = ", "))
   # isolate({
-  #   cat(paste0(names(viz_args), " ", viz_args, collapse = ", "), file = stderr(), "\n")
+    # cat(paste0(names(viz_args), " ", viz_args, collapse = ", "), file = stderr(), "\n")
   # })
   viz_args
 })
@@ -256,7 +255,7 @@ output$ui_viz_fill <- renderUI({
 })
 
 output$ui_viz_axes <- renderUI({
-  if (is_empty(input$viz_type)) return()
+  req(input$viz_type)
   ind <- 1
   if (input$viz_type %in% c("line","scatter")) ind <- 1:3
   if (input$viz_type %in% c("hist","density")) ind <- c(1:2, 5)
@@ -270,7 +269,7 @@ output$ui_viz_axes <- renderUI({
 })
 
 output$ui_viz_check <- renderUI({
-  if (is_empty(input$viz_type)) return()
+  req(input$viz_type)
   if (input$viz_type == "scatter") {
     ind <- 1:3
   } else if (input$viz_type == "box") {
