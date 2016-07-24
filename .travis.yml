@@ -7,17 +7,8 @@ cache: packages
 warnings_are_errors: false
 sudo: required
 
-addons:
-  apt:
-    packages:
-      - libv8-dev
-
 r_github_packages:
   - jimhester/covr
   - rstudio/DT
   - kevinushey/sourcetools
   - rstudio/shiny
-  - jeroenooms/V8
-  - rich-iannone/DiagrammeRsvg
-  - rich-iannone/DiagrammeR
-  - fawda123/NeuralNetTools
