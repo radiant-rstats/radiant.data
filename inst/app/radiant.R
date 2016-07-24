@@ -435,12 +435,12 @@ save2env <- function(dat, dataset,
 state_init <- function(var, init = "") {
   isolate({
     ivar <- input[[var]]
-    if (var %in% names(input)) {
+    if (var %in% names(input) || length(ivar) > 0) {
       ivar <- input[[var]]
-      if (is.null(ivar)) r_state[[var]] <<- NULL
+      if (is_empty(ivar)) r_state[[var]] <<- NULL
     } else {
       ivar <- .state_init(var, init)
-      # r_state[[var]] <<- ivar
+      r_state[[var]] <<- NULL
     }
     ivar
   })
