@@ -92,10 +92,6 @@ output$ui_expl_top  <- renderUI({
                  multiple = FALSE)
 })
 
-output$ui_expl_viz <- renderUI({
-  checkboxInput('expl_viz', 'Show plot', value = state_init("expl_viz", FALSE))
-})
-
 output$ui_Explore <- renderUI({
   tagList(
     wellPanel(
