@@ -126,7 +126,6 @@ getdata <- function(dataset,
                     rows = NULL,
                     na.rm = TRUE) {
 
-  # filt %<>% gsub("\\s","", .) %>% gsub("\"","\'",.)
   filt %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
   { if (!is_string(dataset)) {
       dataset
@@ -141,24 +140,21 @@ getdata <- function(dataset,
     } else {
       stop(message("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call"))
     }
-  } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%     # ungroup data if needed
-        { if (filt == "") . else filterdata(., filt) } %>%     # apply data_filter
+  } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%  ## ungroup data if needed
+        { if (filt == "") . else filterdata(., filt) } %>%         ## apply data_filter
         { if (is.null(rows)) . else slice(., rows) } %>%
         { if (vars[1] == "" || is.null(vars)) . else select_(., .dots = vars) } %>%
         { if (na.rm) na.omit(.) else . }
         ## line below may cause an error https://github.com/hadley/dplyr/issues/219
         # { if (na.rm) { if (anyNA(.)) na.omit(.) else . } else . }
-
-  # use the below when all data is setup as tbl_df
-  # } %>% { if (is.na(groups(.))) . else ungroup(.) } %>%     # ungroup data if needed
 }
 
 #' Convert character to factors as needed
 #'
-#' @param dat Data.frame
+#' @param dat Data frame
 #' @param safx Values to levels ratio
 #'
-#' @return Data.frame with factors
+#' @return Data frame with factors
 #'
 #' @export
 factorizer <- function(dat, safx = 20) {
@@ -170,10 +166,6 @@ factorizer <- function(dat, safx = 20) {
       select(which(. == TRUE)) %>% names
   if (length(toFct) == 0) return(dat)
 
-  ## not using due to https://github.com/hadley/dplyr/issues/1238
-  ## Seems fixed in dev version of dplyr
-  # rmiss <- . %>% ifelse (is.na(.), "[Empty]", .) %>% ifelse (. == "", "[Empty]", .)
-  # mutate_each_(dat, funs(rmiss), vars = toFct)  %>%  # replace missing levels
   mutate_each_(dat, funs(as.factor), vars = toFct)
 }
 
