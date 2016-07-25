@@ -23,7 +23,7 @@ loadcsv(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".",
 \item{safx}{Values to levels ratio}
 }
 \value{
-Data.frame with (some) variables converted to factors
+Data frame with (some) variables converted to factors
 }
 \description{
 Load a csv file with read.csv and read_csv

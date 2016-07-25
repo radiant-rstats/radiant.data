@@ -277,8 +277,7 @@ observeEvent(input$uploadfile, {
 })
 
 observeEvent(input$url_rda_load, {
-  ## loading rda file from url
-  ## https://vnijs.github.io/radiant/examples/houseprices.rda
+  ## loading rda file from url, example https://radiant-rstats.github.io/docs/examples/houseprices.rda
   if (input$url_rda == "") return()
   objname <- "rda_url"
   con <- curl::curl(input$url_rda)
@@ -306,7 +305,7 @@ observeEvent(input$url_rda_load, {
 })
 
 observeEvent(input$url_csv_load, {
-  ## loading csv file from url, example https://vnijs.github.io/radiant/examples/houseprices.csv
+  ## loading csv file from url, example https://radiant-rstats.github.io/docs/examples/houseprices.csv
   objname <- "csv_url"
   if (input$url_csv == "") return()
 

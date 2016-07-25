@@ -21,7 +21,7 @@ loadcsv_url(csv_url, header = TRUE, sep = ",", dec = ".", saf = TRUE,
 \item{safx}{Values to levels ratio}
 }
 \value{
-Data.frame with (some) variables converted to factors
+Data frame with (some) variables converted to factors
 }
 \description{
 Load a csv file with from a url

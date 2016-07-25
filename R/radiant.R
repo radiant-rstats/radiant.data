@@ -1,6 +1,6 @@
 #' Launch Radiant in the default browser
 #'
-#' @details See \url{http://vnijs.github.io/radiant} for documentation and tutorials
+#' @details See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
 #'
 #' @export
 radiant.data <- function() {
@@ -89,10 +89,10 @@ sshhr <- function(...) suppressWarnings( suppressMessages( ... ) )
 
 #' Filter data with user-specified expression
 #'
-#' @param dat Data.frame to filter
+#' @param dat Data frame to filter
 #' @param filt Filter expression to apply to the specified dataset (e.g., "price > 10000" if dataset is "diamonds")
 #'
-#' @return Filtered data.frame
+#' @return Filtered data frame
 #'
 #' @export
 filterdata <- function(dat, filt = "") {
@@ -172,9 +172,9 @@ factorizer <- function(dat, safx = 20) {
 #' Load an rda or rds file and add it to the radiant data list (r_data) if available
 #'
 #' @param fn File name and path as a string. Extension must be either rda or rds
-#' @param objname Name to use for the data.frame. Defaults to the file name
+#' @param objname Name to use for the data frame. Defaults to the file name
 #'
-#' @return Data.frame in r_data or in the calling enviroment
+#' @return Data frame in r_data or in the calling enviroment
 #'
 #' @export
 loadr <- function(fn, objname = "") {
@@ -214,10 +214,10 @@ loadr <- function(fn, objname = "") {
 
 #' Save data.frame as an rda or rds file from Radiant
 #'
-#' @param objname Name of the data.frame
+#' @param objname Name of the data frame
 #' @param file File name and path as a string. Extension must be either rda or rds
 #'
-#' @return Data.frame in r_data
+#' @return Data frame in r_data
 #'
 #' @export
 saver <- function(objname, file) {
@@ -254,7 +254,7 @@ saver <- function(objname, file) {
 #' @param saf Convert character variables to factors if (1) there are less than 100 distinct values (2) there are X (see safx) more values than levels
 #' @param safx Values to levels ratio
 #'
-#' @return Data.frame with (some) variables converted to factors
+#' @return Data frame with (some) variables converted to factors
 #'
 #' @export
 loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", saf = TRUE, safx = 20) {
@@ -293,7 +293,7 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", saf =
 #' @param saf Convert character variables to factors if (1) there are less than 100 distinct values (2) there are X (see safx) more values than levels
 #' @param safx Values to levels ratio
 #'
-#' @return Data.frame with (some) variables converted to factors
+#' @return Data frame with (some) variables converted to factors
 #'
 #' @importFrom curl curl
 #'
@@ -324,7 +324,7 @@ loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", saf = TRUE
 #'
 #' @param rda_url URL for the csv file
 #'
-#' @return Data.frame
+#' @return Data frame
 #'
 #' @importFrom curl curl
 #'

@@ -7,12 +7,12 @@
 filterdata(dat, filt = "")
 }
 \arguments{
-\item{dat}{Data.frame to filter}
+\item{dat}{Data frame to filter}
 
 \item{filt}{Filter expression to apply to the specified dataset (e.g., "price > 10000" if dataset is "diamonds")}
 }
 \value{
-Filtered data.frame
+Filtered data frame
 }
 \description{
 Filter data with user-specified expression

@@ -10,7 +10,7 @@ loadrda_url(rda_url)
 \item{rda_url}{URL for the csv file}
 }
 \value{
-Data.frame
+Data frame
 }
 \description{
 Load an rda file from a url

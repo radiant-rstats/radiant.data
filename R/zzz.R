@@ -6,5 +6,5 @@
 	# sp <- options(shiny.port = 4444)
 
 	# set to radiant miniCRAN
-	# options(repos = "http://vnijs.github.io/radiant_miniCRAN/")
+	# options(repos = "https://radiant-rstats.github.io/minicran")
 }
