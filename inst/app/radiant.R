@@ -440,7 +440,21 @@ state_init <- function(var, init = "") {
       if (is_empty(ivar)) r_state[[var]] <<- NULL
     } else {
       ivar <- .state_init(var, init)
-      r_state[[var]] <<- NULL
+    }
+    ivar
+  })
+}
+
+## need a separate function for checkboxGroupInputs
+state_group <- function(var, init = "") {
+  isolate({
+    ivar <- input[[var]]
+    if (var %in% names(input) || length(ivar) > 0) {
+      ivar <- input[[var]]
+      if (is_empty(ivar)) r_state[[var]] <<- NULL
+    } else {
+      ivar <- .state_init(var, init)
+      r_state[[var]] <<- NULL ## line that differs for CBG inputs
     }
     ivar
   })

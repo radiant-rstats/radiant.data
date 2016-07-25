@@ -264,7 +264,7 @@ output$ui_viz_axes <- renderUI({
   if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
 
   checkboxGroupInput("viz_axes", NULL, viz_axes[ind],
-    selected = state_init("viz_axes", ""),
+    selected = state_group("viz_axes", ""),
     inline = TRUE)
 })
 
@@ -286,7 +286,7 @@ output$ui_viz_check <- renderUI({
   }
 
   checkboxGroupInput("viz_check", NULL, viz_check[ind],
-    selected = state_init("viz_check", ""),
+    selected = state_group("viz_check", ""),
     inline = TRUE)
 })
 

@@ -59,7 +59,7 @@ help_data_panel <-
       wellPanel(
         HTML("<label>Data menu: <i id='help_data_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
               <i id='help_data_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
-        checkboxGroupInput("help_data", NULL, help_data, selected = state_init("help_data"), inline = TRUE)
+        checkboxGroupInput("help_data", NULL, help_data, selected = state_group("help_data"), inline = TRUE)
       )
 
 output$help_data_ui <- renderUI({
