@@ -7,12 +7,12 @@
 factorizer(dat, safx = 20)
 }
 \arguments{
-\item{dat}{Data.frame}
+\item{dat}{Data frame}
 
 \item{safx}{Values to levels ratio}
 }
 \value{
-Data.frame with factors
+Data frame with factors
 }
 \description{
 Convert character to factors as needed
