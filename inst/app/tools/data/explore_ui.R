@@ -105,7 +105,7 @@ output$ui_Explore <- renderUI({
       with(tags, table(
         tr(
           td(textInput("expl_dat", "Store filtered data as:", "explore_dat")),
-          td(actionButton("expl_store", "Store"), style="padding-top:30px;")
+          td(actionButton("expl_store", "Store"), style = "padding-top:30px;")
         )
       ))
     ),
@@ -210,6 +210,36 @@ observeEvent(input$expl_store, {
   env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
   updateSelectInput(session, "dataset", selected = name)
 })
+
+# observeEvent(input$expl_store, {
+#   data_filter <- if (input$show_filter) input$data_filter else ""
+#   expl_store(input$dataset, input$view_vars, input$view_dat, data_filter, input$dataviewer_rows_all)
+#   updateTextInput(session, "data_filter", value = "")
+#   updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
+# })
+
+# expl_store <- function(dataset,
+#                        vars = "",
+#                        view_dat = dataset,
+#                        data_filter = "",
+#                        rows = NULL) {
+
+#   mess <-
+#     if (data_filter != "" && !is.null(rows))
+#       paste0("\nSaved filtered data: ", data_filter, " and view-filter (", lubridate::now(), ")")
+#     else if (is.null(rows))
+#       paste0("\nSaved filtered data: ", data_filter, " (", lubridate::now(), ")")
+#     else if (data_filter == "")
+#       paste0("\nSaved data with view-filter (", lubridate::now(), ")")
+#     else
+#       ""
+
+#   getdata(dataset, vars = vars, filt = data_filter, rows = rows, na.rm = FALSE) %>%
+#     save2env(dataset, view_dat, mess)
+
+#   updateSelectInput(session = session, inputId = "dataset", selected = view_dat)
+#   updateSelectInput(session = session, inputId = "view_vars", selected = vars)
+# }
 
 output$expl_summary <- renderPrint({
   if (not_available(input$expl_vars)) return(invisible())
