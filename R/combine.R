@@ -56,6 +56,8 @@ combinedata <- function(dataset, cmb_dataset,
            " (", type, ")", madd, "\n\nOn: ", lubridate::now(), "\n\n",
            descr1, "\n\n", descr2)
 
+  dat <- set_attr(dat, "description", mess)
+
   if (exists("r_environment")) {
     env <- r_environment
   } else if (exists("r_data")) {

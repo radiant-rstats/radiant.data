@@ -253,7 +253,7 @@ observeEvent(input$explore_report, {
   if (is.null(search)) search <- ""
   # r_state$pivotr_search_columns <<- rep("", ncol(pvt$tab))
   # searchCols <- lapply(input$pivotr_search_columns, function(x) list(search = x))
-  order <- input$explorer_state$order
+  order <- input$explorer_state$order[1]
   if (all(is_empty(order))) order <- "''"
   xcmd <- paste0("#render(make_expl(result, dec = ", input$expl_dec,
                  ", search = '", search, "', order = ", order, "))")
