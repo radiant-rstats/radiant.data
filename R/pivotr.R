@@ -195,7 +195,7 @@ pivotr <- function(dataset,
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' pivotr("diamonds", cvars = "cut") %>% summary
+#' pivotr("diamonds", cvars = "cut") %>% summary(chi2 = TRUE)
 #' pivotr("diamonds", cvars = "cut", tabsort = "-n") %>% summary
 #' pivotr("diamonds", cvars = "cut", tabfilt = "n > 700") %>% summary
 #' pivotr("diamonds", cvars = "cut:clarity", nvar = "price") %>% summary
@@ -231,14 +231,15 @@ summary.pivotr <- function(object,
 
   if (chi2) {
     if (length(object$cvars) < 3) {
+
       cst <- object$tab_freq %>% filter(.[[1]] != "Total") %>%
         select(-which(names(.) %in% c(object$cvars, "Total")))  %>%
-        mutate_each(funs(rep_na = ifelse (is.na(.),0,.))) %>%
+        mutate_each(funs(ifelse (is.na(.), 0, .))) %>%
         {sshhr(chisq.test(., correct = FALSE))}
 
       res <- tidy(cst)
       if (dec < 4 && res$p.value < .001) res$p.value  <- "< .001"
-      res <- formatdf(res, dec = dec)
+      res <- rounddf(res, dec)
 
       l1 <- paste0("Chi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value, "\n")
       l2 <- paste0(sprintf("%.1f",100 * (sum(cst$expected < 5) / length(cst$expected))),"% of cells have expected values below 5")
@@ -310,21 +311,9 @@ make_dt <- function(pvt,
   ## remove column totals
   ## should perhaps be part of pivotr but convenient for now in tfoot
   ## and for external calls to pivotr
-  tab <- filter(tab, tab[,1] != "Total")
-
-  if (nrow(tab) > 5000000) {
-    fbox <- "none"
-  } else {
-    fbox <- list(position = "top")
-    dc <- getclass(tab)
-    if ("factor" %in% dc) {
-      toChar <- sapply(select(tab, which(dc == "factor")), function(x) length(levels(x))) > 100
-      if (any(toChar))
-        tab <- mutate_each_(tab, funs(as.character), vars = names(toChar)[toChar])
-    }
-  }
-
-  dt_tab <- tab %>% {if (!perc) dfround(.,dec) else .} %>%
+  tab <- filter(tab, tab[[1]] != "Total")
+  fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
+  dt_tab <- {if (!perc) rounddf(tab, dec) else tab} %>%
   DT::datatable(container = sketch, selection = "none", rownames = FALSE,
     filter = fbox,
     style = "bootstrap",
@@ -336,8 +325,8 @@ make_dt <- function(pvt,
       processing = FALSE,
       pageLength = 10,
       lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
-    )
-    , callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+    ),
+    callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
   ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey") %>%
         {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}
 

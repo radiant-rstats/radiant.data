@@ -403,18 +403,7 @@ viewdata <- function(dataset,
   ## based on http://rstudio.github.io/DT/server.html
   dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = FALSE)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
-
-  if (nrow(dat) > 5000000) {
-    fbox <- "none"
-  } else {
-    fbox <- list(position = "top")
-    dc <- getclass(dat)
-    if ("factor" %in% dc) {
-      toChar <- sapply(select(dat, which(dc == "factor")), function(x) length(levels(x))) > 100
-      if (any(toChar))
-        dat <- mutate_each_(dat, funs(as.character), vars = names(toChar)[toChar])
-    }
-  }
+  fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
 
   shinyApp(
     ui = fluidPage(title = title,
@@ -722,19 +711,18 @@ formatnr <- function(x, sym = "", dec = 2, perc = FALSE, mark = ",") {
 
 #' Round double in a data.frame to a specified number of decimal places
 #'
-#' @param tbl Data.frame
+#' @param tbl Data frame
 #' @param dec Number of decimal places
 #'
-#' @return Data.frame for viewing
+#' @return Data frame with rounded doubles
 #'
 #' @examples
 #' data.frame(x = c("a","b"), y = c(1L, 2L), z = c(-0.0005, 3.1)) %>%
-#'   dfround(dec = 3)
+#'   rounddf(dec = 3)
 #'
 #' @export
-dfround <- function(tbl, dec = 3) {
-  tbl %>%
-  mutate_each(
+rounddf <- function(tbl, dec = 3) {
+  mutate_each(tbl,
     funs(if (is.double(.)) round(., dec) else .)
   )
 }

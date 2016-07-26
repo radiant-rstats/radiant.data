@@ -290,19 +290,8 @@ make_expl <- function(expl,
     )
   ))
 
-  if (nrow(tab) > 5000000) {
-    fbox <- "none"
-  } else {
-    fbox <- list(position = "top")
-    dc <- getclass(tab)
-    if ("factor" %in% dc) {
-      toChar <- sapply(select(tab, which(dc == "factor")), function(x) length(levels(x))) > 100
-      if (any(toChar))
-        tab <- mutate_each_(tab, funs(as.character), vars = names(toChar)[toChar])
-    }
-  }
-
-  dt_tab <- tab %>% dfround(dec) %>%
+  fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
+  dt_tab <- rounddf(tab, dec) %>%
     DT::datatable(container = sketch, selection = "none",
       rownames = FALSE,
       filter = fbox,
@@ -315,14 +304,14 @@ make_expl <- function(expl,
         processing = FALSE,
         pageLength = 10,
         lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
-      )
-      , callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+      ),
+      callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
     ) %>% DT::formatStyle(., cn_cat,  color = "white", backgroundColor = "grey")
 
   ## see https://github.com/yihui/knitr/issues/1198
-  dt_tab$dependencies <- c(
-    list(rmarkdown::html_dependency_bootstrap('bootstrap')), dt_tab$dependencies
-  )
+  # dt_tab$dependencies <- c(
+  #   list(rmarkdown::html_dependency_bootstrap('bootstrap')), dt_tab$dependencies
+  # )
 
   dt_tab
 }
