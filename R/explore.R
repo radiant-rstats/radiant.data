@@ -309,9 +309,9 @@ make_expl <- function(expl,
     ) %>% DT::formatStyle(., cn_cat,  color = "white", backgroundColor = "grey")
 
   ## see https://github.com/yihui/knitr/issues/1198
-  # dt_tab$dependencies <- c(
-  #   list(rmarkdown::html_dependency_bootstrap('bootstrap')), dt_tab$dependencies
-  # )
+  dt_tab$dependencies <- c(
+    list(rmarkdown::html_dependency_bootstrap('bootstrap')), dt_tab$dependencies
+  )
 
   dt_tab
 }
