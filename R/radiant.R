@@ -803,16 +803,15 @@ store <- function(object, ...) UseMethod("store", object)
 indexr <- function(dataset, vars = "", filt = "") {
   dat <- getdata(dataset, na.rm = FALSE)
   if (is_empty(vars)) vars <- colnames(dat)
-  nr <- nrow(dat)
+  nrows <- nrow(dat)
   ind <-
-    dat %>%
-    mutate(imf___ = 1:nr) %>%
+    mutate(dat, imf___ = 1:nrows) %>%
     {if (filt == "") . else filterdata(., filt)} %>%
     select_(.dots = unique(c("imf___", vars))) %>%
     na.omit %>%
     .[["imf___"]]
 
-  list(nr = nr, ind = ind)
+  list(nr = nrows, ind = ind)
 }
 
 #' Convenience function for is.null or is.na
