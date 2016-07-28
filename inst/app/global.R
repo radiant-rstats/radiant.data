@@ -227,10 +227,12 @@ options(radiant.url.patterns = make_url_patterns())
 
 ## installed packages versions
 tmp <- grep("radiant.", installed.packages()[,"Package"], value = TRUE)
+if ("radiant" %in% installed.packages()) tmp <- c("radiant" = "radiant", tmp)
+
 radiant.versions <- "Unknown"
-if (length(tmp) > 0) {
+if (length(tmp) > 0)
   radiant.versions <- sapply(names(tmp), function(x) paste(x, paste(packageVersion(x), sep = ".")))
-}
+
 options(radiant.versions = paste(radiant.versions, collapse = ", "))
 rm(tmp, radiant.versions)
 
