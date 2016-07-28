@@ -64,10 +64,10 @@ r_ssuid <-
 session$sendCustomMessage("session_start", r_ssuid)
 
 ## load for previous state if available but look in global memory first
-if (exists("r_state") && exists("r_data")) {
+if (exists("r_data")) {
   r_data  <- do.call(reactiveValues, r_data)
-  r_state <- r_state
-  rm(r_data, r_state, envir = .GlobalEnv)
+  r_state <- if (exists("r_state")) r_state else list()
+  suppressWarnings(rm(r_data, r_state, envir = .GlobalEnv))
 } else if (!is.null(r_sessions[[r_ssuid]]$r_data)) {
   r_data  <- do.call(reactiveValues, r_sessions[[r_ssuid]]$r_data)
   r_state <- r_sessions[[r_ssuid]]$r_state
@@ -97,21 +97,13 @@ if (exists("r_state") && exists("r_data")) {
 
   ## restore from local folder but assign new ssuid
   fn <- paste0(normalizePath("~/radiant.sessions"),"/r_", mrsf, ".rds")
-
   rs <- try(readRDS(fn), silent = TRUE)
   if (is(rs, 'try-error')) {
     r_data  <- init_data()
     r_state <- list()
   } else {
-    if (length(rs$r_data) == 0)
-      r_data  <- init_data()
-    else
-      r_data  <- do.call(reactiveValues, rs$r_data)
-
-    if (length(rs$r_state) == 0)
-      r_state <- list()
-    else
-      r_state <- rs$r_state
+    r_data  <- if (length(rs$r_data) == 0) init_data() else do.call(reactiveValues, rs$r_data)
+    r_state <- if (length(rs$r_state) == 0) list() else rs$r_state
   }
 
   ## don't navigate to same tab in case the app locks again
