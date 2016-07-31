@@ -48,6 +48,20 @@ NULL
 #' @export
 NULL
 
+#' Exporting tibble
+#' @importFrom tibble tibble
+#' @name tibble
+#' @rdname tibble
+#' @export
+NULL
+
+#' Exporting as_tibble
+#' @importFrom tibble as_tibble
+#' @name as_tibble
+#' @rdname as_tibble
+#' @export
+NULL
+
 #' Exporting tidy from broom
 #' @importFrom broom tidy
 #' @name tidy
