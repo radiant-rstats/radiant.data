@@ -867,9 +867,20 @@ If the dataset had different columns for the same superheroes we could combine t
 ### Intersect
 
 <table class='table table-condensed table-hover' style='width:70%;'>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> alignment </th>
+   <th style="text-align:left;"> gender </th>
+   <th style="text-align:left;"> publisher </th>
+  </tr>
+ </thead>
 <tbody>
   <tr>
-
+   <td style="text-align:left;"> Magneto </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
   </tr>
 </tbody>
 </table>
@@ -882,241 +893,93 @@ The R(adiant) commands are the same as shown above, except you will need to repl
 
 ### Union
 
-<table class="kable_wrapper">
-<tbody>
-  <tr>
-   <td> 
-
 <table class='table table-condensed table-hover' style='width:70%;'>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> alignment </th>
+   <th style="text-align:left;"> gender </th>
+   <th style="text-align:left;"> publisher </th>
+  </tr>
+ </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> Thor </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Iron Man </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Hulk </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Hawkeye </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Black Widow </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Captain America </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Magneto </td>
-  </tr>
-</tbody>
-</table>
-
- </td>
-   <td> 
-
-<table class='table table-condensed table-hover' style='width:70%;'>
-<tbody>
-  <tr>
+   <td style="text-align:left;"> Hellboy </td>
    <td style="text-align:left;"> good </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> good </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> good </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> good </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> good </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> good </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> bad </td>
-  </tr>
-</tbody>
-</table>
-
- </td>
-   <td> 
-
-<table class='table table-condensed table-hover' style='width:70%;'>
-<tbody>
-  <tr>
    <td style="text-align:left;"> male </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> male </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> male </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> male </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> female </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> male </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> male </td>
-  </tr>
-</tbody>
-</table>
-
- </td>
-   <td> 
-
-<table class='table table-condensed table-hover' style='width:70%;'>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> Marvel </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Marvel </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Marvel </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Marvel </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Marvel </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Marvel </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Marvel </td>
-  </tr>
-</tbody>
-</table>
-
- </td>
-   <td> 
-
-<table class='table table-condensed table-hover' style='width:70%;'>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> Magneto </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Storm </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Mystique </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Batman </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Joker </td>
+   <td style="text-align:left;"> Dark Horse Comics </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Catwoman </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Hellboy </td>
-  </tr>
-</tbody>
-</table>
-
- </td>
-   <td> 
-
-<table class='table table-condensed table-hover' style='width:70%;'>
-<tbody>
-  <tr>
    <td style="text-align:left;"> bad </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> good </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> bad </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> good </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> bad </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> bad </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> good </td>
-  </tr>
-</tbody>
-</table>
-
- </td>
-   <td> 
-
-<table class='table table-condensed table-hover' style='width:70%;'>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> male </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> female </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> female </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> male </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> male </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> female </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> male </td>
-  </tr>
-</tbody>
-</table>
-
- </td>
-   <td> 
-
-<table class='table table-condensed table-hover' style='width:70%;'>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> Marvel </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Marvel </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Marvel </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> DC </td>
   </tr>
   <tr>
+   <td style="text-align:left;"> Joker </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
    <td style="text-align:left;"> DC </td>
   </tr>
   <tr>
+   <td style="text-align:left;"> Batman </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
    <td style="text-align:left;"> DC </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> Dark Horse Comics </td>
+   <td style="text-align:left;"> Mystique </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
   </tr>
-</tbody>
-</table>
-
- </td>
+  <tr>
+   <td style="text-align:left;"> Storm </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Magneto </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Captain America </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Black Widow </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hawkeye </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hulk </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Iron Man </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Thor </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
   </tr>
 </tbody>
 </table>
@@ -1172,12 +1035,6 @@ The R(adiant) commands are the same as shown above, except you will need to repl
   <tr>
    <td style="text-align:left;"> Captain America </td>
    <td style="text-align:left;"> good </td>
-   <td style="text-align:left;"> male </td>
-   <td style="text-align:left;"> Marvel </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Magneto </td>
-   <td style="text-align:left;"> bad </td>
    <td style="text-align:left;"> male </td>
    <td style="text-align:left;"> Marvel </td>
   </tr>

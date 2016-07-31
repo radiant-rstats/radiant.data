@@ -7,10 +7,11 @@ cmb_args <- as.list(formals(combinedata))
 ## list of function inputs selected by user
 cmb_inputs <- reactive({
 
+  cmb_args$data_filter <- if (input$show_filter) input$data_filter else ""
   cmb_args$dataset <- input$dataset
   cmb_args$cmb_dataset <- input$cmb_dataset
   ## loop needed because reactive values don't allow single bracket indexing
-  for (i in r_drop(names(cmb_args), drop = c("dataset","cmb_dataset")))
+  for (i in r_drop(names(cmb_args), drop = c("dataset","cmb_dataset","data_filter")))
     cmb_args[[i]] <- input[[paste0("cmb_",i)]]
 
   ## only need cmb_by when using a join method
@@ -28,7 +29,6 @@ output$ui_cmb_dataset <- renderUI({
 })
 
 output$ui_cmb_by <- renderUI({
-  # if (is.null(input$cmb_dataset)) return()
   req(input$cmb_dataset)
   vars1 <- varnames()
   vars2 <- colnames(r_data[[input$cmb_dataset]])
@@ -41,16 +41,12 @@ output$ui_cmb_by <- renderUI({
 })
 
 output$ui_cmb_add <- renderUI({
-  # if (is.null(input$cmb_dataset)) return()
   req(input$cmb_dataset)
   vars <- colnames(r_data[[input$cmb_dataset]])
   selectInput("cmb_add", "Variables to add:", choices  = vars,
     selected = state_multiple("cmb_add", vars, vars),
     multiple = TRUE, size = min(5,length(vars)), selectize = FALSE)
 })
-
-# cmb_type <- c("inner_join","left_join","right_join","full_join","semi_join",
-              # "anti_join","bind_rows","bind_cols","intersect","union","setdiff")
 
 cmb_type <- c("Inner join" = "inner_join", "Left join" = "left_join",
               "Right join" = "right_join", "Full join" = "full_join",
@@ -103,7 +99,8 @@ observeEvent(input$combine_report, {
 
 output$cmb_data1 <- renderText({
   req(input$dataset)
-  show_data_snippet(title = paste("<h3>Dataset 1:",input$dataset,"</h3>"))
+  filt <- if (input$show_filter) input$data_filter else ""
+  show_data_snippet(title = paste("<h3>Dataset 1:",input$dataset,"</h3>"), filt = filt)
 })
 
 output$cmb_data2 <- renderText({

@@ -261,7 +261,7 @@ If the dataset had different columns for the same superheroes we could combine t
 ### Intersect
 
 ```{r results = 'asis', echo = FALSE}
-intersect(avengers, superheroes) %>%
+dplyr::intersect(avengers, superheroes) %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 
@@ -274,7 +274,7 @@ The R(adiant) commands are the same as shown above, except you will need to repl
 ### Union
 
 ```{r results = 'asis', echo = FALSE}
-union(avengers, superheroes) %>%
+dplyr::union(avengers, superheroes) %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 
@@ -287,7 +287,7 @@ The R(adiant) commands are the same as shown above, except you will need to repl
 ### Setdiff
 
 ```{r results = 'asis', echo = FALSE}
-setdiff(avengers, superheroes) %>%
+dplyr::setdiff(avengers, superheroes) %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 

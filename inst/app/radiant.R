@@ -199,10 +199,10 @@ d2c <- function(x) if (is_date(x)) as.character(x) else x
 trunc_char <- function(x) if (is.character(x)) strtrim(x,40) else x
 
 ## show a few rows of a dataframe
-show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "") {
+show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt = "") {
 
   n <- 0
-  {if (is.character(dat) && length(dat) == 1) getdata(dat, na.rm = FALSE) else dat} %>%
+  {if (is.character(dat) && length(dat) == 1) getdata(dat, filt = filt, na.rm = FALSE) else dat} %>%
     { n <<- nrow(.); . } %>%
     slice(1:min(nshow,n)) %>%
     mutate_each(funs(d2c)) %>%

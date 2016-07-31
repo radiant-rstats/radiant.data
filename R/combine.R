@@ -7,6 +7,7 @@
 #' @param by Variables used to combine `dataset` and `cmb_dataset`
 #' @param add Variables to add from `cmb_dataset`
 #' @param type The main bind and join types from the dplyr package are provided. \bold{inner_join} returns all rows from x with matching values in y, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. \bold{left_join} returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. \bold{right_join} is equivalent to a left join for datasets y and x. \bold{full_join} combines two datasets, keeping rows and columns that appear in either. \bold{semi_join} returns all rows from x with matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. \bold{anti_join} returns all rows from x without matching values in y, keeping only columns from x. \bold{bind_rows} and \bold{bind_cols} are also included, as are \bold{intersect}, \bold{union}, and \bold{setdiff}. See \url{http://radiant-rstats.github.io/docs/data/combine.html} for further details
+#' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
 #' @param name Name for the combined dataset
 #'
 #' @return If list `r_data` exists the combined dataset is added as `name`. Else the combined dataset will be returned as `name`
@@ -22,7 +23,8 @@ combinedata <- function(dataset, cmb_dataset,
                         by = "",
                         add = "",
                         type = "inner_join",
-                        name = "") {
+                        name = "",
+                        data_filter = "") {
 
   is_join <- grepl("_join",type)
   if (is_join && by[1] == "")
@@ -31,7 +33,7 @@ combinedata <- function(dataset, cmb_dataset,
   if (name == "")
     name <- if (is_string(dataset)) paste0("cmb_",dataset) else "cmb_data"
 
-  dat1 <- getdata(dataset, na.rm = FALSE)
+  dat1 <- getdata(dataset, filt = data_filter, na.rm = FALSE)
   if (all(add == ""))
     dat2 <- getdata(cmb_dataset, na.rm = FALSE)
   else
@@ -42,7 +44,7 @@ combinedata <- function(dataset, cmb_dataset,
 
   if (is_join) {
     dat <- get(type)(dat1, dat2, by = by)
-    madd <- paste0("\n\nBy: ", paste0(by, collapse = ", "))
+    madd <- paste0("<br>\nBy: ", paste0(by, collapse = ", "))
   } else {
     dat <- get(type)(dat1, dat2)
     madd <- ""
@@ -53,8 +55,9 @@ combinedata <- function(dataset, cmb_dataset,
 
   mess <-
     paste0("## Combined\n\nDatasets: ", dataset, " and ", cmb_dataset,
-           " (", type, ")", madd, "\n\nOn: ", lubridate::now(), "\n\n",
-           descr1, "\n\n", descr2)
+           " (", type, ")", madd, "</br>\nOn: ", lubridate::now(), "\n\n", descr1,
+           ifelse(data_filter != "", paste0("\n\n**Data filter:** ", data_filter), ""),
+           "\n\n", descr2)
 
   dat <- set_attr(dat, "description", mess)
 
@@ -69,5 +72,5 @@ combinedata <- function(dataset, cmb_dataset,
   env$r_data[[name]] <- dat
   env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
   env$r_data[[paste0(name,"_descr")]] <- mess
-  message("\nCombined data added as", name, "\n")
+  message("\nCombined data added as ", name, "\n")
 }
