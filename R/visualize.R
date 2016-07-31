@@ -405,13 +405,13 @@ visualize <- function(dataset, xvar,
 
   }
 
-  if (color != 'none') {
+  if (color != "none") {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] + aes_string(color = color)
   }
 
   ## adding fill
-  if (fill != 'none') {
+  if (fill != "none") {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] + aes_string(fill = fill)
   }
@@ -424,16 +424,16 @@ visualize <- function(dataset, xvar,
 
   if ("line" %in% check) {
     for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + sshhr( geom_smooth(method = "lm", fill = 'blue',
-                                             alpha = .1, size = .75,
-                                             linetype = "dashed",
-                                             colour = 'black') )
+      plot_list[[i]] <- plot_list[[i]] +
+        sshhr(geom_smooth(method = "lm", fill = "blue", alpha = .1, size = .75,
+                          linetype = "dashed", color = "black"))
   }
 
   if ("loess" %in% check) {
     for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + sshhr( geom_smooth(span = smooth, method = "loess", size = .75,
-                                             linetype = "dotdash", aes(group = 1)) )
+      plot_list[[i]] <- plot_list[[i]] +
+        sshhr(geom_smooth(span = smooth, method = "loess", size = .75,
+                          linetype = "dotdash", aes(group = 1)))
   }
 
   if ("flip" %in% axes) {
@@ -444,6 +444,6 @@ visualize <- function(dataset, xvar,
   if (custom)
     if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
- sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list), 2)))) ) %>%
+  sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list), 2)))) ) %>%
    {if (shiny) . else print(.)}
 }
