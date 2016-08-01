@@ -5,7 +5,7 @@
 \title{Visualize data using ggplot2 \url{http://docs.ggplot2.org/current/}}
 \usage{
 visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
-  type = "hist", facet_row = ".", facet_col = ".", color = "none",
+  type = "dist", facet_row = ".", facet_col = ".", color = "none",
   fill = "none", bins = 10, smooth = 1, fun = "mean", check = "",
   axes = "", alpha = 0.5, data_filter = "", shiny = FALSE,
   custom = FALSE)
@@ -21,7 +21,7 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 
 \item{combx}{Combine xvars in plot (TRUE or FALSE, FALSE is the default)}
 
-\item{type}{Type of plot to create. One of Histogram ('hist'), Density ('density'), Scatter ('scatter'), Line ('line'), Bar ('bar'), or Box-plot ('box')}
+\item{type}{Type of plot to create. One of Distribution ('dist'), Density ('density'), Scatter ('scatter'), Line ('line'), Bar ('bar'), or Box-plot ('box')}
 
 \item{facet_row}{Create vertically arranged subplots for each level of the selected factor variable}
 
@@ -29,7 +29,7 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 
 \item{color}{Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different color}
 
-\item{fill}{Group bar, histogram, and density plots by group, each with a different color}
+\item{fill}{Display bar, distribution, and density plots by group, each with a different color}
 
 \item{bins}{Number of bins used for a histogram (1 - 50)}
 
@@ -60,7 +60,7 @@ See \url{http://radiant-rstats.github.io/docs/data/visualize.html} for an exampl
 }
 \examples{
 visualize("diamonds", "carat", "price", type = "scatter", check = "loess")
-visualize("diamonds", "price:x", type = "hist")
+visualize("diamonds", "price:x", type = "dist")
 visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
 visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
   type = "bar", fun = "median")

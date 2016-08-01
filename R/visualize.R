@@ -7,11 +7,11 @@
 #' @param yvar Variable to display along the Y-axis of the plot (default = "none")
 #' @param comby Combine yvars in plot (TRUE or FALSE, FALSE is the default)
 #' @param combx Combine xvars in plot (TRUE or FALSE, FALSE is the default)
-#' @param type Type of plot to create. One of Histogram ('hist'), Density ('density'), Scatter ('scatter'), Line ('line'), Bar ('bar'), or Box-plot ('box')
+#' @param type Type of plot to create. One of Distribution ('dist'), Density ('density'), Scatter ('scatter'), Line ('line'), Bar ('bar'), or Box-plot ('box')
 #' @param facet_row Create vertically arranged subplots for each level of the selected factor variable
 #' @param facet_col Create horizontally arranged subplots for each level of the selected factor variable
 #' @param color Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different color
-#' @param fill Group bar, histogram, and density plots by group, each with a different color
+#' @param fill Display bar, distribution, and density plots by group, each with a different color
 #' @param bins Number of bins used for a histogram (1 - 50)
 #' @param smooth Adjust the flexibility of the loess line for scatter plots
 #' @param fun Set the summary measure for line and bar plots when the X-variable is a factor (default is "mean"). Also used to plot an error bar in a scatter plot when the X-variable is a factor. Options are "mean" and/or "median"
@@ -26,7 +26,7 @@
 #'
 #' @examples
 #' visualize("diamonds", "carat", "price", type = "scatter", check = "loess")
-#' visualize("diamonds", "price:x", type = "hist")
+#' visualize("diamonds", "price:x", type = "dist")
 #' visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
 #' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
 #'   type = "bar", fun = "median")
@@ -47,7 +47,7 @@ visualize <- function(dataset, xvar,
                       yvar = "",
                       comby = FALSE,
                       combx = FALSE,
-                      type = "hist",
+                      type = "dist",
                       facet_row = ".",
                       facet_col = ".",
                       color = "none",
@@ -70,7 +70,7 @@ visualize <- function(dataset, xvar,
   # type <- "line"
   # comby = FALSE
   # combx = FALSE
-  # # type = "hist"
+  # # type = "dist"
   # facet_row = "."
   # facet_col = "."
   # color = "cut"
@@ -89,7 +89,7 @@ visualize <- function(dataset, xvar,
   vars <- xvar
 
   if (!type %in% c("scatter","line")) color <- "none"
-  if (!type %in% c("bar","hist","density")) fill <- "none"
+  if (!type %in% c("bar","dist","density")) fill <- "none"
   if (type != "scatter") {
     check %<>% sub("line","",.) %>% sub("loess","",.)
     fun <- fun[1]  # only scatter can deal with multiple functions
@@ -100,11 +100,11 @@ visualize <- function(dataset, xvar,
   byvar <- NULL
 
   if (length(yvar) == 0 || identical(yvar, "")) {
-    if (!type %in% c("hist","density")) {
+    if (!type %in% c("dist","density")) {
       return("No Y-variable provided for a plot that requires one")
     }
   } else {
-    if (type %in% c("hist","density")) {
+    if (type %in% c("dist","density")) {
       yvar <- ""
     } else {
       vars %<>% c(., yvar)
@@ -234,10 +234,10 @@ visualize <- function(dataset, xvar,
   }
 
   plot_list <-  list()
-  if (type == "hist") {
+  if (type == "dist") {
     for (i in xvar) {
 
-      ## can't create a histogram for a logical
+      ## can't create a distribution plot for a logical
       if (dc[i] == "logical") {
         dat[[i]] <- as_factor(dat[[i]])
         dc[i] <- "factor"

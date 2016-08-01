@@ -1,4 +1,4 @@
-viz_type <- c("Histogram" = "hist", "Density" = "density", "Scatter" = "scatter",
+viz_type <- c("Distribution" = "dist", "Density" = "density", "Scatter" = "scatter",
               "Line" = "line", "Bar" = "bar", "Box-plot" = "box")
 viz_check <- c("Line" = "line", "Loess" = "loess", "Jitter" = "jitter")
 viz_axes <-  c("Flip" = "flip", "Log X" = "log_x", "Log Y" = "log_y",
@@ -61,7 +61,7 @@ output$ui_viz_xvar <- renderUI({
   # vars <- varnames()
   # if (not_available(vars)) return()
   req(available(vars))
-  if (input$viz_type == "hist") vars <- vars["date" != .getclass()[vars]]
+  if (input$viz_type == "dist") vars <- vars["date" != .getclass()[vars]]
   if (input$viz_type == "density") vars <- vars["factor" != .getclass()[vars]]
   if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars_nonum()
 
@@ -183,7 +183,7 @@ output$ui_viz_combx <- renderUI({
 # })
 
 observeEvent(input$viz_type, {
-  if (input$viz_type %in% c("hist", "density")) {
+  if (input$viz_type %in% c("dist", "density")) {
     updateCheckboxInput(session, "viz_comby", value = FALSE)
   } else {
     updateCheckboxInput(session, "viz_combx", value = FALSE)
@@ -258,7 +258,7 @@ output$ui_viz_axes <- renderUI({
   req(input$viz_type)
   ind <- 1
   if (input$viz_type %in% c("line","scatter")) ind <- 1:3
-  if (input$viz_type %in% c("hist","density")) ind <- c(1:2, 5)
+  if (input$viz_type %in% c("dist","density")) ind <- c(1:2, 5)
   if (input$viz_type %in% c("bar","box")) ind <- c(1, 3)
   if (!is_empty(input$viz_facet_row, ".") || !is_empty(input$viz_facet_col, "."))  ind <- c(ind, 4)
   if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
@@ -295,18 +295,18 @@ output$ui_Visualize <- renderUI({
     wellPanel(
       checkboxInput("viz_pause", "Pause plotting", state_init("viz_pause", FALSE)),
       uiOutput("ui_viz_type"),
-      conditionalPanel(condition = "input.viz_type != 'hist' & input.viz_type != 'density'",
+      conditionalPanel(condition = "input.viz_type != 'dist' & input.viz_type != 'density'",
         uiOutput("ui_viz_yvar"),
         uiOutput("ui_viz_comby")
       ),
       uiOutput("ui_viz_xvar"),
-      conditionalPanel("input.viz_type == 'hist' | input.viz_type == 'density'",
+      conditionalPanel("input.viz_type == 'dist' | input.viz_type == 'density'",
         uiOutput("ui_viz_combx")
       ),
       uiOutput("ui_viz_facet_row"),
       uiOutput("ui_viz_facet_col"),
       conditionalPanel(condition = "input.viz_type == 'bar' |
-                                    input.viz_type == 'hist' |
+                                    input.viz_type == 'dist' |
                                     input.viz_type == 'density'",
         # conditionalPanel("input.viz_combx != true & input.viz_comby != true",
           uiOutput("ui_viz_fill")
@@ -321,7 +321,7 @@ output$ui_Visualize <- renderUI({
         uiOutput("ui_viz_check")
       ),
       uiOutput("ui_viz_axes"),
-      conditionalPanel(condition = "input.viz_type == 'hist'",
+      conditionalPanel(condition = "input.viz_type == 'dist'",
         sliderInput("viz_bins", label = "Number of bins:",
           min = 1, max = 50, value = state_init("viz_bins",10),
           step = 1)
@@ -361,7 +361,7 @@ viz_plot_height <- reactive({
     r_data$plot_height
   } else {
     lx <- ifelse (not_available(input$viz_xvar) || isTRUE(input$viz_combx), 1, length(input$viz_xvar))
-    ly <- ifelse (not_available(input$viz_yvar) || input$viz_type %in% c("hist","density") ||
+    ly <- ifelse (not_available(input$viz_yvar) || input$viz_type %in% c("dist","density") ||
                   isTRUE(input$viz_comby), 1, length(input$viz_yvar))
     nr <- lx * ly
     if (nr > 1)
@@ -416,7 +416,7 @@ output$visualize <- renderPlot({
   if (input$viz_type == "box" && !all(input$viz_xvar %in% groupable_vars())) return()
 
   ## waiting for comby and/or combx to be updated
-  if (input$viz_type %in% c("hist", "density")) {
+  if (input$viz_type %in% c("dist", "density")) {
     if (isTRUE(input$viz_comby)) return()
     if (length(input$viz_xvar) > 1 && is.null(input$viz_combx)) return()
     # if (isTRUE(input$viz_combx)) {
@@ -449,7 +449,7 @@ output$visualize <- renderPlot({
 observeEvent(input$visualize_report, {
   ## resetting hidden elements to default values
   vi <- viz_inputs()
-  if (input$viz_type != "hist") vi$bins <- viz_args$bins
+  if (input$viz_type != "dist") vi$bins <- viz_args$bins
   if (!input$viz_type %in% c("density","scatter") ||
       !"loess" %in% input$viz_check) vi$smooth <- viz_args$smooth
 
