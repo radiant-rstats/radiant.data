@@ -90,7 +90,7 @@ knitr::opts_knit$set(progress = TRUE )
 knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = FALSE,
   message = FALSE, warning = FALSE, error = TRUE,
   # screenshot.force = FALSE,
-  fig.path = tempdir())
+  fig.path = normalizePath(tempdir(), winslash = "/"))
 
 options(radiant.nav_ui =
   list(windowTitle = "Radiant", id = "nav_radiant", inverse = TRUE,
