@@ -6,16 +6,10 @@ rmd_manual <- c("Manual paste", "Auto paste")
 rmd_report_choices <- c("HTML","Rmd")
 if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user))) {
   rmd_manual <- c(rmd_manual, "To Rmd", "To R")
-  # if (rstudioapi::isAvailable()) {
-    rmd_report_choices <- c("HTML","PDF","Word","Rmd")
-  # } else {
-    # rmd_report_choices <- c("HTML","Word","Rmd")
-  # }
+  rmd_report_choices <- c("HTML","PDF","Word","Rmd")
 }
 
-#if (Sys.getenv("R_ZIPCMD") != "")
 rmd_report_choices %<>% c(.,"Rmd & Data (zip)")
-
 rmd_example <- "## Sample report
 
 This is an example of the type of report you can write in Radiant.
@@ -225,7 +219,6 @@ knitIt <- function(text) {
 
 output$rmd_knitted <- renderUI({
   req(valsRmd$knit != 1)
-  # req(input$evalRmd || (input$evalRmd >= 0 && !is.null(input$runKeyRmd$randNum)))
   isolate({
     if (!isTRUE(getOption("radiant.local")) && is.null(session$user)) {
       HTML("<h2>Rmd file is not evaluated when running Radiant on open-source Shiny Server</h2>")
