@@ -4,10 +4,12 @@
 \alias{center}
 \title{Center}
 \usage{
-center(x)
+center(x, na.rm)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 If x is a numberic variable return x - mean(x)

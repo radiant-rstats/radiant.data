@@ -4,10 +4,12 @@
 \alias{sum_rm}
 \title{Sum with na.rm = TRUE}
 \usage{
-sum_rm(x)
+sum_rm(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 Sum of input values

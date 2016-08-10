@@ -4,10 +4,12 @@
 \alias{mode_rm}
 \title{Mode with na.rm = TRUE}
 \usage{
-mode_rm(x)
+mode_rm(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 Mode value

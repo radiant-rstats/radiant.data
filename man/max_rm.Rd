@@ -4,10 +4,12 @@
 \alias{max_rm}
 \title{Max with na.rm = TRUE}
 \usage{
-max_rm(x)
+max_rm(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 Maximum value

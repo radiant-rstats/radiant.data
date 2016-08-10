@@ -4,10 +4,12 @@
 \alias{varp_rm}
 \title{Variance for the population na.rm = TRUE}
 \usage{
-varp_rm(x)
+varp_rm(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 Variance for the population

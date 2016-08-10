@@ -4,10 +4,12 @@
 \alias{sdp_rm}
 \title{Standard deviation for the population na.rm = TRUE}
 \usage{
-sdp_rm(x)
+sdp_rm(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 Standard deviation for the population

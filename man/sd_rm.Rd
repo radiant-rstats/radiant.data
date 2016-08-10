@@ -9,7 +9,7 @@ sd_rm(x, na.rm = TRUE)
 \arguments{
 \item{x}{Input variable}
 
-\item{na.rm}{Remove NAs (TRUE or FALSE)}
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 Standard deviation

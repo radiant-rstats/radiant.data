@@ -4,10 +4,12 @@
 \alias{standardize}
 \title{Standardize}
 \usage{
-standardize(x)
+standardize(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 If x is a numberic variable return center(x) / mean(x)

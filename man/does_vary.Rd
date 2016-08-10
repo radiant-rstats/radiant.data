@@ -4,10 +4,12 @@
 \alias{does_vary}
 \title{Does a vector have non-zero variability?}
 \usage{
-does_vary(x)
+does_vary(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 Logical. TRUE is there is variability

@@ -4,10 +4,12 @@
 \alias{mean_rm}
 \title{Mean with na.rm = TRUE}
 \usage{
-mean_rm(x)
+mean_rm(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 Mean value

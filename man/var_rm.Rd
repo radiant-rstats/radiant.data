@@ -4,10 +4,12 @@
 \alias{var_rm}
 \title{Variance with na.rm = TRUE}
 \usage{
-var_rm(x)
+var_rm(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 Variance

@@ -4,10 +4,12 @@
 \alias{min_rm}
 \title{Min with na.rm = TRUE}
 \usage{
-min_rm(x)
+min_rm(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 Minimum value

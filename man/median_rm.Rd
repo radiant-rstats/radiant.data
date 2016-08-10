@@ -4,10 +4,12 @@
 \alias{median_rm}
 \title{Median with na.rm = TRUE}
 \usage{
-median_rm(x)
+median_rm(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
 Median value

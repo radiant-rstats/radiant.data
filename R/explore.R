@@ -83,65 +83,26 @@ explore <- function(dataset,
 
     ## convert categorical variables to factors if needed
     ## needed to deal with empty/missing values
-    empty_level <- function(x) {
-      if (!is.factor(x)) x %<>% as.factor
-      levs <- levels(x)
-      if ("" %in% levs) {
-        levs[levs == ""] <- "NA"
-        x <- factor(x, levels = levs)
-        x[is.na(x)] <- "NA"
-      } else if (any(is.na(x))) {
-        x <- factor(x, levels = c(levs,"NA"))
-        x[is.na(x)] <- "NA"
-      }
-      x
-    }
-
     dat[,byvar] <- select_(dat, .dots = byvar) %>% mutate_each(funs(empty_level(.)))
 
     ## avoiding issues with n_missing and n_distinct in dplyr
     ## have to reverse this later
-    # names(pfun) %<>% sub("n_","n.",.)
-    # names(pfun) %<>% sub("n_missing","n.missing",.) %>% sub("n_distinct","n.distinct",.)
-    # mutate(fun = sub("n.","n_",fun)) %>%
-    # set_colnames(., sub("^n\\.","n_",colnames(.))) %>%
     fix_uscore <- function(x, org = "_", repl = ".") {
       stats <-  c("missing","distinct")
       org <- paste0("n",org,stats)
       repl <- paste0("n",repl,stats)
-      for (i in seq_along(org)) {
-        x %<>% sub(org[i],repl[i],.)
-      }
+      for (i in seq_along(org)) x %<>% sub(org[i],repl[i],.)
       x
     }
 
     names(pfun) %<>% fix_uscore
 
-    ## for median issue in dplyr < .5
-    ## https://github.com/hadley/dplyr/issues/893
-    # getclass(dat)
-
     tab <-
       dat %>% group_by_(.dots = byvar) %>%
       summarise_each(pfun)
 
-    # library(dplyr)
-    # mtcars %>% select(mpg) %>% group_by(mpg) %>% summarize(nr = n(), perc = n()/nrow(.))
-    # dat %>% select(mpg) %>% group_by(mpg) %>% summarize(nr = n(), perc = n()/nrow(.))
-    # dat %>% group_by(mpg) %>% summarize(n())
-    # dat %>% bind_cols(dat) %>% group_by(mpg) %>%
-
-    # dd <- bind_cols(dat, dat)
-    # colnames(dd) <- c(".byvar","mpg")
-
-    #   dd %>% group_by_(.dots = byvar) %>%
-    #   summarise_each(pfun)
-    #   warnings()
-
     ## avoiding issues with n_missing and n_distinct
     names(pfun) %<>% sub("n.","n_",.)
-    # length(fun)
-    # length(vars)
 
     if (length(vars) > 1 && length(fun) > 1) {
       ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
@@ -409,126 +370,125 @@ cv <- function(x, na.rm = TRUE) {
 
 #' Mean with na.rm = TRUE
 #' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return Mean value
 #' @examples
 #' mean_rm(runif (100))
 #'
 #' @export
-mean_rm <- function(x) mean(x, na.rm = TRUE)
+mean_rm <- function(x, na.rm = TRUE) mean(x, na.rm = na.rm)
 
 #' Median with na.rm = TRUE
 #' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return Median value
 #' @examples
 #' median_rm(runif (100))
 #'
 #' @export
-median_rm <- function(x) median(x, na.rm = TRUE)
+median_rm <- function(x, na.rm = TRUE) median(x, na.rm = na.rm)
 
 #' Mode with na.rm = TRUE
 #' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return Mode value
 #' @examples
 #' mode_rm(diamonds$cut)
 #'
 #' @export
-mode_rm <- function(x) {
+mode_rm <- function(x, na.rm = TRUE) {
   ## from http://stackoverflow.com/a/8189441/1974918
-  x <- na.omit(x)
+  if (na.rm) x <- na.omit(x)
   ux <- unique(x)
   ux[which.max(tabulate(match(x, ux)))]
 }
 
-# mode_rm1 <- function(x) {
-#   data_frame(x = na.omit(x)) %>%
-#   group_by(x) %>%
-#   summarize(n = n()) %>%
-#   arrange(n) %>%
-#   .[[1]] %>%
-#   .[1]
-# }
-
 #' Min with na.rm = TRUE
 #' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return Minimum value
 #' @examples
 #' min_rm(runif (100))
 #'
 #' @export
-min_rm <- function(x) min(x, na.rm = TRUE)
+min_rm <- function(x, na.rm = TRUE) min(x, na.rm = na.rm)
 
 #' Max with na.rm = TRUE
 #' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return Maximum value
 #' @examples
 #' max_rm(runif (100))
 #'
 #' @export
-max_rm <- function(x) max(x, na.rm = TRUE)
+max_rm <- function(x, na.rm = TRUE) max(x, na.rm = na.rm)
 
 #' Standard deviation with na.rm = TRUE
 #' @param x Input variable
-#' @param na.rm Remove NAs (TRUE or FALSE)
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return Standard deviation
 #' @examples
 #' sd_rm(rnorm(100))
 #'
 #' @export
-sd_rm <- function(x, na.rm = TRUE) {
-  # ret <- sd(x, na.rm = na.rm)
-  # if (ret == "NaN") NA else ret
-  sd(x, na.rm = na.rm)
-}
+sd_rm <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm)
 
 #' Standard error
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
 #' @return Standard error
 #' @examples
-#' serr(rnorm(100))
+#' se(rnorm(100))
 #'
 #' @export
-serr <- function(x, na.rm = TRUE) sd_rm(x, na.rm) / sqrt(length(na.omit(x)))
+se <- function(x, na.rm = TRUE) {
+  if (na.rm) x <- na.omit(x)
+  sd(x) / sqrt(length(x))
+}
 
 #' Variance with na.rm = TRUE
 #' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return Variance
 #' @examples
 #' var_rm(rnorm(100))
 #'
 #' @export
-var_rm <- function(x) var(x, na.rm = TRUE)
+var_rm <- function(x, na.rm = TRUE) var(x, na.rm = na.rm)
 
 #' Variance for the population na.rm = TRUE
 #' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return Variance for the population
 #' @examples
 #' varp_rm(rnorm(100))
 #'
 #' @export
-varp_rm <- function(x) {
-  x <- na.omit(x)
+varp_rm <- function(x, na.rm = TRUE) {
+  if (na.rm) x <- na.omit(x)
   n <- length(x)
   var(x) * ((n-1)/n)
 }
 
 #' Standard deviation for the population na.rm = TRUE
 #' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return Standard deviation for the population
 #' @examples
 #' sdp_rm(rnorm(100))
 #'
 #' @export
-sdp_rm <- function(x) sqrt(varp_rm(x))
+sdp_rm <- function(x, na.rm = TRUE) sqrt(varp_rm(x, na.rm = na.rm))
 
 #' Sum with na.rm = TRUE
 #' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return Sum of input values
 #' @examples
 #' sum_rm(1:200)
 #'
 #' @export
-sum_rm <- function(x) sum(x, na.rm = TRUE)
+sum_rm <- function(x, na.rm = TRUE) sum(x, na.rm = na.rm)
 
 #' Natural log
 #' @param x Input variable
@@ -538,25 +498,25 @@ sum_rm <- function(x) sum(x, na.rm = TRUE)
 #' ln(runif(10,1,2))
 #'
 #' @export
-ln <- function(x, na.rm = TRUE)
-  if (na.rm) log(na.omit(x)) else log(x)
+ln <- function(x, na.rm = TRUE) if (na.rm) log(na.omit(x)) else log(x)
 
 #' Does a vector have non-zero variability?
 #' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return Logical. TRUE is there is variability
 #' @examples
 #' summarise_each(diamonds, funs(does_vary)) %>% as.logical
 #'
 #' @export
-does_vary <- function(x) {
+does_vary <- function(x, na.rm = TRUE) {
   ## based on http://stackoverflow.com/questions/4752275/test-for-equality-among-all-elements-of-a-single-vector
   if (length(x) == 1L) {
     FALSE
   } else {
     if (is.factor(x) || is.character(x)) {
-      n_distinct(x, na.rm = TRUE) > 1
+      n_distinct(x, na.rm = na.rm) > 1
     } else {
-      abs(max_rm(x) - min_rm(x)) > .Machine$double.eps^0.5
+      abs(max_rm(x, na.rm = na.rm) - min_rm(x, na.rm = na.rm)) > .Machine$double.eps^0.5
     }
   }
 }
@@ -574,17 +534,18 @@ make_funs <- function(x) {
   dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula, env = env) %>% setNames(xclean))
 }
 
-## Function not exported
-.empty_level <- function(x) {
+## convert categorical variables to factors and deal with empty/missing values
+## used in pivot and explore
+empty_level <- function(x) {
   if (!is.factor(x)) x %<>% as.factor
   levs <- levels(x)
   if ("" %in% levs) {
-    levs[levs == ""] <- "[EMPTY]"
+    levs[levs == ""] <- "NA"
     x <- factor(x, levels = levs)
-    x[is.na(x)] <- "[EMPTY]"
+    x[is.na(x)] <- "NA"
   } else if (any(is.na(x))) {
-    x[is.na(x)] <- "[EMPTY]"
-    x <- factor(x, levels = c(levs,"[EMPTY]"))
+    x <- factor(x, levels = c(levs,"NA"))
+    x[is.na(x)] <- "NA"
   }
   x
 }

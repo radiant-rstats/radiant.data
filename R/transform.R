@@ -1,16 +1,23 @@
 #' Center
 #' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return If x is a numberic variable return x - mean(x)
 #' @export
-center <- function(x)
-	if (is.numeric(x)) { x - mean(x, na.rm = TRUE) } else x
+center <- function(x, na.rm)
+	if (is.numeric(x)) { x - mean(x, na.rm = na.rm) } else x
 
 #' Standardize
 #' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
 #' @return If x is a numberic variable return center(x) / mean(x)
 #' @export
-standardize <- function(x)
-	if (is.numeric(x)) { center(x) / sd_rm(x) } else x
+standardize <- function(x, na.rm = TRUE) {
+	if (is.numeric(x)) {
+    center(x, na.rm = na.rm) / sd_rm(x, na.rm = na.rm)
+  } else {
+    x
+  }
+}
 
 #' Calculate square of a variable
 #' @param x Input variable
@@ -32,7 +39,7 @@ inverse <- function(x) {
 #' @param y Normalizing variable
 #' @return x/y
 #' @export
-normalize <- function(x,y) {
+normalize <- function(x, y) {
   stopifnot(y != 0)
   x/y
 }
@@ -386,7 +393,7 @@ getsummary <- function(dat, dc = getclass(dat)) {
       group_by_("variable") %>%
       summarise_each(funs(n = length, n_missing = n_missing, n_distinct = n_distinct,
                      mean = mean_rm, median = median_rm, min = min_rm, max = max_rm,
-                     `25%` = p25, `75%` = p75, sd = sd_rm, se = serr)) %>%
+                     `25%` = p25, `75%` = p75, sd = sd_rm, se = se)) %>%
       data.frame(check.names = FALSE) %>%
       { .[,-1] %<>% round(.,3); colnames(.)[1] <- ""; . } %>%
       print(row.names = FALSE)

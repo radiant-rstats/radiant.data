@@ -61,22 +61,7 @@ pivotr <- function(dataset,
       dat[[nvar]] %<>% as.integer
   }
 
-  ## convert categorical variables to factors if needed
-  ## needed to deal with empty/missing values
-  empty_level <- function(x) {
-    if (!is.factor(x)) x %<>% as.factor
-    levs <- levels(x)
-    if ("" %in% levs) {
-      levs[levs == ""] <- "NA"
-      x <- factor(x, levels = levs)
-      x[is.na(x)] <- "NA"
-    } else if (any(is.na(x))) {
-      x <- factor(x, levels = c(levs,"NA"))
-      x[is.na(x)] <- "NA"
-    }
-    x
-  }
-
+  ## convert categorical variables to factors and deal with empty/missing values
   dat[,cvars] <- select_(dat, .dots = cvars) %>% mutate_each(funs(empty_level(.)))
 
   sel <- function(x, nvar, cvar = c()) if (nvar == "n") x else select_(x, .dots = c(nvar,cvar))

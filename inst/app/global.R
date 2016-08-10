@@ -79,7 +79,7 @@ options(width  = 250, scipen = 100)
 ## list of function arguments
 list("n" = "length", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
      "mean" = "mean_rm", "median" = "median_rm", "sum" = "sum_rm",
-     "var" = "var_rm", "sd" = "sd_rm", "se" = "serr", "cv" = "cv", "varp" = "varp_rm",
+     "var" = "var_rm", "sd" = "sd_rm", "se" = "se", "cv" = "cv", "varp" = "varp_rm",
      "sdp" = "sdp_rm", "min" = "min_rm", "max" = "max_rm", "5%" = "p05",
      "10%" = "p10", "25%" = "p25", "75%" = "p75", "90%" = "p90", "95%" = "p95",
      "skew" = "skew","kurtosis" = "kurtosi") %>%
