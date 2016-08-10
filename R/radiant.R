@@ -737,8 +737,19 @@ rounddf <- function(tbl, dec = 3) {
 #'
 #' @export
 find_dropbox <- function(account = 1) {
-  if (file.exists("~/.dropbox/info.json")) {
-    fp <- normalizePath("~/.dropbox/info.json", winslash = "/")
+
+  if (Sys.info()["sysname"] == "Windows") {
+    fp <- file.path(Sys.getenv("APPDATA"),"Dropbox/info.json") %>% gsub("\\\\","/",.)
+    if (!file.exists(fp)) {
+      fp <- file.path(Sys.getenv("LOCALAPPDATA"),"Dropbox/info.json") %>%
+        gsub("\\\\","/",.)
+    }
+  } else {
+    fp <- "~/.dropbox/info.json"
+  }
+
+  if (file.exists(fp)) {
+    fp <- normalizePath(fp, winslash = "/")
     dbinfo <- jsonlite::fromJSON(fp)
     ldb <- length(dbinfo)
     if (ldb > 1)
