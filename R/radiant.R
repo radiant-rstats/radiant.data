@@ -299,8 +299,7 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", saf =
 #'
 #' @export
 loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", saf = TRUE, safx = 20) {
-
-  con <- curl(csv_url)
+  con <- curl(gsub("^\\s+|\\s+$", "", csv_url))
   try(open(con), silent = TRUE)
   if (is(con, 'try-error')) {
     close(con)
@@ -330,7 +329,7 @@ loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", saf = TRUE
 #'
 #' @export
 loadrda_url <- function(rda_url) {
-  con <- curl(rda_url)
+  con <- curl(gsub("^\\s+|\\s+$", "", rda_url))
   try(open(con), silent = TRUE)
   if (is(con, 'try-error')) {
     close(con)
@@ -738,6 +737,9 @@ rounddf <- function(tbl, dec = 3) {
 #' @export
 find_dropbox <- function(account = 1) {
 
+   if (length(account) >  1)
+     stop("find_dropbox can only return the path for one account at a time")
+
   if (Sys.info()["sysname"] == "Windows") {
     fp <- file.path(Sys.getenv("APPDATA"),"Dropbox/info.json") %>% gsub("\\\\","/",.)
     if (!file.exists(fp)) {
@@ -754,13 +756,13 @@ find_dropbox <- function(account = 1) {
     ldb <- length(dbinfo)
     if (ldb > 1)
       message("Multiple dropbox folders found. By default the first folder is used.\nTo select, for example, the third dropbox folder use find_dropbox(3).\nAlternatively, specify the type of dropbox account, e.g., find_dropbox('personal')")
-    if (is.numeric(account)) {
-      if (account > ldb) stop(paste0("Invalid account number. Choose a number between 1 and ", ldb))
+    if (is.numeric(account) && account > ldb) {
+      stop(paste0("Invalid account number. Choose a number between 1 and ", ldb))
+    } else if (is.character(account) && !account %in% names(dbinfo)) {
+      stop(paste0("Invalid account type. Choose ", paste0(names(dbinfo), collapse = " or ")))
     } else {
-      if (!account %in% names(dbinfo)) stop(paste0("Invalid account type. Choose ", paste0(names(dbinfo), collapse = " or ")))
-      names(ldb)
+      normalizePath(dbinfo[[account]]$path, winslash = "/")
     }
-    normalizePath(dbinfo[[account]]$path, winslash = "/")
   } else if (file.exists("~/Dropbox")) {
     normalizePath("~/Dropbox", winslash = "/")
   } else if (file.exists("~/../Dropbox")) {
