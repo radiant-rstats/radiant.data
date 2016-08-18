@@ -500,7 +500,7 @@ state_multiple <- function(var, vals, init = character(0)) {
       if (length(ivar) > 0) r_state[[var]] <<- ivar
       ivar
     } else if (available(ivar) && any(ivar %in% vals)) {
-       ivar[ivar %in% vals]
+      ivar[ivar %in% vals]
     } else {
       if (length(ivar) > 0 && all(ivar %in% c("None","none",".","")))
         r_state[[var]] <<- ivar
