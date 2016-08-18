@@ -171,7 +171,7 @@ help_menu <- function(hlp) {
       tabPanel("About", uiOutput("help_about"), icon = icon("info")),
       tabPanel(tags$a("", href = "http://radiant-rstats.github.io/docs/", target = "_blank",
                list(icon("globe"), "Radiant docs"))),
-      tabPanel(tags$a("", href = "https://github.com/vnijs/radiant/issues", target = "_blank",
+      tabPanel(tags$a("", href = "https://github.com/radiant-rstats/radiant/issues", target = "_blank",
                list(icon("github"), "Report issue")))
     ),
     tags$head(
