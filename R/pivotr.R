@@ -94,7 +94,7 @@ pivotr <- function(dataset,
   if (length(cvars) == 1) {
     tab <-
       bind_rows(
-        tab,
+        mutate_each_(tab, funs(as.character), vars = cvars),
         bind_cols(data.frame("Total") %>% setNames(cvars), total %>% set_colnames(nvar))
       )
 
