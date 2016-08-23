@@ -534,8 +534,10 @@ make_funs <- function(x) {
   dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula, env = env) %>% setNames(xclean))
 }
 
-## convert categorical variables to factors and deal with empty/missing values
-## used in pivot and explore
+#' Convert categorical variables to factors and deal with empty/missing values (used in pivotr and explore)
+#' @param x Categorical variable used in table
+#' @return Variable with updated levels
+#' @export
 empty_level <- function(x) {
   if (!is.factor(x)) x %<>% as.factor
   levs <- levels(x)
