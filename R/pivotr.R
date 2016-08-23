@@ -30,11 +30,13 @@ pivotr <- function(dataset,
                    data_filter = "",
                    shiny = FALSE) {
 
+  # dataset = "dat"
   # dataset = "diamonds"
   # # cvars = "cut"
   # cvars = c("cut","clarity","color")
+  # cvars = c("ARR_HOUR","DEP_HOUR")
   # nvar = "price"
-  # # nvar = "None"
+  # nvar = "None"
   # fun = "mean_rm"
   # normalize = "None"
   # tabfilt = ""
@@ -53,7 +55,7 @@ pivotr <- function(dataset,
   if (nvar == "None") {
     nvar <- "n"
   } else {
-    ## converting factors for interger (1st level)
+    ## converting factors for integer (1st level)
     ## see also R/visualize.R
     if ("factor" %in% class(dat[[nvar]]))
       dat[[nvar]] %<>% {as.integer(. == levels(.)[1])}
@@ -81,8 +83,8 @@ pivotr <- function(dataset,
   tab <-
     dat %>%
     group_by_(.dots = cvars) %>%
-    sfun(nvar, cvars, fun) %>%
-    mutate_each_(funs(as.character), vars = cvars)
+    sfun(nvar, cvars, fun)
+  # %>% mutate_each_(funs(as.character), vars = cvars)
 
   ## total
   total <-
