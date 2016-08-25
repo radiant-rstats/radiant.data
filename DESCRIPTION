@@ -1,7 +1,7 @@
 Package: radiant.data
 Title: Business Analytics using R and Shiny
-Version: 0.5.15
-Date: 2016-8-22
+Version: 0.5.16
+Date: 2016-8-25
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description: A platform-independent browser-based interface for business analytics in R, based on the Shiny package.
 Depends:
@@ -9,12 +9,12 @@ Depends:
     magrittr (>= 1.5),
     ggplot2 (>= 2.0.0),
     lubridate (>= 1.5.0),
-    tidyr (>= 0.4.1),
+    tidyr (>= 0.6),
     dplyr (>= 0.5)
 Imports:
     tibble (>= 1.1),
-    broom (>= 0.4.0),
-    car (>= 2.1.1),
+    broom (>= 0.4.1),
+    car (>= 2.1),
     gridExtra (>= 2.0.0),
     knitr (>= 1.13),
     rmarkdown(>= 0.9.5),

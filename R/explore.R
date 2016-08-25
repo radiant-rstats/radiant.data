@@ -32,12 +32,15 @@ explore <- function(dataset,
                     data_filter = "",
                     shiny = FALSE) {
 
-  # vars <- "mpg"
-  # byvar <- "mpg"
-  # dataset <- "mtcars"
+  # library(radiant.data)
+  ## vars <- c("price", "carat")
+  # vars <- "price"
+  # byvar <- "clarity"
+  ## byvar <- ""
+  # dataset <- "diamonds"
   # data_filter <-  ""
   # fun <- c("length","mean")
-  # library(radiant)
+  ## fun <- "mean"
 
   tvars <- vars
   if (!is_empty(byvar)) tvars %<>% c(byvar) %>% unique
@@ -97,29 +100,24 @@ explore <- function(dataset,
 
     names(pfun) %<>% fix_uscore
 
-    tab <-
-      dat %>% group_by_(.dots = byvar) %>%
+    tab <- dat %>% group_by_(.dots = byvar) %>%
       summarise_each(pfun)
 
     ## avoiding issues with n_missing and n_distinct
     names(pfun) %<>% sub("n.","n_",.)
 
-    if (length(vars) > 1 && length(fun) > 1) {
-      ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
-      tab %<>% gather("variable", "value", -(1:length(byvar))) %>%
-        separate(variable, into = c("variable", "fun"), sep = "_(?=[^_]*$)") %>%
-        mutate(fun = fix_uscore(fun, ".","_")) %>%
-        mutate(fun = factor(fun, levels = names(pfun)), variable = factor(variable, levels = vars)) %>%
-        spread_("fun","value")
-    } else if (length(fun) == 1) {
-      tab %<>% gather("variable", "value", -(1:length(byvar))) %>%
-        mutate(variable = factor(variable, levels = vars)) %>%
-        rename_(.dots = setNames("value", names(pfun)))
-    } else if (length(vars) == 1){
-      tab %<>% mutate(variable = factor(vars, levels = vars)) %>%
-        set_colnames(., fix_uscore(colnames(.), ".","_")) %>%
-        select_(.dots = c(byvar, "variable", names(pfun)))
+    ## setting up column names to work with gather code below
+    if (length(vars) == 1) {
+      rng <- (length(byvar) + 1):ncol(tab)
+      colnames(tab)[rng] <- paste0(vars, "_", colnames(tab)[rng])
     }
+
+    ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
+    tab %<>% gather("variable", "value", -(1:length(byvar))) %>%
+      separate(variable, into = c("variable", "fun"), sep = "_(?=[^_]*$)") %>%
+      mutate(fun = fix_uscore(fun, ".","_")) %>%
+      mutate(fun = factor(fun, levels = names(pfun)), variable = factor(variable, levels = vars)) %>%
+      spread_("fun","value")
   }
 
   ## filtering the table if desired from R > Report
