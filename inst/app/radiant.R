@@ -201,18 +201,18 @@ trunc_char <- function(x) if (is.character(x)) strtrim(x,40) else x
 ## show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt = "") {
 
-  n <- 0
+  nr <- 0
   {if (is.character(dat) && length(dat) == 1) getdata(dat, filt = filt, na.rm = FALSE) else dat} %>%
-    { n <<- nrow(.); . } %>%
-    slice(1:min(nshow,n)) %>%
-    mutate_each(funs(d2c)) %>%
+    { nr <<- nrow(.); . } %>%
+    slice(1:min(nshow, nr)) %>%
     mutate_each(funs(trunc_char)) %>%
+    mutate_each(funs(d2c)) %>%
     xtable::xtable(.) %>%
     print(type = 'html',  print.results = FALSE, include.rownames = FALSE,
           sanitize.text.function = identity,
           html.table.attributes = "class='table table-condensed table-hover'") %>%
     paste0(title, .) %>%
-    {if (n <= nshow) . else paste0(.,'\n<label>', nshow,' of ', formatnr(n,dec = 0), ' rows shown. See View-tab for details.</label>')} %>%
+    {if (nr <= nshow) . else paste0(.,'\n<label>', nshow,' of ', formatnr(nr,dec = 0), ' rows shown. See View-tab for details.</label>')} %>%
     enc2utf8
 }
 
