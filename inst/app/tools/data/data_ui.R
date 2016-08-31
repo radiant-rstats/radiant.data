@@ -1,5 +1,5 @@
 #######################################
-# Shiny interface for data functions
+# Shiny interface for data tabs
 #######################################
 
 ## show error message from filter dialog
@@ -14,7 +14,6 @@ output$ui_data <- renderUI({
     includeCSS(file.path(getOption("radiant.path.data"),"app/www/style.css")),
     sidebarLayout(
       sidebarPanel(
-        ## based on https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/PzlSAmAxxwo
         wellPanel(
           uiOutput("ui_datasets"),
           conditionalPanel("input.tabs_data != 'Manage'",
@@ -39,7 +38,6 @@ output$ui_data <- renderUI({
           tabPanel("View",
                    downloadLink("dl_view_tab", "", class = "fa fa-download alignright"),
                    DT::dataTableOutput("dataviewer")),
-          # tabPanel("View", DT::dataTableOutput("dataviewer"), verbatimTextOutput("tbl_state")),
           tabPanel("Visualize",
                    plot_downloader(".visualize", width = viz_plot_width(), height = viz_plot_height(), pre = ""),
                    plotOutput("visualize", width = "100%", height = "100%")),
@@ -57,15 +55,13 @@ output$ui_data <- renderUI({
           ),
           tabPanel("Explore",
                    downloadLink("dl_explore_tab", "", class = "fa fa-download alignright"),
-                   DT::dataTableOutput("explorer")),
+                   DT::dataTableOutput("explore")),
           tabPanel("Transform",
                    htmlOutput("transform_data"),
                    verbatimTextOutput("transform_summary"),
                    uiOutput("ui_tr_log")),
           tabPanel("Combine", htmlOutput("cmb_data1"), htmlOutput("cmb_data2"),
                    htmlOutput("cmb_possible"), htmlOutput("cmb_data"))
-          # tabPanel("Generate", HTML("<h3>Generate input data for simulation and prediction</h3>")),
-          # , selected = ifelse (is_empty(r_url$tab), "Manage", r_url$tab)
         )
       )
     )
