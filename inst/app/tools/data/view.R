@@ -29,7 +29,8 @@ output$ui_View <- renderUI({
         tags$td(actionButton("view_store", "Store"), style="padding-top:30px;")
       )
     ),
-    help_modal('View','view_help',inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/view.md")) %>% gsub("`","",.))
+    # help_modal('View','view_help',inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/view.md")) %>% gsub("`","",.))
+    help_and_report('View','view',inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/view.md")) %>% gsub("`","",.))
   )
 })
 
@@ -51,14 +52,13 @@ output$dataviewer <- DT::renderDataTable({
   req(input$view_pause == FALSE, cancelOutput = TRUE)
 
   dat <- select_(.getdata(), .dots = input$view_vars)
-  ## this causes problems when r_state is NULL?
+  ## check when r_state is NULL
   if (!identical(r_state$view_vars, input$view_vars)) {
     r_state$view_vars <<- input$view_vars
     r_state$dataviewer_state <<- list()
     r_state$dataviewer_search_columns <<- rep("", ncol(dat))
   }
 
-  ## seems needed due to partial name matching on dataviewer_search
   search <- r_state$dataviewer_state$search$search
   if (is.null(search)) search <- ""
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
@@ -67,7 +67,7 @@ output$dataviewer <- DT::renderDataTable({
     DT::datatable(dat, filter = fbox, selection = "none",
       rownames = FALSE, style = "bootstrap", escape = FALSE,
       options = list(
-        stateSave = TRUE,   ## maintains state but does not show column filter settings
+        stateSave = TRUE,   ## maintains state
         searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
         search = list(search = search, regex = TRUE),
         order = {if (is.null(r_state$dataviewer_state$order)) list()
@@ -85,33 +85,20 @@ output$dataviewer <- DT::renderDataTable({
 
 observeEvent(input$view_store, {
   data_filter <- if (input$show_filter) input$data_filter else ""
-  view_store(input$dataset, input$view_vars, input$view_dat, data_filter, input$dataviewer_rows_all)
-  updateTextInput(session, "data_filter", value = "")
-  updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
+  cmd <- .viewcmd()
+
+  getdata(input$dataset, vars = input$view_vars, filt = data_filter,
+          rows = input$dataviewer_rows_all, na.rm = FALSE) %>%
+    save2env(input$dataset, input$view_dat, cmd)
+
+  updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
+
+  ## alert user about new dataset
+  session$sendCustomMessage(type = "message",
+    message = paste0("Dataset '", input$view_dat, "' was successfully added to the datasets dropdown. Add code to R > Report to (re)create the dataset by clicking the report icon on the bottom left of your screen.")
+  )
+
 })
-
-view_store <- function(dataset,
-                       vars = "",
-                       view_dat = dataset,
-                       data_filter = "",
-                       rows = NULL) {
-
-  mess <-
-    if (data_filter != "" && !is.null(rows))
-      paste0("\nSaved filtered data: ", data_filter, " and view-filter (", lubridate::now(), ")")
-    else if (is.null(rows))
-      paste0("\nSaved filtered data: ", data_filter, " (", lubridate::now(), ")")
-    else if (data_filter == "")
-      paste0("\nSaved data with view-filter (", lubridate::now(), ")")
-    else
-      ""
-
-  getdata(dataset, vars = vars, filt = data_filter, rows = rows, na.rm = FALSE) %>%
-    save2env(dataset, view_dat, mess)
-
-  updateSelectInput(session = session, inputId = "dataset", selected = view_dat)
-  updateSelectInput(session = session, inputId = "view_vars", selected = vars)
-}
 
 output$dl_view_tab <- downloadHandler(
   filename = function() { paste0("view_tab.csv") },
@@ -122,3 +109,43 @@ output$dl_view_tab <- downloadHandler(
       write.csv(file, row.names = FALSE)
   }
 )
+
+.dataviewer <- reactive({
+  list(tab = .getdata()[1,])
+})
+
+.viewcmd <- function(mess = "") {
+  ## get the state of the dt table
+  ts <- dt_state("dataviewer", vars = input$view_vars)
+  dataset <- input$view_dat
+  cmd <- ""
+
+  ## shorten list of variales if possible
+  vars <- input$view_vars
+  cn <- colnames(.dataviewer()$tab)
+  if (length(vars) == length(cn)) {
+    vars <- paste0(head(vars,1), ":", tail(vars,1))
+  } else if (length(vars) > (length(cn)/2)) {
+    vars <- paste0("-", setdiff(cn, vars), collapse = ", ")
+  } else {
+    vars <- paste0(vars, collapse = ", ")
+  }
+
+  ## create the command to filter and sort the data
+  cmd <- paste0(cmd, "### filter and sort the dataset\nr_data[['", input$dataset, "']] %>%\n\tselect(", vars, ")")
+  if (input$show_filter && input$data_filter != "")
+    cmd <- paste0(cmd, " %>%\n\tfilter(", input$data_filter, ")")
+  if (ts$search != "")
+    cmd <- paste0(cmd, " %>%\n\tfilter(Search('", ts$search, "', .))")
+  if (ts$tabfilt != "")
+    cmd <- paste0(cmd, " %>%\n\tfilter(", ts$tabfilt, ")")
+  if (ts$tabsort != "")
+    cmd <- paste0(cmd, " %>%\n\tarrange(", ts$tabsort, ")")
+
+  paste0(cmd, " %>%\n\tstore.view('", input$dataset, "', '", dataset, "')")
+}
+
+observeEvent(input$view_report, {
+  cmd <- paste0("```{r}\n", .viewcmd(), "\n```\n")
+  update_report_fun(cmd)
+})
