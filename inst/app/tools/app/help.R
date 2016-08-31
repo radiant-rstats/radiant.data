@@ -18,9 +18,6 @@ output$help_text <- renderUI({
 #######################################
 ## Main function of help menu
 #######################################
-# help2html <- function(x) x %>% gsub("\\\\%","%",.) %>% HTML
-# append_help <- function(help_str, help_path, Rmd = FALSE) {
-
 append_help <- function(help_str, help_path, Rmd = TRUE) {
   if (length(input[[help_str]]) == 0) return()
   help_block <- get(help_str)
@@ -33,7 +30,10 @@ append_help <- function(help_str, help_path, Rmd = TRUE) {
   }
   mathjax_script <- ifelse (Rmd, "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", "")
   cc <- "&copy; Vincent Nijs (2016) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/80x15.png' /></a></br>"
-  paste(all_help,"\n",mathjax_script,"\n",cc) %>% HTML
+
+  ## remove ` from report.md
+  paste(gsub("(\"> )`", "\\1", all_help) %>% gsub("`( </td>)", "\\1", .),
+        "\n",mathjax_script,"\n",cc) %>% HTML
 }
 
 help_switch <- function(help_all, help_str, help_on = TRUE) {
@@ -49,7 +49,7 @@ help_switch <- function(help_all, help_str, help_on = TRUE) {
 
 help_data <- c("Manage" = "manage.md","View" = "view.md", "Visualize" = "visualize.md",
                "Pivot" = "pivotr.md", "Explore" = "explore.md", "Transform" = "transform.md",
-               "Combine" = "combine.md")
+               "Combine" = "combine.md", "Report" = "report.md", "Code" = "code.md")
 output$help_data <- reactive(append_help("help_data", file.path(getOption("radiant.path.data"),"app/tools/help/")))
 
 observeEvent(input$help_data_all, {help_switch(input$help_data_all, "help_data")})
