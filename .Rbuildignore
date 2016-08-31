@@ -1,5 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^inst/rstudio$
 coverage.R
 cran-comments.md
 ^.*\.sublime-project$
