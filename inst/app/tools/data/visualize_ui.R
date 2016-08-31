@@ -1,6 +1,6 @@
 viz_type <- c("Distribution" = "dist", "Density" = "density", "Scatter" = "scatter",
-              "Line" = "line", "Bar" = "bar", "Box-plot" = "box")
-viz_check <- c("Line" = "line", "Loess" = "loess", "Jitter" = "jitter")
+              "Surface" = "surface", "Line" = "line", "Bar" = "bar", "Box-plot" = "box")
+viz_check <- c("Line" = "line", "Loess" = "loess", "Jitter" = "jitter", "Interpolate" = "interpolate")
 viz_axes <-  c("Flip" = "flip", "Log X" = "log_x", "Log Y" = "log_y",
                "Scale-y" = "scale_y", "Density" = "density", "Sort" = "sort")
 
@@ -32,13 +32,11 @@ output$ui_viz_type <- renderUI({
 
 ## Y - variable
 output$ui_viz_yvar <- renderUI({
-  # if (is_empty(input$viz_type)) return()
   req(input$viz_type)
   vars <- varying_vars()
-  # if (not_available(vars)) return()
   req(available(vars))
   vars <- vars["date" != .getclass()[vars]]
-  if (input$viz_type %in% c("line","bar","scatter","box")) {
+  if (input$viz_type %in% c("line","bar","scatter","surface", "box")) {
     vars <- vars["character" != .getclass()[vars]]
   }
   if (input$viz_type %in% c("line","scatter","box")) {
@@ -48,25 +46,20 @@ output$ui_viz_yvar <- renderUI({
 
   selectInput(inputId = "viz_yvar", label = "Y-variable:",
     choices = vars,
-    # selected = use_input("viz_yvar", vars, fun = "state_multiple"),
     selected = state_multiple("viz_yvar", vars),
     multiple = TRUE, size = min(3, length(vars)), selectize = FALSE)
 })
 
 ## X - variable
 output$ui_viz_xvar <- renderUI({
-  # if (is_empty(input$viz_type)) return()
   req(input$viz_type)
   vars <- varying_vars()
-  # vars <- varnames()
-  # if (not_available(vars)) return()
   req(available(vars))
   if (input$viz_type == "dist") vars <- vars["date" != .getclass()[vars]]
   if (input$viz_type == "density") vars <- vars["factor" != .getclass()[vars]]
   if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars_nonum()
 
   selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
-    # selected = use_input("viz_xvar", vars, fun = "state_multiple"),
     selected = state_multiple("viz_xvar", vars),
     multiple = TRUE, size = min(3, length(vars)), selectize = FALSE)
 })
@@ -155,8 +148,6 @@ output$ui_viz_combx <- renderUI({
   # }
 # })
 
-# ?shiny::observeEvent
-
 # observeEvent(input$viz_xvar < 2, {
 # observe({
 #   if (length(input$viz_xvar) < 2)
@@ -214,7 +205,6 @@ observeEvent(input$viz_check, {
 output$ui_viz_facet_row <- renderUI({
   vars <- c("None" = ".", groupable_vars_nonum())
   selectizeInput("viz_facet_row", "Facet row", vars,
-    # selected = use_input("viz_facet_row", vars, init = ".")),
     selected = state_single("viz_facet_row", vars, init = "."),
     multiple = FALSE)
 })
@@ -243,7 +233,6 @@ output$ui_viz_color <- renderUI({
 })
 
 output$ui_viz_fill <- renderUI({
-  # if (isTRUE(input$viz_combx)) {
   if (isTRUE(input$viz_combx) && length(input$viz_xvar) > 1) {
     vars <- c("None" = "none")
     selectizeInput("viz_fill", "Fill", vars, multiple = FALSE, selected = "none")
@@ -257,9 +246,13 @@ output$ui_viz_fill <- renderUI({
 output$ui_viz_axes <- renderUI({
   req(input$viz_type)
   ind <- 1
-  if (input$viz_type %in% c("line","scatter")) ind <- 1:3
-  if (input$viz_type %in% c("dist","density")) ind <- c(1:2, 5)
-  if (input$viz_type %in% c("bar","box")) ind <- c(1, 3)
+  if (input$viz_type %in% c("line","scatter","surface")) {
+    ind <- 1:3
+  } else if (input$viz_type %in% c("dist","density")) {
+    ind <- c(1:2, 5)
+  } else if (input$viz_type %in% c("bar","box")) {
+    ind <- c(1, 3)
+  }
   if (!is_empty(input$viz_facet_row, ".") || !is_empty(input$viz_facet_col, "."))  ind <- c(ind, 4)
   if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
 
@@ -274,6 +267,8 @@ output$ui_viz_check <- renderUI({
     ind <- 1:3
   } else if (input$viz_type == "box") {
     ind <- 3
+  } else if (input$viz_type == "surface") {
+    ind <- 4
   } else {
     ind <- c()
   }
@@ -307,17 +302,19 @@ output$ui_Visualize <- renderUI({
       uiOutput("ui_viz_facet_col"),
       conditionalPanel(condition = "input.viz_type == 'bar' |
                                     input.viz_type == 'dist' |
-                                    input.viz_type == 'density'",
-        # conditionalPanel("input.viz_combx != true & input.viz_comby != true",
-          uiOutput("ui_viz_fill")
-        # )
+                                    input.viz_type == 'density' |
+                                    input.viz_type == 'surface'",
+        uiOutput("ui_viz_fill")
       ),
       conditionalPanel(condition = "input.viz_type == 'scatter' |
                                     input.viz_type == 'line' |
                                     input.viz_type == 'box'",
-        # conditionalPanel("input.viz_combx != true & input.viz_comby != true",
-          uiOutput("ui_viz_color"),
-        # ),
+        uiOutput("ui_viz_color")
+      ),
+      conditionalPanel(condition = "input.viz_type == 'scatter' |
+                                    input.viz_type == 'line' |
+                                    input.viz_type == 'surface' |
+                                    input.viz_type == 'box'",
         uiOutput("ui_viz_check")
       ),
       uiOutput("ui_viz_axes"),
@@ -390,20 +387,7 @@ output$visualize <- renderPlot({
   }
 }, width = viz_plot_width, height = viz_plot_height)
 
-# .visualize <- reactive({
-
-#   req(input$viz_pause == FALSE, cancelOutput = TRUE)
-#   .visualize2()
-#   # if (is.null(input$viz_pause) || input$viz_pause == TRUE) {
-#   #   isolate(.visualize2())
-#   # } else {
-#   #   .visualize2()
-#   # }
-# })
-
-# .visualize2 <- reactive({
 .visualize <- reactive({
-
   req(input$viz_pause == FALSE, cancelOutput = TRUE)
   req(input$viz_type)
 
@@ -411,7 +395,7 @@ output$visualize <- renderPlot({
   req(input$viz_plot_height && input$viz_plot_width)
 
   if (not_available(input$viz_xvar)) return()
-  if (input$viz_type %in% c("scatter","line", "box", "bar") && not_available(input$viz_yvar))
+  if (input$viz_type %in% c("scatter","line", "box", "bar", "surface") && not_available(input$viz_yvar))
     return("No Y-variable provided for a plot that requires one")
   if (input$viz_type == "box" && !all(input$viz_xvar %in% groupable_vars())) return()
 
