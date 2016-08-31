@@ -30,7 +30,6 @@ expl_sum_inputs <- reactive({
 
 ## UI-elements for explore
 output$ui_expl_vars <- renderUI({
-  # isNum <- "numeric" == .getclass() | "integer" == .getclass()
   isNum <- .getclass() %in% c("integer","numeric","factor","logical")
   vars <- varnames()[isNum]
   if (not_available(vars)) return()
@@ -100,17 +99,13 @@ output$ui_Explore <- renderUI({
       uiOutput("ui_expl_byvar"),
       uiOutput("ui_expl_fun"),
       uiOutput("ui_expl_top"),
-      numericInput("expl_dec", label = "Decimals:",
-                   value = state_init("expl_dec", 3), min = 0),
-      with(tags, table(
-        tr(
-          td(textInput("expl_dat", "Store filtered data as:", "explore_dat")),
-          td(actionButton("expl_store", "Store"), style = "padding-top:30px;")
-        )
-      ))
+      numericInput("expl_dec", label = "Decimals:", value = state_init("expl_dec", 3), min = 0),
+      tags$table(
+        tags$td(textInput("expl_dat", "Store as:", paste0(input$dataset,"_expl"))),
+        tags$td(actionButton("expl_store", "Store"), style = "padding-top:30px;")
+      )
     ),
-    help_and_report(modal_title = "Explore",
-                    fun_name = "explore",
+    help_and_report(modal_title = "Explore",fun_name = "explore",
                     help_file = inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/explore.md")))
   )
 })
@@ -120,31 +115,28 @@ output$ui_Explore <- renderUI({
   if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) return()
 
   req(input$expl_pause == FALSE, cancelOutput = TRUE)
-  # if (is.null(input$expl_pause) || input$expl_pause == TRUE)
-    # cancelOutput()
-
   withProgress(message = 'Calculating', value = 0, {
     sshhr( do.call(explore, expl_inputs()) )
   })
 })
 
-observeEvent(input$explorer_search_columns, {
-  r_state$explorer_search_columns <<- input$explorer_search_columns
+observeEvent(input$explore_search_columns, {
+  r_state$explore_search_columns <<- input$explore_search_columns
 })
 
-observeEvent(input$explorer_state, {
-  r_state$explorer_state <<- input$explorer_state
+observeEvent(input$explore_state, {
+  r_state$explore_state <<- input$explore_state
 })
 
 expl_reset <- function(var, ncol) {
   if (!identical(r_state[[var]], input[[var]])) {
     r_state[[var]] <<- input[[var]]
-    r_state$explorer_state <<- list()
-    r_state$explorer_search_columns <<- rep("", ncol)
+    r_state$explore_state <<- list()
+    r_state$explore_search_columns <<- rep("", ncol)
   }
 }
 
-output$explorer <- DT::renderDataTable({
+output$explore <- DT::renderDataTable({
   expl <- .explore()
   if (is.null(expl)) return(data.frame())
   expl$shiny <- TRUE
@@ -157,22 +149,19 @@ output$explorer <- DT::renderDataTable({
   if (!is.null(r_state$expl_top) && !is.null(input$expl_top) &&
       !identical(r_state$expl_top, input$expl_top)) {
     r_state$expl_top <<- input$expl_top
-    r_state$explorer_state <<- list()
-    r_state$explorer_search_columns <<- rep("", nc)
+    r_state$explore_state <<- list()
+    r_state$explore_search_columns <<- rep("", nc)
   }
 
   isolate({
-    search <- r_state$explorer_state$search$search
-    if (is.null(search)) search <- ""
-    searchCols <- lapply(r_state$explorer_search_columns, function(x) list(search = x))
-    order <- r_state$explorer_state$order
+    searchCols <- lapply(r_state$explore_search_columns, function(x) list(search = x))
+    order <- r_state$explore_state$order
   })
 
   top <- ifelse (input$expl_top == "", "fun", input$expl_top)
 
   withProgress(message = 'Generating explore table', value = 0,
-    make_expl(expl, top = top, dec = input$expl_dec, search = search,
-              searchCols = searchCols, order = order)
+    make_expl(expl, top = top, dec = input$expl_dec, searchCols = searchCols, order = order)
   )
 })
 
@@ -183,7 +172,7 @@ output$dl_explore_tab <- downloadHandler(
     if (is.null(dat)) {
       write.csv(data_frame("Data" = "[Empty]"),file, row.names = FALSE)
     } else {
-      rows <- input$explorer_rows_all
+      rows <- input$explore_rows_all
       flip(dat, input$expl_top) %>%
         {if (is.null(rows)) . else slice(., rows)} %>%
         write.csv(file, row.names = FALSE)
@@ -194,52 +183,24 @@ output$dl_explore_tab <- downloadHandler(
 observeEvent(input$expl_store, {
   dat <- .explore()
   if (is.null(dat)) return()
-  rows <- input$explorer_rows_all
+  rows <- input$explore_rows_all
   name <- input$expl_dat
   tab <- dat$tab
-  if (!is.null(rows) && !all(rows == 1:nrow(tab))) {
-    tab <- tab %>% slice(., rows)
-    for (i in c(dat$byvar,"variable"))
-      tab[[i]] %<>% factor(., levels = unique(.))
-  }
+  if (!is.null(rows) && !all(rows == 1:nrow(tab))) tab <- slice(tab, rows)
+  vars <- if (is_empty(dat$byvar[1])) "variable" else c(dat$byvar, "variable")
+  for (i in vars) tab[[i]] %<>% factor(., levels = unique(.))
 
   env <- if (exists("r_environment")) r_environment else pryr::where("r_data")
   env$r_data[[name]] <- tab
   message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
-
   env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
-  updateSelectInput(session, "dataset", selected = name)
+  updateSelectInput(session, "dataset", selected = input$dataset)
+
+  ## alert user about new dataset
+  session$sendCustomMessage(type = "message",
+    message = paste0("Dataset '", name, "' was successfully added to the datasets dropdown. Add code to R > Report to (re)create the results by clicking the report icon on the bottom left of your screen.")
+  )
 })
-
-# observeEvent(input$expl_store, {
-#   data_filter <- if (input$show_filter) input$data_filter else ""
-#   expl_store(input$dataset, input$view_vars, input$view_dat, data_filter, input$dataviewer_rows_all)
-#   updateTextInput(session, "data_filter", value = "")
-#   updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
-# })
-
-# expl_store <- function(dataset,
-#                        vars = "",
-#                        view_dat = dataset,
-#                        data_filter = "",
-#                        rows = NULL) {
-
-#   mess <-
-#     if (data_filter != "" && !is.null(rows))
-#       paste0("\nSaved filtered data: ", data_filter, " and view-filter (", lubridate::now(), ")")
-#     else if (is.null(rows))
-#       paste0("\nSaved filtered data: ", data_filter, " (", lubridate::now(), ")")
-#     else if (data_filter == "")
-#       paste0("\nSaved data with view-filter (", lubridate::now(), ")")
-#     else
-#       ""
-
-#   getdata(dataset, vars = vars, filt = data_filter, rows = rows, na.rm = FALSE) %>%
-#     save2env(dataset, view_dat, mess)
-
-#   updateSelectInput(session = session, inputId = "dataset", selected = view_dat)
-#   updateSelectInput(session = session, inputId = "view_vars", selected = vars)
-# }
 
 output$expl_summary <- renderPrint({
   if (not_available(input$expl_vars)) return(invisible())
@@ -249,17 +210,13 @@ output$expl_summary <- renderPrint({
 })
 
 observeEvent(input$explore_report, {
-  search <- input$explorer_state$search$search
-  if (is.null(search)) search <- ""
-  # r_state$pivotr_search_columns <<- rep("", ncol(pvt$tab))
-  # searchCols <- lapply(input$pivotr_search_columns, function(x) list(search = x))
-  order <- input$explorer_state$order[1]
-  if (all(is_empty(order))) order <- "''"
-  xcmd <- paste0("#render(make_expl(result, dec = ", input$expl_dec,
-                 ", search = '", search, "', order = ", order, "))")
+
+  ## get the state of the dt table
+  ts <- dt_state("explore")
+  xcmd <- paste0("#render(make_expl(result, dec = ", input$expl_dec, ", top = \"", input$expl_top, "\"))\n#store(result, name = \"", input$expl_dat, "\", top = \"", input$expl_top, "\")")
 
   inp_out <- list(clean_args(expl_sum_inputs(), expl_sum_args[-1]))
-  update_report(inp_main = c(clean_args(expl_inputs(), expl_args), tabsort = "", tabfilt = ""),
+  update_report(inp_main = c(clean_args(expl_inputs(), expl_args), tabsort = ts$tabsort, tabfilt = ts$tabfilt),
                 fun_name = "explore",
                 inp_out = inp_out,
                 outputs = c("summary"),
