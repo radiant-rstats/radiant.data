@@ -30,27 +30,19 @@ pivotr <- function(dataset,
                    data_filter = "",
                    shiny = FALSE) {
 
-  # dataset = "dat"
-  # dataset = "diamonds"
-  # # cvars = "cut"
-  # cvars = c("cut","clarity","color")
-  # cvars = c("ARR_HOUR","DEP_HOUR")
-  # nvar = "price"
-  # nvar = "None"
-  # fun = "mean_rm"
-  # normalize = "None"
-  # tabfilt = ""
-  # tabsort = ""
-  # data_filter = ""
-  # shiny = FALSE
-
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   dat <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
   if (!is_string(dataset)) dataset <- "-----"
 
   ## in case : was used vor cvars
-  if (length(vars) < ncol(dat))
-    cvars <- colnames(dat) %>% {.[. != nvar]}
+  if (length(vars) < ncol(dat)) cvars <- colnames(dat) %>% {.[. != nvar]}
+
+  ## in the unlikely event that n is a variable in the dataset
+  if ("n" %in% colnames(dat)) {
+    if (nvar == "n") nvar <- ".n"
+    colnames(dat) <- colnames(dat) %>% sub("^n$",".n",.)
+    cvars <- sub("^n$",".n",cvars)
+  }
 
   if (nvar == "None") {
     nvar <- "n"
@@ -80,15 +72,12 @@ pivotr <- function(dataset,
   }
 
   ## main tab
-  tab <-
-    dat %>%
+  tab <- dat %>%
     group_by_(.dots = cvars) %>%
     sfun(nvar, cvars, fun)
-  # %>% mutate_each_(funs(as.character), vars = cvars)
 
   ## total
-  total <-
-    dat %>% sel(nvar) %>% sfun(nvar, fun = fun)
+  total <- dat %>% sel(nvar) %>% sfun(nvar, fun = fun)
 
   ## row and colum totals
   if (length(cvars) == 1) {
@@ -142,14 +131,12 @@ pivotr <- function(dataset,
 
   isNum <- -which(names(tab) %in% cvars)
   if (normalize == "total") {
-    tab[,isNum] %<>% {. / total[[1]]} #%>% round(dec)
+    tab[,isNum] %<>% {. / total[[1]]}
   } else if (normalize == "row") {
     if (!is.null(tab[["Total"]]))
-      tab[,isNum] %<>% {. / select(., Total)[[1]]} #%>% round(dec)
+      tab[,isNum] %<>% {. / select(., Total)[[1]]}
   } else if (length(cvars) > 1 && normalize == "column") {
-    tab[,isNum] %<>% apply(2, function(.) . / .[which(tab[,1] == "Total")]) # %>% round(dec)
-    ## mutate_each has issues with spaces in variable names
-    # tab[,isNum] %<>% mutate_each_(funs(h = . / .[which(tab[,1] == "Total")]), vars = colnames(.)) %>% round(3)
+    tab[,isNum] %<>% apply(2, function(.) . / .[which(tab[,1] == "Total")])
   }
 
   ## filtering the table if desired
@@ -202,11 +189,13 @@ summary.pivotr <- function(object,
     cat("Data        :", object$dataset, "\n")
     if (object$data_filter %>% gsub("\\s","",.) != "")
       cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
+    if (object$tabfilt != "")
+      cat("Table filter:", object$tabfilt, "\n")
+    if (object$tabsort[1] != "")
+      cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
     cat("Categorical :", object$cvars, "\n")
-
     if (object$normalize != "None")
       cat("Normalize by:", object$normalize, "\n")
-
     if (object$nvar != "n") {
       cat("Numeric     :", object$nvar, "\n")
       cat("Function    :", object$fun, "\n")
@@ -229,8 +218,16 @@ summary.pivotr <- function(object,
       res <- rounddf(res, dec)
 
       l1 <- paste0("Chi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value, "\n")
-      l2 <- paste0(sprintf("%.1f",100 * (sum(cst$expected < 5) / length(cst$expected))),"% of cells have expected values below 5")
-      if (shiny) HTML(paste0("</br><hr>", l1, "</br>", l2)) else cat(l1, l2)
+      l2 <- paste0(sprintf("%.1f",100 * (sum(cst$expected < 5) / length(cst$expected))),"% of cells have expected values below 5\n")
+      # if (shiny) HTML(paste0("</br><hr>", l1, "</br>", l2)) else cat(l1, l2)
+      # if (object$tabfilt == "") {
+      if (nrow(object$tab_freq) == nrow(object$tab)) {
+        if (shiny) HTML(paste0("</br><hr>", l1, "</br>", l2)) else cat(paste0(l1, l2))
+      } else {
+        note <- "\nNote: Test conducted on unfiltered table"
+        ## filtering is client side in Data > Pivot so can't determine if tab filters are being applied
+        if (shiny) HTML(paste0("</br><hr>", l1, "</br>", l2, "</br><hr>", note)) else cat(paste0(l1, l2, note))
+      }
     } else {
       cat("The number of categorical variables should be 1 or 2 for Chi-square")
     }
@@ -245,7 +242,6 @@ summary.pivotr <- function(object,
 #' @param format Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")
 #' @param perc Display numbers as percentages (TRUE or FALSE)
 #' @param dec Number of decimals to show
-#' @param search Global search. Used to save and restore state
 #' @param searchCols Column search and filter. Used to save and restore state
 #' @param order Column sorting. Used to save and restore state
 #'
@@ -263,7 +259,6 @@ make_dt <- function(pvt,
                     format = "none",
                     perc = FALSE,
                     dec = 3,
-                    search = "",
                     searchCols = NULL,
                     order = NULL) {
 
@@ -295,18 +290,28 @@ make_dt <- function(pvt,
     ))
   }
 
-  ## remove column totals
+  ## used when called from report function
+  # if (is.null(searchCols) && !is.null(sc)) {
+  #   searchCols <- rep("", ncol(tab))
+  #   for (i in sc) searchCols[i[[1]]] <- i[[2]]
+  #   searchCols <- gsub("'", "\\\"", searchCols) %>% lapply(function(x) list(search = x))
+  # }
+
+  ## remove row with column totals
   ## should perhaps be part of pivotr but convenient for now in tfoot
   ## and for external calls to pivotr
   tab <- filter(tab, tab[[1]] != "Total")
+  ## for display options see https://datatables.net/reference/option/dom
+  dom <- if (nrow(tab) < 11) "t" else "ltip"
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
   dt_tab <- {if (!perc) rounddf(tab, dec) else tab} %>%
   DT::datatable(container = sketch, selection = "none", rownames = FALSE,
     filter = fbox,
+    # searching = FALSE,
     style = "bootstrap",
     options = list(
+      dom = dom,
       stateSave = TRUE,
-      search = list(search = search, regex = TRUE),
       searchCols = searchCols,
       order = order,
       processing = FALSE,
@@ -388,7 +393,6 @@ plot.pivotr <- function(x,
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
-    # dots <- paste0(cvars[1]," = factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2]),collapse="','"),"'))")
     dots <- paste0("factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2]),collapse="','"),"'))")
     plot_list[[1]] <-
       tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2])) %>% na.omit %>%
@@ -399,7 +403,6 @@ plot.pivotr <- function(x,
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
-    # dots <- paste0(cvars[1]," = factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2:3]),collapse="','"),"'))")
     dots <- paste0("factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2:3]),collapse="','"),"'))")
     plot_list[[1]] <-
       tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2:3])) %>% na.omit %>%
@@ -408,7 +411,7 @@ plot.pivotr <- function(x,
           geom_bar(stat="identity", position = type, alpha=.7) +
           facet_grid(paste(cvars[3], '~ .'))
   } else {
-    ## You are pushing this feature a bit too far dude
+    ## No plot returned if more than 3 grouping variables are selected
     return(invisible())
   }
 
@@ -424,7 +427,6 @@ plot.pivotr <- function(x,
  if (custom)
    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
-  # sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
   sshhr( plot_list[[1]] ) %>%
     { if (shiny) . else print(.) }
 }
