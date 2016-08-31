@@ -7,11 +7,11 @@
 #' @param yvar Variable to display along the Y-axis of the plot (default = "none")
 #' @param comby Combine yvars in plot (TRUE or FALSE, FALSE is the default)
 #' @param combx Combine xvars in plot (TRUE or FALSE, FALSE is the default)
-#' @param type Type of plot to create. One of Distribution ('dist'), Density ('density'), Scatter ('scatter'), Line ('line'), Bar ('bar'), or Box-plot ('box')
+#' @param type Type of plot to create. One of Distribution ('dist'), Density ('density'), Scatter ('scatter'), Surface ('surface'), Line ('line'), Bar ('bar'), or Box-plot ('box')
 #' @param facet_row Create vertically arranged subplots for each level of the selected factor variable
 #' @param facet_col Create horizontally arranged subplots for each level of the selected factor variable
-#' @param color Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different color
-#' @param fill Display bar, distribution, and density plots by group, each with a different color
+#' @param color Adds color to a scatter plot to generate a 'heat map'. For a line plot one line is created for each group and each is assigned a different color
+#' @param fill Display bar, distribution, and density plots by group, each with a different color. Also applied to surface plots to generate a 'heat map'
 #' @param bins Number of bins used for a histogram (1 - 50)
 #' @param smooth Adjust the flexibility of the loess line for scatter plots
 #' @param fun Set the summary measure for line and bar plots when the X-variable is a factor (default is "mean"). Also used to plot an error bar in a scatter plot when the X-variable is a factor. Options are "mean" and/or "median"
@@ -62,34 +62,11 @@ visualize <- function(dataset, xvar,
                       shiny = FALSE,
                       custom = FALSE) {
 
-  # library(radiant.data)
-  # dataset = "diamonds"
-  # yvar = "price"
-  # xvar = "cut"
-  # # type <- "bar"
-  # type <- "line"
-  # comby = FALSE
-  # combx = FALSE
-  # # type = "dist"
-  # facet_row = "."
-  # facet_col = "."
-  # color = "cut"
-  # fill = "cut"
-  # bins = 10
-  # smooth = 1
-  # fun = "mean"
-  # check = ""
-  # axes = ""
-  # alpha = .5
-  # data_filter = ""
-  # shiny = FALSE
-  # custom = FALSE
-
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- xvar
 
   if (!type %in% c("scatter","line")) color <- "none"
-  if (!type %in% c("bar","dist","density")) fill <- "none"
+  if (!type %in% c("bar","dist","density","surface")) fill <- "none"
   if (type != "scatter") {
     check %<>% sub("line","",.) %>% sub("loess","",.)
     fun <- fun[1]  # only scatter can deal with multiple functions
@@ -103,6 +80,8 @@ visualize <- function(dataset, xvar,
     if (!type %in% c("dist","density")) {
       return("No Y-variable provided for a plot that requires one")
     }
+  } else if (type == "surface" && is_empty(fill, "none")) {
+    return("No Fill variable provided for a plot that requires one")
   } else {
     if (type %in% c("dist","density")) {
       yvar <- ""
@@ -144,7 +123,6 @@ visualize <- function(dataset, xvar,
   }
 
   ## convertising factor variables if needed
-  # isChar <- sapply(dat, class) == "character"
   isChar <- dc == "character"
   if (sum(isChar) > 0) {
     if (type == "density") {
@@ -316,6 +294,24 @@ visualize <- function(dataset, xvar,
               stat_summary(fun.data = medianf, geom = "crossbar", color = "red")
           }
         }
+
+        itt <- itt + 1
+      }
+    }
+
+  } else if (type == "surface") {
+
+    itt <- 1
+    for (i in xvar) {
+      if ("log_x" %in% axes && dc[i] == "factor") axes <- sub("log_x","",axes)
+      interpolate <- ifelse ("interpolate" %in% check, TRUE, FALSE)
+
+      for (j in yvar) {
+        plot_list[[itt]] <- ggplot(dat, aes_string(x = i, y = j, fill = fill)) +
+          geom_raster(interpolate = interpolate)
+
+        if ("log_x" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + xlab(paste("log", i))
+        if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
 
         itt <- itt + 1
       }
