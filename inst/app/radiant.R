@@ -315,7 +315,6 @@ plot_downloader <- function(plot_name, width = plot_width(),
         pr <- 7
         png(file=file, width = width*pr, height = height*pr, res=72*pr)
           print(get(paste0(pre, plot_name))())
-          # print(isolate(get(paste0(pre, plot_name))()))
         dev.off()
     }
   )
@@ -381,7 +380,6 @@ help_and_report <- function(modal_title, fun_name, help_file) {
            <div style='clear: both;'></div>",
           fun_name, fun_name, fun_name, modal_title, help_file, fun_name, fun_name, fun_name) %>%
   enc2utf8 %>% HTML %>% withMathJax
-  # enc2utf8 %>% HTML %>% withMathJaxR
 }
 
 ## function to render .md files to html
@@ -396,7 +394,78 @@ inclRmd <- function(path) {
   knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE,
     envir = r_environment, options = "", stylesheet = "") %>%
     HTML %>% withMathJax
-    # HTML %>% withMathJaxR
+}
+
+## capture the state of a dt table
+dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "") {
+
+  ## global search
+  search <- input[[paste0(fun, "_state")]]$search$search
+  if (is.null(search)) search <- ""
+
+  ## table ordering
+  order <- input[[paste0(fun,"_state")]]$order
+  if (length(order) == 0) {
+    order <- "NULL"
+  } else {
+    order <- list(order)
+  }
+
+  ## column filters, gsub needed for factors
+  sc <- input[[paste0(fun, "_search_columns")]] %>% gsub("\\\"","'",.)
+  sci <- which(sc != "")
+  nr_sc <- length(sci)
+  if (nr_sc > 0) {
+    sc <- list(lapply(sci, function(i) list(i, sc[i])))
+  } else if (nr_sc == 0) {
+    sc <-  "NULL"
+  }
+
+  if (order != "NULL" || sc != "NULL") {
+
+    ## get variable class and name
+    gc <- get(paste0(".",fun))()$tab %>% getclass %>%
+      {if (is_empty(vars[1])) . else .[vars]}
+    cn <- names(gc)
+
+    if (length(cn) > 0) {
+      if (order != "NULL") {
+        tabsort <- c()
+        for (i in order[[1]]) {
+          cname <- cn[i[[1]] + 1]
+          if (i[[2]] == "desc") cname <- paste0("desc(", cname, ")")
+          tabsort <- c(tabsort, cname)
+        }
+        tabsort <- paste0(tabsort, collapse = ", ")
+      }
+
+      if (sc != "NULL") {
+        tabfilt <- c()
+        for (i in sc[[1]]) {
+          cname <- cn[i[[1]]]
+          type <- gc[cname]
+          if (type == "factor") {
+            cname <- paste0(cname, " %in% ", sub("\\[","c(", i[[2]]) %>% sub("\\]",")", .))
+          } else if (type %in% c("numeric","integer")) {
+            bnd <- strsplit(i[[2]], "...", fixed = TRUE)[[1]]
+            cname <- paste0(cname, " >= ", bnd[1], " & ", cname, " <= ", bnd[2]) %>% gsub("  ", " ", .)
+          } else if (type %in% c("date","period")) {
+            bnd <- strsplit(i[[2]], "...", fixed = TRUE)[[1]] %>% gsub(" ", "", .)
+            cname <- paste0(cname, " >= '", bnd[1], "' & ", cname, " <= '", bnd[2], "'") %>% gsub("  ", " ", .)
+          } else if (type == "character") {
+            cname <- paste0("grepl('", i[[2]], "', ", cname, ", fixed = TRUE)")
+          } else {
+            message("Variable ", cname, " has type ", type, ". This type is not currently supported to generate code for R > Report")
+            next
+          }
+          tabfilt <- c(tabfilt, cname)
+        }
+        tabfilt <- paste0(tabfilt, collapse = " & ")
+      }
+    }
+  }
+
+  list(search = search, order = order, sc = sc, tabsort = tabsort, tabfilt = tabfilt)
 }
 
 ## used by View - remove or use more broadly
