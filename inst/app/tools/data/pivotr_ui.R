@@ -207,14 +207,14 @@ output$pivotr <- DT::renderDataTable({
     r_state$pivotr_search_columns <<- rep("", ncol(pvt$tab))
   }
 
-  search <- r_state$pivotr_state$search$search
-  if (is.null(search)) search <- ""
+  # search <- r_state$pivotr_state$search$search
+  # if (is.null(search)) search <- ""
   searchCols <- lapply(r_state$pivotr_search_columns, function(x) list(search = x))
   order <- r_state$pivotr_state$order
 
   withProgress(message = 'Generating pivot table', value = 0,
     make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc,
-            dec = input$pvt_dec, search = search, searchCols = searchCols, order = order)
+            dec = input$pvt_dec, searchCols = searchCols, order = order)
   )
 
 })
@@ -303,6 +303,7 @@ output$plot_pivot <- renderPlot({
 }, width = pvt_plot_width, height = pvt_plot_height)
 
 observeEvent(input$pivotr_report, {
+
   inp_out <- list("","")
   inp_out[[1]] <- clean_args(pvt_sum_inputs(), pvt_sum_args[-1])
 
@@ -315,25 +316,12 @@ observeEvent(input$pivotr_report, {
     figs <- FALSE
   }
 
-  search <- input$pivotr_state$search$search
-  if (is.null(search)) search <- ""
-  order <- input$pivotr_state$order[1]
+  ## get the state of the dt table
+  ts <- dt_state("pivotr")
+  xcmd <- paste0("#render(make_dt(result, format = '", input$pvt_format, "', perc = ", input$pvt_perc, ", dec = ", input$pvt_dec, "))")
 
-  # r_state$pivotr_search_columns <<- rep("", ncol(pvt$tab))
-  # searchCols <- lapply(input$pivotr_search_columns, function(x) list(search = x))
-  # if (all(is.null(order))) order <- "''"
-  # id <- sample(seq_len(1000000),1)
-  # xcmd <- paste0("#pvtab",id," <- make_dt(result, format = '", input$pvt_format,
-  #                "', perc = ", input$pvt_perc, ", dec = ", input$pvt_dec,
-  #                ", search = '", search,"', order = ", order,
-  #                # "', searchCols = ", searchCols, ", order = ", order,
-  #                ")\n#render(pvtab",id,")")
-
-  xcmd <- paste0("#render(make_dt(result, format = '", input$pvt_format,
-                 "', perc = ", input$pvt_perc, ", dec = ", input$pvt_dec,
-                 ", search = '", search,"', order = ", order, "))")
-
-  update_report(inp_main = c(clean_args(pvt_inputs(), pvt_args), tabsort = "", tabfilt = ""),
+  ## update R > Report
+  update_report(inp_main = c(clean_args(pvt_inputs(), pvt_args), tabsort = ts$tabsort, tabfilt = ts$tabfilt),
                 fun_name = "pivotr",
                 outputs = outputs,
                 inp_out = inp_out,
