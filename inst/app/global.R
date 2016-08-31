@@ -178,8 +178,9 @@ help_menu <- function(hlp) {
       tags$script(src = "js/session.js"),
       tags$script(src = "js/returnTextAreaBinding.js"),
       tags$script(src = "js/returnTextInputBinding.js"),
-      # tags$script(src = "js/draggable_modal.js"),
       tags$script(src = "js/video_reset.js"),
+      tags$script(src = "js/message-handler.js"),
+      # tags$script(src = "js/draggable_modal.js"),
       tags$link(rel = "shortcut icon", href = "imgs/icon.png")
     )
   )
