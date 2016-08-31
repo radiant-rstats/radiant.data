@@ -4,8 +4,8 @@
 \alias{make_dt}
 \title{Make a pivot tabel in DT}
 \usage{
-make_dt(pvt, format = "none", perc = FALSE, dec = 3, search = "",
-  searchCols = NULL, order = NULL)
+make_dt(pvt, format = "none", perc = FALSE, dec = 3, searchCols = NULL,
+  order = NULL)
 }
 \arguments{
 \item{pvt}{Return value from \code{\link{pivotr}}}
@@ -15,8 +15,6 @@ make_dt(pvt, format = "none", perc = FALSE, dec = 3, search = "",
 \item{perc}{Display numbers as percentages (TRUE or FALSE)}
 
 \item{dec}{Number of decimals to show}
-
-\item{search}{Global search. Used to save and restore state}
 
 \item{searchCols}{Column search and filter. Used to save and restore state}
 

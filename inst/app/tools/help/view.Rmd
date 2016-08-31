@@ -33,6 +33,10 @@ For very large datasets it can useful to click `Pause view` before selecting var
 
 By default all columns in the data are shown. Click on any variable to focus on it alone. To select several variables use the SHIFT and ARROW keys on your keyboard. On a mac the CMD key can also be used to select multiple variables. The same effect is achieved on windows using the CTRL key. To select all variable use CTRL-A (or CMD-A on mac).
 
+### Browse the data
+
+By default only 10 rows of data are shown at a time. You can change this setting through the `Show ... entries` dropdown. Press the `Next` and `Previous` buttons at the bottom-right of the screen to page through the data.
+
 ### Sort
 
 Click on a column header in the table to sort the data. Clicking again will toggle between sorting in ascending and descending order. To sort on multiple columns at once press shift and then click on the 2nd, 3rd, etc. column to sort by.
@@ -45,9 +49,11 @@ For numeric variables the column filter boxes have some special features that ma
 
 If you want to get _really_ fancy you can use the search box on the top right to search across all columns in the data using **regular expressions**. For example, to find all rows that have an entry in _any_ column ending with the number 72 type `72$` (i.e., the `$` sign is used to indicate the end of an entry). For all rows with entries that start with 60 use `^60` (i.e., the `^` is used to indicate the first character in an entry). Regular expressions are incredibly powerful for search but this is a _big_ topic area. To learn more about regular expressions see this <a href="http://www.regular-expressions.info/tutorial.html" target="_blank">tutorial</a>.
 
+
+### Store filters
+
 It is important to note that column sorting, column filters, and search are **not** persistent. To store these settings for use in other parts of Radiant press the `Store` button. You can store the data and settings under a different dataset name by changing the value in the text input to the left of the `Store` button. This feature can also be used to select a subset of variables to keep. Just select the ones you want to keep and press the `Store` button. For more control over the variables you want to keep or remove and to specify their order in the dataset use the _Data > Transform_ tab.
 
-### Browse the data
+To download the data in _csv_ format click the <i title='Download' class='fa fa-download'></i> icon on the top right of your screen.
 
-By default only 10 rows of data are shown at a time. You can change this setting through the `Show ... entries` dropdown. Press the `Next` and `Previous` buttons at the bottom-right of the screen to page through the data.
-
+Click the report (<i title='Report results' class='fa fa-edit'></i>) icon on the bottom left of your screen to add the filter and sort commands used by Radiant to a (reproducible) report in <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_R > Report_</a>.

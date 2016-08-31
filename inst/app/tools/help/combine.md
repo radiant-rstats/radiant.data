@@ -1047,5 +1047,9 @@ The R(adiant) commands are the same as shown above, except you will need to repl
 
 <br>
 
+### R > Report
+
+Add code to <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_R > Report_</a> to (re)create the combined dataset by clicking the <i title="report results" class="fa fa-edit"></i> icon on the bottom left of your screen.
+
 --------
 For additional discussion see the chapter on relational data in <a href="http://r4ds.had.co.nz/relational-data.html" target="_blank">R for data science</a>.

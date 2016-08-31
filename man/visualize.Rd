@@ -21,15 +21,15 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 
 \item{combx}{Combine xvars in plot (TRUE or FALSE, FALSE is the default)}
 
-\item{type}{Type of plot to create. One of Distribution ('dist'), Density ('density'), Scatter ('scatter'), Line ('line'), Bar ('bar'), or Box-plot ('box')}
+\item{type}{Type of plot to create. One of Distribution ('dist'), Density ('density'), Scatter ('scatter'), Surface ('surface'), Line ('line'), Bar ('bar'), or Box-plot ('box')}
 
 \item{facet_row}{Create vertically arranged subplots for each level of the selected factor variable}
 
 \item{facet_col}{Create horizontally arranged subplots for each level of the selected factor variable}
 
-\item{color}{Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different color}
+\item{color}{Adds color to a scatter plot to generate a 'heat map'. For a line plot one line is created for each group and each is assigned a different color}
 
-\item{fill}{Display bar, distribution, and density plots by group, each with a different color}
+\item{fill}{Display bar, distribution, and density plots by group, each with a different color. Also applied to surface plots to generate a 'heat map'}
 
 \item{bins}{Number of bins used for a histogram (1 - 50)}
 

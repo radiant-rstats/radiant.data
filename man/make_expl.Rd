@@ -4,8 +4,7 @@
 \alias{make_expl}
 \title{Make a tabel of summary statistics in DT}
 \usage{
-make_expl(expl, top = "fun", dec = 3, search = "", searchCols = NULL,
-  order = NULL)
+make_expl(expl, top = "fun", dec = 3, searchCols = NULL, order = NULL)
 }
 \arguments{
 \item{expl}{Return value from \code{\link{explore}}}
@@ -13,8 +12,6 @@ make_expl(expl, top = "fun", dec = 3, search = "", searchCols = NULL,
 \item{top}{The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by}
 
 \item{dec}{Number of decimals to show}
-
-\item{search}{Global search. Used to save and restore state}
 
 \item{searchCols}{Column search and filter. Used to save and restore state}
 
