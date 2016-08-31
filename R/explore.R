@@ -32,16 +32,6 @@ explore <- function(dataset,
                     data_filter = "",
                     shiny = FALSE) {
 
-  # library(radiant.data)
-  ## vars <- c("price", "carat")
-  # vars <- "price"
-  # byvar <- "clarity"
-  ## byvar <- ""
-  # dataset <- "diamonds"
-  # data_filter <-  ""
-  # fun <- c("length","mean")
-  ## fun <- "mean"
-
   tvars <- vars
   if (!is_empty(byvar)) tvars %<>% c(byvar) %>% unique
 
@@ -67,7 +57,6 @@ explore <- function(dataset,
   }
 
   ## summaries only for numeric variables
-  # isNum <- getclass(dat) %>% {which("numeric" == . | "integer" == .)}
   isNum <- dc %>% {which("numeric" == . | "integer" == .)}
 
   ## avoid using .._rm as function name
@@ -75,7 +64,7 @@ explore <- function(dataset,
 
   if (is_empty(byvar)) {
     tab <- dat %>% select(isNum) %>%
-      gather("variable", "value") %>%
+      gather("variable", "value", factor_key = TRUE) %>%
       group_by_("variable")  %>% summarise_each(pfun)
 
     ## order by the variable names selected
@@ -160,18 +149,49 @@ explore <- function(dataset,
 summary.explore <- function(object, top = "fun", dec = 3, ...) {
 
   cat("Explore\n")
-  cat("Data      :", object$dataset, "\n")
+  cat("Data        :", object$dataset, "\n")
   if (object$data_filter %>% gsub("\\s","",.) != "")
-    cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
+    cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
+  if (object$tabfilt != "")
+    cat("Table filter:", object$tabfilt, "\n")
+  if (object$tabsort[1] != "")
+    cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
   if (object$byvar[1] != "")
-    cat("Grouped by:", object$byvar, "\n")
-  cat("Functions :", names(object$pfun), "\n")
-  cat("Top       :", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[top], "\n")
+    cat("Grouped by  :", object$byvar, "\n")
+  cat("Functions   :", names(object$pfun), "\n")
+  cat("Top         :", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[top], "\n")
   cat("\n")
 
   tab <- object %>% flip(top) %>% as.data.frame
   print(formatdf(tab, dec), row.names = FALSE)
   invisible()
+}
+
+#' Store method for the explore function
+#'
+#' @details Add the summarized data to the r_data list in Radiant or return it. See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
+#'
+#' @param object Return value from \code{\link{explore}}
+#' @param name Name to assign to the dataset
+#' @param top The variable (type) to display at the top of the table
+#' @param ... further arguments passed to or from other methods
+#'
+#' @seealso \code{\link{explore}} to generate summaries
+#'
+#' @export
+store.explore <- function(object, name, top = "fun", ...) {
+  tab <- object %>% flip(top) %>% as.data.frame
+
+  if (exists("r_environment")) {
+    env <- r_environment
+  } else if (exists("r_data")) {
+    env <- pryr::where("r_data")
+  } else {
+    return(tab)
+  }
+
+  env$r_data[[name]] <- tab
+  env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
 }
 
 #' Flip the DT table to put Function, Variable, or Group by on top
@@ -211,7 +231,6 @@ flip <- function(expl, top = "fun") {
 #' @param expl Return value from \code{\link{explore}}
 #' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by
 #' @param dec Number of decimals to show
-#' @param search Global search. Used to save and restore state
 #' @param searchCols Column search and filter. Used to save and restore state
 #' @param order Column sorting. Used to save and restore state
 #'
@@ -227,10 +246,8 @@ flip <- function(expl, top = "fun") {
 make_expl <- function(expl,
                       top = "fun",
                       dec = 3,
-                      search = "",
                       searchCols = NULL,
                       order = NULL) {
-
 
   tab <- expl %>% flip(top)
   cn_all <- colnames(tab)
@@ -249,6 +266,15 @@ make_expl <- function(expl,
     )
   ))
 
+  ## used when called from report function
+  # if (is.null(searchCols) && !is.null(sc)) {
+  #   searchCols <- rep("", ncol(tab))
+  #   for (i in sc) searchCols[i[[1]]] <- i[[2]]
+  #   searchCols <- gsub("'", "\\\"", searchCols) %>% lapply(function(x) list(search = x))
+  # }
+
+  ## for display options see https://datatables.net/reference/option/dom
+  dom <- if (nrow(tab) < 11) "t" else "ltip"
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
   dt_tab <- rounddf(tab, dec) %>%
     DT::datatable(container = sketch, selection = "none",
@@ -256,8 +282,8 @@ make_expl <- function(expl,
       filter = fbox,
       style = "bootstrap",
       options = list(
+        dom = dom,
         stateSave = TRUE,
-        search = list(search = search, regex = TRUE),
         searchCols = searchCols,
         order = order,
         processing = FALSE,
