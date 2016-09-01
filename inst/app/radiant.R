@@ -158,13 +158,12 @@ clean_args <- function(rep_args, rep_default = list()) {
 
   ## removing default arguments before sending to report feature
   for (i in names(rep_args)) {
-    if (!any(is.language(rep_args[[i]])) && all(is.na(rep_args[[i]]))) {
-      rep_args[[i]] <- NULL
-      next
+    if (!is.language(rep_args[[i]]) && !is.call(rep_args[[i]]) && all(is.na(rep_args[[i]]))) {
+      rep_args[[i]] <- NULL; next
     }
-    if (!all(is.symbol(rep_default[[i]])) && all(is_not(rep_default[[i]]))) next
-    if (length(rep_args[[i]]) == length(rep_default[[i]]) &&
-        all(rep_args[[i]] == rep_default[[i]])) rep_args[[i]] <- NULL
+    if (!is.symbol(rep_default[[i]]) && !is.call(rep_default[[i]]) && all(is_not(rep_default[[i]]))) next
+    if (length(rep_args[[i]]) == length(rep_default[[i]]) && all(rep_args[[i]] == rep_default[[i]]))
+      rep_args[[i]] <- NULL
   }
 
   rep_args
@@ -187,7 +186,7 @@ has_duplicates <- function(x)
   if (length(unique(x)) < length(x)) TRUE else FALSE
 
 ## is x some type of date variable
-is_date <- function(x) inherits(x, c('Date', 'POSIXlt', 'POSIXct'))
+is_date <- function(x) inherits(x, c("Date", "POSIXlt", "POSIXct"))
 
 ## drop elements from .._args variables obtained using formals
 r_drop <- function(x, drop = c("dataset","data_filter")) x[-which(x %in% drop)]
