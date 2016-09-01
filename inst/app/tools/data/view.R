@@ -142,7 +142,7 @@ output$dl_view_tab <- downloadHandler(
   if (ts$tabsort != "")
     cmd <- paste0(cmd, " %>%\n\tarrange(", ts$tabsort, ")")
 
-  paste0(cmd, " %>%\n\tstore.view('", input$dataset, "', '", dataset, "')")
+  paste0(cmd, " %>%\n\tstore('", dataset, "', '", input$dataset, "')")
 }
 
 observeEvent(input$view_report, {

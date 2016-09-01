@@ -19,28 +19,34 @@ Search <- function(pattern, df, ignore.case = TRUE, fixed = FALSE) {
 
 #' Store method for the Data > View tab
 #'
-#' @details Apply all filters and searches. See \url{http://radiant-rstats.github.io/docs/data/view.html} for an example in Radiant
+#' @details Store data frame in Radiant r_data list if available
 #'
 #' @param object Filtered data frame from the Data > View tab
-#' @param name1 Name of the original data
-#' @param name2 Name of the new dataset
+#' @param new Name of the new dataset
+#' @param org Name of the original data
+#' @param envir Environment to assign 'new' dataset (optional). Used if 'new' is specified but an r_data list is not available
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-store.view <- function(object, name1, name2, ...) {
+store.data.frame <- function(object, new = "", org = "", envir = parent.frame(), ...) {
 
-  if (exists("r_environment")) {
+  if (is_empty(new)) {
+    return(object)
+  } else if (exists("r_environment")) {
     env <- r_environment
   } else if (exists("r_data")) {
     env <- pryr::where("r_data")
   } else {
-    return(object)
+    assign(new, object, envir = envir)
+    message("Dataset ", new, " created in ", environmentName(envir), " environment")
+    return(invisible())
   }
 
-  if (!is_empty(attr(object, "description")))
-    attr(object, "desription") <- env$r_data[[paste0(name1,"_descr")]]
+  ## use data description from the original if available
+  if (is_empty(attr(object, "description")) && !is_empty(org))
+    attr(object, "description") <- env$r_data[[paste0(org, "_descr")]]
 
-  env$r_data[[name2]] <- object
-  env$r_data[[paste0(name2,"_descr")]] <- attr(object, "desription")
-  env$r_data[["datasetlist"]] <- c(name2, env$r_data[["datasetlist"]]) %>% unique
+  env$r_data[[new]] <- object
+  env$r_data[[paste0(new,"_descr")]] <- attr(object, "description")
+  env$r_data[["datasetlist"]] <- c(new, env$r_data[["datasetlist"]]) %>% unique
 }
