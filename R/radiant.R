@@ -847,7 +847,7 @@ is_not <- function(x) length(x) == 0 || is.na(x)
 #' @export
 plot.character <- function(x, ...) return(invisible())
 
-#' Method to render htmlwidgets
+#' Method to render objects (i.e., htmlwidgets and rmarkdown files)
 #'
 #' @param object Object of relevant class to render
 #' @param ... Additional arguments
@@ -862,6 +862,22 @@ render <- function(object, ...) UseMethod("render", object)
 #'
 #' @export
 render.datatables <- function(object, ...) DT::renderDataTable(object)
+
+#' Method to render rmarkdown documents
+#'
+#' @param object File path to an R-markdown file
+#' @param ... Additional arguments passed on to rmarkdown::render
+#'
+#' @export
+render.character <- function(object, ...) {
+  if (length(object) > 1) {
+    stop("Expecting file path to an R-markdown file")
+  } else if (file.exists(object)) {
+    rmarkdown::render(object, ...)
+  } else {
+    stop("R-markdown file not found")
+  }
+}
 
 #' Show dataset desription, if available, in html form in Rstudio viewer or default browser
 #'
