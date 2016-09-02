@@ -5,7 +5,8 @@
 \title{Explore data}
 \usage{
 explore(dataset, vars = "", byvar = "", fun = c("mean_rm", "sd_rm"),
-  tabfilt = "", tabsort = "", data_filter = "", shiny = FALSE)
+  tabfilt = "", tabsort = "", nr = NULL, data_filter = "",
+  shiny = FALSE)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -19,6 +20,8 @@ explore(dataset, vars = "", byvar = "", fun = c("mean_rm", "sd_rm"),
 \item{tabfilt}{Expression used to filter the table. This should be a string (e.g., "Total > 10000")}
 
 \item{tabsort}{Expression used to sort the table (e.g., "-Total")}
+
+\item{nr}{Number of rows to display}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 

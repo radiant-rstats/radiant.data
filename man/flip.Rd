@@ -4,12 +4,14 @@
 \alias{flip}
 \title{Flip the DT table to put Function, Variable, or Group by on top}
 \usage{
-flip(expl, top = "fun")
+flip(expl, top = "fun", rows = NULL)
 }
 \arguments{
 \item{expl}{Return value from \code{\link{explore}}}
 
 \item{top}{The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by. "fun" is the default}
+
+\item{rows}{Ordering of rows in the table}
 }
 \description{
 Flip the DT table to put Function, Variable, or Group by on top
