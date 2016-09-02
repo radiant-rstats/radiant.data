@@ -321,8 +321,13 @@ observeEvent(input$pivotr_report, {
   ts <- dt_state("pivotr")
   xcmd <- paste0("#render(make_dt(result, format = '", input$pvt_format, "', perc = ", input$pvt_perc, ", dec = ", input$pvt_dec, "))")
 
+  inp_main <- clean_args(pvt_inputs(), pvt_args)
+  if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)
+  if (ts$tabfilt != "") inp_main <- c(inp_main, tabfilt = ts$tabfilt)
+  inp_main <- c(inp_main, nr = ts$nr - 1)
+
   ## update R > Report
-  update_report(inp_main = c(clean_args(pvt_inputs(), pvt_args), tabsort = ts$tabsort, tabfilt = ts$tabfilt),
+  update_report(inp_main = inp_main,
                 fun_name = "pivotr",
                 outputs = outputs,
                 inp_out = inp_out,

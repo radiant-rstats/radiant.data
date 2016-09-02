@@ -9,6 +9,7 @@
 #' @param normalize Normalize the table by "row" total,"column" totals, or overall "total"
 #' @param tabfilt Expression used to filter the table. This should be a string (e.g., "Total > 10000")
 #' @param tabsort Expression used to sort the table (e.g., "-Total")
+#' @param nr Number of rows to display
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #'
@@ -27,6 +28,7 @@ pivotr <- function(dataset,
                    normalize = "None",
                    tabfilt = "",
                    tabsort = "",
+                   nr = NULL,
                    data_filter = "",
                    shiny = FALSE) {
 
@@ -139,20 +141,31 @@ pivotr <- function(dataset,
     tab[,isNum] %<>% apply(2, function(.) . / .[which(tab[,1] == "Total")])
   }
 
+  nrow_tab <- nrow(tab) - 1
+
   ## filtering the table if desired
   if (tabfilt != "")
-    tab <- filterdata(tab, tabfilt) %>% droplevels
+    tab <- tab[-nrow(tab),] %>% filterdata(tabfilt) %>% bind_rows(tab[nrow(tab),]) %>% droplevels
 
   ## sorting the table if desired
   if (!identical(tabsort, "")) {
     if (grepl(",", tabsort))
       tabsort <- strsplit(tabsort,",")[[1]] %>% gsub(" ", "", .)
     tab[-nrow(tab),] %<>% arrange_(.dots = tabsort)
+
+    ## order factors as set in the sorted table
+    tc <- if (length(cvars) == 1) cvars else cvars[-1] ## don't change top cv
+    for (i in tc) tab[[i]] %<>% factor(., levels = unique(.))
   }
 
-  if (!shiny) tab <- as.data.frame(tab, as.is = TRUE)
+  tab <- as.data.frame(tab, as.is = TRUE)
+  attr(tab, "nrow") <- nrow_tab
+  if (!is.null(nr)) {
+    ind <- if (nr >= nrow(tab)) 1:nrow(tab) else c(1:nr, nrow(tab))
+    tab <- tab[ind,, drop = FALSE]
+  }
 
-  rm(isNum, dat, sfun, sel, i, levs, total, ind)
+  rm(isNum, dat, sfun, sel, i, levs, total, ind, nrow_tab)
 
   as.list(environment()) %>% add_class("pivotr")
 }
@@ -193,6 +206,9 @@ summary.pivotr <- function(object,
       cat("Table filter:", object$tabfilt, "\n")
     if (object$tabsort[1] != "")
       cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
+    nr <- attr(object$tab,"nrow")
+    if (!is.null(nr) && !is.null(object$nr) && object$nr < nr)
+      cat(paste0("Rows shown  : ", object$nr, " (out of ", nr, ")\n"))
     cat("Categorical :", object$cvars, "\n")
     if (object$normalize != "None")
       cat("Normalize by:", object$normalize, "\n")
@@ -219,8 +235,6 @@ summary.pivotr <- function(object,
 
       l1 <- paste0("Chi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value, "\n")
       l2 <- paste0(sprintf("%.1f",100 * (sum(cst$expected < 5) / length(cst$expected))),"% of cells have expected values below 5\n")
-      # if (shiny) HTML(paste0("</br><hr>", l1, "</br>", l2)) else cat(l1, l2)
-      # if (object$tabfilt == "") {
       if (nrow(object$tab_freq) == nrow(object$tab)) {
         if (shiny) HTML(paste0("</br><hr>", l1, "</br>", l2)) else cat(paste0(l1, l2))
       } else {

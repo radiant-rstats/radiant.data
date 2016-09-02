@@ -398,7 +398,7 @@ inclRmd <- function(path) {
 }
 
 ## capture the state of a dt table
-dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "") {
+dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
 
   ## global search
   search <- input[[paste0(fun, "_state")]]$search$search
@@ -422,11 +422,13 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "") {
     sc <-  "NULL"
   }
 
+  dat <- get(paste0(".",fun))()$tab %>% {nr <<- nrow(.); .[1,,drop = FALSE]}
+
   if (order != "NULL" || sc != "NULL") {
 
     ## get variable class and name
-    gc <- get(paste0(".",fun))()$tab %>% getclass %>%
-      {if (is_empty(vars[1])) . else .[vars]}
+    # gc <- get(paste0(".",fun))()$tab %>% {nr <<- nrow(.); .} %>% getclass %>%
+    gc <- getclass(dat) %>% {if (is_empty(vars[1])) . else .[vars]}
     cn <- names(gc)
 
     if (length(cn) > 0) {
@@ -466,7 +468,9 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "") {
     }
   }
 
-  list(search = search, order = order, sc = sc, tabsort = tabsort, tabfilt = tabfilt)
+  # tabslice <- if (ts < 2) "1" else paste0("1:",ts)
+
+  list(search = search, order = order, sc = sc, tabsort = tabsort, tabfilt = tabfilt, nr = nr)
 }
 
 ## used by View - remove or use more broadly
