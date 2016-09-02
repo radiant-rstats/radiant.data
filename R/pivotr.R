@@ -49,7 +49,7 @@ pivotr <- function(dataset,
   } else {
     ## converting factors for integer (1st level)
     ## see also R/visualize.R
-    if ("factor" %in% class(dat[[nvar]]))
+    if ("factor" %in% class(dat[[nvar]]) && fun[1] != "n_distinct")
       dat[[nvar]] %<>% {as.integer(. == levels(.)[1])}
     if ("logical" %in% class(dat[[nvar]]))
       dat[[nvar]] %<>% as.integer
