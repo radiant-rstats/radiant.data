@@ -10,6 +10,8 @@ It is also possible to summarize numerical variables. Select `price` from the `N
 
 You can also create a bar chart based on the generated table (see image above). To download the table in _csv_ format or the plot in _png_ format click the appropriate download icon on the right.
 
+> Note that when a categorical variable (`factor`) is selected from the `Numeric variable` dropdown it is converted to a 0-1 (binary) variable where the first level is coded as 1 and all other levels as 0.
+
 ### Filter
 
 Use the `Filter` box to select (or omit) specific sets of rows from the data to tabulate. See the help file for <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank">_Data > View_</a> for details.
