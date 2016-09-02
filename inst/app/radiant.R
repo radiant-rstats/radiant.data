@@ -200,10 +200,12 @@ trunc_char <- function(x) if (is.character(x)) strtrim(x,40) else x
 ## show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt = "") {
 
-  nr <- 0
-  {if (is.character(dat) && length(dat) == 1) getdata(dat, filt = filt, na.rm = FALSE) else dat} %>%
-    { nr <<- nrow(.); . } %>%
-    slice(1:min(nshow, nr)) %>%
+  if (is.character(dat) && length(dat) == 1) dat <- getdata(dat, filt = filt, na.rm = FALSE)
+  nr <- nrow(dat)
+  ## avoid slice with variables outside of the df in case a column with the same
+  ## name exists
+  dat <- dat[1:min(nshow, nr),]
+  dat %>%
     mutate_each(funs(trunc_char)) %>%
     mutate_each(funs(d2c)) %>%
     xtable::xtable(.) %>%
