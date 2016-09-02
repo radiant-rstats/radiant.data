@@ -183,17 +183,8 @@ output$dl_explore_tab <- downloadHandler(
 observeEvent(input$expl_store, {
   dat <- .explore()
   if (is.null(dat)) return()
-  rows <- input$explore_rows_all
   name <- input$expl_dat
-  tab <- dat$tab
-  if (!is.null(rows) && !all(rows == 1:nrow(tab))) tab <- tab[rows,, drop = FALSE]
-  vars <- if (is_empty(dat$byvar[1])) "variable" else c(dat$byvar, "variable")
-  for (i in vars) tab[[i]] %<>% factor(., levels = unique(.))
-
-  env <- if (exists("r_environment")) r_environment else pryr::where("r_data")
-  env$r_data[[name]] <- tab
-  message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
-  env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
+  store(dat, name, top = input$expl_top, rows = input$explore_rows_all)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
   ## alert user about new dataset
@@ -215,8 +206,13 @@ observeEvent(input$explore_report, {
   ts <- dt_state("explore")
   xcmd <- paste0("#render(make_expl(result, dec = ", input$expl_dec, ", top = \"", input$expl_top, "\"))\n#store(result, name = \"", input$expl_dat, "\", top = \"", input$expl_top, "\")")
 
+  inp_main <- clean_args(expl_inputs(), expl_args)
+  if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)
+  if (ts$tabfilt != "") inp_main <- c(inp_main, tabfilt = ts$tabfilt)
+  inp_main <- c(inp_main, nr = ts$nr)
+
   inp_out <- list(clean_args(expl_sum_inputs(), expl_sum_args[-1]))
-  update_report(inp_main = c(clean_args(expl_inputs(), expl_args), tabsort = ts$tabsort, tabfilt = ts$tabfilt),
+  update_report(inp_main = inp_main,
                 fun_name = "explore",
                 inp_out = inp_out,
                 outputs = c("summary"),

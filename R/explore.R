@@ -8,6 +8,7 @@
 #' @param fun Functions to use for summarizing
 #' @param tabfilt Expression used to filter the table. This should be a string (e.g., "Total > 10000")
 #' @param tabsort Expression used to sort the table (e.g., "-Total")
+#' @param nr Number of rows to display
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #'
@@ -29,6 +30,7 @@ explore <- function(dataset,
                     fun = c("mean_rm","sd_rm"),
                     tabfilt = "",
                     tabsort = "",
+                    nr = NULL,
                     data_filter = "",
                     shiny = FALSE) {
 
@@ -109,6 +111,8 @@ explore <- function(dataset,
       spread_("fun","value")
   }
 
+  nrow_tab <- nrow(tab)
+
   ## filtering the table if desired from R > Report
   if (tabfilt != "")
     tab <- filterdata(tab, tabfilt) %>% droplevels
@@ -118,7 +122,31 @@ explore <- function(dataset,
     if (grepl(",", tabsort))
       tabsort <- strsplit(tabsort,",")[[1]] %>% gsub(" ", "", .)
     tab %<>% arrange_(.dots = tabsort)
+
+    ## order factors as set in the sorted table
+    if (!is_empty(byvar))
+      for (i in byvar) tab[[i]] %<>% factor(., levels = unique(.))
   }
+
+  ## frequencies turned into doubles earlier ...
+  check_int <- function(x) {
+    if (is.numeric(x)) {
+      x_int <- as.integer(round(x,.Machine$double.rounding))
+      if (all(x == x_int)) x <- x_int
+    }
+    x
+  }
+
+  tab <- mutate_each(tab, funs(check_int))
+
+  ## convert to data.frame to maintain attributes
+  tab <- as.data.frame(tab, as.is = TRUE)
+  attr(tab, "nrow") <- nrow_tab
+  if (!is.null(nr)) {
+    ind <- if (nr > nrow(tab)) 1:nrow(tab) else 1:nr
+    tab <- tab[ind,, drop = FALSE]
+  }
+
 
   ## dat no longer needed
   rm(dat)
@@ -156,13 +184,16 @@ summary.explore <- function(object, top = "fun", dec = 3, ...) {
     cat("Table filter:", object$tabfilt, "\n")
   if (object$tabsort[1] != "")
     cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
+  nr <- attr(object$tab,"nrow")
+  if (!is.null(nr) && !is.null(object$nr) && object$nr < nr)
+    cat(paste0("Rows shown  : ", object$nr, " (out of ", nr, ")\n"))
   if (object$byvar[1] != "")
     cat("Grouped by  :", object$byvar, "\n")
   cat("Functions   :", names(object$pfun), "\n")
   cat("Top         :", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[top], "\n")
   cat("\n")
 
-  tab <- object %>% flip(top) %>% as.data.frame
+  tab <- object %>% flip(top) %>% as.data.frame(as.is = TRUE)
   print(formatdf(tab, dec), row.names = FALSE)
   invisible()
 }
@@ -180,7 +211,7 @@ summary.explore <- function(object, top = "fun", dec = 3, ...) {
 #'
 #' @export
 store.explore <- function(object, name, top = "fun", ...) {
-  tab <- object %>% flip(top) %>% as.data.frame
+  tab <- object %>% flip(top, ...) %>% as.data.frame(as.is = TRUE)
 
   if (exists("r_environment")) {
     env <- r_environment
@@ -189,6 +220,8 @@ store.explore <- function(object, name, top = "fun", ...) {
   } else {
     return(tab)
   }
+
+  message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
 
   env$r_data[[name]] <- tab
   env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
@@ -200,6 +233,7 @@ store.explore <- function(object, name, top = "fun", ...) {
 #'
 #' @param expl Return value from \code{\link{explore}}
 #' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by. "fun" is the default
+#' @param rows Ordering of rows in the table
 #'
 #' @examples
 #' result <- explore("diamonds", "price:x") %>% flip("var")
@@ -211,15 +245,19 @@ store.explore <- function(object, name, top = "fun", ...) {
 #' @seealso \code{\link{make_expl}} to create the DT table
 #'
 #' @export
-flip <- function(expl, top = "fun") {
+flip <- function(expl, top = "fun", rows = NULL) {
   cvars <- expl$byvar %>% {if (is_empty(.[1])) character(0) else .}
   if (top[1] == "var") {
-    expl$tab %<>% gather("function", "value", -(1:(length(cvars)+1))) %>% spread_("variable", "value")
-    expl$tab[["function"]] %<>% factor(., levels = names(expl$pfun))
+    expl$tab %<>% gather(".function", "value", -(1:(length(cvars)+1))) %>% spread_("variable", "value")
+    expl$tab[[".function"]] %<>% factor(., levels = names(expl$pfun))
   } else if (top[1] == "byvar" && length(cvars) > 0) {
-    expl$tab %<>% gather("function", "value", -(1:(length(cvars)+1))) %>% spread_(cvars[1], "value")
-    expl$tab[["function"]] %<>% factor(., levels = names(expl$pfun))
+    expl$tab %<>% gather(".function", "value", -(1:(length(cvars)+1))) %>% spread_(cvars[1], "value")
+    expl$tab[[".function"]] %<>% factor(., levels = names(expl$pfun))
+    colnames(expl$tab) <- gsub(" ", ".", colnames(expl$tab))
   }
+
+  if (!is.null(rows) && !identical(rows, 1:nrow(expl$tab)))
+    expl$tab <- expl$tab[rows,, drop = FALSE]
 
   expl$tab
 }
