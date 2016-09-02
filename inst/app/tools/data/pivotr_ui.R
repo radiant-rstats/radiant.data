@@ -235,7 +235,7 @@ output$dl_pivot_tab <- downloadHandler(
       write.csv(data_frame("Data" = "[Empty]"),file, row.names = FALSE)
     } else {
       rows <- isolate(r_data$pvt_rows)
-      dat$tab %>% {if (is.null(rows)) . else slice(., c(rows,nrow(.)))} %>%
+      dat$tab %>% {if (is.null(rows)) . else .[c(rows,nrow(.)),]} %>%
         write.csv(file, row.names = FALSE)
     }
   }
@@ -268,9 +268,10 @@ pvt_sorter <- function(pvt, rows = NULL) {
   if (length(cvars) > 1)
     tab %<>% select(-which(colnames(.) == "Total"))
 
-  tab %<>% slice(rows)
+  tab <- tab[rows,]
   cvars <- if (length(cvars) == 1) cvars else cvars[-1]
 
+  ## order factors as set in the sorted data
   for (i in cvars)
     tab[[i]] %<>% factor(., levels = unique(.))
 

@@ -174,7 +174,7 @@ output$dl_explore_tab <- downloadHandler(
     } else {
       rows <- input$explore_rows_all
       flip(dat, input$expl_top) %>%
-        {if (is.null(rows)) . else slice(., rows)} %>%
+        {if (is.null(rows)) . else .[rows,]} %>%
         write.csv(file, row.names = FALSE)
     }
   }
@@ -186,7 +186,7 @@ observeEvent(input$expl_store, {
   rows <- input$explore_rows_all
   name <- input$expl_dat
   tab <- dat$tab
-  if (!is.null(rows) && !all(rows == 1:nrow(tab))) tab <- slice(tab, rows)
+  if (!is.null(rows) && !all(rows == 1:nrow(tab))) tab <- tab[rows,]
   vars <- if (is_empty(dat$byvar[1])) "variable" else c(dat$byvar, "variable")
   for (i in vars) tab[[i]] %<>% factor(., levels = unique(.))
 
