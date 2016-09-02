@@ -3,7 +3,7 @@
 #######################################
 
 # default_funs <- c("length", "n_missing", "n_distinct", "mean_rm", "sd_rm", "min_rm", "max_rm")
-default_funs <- c("length", "n_distinct", "mean_rm", "sd_rm", "min_rm", "max_rm")
+default_funs <- c("length", "mean_rm", "sd_rm", "min_rm", "max_rm")
 expl_args <- as.list(formals(explore))
 
 ## list of function inputs selected by user
@@ -34,7 +34,7 @@ output$ui_expl_vars <- renderUI({
   vars <- varnames()[isNum]
   if (not_available(vars)) return()
 
-  selectInput("expl_vars", label = "Select variable(s):", choices = vars,
+  selectInput("expl_vars", label = "Numeric variable(s):", choices = vars,
     selected = state_multiple("expl_vars",vars), multiple = TRUE,
     size = min(8, length(vars)), selectize = FALSE)
 })
@@ -174,7 +174,7 @@ output$dl_explore_tab <- downloadHandler(
     } else {
       rows <- input$explore_rows_all
       flip(dat, input$expl_top) %>%
-        {if (is.null(rows)) . else .[rows,]} %>%
+        {if (is.null(rows)) . else .[rows,, drop = FALSE]} %>%
         write.csv(file, row.names = FALSE)
     }
   }
@@ -186,7 +186,7 @@ observeEvent(input$expl_store, {
   rows <- input$explore_rows_all
   name <- input$expl_dat
   tab <- dat$tab
-  if (!is.null(rows) && !all(rows == 1:nrow(tab))) tab <- tab[rows,]
+  if (!is.null(rows) && !all(rows == 1:nrow(tab))) tab <- tab[rows,, drop = FALSE]
   vars <- if (is_empty(dat$byvar[1])) "variable" else c(dat$byvar, "variable")
   for (i in vars) tab[[i]] %<>% factor(., levels = unique(.))
 

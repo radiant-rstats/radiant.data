@@ -142,7 +142,7 @@ getdata <- function(dataset,
     }
   } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%  ## ungroup data if needed
         { if (filt == "") . else filterdata(., filt) } %>%         ## apply data_filter
-        { if (is.null(rows)) . else .[rows,] } %>%
+        { if (is.null(rows)) . else .[rows,, drop = FALSE] } %>%
         { if (vars[1] == "" || is.null(vars)) . else select_(., .dots = vars) } %>%
         { if (na.rm) na.omit(.) else . }
         ## line below may cause an error https://github.com/hadley/dplyr/issues/219
@@ -267,7 +267,7 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", saf =
       prb <- readr::problems(dat)
       if (nrow(prb) > 0) {
         tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
-        rprob <- knitr::kable(prb[1:(min(nrow(prb):10)),], align = 'l', format = 'html', table.attr = tab_big, caption = "Read issues (max 10 rows shown): Consider selecting read.csv to read the file (see check-box on the left). To reload the file you may need to refresh the browser first")
+        rprob <- knitr::kable(prb[1:(min(nrow(prb):10)),, drop = FALSE], align = 'l', format = 'html', table.attr = tab_big, caption = "Read issues (max 10 rows shown): Consider selecting read.csv to read the file (see check-box on the left). To reload the file you may need to refresh the browser first")
       }
       rm(prb)
     }

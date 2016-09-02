@@ -204,7 +204,7 @@ show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt =
   nr <- nrow(dat)
   ## avoid slice with variables outside of the df in case a column with the same
   ## name exists
-  dat <- dat[1:min(nshow, nr),]
+  dat <- dat[1:min(nshow, nr),, drop = FALSE]
   dat %>%
     mutate_each(funs(trunc_char)) %>%
     mutate_each(funs(d2c)) %>%
