@@ -280,8 +280,9 @@ observeEvent(input$url_rda_load, {
   ## loading rda file from url, example https://radiant-rstats.github.io/docs/examples/houseprices.rda
   if (input$url_rda == "") return()
   objname <- "rda_url"
-  con <- curl::curl(gsub("^\\s+|\\s+$", "", input$url_rda))
-  try(open(con), silent = TRUE)
+  con <- tempfile()
+  con <- try(curl::curl_download(gsub("^\\s+|\\s+$", "", input$url_rda), con), silent = TRUE)
+
   if (is(con, 'try-error')) {
     upload_error_handler(objname, "### There was an error loading the r-data file from the provided url.")
   } else {
@@ -301,7 +302,6 @@ observeEvent(input$url_rda_load, {
                         selected = r_data$datasetlist[1])
     }
   }
-  close(con)
 })
 
 observeEvent(input$url_csv_load, {
