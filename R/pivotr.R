@@ -214,7 +214,7 @@ summary.pivotr <- function(object,
       cat("Normalize by:", object$normalize, "\n")
     if (object$nvar != "n") {
       cat("Numeric     :", object$nvar, "\n")
-      cat("Function    :", object$fun, "\n")
+      cat("Function    :", sub("_rm", "", object$fun), "\n")
     }
     cat("\n")
     print(formatdf(object$tab, dec, perc), row.names = FALSE)
