@@ -6,6 +6,7 @@
 #' @param vars (Numerical) variables to summaries
 #' @param byvar Variable(s) to group data by before summarizing
 #' @param fun Functions to use for summarizing
+#' @param top The variable (type) to display at the top of the table
 #' @param tabfilt Expression used to filter the table. This should be a string (e.g., "Total > 10000")
 #' @param tabsort Expression used to sort the table (e.g., "-Total")
 #' @param nr Number of rows to display
@@ -20,6 +21,9 @@
 #' result <- explore("diamonds", c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))
 #' summary(result)
 #' diamonds %>% explore("price", byvar = "cut", fun = c("length", "n_distinct"))
+
+# explore(dataset = "diamonds", vars = c("price", "carat"), byvar = "cut", fun = c("length", "mean_rm", "sd_rm", "min_rm", "max_rm"), top = "byvar", tabsort = "variable", nr = 10)
+
 #'
 #' @seealso \code{\link{summary.explore}} to show summaries
 #'
@@ -28,6 +32,7 @@ explore <- function(dataset,
                     vars = "",
                     byvar = "",
                     fun = c("mean_rm","sd_rm"),
+                    top = "fun",
                     tabfilt = "",
                     tabsort = "",
                     nr = NULL,
@@ -109,7 +114,13 @@ explore <- function(dataset,
       mutate(fun = fix_uscore(fun, ".","_")) %>%
       mutate(fun = factor(fun, levels = names(pfun)), variable = factor(variable, levels = vars)) %>%
       spread_("fun","value")
+
+    rm(fix_uscore)
   }
+
+  ## flip the table if needed
+  if (top != "fun")
+    tab <- list(tab = tab, byvar = byvar, pfun = pfun) %>% flip(top)
 
   nrow_tab <- nrow(tab)
 
@@ -122,11 +133,11 @@ explore <- function(dataset,
     if (grepl(",", tabsort))
       tabsort <- strsplit(tabsort,",")[[1]] %>% gsub(" ", "", .)
     tab %<>% arrange_(.dots = tabsort)
-
-    ## order factors as set in the sorted table
-    if (!is_empty(byvar))
-      for (i in byvar) tab[[i]] %<>% factor(., levels = unique(.))
   }
+
+  ## ensure factors ordered as in the (sorted) table
+  if (!is_empty(byvar) && top != "byvar")
+    for (i in byvar) tab[[i]] %<>% factor(., levels = unique(.))
 
   ## frequencies turned into doubles earlier ...
   check_int <- function(x) {
@@ -147,9 +158,8 @@ explore <- function(dataset,
     tab <- tab[ind,, drop = FALSE]
   }
 
-
-  ## dat no longer needed
-  rm(dat)
+  ## objects no longer needed
+  rm(dat, check_int)
 
   as.list(environment()) %>% add_class("explore")
 }
@@ -159,7 +169,6 @@ explore <- function(dataset,
 #' @details See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{explore}}
-#' @param top The variable (type) to display at the top of the table
 #' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods
 #'
@@ -174,7 +183,7 @@ explore <- function(dataset,
 #' @seealso \code{\link{explore}} to generate summaries
 #'
 #' @export
-summary.explore <- function(object, top = "fun", dec = 3, ...) {
+summary.explore <- function(object, dec = 3, ...) {
 
   cat("Explore\n")
   cat("Data        :", object$dataset, "\n")
@@ -190,11 +199,10 @@ summary.explore <- function(object, top = "fun", dec = 3, ...) {
   if (object$byvar[1] != "")
     cat("Grouped by  :", object$byvar, "\n")
   cat("Functions   :", names(object$pfun), "\n")
-  cat("Top         :", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[top], "\n")
+  cat("Top         :", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[object$top], "\n")
   cat("\n")
 
-  tab <- object %>% flip(top) %>% as.data.frame(as.is = TRUE)
-  print(formatdf(tab, dec), row.names = FALSE)
+  print(formatdf(object$tab, dec), row.names = FALSE)
   invisible()
 }
 
@@ -204,14 +212,13 @@ summary.explore <- function(object, top = "fun", dec = 3, ...) {
 #'
 #' @param object Return value from \code{\link{explore}}
 #' @param name Name to assign to the dataset
-#' @param top The variable (type) to display at the top of the table
 #' @param ... further arguments passed to or from other methods
 #'
 #' @seealso \code{\link{explore}} to generate summaries
 #'
 #' @export
-store.explore <- function(object, name, top = "fun", ...) {
-  tab <- object %>% flip(top, ...) %>% as.data.frame(as.is = TRUE)
+store.explore <- function(object, name, ...) {
+  tab <- object$tab
 
   if (exists("r_environment")) {
     env <- r_environment
@@ -233,19 +240,16 @@ store.explore <- function(object, name, top = "fun", ...) {
 #'
 #' @param expl Return value from \code{\link{explore}}
 #' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by. "fun" is the default
-#' @param rows Ordering of rows in the table
 #'
 #' @examples
-#' result <- explore("diamonds", "price:x") %>% flip("var")
-#'
-#' result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew")) %>%
-#'   flip("byvar")
+#' result <- explore("diamonds", "price:x", top = "var")
+#' result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"), top = "byvar")
 #'
 #' @seealso \code{\link{explore}} to generate summaries
-#' @seealso \code{\link{make_expl}} to create the DT table
+#' @seealso \code{\link{dtab.explore}} to create the DT table
 #'
 #' @export
-flip <- function(expl, top = "fun", rows = NULL) {
+flip <- function(expl, top = "fun") {
   cvars <- expl$byvar %>% {if (is_empty(.[1])) character(0) else .}
   if (top[1] == "var") {
     expl$tab %<>% gather(".function", "value", -(1:(length(cvars)+1))) %>% spread_("variable", "value")
@@ -256,9 +260,6 @@ flip <- function(expl, top = "fun", rows = NULL) {
     colnames(expl$tab) <- gsub(" ", ".", colnames(expl$tab))
   }
 
-  if (!is.null(rows) && !identical(rows, 1:nrow(expl$tab)))
-    expl$tab <- expl$tab[rows,, drop = FALSE]
-
   expl$tab
 }
 
@@ -266,33 +267,33 @@ flip <- function(expl, top = "fun", rows = NULL) {
 #'
 #' @details See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
-#' @param expl Return value from \code{\link{explore}}
-#' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by
+#' @param object Return value from \code{\link{explore}}
 #' @param dec Number of decimals to show
 #' @param searchCols Column search and filter. Used to save and restore state
 #' @param order Column sorting. Used to save and restore state
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' tab <- explore("diamonds", "price:x") %>% make_expl
-#' tab <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew")) %>%
-#'   make_expl(top = "byvar")
+#' tab <- explore("diamonds", "price:x") %>% dtab
+#' tab <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"), top = "byvar") %>%
+#'   dtab
 #'
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
 #' @seealso \code{\link{summary.pivotr}} to print a plain text table
 #'
 #' @export
-make_expl <- function(expl,
-                      top = "fun",
-                      dec = 3,
-                      searchCols = NULL,
-                      order = NULL) {
+dtab.explore <- function(object,
+                         dec = 3,
+                         searchCols = NULL,
+                         order = NULL,
+                         ...) {
 
-  tab <- expl %>% flip(top)
+  tab <- object$tab
   cn_all <- colnames(tab)
   cn_num <- cn_all[sapply(tab, is.numeric)]
   cn_cat <- cn_all[-which(cn_all %in% cn_num)]
 
-  top <- c("fun" = "Function", "var" = "Variables", "byvar" = paste0("Group by: ", expl$byvar[1]))[top]
+  top <- c("fun" = "Function", "var" = "Variables", "byvar" = paste0("Group by: ", object$byvar[1]))[object$top]
 
   sketch = shiny::withTags(table(
     thead(
