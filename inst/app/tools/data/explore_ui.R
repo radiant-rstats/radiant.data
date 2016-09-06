@@ -113,7 +113,6 @@ output$ui_Explore <- renderUI({
 .explore <- reactive({
   if (not_available(input$expl_vars) || is.null(input$expl_top)) return()
   if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) return()
-
   req(input$expl_pause == FALSE, cancelOutput = TRUE)
   withProgress(message = 'Calculating', value = 0, {
     sshhr( do.call(explore, expl_inputs()) )
@@ -158,10 +157,8 @@ output$explore <- DT::renderDataTable({
     order <- r_state$explore_state$order
   })
 
-  top <- ifelse (input$expl_top == "", "fun", input$expl_top)
-
   withProgress(message = 'Generating explore table', value = 0,
-    make_expl(expl, top = top, dec = input$expl_dec, searchCols = searchCols, order = order)
+    dtab(expl, dec = input$expl_dec, searchCols = searchCols, order = order)
   )
 })
 
@@ -173,9 +170,8 @@ output$dl_explore_tab <- downloadHandler(
       write.csv(data_frame("Data" = "[Empty]"),file, row.names = FALSE)
     } else {
       rows <- input$explore_rows_all
-      flip(dat, input$expl_top) %>%
-        {if (is.null(rows)) . else .[rows,, drop = FALSE]} %>%
-        write.csv(file, row.names = FALSE)
+      dat$tab %>% {if (is.null(rows)) . else .[rows,, drop = FALSE]} %>%
+      write.csv(file, row.names = FALSE)
     }
   }
 )
@@ -184,7 +180,9 @@ observeEvent(input$expl_store, {
   dat <- .explore()
   if (is.null(dat)) return()
   name <- input$expl_dat
-  store(dat, name, top = input$expl_top, rows = input$explore_rows_all)
+  rows <- input$explore_rows_all
+  dat$tab %<>% {if (is.null(rows)) . else .[rows,, drop = FALSE]}
+  store(dat, name)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
   ## alert user about new dataset
@@ -193,18 +191,14 @@ observeEvent(input$expl_store, {
   )
 })
 
-output$expl_summary <- renderPrint({
-  if (not_available(input$expl_vars)) return(invisible())
-    withProgress(message = 'Calculating', value = 0, {
-      .explore() %>% { if (is.null(.)) invisible() else summary(., top = input$expl_top) }
-    })
-})
-
 observeEvent(input$explore_report, {
 
   ## get the state of the dt table
   ts <- dt_state("explore")
-  xcmd <- paste0("#render(make_expl(result, dec = ", input$expl_dec, ", top = \"", input$expl_top, "\"))\n#store(result, name = \"", input$expl_dat, "\", top = \"", input$expl_top, "\")")
+  xcmd <- "#render(dtab(result"
+  if (!is_empty(input$expl_dec, 3))
+    xcmd <- paste0(xcmd, ", dec = ", input$expl_dec)
+  xcmd <- paste0(xcmd, "))\n#store(result, name = \"", input$expl_dat, "\")")
 
   inp_main <- clean_args(expl_inputs(), expl_args)
   if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)

@@ -213,7 +213,7 @@ output$pivotr <- DT::renderDataTable({
   order <- r_state$pivotr_state$order
 
   withProgress(message = 'Generating pivot table', value = 0,
-    make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc,
+    dtab(pvt, format = input$pvt_format, perc = input$pvt_perc,
             dec = input$pvt_dec, searchCols = searchCols, order = order)
   )
 
@@ -319,7 +319,15 @@ observeEvent(input$pivotr_report, {
 
   ## get the state of the dt table
   ts <- dt_state("pivotr")
-  xcmd <- paste0("#render(make_dt(result, format = '", input$pvt_format, "', perc = ", input$pvt_perc, ", dec = ", input$pvt_dec, "))")
+  # xcmd <- paste0("#render(dtab(result, format = '", input$pvt_format, "', perc = ", input$pvt_perc, ", dec = ", input$pvt_dec, "))")
+  xcmd <- paste0("#render(dtab(result")
+  if (!is_empty(input$pvt_format, "none"))
+    xcmd <- paste0(xcmd, ", format = \"", input$pvt_format, "\"")
+  if (isTRUE(input$pvt_perc))
+    xcmd <- paste0(xcmd, ", perc = ", input$pvt_perc)
+  if (!is_empty(input$pvt_dec, 3))
+    xcmd <- paste0(xcmd, ", dec = ", input$pvt_dec)
+  xcmd <- paste0(xcmd, "))")
 
   inp_main <- clean_args(pvt_inputs(), pvt_args)
   if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)
