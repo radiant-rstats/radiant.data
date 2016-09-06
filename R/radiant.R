@@ -878,6 +878,14 @@ render.character <- function(object, ...) {
   }
 }
 
+#' Method to create datatables
+#'
+#' @param object Object of relevant class to render
+#' @param ... Additional arguments
+#'
+#' @export
+dtab <- function(object, ...) UseMethod("dtab", object)
+
 #' Show dataset desription, if available, in html form in Rstudio viewer or default browser
 #'
 #' @param name Dataset name or a dataframe
