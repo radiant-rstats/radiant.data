@@ -131,12 +131,12 @@ pivotr <- function(dataset,
   ## frequency table for chi-square test
   tab_freq <- tab
 
-  isNum <- -which(names(tab) %in% cvars)
+  isNum <- if (length(cvars) == 1) -1 else -c(1:(length(cvars)-1))
   if (normalize == "total") {
     tab[,isNum] %<>% {. / total[[1]]}
   } else if (normalize == "row") {
     if (!is.null(tab[["Total"]]))
-      tab[,isNum] %<>% {. / select(., Total)[[1]]}
+      tab[,isNum] %<>% {. / .[["Total"]]}
   } else if (length(cvars) > 1 && normalize == "column") {
     tab[,isNum] %<>% apply(2, function(.) . / .[which(tab[,1] == "Total")])
   }
