@@ -42,7 +42,6 @@ output$ui_pvt_nvar <- renderUI({
   }
 
   selectizeInput("pvt_nvar", label = "Numeric variable:", choices = vars,
-    # selected = use_input("pvt_nvar", vars, "None"),
     selected = state_single("pvt_nvar", vars, "None"),
     multiple = FALSE, options = list(placeholder = 'Select numeric variable'))
 })
@@ -61,7 +60,6 @@ output$ui_pvt_normalize  <- renderUI({
 
   selectizeInput("pvt_normalize", label = "Normalize by:",
     choices = pvt_normalize,
-    # selected = use_input("pvt_normalize", pvt_normalize, "None"),
     selected = state_single("pvt_normalize", pvt_normalize, "None"),
     multiple = FALSE)
 })
@@ -93,8 +91,6 @@ output$ui_Pivotr <- renderUI({
         tr(
           td(checkboxInput("pvt_perc", "Percentage", value = state_init("pvt_perc", FALSE))),
           td(HTML("&nbsp;&nbsp;")),
-          # td(checkboxInput("pvt_chi2", "Chi-square", value = state_init("pvt_chi2", FALSE)))
-          # td(conditionalPanel("input.pvt_nvar == 'None' && input.pvt_normalize == 'None'",
           td(conditionalPanel("input.pvt_nvar == 'None'",
                checkboxInput("pvt_chi2", "Chi-square", value = state_init("pvt_chi2", FALSE))))
       )))
@@ -156,23 +152,10 @@ pvt_plot_inputs <- reactive({
 })
 
 .pivotr <- reactive({
-  # if (not_available(input$pvt_cvars)) return()
   req(available(input$pvt_cvars))
   req(!any(input$pvt_nvar %in% input$pvt_cvars))
 
   pvti <- pvt_inputs()
-
-  # if (is_empty(input$pvt_fun)) {
-  #   updateSelectInput(session, "pvt_fun", selected = "length")
-  #   return()
-  # }
-  # if (is_empty(input$pvt_nvar)) {
-  #   updateSelectInput(session, "pvt_nvar", selected = "None")
-  #   return()
-  # }
-
-  # if (!is_empty(input$pvt_nvar, "None")) req(available(input$pvt_nvar))
-
   if (is_empty(input$pvt_fun)) pvti$fun <- "length"
   if (is_empty(input$pvt_nvar)) pvti$nvar <- "None"
 
@@ -182,7 +165,6 @@ pvt_plot_inputs <- reactive({
   req(input$pvt_pause == FALSE, cancelOutput = TRUE)
 
   withProgress(message = "Calculating", value = 0, {
-    # sshhr( do.call(pivotr, pvt_inputs()) )
     sshhr( do.call(pivotr, pvti) )
   })
 })
@@ -207,8 +189,6 @@ output$pivotr <- DT::renderDataTable({
     r_state$pivotr_search_columns <<- rep("", ncol(pvt$tab))
   }
 
-  # search <- r_state$pivotr_state$search$search
-  # if (is.null(search)) search <- ""
   searchCols <- lapply(r_state$pivotr_search_columns, function(x) list(search = x))
   order <- r_state$pivotr_state$order
 
@@ -222,7 +202,6 @@ output$pivotr <- DT::renderDataTable({
 output$pivotr_chi2 <- renderPrint({
   req(input$pvt_chi2)
   req(input$pvt_dec)
-  # if (!input$pvt_chi2) return(invisible())
   .pivotr() %>% {if (is.null(.)) return(invisible())
                  else summary(., chi2 = TRUE, dec = input$pvt_dec, shiny = TRUE)}
 })
@@ -319,7 +298,6 @@ observeEvent(input$pivotr_report, {
 
   ## get the state of the dt table
   ts <- dt_state("pivotr")
-  # xcmd <- paste0("#render(dtab(result, format = '", input$pvt_format, "', perc = ", input$pvt_perc, ", dec = ", input$pvt_dec, "))")
   xcmd <- paste0("#render(dtab(result")
   if (!is_empty(input$pvt_format, "none"))
     xcmd <- paste0(xcmd, ", format = \"", input$pvt_format, "\"")
