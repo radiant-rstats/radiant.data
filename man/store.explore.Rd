@@ -4,14 +4,12 @@
 \alias{store.explore}
 \title{Store method for the explore function}
 \usage{
-\method{store}{explore}(object, name, top = "fun", ...)
+\method{store}{explore}(object, name, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{explore}}}
 
 \item{name}{Name to assign to the dataset}
-
-\item{top}{The variable (type) to display at the top of the table}
 
 \item{...}{further arguments passed to or from other methods}
 }

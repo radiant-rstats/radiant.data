@@ -5,8 +5,8 @@
 \title{Explore data}
 \usage{
 explore(dataset, vars = "", byvar = "", fun = c("mean_rm", "sd_rm"),
-  tabfilt = "", tabsort = "", nr = NULL, data_filter = "",
-  shiny = FALSE)
+  top = "fun", tabfilt = "", tabsort = "", nr = NULL,
+  data_filter = "", shiny = FALSE)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -16,6 +16,8 @@ explore(dataset, vars = "", byvar = "", fun = c("mean_rm", "sd_rm"),
 \item{byvar}{Variable(s) to group data by before summarizing}
 
 \item{fun}{Functions to use for summarizing}
+
+\item{top}{The variable (type) to display at the top of the table}
 
 \item{tabfilt}{Expression used to filter the table. This should be a string (e.g., "Total > 10000")}
 
