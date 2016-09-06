@@ -252,33 +252,35 @@ summary.pivotr <- function(object,
 #'
 #' @details See \url{http://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
-#' @param pvt Return value from \code{\link{pivotr}}
+#' @param object Return value from \code{\link{pivotr}}
 #' @param format Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")
 #' @param perc Display numbers as percentages (TRUE or FALSE)
 #' @param dec Number of decimals to show
 #' @param searchCols Column search and filter. Used to save and restore state
 #' @param order Column sorting. Used to save and restore state
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' pivotr("diamonds", cvars = "cut") %>% make_dt
-#' pivotr("diamonds", cvars = c("cut","clarity")) %>% make_dt(format = "color_bar")
+#' pivotr("diamonds", cvars = "cut") %>% dtab
+#' pivotr("diamonds", cvars = c("cut","clarity")) %>% dtab(format = "color_bar")
 #' ret <-  pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") %>%
-#'    make_dt(format = "color_bar", perc = TRUE)
+#'    dtab(format = "color_bar", perc = TRUE)
 #'
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
 #' @seealso \code{\link{summary.pivotr}} to print a plain text table
 #'
 #' @export
-make_dt <- function(pvt,
-                    format = "none",
-                    perc = FALSE,
-                    dec = 3,
-                    searchCols = NULL,
-                    order = NULL) {
+dtab.pivotr  <- function(object,
+                         format = "none",
+                         perc = FALSE,
+                         dec = 3,
+                         searchCols = NULL,
+                         order = NULL,
+                         ...) {
 
-  tab <- pvt$tab
-  cvar <- pvt$cvars[1]
-  cvars <- pvt$cvars %>% {if (length(.) > 1) .[-1] else .}
+  tab <- object$tab
+  cvar <- object$cvars[1]
+  cvars <- object$cvars %>% {if (length(.) > 1) .[-1] else .}
   cn <- colnames(tab) %>% {.[-which(cvars %in% .)]}
 
   ## column names without total
