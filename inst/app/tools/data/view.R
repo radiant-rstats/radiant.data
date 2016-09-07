@@ -72,6 +72,7 @@ output$dataviewer <- DT::renderDataTable({
         search = list(search = search, regex = TRUE),
         order = {if (is.null(r_state$dataviewer_state$order)) list()
                  else r_state$dataviewer_state$order},
+        columnDefs = list(list(orderSequence = c('desc', 'asc'), targets = "_all")),
         autoWidth = TRUE,
         columnDefs = list(list(className = 'dt-center', targets = "_all")),
         processing = FALSE,

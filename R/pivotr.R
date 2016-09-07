@@ -330,6 +330,7 @@ dtab.pivotr  <- function(object,
       stateSave = TRUE,
       searchCols = searchCols,
       order = order,
+      columnDefs = list(list(orderSequence = c('desc', 'asc'), targets = "_all")),
       processing = FALSE,
       pageLength = 10,
       lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
