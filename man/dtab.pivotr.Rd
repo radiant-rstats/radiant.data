@@ -5,7 +5,7 @@
 \title{Make a pivot tabel in DT}
 \usage{
 \method{dtab}{pivotr}(object, format = "none", perc = FALSE, dec = 3,
-  searchCols = NULL, order = NULL, ...)
+  searchCols = NULL, order = NULL, pageLength = NULL, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{pivotr}}}
@@ -19,6 +19,8 @@
 \item{searchCols}{Column search and filter. Used to save and restore state}
 
 \item{order}{Column sorting. Used to save and restore state}
+
+\item{pageLength}{Page length. Used to save and restore state}
 
 \item{...}{further arguments passed to or from other methods}
 }
