@@ -159,8 +159,8 @@ scrub <- . %>%
 # "render(lklklk)" %>% cleanout
 
 cleanout <- . %>%
-  gsub("DiagrammeR::renderDiagrammeR", "", .) %>%
-  gsub("DT::renderDataTable", "", .) %>%
+  gsub("DiagrammeR::renderDiagrammeR", "", .) %>% ## leave for legacy reasons
+  gsub("DT::renderDataTable", "", .) %>%          ## leave for legacy reasons
   gsub("render(", "(", ., fixed = TRUE)
 
 ## Based on http://stackoverflow.com/a/31797947/1974918
