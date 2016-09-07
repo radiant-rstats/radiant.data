@@ -258,6 +258,7 @@ summary.pivotr <- function(object,
 #' @param dec Number of decimals to show
 #' @param searchCols Column search and filter. Used to save and restore state
 #' @param order Column sorting. Used to save and restore state
+#' @param pageLength Page length. Used to save and restore state
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -276,6 +277,7 @@ dtab.pivotr  <- function(object,
                          dec = 3,
                          searchCols = NULL,
                          order = NULL,
+                         pageLength = NULL,
                          ...) {
 
   tab <- object$tab
@@ -332,8 +334,8 @@ dtab.pivotr  <- function(object,
       order = order,
       columnDefs = list(list(orderSequence = c('desc', 'asc'), targets = "_all")),
       processing = FALSE,
-      pageLength = 10,
-      lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
+      pageLength = {if (is.null(pageLength)) 10 else pageLength},
+      lengthMenu = list(c(5, 10, 25, 50, -1), c("5","10","25","50","All"))
     ),
     callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
   ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey") %>%

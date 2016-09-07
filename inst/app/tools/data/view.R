@@ -52,7 +52,8 @@ output$dataviewer <- DT::renderDataTable({
   req(input$view_pause == FALSE, cancelOutput = TRUE)
 
   dat <- select_(.getdata(), .dots = input$view_vars)
-  ## check when r_state is NULL
+
+  ## update state when view_vars changes
   if (!identical(r_state$view_vars, input$view_vars)) {
     r_state$view_vars <<- input$view_vars
     r_state$dataviewer_state <<- list()
@@ -72,12 +73,12 @@ output$dataviewer <- DT::renderDataTable({
         search = list(search = search, regex = TRUE),
         order = {if (is.null(r_state$dataviewer_state$order)) list()
                  else r_state$dataviewer_state$order},
-        columnDefs = list(list(orderSequence = c('desc', 'asc'), targets = "_all")),
+        columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all"),
+                          list(className = "dt-center", targets = "_all")),
         autoWidth = TRUE,
-        columnDefs = list(list(className = 'dt-center', targets = "_all")),
         processing = FALSE,
-        pageLength = 10,
-        lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
+        pageLength = {if (is.null(r_state$dataviewer_state$length)) 10 else r_state$dataviewer_state$length},
+        lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10","25","50","All"))
       ),
       callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
     )

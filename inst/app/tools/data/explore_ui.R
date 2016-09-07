@@ -152,13 +152,13 @@ output$explore <- DT::renderDataTable({
     r_state$explore_search_columns <<- rep("", nc)
   }
 
-  isolate({
-    searchCols <- lapply(r_state$explore_search_columns, function(x) list(search = x))
-    order <- r_state$explore_state$order
-  })
+  searchCols <- lapply(r_state$explore_search_columns, function(x) list(search = x))
+  order <- r_state$explore_state$order
+  pageLength <- r_state$explore_state$length
 
   withProgress(message = 'Generating explore table', value = 0,
-    dtab(expl, dec = input$expl_dec, searchCols = searchCols, order = order)
+    dtab(expl, dec = input$expl_dec, searchCols = searchCols, order = order,
+         pageLength = pageLength)
   )
 })
 
@@ -198,6 +198,8 @@ observeEvent(input$explore_report, {
   xcmd <- "#render(dtab(result"
   if (!is_empty(input$expl_dec, 3))
     xcmd <- paste0(xcmd, ", dec = ", input$expl_dec)
+  if (!is_empty(r_state$explore_state$length, 10))
+    xcmd <- paste0(xcmd, ", pageLength = ", r_state$explore_state$length)
   xcmd <- paste0(xcmd, "))\n#store(result, name = \"", input$expl_dat, "\")")
 
   inp_main <- clean_args(expl_inputs(), expl_args)

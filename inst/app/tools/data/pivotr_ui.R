@@ -191,10 +191,12 @@ output$pivotr <- DT::renderDataTable({
 
   searchCols <- lapply(r_state$pivotr_search_columns, function(x) list(search = x))
   order <- r_state$pivotr_state$order
+  pageLength <- r_state$pivotr_state$length
 
   withProgress(message = 'Generating pivot table', value = 0,
     dtab(pvt, format = input$pvt_format, perc = input$pvt_perc,
-            dec = input$pvt_dec, searchCols = searchCols, order = order)
+            dec = input$pvt_dec, searchCols = searchCols, order = order,
+            pageLength = pageLength)
   )
 
 })
@@ -305,6 +307,8 @@ observeEvent(input$pivotr_report, {
     xcmd <- paste0(xcmd, ", perc = ", input$pvt_perc)
   if (!is_empty(input$pvt_dec, 3))
     xcmd <- paste0(xcmd, ", dec = ", input$pvt_dec)
+  if (!is_empty(r_state$pivotr_state$length, 10))
+    xcmd <- paste0(xcmd, ", pageLength = ", r_state$pivotr_state$length)
   xcmd <- paste0(xcmd, "))")
 
   inp_main <- clean_args(pvt_inputs(), pvt_args)

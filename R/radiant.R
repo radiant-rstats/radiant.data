@@ -418,12 +418,12 @@ viewdata <- function(dataset,
         # extensions = 'KeyTable'# ,
         options = list(
           search = list(regex = TRUE),
-          # columnDefs = list(list(className = 'dt-center', targets = "_all")),
-          columnDefs = list(list(orderSequence = c('desc', 'asc'), targets = "_all")),
+          columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all"),
+                            list(className = "dt-center", targets = "_all")),
           autoWidth = TRUE,
           processing = FALSE,
           pageLength = 10,
-          lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
+          lengthMenu = list(c(5, 10, 25, 50, -1), c("5","10","25","50","All"))
         )
       )
       output$tbl <- DT::renderDataTable(widget)
