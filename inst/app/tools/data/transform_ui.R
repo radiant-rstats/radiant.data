@@ -613,7 +613,7 @@ observeEvent(input$tr_change_type, {
     if (all(vars == "") || length(unique(vars)) == nr_col)
       paste0("## remove duplicate rows\nr_data[[\"",store_dat,"\"]] <- distinct(r_data[[\"",dataset,"\"]])\n")
     else
-      paste0("## remove rows with duplicate values\nr_data[[\"",store_dat,"\"]] <- distinct(r_data[[\"",dataset,"\"]], ", paste0(vars, collapse = ", "),")\n")
+      paste0("## remove rows with duplicate values\nr_data[[\"",store_dat,"\"]] <- distinct(r_data[[\"",dataset,"\"]], ", paste0(vars, collapse = ", "),", .keep_all = TRUE)\n")
   }
 }
 
