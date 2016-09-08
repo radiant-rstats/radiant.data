@@ -603,7 +603,7 @@ observeEvent(input$tr_change_type, {
     if (all(vars == "") || length(unique(vars)) == ncol(dataset))
       dat <- distinct(dataset)
     else
-      dat <- distinct_(dataset, .dots = vars)
+      dat <- distinct_(dataset, .dots = vars, .keep_all = TRUE)
 
     if (nrow(dat) == nrow(dataset))
       paste0("No duplicates found (n_distinct = ", nrow(dat),")")
