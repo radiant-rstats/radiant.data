@@ -413,9 +413,9 @@ getsummary <- function(dat, dc = getclass(dat)) {
   }
   if (sum(isDate) > 0) {
     cat("Earliest dates:\n")
-    select(dat, which(isDate)) %>% summarise_each(funs(min)) %>% print
+    select(dat, which(isDate)) %>% summarise_each(funs(min)) %>% as.data.frame %>% print(., row.names = FALSE)
     cat("\nFinal dates:\n")
-    select(dat, which(isDate)) %>% summarise_each(funs(max)) %>% print
+    select(dat, which(isDate)) %>% summarise_each(funs(max)) %>% as.data.frame %>% print(., row.names = FALSE)
     cat("\n")
   }
   if (sum(isPeriod) > 0) {
@@ -424,9 +424,9 @@ getsummary <- function(dat, dc = getclass(dat)) {
     min_time <- function(x) sort(x) %>% head(1)
 
     cat("Earliest time:\n")
-    select(dat, which(isPeriod)) %>% summarise_each(funs(min_time)) %>% as.data.frame %>% print
+    select(dat, which(isPeriod)) %>% summarise_each(funs(min_time)) %>% as.data.frame %>% print(., row.names = FALSE)
     cat("\nFinal time:\n")
-    select(dat, which(isPeriod)) %>% summarise_each(funs(max_time)) %>% as.data.frame %>% print
+    select(dat, which(isPeriod)) %>% summarise_each(funs(max_time)) %>% as.data.frame %>% print(., row.names = FALSE)
     cat("\n")
   }
 
