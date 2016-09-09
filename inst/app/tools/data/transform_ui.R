@@ -343,6 +343,7 @@ observeEvent(input$tr_change_type, {
     } else {
       dots <- sub("^","~",dots) %>% lapply(as.formula, env = r_environment)
       nvar <- try(group_by_(dataset, .dots = byvar) %>% mutate_(.dots = setNames(dots, vars)), silent = TRUE)
+      vars <- c(byvar, vars) ## to avoid the 'added group_by variable' message
     }
     if (is(nvar, 'try-error')) {
       paste0(" **\nThe create command was not valid. The command entered was:\n\n", cmd, "\n\nThe error message was:\n\n", attr(nvar,"condition")$message, "\n\nPlease try again. Examples are shown in the help file\n**")
