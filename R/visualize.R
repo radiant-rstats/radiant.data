@@ -232,7 +232,7 @@ visualize <- function(dataset, xvar,
         if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       } else {
         plot_fun <- get("geom_histogram")
-        hist_par[["binwidth"]] <- select_(dat, .dots = i) %>% range %>% {diff(.)/bins}
+        hist_par[["binwidth"]] <- select_(dat, .dots = i) %>% range %>% {diff(.)/(bins-1)}
       }
 
       plot_list[[i]] <- plot_list[[i]] + do.call(plot_fun, hist_par)
