@@ -3,7 +3,7 @@
 #' @param na.rm If TRUE missing values are removed before calculation
 #' @return If x is a numberic variable return x - mean(x)
 #' @export
-center <- function(x, na.rm)
+center <- function(x, na.rm = TRUE)
 	if (is.numeric(x)) { x - mean(x, na.rm = na.rm) } else x
 
 #' Standardize
@@ -29,20 +29,16 @@ square <- function(x) x^2
 #' @param x Input variable
 #' @return 1/x
 #' @export
-inverse <- function(x) {
-  stopifnot(y != 0)
-  1/x
-}
+inverse <- function(x)
+  if (is.numeric(x)) 1/x else x
 
 #' Normalize a variable x by a variable y
 #' @param x Input variable
 #' @param y Normalizing variable
 #' @return x/y
 #' @export
-normalize <- function(x, y) {
-  stopifnot(y != 0)
-  x/y
-}
+normalize <- function(x, y)
+  if (is.numeric(x) && is.numeric(y)) x/y else x
 
 #' Convert input in month-day-year format to date
 #' @details Use as.character if x is a factor
@@ -56,8 +52,8 @@ normalize <- function(x, y) {
 #' as_mdy("2-1-2014") %>% wday(label = TRUE)
 #' }
 #' @export
-as_mdy <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
-            {sshhr( mdy(.) )} %>% as.Date
+as_mdy <- function(x)
+  {if (is.factor(x)) as.character(x) else x} %>% {sshhr(mdy(.))} %>% as.Date
 
 #' Convert input in day-month-year format to date
 #' @param x Input variable
@@ -66,8 +62,8 @@ as_mdy <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
 #' as_dmy("1-2-2014")
 #'
 #' @export
-as_dmy <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
-            {sshhr( dmy(.) )} %>% as.Date
+as_dmy <- function(x)
+  {if (is.factor(x)) as.character(x) else x } %>% {sshhr(dmy(.))} %>% as.Date
 
 #' Convert input in year-month-day format to date
 #' @param x Input variable
@@ -76,8 +72,8 @@ as_dmy <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
 #' as_ymd("2013-1-1")
 #'
 #' @export
-as_ymd <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
-            {sshhr( ymd(.) )} %>% as.Date
+as_ymd <- function(x)
+  {if (is.factor(x)) as.character(x) else x } %>% {sshhr(ymd(.))} %>% as.Date
 
 # http://www.noamross.net/blog/2014/2/10/using-times-and-dates-in-r---presentation-code.html
 #' Convert input in year-month-day-hour-minute-second format to date-time
@@ -91,8 +87,8 @@ as_ymd <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
 #' as_ymd_hms("2014-1-1 12:15:01") %>% hour
 #' }
 #' @export
-as_ymd_hms <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
-                {sshhr( ymd_hms(.) )}
+as_ymd_hms <- function(x)
+ {if (is.factor(x)) as.character(x) else x} %>% {sshhr(ymd_hms(.))}
 
 #' Convert input in year-month-day-hour-minute format to date-time
 #' @param x Input variable
@@ -100,8 +96,10 @@ as_ymd_hms <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
 #' @examples
 #' as_ymd_hm("2014-1-1 12:15")
 #' @export
-as_ymd_hm <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
-                {sshhr( parse_date_time(x, "%Y%m%d %H%M") )}
+as_ymd_hm <- function(x) {
+  {if (is.factor(x)) as.character(x) else x} %>%
+    {sshhr(parse_date_time(., "%Y%m%d %H%M"))}
+}
 
 #' Convert input in month-day-year-hour-minute-second format to date-time
 #' @param x Input variable
@@ -109,8 +107,10 @@ as_ymd_hm <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
 #' @examples
 #' as_mdy_hms("1-1-2014 12:15:01")
 #' @export
-as_mdy_hms <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
-                {sshhr( parse_date_time(x, "%m%d%Y %H%M%S") )}
+as_mdy_hms <- function(x) {
+  {if (is.factor(x)) as.character(x) else x} %>%
+   {sshhr(parse_date_time(., "%m%d%Y %H%M%S"))}
+}
 
 #' Convert input in month-day-year-hour-minute format to date-time
 #' @param x Input variable
@@ -118,8 +118,10 @@ as_mdy_hms <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
 #' @examples
 #' as_mdy_hm("1-1-2014 12:15")
 #' @export
-as_mdy_hm <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
-                {sshhr( parse_date_time(x, "%m%d%Y %H%M") )}
+as_mdy_hm <- function(x) {
+  {if (is.factor(x)) as.character(x) else x} %>%
+    {sshhr(parse_date_time(., "%m%d%Y %H%M"))}
+}
 
 #' Convert input in day-month-year-hour-minute-second format to date-time
 #' @param x Input variable
@@ -127,8 +129,10 @@ as_mdy_hm <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
 #' @examples
 #' as_mdy_hms("1-1-2014 12:15:01")
 #' @export
-as_dmy_hms <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
-                {sshhr( parse_date_time(x, "%d%m%Y %H%M%S") )}
+as_dmy_hms <- function(x) {
+  {if (is.factor(x)) as.character(x) else x} %>%
+    {sshhr(parse_date_time(., "%d%m%Y %H%M%S"))}
+}
 
 #' Convert input in day-month-year-hour-minute format to date-time
 #' @param x Input variable
@@ -136,8 +140,10 @@ as_dmy_hms <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
 #' @examples
 #' as_mdy_hm("1-1-2014 12:15")
 #' @export
-as_dmy_hm <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
-                {sshhr( parse_date_time(x, "%d%m%Y %H%M") )}
+as_dmy_hm <- function(x) {
+  {if (is.factor(x)) as.character(x) else x} %>%
+    {sshhr(parse_date_time(x, "%d%m%Y %H%M"))}
+}
 
 #' Convert input in hour-minute-second format to time
 #' @param x Input variable
@@ -149,8 +155,8 @@ as_dmy_hm <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
 #' as_hms("12:45:00") %>% second
 #' }
 #' @export
-as_hms <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
-            {sshhr( hms(.) )}
+as_hms <- function(x)
+  {if (is.factor(x)) as.character(x) else x} %>% {sshhr(hms(.))}
 
 #' Convert input in hour-minute format to time
 #' @param x Input variable
@@ -161,8 +167,8 @@ as_hms <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
 #' as_hm("12:45") %>% minute
 #' }
 #' @export
-as_hm <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
-            {sshhr( hm(.) )}
+as_hm <- function(x)
+  {if (is.factor(x)) as.character(x) else x} %>% {sshhr(hm(.))}
 
 #' Convert variable to integer avoiding potential issues with factors
 #' @param x Input variable
