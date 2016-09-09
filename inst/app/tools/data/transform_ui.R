@@ -330,6 +330,12 @@ observeEvent(input$tr_change_type, {
     for (i in seq_along(dots))
       dots[[i]] <- sub(paste0(vars[[i]],"="),"",dots[[i]])
 
+    ## in case the create command tries to over-write the group-by variable ...
+    if (any(byvar %in% vars)) {
+      byvar <- setdiff(byvar, vars)
+      updateSelectInput(session = session, inputId = "tr_vars", selected = character(0))
+    }
+
     if (is_empty(byvar)) {
       ## using within and do.call because it provides better err messages
       nvar <- try(do.call(within, list(dataset, parse(text = cmd))), silent = TRUE)
@@ -677,8 +683,9 @@ observeEvent(input$tr_change_type, {
 # .sort ......
 # arrange_(mtcars, .dots = c("desc(cyl)","mpg"))
 
-inp_vars <- function(inp, rval = "")
-	if (is_empty(input[[inp]])) rval else input[[inp]]
+inp_vars <- function(inp, rval = "") {
+	if (is_empty(input[[inp]]) || !available(input[[inp]])) rval else input[[inp]]
+}
 
 transform_main <- reactive({
 
