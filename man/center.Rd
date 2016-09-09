@@ -4,7 +4,7 @@
 \alias{center}
 \title{Center}
 \usage{
-center(x, na.rm)
+center(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
