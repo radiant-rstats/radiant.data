@@ -280,7 +280,6 @@ visualize <- function(dataset, xvar,
               data.frame(ymin = y, ymax = y, y = y)
             }
             plot_list[[itt]] <- plot_list[[itt]] +
-              ylab(paste(plot_list[[itt]]$labels$y, "(mean)")) +
               stat_summary(fun.data = meanf, geom = "crossbar", color = "blue")
           }
 
@@ -290,9 +289,13 @@ visualize <- function(dataset, xvar,
               data.frame(ymin = y, ymax = y, y = y)
             }
             plot_list[[itt]] <- plot_list[[itt]] +
-              ylab(paste(plot_list[[itt]]$labels$y, "(median)")) +
               stat_summary(fun.data = medianf, geom = "crossbar", color = "red")
           }
+
+          nr <- nrow(dat)
+          if (nr > 1000 || nr != length(unique(dat[[i]])))
+            plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
+
         }
 
         itt <- itt + 1
@@ -344,7 +347,8 @@ visualize <- function(dataset, xvar,
         }
         if ("log_x" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + xlab(paste("log", i))
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
-        if (dc[i] %in% c("factor","date")) plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
+        if (dc[i] %in% c("factor","date") && nrow(tmp) < nrow(dat))
+          plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
 
         itt <- itt + 1
       }
@@ -370,7 +374,8 @@ visualize <- function(dataset, xvar,
 
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
 
-        plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
+        if (dc[i] %in% c("factor","date") && nrow(tmp) < nrow(dat))
+          plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
 
         itt <- itt + 1
       }
