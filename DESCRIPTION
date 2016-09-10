@@ -1,6 +1,6 @@
 Package: radiant.data
 Title: Business Analytics using R and Shiny
-Version: 0.5.27
+Version: 0.6.0
 Date: 2016-9-10
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description: A platform-independent browser-based interface for business analytics in R, based on the Shiny package.
@@ -12,24 +12,24 @@ Depends:
     tidyr (>= 0.6),
     dplyr (>= 0.5)
 Imports:
-    tibble (>= 1.1),
+    tibble (>= 1.2),
     broom (>= 0.4.1),
-    car (>= 2.1),
+    car (>= 2.1.3),
     gridExtra (>= 2.0.0),
-    knitr (>= 1.13),
-    rmarkdown(>= 0.9.5),
+    knitr (>= 1.14),
+    rmarkdown(>= 1.0),
     markdown (>= 0.7.7),
     pryr (>= 0.1.2),
     shiny (>= 0.14),
-    jsonlite (>= 0.9.17),
+    jsonlite (>= 1.0),
     shinyAce (>= 0.2.1),
-    psych (>= 1.5.8),
+    psych (>= 1.6.6),
     DT (>= 0.2),
     readr (>= 1.0.0),
     scales (>= 0.4.0),
     curl (>= 1.1.0),
-    rstudioapi (>= 0.5),
-    import (>= 1.0.0),
+    rstudioapi (>= 0.6),
+    import (>= 1.1.0),
     base64enc,
     methods
 Suggests:
