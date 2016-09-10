@@ -25,7 +25,6 @@
 #' @return Generated plots
 #'
 #' @examples
-#' visualize("diamonds", "carat", "price", type = "scatter", check = "loess")
 #' visualize("diamonds", "price:x", type = "dist")
 #' visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
 #' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
@@ -36,11 +35,8 @@
 #'   ggtitle("A scatterplot") + xlab("price in $")
 #' visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) %>%
 #'   {.[[1]] + ggtitle("A histogram") + xlab("price in $")}
-#' diamonds %>% visualize(c("price","carat","depth"), type = "density")
 #' visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "bar",
 #'   facet_row = "cut", fill = "cut", custom = FALSE)
-#' visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "line",
-#'   facet_row = "cut", color = "cut", custom = FALSE)
 #'
 #' @export
 visualize <- function(dataset, xvar,
