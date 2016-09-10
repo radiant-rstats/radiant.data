@@ -293,7 +293,7 @@ register_plot_output <- function(fun_name, rfun_name,
         plot(x = 1, type = 'n', main = paste0("\n\n\n\n\n\n\n\n",.) ,
              axes = FALSE, xlab = "", ylab = "")
       } else {
-        withProgress(message = 'Making plot', value = 0, print(.))
+        withProgress(message = 'Making plot', value = 0.5, print(.))
       }
     }
   }, width=get(width_fun), height=get(height_fun))

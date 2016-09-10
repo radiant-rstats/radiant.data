@@ -223,7 +223,7 @@ output$rmd_knitted <- renderUI({
     if (!isTRUE(getOption("radiant.local")) && is.null(session$user)) {
       HTML("<h2>Rmd file is not evaluated when running Radiant on open-source Shiny Server</h2>")
     } else if (input$rmd_report != "") {
-      withProgress(message = "Knitting report", value = 0, {
+      withProgress(message = "Knitting report", value = 0.5, {
         if (is_empty(input$rmd_selection))
           knitIt(input$rmd_report)
         else
@@ -367,16 +367,16 @@ update_report_fun <- function(cmd) {
       } else if (os_type == "Linux") {
         cat("Clipboard not supported on linux")
       }
-      withProgress(message = 'Putting command in clipboard', value = 0,
+      withProgress(message = 'Putting command in clipboard', value = 0.5,
         cat("")
       )
     } else if (state_init("rmd_manual", "Auto paste") == "To Rmd") {
-      withProgress(message = 'Putting Rmd chunk in Rstudio', value = 0,
+      withProgress(message = 'Putting Rmd chunk in Rstudio', value = 0.5,
         cleanout(cmd) %>%
         rstudioapi::insertText(.)
       )
     } else if (state_init("rmd_manual", "Auto paste") == "To R") {
-      withProgress(message = 'Putting R-command in Rstudio', value = 0,
+      withProgress(message = 'Putting R-command in Rstudio', value = 0.5,
         gsub("(```\\{.*\\}\n)|(```\n)","",cmd) %>% cleanout(.) %>%
         rstudioapi::insertText(.)
       )
@@ -386,7 +386,7 @@ update_report_fun <- function(cmd) {
       } else {
         r_state$rmd_report <<- paste0(esc_slash(r_state$rmd_report),"\n",cmd)
       }
-      withProgress(message = 'Updating report', value = 0,
+      withProgress(message = 'Updating report', value = 0.5,
         shinyAce::updateAceEditor(session, "rmd_report",
                                   value = esc_slash(r_state$rmd_report))
       )
