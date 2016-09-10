@@ -11,9 +11,9 @@ To rename a dataset loaded in Radiant click the `Rename data` check box, enter a
 
 ### Load data
 
-The best way to load and save data for use in Radiant (and R) is to use the R-data format (rda or rds). These are binary files that can be stored compactly and read into R quickly. Select `rda` (or `rds`) from the `Load data of type` dropdown and click `Choose Files` to locate the file(s) you want to load on your computer.
+The best way to load and save data for use in Radiant (and R) is to use the R-data format (rda or rds). These are binary files that can be stored compactly and read into R quickly. Select `rda` (or `rds`) from the `Load data of type` dropdown and click `Browse` to locate the file(s) you want to load on your computer.
 
-You can get data from a spreadsheet (e.g., Excel or Google sheets) into Radiant in two ways. First, you can save data from the spreadsheet in csv format and then, in Radiant, choose `csv` from the `Load data of type` dropdown. Most likely you will have a header row in the csv file with variable names. If the data are not comma separated you can choose semicolon or tab separated. To load a csv file click 'Choose files' and locate the file on your computer.
+You can get data from a spreadsheet (e.g., Excel or Google sheets) into Radiant in two ways. First, you can save data from the spreadsheet in csv format and then, in Radiant, choose `csv` from the `Load data of type` dropdown. Most likely you will have a header row in the csv file with variable names. If the data are not comma separated you can choose semicolon or tab separated. To load a csv file click 'Browse' and locate the file on your computer.
 
 > **Note:** For Windows users with data that contain multibyte characters please make sure your data are in ANSI format so R(adiant) can load the characters correctly.
 
@@ -21,7 +21,7 @@ Alternatively, you can select and copy the data in the spreadsheet using CTRL-C 
 
 If the data is available in R's global workspace (e.g., you opened a data set in Rstudio and then started Radiant from the `addins` menu) you can move (or copy) it to Radiant by selecting `from global workspace`. Select the data.frame(s) you want to use and click the `Load` button.
 
-To access all data files bundled with Radiant choose `examples` from the `Load data of type` dropdown and then click `Load` button. These files are used to illustrate the various data and analysis tools accessible in Radiant. For example, the `avengers` and `publishers` data are used to illustrate how to combine data in R(adiant) (i.e., _Data > Combine_).
+To access all data files bundled with Radiant choose `examples` from the `Load data of type` dropdown and then click the `Load` button. These files are used to illustrate the various data and analysis tools accessible in Radiant. For example, the `avengers` and `publishers` data are used to illustrate how to combine data in R(adiant) (i.e., _Data > Combine_).
 
 If `csv` data is available online choose `csv (url)` from the dropdown, paste the url into the text input shown, and press `Load`. If an `rda` file is available online choose `rda (url)` from the dropdown, paste the url into the text input, and press `Load`.
 

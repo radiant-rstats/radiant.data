@@ -42,7 +42,7 @@ Radiant focuses on business data and decisions. It offers tools, examples, and d
 
 ## How to install Radiant
 
-- Required: [R](https://cran.rstudio.com/) version 3.3.0 or later
+- Required: [R](https://cran.r-project.org/) version 3.3.0 or later
 - Required: A modern browser (e.g., [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari). Internet Explorer (version 11 or higher) should work as well
 - Required: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
@@ -104,7 +104,7 @@ You can also host Radiant using [shiny-server](http://www.rstudio.com/products/r
 install.packages("radiant", repos = "https://radiant-rstats.github.io/minicran/")
 ```
 
-Then clone the <a href="https://radiant-rstats.github.io/radiant" target="_blank">radiant</a> repo and point shiny-server to the `inst/app/` directory. As a courtesy, please let me know if you intend to use Radiant on a server.
+Then clone the <a href="https://github.com/radiant-rstats/radiant" target="_blank">radiant</a> repo and point shiny-server to the `inst/app/` directory. As a courtesy, please let me know if you intend to use Radiant on a server.
 
 ## Saving and loading state
 
