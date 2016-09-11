@@ -164,7 +164,7 @@ pvt_plot_inputs <- reactive({
 
   req(input$pvt_pause == FALSE, cancelOutput = TRUE)
 
-  withProgress(message = "Calculating", value = 0.5, {
+  withProgress(message = "Calculating", value = 1, {
     sshhr( do.call(pivotr, pvti) )
   })
 })
@@ -193,7 +193,7 @@ output$pivotr <- DT::renderDataTable({
   order <- r_state$pivotr_state$order
   pageLength <- r_state$pivotr_state$length
 
-  withProgress(message = 'Generating pivot table', value = 0.5,
+  withProgress(message = 'Generating pivot table', value = 1,
     dtab(pvt, format = input$pvt_format, perc = input$pvt_perc,
             dec = input$pvt_dec, searchCols = searchCols, order = order,
             pageLength = pageLength)
@@ -278,7 +278,7 @@ observeEvent(input$pivotr_rows_all, {
 
 output$plot_pivot <- renderPlot({
   if (is_empty(input$pvt_plot, FALSE)) return(invisible())
-  withProgress(message = 'Making plot', value = 0.5, {
+  withProgress(message = 'Making plot', value = 1, {
     sshhr(.plot_pivot()) %>% print
   })
   return(invisible())

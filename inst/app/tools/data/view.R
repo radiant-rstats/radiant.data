@@ -64,7 +64,7 @@ output$dataviewer <- DT::renderDataTable({
   if (is.null(search)) search <- ""
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
 
-  withProgress(message = 'Generating view table', value = 0.5,
+  withProgress(message = 'Generating view table', value = 1,
     DT::datatable(dat, filter = fbox, selection = "none",
       rownames = FALSE, style = "bootstrap", escape = FALSE,
       options = list(

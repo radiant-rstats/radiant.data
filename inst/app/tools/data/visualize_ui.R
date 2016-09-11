@@ -382,7 +382,7 @@ output$visualize <- renderPlot({
     } else if (is.null(.)) {
       return(invisible())
     } else {
-      withProgress(message = 'Making plot', value = 0.5, print(.))
+      withProgress(message = 'Making plot', value = 1, print(.))
     }
   }
 }, width = viz_plot_width, height = viz_plot_height)
