@@ -428,7 +428,8 @@ observeEvent(input$renameButton, {
 # .data_rename <- reactive({
 .data_rename <- function() {
   isolate({
-    if (is_empty(input$data_rename)) return()
+    if (is_empty(input$data_rename) || input$dataset == input$data_rename) return()
+
     ## use pryr::object_size to see that the size of the list doesn't change
     ## when you assign a list element another name
     r_data[[input$data_rename]] <- r_data[[input$dataset]]
