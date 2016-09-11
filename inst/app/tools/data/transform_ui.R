@@ -150,15 +150,16 @@ type_options <- list("None" = "none", "As factor" = "as_factor",
                      "As date/time (ymd_hms)" = "as_ymd_hms",
                      "As date/time (ymd_hm)" = "as_ymd_hm")
 
-trans_types <- list(`Change variable(s)` = c(
+trans_types <- list(` ` = c("None" = "none"),
+                    `Change variable(s)` = c(
                     "Bin" = "bin",
-                    "Change type" = "type"),
+                    "Change type" = "type",
                     "Normalize" = "normalize",
                     "Recode" = "recode",
                     "Remove/reorder levels" = "reorg_levs",
                     "Rename" = "rename",
                     "Replace" = "replace",
-                    "Transform" = "transform",
+                    "Transform" = "transform"),
                     `Create new variable(s)` = c(
                     "Clipboard" = "clip",
                     "Create" = "create"),
@@ -182,7 +183,7 @@ output$ui_Transform <- renderUI({
   tagList(wellPanel(
     checkboxInput("tr_hide", "Hide summaries", state_init("tr_hide", FALSE)),
     uiOutput("ui_tr_vars"),
-    selectizeInput("tr_change_type", "Transformation type:", trans_types, selected = "type"),
+    selectizeInput("tr_change_type", "Transformation type:", trans_types, selected = "none"),
     conditionalPanel(condition = "input.tr_change_type == 'type'",
 	    selectInput("tr_typefunction", "Change variable type:", type_options, selected = "none")
     ),
@@ -693,10 +694,10 @@ transform_main <- reactive({
   req(input$tr_change_type)
 
   if (not_available(input$tr_vars)) {
-    if (input$tr_change_type == "none") {
-      return("Select a transformation type and select one or more variables to transform")
+    if (input$tr_change_type == "none" && length(input$tr_vars) == 0) {
+      return("Select a transformation type or select variables to summarize")
     } else if (input$tr_change_type == "type") {
-      return("Select one or more variables to change their variable type")
+      return("Select one or more variables to change their type")
     } else if (input$tr_change_type == "transform") {
       return("Select one or more variables to apply a transformation")
     } else if (input$tr_change_type == "rename") {
@@ -712,9 +713,9 @@ transform_main <- reactive({
     } else if (input$tr_change_type == 'normalize') {
       return("Select one or more variables to normalize")
     } else if (input$tr_change_type == "remove_na") {
-      return("Select a one or more variables to see the effects of removing missing values")
+      return("Select one or more variables to see the effects of removing missing values")
     } else if (input$tr_change_type %in% c("remove_dup","show_dup")) {
-      return("Select a one or more variables to see the effects of removing duplicates")
+      return("Select one or more variables to see the effects of removing duplicates")
     } else if (input$tr_change_type == 'gather') {
       return("Select one or more variables to gather")
     } else if (input$tr_change_type == 'expand') {
@@ -916,7 +917,7 @@ output$transform_summary <- renderPrint({
       cat("** The selected operation resulted in an empty data frame and cannot be executed **\n\n")
     } else {
       if (input$tr_change_type %in% c("","none")) {
-        cat("** Select a transformation type **\n\n")
+        cat("** Select a transformation type or select variables to summarize **\n\n")
       } else {
         cat("** Press the 'Store' button to add your changes to the data **\n\n")
         if (!is_empty(input$tr_vars) && input$tr_change_type == "create")
@@ -1018,8 +1019,8 @@ observeEvent(input$tr_store, {
   updateTextInput(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd,ncmd)))
 
 	## reset input values once the changes have been applied
-	updateSelectInput(session = session, inputId = "tr_change_type", selected = NULL)
-	updateSelectInput(session = session, inputId = "dataset", select = dataset)
+	updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")
+	updateSelectInput(session = session, inputId = "dataset", selected = dataset)
 })
 
 observeEvent(input$tr_change_type, {
