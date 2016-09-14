@@ -4,8 +4,8 @@
 \alias{loadcsv_url}
 \title{Load a csv file with from a url}
 \usage{
-loadcsv_url(csv_url, header = TRUE, sep = ",", dec = ".", saf = TRUE,
-  safx = 20)
+loadcsv_url(csv_url, header = TRUE, sep = ",", dec = ".", n_max = Inf,
+  saf = TRUE, safx = 20)
 }
 \arguments{
 \item{csv_url}{URL for the csv file}
@@ -15,6 +15,8 @@ loadcsv_url(csv_url, header = TRUE, sep = ",", dec = ".", saf = TRUE,
 \item{sep}{Use , (default) or ; or \\t}
 
 \item{dec}{Decimal symbol. Use . (default) or ,}
+
+\item{n_max}{Maximum number of rows to read}
 
 \item{saf}{Convert character variables to factors if (1) there are less than 100 distinct values (2) there are X (see safx) more values than levels}
 
