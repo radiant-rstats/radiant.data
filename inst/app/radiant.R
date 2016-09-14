@@ -91,14 +91,24 @@ saveStateOnRefresh <- function(session = session) {
 })
 
 ## same as .getdata but without filters etc.
-.getdata_transform <- reactive({
-  if (is.null(input$dataset)) return()
-  if ("grouped_df" %in% class(r_data[[input$dataset]])) {
-    ungroup(r_data[[input$dataset]])
+# .getdata_transform <- reactive({
+#   if (is.null(input$dataset)) return()
+#   if ("grouped_df" %in% class(r_data[[input$dataset]])) {
+#     ungroup(r_data[[input$dataset]])
+#   } else {
+#     r_data[[input$dataset]]
+#   }
+# })
+
+## using a regular function to avoid a full data copy
+.getdata_transform <- function(dataset = input$dataset) {
+  if (is.null(dataset)) return()
+  if ("grouped_df" %in% class(r_data[[dataset]])) {
+    ungroup(r_data[[dataset]])
   } else {
-    r_data[[input$dataset]]
+    r_data[[dataset]]
   }
-})
+}
 
 .getclass <- reactive({
   getclass(.getdata())
