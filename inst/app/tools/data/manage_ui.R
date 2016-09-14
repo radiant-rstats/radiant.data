@@ -128,6 +128,7 @@ output$ui_Manage <- renderUI({
             td(HTML("&nbsp;&nbsp;")),
             td(checkboxInput("man_str_as_factor", "Str. as Factor", TRUE)))),
           checkboxInput("man_read.csv", "use read.csv", FALSE),
+          numericInput("man_n_max", label = "Maximum rows to read:", value = Inf, max = Inf, step = 1000),
           radioButtons("man_sep", "Separator:", c(Comma=",", Semicolon=";", Tab="\t"),
                        ",", inline = TRUE),
           radioButtons("man_dec", "Decimal:", c(Period=".", Comma=","),
@@ -269,7 +270,8 @@ observeEvent(input$uploadfile, {
                  .csv = input$man_read.csv,
                  header = input$man_header,
                  man_str_as_factor = input$man_str_as_factor,
-                 sep = input$man_sep, dec = input$man_dec)
+                 sep = input$man_sep, dec = input$man_dec,
+                 n_max = input$man_n_max)
 
   updateSelectInput(session, "dataset", label = "Datasets:",
                     choices = r_data$datasetlist,

@@ -370,7 +370,7 @@ observeEvent(input$tr_change_type, {
 
   if (!store || !is.character(dataset)) {
     if (cmd == "") return(dataset)
-    nvar <- try(car::recode(dataset[[var]], cmd), silent = TRUE)
+    nvar <- try(car::Recode(dataset[[var]], cmd), silent = TRUE)
     # nvar <- try(dplyr::recode(dataset[[var]], cmd), silent = TRUE)
     if (is(nvar, 'try-error')) {
       paste0("The recode command was not valid. The error message was:\n", attr(nvar,"condition")$message, "\nPlease try again. Examples are shown in the help file (click the ? icon).")
@@ -379,7 +379,7 @@ observeEvent(input$tr_change_type, {
     }
   } else {
     if (store_dat == "") store_dat <- dataset
-    paste0("## recode variable\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", rcname, " = car::recode(", var, ", \"", cmd, "\"))\n")
+    paste0("## recode variable\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", rcname, " = car::Recode(", var, ", \"", cmd, "\"))\n")
   }
 }
 

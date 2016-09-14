@@ -8,6 +8,7 @@ globalVariables(c("r_environment", "r_data", "r_state", ".", ".rs.restartR",
 #' @name radiant.data
 #' @docType package
 #' @import ggplot2 shiny dplyr
+#' @importFrom car Recode
 #' @importFrom rstudioapi insertText isAvailable
 #' @importFrom knitr knit2html knit
 #' @importFrom markdown markdownToHTML
