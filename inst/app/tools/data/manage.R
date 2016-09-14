@@ -53,7 +53,8 @@ loadUserData <- function(fname, uFile, ext,
                          header = TRUE,
                          man_str_as_factor = TRUE,
                          sep = ",",
-                         dec = ".") {
+                         dec = ".",
+                         n_max = Inf) {
 
   filename <- basename(fname)
 
@@ -102,7 +103,7 @@ loadUserData <- function(fname, uFile, ext,
       r_data[[objname]] <- as.data.frame(robj) %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
     }
   } else if (ext == 'csv') {
-    r_data[[objname]] <- loadcsv(uFile, .csv = .csv, header = header, sep = sep, saf = man_str_as_factor) %>%
+    r_data[[objname]] <- loadcsv(uFile, .csv = .csv, header = header, n_max = n_max, sep = sep, saf = man_str_as_factor) %>%
       {if (is.character(.)) upload_error_handler(objname, "### There was an error loading the data") else .} %>%
       {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
 

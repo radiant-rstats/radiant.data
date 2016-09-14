@@ -251,18 +251,21 @@ saver <- function(objname, file) {
 #' @param header Header in file (TRUE, FALSE)
 #' @param sep Use , (default) or ; or \\t
 #' @param dec Decimal symbol. Use . (default) or ,
+#' @param n_max Maximum number of rows to read
 #' @param saf Convert character variables to factors if (1) there are less than 100 distinct values (2) there are X (see safx) more values than levels
 #' @param safx Values to levels ratio
 #'
 #' @return Data frame with (some) variables converted to factors
 #'
 #' @export
-loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", saf = TRUE, safx = 20) {
+loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max = Inf, saf = TRUE, safx = 20) {
 
   rprob <- ""
-  cn <- read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1)
+  n_max <- if (is_not(n_max) || n_max == -1) Inf else n_max
+
   if (.csv == FALSE) {
-    dat <- try(readr::read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE)
+    cn <- read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1)
+    dat <- sshhr(try(readr::read_delim(fn, sep, col_names = colnames(cn), skip = header, n_max = n_max), silent = TRUE))
     if (!is(dat, 'try-error')) {
       prb <- readr::problems(dat)
       if (nrow(prb) > 0) {
@@ -272,7 +275,7 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", saf =
       rm(prb)
     }
   } else {
-    dat <- try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE)
+    dat <- sshhr(try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = n_max), silent = TRUE))
     rprob <- "Used read.csv to load file"
   }
 
@@ -289,6 +292,7 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", saf =
 #' @param header Header in file (TRUE, FALSE)
 #' @param sep Use , (default) or ; or \\t
 #' @param dec Decimal symbol. Use . (default) or ,
+#' @param n_max Maximum number of rows to read
 #' @param saf Convert character variables to factors if (1) there are less than 100 distinct values (2) there are X (see safx) more values than levels
 #' @param safx Values to levels ratio
 #'
@@ -297,16 +301,18 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", saf =
 #' @importFrom curl curl
 #'
 #' @export
-loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", saf = TRUE, safx = 20) {
+loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", n_max = Inf, saf = TRUE, safx = 20) {
   con <- curl(gsub("^\\s+|\\s+$", "", csv_url))
   try(open(con), silent = TRUE)
   if (is(con, 'try-error')) {
     close(con)
     return("### There was an error loading the csv file from the provided url.")
   } else {
-    dat <- try(read.table(con, header = header, comment.char = "",
-               quote = "\"", fill = TRUE, stringsAsFactors = saf,
-               sep = sep, dec = dec), silent = TRUE)
+    dat <- sshhr(
+             try(read.table(con, header = header, comment.char = "",
+             quote = "\"", fill = TRUE, stringsAsFactors = saf,
+             sep = sep, dec = dec, nrows = n_max), silent = TRUE)
+           )
     close(con)
 
     if (is(dat, 'try-error'))
