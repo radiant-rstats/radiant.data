@@ -11,6 +11,11 @@ output$ui_fileUpload <- renderUI({
   } else if (input$dataType %in% c("rda","rds")) {
     fileInput('uploadfile', '', multiple = TRUE,
       accept = c(".rda",".rds",".rdata"))
+  } else if (input$dataType == "feather") {
+    tagList(
+      numericInput("feather_n_max", label = "Maximum rows to read:", value = Inf, max = Inf, step = 1000),
+      fileInput('uploadfile', '', multiple = TRUE, accept = ".feather")
+    )
   } else if (input$dataType == "url_rda") {
     with(tags, table(
       tr(
@@ -109,10 +114,11 @@ observeEvent(input$to_global_save, {
 output$ui_Manage <- renderUI({
   data_types_in <- c("rda" = "rda", "rds" = "rds", "state" = "state", "csv" = "csv",
                   "clipboard" = "clipboard", "from global workspace" = "from_global",
-                  "examples" = "examples", "rda (url)" = "url_rda",
-                  "csv (url)" = "url_csv")
+                  "examples" = "examples", "feather" = "feather",
+                  "rda (url)" = "url_rda", "csv (url)" = "url_csv")
   data_types_out <- c("rda" = "rda", "rds" = "rds", "state" = "state", "csv" = "csv",
-                  "clipboard" = "clipboard", "to global workspace" = "to_global")
+                      "feather" = "feather",
+                      "clipboard" = "clipboard", "to global workspace" = "to_global")
   if (!isTRUE(getOption("radiant.local"))) {
     data_types_in <- data_types_in[-which(data_types_in == "from_global")]
     data_types_out <- data_types_out[-which(data_types_out == "to_global")]
@@ -252,17 +258,19 @@ output$downloadData <- downloadHandler(
       if (!is.null(input$man_data_descr) && input$man_data_descr != "")
         attr(tmp[[robj]],"description") <- r_data[[paste0(robj,"_descr")]]
 
-      if (ext == 'rda') {
-        save(list = robj, file = file, envir = tmp)
-      } else {
+      if (ext == 'rds') {
         saveRDS(tmp[[robj]], file = file)
+      } else if (ext == 'feather') {
+        feather::write_feather(tmp[[robj]], file)
+      } else {
+        save(list = robj, file = file, envir = tmp)
       }
     }
   }
 )
 
 observeEvent(input$uploadfile, {
-  ## loading files from disk
+  n_max <- if (is_not(input$man_n_max)) input$feather_n_max else input$man_n_max
   inFile <- input$uploadfile
   ## iterating through the files to upload
   for (i in 1:(dim(inFile)[1]))
@@ -271,7 +279,7 @@ observeEvent(input$uploadfile, {
                  header = input$man_header,
                  man_str_as_factor = input$man_str_as_factor,
                  sep = input$man_sep, dec = input$man_dec,
-                 n_max = input$man_n_max)
+                 n_max = n_max)
 
   updateSelectInput(session, "dataset", label = "Datasets:",
                     choices = r_data$datasetlist,
@@ -479,7 +487,8 @@ output$htmlDataExample <- renderText({
   if (is.null(.getdata())) return()
 
   ## Show only the first 10 (or 20) rows
-  r_data[[paste0(input$dataset,"_descr")]] %>%
-    { is_empty(.) %>% ifelse (., 20, 10) } %>%
-    show_data_snippet(nshow = .)
+  # r_data[[paste0(input$dataset,"_descr")]] %>%
+  #   { is_empty(.) %>% ifelse (., 20, 10) } %>%
+  #   show_data_snippet(nshow = .)
+  show_data_snippet(nshow = 10)
 })

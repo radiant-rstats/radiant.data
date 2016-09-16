@@ -98,10 +98,21 @@ loadUserData <- function(fname, uFile, ext,
     ## objname will hold the name of the object(s) inside the R datafile
     robj <- try(readRDS(uFile), silent = TRUE)
     if (is(robj, 'try-error')) {
-      upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in rds.")
+      upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in rds format.")
     } else {
       r_data[[objname]] <- as.data.frame(robj) %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
     }
+  } else if (ext == 'feather') {
+    robj <- feather::feather(uFile)
+    if (is(robj, 'try-error')) {
+      upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in feather format.")
+    } else {
+      n_max <- if (is_not(n_max) || n_max == -1) Inf else n_max
+      nrows <- nrow(robj)
+      if (n_max > nrows) n_max <- nrows
+      r_data[[objname]] <- robj[1:n_max,] %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
+    }
+    robj <- robj[1:nrows,]
   } else if (ext == 'csv') {
     r_data[[objname]] <- loadcsv(uFile, .csv = .csv, header = header, n_max = n_max, sep = sep, saf = man_str_as_factor) %>%
       {if (is.character(.)) upload_error_handler(objname, "### There was an error loading the data") else .} %>%
