@@ -213,10 +213,11 @@ as_numeric <- function(x) {
 	}
 }
 
-#' Wrapper for as.factor
+#' Wrapper for factor with ordered = FALSE
 #' @param x Input vector
+#' @param ordered Order factor levels (TRUE, FALSE)
 #' @export
-as_factor <- function(x) as.factor(x)
+as_factor <- function(x, ordered = FALSE) factor(x, ordered = ordered)
 
 #' Wrapper for as.character
 #' @param x Input vector
@@ -279,23 +280,23 @@ make_train <- function(n = .7, nr = 100) {
 #' @param tbl Data frame to add transformed variables to
 #' @param funs Function(s) to apply (e.g., funs(log))
 #' @param ... Variables to transform
-#' @param ext Extension to add for each variable
+#' @param .ext Extension to add for each variable
 #'
 #' @examples
-#' mutate_each(mtcars, funs(log), mpg, cyl, ext = "_log")
+#' mutate_each(mtcars, funs(log), mpg, cyl, .ext = "_log")
 #'
 #' @importFrom pryr named_dots
 #'
 #' @export
-mutate_each <- function(tbl, funs, ..., ext = "") {
+mutate_each <- function(tbl, funs, ..., .ext = "") {
 
-  if (ext == "") {
+  if (.ext == "") {
     dplyr::mutate_each(tbl, funs, ...)
   } else {
     vars <- pryr::named_dots(...) %>% names
     if (is.null(vars)) vars <- colnames(tbl)
 
-    new <- paste0(vars, ext)
+    new <- paste0(vars, .ext)
     tbl[,new] <-
       tbl %>% mutate_each_(funs, vars = vars) %>% select_(.dots = vars) %>%
       set_colnames(new)
@@ -497,6 +498,41 @@ level_list <- function(dat, ...) {
   } else {
     lapply(dat, fl)
   }
+}
+
+
+#' Add ordered argument to lubridate::month
+#' @param x Input date vector
+#' @param label Month as label (TRUE, FALSE)
+#' @param abbr Abbreviate label (TRUE, FALSE)
+#' @param ordered Order factor (TRUE, FALSE)
+#'
+#' @importFrom lubridate month
+#'
+#' @seealso See the \code{\link[lubridate]{month}} function in the lubridate package for additional details
+#'
+#' @export
+month <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
+  x <- lubridate::month(x, label = label, abbr = abbr)
+  if (!ordered && label) x <- factor(x, ordered = FALSE)
+  x
+}
+
+#' Add ordered argument to lubridate::wday
+#' @param x Input date vector
+#' @param label Weekday as label (TRUE, FALSE)
+#' @param abbr Abbreviate label (TRUE, FALSE)
+#' @param ordered Order factor (TRUE, FALSE)
+#'
+#' @importFrom lubridate wday
+#'
+#' @seealso See the \code{\link[lubridate]{wday}} function in the lubridate package for additional details
+#'
+#' @export
+wday <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
+  x <- lubridate::wday(x, label = label, abbr = abbr)
+  if (!ordered && label) x <- factor(x, ordered = FALSE)
+  x
 }
 
 # dat <-
