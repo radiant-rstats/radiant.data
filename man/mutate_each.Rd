@@ -4,7 +4,7 @@
 \alias{mutate_each}
 \title{Add tranformed variables to a data frame (NSE)}
 \usage{
-mutate_each(tbl, funs, ..., ext = "")
+mutate_each(tbl, funs, ..., .ext = "")
 }
 \arguments{
 \item{tbl}{Data frame to add transformed variables to}
@@ -13,7 +13,7 @@ mutate_each(tbl, funs, ..., ext = "")
 
 \item{...}{Variables to transform}
 
-\item{ext}{Extension to add for each variable}
+\item{.ext}{Extension to add for each variable}
 }
 \description{
 Add tranformed variables to a data frame (NSE)
@@ -22,7 +22,7 @@ Add tranformed variables to a data frame (NSE)
 Wrapper for dplyr::mutate_each that allows custom variable name extensions
 }
 \examples{
-mutate_each(mtcars, funs(log), mpg, cyl, ext = "_log")
+mutate_each(mtcars, funs(log), mpg, cyl, .ext = "_log")
 
 }
 

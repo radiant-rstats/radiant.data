@@ -2,14 +2,16 @@
 % Please edit documentation in R/transform.R
 \name{as_factor}
 \alias{as_factor}
-\title{Wrapper for as.factor}
+\title{Wrapper for factor with ordered = FALSE}
 \usage{
-as_factor(x)
+as_factor(x, ordered = FALSE)
 }
 \arguments{
 \item{x}{Input vector}
+
+\item{ordered}{Order factor levels (TRUE, FALSE)}
 }
 \description{
-Wrapper for as.factor
+Wrapper for factor with ordered = FALSE
 }
 
