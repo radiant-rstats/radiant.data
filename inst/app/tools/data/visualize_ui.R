@@ -95,11 +95,13 @@ output$ui_viz_xvar <- renderUI({
 # })
 
 # observeEvent(length(input$viz_yvar) < 2, {
+# observeEvent(length(input$viz_yvar) == 1, {
 #   r_state[["viz_comby"]] <<- FALSE
 #   updateCheckboxInput(session, "viz_comby", value = FALSE)
 # })
 
 output$ui_viz_comby <- renderUI({
+  # req(length(input$viz_yvar) > 1)
   # if (length(input$viz_yvar) < 2) return(NULL)
   # checkboxInput("viz_comby", "Combine Y-variables in one plot",
   #   state_init("viz_comby", FALSE))
@@ -108,6 +110,8 @@ output$ui_viz_comby <- renderUI({
     checkboxInput("viz_comby", "Combine Y-variables in one plot",
       state_init("viz_comby", FALSE))
   } else {
+    # r_state[["viz_comby"]] <<- FALSE
+    # updateCheckboxInput(session, "viz_comby", value = FALSE)
     return()
   }
 })
@@ -394,6 +398,13 @@ output$visualize <- renderPlot({
   ## need dependency on ..
   req(input$viz_plot_height && input$viz_plot_width)
 
+
+  ## not working
+  # if (length(input$viz_yvar) < 2 && isTRUE(input$viz_comby)) {
+  #   r_state[["viz_comby"]] <<- FALSE
+  #   updateCheckboxInput(session, "viz_comby", value = FALSE)
+  # }
+
   if (not_available(input$viz_xvar)) return()
   if (input$viz_type %in% c("scatter","line", "box", "bar", "surface") && not_available(input$viz_yvar))
     return("No Y-variable provided for a plot that requires one")
@@ -410,6 +421,9 @@ output$visualize <- renderPlot({
   } else {
     if (isTRUE(input$viz_combx)) return()
     if (length(input$viz_yvar) > 1 && is.null(input$viz_comby)) return()
+
+    ## doesn't work
+    # if (length(input$viz_yvar) < 2 && isTRUE(input$viz_comby)) return()
     # if (isTRUE(input$viz_comby)) {
     #   if (!is_empty(input$viz_color,"none")) return()
     #   if (!is_empty(input$viz_fill,"none")) return()
@@ -418,13 +432,12 @@ output$visualize <- renderPlot({
 
   # isolate({
   #   print("-----")
-  #   print(length(input$viz_xvar))
-  #   print(isTRUE(input$viz_combx))
-  #   print(input$viz_combx)
+  #   print(length(input$viz_yvar))
+  #   print(isTRUE(input$viz_comby))
+  #   print(input$viz_comby)
   #   print("-----")
   # })
 
-  ## still doesn't stop flickering!
   req(!is.null(input$viz_color) || !is.null(input$viz_fill))
 
   viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)
