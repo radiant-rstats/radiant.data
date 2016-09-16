@@ -2,7 +2,7 @@
 ^\.Rproj\.user$
 ^inst/rstudio$
 coverage.R
-cran-comments.md
 ^.*\.sublime-project$
 ^\.travis\.yml$
 ^build$
+cran-comments.md
