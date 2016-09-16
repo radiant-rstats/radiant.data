@@ -83,14 +83,14 @@ ext_options <- list("none" = "", "log" = "_ln", "exp" = "_exp",
 output$ui_tr_ext <- renderUI({
   trfun <- input$tr_transfunction
   if (is_empty(trfun)) trfun <- "none"
-  ext <- ext_options[[trfun]]
-  returnTextInput("tr_ext", "Variable name extension:", ext)
+  .ext <- ext_options[[trfun]]
+  returnTextInput("tr_ext", "Variable name extension:", .ext)
 })
 
 output$ui_tr_ext_nz <- renderUI({
   if (is_empty(input$tr_normalizer, "none")) return()
-  ext <- paste0("_", input$tr_normalizer)
-  returnTextInput("tr_ext_nz", "Variable name extension:", ext)
+  .ext <- paste0("_", input$tr_normalizer)
+  returnTextInput("tr_ext_nz", "Variable name extension:", .ext)
 })
 
 output$ui_tr_rcname <- renderUI({
@@ -264,47 +264,47 @@ output$ui_Transform <- renderUI({
 
 .change_type <- function(dataset, fun,
                          vars = "",
-                         ext = "",
+                         .ext = "",
                          store_dat = "",
                          store = TRUE) {
 
   if (!store || !is.character(dataset)) {
     fun <- get(fun)
-    if (is_empty(ext)) {
+    if (is_empty(.ext)) {
       mutate_each_(dataset, funs(fun), vars)
     } else {
-      mutate_each_(dataset, funs(fun), vars) %>% set_colnames(paste0(vars, ext))
+      mutate_each_(dataset, funs(fun), vars) %>% set_colnames(paste0(vars, .ext))
     }
   } else {
     if (store_dat == "") store_dat <- dataset
-    if (is_empty(ext)) {
+    if (is_empty(.ext)) {
       paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "),")\n")
     } else {
-      paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+      paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
     }
   }
 }
 
 .transform <- function(dataset, fun,
                        vars = "",
-                       ext = "",
+                       .ext = "",
                        store_dat = "",
                        store = TRUE) {
 
   if (!store && !is.character(dataset)) {
     fun <- get(fun)
-    if (is_empty(ext)) {
+    if (is_empty(.ext)) {
       mutate_each_(dataset, funs(fun), vars)
     } else {
-      mutate_each_(dataset, funs(fun), vars) %>% set_colnames(paste0(vars, ext))
+      mutate_each_(dataset, funs(fun), vars) %>% set_colnames(paste0(vars, .ext))
     }
   } else {
 
     if (store_dat == "") store_dat <- dataset
-    if (is_empty(ext)) {
+    if (is_empty(.ext)) {
       paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "), ")\n")
     } else {
-      paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+      paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
     }
   }
 }
@@ -415,7 +415,7 @@ observeEvent(input$tr_change_type, {
 }
 
 .normalize <- function(dataset, vars, nzvar,
-                       ext = paste0("_",nzvar),
+                       .ext = paste0("_",nzvar),
                        store_dat = "",
                        store = TRUE) {
 
@@ -428,10 +428,10 @@ observeEvent(input$tr_change_type, {
     if (sum(isnum) == 0) return("Please select only integer or numeric variables to normalize")
     vars <- vars[isnum]
     select_(dat, .dots = vars) %>% {. / nz[[1]]} %>%
-      set_colnames(paste0(vars, ext))
+      set_colnames(paste0(vars, .ext))
   } else {
     if (store_dat == "") store_dat <- dataset
-    paste0("## normalize variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(normalize(.,",nzvar,")), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+    paste0("## normalize variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(normalize(.,",nzvar,")), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
   }
 }
 
@@ -504,7 +504,7 @@ observeEvent(input$tr_change_type, {
                  vars = "",
                  bins = 10,
                  rev = FALSE,
-                 ext = "_dec",
+                 .ext = "_dec",
                  store_dat = "",
                  store = TRUE) {
 
@@ -514,13 +514,13 @@ observeEvent(input$tr_change_type, {
     select_(dataset, .dots = vars) %>%
     # mutate_each(funs(radiant.data::xtile(.,bins, rev = rev))) %>%
     mutate_each(funs(xt(., bins, rev = rev))) %>%
-    set_colnames(paste0(vars, ext))
+    set_colnames(paste0(vars, .ext))
   } else {
     if (store_dat == "") store_dat <- dataset
     if (rev)
-      paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(xtile(.,",bins,", rev = TRUE)), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+      paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(xtile(.,",bins,", rev = TRUE)), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
     else
-      paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(xtile(.,",bins,")), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+      paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(xtile(.,",bins,")), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
   }
 }
 
@@ -796,7 +796,7 @@ transform_main <- reactive({
 
     ## bin variables
     if (input$tr_change_type == "bin")
-      return(.bin(dat, inp_vars("tr_vars"), bins = input$tr_bin_n, rev = input$tr_bin_rev, ext = input$tr_ext_bin, store = FALSE))
+      return(.bin(dat, inp_vars("tr_vars"), bins = input$tr_bin_n, rev = input$tr_bin_rev, .ext = input$tr_ext_bin, store = FALSE))
              # bin_order = input$tr_bin_order, store = FALSE))
 
     ## gather variables
@@ -822,7 +822,7 @@ transform_main <- reactive({
       if (is_empty(input$tr_normalizer, "none")) {
         return("Select a normalizing variable")
       } else {
-        return(.normalize(dat, inp_vars("tr_vars"), input$tr_normalizer, ext = input$tr_ext_nz, store = FALSE))
+        return(.normalize(dat, inp_vars("tr_vars"), input$tr_normalizer, .ext = input$tr_ext_nz, store = FALSE))
       }
     }
 
@@ -980,19 +980,19 @@ observeEvent(input$tr_store, {
     cmd <- .reorg_vars(input$dataset, vars = input$tr_reorg_vars, input$tr_dataset)
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == 'type') {
-    cmd <- .change_type(input$dataset, fun = input$tr_typefunction, vars = input$tr_vars, ext = input$tr_typename, input$tr_dataset)
+    cmd <- .change_type(input$dataset, fun = input$tr_typefunction, vars = input$tr_vars, .ext = input$tr_typename, input$tr_dataset)
   	r_data[[dataset]][,colnames(dat)] <- dat
   } else if (input$tr_change_type == 'transform') {
-    cmd <- .transform(input$dataset, fun = input$tr_transfunction, vars = input$tr_vars, ext = input$tr_ext, input$tr_dataset)
+    cmd <- .transform(input$dataset, fun = input$tr_transfunction, vars = input$tr_vars, .ext = input$tr_ext, input$tr_dataset)
     r_data[[dataset]][,colnames(dat)] <- dat
   } else if (input$tr_change_type == 'training') {
     cmd <- .training(input$dataset, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, input$tr_dataset)
     r_data[[dataset]][,colnames(dat)] <- dat
   } else if (input$tr_change_type == 'normalize') {
-    cmd <- .normalize(input$dataset, vars = input$tr_vars, nzvar = input$tr_normalizer, ext = input$tr_ext_nz, input$tr_dataset)
+    cmd <- .normalize(input$dataset, vars = input$tr_vars, nzvar = input$tr_normalizer, .ext = input$tr_ext_nz, input$tr_dataset)
     r_data[[dataset]][,colnames(dat)] <- dat
   } else if (input$tr_change_type == 'bin') {
-    cmd <- .bin(input$dataset, vars = input$tr_vars, bins = input$tr_bin_n, rev = input$tr_bin_rev, ext = input$tr_ext_bin, input$tr_dataset)
+    cmd <- .bin(input$dataset, vars = input$tr_vars, bins = input$tr_bin_n, rev = input$tr_bin_rev, .ext = input$tr_ext_bin, input$tr_dataset)
     r_data[[dataset]][,colnames(dat)] <- dat
   } else if (input$tr_change_type == 'reorg_levs') {
     cmd <- .reorg_levs(input$dataset, input$tr_vars[1], input$tr_reorg_levs, input$tr_roname, input$tr_dataset)
