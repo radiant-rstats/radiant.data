@@ -19,7 +19,7 @@ Convert variable to integer avoiding potential issues with factors
 as_integer(rnorm(10))
 as_integer(letters)
 as_integer(5:10 \%>\% as.factor)
-as.integer(5:10 \%>\% as.factor)
+as.integer(c("a","b") \%>\% as.factor)
 
 }
 

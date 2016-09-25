@@ -177,15 +177,15 @@ as_hm <- function(x)
 #' as_integer(rnorm(10))
 #' as_integer(letters)
 #' as_integer(5:10 %>% as.factor)
-#' as.integer(c("a","b") %>% as.factor)
+#' as_integer(c("a","b") %>% as.factor)
 #'
 #' @export
 as_integer <- function(x) {
 	if (is.factor(x)) {
-		int <- levels(x) %>% .[x] %>% as.integer
+		int <- sshhr(levels(x) %>% .[x] %>% as.integer)
     if (length(na.omit(int)) == 0) as.integer(x) else int
 	} else if (is.character(x)) {
-    int <- sshhr( try(as.integer(x), silent = TRUE))
+    int <- sshhr(as.integer(x))
     if (length(na.omit(int)) == 0) x else int
   } else {
 		as.integer(x)
