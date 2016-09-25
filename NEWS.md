@@ -10,4 +10,5 @@
 - When clicking the `rename` button, without changing the name, the dataset was set to NULL (thanks @kmezhoud, https://github.com/radiant-rstats/radiant/issues/5)
 - Replace ext with .ext in `mutate_each` function call
 - Variance estimation in Data > Explore would cause an error with unit cell-frequencies (thanks @kmezhoud, https://github.com/radiant-rstats/radiant/issues/6)
+- Fix for as_integer when factor levels are characters
 
