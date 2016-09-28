@@ -176,20 +176,21 @@ as_hm <- function(x)
 #' @examples
 #' as_integer(rnorm(10))
 #' as_integer(letters)
-#' as_integer(5:10 %>% as.factor)
-#' as_integer(c("a","b") %>% as.factor)
+#' as_integer(as.factor(5:10))
+#' as.integer(as.factor(5:10))
+#' as_integer(as.factor(c("a","b")))
 #'
 #' @export
 as_integer <- function(x) {
-	if (is.factor(x)) {
-		int <- sshhr(levels(x) %>% .[x] %>% as.integer)
+  if (is.factor(x)) {
+    int <- sshhr(levels(x) %>% .[x] %>% as.integer)
     if (length(na.omit(int)) == 0) as.integer(x) else int
-	} else if (is.character(x)) {
+  } else if (is.character(x)) {
     int <- sshhr(as.integer(x))
     if (length(na.omit(int)) == 0) x else int
   } else {
-		as.integer(x)
-	}
+    as.integer(x)
+  }
 }
 
 #' Convert variable to numeric avoiding potential issues with factors
@@ -198,20 +199,22 @@ as_integer <- function(x) {
 #' @examples
 #' as_numeric(rnorm(10))
 #' as_numeric(letters)
-#' as_numeric(5:10 %>% as.factor)
-#' as.numeric(5:10 %>% as.factor)
-#' as_numeric(c("1","2"))
+#' as_numeric(as.factor(5:10))
+#' as.numeric(as.factor(5:10))
+#' as_numeric(as.factor(c("a","b")))
+#' as_numeric(c("3","4"))
 #'
 #' @export
 as_numeric <- function(x) {
-	if (is.factor(x)) {
-		levels(x) %>% .[x] %>% as.numeric
+  if (is.factor(x)) {
+    num <- sshhr(levels(x) %>% .[x] %>% as.numeric)
+    if (length(na.omit(num)) == 0) as.numeric(x) else num
   } else if (is.character(x)) {
-    num <- sshhr( try(as.numeric(x), silent = TRUE))
+    num <- sshhr(as.numeric(x))
     if (length(na.omit(num)) == 0) x else num
-	} else {
+  } else {
     as.numeric(x)
-	}
+  }
 }
 
 #' Wrapper for factor with ordered = FALSE
