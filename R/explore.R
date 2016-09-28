@@ -141,11 +141,12 @@ explore <- function(dataset,
 
   ## frequencies turned into doubles earlier ...
   check_int <- function(x) {
-    if (is.double(x)) {
+    if (is.double(x) && length(na.omit(x)) > 0) {
       x_int <- as.integer(round(x,.Machine$double.rounding))
-      if (all(x == x_int)) x <- x_int
+      if (all(x == x_int)) x_int else x
+    } else {
+      x
     }
-    x
   }
 
   tab <- ungroup(tab) %>% mutate_each(funs(check_int))
