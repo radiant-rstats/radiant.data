@@ -18,9 +18,10 @@ Convert variable to numeric avoiding potential issues with factors
 \examples{
 as_numeric(rnorm(10))
 as_numeric(letters)
-as_numeric(5:10 \%>\% as.factor)
-as.numeric(5:10 \%>\% as.factor)
-as_numeric(c("1","2"))
+as_numeric(as.factor(5:10))
+as.numeric(as.factor(5:10))
+as_numeric(as.factor(c("a","b")))
+as_numeric(c("3","4"))
 
 }
 
