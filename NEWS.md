@@ -12,4 +12,5 @@
 - Variance estimation in Data > Explore would cause an error with unit cell-frequencies (thanks @kmezhoud, https://github.com/radiant-rstats/radiant/issues/6)
 - Fix for as_integer when factor levels are characters
 - Fix for integer conversion in explore
+- Remove \\r and special characters from strings in r_data and r_state 
 

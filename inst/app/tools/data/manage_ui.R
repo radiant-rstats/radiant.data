@@ -382,8 +382,26 @@ observeEvent(input$uploadState, {
   load(inFile$datapath, envir = tmpEnv)
 
   ## remove characters that may cause problems in shinyAce
-  if (!is.null(tmpEnv$r_state$rmd_report))
-    tmpEnv$r_state$rmd_report %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
+  # if (!is.null(tmpEnv$r_state$rmd_report))
+    # tmpEnv$r_state$rmd_report %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
+
+  ## remove characters that may cause problems in shinyAce
+  if (!is.null(tmpEnv$r_state)) {
+    for (i in names(tmpEnv$r_state)) {
+      if (is.character(tmpEnv$r_state[[i]])) {
+        tmpEnv$r_state[[i]] %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
+      }
+    }
+  }
+
+  ## remove characters that may cause problems in shinyAce
+  if (!is.null(tmpEnv$r_data)) {
+    for (i in names(tmpEnv$r_data)) {
+      if (is.character(tmpEnv$r_data[[i]])) {
+        tmpEnv$r_data[[i]] %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
+      }
+    }
+  }
 
   r_sessions[[r_ssuid]] <- list(
     r_data = tmpEnv$r_data,
