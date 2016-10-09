@@ -21,6 +21,9 @@
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
+#' @param size The numeric variable used to scale the size of the scatter-plot points
+#' @param size_mult A multiplier specifying the scatter plot point size relative to ggplot defaults
+#' @param size_transform The transformation to be applied to the variable defining the scatter plot point size.
 #'
 #' @return Generated plots
 #'
