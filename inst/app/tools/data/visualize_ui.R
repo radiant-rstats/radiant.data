@@ -16,7 +16,7 @@ viz_inputs <- reactive({
   for (i in r_drop(names(viz_args)))
     viz_args[[i]] <- input[[paste0("viz_",i)]]
   # isolate({
-    # cat(paste0(names(viz_args), " ", viz_args, collapse = ", "), file = stderr(), "\n")
+  # cat(paste0(names(viz_args), " ", viz_args, collapse = ", "), file = stderr(), "\n")
   # })
   viz_args
 })
@@ -26,8 +26,8 @@ viz_inputs <- reactive({
 #######################################
 output$ui_viz_type <- renderUI({
   selectInput(inputId = "viz_type", label = "Plot-type:", choices = viz_type,
-    selected = state_multiple("viz_type", viz_type),
-    multiple = FALSE)
+              selected = state_multiple("viz_type", viz_type),
+              multiple = FALSE)
 })
 
 ## Y - variable
@@ -45,9 +45,9 @@ output$ui_viz_yvar <- renderUI({
   }
 
   selectInput(inputId = "viz_yvar", label = "Y-variable:",
-    choices = vars,
-    selected = state_multiple("viz_yvar", vars),
-    multiple = TRUE, size = min(3, length(vars)), selectize = FALSE)
+              choices = vars,
+              selected = state_multiple("viz_yvar", vars),
+              multiple = TRUE, size = min(3, length(vars)), selectize = FALSE)
 })
 
 ## X - variable
@@ -60,8 +60,8 @@ output$ui_viz_xvar <- renderUI({
   if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars_nonum()
 
   selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
-    selected = state_multiple("viz_xvar", vars),
-    multiple = TRUE, size = min(3, length(vars)), selectize = FALSE)
+              selected = state_multiple("viz_xvar", vars),
+              multiple = TRUE, size = min(3, length(vars)), selectize = FALSE)
 })
 
 # output$ui_viz_comby <- renderUI({
@@ -108,7 +108,7 @@ output$ui_viz_comby <- renderUI({
 
   if (length(input$viz_yvar) > 1) {
     checkboxInput("viz_comby", "Combine Y-variables in one plot",
-      state_init("viz_comby", FALSE))
+                  state_init("viz_comby", FALSE))
   } else {
     # r_state[["viz_comby"]] <<- FALSE
     # updateCheckboxInput(session, "viz_comby", value = FALSE)
@@ -139,7 +139,7 @@ output$ui_viz_combx <- renderUI({
   # if (!is.null(input$viz_xvar) && length(input$viz_xvar) < 2) return(NULL)
   if (length(input$viz_xvar) > 1) {
     checkboxInput("viz_combx", "Combine X-variables in one plot",
-      state_init("viz_combx", FALSE))
+                  state_init("viz_combx", FALSE))
   } else {
     return()
   }
@@ -147,9 +147,9 @@ output$ui_viz_combx <- renderUI({
 
 # observeEvent(input$viz_xvar < 2, {
 #   # if (length(input$viz_xvar) < 2) {
-    # r_state[["viz_combx"]] <<- FALSE
-    # updateCheckboxInput(session, "viz_combx", value = FALSE)
-  # }
+# r_state[["viz_combx"]] <<- FALSE
+# updateCheckboxInput(session, "viz_combx", value = FALSE)
+# }
 # })
 
 # observeEvent(input$viz_xvar < 2, {
@@ -209,15 +209,15 @@ observeEvent(input$viz_check, {
 output$ui_viz_facet_row <- renderUI({
   vars <- c("None" = ".", groupable_vars_nonum())
   selectizeInput("viz_facet_row", "Facet row", vars,
-    selected = state_single("viz_facet_row", vars, init = "."),
-    multiple = FALSE)
+                 selected = state_single("viz_facet_row", vars, init = "."),
+                 multiple = FALSE)
 })
 
 output$ui_viz_facet_col <- renderUI({
   vars <- c("None" = ".", groupable_vars_nonum())
   selectizeInput("viz_facet_col", 'Facet column', vars,
-    selected = state_single("viz_facet_col", vars, init = "."),
-    multiple = FALSE)
+                 selected = state_single("viz_facet_col", vars, init = "."),
+                 multiple = FALSE)
 })
 
 output$ui_viz_color <- renderUI({
@@ -232,7 +232,34 @@ output$ui_viz_color <- renderUI({
     selectizeInput("viz_color", "Color", vars, multiple = FALSE, selected = "none")
   } else {
     selectizeInput("viz_color", "Color", vars, multiple = FALSE,
-      selected = state_single("viz_color", vars, init = "none"))
+                   selected = state_single("viz_color", vars, init = "none"))
+  }
+})
+
+# for bubble charts
+output$ui_viz_size <- renderUI({
+  req(input$viz_type)
+  # size only makes sense for numeric variables
+  isNum <- .getclass() %in% c("integer","numeric")
+
+  vars <- c("None" = "none", varnames()[isNum])
+  # from http://docs.ggplot2.org/current/scale_size.html
+  selectizeInput("viz_size", "Size", vars, multiple = FALSE,
+                 selected = state_single("viz_size", vars, init = "none"))
+})
+
+output$ui_viz_size_control <- renderUI({
+  req(input$viz_size)
+  if (input$viz_size != "none") {
+    # from http://docs.ggplot2.org/current/scale_size.html
+    viz_transforms <- c("identity","reverse","exp")
+    size_data <- getdata(input$dataset, input$viz_size, filt = input$data_filter) %>% filter_(paste0("!is.na(",input$viz_size,")"))
+    # some transforms make sense only for positive data
+    if (!is.null(size_data[[1]]) && length(size_data[[1]])>0 && is.numeric(size_data[[1]]) && all(size_data[[1]]>0)) {
+      viz_transforms %<>% c(.,c("log", "log10", "log1p", "log2","sqrt","reciprocal"))
+    }
+    tagList(conditionalPanel("input.viz_size != 'none'",numericInput("viz_size_mult", "Size multiplier:", state_init("viz_size_mult",1), min = 0,step=0.1)),
+            conditionalPanel("input.viz_size != 'none'",selectizeInput("viz_size_transform", "Size transform:", viz_transforms, selected = state_single("viz_size_transform",viz_transforms,"identity"), multiple=FALSE)))
   }
 })
 
@@ -243,7 +270,7 @@ output$ui_viz_fill <- renderUI({
   } else {
     vars <- c("None" = "none", groupable_vars())
     selectizeInput("viz_fill", "Fill", vars, multiple = FALSE,
-      selected = state_single("viz_fill", vars, init = "none"))
+                   selected = state_single("viz_fill", vars, init = "none"))
   }
 })
 
@@ -261,8 +288,8 @@ output$ui_viz_axes <- renderUI({
   if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
 
   checkboxGroupInput("viz_axes", NULL, viz_axes[ind],
-    selected = state_group("viz_axes", ""),
-    inline = TRUE)
+                     selected = state_group("viz_axes", ""),
+                     inline = TRUE)
 })
 
 output$ui_viz_check <- renderUI({
@@ -285,8 +312,8 @@ output$ui_viz_check <- renderUI({
   }
 
   checkboxGroupInput("viz_check", NULL, viz_check[ind],
-    selected = state_group("viz_check", ""),
-    inline = TRUE)
+                     selected = state_group("viz_check", ""),
+                     inline = TRUE)
 })
 
 output$ui_Visualize <- renderUI({
@@ -295,12 +322,12 @@ output$ui_Visualize <- renderUI({
       checkboxInput("viz_pause", "Pause plotting", state_init("viz_pause", FALSE)),
       uiOutput("ui_viz_type"),
       conditionalPanel(condition = "input.viz_type != 'dist' & input.viz_type != 'density'",
-        uiOutput("ui_viz_yvar"),
-        uiOutput("ui_viz_comby")
+                       uiOutput("ui_viz_yvar"),
+                       uiOutput("ui_viz_comby")
       ),
       uiOutput("ui_viz_xvar"),
       conditionalPanel("input.viz_type == 'dist' | input.viz_type == 'density'",
-        uiOutput("ui_viz_combx")
+                       uiOutput("ui_viz_combx")
       ),
       uiOutput("ui_viz_facet_row"),
       uiOutput("ui_viz_facet_col"),
@@ -308,33 +335,37 @@ output$ui_Visualize <- renderUI({
                                     input.viz_type == 'dist' |
                                     input.viz_type == 'density' |
                                     input.viz_type == 'surface'",
-        uiOutput("ui_viz_fill")
+                       uiOutput("ui_viz_fill")
       ),
       conditionalPanel(condition = "input.viz_type == 'scatter' |
                                     input.viz_type == 'line' |
                                     input.viz_type == 'box'",
-        uiOutput("ui_viz_color")
+                       uiOutput("ui_viz_color")
+      ),
+      conditionalPanel(condition = "input.viz_type == 'scatter'",
+                       uiOutput("ui_viz_size"),
+                       uiOutput("ui_viz_size_control")
       ),
       conditionalPanel(condition = "input.viz_type == 'scatter' |
                                     input.viz_type == 'line' |
                                     input.viz_type == 'surface' |
                                     input.viz_type == 'box'",
-        uiOutput("ui_viz_check")
+                       uiOutput("ui_viz_check")
       ),
       uiOutput("ui_viz_axes"),
       conditionalPanel(condition = "input.viz_type == 'dist'",
-        sliderInput("viz_bins", label = "Number of bins:",
-          min = 1, max = 50, value = state_init("viz_bins",10),
-          step = 1)
+                       sliderInput("viz_bins", label = "Number of bins:",
+                                   min = 1, max = 50, value = state_init("viz_bins",10),
+                                   step = 1)
       ),
       conditionalPanel("input.viz_type == 'density' |
                        (input.viz_type == 'scatter' & (input.viz_check && input.viz_check.indexOf('loess') >= 0))",
-        sliderInput("viz_smooth", label = "Smooth:",
-                    value = state_init("viz_smooth", 1),
-                    min = 0.1, max = 3, step = .1)
+                       sliderInput("viz_smooth", label = "Smooth:",
+                                   value = state_init("viz_smooth", 1),
+                                   min = 0.1, max = 3, step = .1)
       ),
       sliderInput("viz_alpha", label = "Opacity:", min = 0, max = 1,
-        value = state_init("viz_alpha",.5), step = .01),
+                  value = state_init("viz_alpha",.5), step = .01),
       tags$table(
         tags$td(numericInput("viz_plot_height", label = "Plot height:", min = 100,
                              max = 2000, step = 50,
@@ -363,7 +394,7 @@ viz_plot_height <- reactive({
   } else {
     lx <- ifelse (not_available(input$viz_xvar) || isTRUE(input$viz_combx), 1, length(input$viz_xvar))
     ly <- ifelse (not_available(input$viz_yvar) || input$viz_type %in% c("dist","density") ||
-                  isTRUE(input$viz_comby), 1, length(input$viz_yvar))
+                    isTRUE(input$viz_comby), 1, length(input$viz_yvar))
     nr <- lx * ly
     if (nr > 1)
       (input$viz_plot_height/2) * ceiling(nr / 2)
@@ -376,18 +407,18 @@ output$visualize <- renderPlot({
   if (not_available(input$viz_xvar)) {
     return(
       plot(x = 1, type = 'n',
-      main="\nPlease select variables from the dropdown menus to create a plot",
-      axes = FALSE, xlab = "", ylab = "")
+           main="\nPlease select variables from the dropdown menus to create a plot",
+           axes = FALSE, xlab = "", ylab = "")
     )
   }
 
   .visualize() %>% { if (is.character(.)) {
-      plot(x = 1, type = 'n', main = paste0("\n",.), axes = FALSE, xlab = "", ylab = "")
-    } else if (is.null(.)) {
-      return(invisible())
-    } else {
-      withProgress(message = 'Making plot', value = 1, print(.))
-    }
+    plot(x = 1, type = 'n', main = paste0("\n",.), axes = FALSE, xlab = "", ylab = "")
+  } else if (is.null(.)) {
+    return(invisible())
+  } else {
+    withProgress(message = 'Making plot', value = 1, print(.))
+  }
   }
 }, width = viz_plot_width, height = viz_plot_height)
 
@@ -454,10 +485,10 @@ observeEvent(input$visualize_report, {
       "jitter" %in% input$viz_check) vi$check <- setdiff(vi$check, "jitter")
 
   if (isTRUE(input$viz_combx) && length(input$viz_xvar) < 2)
-      vi$combx <- FALSE
+    vi$combx <- FALSE
 
   if (isTRUE(input$viz_comby) && length(input$viz_yvar) < 2)
-      vi$comby <- FALSE
+    vi$comby <- FALSE
 
   inp_main <- clean_args(vi, viz_args)
   inp_main[["custom"]] <- FALSE
