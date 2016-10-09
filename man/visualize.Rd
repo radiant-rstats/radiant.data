@@ -8,7 +8,8 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   type = "dist", facet_row = ".", facet_col = ".", color = "none",
   fill = "none", bins = 10, smooth = 1, fun = "mean", check = "",
   axes = "", alpha = 0.5, data_filter = "", shiny = FALSE,
-  custom = FALSE)
+  custom = FALSE, size = "none", size_mult = 1,
+  size_transform = "identity")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -48,6 +49,12 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 \item{shiny}{Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app}
 
 \item{custom}{Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.}
+
+\item{size}{The numeric variable used to scale the size of the scatter-plot points}
+
+\item{size_mult}{A multiplier specifying the scatter plot point size relative to ggplot defaults}
+
+\item{size_transform}{The transformation to be applied to the variable defining the scatter plot point size.}
 }
 \value{
 Generated plots

@@ -21,6 +21,9 @@
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
+#' @param size The numeric variable used to scale the size of the scatter-plot points
+#' @param size_mult A multiplier specifying the scatter plot point size relative to ggplot defaults
+#' @param size_transform The transformation to be applied to the variable defining the scatter plot point size.
 #'
 #' @return Generated plots
 #'
@@ -56,12 +59,16 @@ visualize <- function(dataset, xvar,
                       alpha = .5,
                       data_filter = "",
                       shiny = FALSE,
-                      custom = FALSE) {
+                      custom = FALSE,
+                      size="none",
+                      size_mult=1,
+                      size_transform="identity") {
 
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- xvar
 
   if (!type %in% c("scatter","line")) color <- "none"
+  if (!type %in% c("scatter")) size <- "none"
   if (!type %in% c("bar","dist","density","surface")) fill <- "none"
   if (type != "scatter") {
     check %<>% sub("line","",.) %>% sub("loess","",.)
@@ -103,6 +110,9 @@ visualize <- function(dataset, xvar,
     if (type == "bar")
       byvar <- if (is.null(byvar)) fill else unique(c(byvar, fill))
   }
+  if (size != "none") {
+    vars %<>% c(.,size)
+  }
 
   ## so you can also pass-in a data.frame
   dat <- getdata(dataset, vars, filt = data_filter)
@@ -137,11 +147,11 @@ visualize <- function(dataset, xvar,
 
   if (type == "bar") {
     if (any(xvar %in% yvar)) {
-       return("Cannot create a bar-chart if an X-variable is also included as a Y-variable")
+      return("Cannot create a bar-chart if an X-variable is also included as a Y-variable")
     }
   } else if (type == "box") {
     if (any(xvar %in% yvar)) {
-       return("Cannot create a box-plot if an X-variable is also included as a Y-variable")
+      return("Cannot create a box-plot if an X-variable is also included as a Y-variable")
     }
   }
 
@@ -239,14 +249,15 @@ visualize <- function(dataset, xvar,
       plot_list[[i]] <- ggplot(dat, aes_string(x = i)) +
         if (fill == "none")
           geom_density(adjust = smooth, color = "blue", fill = "blue", alpha = alpha, size = 1)
-        else
-          geom_density(adjust = smooth, alpha = alpha, size = 1)
+      else
+        geom_density(adjust = smooth, alpha = alpha, size = 1)
 
       if ("log_x" %in% axes) plot_list[[i]] <- plot_list[[i]] + xlab(paste("log", i))
     }
   } else if (type == "scatter") {
 
     itt <- 1
+
     if ("jitter" %in% check) {
       gs <- geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.1))
       check <- sub("jitter","", check)
@@ -276,7 +287,7 @@ visualize <- function(dataset, xvar,
               data.frame(ymin = y, ymax = y, y = y)
             }
             plot_list[[itt]] <- plot_list[[itt]] +
-              stat_summary(fun.data = meanf, geom = "crossbar", color = "blue")
+              stat_summary(fun.data = meanf, geom = "crossbar", color = "blue",show.legend = FALSE)
           }
 
           if ("median" %in% fun) {
@@ -285,7 +296,7 @@ visualize <- function(dataset, xvar,
               data.frame(ymin = y, ymax = y, y = y)
             }
             plot_list[[itt]] <- plot_list[[itt]] +
-              stat_summary(fun.data = medianf, geom = "crossbar", color = "red")
+              stat_summary(fun.data = medianf, geom = "crossbar", color = "red" ,show.legend = FALSE)
           }
 
           nr <- nrow(dat)
@@ -382,8 +393,8 @@ visualize <- function(dataset, xvar,
       if (!"factor" %in% dc[i]) dat[[i]] %<>% as_factor
       for (j in yvar) {
         plot_list[[itt]] <- ggplot(dat, aes_string(x = i, y = j, fill = i)) +
-                          geom_boxplot(alpha = alpha) +
-                          theme(legend.position = "none")
+          geom_boxplot(alpha = alpha) +
+          theme(legend.position = "none")
 
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
 
@@ -394,7 +405,7 @@ visualize <- function(dataset, xvar,
 
   if (facet_row != "." || facet_col != ".") {
     facets <- if (facet_row == ".")  paste("~", facet_col)
-              else paste(facet_row, '~', facet_col)
+    else paste(facet_row, '~', facet_col)
     scl <- if ("scale_y" %in% axes) "free_y" else "fixed"
     facet_fun <- if (facet_row == ".") facet_wrap else facet_grid
     for (i in 1:length(plot_list))
@@ -411,6 +422,12 @@ visualize <- function(dataset, xvar,
   if (fill != "none") {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] + aes_string(fill = fill)
+  }
+
+  ## add size
+  if (size != "none") {
+    for (i in 1:length(plot_list))
+      plot_list[[i]] <- plot_list[[i]] + aes_string(size = size) + scale_size(range=c(1,6) * as.numeric(size_mult),trans=size_transform)
   }
 
   if ("jitter" %in% check) {
@@ -442,5 +459,5 @@ visualize <- function(dataset, xvar,
     if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
   sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list), 2)))) ) %>%
-   {if (shiny) . else print(.)}
+  {if (shiny) . else print(.)}
 }
