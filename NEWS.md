@@ -1,9 +1,11 @@
-# CHANGES IN radiant.data VERSION 0.6.2 (unreleased)
+# CHANGES IN radiant.data VERSION 0.6.7 (unreleased)
 
 ## NEW FEATURES
 
 - Specify the maximum number of rows to load for a csv and csv (url) file through _Data > Manage_
 - Support for loading and saving feather files, including specifying the maximum number of rows to load through _Data > Manage_
+- Added author and year arguments to help modals in inst/app/radiant.R (thanks @kmezhoud)
+- Added size argument for scatter plots to create bubble charts (thanks @andrewsali)
 
 ## BUG FIXES
 

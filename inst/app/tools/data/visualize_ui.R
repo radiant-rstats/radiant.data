@@ -227,24 +227,25 @@ output$ui_viz_color <- renderUI({
   else
     vars <- c("None" = "none", varnames())
 
-  if (isTRUE(input$viz_comby) && length(input$viz_yvar) > 1) {
-    vars <- c("None" = "none")
-    selectizeInput("viz_color", "Color", vars, multiple = FALSE, selected = "none")
-  } else {
-    selectizeInput("viz_color", "Color", vars, multiple = FALSE,
-      selected = state_single("viz_color", vars, init = "none"))
-  }
+  if (isTRUE(input$viz_comby) && length(input$viz_yvar) > 1) vars <- c("None" = "none")
+  selectizeInput("viz_color", "Color", vars, multiple = FALSE,
+    selected = state_single("viz_color", vars, init = "none"))
 })
 
 output$ui_viz_fill <- renderUI({
-  if (isTRUE(input$viz_combx) && length(input$viz_xvar) > 1) {
-    vars <- c("None" = "none")
-    selectizeInput("viz_fill", "Fill", vars, multiple = FALSE, selected = "none")
-  } else {
-    vars <- c("None" = "none", groupable_vars())
-    selectizeInput("viz_fill", "Fill", vars, multiple = FALSE,
-      selected = state_single("viz_fill", vars, init = "none"))
-  }
+  vars <- c("None" = "none", groupable_vars())
+  if (isTRUE(input$viz_combx) && length(input$viz_xvar) > 1) vars <- vars[1]
+  selectizeInput("viz_fill", "Fill", vars, multiple = FALSE,
+    selected = state_single("viz_fill", vars, init = "none"))
+})
+
+output$ui_viz_size <- renderUI({
+  req(input$viz_type)
+  isNum <- .getclass() %in% c("integer", "numeric")
+  vars <- c("None" = "none", varnames()[isNum])
+  if (isTRUE(input$viz_comby) && length(input$viz_yvar) > 1) vars <- c("None" = "none")
+  selectizeInput("viz_size", "Size", vars, multiple = FALSE,
+    selected = state_single("viz_size", vars, init = "none"))
 })
 
 output$ui_viz_axes <- renderUI({
@@ -314,6 +315,9 @@ output$ui_Visualize <- renderUI({
                                     input.viz_type == 'line' |
                                     input.viz_type == 'box'",
         uiOutput("ui_viz_color")
+      ),
+      conditionalPanel(condition = "input.viz_type == 'scatter'",
+        uiOutput("ui_viz_size")
       ),
       conditionalPanel(condition = "input.viz_type == 'scatter' |
                                     input.viz_type == 'line' |
@@ -452,6 +456,8 @@ observeEvent(input$visualize_report, {
 
   if (!input$viz_type %in% c("scatter", "box") &&
       "jitter" %in% input$viz_check) vi$check <- setdiff(vi$check, "jitter")
+
+  if (!input$viz_type %in% "scatter") vi$size <- "none"
 
   if (isTRUE(input$viz_combx) && length(input$viz_xvar) < 2)
       vi$combx <- FALSE
