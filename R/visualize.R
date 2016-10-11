@@ -12,6 +12,7 @@
 #' @param facet_col Create horizontally arranged subplots for each level of the selected factor variable
 #' @param color Adds color to a scatter plot to generate a 'heat map'. For a line plot one line is created for each group and each is assigned a different color
 #' @param fill Display bar, distribution, and density plots by group, each with a different color. Also applied to surface plots to generate a 'heat map'
+#' @param size Numeric variable used to scale the size of scatter-plot points
 #' @param bins Number of bins used for a histogram (1 - 50)
 #' @param smooth Adjust the flexibility of the loess line for scatter plots
 #' @param fun Set the summary measure for line and bar plots when the X-variable is a factor (default is "mean"). Also used to plot an error bar in a scatter plot when the X-variable is a factor. Options are "mean" and/or "median"
@@ -31,6 +32,8 @@
 #'   type = "bar", fun = "median")
 #' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
 #'   type = "line", fun = "max")
+#' visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter",
+#'           size = "table", custom = TRUE) + scale_size(range=c(1,10), guide = "none")
 #' visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
 #'   ggtitle("A scatterplot") + xlab("price in $")
 #' visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) %>%
@@ -48,6 +51,7 @@ visualize <- function(dataset, xvar,
                       facet_col = ".",
                       color = "none",
                       fill = "none",
+                      size = "none",
                       bins = 10,
                       smooth = 1,
                       fun = "mean",
@@ -66,6 +70,7 @@ visualize <- function(dataset, xvar,
   if (type != "scatter") {
     check %<>% sub("line","",.) %>% sub("loess","",.)
     fun <- fun[1]  # only scatter can deal with multiple functions
+    size <- "none"
   }
   if (!type %in% c("scatter","box")) check %<>% sub("jitter","",.)
 
@@ -103,6 +108,7 @@ visualize <- function(dataset, xvar,
     if (type == "bar")
       byvar <- if (is.null(byvar)) fill else unique(c(byvar, fill))
   }
+  if (size != "none") vars %<>% c(., size)
 
   ## so you can also pass-in a data.frame
   dat <- getdata(dataset, vars, filt = data_filter)
@@ -183,6 +189,7 @@ visualize <- function(dataset, xvar,
     if (any(xvar %in% yvar)) return("X-variables cannot be part of Y-variables when combining Y-variables")
     if (!is_empty(color, "none")) return("Cannot use Color when combining Y-variables")
     if (!is_empty(fill, "none")) return("Cannot use Fill when combining Y-variables")
+    if (!is_empty(size, "none")) return("Cannot use Size when combining Y-variables")
     if (facet_row %in% yvar || facet_col %in% yvar) return("Facet row or column variables cannot be part of\nY-variables when combining Y-variables")
 
     dat <- gather_(dat, "yvar", "values", gather_cols = yvar)
@@ -405,6 +412,11 @@ visualize <- function(dataset, xvar,
   if (color != "none") {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] + aes_string(color = color)
+  }
+
+  if (size != "none") {
+    for (i in 1:length(plot_list))
+      plot_list[[i]] <- plot_list[[i]] + aes_string(size = size)
   }
 
   ## adding fill

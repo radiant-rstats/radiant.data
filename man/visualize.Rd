@@ -6,8 +6,8 @@
 \usage{
 visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   type = "dist", facet_row = ".", facet_col = ".", color = "none",
-  fill = "none", bins = 10, smooth = 1, fun = "mean", check = "",
-  axes = "", alpha = 0.5, data_filter = "", shiny = FALSE,
+  fill = "none", size = "none", bins = 10, smooth = 1, fun = "mean",
+  check = "", axes = "", alpha = 0.5, data_filter = "", shiny = FALSE,
   custom = FALSE)
 }
 \arguments{
@@ -30,6 +30,8 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 \item{color}{Adds color to a scatter plot to generate a 'heat map'. For a line plot one line is created for each group and each is assigned a different color}
 
 \item{fill}{Display bar, distribution, and density plots by group, each with a different color. Also applied to surface plots to generate a 'heat map'}
+
+\item{size}{Variable used to scale the size of scatter-plot points}
 
 \item{bins}{Number of bins used for a histogram (1 - 50)}
 
@@ -65,6 +67,8 @@ visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
   type = "bar", fun = "median")
 visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
   type = "line", fun = "max")
+visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter",
+          size = "table", custom = TRUE) + scale_size(range=c(1,10), guide = "none")
 visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
   ggtitle("A scatterplot") + xlab("price in $")
 visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) \%>\%
