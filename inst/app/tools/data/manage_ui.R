@@ -350,7 +350,6 @@ observeEvent(input$loadExampleData, {
   # exdat <- data(package = r_example_data)$results[, c("Package","Item")]
 
   for (i in 1:nrow(exdat)) {
-    pack <-
     item <- exdat[i,"Item"]
     r_data[[item]] <- data(list = item, package = exdat[i,"Package"], envir = environment()) %>% get
     r_data[[paste0(item,"_descr")]] <- attr(r_data[[item]], "description")

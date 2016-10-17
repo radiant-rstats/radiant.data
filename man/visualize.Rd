@@ -31,7 +31,7 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 
 \item{fill}{Display bar, distribution, and density plots by group, each with a different color. Also applied to surface plots to generate a 'heat map'}
 
-\item{size}{Variable used to scale the size of scatter-plot points}
+\item{size}{Numeric variable used to scale the size of scatter-plot points}
 
 \item{bins}{Number of bins used for a histogram (1 - 50)}
 
