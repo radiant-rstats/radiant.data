@@ -28,6 +28,29 @@ $$y_t = \\alpha + \\beta x_t + \\epsilon_t.$$
 
 To show the output press the `Knit report` button.
 
+### Tables
+
+To generate a table that will display properly in both PDF and HTML you can use a layout similar to the example below:
+
+Year  |  Outcome  |  Prior probability
+:---- | --------: | :----------------------:
+2013  | Win       |  0.30
+2014  | Loss      |  0.25
+2015  | Win       |  0.20
+
+Note that the columns are left-aligned, right-aligned, and centered using a `:`. Alternatively you can create a `data.frame` with the information to be put in the table and use `knitr`'s `kable` function to generate the desired output. See example below:
+
+```{r}
+df <- data.frame(
+        Year = c(2013, 2014, 2015),
+        Outcome = c(\"Win\", \"Loss\", \"Win\"),
+        `Prior probability` = c(0.30, 0.25, 0.20),
+        check.names = FALSE
+      )
+
+knitr::kable(df)
+```
+
 ### Documenting analysis results in Radiant
 
 The report feature in Radiant should be used in conjunction with the <i title='Report results' class='fa fa-edit'></i> icons shown at the bottom of the side bar on (almost) all pages. When that icon is clicked the command used to create the ouput is copied into the editor in the _R > Report_ tab. By default Radiant will paste the code generated for the analysis you just completed at the bottom of the report (i.e., `Auto paste`). However, you can turn off that feature by selecting `Manual paste` from the dropown. With manual paste on, the code is put in the clipboard when you click a report icon and you can paste it where you want in the _R > Report_ editor window.
@@ -211,8 +234,12 @@ knitIt <- function(text) {
   ## fragment also available with rmarkdown
   ## http://rmarkdown.rstudio.com/html_fragment_format.html
   md <- knitr::knit(text = paste0("\n`r options(width = 250)`\n",text), envir = r_environment)
+
+  ## add basic styling to tables
+  "<style>th, td { padding-right: 15px; border-bottom: 1px solid #ddd; }
+    tr:hover { background-color: #f5f5f5 } table { width = auto }
+   </style>" %>%
   paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
-        # "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         paste0("<script type='text/javascript' src='", getOption("radiant.mathjax.path"),"/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
         "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
 }
@@ -283,7 +310,7 @@ output$saveReport <- downloadHandler(
           ## you may need to use http://pandoc.org/installing.html#installing-from-source
           ## also check the logs to make sure its not complaining about missing files
           if (rstudioapi::isAvailable() || !isTRUE(local)) {
-            cat(paste0("\n`r options(width = 250)`\n\n",report), file = "report.Rmd", sep = "\n")
+            cat(paste0("\n`r options(width = 250)`\n\n<style type='text/css'> .table { width: auto; } </style>\n\n", report), file = "report.Rmd", sep = "\n")
             out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
               PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(),
               Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"),"app/www/style.docx"))
