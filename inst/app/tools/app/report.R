@@ -48,8 +48,11 @@ df <- data.frame(
         check.names = FALSE
       )
 
-knitr::kable(df)
+knitr::kable(df, align = \"ccc\")
 ```
+
+To align the columns use `l` for left, `r` for right, and `c` for center. In the example above each column is centered. For additional information about formatting tables see
+https://www.rforge.net/doc/packages/knitr/kable.html
 
 ### Documenting analysis results in Radiant
 
@@ -236,12 +239,12 @@ knitIt <- function(text) {
   md <- knitr::knit(text = paste0("\n`r options(width = 250)`\n",text), envir = r_environment)
 
   ## add basic styling to tables
-  "<style>th, td { padding-right: 15px; border-bottom: 1px solid #ddd; }
-    tr:hover { background-color: #f5f5f5 } table { width = auto }
-   </style>" %>%
   paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
         paste0("<script type='text/javascript' src='", getOption("radiant.mathjax.path"),"/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
-        "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
+        "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>%
+  gsub("<table>","<table class='table table-condensed table-hover'",.) %>%
+  scrub %>%
+  HTML
 }
 
 output$rmd_knitted <- renderUI({

@@ -150,7 +150,8 @@ pivotr <- function(dataset,
   ## sorting the table if desired
   if (!identical(tabsort, "")) {
     if (grepl(",", tabsort))
-      tabsort <- strsplit(tabsort,",")[[1]] %>% gsub(" ", "", .)
+      tabsort <- strsplit(tabsort,",")[[1]] %>% gsub("^\\s+|\\s+$", "", .)
+
     tab[-nrow(tab),] %<>% arrange_(.dots = tabsort)
 
     ## order factors as set in the sorted table

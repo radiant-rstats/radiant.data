@@ -2,8 +2,8 @@
   width: auto;
 }
 
-th, td {
-  text-align: left;
+.snippet th, .snippet td {
+  text-align: center;
 }
 
 table.dataTable tfoot td, table.dataTable thead td {
