@@ -131,7 +131,8 @@ explore <- function(dataset,
   ## sorting the table if desired from R > Report
   if (!identical(tabsort, "")) {
     if (grepl(",", tabsort))
-      tabsort <- strsplit(tabsort,",")[[1]] %>% gsub(" ", "", .)
+      tabsort <- strsplit(tabsort,",")[[1]] %>% gsub("^\\s+|\\s+$", "", .)
+
     tab %<>% arrange_(.dots = tabsort)
   }
 

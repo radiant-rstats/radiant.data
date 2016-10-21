@@ -221,7 +221,7 @@ show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt =
     xtable::xtable(.) %>%
     print(type = 'html',  print.results = FALSE, include.rownames = FALSE,
           sanitize.text.function = identity,
-          html.table.attributes = "class='table table-condensed table-hover'") %>%
+          html.table.attributes = "class='table table-condensed table-hover snippet'") %>%
     paste0(title, .) %>%
     {if (nr <= nshow) . else paste0(.,'\n<label>', nshow,' of ', formatnr(nr,dec = 0), ' rows shown. See View-tab for details.</label>')} %>%
     enc2utf8
@@ -441,7 +441,6 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
   if (order != "NULL" || sc != "NULL") {
 
     ## get variable class and name
-    # gc <- get(paste0(".",fun))()$tab %>% {nr <<- nrow(.); .} %>% getclass %>%
     gc <- getclass(dat) %>% {if (is_empty(vars[1])) . else .[vars]}
     cn <- names(gc)
 
@@ -449,7 +448,8 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
       if (order != "NULL") {
         tabsort <- c()
         for (i in order[[1]]) {
-          cname <- cn[i[[1]] + 1]
+          cname <- cn[i[[1]] + 1] %>% gsub("^\\s+|\\s+$", "", .)
+          if (grepl("[^0-9a-zA-Z]", cname)) cname <- paste0("`", cname, "`")
           if (i[[2]] == "desc") cname <- paste0("desc(", cname, ")")
           tabsort <- c(tabsort, cname)
         }

@@ -48,8 +48,11 @@ df <- data.frame(
         check.names = FALSE
       )
 
-knitr::kable(df)
+knitr::kable(df, align = \"ccc\")
 ```
+
+To align the columns use `l` for left, `r` for right, and `c` for center. In the example above each column is centered. For additional information about formatting tables see
+https://www.rforge.net/doc/packages/knitr/kable.html
 
 ### Documenting analysis results in Radiant
 
@@ -236,7 +239,7 @@ knitIt <- function(text) {
   md <- knitr::knit(text = paste0("\n`r options(width = 250)`\n",text), envir = r_environment)
 
   ## add basic styling to tables
-  "<style>th, td { padding-right: 15px; border-bottom: 1px solid #ddd; }
+  "<style>th, td { border-bottom: 1px solid #ddd; padding-left: 10px; padding-right: 10px}
     tr:hover { background-color: #f5f5f5 } table { width = auto }
    </style>" %>%
   paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
