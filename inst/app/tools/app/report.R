@@ -239,6 +239,7 @@ knitIt <- function(text) {
   md <- knitr::knit(text = paste0("\n`r options(width = 250)`\n",text), envir = r_environment)
 
   ## add basic styling to tables
+
   paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
         paste0("<script type='text/javascript' src='", getOption("radiant.mathjax.path"),"/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
         "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>%
