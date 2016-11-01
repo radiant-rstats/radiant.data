@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data VERSION 0.6.7 (unreleased)
+# CHANGES IN radiant.data VERSION 0.6.9 (unreleased)
 
 ## NEW FEATURES
 
@@ -17,4 +17,4 @@
 - Fix for integer conversion in explore
 - Remove \\r and special characters from strings in r_data and r_state 
 - Fix sorting in _R > Report_ for tables created using _Data > Pivot_ and _Data > Explore_ when column headers contain symbols or spaces (thanks @4kammer)
-
+- Set `error = TRUE` for rmarkdown for consistency with knitr as used in R > Report
