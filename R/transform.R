@@ -109,7 +109,7 @@ as_ymd_hm <- function(x) {
 #' @export
 as_mdy_hms <- function(x) {
   {if (is.factor(x)) as.character(x) else x} %>%
-   {sshhr(parse_date_time(., "%m%d%Y %H%M%S"))}
+    {sshhr(parse_date_time(., "%m%d%Y %H%M%S"))}
 }
 
 #' Convert input in month-day-year-hour-minute format to date-time
@@ -178,7 +178,7 @@ as_hm <- function(x)
 #' as_integer(letters)
 #' as_integer(as.factor(5:10))
 #' as.integer(as.factor(5:10))
-#' as_integer(as.factor(c("a","b")))
+#' as_integer(c("a","b"))
 #'
 #' @export
 as_integer <- function(x) {
@@ -187,7 +187,7 @@ as_integer <- function(x) {
     if (length(na.omit(int)) == 0) as.integer(x) else int
   } else if (is.character(x)) {
     int <- sshhr(as.integer(x))
-    if (length(na.omit(int)) == 0) x else int
+    if (length(na.omit(int)) == 0) as_integer(as.factor(x)) else int
   } else {
     as.integer(x)
   }
@@ -201,7 +201,7 @@ as_integer <- function(x) {
 #' as_numeric(letters)
 #' as_numeric(as.factor(5:10))
 #' as.numeric(as.factor(5:10))
-#' as_numeric(as.factor(c("a","b")))
+#' as_numeric(c("a","b"))
 #' as_numeric(c("3","4"))
 #'
 #' @export
@@ -211,7 +211,7 @@ as_numeric <- function(x) {
     if (length(na.omit(num)) == 0) as.numeric(x) else num
   } else if (is.character(x)) {
     num <- sshhr(as.numeric(x))
-    if (length(na.omit(num)) == 0) x else num
+    if (length(na.omit(num)) == 0) as_numeric(as.factor(x)) else num
   } else {
     as.numeric(x)
   }
@@ -416,6 +416,7 @@ getsummary <- function(dat, dc = getclass(dat)) {
     select(dat, which(isFct)) %>% summary(maxsum = 20) %>% print
     cat("\n")
   }
+
   if (sum(isDate) > 0) {
     cat("Earliest dates:\n")
     select(dat, which(isDate)) %>% summarise_each(funs(min)) %>% as.data.frame %>% print(., row.names = FALSE)
@@ -423,8 +424,8 @@ getsummary <- function(dat, dc = getclass(dat)) {
     select(dat, which(isDate)) %>% summarise_each(funs(max)) %>% as.data.frame %>% print(., row.names = FALSE)
     cat("\n")
   }
-  if (sum(isPeriod) > 0) {
 
+  if (sum(isPeriod) > 0) {
     max_time <- function(x) sort(x) %>% tail(1)
     min_time <- function(x) sort(x) %>% head(1)
 
@@ -450,8 +451,11 @@ getsummary <- function(dat, dc = getclass(dat)) {
   }
   if (sum(isLogic) > 0) {
     cat("Summarize logical variables:\n")
-    select(dat, which(isLogic)) %>% summarise_each(funs(sum, mean)) %>% matrix(ncol = 2) %>%
-      set_colnames(c("# TRUE", "% TRUE")) %>% set_rownames(names(dat)[isLogic]) %>% print
+    select(dat, which(isLogic)) %>% summarise_each(funs(sum_rm, mean_rm, n_missing)) %>%
+      matrix(ncol = 3) %>%
+      round(3) %>%
+      set_colnames(c("# TRUE", "% TRUE", "n_missing")) %>%
+      set_rownames(names(dat)[isLogic]) %>% print
     cat("\n")
   }
 }
@@ -538,79 +542,3 @@ wday <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
   if (!ordered && label) x <- factor(x, ordered = FALSE)
   x
 }
-
-# dat <-
-#   data.frame(
-#     free_ship = c("$200","$300","$200","$300"),
-#     sale = c("yes","no","yes","no"),
-#     freq = c(3, 5,2, 4)
-#   )
-
-# dat <-
-#   data.frame(
-#     free_ship = c("$200","$300","$200","$300"),
-#     sale = c("yes","no","yes","no"),
-#     freq = c(500, 9500,580, 9420)
-#   )
-
-# table2data(dat)
-
-## Test
-# dat <- read.table(header = TRUE, text = "date days
-# 1/1/10  1
-# 1/2/10  2
-# 1/3/10  3
-# 1/4/10  4
-# 1/5/10  5
-# 1/6/10  6
-# 1/7/10  7
-# 1/8/10  8
-# 1/9/10  9
-# 1/10/10 10")
-# sapply(dat,class)
-# library(lubridate)
-# library(magrittr)
-# dat$date %>% as_mdy %T>% print %>% class
-# dat$date %<>% as.character
-# dat$date %>% as_mdy %T>% print %>% class
-# dat$date %<>% as.factor
-# dat$date %>% as_mdy %T>% print %>% class
-
-## time in hours:minutes and seconds
-# library(lubridate)
-# time <- as_hms("19:12:01") + lubridate::minutes(0:2999) %>% data.frame
-# summarise_each(time, funs(max))
-# max(minute(time[[1]]))
-# time(time)
-# arrange(time) %>% tail(1)
-# arrange(time) %>% tail(1)
-# time %<>% { if (is.factor(.)) as.character(.) else . } %>% lubridate::hms(.)
-# time <- "19:12"
-# time %<>% { if (is.factor(.)) as.character(.) else . } %>% lubridate::hm(.)
-# time
-# ?hm
-# hours(time)
-# minutes(time)
-# seconds(time)
-
-
-# library(lubridate)
-# library(DT)
-# dat <- read.table(header = TRUE, text = "time
-# 1:00
-# 1:01
-# 1:02
-# 1:03
-# 1:04
-# 1:05
-# 1:06
-# 1:07
-# 4:08
-# 8:09
-# 9:10")
-
-# dat$time <- hm(dat$time)
-# class(dat$time)
-
-# datatable(dat, filter = 'top')
-
