@@ -264,8 +264,8 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max
   n_max <- if (is_not(n_max) || n_max == -1) Inf else n_max
 
   if (.csv == FALSE) {
-    cn <- read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1)
-    dat <- sshhr(try(readr::read_delim(fn, sep, col_names = colnames(cn), skip = header, n_max = n_max), silent = TRUE))
+    cn <- read.table(fn, header = header, sep = sep, dec = dec, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1)
+    dat <- sshhr(try(readr::read_delim(fn, sep, locale = readr::locale(decimal_mark = dec, grouping_mark = sep), col_names = colnames(cn), skip = header, n_max = n_max), silent = TRUE))
     if (!is(dat, 'try-error')) {
       prb <- readr::problems(dat)
       if (nrow(prb) > 0) {
@@ -275,15 +275,13 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max
       rm(prb)
     }
   } else {
-    dat <- sshhr(try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = n_max), silent = TRUE))
+    dat <- sshhr(try(read.table(fn, header = header, sep = sep, dec = dec, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = n_max), silent = TRUE))
     rprob <- "Used read.csv to load file"
   }
 
   if (is(dat, 'try-error')) return("### There was an error loading the data. Please make sure the data are in csv format.")
   if (saf) dat <- factorizer(dat, safx)
-  dat <- as.data.frame(dat)
-  attr(dat, "description") <- rprob
-  dat
+  as.data.frame(dat) %>% set_attr("description", rprob)
 }
 
 #' Load a csv file with from a url

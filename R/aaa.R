@@ -20,7 +20,7 @@ globalVariables(c("r_environment", "r_data", "r_state", ".", ".rs.restartR",
 #' @importFrom tidyr gather_ gather spread spread_ separate
 #' @importFrom gridExtra arrangeGrob
 #' @importFrom shinyAce aceEditor updateAceEditor
-#' @importFrom readr read_delim write_csv
+#' @importFrom readr read_delim write_csv locale problems
 #' @importFrom base64enc dataURI
 #' @importFrom methods is
 #' @importFrom stats as.formula chisq.test dbinom median na.omit quantile sd setNames var weighted.mean
