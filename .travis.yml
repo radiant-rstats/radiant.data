@@ -9,7 +9,7 @@ sudo: required
 dist: trusty
 
 repos:
-  CRAN: https://radiant-rstats.github.io/minicran/
+  minicran: https://radiant-rstats.github.io/minicran/
 
 r_github_packages:
   - kevinushey/sourcetools
