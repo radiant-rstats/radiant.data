@@ -8,5 +8,8 @@ warnings_are_errors: true
 sudo: required
 dist: trusty
 
+repos:
+  CRAN: https://radiant-rstats.github.io/minicran/
+
 r_github_packages:
   - kevinushey/sourcetools
