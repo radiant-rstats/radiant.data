@@ -84,11 +84,12 @@ observeEvent(input$cmb_store, {
   cmb_dataset <- input$cmb_dataset
   result <- try(do.call(combinedata, cmb_inputs()), silent = TRUE)
   if (is(result, 'try-error')) {
-    r_data[[input$cmb_name]] <- attr(result,"condition")$message
-    r_data[["datasetlist"]] %<>% setdiff(input$cmb_name)
+    r_data[["cmb_error"]] <- attr(result,"condition")$message
+  } else {
+    r_data[["cmb_error"]] <- ""
+    updateSelectInput(session = session, inputId = "dataset", selected = dataset)
+    updateSelectInput(session = session, inputId = "cmb_dataset", selected = cmb_dataset)
   }
-  updateSelectInput(session = session, inputId = "dataset", selected = dataset)
-  updateSelectInput(session = session, inputId = "cmb_dataset", selected = cmb_dataset)
 })
 
 observeEvent(input$combine_report, {
@@ -114,17 +115,15 @@ output$cmb_possible <- renderText({
 })
 
 output$cmb_data <- renderText({
-  input$cmb_store  ## dependence is needed to update cmb_type when result doesn't change
+  req(input$cmb_store)  ## dependence is needed to update cmb_type when result doesn't change
   name <- if (is_empty(input$cmb_name)) paste0("cmb_",isolate(input$dataset))
           else input$cmb_name
-  if (!is.null(r_data[[name]])) {
-    if (is.character(r_data[[name]])) {
-      HTML(paste0("</br><h4>The combine type selected is not appropriate for these datasets.</br>The error message was:</br></br>\"", r_data[[name]],"\"</h4>"))
-    } else {
-      show_data_snippet(name, nshow = 15, title = paste0("<h3>Combined dataset: ",
-        name," [<font color='blue'>", isolate(input$cmb_type),"</font>]</h3>"))
-    }
+
+  if (!is_empty(r_data[["cmb_error"]])) {
+    HTML(paste0("</br><h4>Combining data failed. The error message was:</br></br>\"", r_data[["cmb_error"]],"\"</h4>"))
+  } else if (!is.null(r_data[[name]])) {
+    show_data_snippet(name, nshow = 15, title = paste0("<h3>Combined dataset: ",
+      name," [<font color='blue'>", isolate(input$cmb_type),"</font>]</h3>"))
   }
 })
-
 

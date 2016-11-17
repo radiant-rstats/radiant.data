@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data VERSION 0.6.9 (unreleased)
+# CHANGES IN radiant.data VERSION 0.6.10 (unreleased)
 
 ## NEW FEATURES
 
@@ -19,3 +19,4 @@
 - Fix sorting in _R > Report_ for tables created using _Data > Pivot_ and _Data > Explore_ when column headers contain symbols or spaces (thanks @4kammer)
 - Set `error = TRUE` for rmarkdown for consistency with knitr as used in R > Report
 - Correctly handle decimal indicators when loading csv files in _Data > Manage_
+- Don't overwrite a dataset to combine if combine generates an error when user sets the the name of the combined data to that of an already selected dataset
