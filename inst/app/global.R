@@ -74,7 +74,7 @@ ifelse (grepl("radiant.data", getwd()) && file.exists("../../inst") , "..", syst
   options(radiant.path.data = .)
 
 ## print options
-options(width  = 250, scipen = 100)
+options(width = 250, scipen = 100)
 
 ## list of function arguments
 list("n" = "length", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
