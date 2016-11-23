@@ -449,7 +449,8 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
         tabsort <- c()
         for (i in order[[1]]) {
           cname <- cn[i[[1]] + 1] %>% gsub("^\\s+|\\s+$", "", .)
-          if (grepl("[^0-9a-zA-Z]", cname)) cname <- paste0("`", cname, "`")
+          if (grepl("[^0-9a-zA-Z]", cname) || grepl("^[0-9]", cname))
+            cname <- paste0("`", cname, "`")
           if (i[[2]] == "desc") cname <- paste0("desc(", cname, ")")
           tabsort <- c(tabsort, cname)
         }
@@ -481,8 +482,6 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
       }
     }
   }
-
-  # tabslice <- if (ts < 2) "1" else paste0("1:",ts)
 
   list(search = search, order = order, sc = sc, tabsort = tabsort, tabfilt = tabfilt, nr = nr)
 }
