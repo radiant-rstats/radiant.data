@@ -406,7 +406,8 @@ getsummary <- function(dat, dc = getclass(dat)) {
                      mean = mean_rm, median = median_rm, min = min_rm, max = max_rm,
                      `25%` = p25, `75%` = p75, sd = sd_rm, se = se)) %>%
       data.frame(check.names = FALSE) %>%
-      { .[,-1] %<>% round(.,3); colnames(.)[1] <- ""; . } %>%
+      mutate_each(funs(ifelse (is.numeric(.), round(.,3), .))) %>%
+      set_colnames(c("", colnames(.)[-1])) %>%
       print(row.names = FALSE)
     cat("\n")
   }
