@@ -103,6 +103,10 @@ visualize <- function(dataset, xvar,
     vars %<>% c(., facet_col)
     byvar <- if (is.null(byvar)) facet_col else unique(c(byvar, facet_col))
   }
+
+  if (facet_col != "." && facet_row == facet_col)
+    return("The same variable cannot be used for both Facet row and Facet column")
+
   if (fill != "none") {
     vars %<>% c(., fill)
     if (type == "bar")
