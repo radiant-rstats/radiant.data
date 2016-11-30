@@ -21,10 +21,11 @@ stop_radiant <- function(rmd = FALSE) {
       assign("r_data", toList(r_data), envir = .GlobalEnv)
 
       stop_message <- "\nStopped Radiant. State available as r_state and r_data.\n"
+      lib <- if ("radiant" %in% installed.packages()) "radiant" else "radiant.data"
 
       if (!is_empty(input$rmd_report)) {
         rmd_report <-
-          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\nloadr('~/radiant.sessions/r_data.rda')\n```\n\n") %>%
+          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(", lib, ")))\n#loadr('~/radiant.sessions/r_data.rda')\n```\n\n") %>%
           paste0(., input$rmd_report) %>% gsub("\\\\\\\\","\\\\",.) %>%
           cleanout(.)
         if (!rmd) {

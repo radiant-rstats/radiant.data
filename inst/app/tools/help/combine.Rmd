@@ -11,7 +11,7 @@ The examples below are adapted from the [Cheatsheet for dplyr join functions](ht
 ```{r results = 'asis', echo = FALSE}
 tab_small <- "class='table table-condensed table-hover' style='width:30%;'"
 tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
-suppressPackageStartupMessages(library(radiant))
+suppressPackageStartupMessages(library(radiant.data))
 knitr::kable(superheroes, align = 'l', format = 'html', caption = "Superheroes",
              table.attr = tab_big)
 ```

@@ -27,7 +27,7 @@ dat %>% ggplot(aes(x = price)) + geom_histogram()
 dat %>% ggplot(aes(x = log_price)) + geom_histogram()
 
 ## open help in the R-studio viewer from Radiant
-help(package = 'radiant')
+help(package = 'radiant.data')
 
 ## if you are familiar with Shiny you can call reactives here
 ## for example, if you just transformed some variables in Data > Transform

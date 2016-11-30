@@ -268,6 +268,8 @@ output$saveReport <- downloadHandler(
         owd <- setwd(tempdir())
         on.exit(setwd(owd))
 
+        lib <- if ("radiant" %in% installed.packages()) "radiant" else "radiant.data"
+
         report <-
           ifelse (is_empty(input$rmd_selection), input$rmd_report, input$rmd_selection) %>%
           gsub("\\\\\\\\","\\\\",.) %>% cleanout(.)
@@ -275,7 +277,7 @@ output$saveReport <- downloadHandler(
         if (input$rmd_save_report == "Rmd & Data (zip)") {
           r_data <- toList(r_data)
           save(r_data, file = "r_data.rda")
-          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(radiant)))\nload(\"r_data.rda\")\n```\n\n", report) %>%
+          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(", lib, ")))\nload(\"r_data.rda\")\n```\n\n", report) %>%
             cat(file = "report.Rmd", sep = "\n")
 
           zip_util = Sys.getenv("R_ZIPCMD", "zip")
@@ -295,7 +297,7 @@ output$saveReport <- downloadHandler(
           zip(file, c("report.Rmd", "r_data.rda"), flags = flags, zip = zip_util)
 
         } else if (input$rmd_save_report == "Rmd") {
-          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n\n", report) %>%
+          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(", lib, ")))\n```\n\n", report) %>%
             cat(file = file, sep = "\n")
         } else {
           ## on linux ensure you have you have pandoc > 1.14 installed
