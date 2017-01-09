@@ -109,6 +109,7 @@ output$rcode_output <- renderUI({
       paste0("```{r cache = FALSE, echo = TRUE}\n", rcode_edit ,"\n```") %>%
         ## need r_environment so changes are reflected in the shiny environment
         knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_environment) %>%
+        scrub %>%
         HTML
     }
   })
@@ -144,7 +145,7 @@ output$saveCodeReport <- downloadHandler(
             cat(file = file, sep = "\n")
         } else {
           if (rstudioapi::isAvailable() || !isTRUE(local)) {
-            paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}\n\n", rcode,"\n```") %>%
+            paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}options(width = 250)\n\n", rcode,"\n```") %>%
               cat(file = "rcode.Rmd", sep = "\n")
             out <- rmarkdown::render("rcode.Rmd", switch(input$rcode_save,
               PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(), Word = rmarkdown::word_document()

@@ -304,7 +304,8 @@ output$saveReport <- downloadHandler(
           ## you may need to use http://pandoc.org/installing.html#installing-from-source
           ## also check the logs to make sure its not complaining about missing files
           if (rstudioapi::isAvailable() || !isTRUE(local)) {
-            cat(paste0("\n`r options(width = 250); knitr::opts_chunk$set(error = TRUE)`\n\n<style type='text/css'> .table { width: auto; } </style>\n\n", report), file = "report.Rmd", sep = "\n")
+            sopts <- if (input$rmd_save_report == "PDF") ", screenshot.opts = list(vheight = 1200)" else ""
+            cat(paste0("\n`r options(width = 250); knitr::opts_chunk$set(error = TRUE", sopts, ")`\n\n<style type='text/css'> .table { width: auto; } </style>\n\n", report), file = "report.Rmd", sep = "\n")
             out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
               PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(),
               Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"),"app/www/style.docx"))
