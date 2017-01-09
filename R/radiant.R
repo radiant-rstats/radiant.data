@@ -810,6 +810,23 @@ which.pmin <- function(...) unname(apply(cbind(...), 1, which.min))
 #' @export
 store <- function(object, ...) UseMethod("store", object)
 
+#' Method for error messages that a user tries to store
+#'
+#' @param object Object of type character
+#' @param ... Additional arguments
+#'
+#' @export
+store.character <- function(object, ...) {
+  mess <- paste0("Unable to store output. The returned message was:\n\n", object)
+  if (exists("r_environment")) {
+    session$sendCustomMessage(type = "message", message = gsub("\n", " ", mess))
+    # string_to_break <-"alert(\"Line1.\\nLine2.\");"
+    # session$sendCustomMessage(type='jsCode', list(value = string_to_break ))
+  } else {
+    message(mess)
+  }
+}
+
 #' Find index corrected for missing values and filters
 #'
 #' @param dataset Dataset name
