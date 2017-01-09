@@ -264,12 +264,14 @@ as_distance <- function (lat1, long1, lat2, long2,
 #' Generate a variable used to selected a training sample
 #' @param n Number (or fraction) of observations to label as training
 #' @param nr Number of rows in the dataset
+#' @param seed Random seed
 #' @return 0/1 variables for filtering
 #' @examples
 #' make_train(.5, 10)
 #'
 #' @export
-make_train <- function(n = .7, nr = 100) {
+make_train <- function(n = .7, nr = 100, seed = 1234) {
+  seed %>% gsub("[^0-9]","",.) %>% { if (!is_empty(.)) set.seed(seed) }
   if (n < 1) n <- round(n * nr) %>% max(1)
   ind <- seq_len(nr)
   training <- rep_len(0L,nr)
@@ -453,8 +455,8 @@ getsummary <- function(dat, dc = getclass(dat)) {
   if (sum(isLogic) > 0) {
     cat("Summarize logical variables:\n")
     select(dat, which(isLogic)) %>% summarise_each(funs(sum_rm, mean_rm, n_missing)) %>%
+      apply(2, function(x) if (is.numeric(x)) round(x,3) else x) %>%
       matrix(ncol = 3) %>%
-      round(3) %>%
       set_colnames(c("# TRUE", "% TRUE", "n_missing")) %>%
       set_rownames(names(dat)[isLogic]) %>% print
     cat("\n")

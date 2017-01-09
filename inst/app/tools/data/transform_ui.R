@@ -214,7 +214,8 @@ output$ui_Transform <- renderUI({
       tags$table(
         tags$td(numericInput("tr_training_n", label = "Size:", min = 0, value = .7)),
         tags$td(textInput("tr_training", "Variable name:", "training"))
-      )
+      ),
+      numericInput("tr_training_seed", label = "Seed:", value = 1234)
     ),
     conditionalPanel(condition = "input.tr_change_type == 'holdout'",
       checkboxInput("tr_holdout_rev", "Reverse filter", value = TRUE)
@@ -529,6 +530,7 @@ observeEvent(input$tr_change_type, {
                       n = .7,
                       nr = 100,
                       name = "training",
+                      seed = 1234,
                       store_dat = "",
                       store = TRUE) {
 
@@ -536,14 +538,14 @@ observeEvent(input$tr_change_type, {
   if (!store && !is.character(dataset)) {
     n <- n %>% {ifelse (. < 0 || is.na(.) || . > nr, .7, .)}
     if (is_empty(vars)) {
-      data.frame(make_train(n, nr)) %>% setNames(name)
+      data.frame(make_train(n, nr, seed)) %>% setNames(name)
     } else {
       dat <- dataset %>% group_by_(.dots = vars)
       nr <- length(attr(dat, "indices"))
     }
   } else {
     if (store_dat == "") store_dat <- dataset
-    paste0("## created variable to select training sample\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", name, " = make_train(", n, ", n()))\n")
+    paste0("## created variable to select training sample\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", name, " = make_train(", n, ", n(), seed = ", seed, "))\n")
   }
 }
 
@@ -736,7 +738,7 @@ transform_main <- reactive({
 
   ## create training variable
   if (input$tr_change_type == 'training')
-    return(.training(dat, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, store = FALSE))
+    return(.training(dat, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, seed = input$tr_training_seed, store = FALSE))
 
   if (input$tr_change_type == 'create') {
     if (input$tr_create == "") {
@@ -986,7 +988,7 @@ observeEvent(input$tr_store, {
     cmd <- .transform(input$dataset, fun = input$tr_transfunction, vars = input$tr_vars, .ext = input$tr_ext, input$tr_dataset)
     r_data[[dataset]][,colnames(dat)] <- dat
   } else if (input$tr_change_type == 'training') {
-    cmd <- .training(input$dataset, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, input$tr_dataset)
+    cmd <- .training(input$dataset, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, seed = input$tr_training_seed, input$tr_dataset)
     r_data[[dataset]][,colnames(dat)] <- dat
   } else if (input$tr_change_type == 'normalize') {
     cmd <- .normalize(input$dataset, vars = input$tr_vars, nzvar = input$tr_normalizer, .ext = input$tr_ext_nz, input$tr_dataset)

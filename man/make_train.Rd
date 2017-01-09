@@ -4,12 +4,14 @@
 \alias{make_train}
 \title{Generate a variable used to selected a training sample}
 \usage{
-make_train(n = 0.7, nr = 100)
+make_train(n = 0.7, nr = 100, seed = 1234)
 }
 \arguments{
 \item{n}{Number (or fraction) of observations to label as training}
 
 \item{nr}{Number of rows in the dataset}
+
+\item{seed}{Random seed}
 }
 \value{
 0/1 variables for filtering
