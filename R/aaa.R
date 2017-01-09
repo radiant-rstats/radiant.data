@@ -1,7 +1,7 @@
 # to avoid 'no visible binding for global variable' NOTE
-globalVariables(c("r_environment", "r_data", "r_state", ".", ".rs.restartR",
-                  "..density..", "Total", "tfoot", "thead", "tr", "th",
-                  "variable", "y", "matches"))
+globalVariables(c("r_environment", "session", "r_data", "r_state", ".",
+                  ".rs.restartR", "..density..", "Total", "tfoot", "thead",
+                  "tr", "th", "variable", "y", "matches"))
 
 #' radiant.data
 #'
