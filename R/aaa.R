@@ -18,6 +18,7 @@ globalVariables(c("r_environment", "r_data", "r_state", ".", ".rs.restartR",
 #' @importFrom lubridate is.Date is.POSIXt now year month wday week hour minute second ymd mdy dmy ymd_hms hms hm as.duration parse_date_time
 #' @importFrom tibble rownames_to_column as_data_frame data_frame
 #' @importFrom tidyr gather_ gather spread spread_ separate
+#' @importFrom grid textGrob gpar
 #' @importFrom gridExtra arrangeGrob
 #' @importFrom shinyAce aceEditor updateAceEditor
 #' @importFrom readr read_delim write_csv locale problems
