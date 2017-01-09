@@ -57,15 +57,14 @@ loadUserData <- function(fname, uFile, ext,
                          n_max = Inf) {
 
   filename <- basename(fname)
-
   fext <- tools::file_ext(filename) %>% tolower
 
   ## switch extension if needed
   if (fext == "rds" && ext == "rda") ext <- "rds"
   if (fext == "rda" && ext == "rds") ext <- "rda"
 
-  ## objname is used as the name of the data.frame
-  objname <- sub(paste0(".",ext,"$"),"", filename)
+  ## objname is used as the name of the data.frame, make case insensitive
+  objname <- sub(paste0(".",ext,"$"),"", filename, ignore.case = TRUE)
 
   ## if ext isn't in the filename nothing was replaced and so ...
   if (objname == filename) {
