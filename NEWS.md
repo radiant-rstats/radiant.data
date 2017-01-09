@@ -7,6 +7,7 @@
 - Added author and year arguments to help modals in inst/app/radiant.R (thanks @kmezhoud)
 - Added size argument for scatter plots to create bubble charts (thanks @andrewsali)
 - Example and CSS formatting for tables in R > Report
+- Added `seed` argument to `make_train`
 
 ## BUG FIXES
 
