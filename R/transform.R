@@ -402,13 +402,13 @@ getsummary <- function(dat, dc = getclass(dat)) {
 
     cat("Summarize numeric variables:\n")
     select(dat, which(isNum)) %>%
-      tidyr::gather_("variable", "values", cn) %>%
+      tidyr::gather_("variable", "values", cn, factor_key = TRUE) %>%
       group_by_("variable") %>%
       summarise_each(funs(n = length, n_missing = n_missing, n_distinct = n_distinct,
                      mean = mean_rm, median = median_rm, min = min_rm, max = max_rm,
                      `25%` = p25, `75%` = p75, sd = sd_rm, se = se)) %>%
       data.frame(check.names = FALSE) %>%
-      mutate_each(funs(ifelse (is.numeric(.), round(.,3), .))) %>%
+      mutate_each(funs(if (is.numeric(.)) round(., 3) else .)) %>%
       set_colnames(c("", colnames(.)[-1])) %>%
       print(row.names = FALSE)
     cat("\n")
@@ -455,8 +455,8 @@ getsummary <- function(dat, dc = getclass(dat)) {
   if (sum(isLogic) > 0) {
     cat("Summarize logical variables:\n")
     select(dat, which(isLogic)) %>% summarise_each(funs(sum_rm, mean_rm, n_missing)) %>%
-      apply(2, function(x) if (is.numeric(x)) round(x,3) else x) %>%
-      matrix(ncol = 3) %>%
+      mutate_each(funs(if (is.numeric(.)) round(., 4) else .)) %>%
+      data.frame %>%
       set_colnames(c("# TRUE", "% TRUE", "n_missing")) %>%
       set_rownames(names(dat)[isLogic]) %>% print
     cat("\n")
