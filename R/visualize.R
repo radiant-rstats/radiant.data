@@ -134,12 +134,12 @@ visualize <- function(dataset, xvar,
     if (type == "density") {
       dat[,isChar] <- select(dat, which(isChar)) %>% mutate_each(funs(as_numeric))
       if ("character" %in% getclass(select(dat,which(isChar))))
-        return("Character variable(s) were not converted to numeric.\nTo use these variables in a plot convert them to numeric\nvariables (or factors) in the Data > Transform tab")
+        return("Character variable(s) were not converted to numeric for plotting.\nTo use these variables in a plot convert them to numeric\nvariables (or factors) in the Data > Transform tab")
     } else {
       dat[,isChar] <- select(dat, which(isChar)) %>% mutate_each(funs(as_factor))
       nrlev <- sapply(dat, function(x) if (is.factor(x)) length(levels(x)) else 0)
-      if (max(nrlev) > 100)
-        return("Character variable(s) were not converted to factors.\nTo use these variable in a plot convert them to factors\n(or numeric variables) in the Data > Transform tab")
+      if (max(nrlev) > 500)
+        return("Character variable(s) were not converted to factors for plotting.\nTo use these variable in a plot convert them to factors\n(or numeric variables) in the Data > Transform tab")
     }
     ## in case something was changed, if not, this won't run
     dc <- getclass(dat)
