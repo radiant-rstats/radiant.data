@@ -78,11 +78,13 @@ options(width = 250, scipen = 100)
 
 ## list of function arguments
 list("n" = "length", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
-     "mean" = "mean_rm", "median" = "median_rm", "sum" = "sum_rm",
-     "var" = "var_rm", "sd" = "sd_rm", "se" = "se", "cv" = "cv", "varp" = "varp_rm",
-     "sdp" = "sdp_rm", "min" = "min_rm", "max" = "max_rm", "5%" = "p05",
-     "10%" = "p10", "25%" = "p25", "75%" = "p75", "90%" = "p90", "95%" = "p95",
-     "skew" = "skew","kurtosis" = "kurtosi") %>%
+     "mean" = "mean_rm", "median" = "median_rm", "min" = "min_rm",
+     "max" = "max_rm", "sum" = "sum_rm",
+     "var" = "var_rm", "sd" = "sd_rm", "se" = "se", "cv" = "cv",
+     "prop" = "prop", "varprop" = "varprop", "sdprop" = "sdprop", "seprop" = "seprop",
+     "varpop" = "varpop", "sdpop" = "sdpop",
+     "5%" = "p05", "10%" = "p10", "25%" = "p25", "75%" = "p75", "90%" = "p90",
+     "95%" = "p95", "skew" = "skew","kurtosis" = "kurtosi") %>%
 options(radiant.functions = .)
 
 ## for report and code in menu R
@@ -149,7 +151,7 @@ addResourcePath("js", file.path(getOption("radiant.path.data"), "app/www/js/"))
 
 options(radiant.mathjax.path = "https://cdn.mathjax.org/mathjax/latest")
 
-## using mathjax bundeled with Rstudio if available
+# using mathjax bundeled with Rstudio if available
 # if (Sys.getenv("RMARKDOWN_MATHJAX_PATH") == "") {
 #   options(radiant.mathjax.path = "https://cdn.mathjax.org/mathjax/latest")
 # } else {

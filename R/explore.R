@@ -514,6 +514,65 @@ se <- function(x, na.rm = TRUE) {
   sd(x) / sqrt(length(x))
 }
 
+#' Calculate proportion
+#' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return Proportion of first level for a factor and of the maximum value for numeric
+#' @examples
+#' prop(c(rep(1L, 10), rep(0L, 10)))
+#' prop(c(rep(4, 10), rep(2, 10)))
+#' prop(factor(c(rep("a", 20), rep("b", 10))))
+#'
+#' @export
+prop <- function(x, na.rm = TRUE) {
+  if (na.rm) x <- na.omit(x)
+  if (is.numeric(x)) {
+    mean(x == max(x))        ## gives proportion of max value in x
+  } else if (is.factor(x)) {
+    mean(x == levels(x)[1])  ## gives proportion of first level in x
+  } else if (is.logical(x)) {
+    mean(x)
+  } else {
+    NA
+  }
+}
+
+#' Variance for proportion
+#' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return Variance for proportion
+#' @examples
+#' varprop(c(rep(1L, 10), rep(0L, 10)))
+#'
+#' @export
+varprop <- function(x, na.rm = TRUE) {
+  p <- prop(x, na.rm = na.rm)
+  p*(1-p)
+}
+
+#' Standard deviation for proportion
+#' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return Standard deviation for proportion
+#' @examples
+#' sdprop(c(rep(1L, 10), rep(0L, 10)))
+#'
+#' @export
+sdprop <- function(x, na.rm = TRUE) sqrt(varprop(x, na.rm = na.rm))
+
+#' Standard error for proportion
+#' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return Standard error for proportion
+#' @examples
+#' seprop(c(rep(1L, 10), rep(0L, 10)))
+#'
+#' @export
+seprop <- function(x, na.rm = TRUE) {
+  if (na.rm) x <- na.omit(x)
+  sqrt(varprop(x, na.rm = FALSE)/length(x))
+}
+
 #' Variance with na.rm = TRUE
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
@@ -524,29 +583,29 @@ se <- function(x, na.rm = TRUE) {
 #' @export
 var_rm <- function(x, na.rm = TRUE) var(x, na.rm = na.rm)
 
-#' Variance for the population na.rm = TRUE
+#' Variance for the population
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
 #' @return Variance for the population
 #' @examples
-#' varp_rm(rnorm(100))
+#' varpop(rnorm(100))
 #'
 #' @export
-varp_rm <- function(x, na.rm = TRUE) {
+varpop <- function(x, na.rm = TRUE) {
   if (na.rm) x <- na.omit(x)
   n <- length(x)
   var(x) * ((n-1)/n)
 }
 
-#' Standard deviation for the population na.rm = TRUE
+#' Standard deviation for the population
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
 #' @return Standard deviation for the population
 #' @examples
-#' sdp_rm(rnorm(100))
+#' sdpop(rnorm(100))
 #'
 #' @export
-sdp_rm <- function(x, na.rm = TRUE) sqrt(varp_rm(x, na.rm = na.rm))
+sdpop <- function(x, na.rm = TRUE) sqrt(varpop(x, na.rm = na.rm))
 
 #' Sum with na.rm = TRUE
 #' @param x Input variable

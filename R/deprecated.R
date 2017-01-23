@@ -12,6 +12,8 @@
 #' \tabular{rl}{
 #'   \code{dfprint} is now a synonym for \code{\link{formatdf}}\cr
 #'   \code{nrprint} is now a synonym for \code{\link{formatnr}}\cr
+#'   \code{varp_rm} is now a synonym for \code{\link{varpop}}\cr
+#'   \code{sdp_rm} is now a synonym for \code{\link{sdpop}}\cr
 #' }
 #'
 dfprint <- function(...) {
@@ -21,5 +23,13 @@ dfprint <- function(...) {
 nrprint <- function(...) {
   .Deprecated("formatnr", package = "radiant.data")
   formatnr(...)
+}
+varp_rm <- function(...) {
+  .Deprecated("varpop", package = "radiant.data")
+  varpop(...)
+}
+sdp_rm <- function(...) {
+  .Deprecated("sdpop", package = "radiant.data")
+  sdpop(...)
 }
 NULL

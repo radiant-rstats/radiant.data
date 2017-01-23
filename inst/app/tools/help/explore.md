@@ -19,8 +19,11 @@ Below you will find a brief description of several functions. Most functions, ho
 * `n_distinct` calculates the number of distinct values
 * `n_missing` calculates the number of missing values
 * `cv` is the coefficient of variation (i.e., mean(x) / sd(x))
-* `sd` and `var` calculate the sample standard deviation and variance
-* `sdp` and `varp` calculate the population standard deviation and variance
+* `sd` and `var` calculate the sample standard deviation and variance for numeric data
+* `prop` calculates a proportion. For a variable with only values 0 or 1 this is equivalent to `mean`. For other numeric variables it captures the occurence of the maximum value.
+For a `factor` it captures the occurence of the first level. 
+* `sdprop` and `varprop` calculate the sample standard deviation and variance for a proportion
+* `sdpop` and `varpop` calculate the population standard deviation and variance
 
 ### Filter
 

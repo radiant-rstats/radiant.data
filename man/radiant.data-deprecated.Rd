@@ -22,6 +22,8 @@ radiant. They will eventually be  removed.
 \tabular{rl}{
   \code{dfprint} is now a synonym for \code{\link{formatdf}}\cr
   \code{nrprint} is now a synonym for \code{\link{formatnr}}\cr
+  \code{varp_rm} is now a synonym for \code{\link{varpop}}\cr
+  \code{sdp_rm} is now a synonym for \code{\link{sdpop}}\cr
 }
 }
 
