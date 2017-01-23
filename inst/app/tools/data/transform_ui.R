@@ -946,13 +946,21 @@ observeEvent(input$tr_store, {
 	if (is.null(r_data[[dataset]])) {
     r_data[[dataset]] <- .getdata_transform()
 		r_data[[paste0(dataset,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
-		r_data[['datasetlist']] %<>% c(dataset,.) %>% unique
+		r_data[["datasetlist"]] %<>% c(dataset,.) %>% unique
 
     ## adding command to ensure new data is in the datasetlist
     ncmd <- paste0("\n## register the new dataset\nr_data[[\"datasetlist\"]] <- c(\"", dataset, "\", r_data[[\"datasetlist\"]]) %>% unique\n")
     if (!is_empty(r_data[[paste0(input$dataset,"_descr")]]))
-      ncmd %<>% paste0("\nr_data[[\"",paste0(dataset,"_descr"),"\"]] <- r_data[[\"", paste0(input$dataset,"_descr"),"\"]]")
-	}
+      ncmd %<>% paste0("r_data[[\"",paste0(dataset,"_descr"),"\"]] <- r_data[[\"", paste0(input$dataset,"_descr"),"\"]]")
+	} else if (!dataset %in% r_data[["datasetlist"]]) {
+    r_data[["datasetlist"]] %<>% c(dataset,.) %>% unique
+
+    ## adding command to ensure new data is in the datasetlist
+    ncmd <- paste0("\n## register the new dataset\nr_data[[\"datasetlist\"]] <- c(\"", dataset, "\", r_data[[\"datasetlist\"]]) %>% unique\n")
+    if (!is_empty(r_data[[paste0(input$dataset,"_descr")]]))
+      ncmd %<>% paste0("r_data[[\"",paste0(dataset,"_descr"),"\"]] <- r_data[[\"", paste0(input$dataset,"_descr"),"\"]]")
+  }
+
 
   if (input$tr_change_type == 'remove_na') {
     cmd <- .remove_na(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
