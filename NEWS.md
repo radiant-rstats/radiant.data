@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data VERSION 0.6.10 (unreleased)
+# CHANGES IN radiant.data VERSION 0.7.1
 
 ## NEW FEATURES
 
@@ -8,6 +8,7 @@
 - Added size argument for scatter plots to create bubble charts (thanks @andrewsali)
 - Example and CSS formatting for tables in R > Report
 - Added `seed` argument to `make_train`
+- Added `prop`, `sdprop`, etc. for working with proportions
 
 ## BUG FIXES
 
@@ -21,3 +22,8 @@
 - Set `error = TRUE` for rmarkdown for consistency with knitr as used in R > Report
 - Correctly handle decimal indicators when loading csv files in _Data > Manage_
 - Don't overwrite a dataset to combine if combine generates an error when user sets the the name of the combined data to that of an already selected dataset
+- When multiple variables were selected, data were not correctly summarized in Data > Transform
+
+## Deprecated
+- varp_rm deprecated in favor of varpop 
+- sdp_rm deprecated in favor of sdpop 
