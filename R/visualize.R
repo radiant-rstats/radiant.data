@@ -381,7 +381,7 @@ visualize <- function(dataset, xvar,
 
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
 
-        if (dc[i] %in% c("factor","date") && nrow(tmp) < nrow(dat))
+        if (dc[i] %in% c("factor","integer","date") && nrow(tmp) < nrow(dat))
           plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
 
         itt <- itt + 1
