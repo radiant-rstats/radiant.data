@@ -521,13 +521,14 @@ se <- function(x, na.rm = TRUE) {
 #' @examples
 #' prop(c(rep(1L, 10), rep(0L, 10)))
 #' prop(c(rep(4, 10), rep(2, 10)))
+#' prop(rep(0, 10))
 #' prop(factor(c(rep("a", 20), rep("b", 10))))
 #'
 #' @export
 prop <- function(x, na.rm = TRUE) {
   if (na.rm) x <- na.omit(x)
   if (is.numeric(x)) {
-    mean(x == max(x))        ## gives proportion of max value in x
+    mean(x == max(x, 1))     ## gives proportion of max value in x
   } else if (is.factor(x)) {
     mean(x == levels(x)[1])  ## gives proportion of first level in x
   } else if (is.logical(x)) {

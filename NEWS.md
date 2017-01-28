@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data VERSION 0.7.1
+# CHANGES IN radiant.data VERSION 0.7.2
 
 ## NEW FEATURES
 
