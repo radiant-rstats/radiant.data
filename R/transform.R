@@ -13,7 +13,7 @@ center <- function(x, na.rm = TRUE)
 #' @export
 standardize <- function(x, na.rm = TRUE) {
 	if (is.numeric(x)) {
-    center(x, na.rm = na.rm) / sd_rm(x, na.rm = na.rm)
+    center(x, na.rm = na.rm) / sd(x, na.rm = na.rm)
   } else {
     x
   }
