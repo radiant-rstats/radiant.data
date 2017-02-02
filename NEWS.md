@@ -24,6 +24,7 @@
 - Don't overwrite a dataset to combine if combine generates an error when user sets the the name of the combined data to that of an already selected dataset
 - When multiple variables were selected, data were not correctly summarized in Data > Transform
 - Add (function) lable to bar plot when x-variable is an integer
+- Maintain order of variables in Data > Visualize when using "color", "fill", "comby", or "combx"
 
 ## Deprecated
 - varp_rm deprecated in favor of varpop 
