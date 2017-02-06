@@ -7,8 +7,8 @@
 visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   type = "dist", facet_row = ".", facet_col = ".", color = "none",
   fill = "none", size = "none", bins = 10, smooth = 1, fun = "mean",
-  check = "", axes = "", alpha = 0.5, data_filter = "", shiny = FALSE,
-  custom = FALSE)
+  check = "", axes = "", alpha = 0.5, ylim = "none", data_filter = "",
+  shiny = FALSE, custom = FALSE)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -44,6 +44,8 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 \item{axes}{Flip the axes in a plot ("flip") or apply a log transformation (base e) to the y-axis ("log_y") or the x-axis ("log_x")}
 
 \item{alpha}{Opacity for plot elements (0 to 1)}
+
+\item{ylim}{Set limit for y-axis}
 
 \item{data_filter}{Expression used to filter the dataset. This should be a string (e.g., "price > 10000")}
 
