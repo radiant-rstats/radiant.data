@@ -19,6 +19,7 @@
 #' @param check Add a regression line ("line"), a loess line ("loess"), or jitter ("jitter") to a scatter plot
 #' @param axes Flip the axes in a plot ("flip") or apply a log transformation (base e) to the y-axis ("log_y") or the x-axis ("log_x")
 #' @param alpha Opacity for plot elements (0 to 1)
+#' @param ylim Set limit for y-axis
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
@@ -58,6 +59,7 @@ visualize <- function(dataset, xvar,
                       check = "",
                       axes = "",
                       alpha = .5,
+                      ylim = "none",
                       data_filter = "",
                       shiny = FALSE,
                       custom = FALSE) {
@@ -156,8 +158,8 @@ visualize <- function(dataset, xvar,
   }
 
   ## 1 of first level of factor, else 0
+  # if (type == "bar" || type == "scatter" || type == "line") {
   if (type == "bar") {
-
     isFctY <- "factor" == dc & names(dc) %in% yvar
     if (sum(isFctY)) {
       dat[,isFctY] <- select(dat, which(isFctY)) %>% mutate_each(funs(as.integer(. == levels(.)[1])))
@@ -423,12 +425,16 @@ visualize <- function(dataset, xvar,
       plot_list[[i]] <- plot_list[[i]] + aes_string(size = size)
   }
 
-  ## adding fill
   if (fill != "none") {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] + aes_string(fill = fill)
   }
 
+  if (ylim != "none" && is.numeric(ylim) && length(ylim) == 2) {
+    for (i in 1:length(plot_list))
+      plot_list[[i]] <- plot_list[[i]] + ylim(ylim[1], ylim[2])
+  }
+  
   if ("jitter" %in% check) {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] +
