@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data VERSION 0.7.2
+# CHANGES IN radiant.data VERSION 0.7.4
 
 ## NEW FEATURES
 
@@ -9,6 +9,7 @@
 - Example and CSS formatting for tables in R > Report
 - Added `seed` argument to `make_train`
 - Added `prop`, `sdprop`, etc. for working with proportions
+- Set `ylim` in `visualize` for multiple plots
 
 ## BUG FIXES
 
@@ -25,6 +26,7 @@
 - When multiple variables were selected, data were not correctly summarized in Data > Transform
 - Add (function) lable to bar plot when x-variable is an integer
 - Maintain order of variables in Data > Visualize when using "color", "fill", "comby", or "combx"
+- Avoid warning when switching datasets in Data > Transform and variables being summarized do not exists in the new dataset
 
 ## Deprecated
 - varp_rm deprecated in favor of varpop 

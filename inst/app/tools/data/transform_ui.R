@@ -698,6 +698,8 @@ transform_main <- reactive({
   if (not_available(input$tr_vars)) {
     if (input$tr_change_type == "none" && length(input$tr_vars) == 0) {
       return("Select a transformation type or select variables to summarize")
+    } else if (input$tr_change_type == "none" && length(input$tr_vars) >  0) {
+      return("Select a transformation type or select variables to summarize")
     } else if (input$tr_change_type == "type") {
       return("Select one or more variables to change their type")
     } else if (input$tr_change_type == "transform") {
