@@ -144,17 +144,20 @@ output$saveCodeReport <- downloadHandler(
           paste0("## Load radiant package if needed\nsuppressWarnings(suppressMessages(library(", lib, ")))\n\n", rcode,"\n") %>%
             cat(file = file, sep = "\n")
         } else {
-          if (rstudioapi::isAvailable() || !isTRUE(local)) {
-            paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}options(width = 250)\n\n", rcode,"\n```") %>%
-              cat(file = "rcode.Rmd", sep = "\n")
-            out <- rmarkdown::render("rcode.Rmd", switch(input$rcode_save,
-              PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(), Word = rmarkdown::word_document()
-            ), envir = r_environment)
-            file.rename(out, file)
-          } else {
-            paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}\n", rcode ,"\n```") %>%
-              knitItSave %>% cat(file = file, sep = "\n")
-          }
+
+          withProgress(message = paste0("Saving output to ", input$rcode_save), value = 1,
+            if (rstudioapi::isAvailable() || !isTRUE(local)) {
+              paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}options(width = 250)\n\n", rcode,"\n```") %>%
+                cat(file = "rcode.Rmd", sep = "\n")
+              out <- rmarkdown::render("rcode.Rmd", switch(input$rcode_save,
+                PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(), Word = rmarkdown::word_document()
+              ), envir = r_environment)
+              file.rename(out, file)
+            } else {
+              paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}\n", rcode ,"\n```") %>%
+                knitItSave %>% cat(file = file, sep = "\n")
+            }
+          )
         }
       })
     }

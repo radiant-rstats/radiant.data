@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data VERSION 0.7.4
+# CHANGES IN radiant.data VERSION 0.7.5
 
 ## NEW FEATURES
 
@@ -10,6 +10,7 @@
 - Added `seed` argument to `make_train`
 - Added `prop`, `sdprop`, etc. for working with proportions
 - Set `ylim` in `visualize` for multiple plots
+- Show progress indicator when saving reports from R > Report
 
 ## BUG FIXES
 

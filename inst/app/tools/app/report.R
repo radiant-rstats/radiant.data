@@ -303,17 +303,20 @@ output$saveReport <- downloadHandler(
           ## on linux ensure you have you have pandoc > 1.14 installed
           ## you may need to use http://pandoc.org/installing.html#installing-from-source
           ## also check the logs to make sure its not complaining about missing files
-          if (rstudioapi::isAvailable() || !isTRUE(local)) {
-            sopts <- if (input$rmd_save_report == "PDF") ", screenshot.opts = list(vheight = 1200)" else ""
-            cat(paste0("\n`r options(width = 250); knitr::opts_chunk$set(error = TRUE", sopts, ")`\n\n<style type='text/css'> .table { width: auto; } </style>\n\n", report), file = "report.Rmd", sep = "\n")
-            out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
-              PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(),
-              Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"),"app/www/style.docx"))
-            ), envir = r_environment)
-            file.rename(out, file)
-          } else {
-            knitItSave(report) %>% cat(file = file, sep = "\n")
-          }
+
+          withProgress(message = paste0("Saving report to ", input$rmd_save_report), value = 1,
+            if (rstudioapi::isAvailable() || !isTRUE(local)) {
+              sopts <- if (input$rmd_save_report == "PDF") ", screenshot.opts = list(vheight = 1200)" else ""
+              cat(paste0("\n`r options(width = 250); knitr::opts_chunk$set(error = TRUE", sopts, ")`\n\n<style type='text/css'> .table { width: auto; } </style>\n\n", report), file = "report.Rmd", sep = "\n")
+              out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
+                PDF = rmarkdown::pdf_document(), HTML = rmarkdown::html_document(),
+                Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"),"app/www/style.docx"))
+              ), envir = r_environment)
+              file.rename(out, file)
+            } else {
+              knitItSave(report) %>% cat(file = file, sep = "\n")
+            }
+          )
         }
       })
     }
