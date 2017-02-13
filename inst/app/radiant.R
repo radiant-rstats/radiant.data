@@ -519,14 +519,15 @@ save2env <- function(dat, dataset,
 }
 
 ## use the value in the input list if available and update r_state
-state_init <- function(var, init = "") {
+state_init <- function(var, init = "", na.rm = TRUE) {
   isolate({
     ivar <- input[[var]]
     if (var %in% names(input) || length(ivar) > 0) {
       ivar <- input[[var]]
-      if (is_empty(ivar)) r_state[[var]] <<- NULL
+      if ((na.rm && is_empty(ivar)) || length(ivar) == 0) 
+        r_state[[var]] <<- NULL
     } else {
-      ivar <- .state_init(var, init)
+      ivar <- .state_init(var, init, na.rm)
     }
     ivar
   })
@@ -547,9 +548,9 @@ state_group <- function(var, init = "") {
   })
 }
 
-.state_init <- function(var, init = "") {
+.state_init <- function(var, init = "", na.rm = TRUE) {
   rs <- r_state[[var]]
-  if (is_empty(rs)) init else rs
+  if ((na.rm && is_empty(rs)) || length(rs) == 0) init else rs
 }
 
 state_single <- function(var, vals, init = character(0)) {
@@ -568,7 +569,6 @@ state_single <- function(var, vals, init = character(0)) {
         r_state[[var]] <<- ivar
       .state_single(var, vals, init = init)
     }
-    # .state_single(var, vals, init = init)
   })
 }
 

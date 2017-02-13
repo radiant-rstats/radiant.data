@@ -836,7 +836,8 @@ store.character <- function(object, ...) {
 #' @export
 indexr <- function(dataset, vars = "", filt = "") {
   dat <- getdata(dataset, na.rm = FALSE)
-  if (is_empty(vars)) vars <- colnames(dat)
+  if (is_empty(vars) || sum(vars %in% colnames(dat)) != length(vars)) 
+    vars <- colnames(dat)
   nrows <- nrow(dat)
   ind <-
     mutate(dat, imf___ = 1:nrows) %>%
