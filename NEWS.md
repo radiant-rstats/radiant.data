@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data VERSION 0.7.5
+# CHANGES IN radiant.data VERSION 0.7.7
 
 ## NEW FEATURES
 
@@ -11,6 +11,7 @@
 - Added `prop`, `sdprop`, etc. for working with proportions
 - Set `ylim` in `visualize` for multiple plots
 - Show progress indicator when saving reports from R > Report
+- `copy_attr` convenience function
 
 ## BUG FIXES
 

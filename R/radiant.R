@@ -29,6 +29,20 @@ install_webshot <- function() {
 #' @export
 set_attr <- function(x, which, value) `attr<-`(x, which, value)
 
+#' Copy attributes from on object to another
+#'
+#' @param to Object to copy attributes to
+#' @param from Object to copy attributes from
+#' @param attr Vector of attributes. If missing all attributes will be copied
+#
+#' @export
+copy_attr <- function(to, from, attr) {
+  if (missing(attr)) attr <- attributes(from)
+  for (i in attr)
+    to <- set_attr(to, i, attributes(from)[[i]])
+  to
+}
+
 #' Convenience function to add a class
 #'
 #' @param x Object
@@ -836,7 +850,7 @@ store.character <- function(object, ...) {
 #' @export
 indexr <- function(dataset, vars = "", filt = "") {
   dat <- getdata(dataset, na.rm = FALSE)
-  if (is_empty(vars) || sum(vars %in% colnames(dat)) != length(vars)) 
+  if (is_empty(vars) || sum(vars %in% colnames(dat)) != length(vars))
     vars <- colnames(dat)
   nrows <- nrow(dat)
   ind <-
