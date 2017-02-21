@@ -9,7 +9,7 @@
 
 The first step is to install R. For mac go to <a href="https://cran.r-project.org/bin/macosx/" target="_blank">https://cran.r-project.org/bin/macosx/</a>. For windows get the latest release from <a href="https://cran.r-project.org/bin/windows/base/release.htm" target="_blank">https://cran.r-project.org/bin/windows/base/release.htm</a>
 
-> **Important:** Windows users **must** install R in directory C:\\R\\R-3.3.1
+> **Important:** Windows users **must** install R in directory C:\\R\\R-3.3.2
 
 To automate the remaining steps in the install process open R and copy-and-paste the command below, press return, and accept all default settings during the install process:
 
