@@ -801,7 +801,7 @@ find_dropbox <- function(account = 1) {
 #' which.pmax(2, 10:1)
 #'
 #' @export
-which.pmax <- function(...) unname(apply(cbind(...), 1, which.max))
+which.pmax <- function(...) as.integer(unname(unlist(apply(cbind(...), 1, which.max))))
 
 #' Returns the index of the (parallel) minima of the input values
 #'
@@ -846,13 +846,28 @@ store.character <- function(object, ...) {
 #' @param dataset Dataset name
 #' @param vars Variables to select
 #' @param filt Data filter
+#' @param cmd A command used to customize the data
 #'
 #' @export
-indexr <- function(dataset, vars = "", filt = "") {
+indexr <- function(dataset, vars = "", filt = "", cmd = "") {
   dat <- getdata(dataset, na.rm = FALSE)
   if (is_empty(vars) || sum(vars %in% colnames(dat)) != length(vars))
     vars <- colnames(dat)
   nrows <- nrow(dat)
+
+  ## customizing data if a command was used
+  if (!is_empty(cmd)) {
+    pred_cmd <- gsub("\"","\'", cmd) %>% gsub(" ","",.)
+    cmd_vars <-
+      strsplit(pred_cmd, ";")[[1]] %>% strsplit(., "=") %>%
+      sapply("[", 1) %>% gsub(" ","",.)
+    dots <- strsplit(pred_cmd, ";")[[1]] %>% gsub(" ","",.)
+    for (i in seq_along(dots))
+      dots[[i]] <- sub(paste0(cmd_vars[[i]],"="),"",dots[[i]])
+
+    dat <- try(mutate_(dat, .dots = setNames(dots, cmd_vars)), silent = TRUE)
+  }
+
   ind <-
     mutate(dat, imf___ = 1:nrows) %>%
     {if (filt == "") . else filterdata(., filt)} %>%

@@ -29,6 +29,8 @@
 - Add (function) lable to bar plot when x-variable is an integer
 - Maintain order of variables in Data > Visualize when using "color", "fill", "comby", or "combx"
 - Avoid warning when switching datasets in Data > Transform and variables being summarized do not exists in the new dataset
+- which.pmax produced a list but needed to be integer
+- to customized predictions in radiand.model indexr must be able to customize the prediction dataframe
 
 ## Deprecated
 - varp_rm deprecated in favor of varpop 

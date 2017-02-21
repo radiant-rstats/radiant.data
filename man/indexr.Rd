@@ -4,7 +4,7 @@
 \alias{indexr}
 \title{Find index corrected for missing values and filters}
 \usage{
-indexr(dataset, vars = "", filt = "")
+indexr(dataset, vars = "", filt = "", cmd = "")
 }
 \arguments{
 \item{dataset}{Dataset name}
@@ -12,6 +12,8 @@ indexr(dataset, vars = "", filt = "")
 \item{vars}{Variables to select}
 
 \item{filt}{Data filter}
+
+\item{cmd}{A command used to customize the data}
 }
 \description{
 Find index corrected for missing values and filters
