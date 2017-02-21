@@ -125,8 +125,12 @@ output$dl_view_tab <- downloadHandler(
   ## shorten list of variales if possible
   vars <- input$view_vars
   cn <- colnames(.dataviewer()$tab)
+  ind <- which(cn %in% vars)
+
   if (length(vars) == length(cn)) {
     vars <- paste0(head(vars,1), ":", tail(vars,1))
+  } else if ((max(ind) - min(ind) + 1) == length(vars)) {
+    vars <- paste0(cn[min(ind)], ":", cn[max(ind)])
   } else if (length(vars) > (length(cn)/2)) {
     vars <- paste0("-", setdiff(cn, vars), collapse = ", ")
   } else {
