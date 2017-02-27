@@ -59,14 +59,15 @@ output$ui_tr_reorg_levs <- renderUI({
   req(input$tr_change_type)
 	if (not_available(input$tr_vars)) return()
   fctCol <- input$tr_vars[1]
-	isFct <- "factor" == .getclass()[fctCol]
+	isFct <- "factor" == .getclass()[fctCol] || "character" == .getclass()[fctCol]
   if (!isFct) return()
-  levs <- .getdata_transform()[[fctCol]] %>% levels
+  fct <- .getdata_transform()[[fctCol]]
+  levs <- if (is.factor(fct)) levels(fct) else levels(as_factor(fct))
 
   selectizeInput("tr_reorg_levs", "Reorder/remove levels:", choices  = levs,
     selected = levs, multiple = TRUE,
-    options = list(placeholder = 'Select level(s)',
-                   plugins = list('remove_button', 'drag_drop')))
+    options = list(placeholder = "Select level(s)",
+                   plugins = list("remove_button", "drag_drop")))
 })
 
 output$ui_tr_log <- renderUI({
@@ -862,12 +863,12 @@ transform_main <- reactive({
         return(.transform(dat, input$tr_transfunction, inp_vars("tr_vars"), input$tr_ext, store = FALSE))
     }
 
-    if (input$tr_change_type == 'reorg_levs') {
+    if (input$tr_change_type == "reorg_levs") {
         fct <- input$tr_vars[1]
-        if (is.factor(dat[[fct]])) {
+        if (is.factor(dat[[fct]]) || is.character(dat[[fct]])) {
           return(.reorg_levs(dat, fct, input$tr_reorg_levs, input$tr_roname, store = FALSE))
         } else {
-          return("Select a variable of type factor to change the ordering and/or number of levels")
+          return("Select a variable of type factor or character to change the ordering\nand/or number of levels")
         }
     }
 
