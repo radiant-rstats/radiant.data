@@ -37,7 +37,9 @@ output$saveStateNav <- downloadHandler(
 )
 
 observeEvent(input$shareState, {
-  saveSession(session)
+  withProgress(message = "Preparing session sharing", value = 1, {
+    saveSession(session)
+  })
 })
 
 output$show_session <- renderPrint({

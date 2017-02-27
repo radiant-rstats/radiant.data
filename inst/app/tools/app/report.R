@@ -275,27 +275,29 @@ output$saveReport <- downloadHandler(
           gsub("\\\\\\\\","\\\\",.) %>% cleanout(.)
 
         if (input$rmd_save_report == "Rmd & Data (zip)") {
-          r_data <- toList(r_data)
-          save(r_data, file = "r_data.rda")
-          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(", lib, ")))\nload(\"r_data.rda\")\n```\n\n", report) %>%
-            cat(file = "report.Rmd", sep = "\n")
 
-          zip_util = Sys.getenv("R_ZIPCMD", "zip")
-          flags = "-r9X"
-          os_type <- Sys.info()["sysname"]
-          if (os_type == 'Windows') {
-            wz <- suppressWarnings(system("where zip", intern = TRUE))
-            if (!grepl("zip", wz)) {
-              wz <- suppressWarnings(system("where 7z", intern = TRUE))
-              if (grepl("7z", wz)) {
-                zip_util = "7z"
-                flags = "a"
+          withProgress(message = "Preparing Rmd & Data zip file", value = 1, {
+            r_data <- toList(r_data)
+            save(r_data, file = "r_data.rda")
+            paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(", lib, ")))\nload(\"r_data.rda\")\n```\n\n", report) %>%
+              cat(file = "report.Rmd", sep = "\n")
+
+            zip_util = Sys.getenv("R_ZIPCMD", "zip")
+            flags = "-r9X"
+            os_type <- Sys.info()["sysname"]
+            if (os_type == 'Windows') {
+              wz <- suppressWarnings(system("where zip", intern = TRUE))
+              if (!grepl("zip", wz)) {
+                wz <- suppressWarnings(system("where 7z", intern = TRUE))
+                if (grepl("7z", wz)) {
+                  zip_util = "7z"
+                  flags = "a"
+                }
               }
             }
-          }
 
-          zip(file, c("report.Rmd", "r_data.rda"), flags = flags, zip = zip_util)
-
+            zip(file, c("report.Rmd", "r_data.rda"), flags = flags, zip = zip_util)
+          })
         } else if (input$rmd_save_report == "Rmd") {
           paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo=FALSE, error = TRUE, cache=FALSE, message=FALSE, warning=FALSE)\noptions(width = 250)\nsuppressWarnings(suppressMessages(library(", lib, ")))\n```\n\n", report) %>%
             cat(file = file, sep = "\n")

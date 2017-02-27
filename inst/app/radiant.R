@@ -44,7 +44,10 @@ saveStateOnRefresh <- function(session = session) {
       url_query <- parseQueryString(session$clientData$url_search)
       if (not_pressed(input$refresh_radiant) && not_pressed(input$stop_radiant) &&
           is.null(input$uploadState) && !"fixed" %in% names(url_query)) {
-        saveSession(session)
+
+        # withProgress(message = "Preparing session sharing", value = 1, {
+          saveSession(session)
+        # })
       } else {
         if (is.null(input$uploadState)) {
           if (exists("r_sessions")) {

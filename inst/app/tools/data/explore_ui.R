@@ -40,7 +40,9 @@ output$ui_expl_vars <- renderUI({
 })
 
 output$ui_expl_byvar <- renderUI({
-  vars <- groupable_vars()
+  withProgress(message = "Acquiring variable information", value = 1, {
+    vars <- groupable_vars()
+  })
   if (not_available(vars)) return()
 
   if (any(vars %in% input$expl_vars)) {

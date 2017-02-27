@@ -9,7 +9,10 @@ pvt_type <- c("Dodge" = "dodge","Fill" = "fill")
 
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
-  vars <- groupable_vars()
+
+  withProgress(message = "Acquiring variable information", value = 1, {
+    vars <- groupable_vars()
+  })
   req(available(vars))
 
   isolate({

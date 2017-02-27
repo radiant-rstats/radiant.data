@@ -423,12 +423,14 @@ output$refreshOnUpload <- renderUI({
 # Save state
 #######################################
 saveState <- function(filename) {
-  isolate({
-    LiveInputs <- toList(input)
-    r_state[names(LiveInputs)] <- LiveInputs
-    r_data <- toList(r_data)
-    save(r_state, r_data , file = filename)
-  })
+  withProgress(message = "Preparing state file", value = 1,
+    isolate({
+      LiveInputs <- toList(input)
+      r_state[names(LiveInputs)] <- LiveInputs
+      r_data <- toList(r_data)
+      save(r_state, r_data , file = filename)
+    })
+  )
 }
 
 output$saveState <- downloadHandler(
