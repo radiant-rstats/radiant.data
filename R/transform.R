@@ -545,3 +545,32 @@ wday <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
   if (!ordered && label) x <- factor(x, ordered = FALSE)
   x
 }
+
+#' Remove/reorder levels 
+#' @details Keep only a specific set of levels in a factor. By removing levels the base for comparison in, e.g., regression analysis, becomes the first level. The relable the base use, for example, repl = 'other' 
+#' @param x Character or Factor
+#' @param levs Set of levels to use
+#' @param repl String (or NA) used to replace missing levels. If not missing, this value will also replace the first level
+#'
+#' @examples
+#' refactor(diamonds$cut, c("Premium","Ideal"))
+#' refactor(diamonds$cut, c("Premium","Ideal"), "Other")
+#'
+#' @export
+refactor <- function(x, levs = levels(x), repl = NA) {
+  if (is.character(x)) {
+    lv <- unique(x)
+    if (length(levs) == 0) levs <- lv
+  } else if (is.factor(x)) {
+    lv <- levels(x)
+  } else {
+    return(x)
+  }
+  
+  if (length(levs) > 0 && length(lv) > length(levs)) {
+    if (!is_empty(repl)) levs[1] <- repl
+    x <- as_character(x) %>% ifelse (. %in% setdiff(lv, levs), repl, .)
+  }
+  
+  factor(x, levels = levs)
+}

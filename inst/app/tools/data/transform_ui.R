@@ -64,10 +64,13 @@ output$ui_tr_reorg_levs <- renderUI({
   fct <- .getdata_transform()[[fctCol]]
   levs <- if (is.factor(fct)) levels(fct) else levels(as_factor(fct))
 
-  selectizeInput("tr_reorg_levs", "Reorder/remove levels:", choices  = levs,
-    selected = levs, multiple = TRUE,
-    options = list(placeholder = "Select level(s)",
-                   plugins = list("remove_button", "drag_drop")))
+  tagList(
+    selectizeInput("tr_reorg_levs", "Reorder/remove levels:", choices  = levs,
+      selected = levs, multiple = TRUE,
+      options = list(placeholder = "Select level(s)",
+                     plugins = list("remove_button", "drag_drop"))),
+    textInput("tr_rorepl", "Replacement level name:", value = NA)
+  )  
 })
 
 output$ui_tr_log <- renderUI({
@@ -558,16 +561,19 @@ observeEvent(input$tr_change_type, {
 ## link to sampling menu?
 
 .reorg_levs <- function(dataset, fct, levs,
+                        repl = NA,
                         name = fct,
                         store_dat = "",
                         store = TRUE) {
 
   if (is_empty(name)) name <- fct
   if (!store || !is.character(dataset)) {
-    data.frame(factor(dataset[[fct]], levels = levs)) %>% setNames(name)
+    data.frame(refactor(dataset[[fct]], levs = levs, repl = repl)) %>% 
+      setNames(name)
   } else {
     if (store_dat == "") store_dat <- dataset
-    paste0("## change factor levels\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", name, " = factor(", fct, ", levels = c(\"", paste0(levs, collapse = "\",\""), "\")))\n")
+    repl <- if (is.na(repl)) "" else paste0(", repl = \"", repl, "\"")
+    paste0("## change factor levels\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", name, " = refactor(", fct, ", levs = c(\"", paste0(levs, collapse = "\",\""), "\")", repl, "))\n")
   }
 }
 
@@ -866,7 +872,7 @@ transform_main <- reactive({
     if (input$tr_change_type == "reorg_levs") {
         fct <- input$tr_vars[1]
         if (is.factor(dat[[fct]]) || is.character(dat[[fct]])) {
-          return(.reorg_levs(dat, fct, input$tr_reorg_levs, input$tr_roname, store = FALSE))
+          return(.reorg_levs(dat, fct, input$tr_reorg_levs, input$tr_rorepl, input$tr_roname, store = FALSE))
         } else {
           return("Select a variable of type factor or character to change the ordering\nand/or number of levels")
         }
@@ -1008,7 +1014,7 @@ observeEvent(input$tr_store, {
     cmd <- .bin(input$dataset, vars = input$tr_vars, bins = input$tr_bin_n, rev = input$tr_bin_rev, .ext = input$tr_ext_bin, input$tr_dataset)
     r_data[[dataset]][,colnames(dat)] <- dat
   } else if (input$tr_change_type == 'reorg_levs') {
-    cmd <- .reorg_levs(input$dataset, input$tr_vars[1], input$tr_reorg_levs, input$tr_roname, input$tr_dataset)
+    cmd <- .reorg_levs(input$dataset, input$tr_vars[1], input$tr_reorg_levs, input$tr_rorepl, input$tr_roname, input$tr_dataset)
     r_data[[dataset]][,colnames(dat)] <- dat
   } else if (input$tr_change_type == 'recode') {
     cmd <- .recode(input$dataset, input$tr_vars[1], input$tr_recode, input$tr_rcname, input$tr_dataset)

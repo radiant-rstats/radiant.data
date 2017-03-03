@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data VERSION 0.7.7
+# CHANGES IN radiant.data VERSION 0.7.10
 
 ## NEW FEATURES
 
@@ -12,6 +12,7 @@
 - Set `ylim` in `visualize` for multiple plots
 - Show progress indicator when saving reports from R > Report
 - `copy_attr` convenience function
+- `refactor` function to keep only a subset of levels in a factor and recode the remaining (and first) level to, for example, other
 
 ## BUG FIXES
 
