@@ -386,14 +386,17 @@ output$visualize <- renderPlot({
     )
   }
 
-  .visualize() %>% { if (is.character(.)) {
-      plot(x = 1, type = 'n', main = paste0("\n",.), axes = FALSE, xlab = "", ylab = "")
-    } else if (is.null(.)) {
-      return(invisible())
-    } else {
-      withProgress(message = 'Making plot', value = 1, print(.))
+  withProgress(message = 'Making plot', value = 1, {
+    .visualize() %>% { if (is.character(.)) {
+        plot(x = 1, type = 'n', main = paste0("\n",.), axes = FALSE, xlab = "", ylab = "")
+      } else if (is.null(.)) {
+        return(invisible())
+      } else {
+        # withProgress(message = 'Making plot', value = 1, print(.))
+        print(.)
+      }
     }
-  }
+  })
 }, width = viz_plot_width, height = viz_plot_height)
 
 .visualize <- reactive({
