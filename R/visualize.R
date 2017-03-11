@@ -374,7 +374,7 @@ visualize <- function(dataset, xvar,
         colnames(tmp)[ncol(tmp)] <- j
 
         if ("sort" %in% axes && facet_row == "." && facet_col == ".") {
-          tmp <- arrange_(ungroup(tmp), j)
+          tmp <- arrange_(ungroup(tmp), paste0("desc(",j,")"))
           tmp[[i]] %<>% factor(., levels = unique(.))
         }
 
