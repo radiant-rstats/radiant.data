@@ -230,10 +230,10 @@ visualize <- function(dataset, xvar,
         dc[i] <- "factor"
       }
 
-      hist_par <- list(alpha = alpha, position = "dodge")
+      hist_par <- list(alpha = alpha, position = "identity")
       plot_list[[i]] <- ggplot(dat, aes_string(x = i))
       if ("density" %in% axes && !"factor" %in% dc[i]) {
-        hist_par <- list(aes(y = ..density..), alpha = alpha, position = "dodge")
+        hist_par <- list(aes(y = ..density..), alpha = alpha, position = "identity")
         plot_list[[i]] <- plot_list[[i]] + geom_density(color = "blue", size = .5)
       }
       if ("factor" %in% dc[i]) {
