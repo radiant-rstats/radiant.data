@@ -75,6 +75,7 @@ ifelse (grepl("radiant.data", getwd()) && file.exists("../../inst") , "..", syst
 
 ## print options
 options(width = 250, scipen = 100)
+options(max.print = max(getOption("max.print"), 5000))
 
 ## list of function arguments
 list("n" = "length", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
