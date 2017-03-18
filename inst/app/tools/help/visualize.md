@@ -74,5 +74,7 @@ visualize("diamonds", yvar = "price", xvar = "carat", type = "scatter", custom =
 * Set plot limits: `+ ylim(15, 20)` or `+ xlim("VS1","VS2")`
 * Remove size legend: `+ scale_size(guide = "none")`
 * Change size range: `+ scale_size(range=c(1,6))`
+* Draw a horizontal line: `+ geom_hline(yintercept = 0.1)`
+* Draw a vertical line: `+ geom_vline(xintercept = 8)`
 
 See the ggplot2 documentation page for additional options <a href="http://docs.ggplot2.org/" target="_blank">http://docs.ggplot2.org</a>.

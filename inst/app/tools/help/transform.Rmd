@@ -26,7 +26,7 @@ For larger datasets, or when summaries are not needed, it can useful to click `H
 
 #### Bin
 
-The `Bin` command is a convenience function for the `xtile` command discussed below when you want to create multiple quitile/decile/... variables. To calculate quintiles enter `5` as the `Nr bins`. The `reverse` option replaces 1 by 5, 2 by 4, ..., 5 by 1. Choose an appropriate extension for the new variable(s).
+The `Bin` command is a convenience function for the `xtile` command discussed below when you want to create multiple quintile/decile/... variables. To calculate quintiles enter `5` as the `Nr bins`. The `reverse` option replaces 1 by 5, 2 by 4, ..., 5 by 1. Choose an appropriate extension for the new variable(s).
 
 #### Change type
 
@@ -198,7 +198,7 @@ income_rc = ifelse(ID == 3, income/1000, income)
 income_rc = ifelse(ID %in% c(1, 3, 15), income/1000, income)
 ```
 
-12. If a date variable is in a format not available through the `Type` menu you can use the `parse_date_time` function. For a date formated as `2-1-14` you would specify the command below (note that this format will also be parsed correctly by the `mdy` function in the `Type` menu)
+12. If a date variable is in a format not available through the `Type` menu you can use the `parse_date_time` function. For a date formatted as `2-1-14` you would specify the command below (note that this format will also be parsed correctly by the `mdy` function in the `Type` menu)
 
 ```r
 date = parse_date_time(x, '%m%d%y')
@@ -234,7 +234,20 @@ dist = as_distance(lat1, long1, lat2, long2)
 rec_iq = xtile(recency, 5)
 ```
 
-Note: For examples 7, 8, and 15 above you may need to change the new variable to type `factor` before using it for further analysis (see also `Type` above)
+18. To reverse the ordering of the quintiles created in 17 above use `rev = TRUE`
+
+
+```r
+rec_iq = xtile(recency, 5, rev = TRUE)
+```
+
+18. To remove text from entries in a character or factor variable use `sub` to remove only the first instance or `gsub` to remove all instances. For example, suppose a each row for a variable `bk_score` has the letters "ltv" before a number (e.g., "ltv150"). We could replace each occurrence of "ltv" by "" as follows:
+
+```r
+bk_score = sub("ltv", "", bk_score)
+```
+
+Note: For examples 7, 8, and 15 above you may need to change the new variable to type `factor` before using it for further analysis (see also `Change type` above)
 
 
 ### Clean data
