@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data VERSION 0.7.13
+# CHANGES IN radiant.data VERSION 0.7.15
 
 ## NEW FEATURES
 
@@ -13,6 +13,9 @@
 - Show progress indicator when saving reports from R > Report
 - `copy_attr` convenience function
 - `refactor` function to keep only a subset of levels in a factor and recode the remaining (and first) level to, for example, other
+- `register` function to add a (transformed) dataset to the dataset dropdown
+- Remember name of state files loaded and suggest that name when re-saving the state
+- Show dataset name in output if dataframe passed directly to analysis function
 
 ## BUG FIXES
 

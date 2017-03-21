@@ -118,7 +118,8 @@ visualize <- function(dataset, xvar,
 
   ## so you can also pass-in a data.frame
   dat <- getdata(dataset, vars, filt = data_filter)
-  if (!is_string(dataset)) dataset <- "-----"
+  # if (!is_string(dataset)) dataset <- deparse(substitute(dataset))
+  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## get class
   dc <- getclass(dat)
@@ -374,7 +375,10 @@ visualize <- function(dataset, xvar,
         colnames(tmp)[ncol(tmp)] <- j
 
         if ("sort" %in% axes && facet_row == "." && facet_col == ".") {
-          tmp <- arrange_(ungroup(tmp), paste0("desc(",j,")"))
+          if ("flip" %in% axes)
+            tmp <- arrange_(ungroup(tmp), j)
+          else
+            tmp <- arrange_(ungroup(tmp), paste0("desc(",j,")"))
           tmp[[i]] %<>% factor(., levels = unique(.))
         }
 
@@ -434,7 +438,7 @@ visualize <- function(dataset, xvar,
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] + ylim(ylim[1], ylim[2])
   }
-  
+
   if ("jitter" %in% check) {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] +

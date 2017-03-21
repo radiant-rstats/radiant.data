@@ -43,7 +43,8 @@ explore <- function(dataset,
   if (!is_empty(byvar)) tvars %<>% c(byvar) %>% unique
 
   dat <- getdata(dataset, tvars, filt = data_filter, na.rm = FALSE)
-  if (!is_string(dataset)) dataset <- "-----"
+  # if (!is_string(dataset)) dataset <- deparse(substitute(dataset))
+  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## in case : was used
   vars <- colnames(head(dat) %>% select_(.dots = vars))

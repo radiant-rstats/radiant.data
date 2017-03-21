@@ -34,7 +34,8 @@ pivotr <- function(dataset,
 
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   dat <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
-  if (!is_string(dataset)) dataset <- "-----"
+  # if (!is_string(dataset)) dataset <- deparse(substitute(dataset))
+  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## in case : was used vor cvars
   if (length(vars) < ncol(dat)) cvars <- colnames(dat) %>% {.[. != nvar]}
