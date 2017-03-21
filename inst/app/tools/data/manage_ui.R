@@ -402,6 +402,9 @@ observeEvent(input$uploadState, {
     }
   }
 
+  ## storing statename for later use if needed
+  tmpEnv$r_state$state_name <- inFile$name
+
   r_sessions[[r_ssuid]] <- list(
     r_data = tmpEnv$r_data,
     r_state = tmpEnv$r_state,
@@ -434,7 +437,13 @@ saveState <- function(filename) {
 }
 
 output$saveState <- downloadHandler(
-  filename = function() { paste0("radiant-state-",Sys.Date(),".rda") },
+  filename = function() { 
+    if (is.null(r_state$state_name)) {
+      paste0("radiant-state-",Sys.Date(),".rda") 
+    } else {
+      r_state$state_name
+    }
+  },
   content = function(file) {
     saveState(file)
   }
