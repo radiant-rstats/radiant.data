@@ -50,3 +50,36 @@ store.data.frame <- function(object, new = "", org = "", envir = parent.frame(),
   env$r_data[[paste0(new,"_descr")]] <- attr(object, "description")
   env$r_data[["datasetlist"]] <- c(new, env$r_data[["datasetlist"]]) %>% unique
 }
+
+
+#' Register a data.frame in the datasetlist in Radiant
+#'
+#' @details Store data frame in Radiant r_data list if available
+#'
+#' @param new Name of the new dataset
+#' @param org Name of the original data
+#' @param descr Dataset description
+#' @param envir Environment to assign 'new' dataset (optional). Used if 'new' is specified but an r_data list is not available
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+register <- function(new = "", org = "", descr = "", envir = parent.frame(), ...) {
+
+  if (exists("r_environment")) {
+    env <- r_environment
+  } else if (exists("r_data")) {
+    env <- pryr::where("r_data")
+  } else {
+    # message("Dataset ", new, " created in ", environmentName(envir), " environment")
+    message("Nothing registered. Function not called from a shiny app")
+    return(invisible())
+  }
+
+  ## use data description from the original if available
+  if (is_empty(env$r_data[[paste0(new, "_descr")]]) && is_empty(descr) && !is_empty(org))
+    env$r_data[[paste0(new,"_descr")]] <- env$r_data[[paste0(org,"_descr")]]
+  else if (!is_empty(descr))
+    env$r_data[[paste0(new,"_descr")]] <- descr
+
+  env$r_data[["datasetlist"]] <- c(new, env$r_data[["datasetlist"]]) %>% unique
+}
