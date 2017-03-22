@@ -954,7 +954,7 @@ describe <- function(name) {
     return(str(dat))
 
   owd <- setwd(tempdir())
-  on.exit(owd)
+  on.exit(setwd(owd))
 
   ## generate html and open on the Rstudio viewer or in the default browser
   description %>% knitr::knit2html(text = .) %>% cat(file = "index.html")
