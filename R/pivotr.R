@@ -451,3 +451,35 @@ plot.pivotr <- function(x,
   sshhr( plot_list[[1]] ) %>%
     { if (shiny) . else print(.) }
 }
+
+
+#' Store method for the pivort function
+#'
+#' @details Add the summarized data to the r_data list in Radiant or return it. See \url{http://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
+#'
+#' @param object Return value from \code{\link{pivotr}}
+#' @param name Name to assign to the dataset
+#' @param ... further arguments passed to or from other methods
+#'
+#' @seealso \code{\link{pivotr}} to generate summaries
+#'
+#' @export
+store.pivotr <- function(object, name, ...) {
+  tab <- object$tab
+
+  ## fix colnames as needed
+  colnames(tab) <- sub("^\\s+","", colnames(tab)) %>% sub("\\s+$","", .) %>% gsub("\\s+", "_", .)
+
+  if (exists("r_environment")) {
+    env <- r_environment
+  } else if (exists("r_data")) {
+    env <- pryr::where("r_data")
+  } else {
+    return(tab)
+  }
+
+  message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
+
+  env$r_data[[name]] <- tab
+  env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
+}

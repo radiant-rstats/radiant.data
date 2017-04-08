@@ -107,6 +107,12 @@ output$ui_Pivotr <- renderUI({
         checkboxInput("pvt_flip", "Flip", value = state_init("pvt_flip", FALSE))
       )
     ),
+    wellPanel(
+      tags$table(
+        tags$td(textInput("pvt_dat", "Store as:", paste0(input$dataset,"_pvt"))),
+        tags$td(actionButton("pvt_store", "Store"), style = "padding-top:30px;")
+      )
+    ),
     help_and_report(modal_title = "Pivotr",
                     fun_name = "pivotr",
                     help_file = inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/pivotr.md")))
@@ -287,6 +293,21 @@ output$plot_pivot <- renderPlot({
   return(invisible())
 }, width = pvt_plot_width, height = pvt_plot_height)
 
+observeEvent(input$pvt_store, {
+  dat <- .pivotr()
+  if (is.null(dat)) return()
+  name <- input$pvt_dat
+  rows <- input$pivotr_rows_all
+  dat$tab %<>% {if (is.null(rows)) . else .[rows,, drop = FALSE]}
+  store(dat, name)
+  updateSelectInput(session, "dataset", selected = input$dataset)
+
+  ## alert user about new dataset
+  session$sendCustomMessage(type = "message",
+    message = paste0("Dataset '", name, "' was successfully added to the datasets dropdown. Add code to R > Report to (re)create the results by clicking the report icon on the bottom left of your screen.")
+  )
+})
+
 observeEvent(input$pivotr_report, {
 
   inp_out <- list("","")
@@ -312,7 +333,7 @@ observeEvent(input$pivotr_report, {
     xcmd <- paste0(xcmd, ", dec = ", input$pvt_dec)
   if (!is_empty(r_state$pivotr_state$length, 10))
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$pivotr_state$length)
-  xcmd <- paste0(xcmd, "))")
+  xcmd <- paste0(xcmd, "))\n#store(result, name = \"", input$pvt_dat, "\")")
 
   inp_main <- clean_args(pvt_inputs(), pvt_args)
   if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)
