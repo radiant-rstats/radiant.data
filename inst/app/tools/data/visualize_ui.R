@@ -39,7 +39,6 @@ output$ui_viz_yvar <- renderUI({
   if (input$viz_type %in% c("line","bar","scatter","surface", "box")) {
     vars <- vars["character" != .getclass()[vars]]
   }
-  # if (input$viz_type == "box") {
   if (input$viz_type %in% c("line","scatter","box")) {
     ## allow factors in yvars for bar plots
     vars <- vars["factor" != .getclass()[vars]]
@@ -65,118 +64,23 @@ output$ui_viz_xvar <- renderUI({
     multiple = TRUE, size = min(3, length(vars)), selectize = FALSE)
 })
 
-# output$ui_viz_comby <- renderUI({
-#   req(input$viz_yvar)
-#   if (length(input$viz_yvar) < 2) {
-#     # isolate({
-#     #   r_state[["viz_comby"]] <<- FALSE
-#     #   updateCheckboxInput(session, "viz_comby", value = FALSE)
-#     # })
-#     r_state[["viz_comby"]] <<- FALSE
-#     return()
-#   }
-#   checkboxInput("viz_comby", "Combine Y-variables in one plot",
-#     .state_init("viz_comby", FALSE))
-# })
-
-# output$ui_viz_combx <- renderUI({
-#   req(input$viz_xvar)
-#   if (length(input$viz_xvar) < 2) {
-#     # isolate({
-#       # r_state[["viz_combx"]] <<- FALSE
-#       # updateCheckboxInput(session, "viz_combx", value = FALSE)
-#     # })
-#     r_state[["viz_combx"]] <<- FALSE
-#     checkboxInput("viz_combx", "Combine X-variables in one plot", FALSE)
-#     # return()
-#   } else {
-#     checkboxInput("viz_combx", "Combine X-variables in one plot",
-#       state_init("viz_combx", FALSE))
-#   }
-# })
-
-# observeEvent(length(input$viz_yvar) < 2, {
-# observeEvent(length(input$viz_yvar) == 1, {
-#   r_state[["viz_comby"]] <<- FALSE
-#   updateCheckboxInput(session, "viz_comby", value = FALSE)
-# })
-
 output$ui_viz_comby <- renderUI({
-  # req(length(input$viz_yvar) > 1)
-  # if (length(input$viz_yvar) < 2) return(NULL)
-  # checkboxInput("viz_comby", "Combine Y-variables in one plot",
-  #   state_init("viz_comby", FALSE))
-
-  if (length(input$viz_yvar) > 1) {
-    checkboxInput("viz_comby", "Combine Y-variables in one plot",
-      state_init("viz_comby", FALSE))
-  } else {
-    # r_state[["viz_comby"]] <<- FALSE
-    # updateCheckboxInput(session, "viz_comby", value = FALSE)
-    return()
-  }
+  checkboxInput("viz_comby", "Combine Y-variables in one plot",
+    state_init("viz_comby", FALSE))
 })
-
-# observeEvent(!is.null(input$viz_xvar) && length(input$viz_xvar) < 2, {
-#   r_state[["viz_combx"]] <<- FALSE
-#   updateCheckboxInput(session, "viz_combx", value = FALSE)
-# })
-
-# observeEvent(length(input$viz_xvar) == 1, {
-#   r_state[["viz_combx"]] <<- FALSE
-#   updateCheckboxInput(session, "viz_combx", value = FALSE)
-# })
-
-# observeEvent(input$viz_xvar, {
-#   if (length(input$viz_xvar) < 2) {
-#     r_state[["viz_combx"]] <<- FALSE
-#     updateCheckboxInput(session, "viz_combx", value = FALSE)
-#   }
-# })
 
 output$ui_viz_combx <- renderUI({
-  # req(length(input$viz_xvar) > 1)
-  # if (!is.null(input$viz_xvar) && length(input$viz_xvar) < 2) return(NULL)
-  # if (!is.null(input$viz_xvar) && length(input$viz_xvar) < 2) return(NULL)
-  if (length(input$viz_xvar) > 1) {
-    checkboxInput("viz_combx", "Combine X-variables in one plot",
-      state_init("viz_combx", FALSE))
-  } else {
-    return()
-  }
+  checkboxInput("viz_combx", "Combine X-variables in one plot",
+    state_init("viz_combx", FALSE))
 })
 
-# observeEvent(input$viz_xvar < 2, {
-#   # if (length(input$viz_xvar) < 2) {
-    # r_state[["viz_combx"]] <<- FALSE
-    # updateCheckboxInput(session, "viz_combx", value = FALSE)
-  # }
-# })
+observeEvent(length(input$viz_xvar) < 2, {
+  updateCheckboxInput(session, "viz_combx", value = FALSE)
+})
 
-# observeEvent(input$viz_xvar < 2, {
-# observe({
-#   if (length(input$viz_xvar) < 2)
-#     updateCheckboxInput(session, "viz_combx", value = FALSE)
-# })
-
-# output$ui_viz_combx <- renderUI({
-#   # req(input$viz_xvar > 1) {
-#   # req(input$viz_xvar)
-#   if (length(input$viz_xvar) > 1) {
-#     checkboxInput("viz_combx", "Combine X-variables in one plot", FALSE)
-#     # checkboxInput("viz_combx", "Combine X-variables in one plot",
-#     #   .state_init("viz_combx", FALSE))
-#   } else {
-#     # updateCheckboxInput(session, "viz_combx", value = FALSE)
-#     return()
-#   }
-
-#   # } else {
-#   #   r_state[["viz_combx"]] <<- FALSE
-#   #   isolate(updateCheckboxInput(session, "viz_combx", value = FALSE))
-#   #   return()
-#   # }
-# })
+observeEvent(length(input$viz_yvar) < 2, {
+  updateCheckboxInput(session, "viz_comby", value = FALSE)
+})
 
 observeEvent(input$viz_type, {
   if (input$viz_type %in% c("dist", "density")) {
@@ -185,22 +89,6 @@ observeEvent(input$viz_type, {
     updateCheckboxInput(session, "viz_combx", value = FALSE)
   }
 })
-
-# observeEvent(input$viz_combx, {
-#   if (input$viz_combx) {
-#   # if (input$viz_combx && length(input$viz_xvar) > 1) {
-#     updateCheckboxInput(session, "viz_color", value = "none")
-#     updateCheckboxInput(session, "viz_fill", value = "none")
-#   }
-# })
-
-# observeEvent(input$viz_comby, {
-#   if (input$viz_comby) {
-#   # if (input$viz_combx && input$viz_yvar > 1) {
-#     updateCheckboxInput(session, "viz_color", value = "none")
-#     updateCheckboxInput(session, "viz_fill", value = "none")
-#   }
-# })
 
 observeEvent(input$viz_check, {
   if (!"loess" %in% input$viz_check && input$viz_smooth != 1)
@@ -298,11 +186,15 @@ output$ui_Visualize <- renderUI({
       uiOutput("ui_viz_type"),
       conditionalPanel(condition = "input.viz_type != 'dist' & input.viz_type != 'density'",
         uiOutput("ui_viz_yvar"),
-        uiOutput("ui_viz_comby")
+        conditionalPanel("input.viz_yvar != undefined && input.viz_yvar != null && input.viz_yvar.length > 1",
+          uiOutput("ui_viz_comby")
+        )
       ),
       uiOutput("ui_viz_xvar"),
       conditionalPanel("input.viz_type == 'dist' | input.viz_type == 'density'",
-        uiOutput("ui_viz_combx")
+        conditionalPanel("input.viz_xvar != undefined && input.viz_xvar != null && input.viz_xvar.length > 1",
+          uiOutput("ui_viz_combx")
+        )
       ),
       uiOutput("ui_viz_facet_row"),
       uiOutput("ui_viz_facet_col"),
@@ -392,7 +284,6 @@ output$visualize <- renderPlot({
       } else if (is.null(.)) {
         return(invisible())
       } else {
-        # withProgress(message = 'Making plot', value = 1, print(.))
         print(.)
       }
     }
@@ -406,13 +297,6 @@ output$visualize <- renderPlot({
   ## need dependency on ..
   req(input$viz_plot_height && input$viz_plot_width)
 
-
-  ## not working
-  # if (length(input$viz_yvar) < 2 && isTRUE(input$viz_comby)) {
-  #   r_state[["viz_comby"]] <<- FALSE
-  #   updateCheckboxInput(session, "viz_comby", value = FALSE)
-  # }
-
   if (not_available(input$viz_xvar)) return()
   if (input$viz_type %in% c("scatter","line", "box", "bar", "surface") && not_available(input$viz_yvar))
     return("No Y-variable provided for a plot that requires one")
@@ -422,29 +306,10 @@ output$visualize <- renderPlot({
   if (input$viz_type %in% c("dist", "density")) {
     if (isTRUE(input$viz_comby)) return()
     if (length(input$viz_xvar) > 1 && is.null(input$viz_combx)) return()
-    # if (isTRUE(input$viz_combx)) {
-    #   if (!is_empty(input$viz_color,"none")) return()
-    #   if (!is_empty(input$viz_fill,"none")) return()
-    # }
   } else {
     if (isTRUE(input$viz_combx)) return()
     if (length(input$viz_yvar) > 1 && is.null(input$viz_comby)) return()
-
-    ## doesn't work
-    # if (length(input$viz_yvar) < 2 && isTRUE(input$viz_comby)) return()
-    # if (isTRUE(input$viz_comby)) {
-    #   if (!is_empty(input$viz_color,"none")) return()
-    #   if (!is_empty(input$viz_fill,"none")) return()
-    # }
   }
-
-  # isolate({
-  #   print("-----")
-  #   print(length(input$viz_yvar))
-  #   print(isTRUE(input$viz_comby))
-  #   print(input$viz_comby)
-  #   print("-----")
-  # })
 
   req(!is.null(input$viz_color) || !is.null(input$viz_fill))
 
@@ -462,12 +327,6 @@ observeEvent(input$visualize_report, {
       "jitter" %in% input$viz_check) vi$check <- setdiff(vi$check, "jitter")
 
   if (!input$viz_type %in% "scatter") vi$size <- "none"
-
-  if (isTRUE(input$viz_combx) && length(input$viz_xvar) < 2)
-      vi$combx <- FALSE
-
-  if (isTRUE(input$viz_comby) && length(input$viz_yvar) < 2)
-      vi$comby <- FALSE
 
   inp_main <- clean_args(vi, viz_args)
   inp_main[["custom"]] <- FALSE
