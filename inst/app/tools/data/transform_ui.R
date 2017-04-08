@@ -41,8 +41,13 @@ output$ui_tr_spread <- renderUI({
   req(input$tr_change_type)
   vars <- c("None" = "none", varnames())
   tagList(
-    selectInput("tr_spread_key", "Key:", choices  = vars, selected = "none", multiple = FALSE),
-    selectInput("tr_spread_value", "Value:", choices  = vars, selected = "none", multiple = FALSE)
+    # selectInput("tr_spread_key", "Key:", choices  = vars, selected = "none", multiple = TRUE),
+    selectizeInput("tr_spread_key", "Key(s):", choices  = vars[-1],
+      selected = NULL, multiple = TRUE,
+      options = list(placeholder = "None",
+                     plugins = list("remove_button", "drag_drop"))),
+    selectInput("tr_spread_value", "Value:", choices  = vars, selected = "none", multiple = FALSE),
+    numericInput("tr_spread_fill", "Fill:", value = NA)
   )
 })
 
@@ -468,18 +473,39 @@ observeEvent(input$tr_change_type, {
   }
 }
 
-.spread <- function(dataset, key, value,
+.spread <- function(dataset, key, value, 
+                    fill = NA,
+                    vars = "",
                     store_dat = "",
                     store = TRUE) {
 
   if (!store && !is.character(dataset)) {
-
+    if (!vars[1] == "") dataset <- select_(dataset, .dots = vars)
     cn <- colnames(dataset)
-    if (!key %in% cn || !value %in% cn) return("Key of value variable is not in the dataset")
-    spread_(dataset, key, value)
+    if (!all(key %in% cn) || !value %in% cn) return("Key or value variable is not in the dataset")
+    nr <- distinct_(dataset, .dots = setdiff(cn, value), .keep_all = TRUE) %>% nrow
+    if (nr < nrow(dataset)) return("Rows are not unique. Select additional variables")
+    if (length(key) > 1) {
+      dataset <- unite_(dataset, paste(key, collapse = "_"), key)
+      key <- paste(key, collapse = "_")
+    }
+    spread_(dataset, key, value, fill = fill)
   } else {
     if (store_dat == "") store_dat <- dataset
-    paste0("## Spread columns\nr_data[[\"",store_dat,"\"]] <- spread(r_data[[\"",dataset,"\"]], ", key, ", ", value, ")\n")
+    cmd <- ""
+    if (!vars[1] == "") {
+      cmd <- paste0("## Select columns\nr_data[[\"",store_dat,"\"]] <- select(r_data[[\"",dataset,"\"]], ", paste0(vars, collapse = ", "), ")\n")
+      dataset <- store_dat
+    }
+    if (length(key) > 1) {
+      cmd <- paste0(cmd, "## Unite columns\nr_data[[\"",store_dat,"\"]] <- unite(r_data[[\"",dataset,"\"]], ", paste(key, collapse = "_"), ", ", paste0(key, collapse = ", "), ")\n")
+      key <- paste(key, collapse = "_")
+      dataset <- store_dat
+    }
+    if (!is.na(fill))
+      paste0(cmd, "## Spread columns\nr_data[[\"",store_dat,"\"]] <- spread(r_data[[\"",dataset,"\"]], ", key, ", ", value, ", fill = ", fill, ")\n")
+    else
+      paste0(cmd, "## Spread columns\nr_data[[\"",store_dat,"\"]] <- spread(r_data[[\"",dataset,"\"]], ", key, ", ", value, ")\n")
   }
 }
 
@@ -794,7 +820,7 @@ transform_main <- reactive({
   if (input$tr_change_type == "spread") {
     if (is_empty(input$tr_spread_key, "none") ||
         is_empty(input$tr_spread_value, "none")) return("Select a Key and Value pair to spread")
-    return(.spread(dat, key = input$tr_spread_key, value = input$tr_spread_value, store = FALSE))
+    return(.spread(dat, key = input$tr_spread_key, value = input$tr_spread_value, fill = input$tr_spread_fill, vars = inp_vars("tr_vars"), store = FALSE))
   }
 
   ## only use the functions below if variables have been selected
@@ -997,7 +1023,7 @@ observeEvent(input$tr_store, {
     cmd <- .gather(input$dataset, vars = input$tr_vars, key = input$tr_gather_key, value = input$tr_gather_value, input$tr_dataset)
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == 'spread') {
-    cmd <- .spread(input$dataset, key = input$tr_spread_key, value = input$tr_spread_value, input$tr_dataset)
+    cmd <- .spread(input$dataset, key = input$tr_spread_key, value = input$tr_spread_value, fill = input$tr_spread_fill, vars = input$tr_vars, input$tr_dataset)
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == 'expand') {
     cmd <- .expand(input$dataset, vars = input$tr_vars, input$tr_dataset)
