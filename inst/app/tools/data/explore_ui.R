@@ -101,7 +101,9 @@ output$ui_Explore <- renderUI({
       uiOutput("ui_expl_byvar"),
       uiOutput("ui_expl_fun"),
       uiOutput("ui_expl_top"),
-      numericInput("expl_dec", label = "Decimals:", value = state_init("expl_dec", 3), min = 0),
+      numericInput("expl_dec", label = "Decimals:", value = state_init("expl_dec", 3), min = 0)
+    ),
+    wellPanel(
       tags$table(
         tags$td(textInput("expl_dat", "Store as:", paste0(input$dataset,"_expl"))),
         tags$td(actionButton("expl_store", "Store"), style = "padding-top:30px;")

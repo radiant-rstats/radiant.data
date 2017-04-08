@@ -223,6 +223,9 @@ summary.explore <- function(object, dec = 3, ...) {
 store.explore <- function(object, name, ...) {
   tab <- object$tab
 
+  ## fix colnames as needed
+  colnames(tab) <- sub("^\\s+","", colnames(tab)) %>% sub("\\s+$","", .) %>% gsub("\\s+", "_", .)
+
   if (exists("r_environment")) {
     env <- r_environment
   } else if (exists("r_data")) {
