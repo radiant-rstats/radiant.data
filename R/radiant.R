@@ -604,7 +604,7 @@ copy_all <- function(.from) {
 
 #' Print/draw method for grobs produced by gridExtra
 #'
-#' @details Print method for ggplot grobs created using arrangeGrob. Code is based on \url{https://github.com/baptiste/gridextra/blob/master/inst/testing/shiny.R}
+#' @details Print method for ggplot grobs created using grid.arrange. Code is based on \url{https://github.com/baptiste/gridextra/blob/master/inst/testing/shiny.R}
 #'
 #' @param x a gtable object
 #' @param ... further arguments passed to or from other methods

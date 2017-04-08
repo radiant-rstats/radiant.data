@@ -467,6 +467,6 @@ visualize <- function(dataset, xvar,
   if (custom)
     if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
-  sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list), 2)))) ) %>%
-   {if (shiny) . else print(.)}
+  sshhr( do.call(gridExtra::grid.arrange, c(plot_list, list(ncol = min(length(plot_list), 2)))) ) %>%
+    {if (shiny) . else print(.)}
 }

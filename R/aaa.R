@@ -19,7 +19,7 @@ globalVariables(c("r_environment", "session", "r_data", "r_state", ".",
 #' @importFrom tibble rownames_to_column as_data_frame data_frame
 #' @importFrom tidyr gather_ gather spread spread_ separate
 #' @importFrom grid textGrob gpar
-#' @importFrom gridExtra arrangeGrob
+#' @importFrom gridExtra grid.arrange
 #' @importFrom shinyAce aceEditor updateAceEditor
 #' @importFrom readr read_delim write_csv locale problems
 #' @importFrom base64enc dataURI
