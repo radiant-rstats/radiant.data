@@ -321,7 +321,7 @@ output$ui_Transform <- renderUI({
 
 ## ensure no variables are selected 'by accident' when creating a new variable
 observeEvent(input$tr_change_type, {
-  if (input$tr_change_type == "create")
+  if (input$tr_change_type == "create" || input$tr_change_type == "spread")
     updateSelectInput(session = session, inputId = "tr_vars", selected = character(0))
 })
 
