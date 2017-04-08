@@ -120,7 +120,7 @@ saveStateOnRefresh <- function(session = session) {
 groupable_vars <- reactive({
   .getdata() %>%
     summarise_each(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
-                        ((n_distinct(., na.rm = TRUE)/n()) < .30))) %>%
+                        is.character(.) || ((n_distinct(., na.rm = TRUE)/n()) < .30))) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
 })
