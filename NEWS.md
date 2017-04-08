@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data VERSION 0.7.16
+# CHANGES IN radiant.data
 
 ## NEW FEATURES
 
@@ -16,6 +16,7 @@
 - `register` function to add a (transformed) dataset to the dataset dropdown
 - Remember name of state files loaded and suggest that name when re-saving the state
 - Show dataset name in output if dataframe passed directly to analysis function
+- R-notebooks are now the default option for output saved from R > Report and R > Code
 
 ## BUG FIXES
 
