@@ -456,9 +456,11 @@ getsummary <- function(dat, dc = getclass(dat)) {
     cat("Summarize logical variables:\n")
     select(dat, which(isLogic)) %>% summarise_each(funs(sum_rm, mean_rm, n_missing)) %>%
       mutate_each(funs(if (is.numeric(.)) round(., 4) else .)) %>%
+      matrix(ncol = 3) %>%
       data.frame %>%
       set_colnames(c("# TRUE", "% TRUE", "n_missing")) %>%
-      set_rownames(names(dat)[isLogic]) %>% print
+      set_rownames(names(dat)[isLogic]) %>% 
+      print
     cat("\n")
   }
 }
