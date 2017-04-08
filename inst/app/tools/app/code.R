@@ -151,7 +151,7 @@ output$saveCodeReport <- downloadHandler(
               out <- rmarkdown::render("rcode.Rmd", switch(input$rcode_save,
                 Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "show"),
                 HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_folding = "show", code_download = TRUE, df_print = "paged"),
-                PDF = rmarkdown::pdf_document(), 
+                PDF = rmarkdown::pdf_document(),
                 Word = rmarkdown::word_document()
               ), envir = r_environment)
               file.rename(out, file)
