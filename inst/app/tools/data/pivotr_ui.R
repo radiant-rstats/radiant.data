@@ -190,7 +190,6 @@ observeEvent(input$pivotr_state, {
 output$pivotr <- DT::renderDataTable({
   pvt <- .pivotr()
   if (is.null(pvt)) return(data.frame())
-  pvt$shiny <- TRUE
 
   if (!identical(r_state$pvt_cvars, input$pvt_cvars)) {
     r_state$pvt_cvars <<- input$pvt_cvars
@@ -214,7 +213,7 @@ output$pivotr_chi2 <- renderPrint({
   req(input$pvt_chi2)
   req(input$pvt_dec)
   .pivotr() %>% {if (is.null(.)) return(invisible())
-                 else summary(., chi2 = TRUE, dec = input$pvt_dec, shiny = TRUE)}
+                 else summary(., chi2 = TRUE, dec = input$pvt_dec)}
 })
 
 output$dl_pivot_tab <- downloadHandler(
@@ -281,8 +280,7 @@ observeEvent(input$pivotr_rows_all, {
   if (is.null(pvt)) return(invisible())
   if (!is_empty(input$pvt_tab, FALSE))
     pvt <- pvt_sorter(pvt, rows = r_data$pvt_rows)
-    pvt_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
-      { do.call(plot, c(list(x = pvt), .)) }
+    pvt_plot_inputs() %>% { do.call(plot, c(list(x = pvt), .)) }
 })
 
 output$plot_pivot <- renderPlot({

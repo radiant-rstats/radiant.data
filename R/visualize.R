@@ -36,11 +36,11 @@
 #' visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter",
 #'           size = "table", custom = TRUE) + scale_size(range=c(1,10), guide = "none")
 #' visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
-#'   ggtitle("A scatterplot") + xlab("price in $")
+#'   labs(title = "A scatterplot", x = "price in $")
 #' visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) %>%
-#'   {.[[1]] + ggtitle("A histogram") + xlab("price in $")}
+#'   gridExtra::grid.arrange(grobs = ., top = "Histograms", ncol = 2)
 #' visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "bar",
-#'   facet_row = "cut", fill = "cut", custom = FALSE)
+#'   facet_row = "cut", fill = "cut")
 #'
 #' @export
 visualize <- function(dataset, xvar,
@@ -467,6 +467,6 @@ visualize <- function(dataset, xvar,
   if (custom)
     if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
-  sshhr( do.call(gridExtra::grid.arrange, c(plot_list, list(ncol = min(length(plot_list), 2)))) ) %>%
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = min(length(plot_list), 2))) %>%
     {if (shiny) . else print(.)}
 }

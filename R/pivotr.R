@@ -310,13 +310,6 @@ dtab.pivotr  <- function(object,
     ))
   }
 
-  ## used when called from report function
-  # if (is.null(searchCols) && !is.null(sc)) {
-  #   searchCols <- rep("", ncol(tab))
-  #   for (i in sc) searchCols[i[[1]]] <- i[[2]]
-  #   searchCols <- gsub("'", "\\\"", searchCols) %>% lapply(function(x) list(search = x))
-  # }
-
   ## remove row with column totals
   ## should perhaps be part of pivotr but convenient for now in tfoot
   ## and for external calls to pivotr
@@ -327,7 +320,6 @@ dtab.pivotr  <- function(object,
   dt_tab <- {if (!perc) rounddf(tab, dec) else tab} %>%
   DT::datatable(container = sketch, selection = "none", rownames = FALSE,
     filter = fbox,
-    # searching = FALSE,
     style = "bootstrap",
     options = list(
       dom = dom,
@@ -379,8 +371,6 @@ dtab.pivotr  <- function(object,
 #' @param type Plot type to use ("fill" or "dodge" (default))
 #' @param perc Use percentage on the y-axis
 #' @param flip Flip the axes in a plot (FALSE or TRUE)
-#' @param shiny Did the function call originate inside a shiny app
-#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -396,27 +386,22 @@ plot.pivotr <- function(x,
                         type = "dodge",
                         perc = FALSE,
                         flip = FALSE,
-                        shiny = FALSE,
-                        custom = FALSE,
                         ...) {
 
   object <- x; rm(x)
   cvars <- object$cvars
   nvar <- object$nvar
   tab <- object$tab %>% {filter(., .[[1]] != "Total")}
-  plot_list <- list()
 
   if (length(cvars) == 1) {
-    plot_list[[1]] <-
-      ggplot(na.omit(tab), aes_string(x = cvars, y = nvar)) +
+    p <- ggplot(na.omit(tab), aes_string(x = cvars, y = nvar)) +
         geom_bar(stat="identity", position = "dodge", alpha=.7)
   } else if (length(cvars) == 2) {
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
     dots <- paste0("factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2]),collapse="','"),"'))")
-    plot_list[[1]] <-
-      tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2])) %>% na.omit %>%
+    p <- tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2])) %>% na.omit %>%
         mutate_(.dots = setNames(dots,cvars[1])) %>%
         ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
           geom_bar(stat="identity", position = type, alpha=.7)
@@ -425,8 +410,7 @@ plot.pivotr <- function(x,
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
     dots <- paste0("factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2:3]),collapse="','"),"'))")
-    plot_list[[1]] <-
-      tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2:3])) %>% na.omit %>%
+    p <- tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2:3])) %>% na.omit %>%
         mutate_(.dots = setNames(dots,cvars[1])) %>%
         ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
           geom_bar(stat="identity", position = type, alpha=.7) +
@@ -436,20 +420,17 @@ plot.pivotr <- function(x,
     return(invisible())
   }
 
-  if (flip) plot_list[[1]] <- plot_list[[1]] + coord_flip()
-  if (perc) plot_list[[1]] <- plot_list[[1]] + scale_y_continuous(labels = scales::percent)
+  if (flip) p <- p + coord_flip()
+  if (perc) p <- p + scale_y_continuous(labels = scales::percent)
+
   if (nvar == "n") {
     if (!is_empty(object$normalize, "None"))
-      plot_list[[1]] <- plot_list[[1]] + ylab(ifelse (perc, "Percentage", "Proportion"))
+      p <- p + ylab(ifelse (perc, "Percentage", "Proportion"))
   } else {
-    plot_list[[1]] <- plot_list[[1]] + ylab(paste0(nvar, " (",names(make_funs(object$fun)),")"))
+    p <- p + ylab(paste0(nvar, " (",names(make_funs(object$fun)),")"))
   }
 
- if (custom)
-   if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
-
-  sshhr( plot_list[[1]] ) %>%
-    { if (shiny) . else print(.) }
+  sshhr(p)
 }
 
 

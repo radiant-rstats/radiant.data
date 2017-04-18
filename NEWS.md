@@ -17,6 +17,8 @@
 - Remember name of state files loaded and suggest that name when re-saving the state
 - Show dataset name in output if dataframe passed directly to analysis function
 - R-notebooks are now the default option for output saved from R > Report and R > Code
+- Improved documentation on how to customize plots in R > Report
+- Keyboard short-cut to put code into R > Report (ALT-enter)
 
 ## BUG FIXES
 
