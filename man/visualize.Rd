@@ -72,11 +72,11 @@ visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
 visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter",
           size = "table", custom = TRUE) + scale_size(range=c(1,10), guide = "none")
 visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
-  ggtitle("A scatterplot") + xlab("price in $")
+  labs(title = "A scatterplot", x = "price in $")
 visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) \%>\%
-  {.[[1]] + ggtitle("A histogram") + xlab("price in $")}
+  gridExtra::grid.arrange(grobs = ., top = "Histograms", ncol = 2)
 visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "bar",
-  facet_row = "cut", fill = "cut", custom = FALSE)
+  facet_row = "cut", fill = "cut")
 
 }
 

@@ -89,7 +89,7 @@ list("n" = "length", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
 options(radiant.functions = .)
 
 ## for report and code in menu R
-knitr::opts_knit$set(progress = TRUE )
+knitr::opts_knit$set(progress = TRUE)
 knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = FALSE,
   message = FALSE, warning = FALSE, error = TRUE,
   # screenshot.force = FALSE,
@@ -199,7 +199,7 @@ help_menu <- function(hlp) {
 # https://groups.google.com/forum/#!topic/shiny-discuss/Xgxq08N8HBE
 # https://gist.github.com/jcheng5/5427d6f264408abf3049
 
-## try http://127.0.0.1:3174/?url=decide/simulate/&SSUID=local
+## try http://127.0.0.1:3174/?url=multivariate/conjoint/plot/&SSUID=local
 options(radiant.url.list =
   list("Data" = list("tabs_data" = list("Manage"    = "data/",
                                         "View"      = "data/view/",

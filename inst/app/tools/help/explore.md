@@ -15,6 +15,7 @@ You can select options from `Column header` dropdown to switch between different
 ## Functions
 
 Below you will find a brief description of several functions. Most functions, however, will be self-explanatory.
+
 * `n` calculates the number of observations, or rows, in the data or in a group if a `Group by` variable has been selected (`n` uses the `length` function in R)
 * `n_distinct` calculates the number of distinct values
 * `n_missing` calculates the number of missing values
@@ -35,4 +36,4 @@ For large datasets it can useful to click `Pause explore` before selecting categ
 
 ### R > Report
 
-Add code to <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_R > Report_</a> to (re)create the summary table by clicking the <i title="report results" class="fa fa-edit"></i> icon on the bottom left of your screen.
+Add code to <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_R > Report_</a> to (re)create the summary table by clicking the <i title="report results" class="fa fa-edit"></i> icon on the bottom left of your screen or by pressing `ALT-enter` on your keyboard.

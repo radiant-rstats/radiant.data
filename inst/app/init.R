@@ -120,6 +120,7 @@ if (exists("r_data")) {
 r_environment <- environment()
 
 ## parse the url and use updateTabsetPanel to navigate to the desired tab
+## currently only works with a new or refreshed session
 observeEvent(session$clientData$url_search, {
   url_query <- parseQueryString(session$clientData$url_search)
   if ("url" %in% names(url_query)) {

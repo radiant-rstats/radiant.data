@@ -56,4 +56,4 @@ It is important to note that column sorting, column filters, and search are **no
 
 To download the data in _csv_ format click the <i title='Download' class='fa fa-download'></i> icon on the top right of your screen.
 
-Click the report (<i title='Report results' class='fa fa-edit'></i>) icon on the bottom left of your screen to add the filter and sort commands used by Radiant to a (reproducible) report in <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_R > Report_</a>.
+Click the report (<i title='Report results' class='fa fa-edit'></i>) icon on the bottom left of your screen or press `ALT-enter` on your keyboard to add the filter and sort commands used by Radiant to a (reproducible) report in <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_R > Report_</a>.
