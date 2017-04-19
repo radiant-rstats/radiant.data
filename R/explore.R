@@ -646,7 +646,8 @@ does_vary <- function(x, na.rm = TRUE) {
     FALSE
   } else {
     if (is.factor(x) || is.character(x)) {
-      n_distinct(x, na.rm = na.rm) > 1
+      # n_distinct(x, na.rm = na.rm) > 1
+      length(unique(x)) > 1
     } else {
       abs(max_rm(x, na.rm = na.rm) - min_rm(x, na.rm = na.rm)) > .Machine$double.eps^0.5
     }

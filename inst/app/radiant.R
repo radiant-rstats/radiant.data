@@ -119,8 +119,10 @@ saveStateOnRefresh <- function(session = session) {
 
 groupable_vars <- reactive({
   .getdata() %>%
+    # summarise_each(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
+                        # is.character(.) || ((n_distinct(., na.rm = TRUE)/n()) < .30))) %>%
     summarise_each(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
-                        is.character(.) || ((n_distinct(., na.rm = TRUE)/n()) < .30))) %>%
+                        is.character(.) || ((length(unique(.))/n()) < .30))) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
 })
@@ -137,7 +139,8 @@ groupable_vars_nonum <- reactive({
 ## used in compare proportions
 two_level_vars <- reactive({
   .getdata() %>%
-    summarise_each(funs(n_distinct(., na.rm = TRUE))) %>%
+    # summarise_each(funs(n_distinct(., na.rm = TRUE))) %>%
+    summarise_each(funs(length(unique(.)))) %>%
     { . == 2 } %>%
     which(.) %>%
     varnames()[.]

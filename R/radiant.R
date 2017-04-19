@@ -171,15 +171,23 @@ getdata <- function(dataset,
 #' @return Data frame with factors
 #'
 #' @export
-factorizer <- function(dat, safx = 20) {
+factorizer <- function(dat, safx = 30) {
   isChar <- sapply(dat, is.character)
   if (sum(isChar) == 0) return(dat)
-    toFct <-
-      select(dat, which(isChar)) %>%
-      summarise_each(funs(nrow(dat) < 101 | (n_distinct(.) < 100 & (n_distinct(.)/length(.)) < (1/safx)))) %>%
-      select(which(. == TRUE)) %>% names
+  fab <- function(x) {
+    n <- length(x)
+    if (n < 101) return(TRUE)
+    nd <- length(unique(x)) 
+    nd < 100 && (nd/n < (1/safx))
+  }
+  toFct <-
+    select(dat, which(isChar)) %>%
+    # summarise_each(funs(n() < 101 | (n_distinct(.) < 100 & (n_distinct(.)/length(.)) < (1/safx)))) %>%
+    summarise_each(funs(fab)) %>%
+    select(which(. == TRUE)) %>% 
+    names
   if (length(toFct) == 0) return(dat)
-
+  
   mutate_each_(dat, funs(as.factor), vars = toFct)
 }
 
