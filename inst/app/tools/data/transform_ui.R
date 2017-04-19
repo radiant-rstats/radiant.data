@@ -726,210 +726,213 @@ inp_vars <- function(inp, rval = "") {
 
 transform_main <- reactive({
 
-  req(input$tr_change_type)
+    req(input$tr_change_type)
 
-  if (not_available(input$tr_vars)) {
-    if (input$tr_change_type == "none" && length(input$tr_vars) == 0) {
-      return("Select a transformation type or select variables to summarize")
-    } else if (input$tr_change_type == "none" && length(input$tr_vars) >  0) {
-      return("Select a transformation type or select variables to summarize")
-    } else if (input$tr_change_type == "type") {
-      return("Select one or more variables to change their type")
-    } else if (input$tr_change_type == "transform") {
-      return("Select one or more variables to apply a transformation")
-    } else if (input$tr_change_type == "rename") {
-      return("Select one or more variables to rename")
-    } else if (input$tr_change_type == "replace") {
-      return("Select one or more variables to replace")
-    } else if (input$tr_change_type == 'recode') {
-      return("Select a variable to recode")
-    } else if (input$tr_change_type == "bin") {
-      return("Select one or more variables to bin")
-    } else if (input$tr_change_type == 'reorg_levs') {
-      return("Select a variable of type factor to change the ordering and/or number of levels")
-    } else if (input$tr_change_type == 'normalize') {
-      return("Select one or more variables to normalize")
-    } else if (input$tr_change_type == "remove_na") {
-      return("Select one or more variables to see the effects of removing missing values")
-    } else if (input$tr_change_type %in% c("remove_dup","show_dup")) {
-      return("Select one or more variables to see the effects of removing duplicates")
-    } else if (input$tr_change_type == 'gather') {
-      return("Select one or more variables to gather")
-    } else if (input$tr_change_type == 'expand') {
-      return("Select one or more variables to expand")
-    }
-  }
-
-  ## get the active dataset, filter not applied when called from transform tab
-  dat <- .getdata_transform()
-
-  ## what data to pass on ...
-	if (input$tr_change_type %in% c("","none"))
- 		return(select_(dat, .dots = input$tr_vars))
-
-  ## reorganize variables
-	if (input$tr_change_type == "reorg_vars")
- 	  return(.reorg_vars(dat, inp_vars("tr_reorg_vars"), store = FALSE))
-
-  ## create training variable
-  if (input$tr_change_type == 'training')
-    return(.training(dat, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, seed = input$tr_training_seed, store = FALSE))
-
-  if (input$tr_change_type == 'create') {
-    if (input$tr_create == "") {
-      return("Specify an equation to create a new variable and press 'return'. **\n** See the help file for examples")
-    } else {
-      return(.create(dat, input$tr_create, byvar = inp_vars("tr_vars"), store = FALSE))
-    }
-  }
-
-  if (input$tr_change_type == 'tab2dat') {
-    if (is.null(input$tr_tab2dat) || input$tr_tab2dat == "none") {
-      return("Select a frequency variable")
-    } else if (!is_empty(input$tr_vars) && all(input$tr_vars == input$tr_tab2dat)) {
-      return("Select at least one variable that is not the frequency variable")
-    } else {
-      req(available(input$tr_tab2dat))
-      return(.tab2dat(dat, input$tr_tab2dat, vars = inp_vars("tr_vars"), store = FALSE))
-    }
-  }
-
-  if (input$tr_change_type == 'clip') {
-    if (input$tr_paste == "") {
-      return("Copy-and-paste data with a header row from a spreadsheet")
-    } else {
-      cpdat <- try(read.table(header = TRUE, comment.char = "", fill = TRUE, sep = "\t", as.is = TRUE, text = input$tr_paste), silent = TRUE)
-      if (is(cpdat, 'try-error')) {
-        return("The pasted data was not well formated. Please make sure the number of rows **\n** in the data in Radiant and in the spreadsheet are the same and try again.")
-      } else if (nrow(cpdat) != nrow(dat)) {
-        return("The pasted data does not have the correct number of rows. Please make sure **\n** the number of rows in the data in Radiant and in the spreadsheet are the **\n** same and try again.")
-      } else {
-        return(as.data.frame(cpdat, check.names = FALSE) %>% factorizer)
-        # return(cpdat)
-      }
-    }
-  }
-
-  ## filter data for holdout
-  if (input$tr_change_type == "holdout") {
-    if (!input$show_filter) return("No filter active. Click the 'Filter' checkbox and enter a filter")
-    return(.holdout(dat, inp_vars("tr_vars"), filt = input$data_filter, rev = input$tr_holdout_rev, store = FALSE))
-  }
-
-  ## spread a variable
-  if (input$tr_change_type == "spread") {
-    if (is_empty(input$tr_spread_key, "none") ||
-        is_empty(input$tr_spread_value, "none")) return("Select a Key and Value pair to spread")
-    return(.spread(dat, key = input$tr_spread_key, value = input$tr_spread_value, fill = input$tr_spread_fill, vars = inp_vars("tr_vars"), store = FALSE))
-  }
-
-  ## only use the functions below if variables have been selected
-  if (!is_empty(input$tr_vars)) {
-    if (not_available(input$tr_vars)) return()
-
-    ## remove missing values
-    if (input$tr_change_type == "remove_na")
-      return(.remove_na(dat, inp_vars("tr_vars"), store = FALSE))
-
-    ## bin variables
-    if (input$tr_change_type == "bin")
-      return(.bin(dat, inp_vars("tr_vars"), bins = input$tr_bin_n, rev = input$tr_bin_rev, .ext = input$tr_ext_bin, store = FALSE))
-             # bin_order = input$tr_bin_order, store = FALSE))
-
-    ## gather variables
-    if (input$tr_change_type == "gather") {
-      if (is_empty(input$tr_gather_key) || is_empty(input$tr_gather_value))
-        return("Provide a name for the Key and Value variables")
-      return(.gather(dat, inp_vars("tr_vars"), key = input$tr_gather_key, value = input$tr_gather_value, store = FALSE))
-    }
-
-    ## remove duplicates
-    if (input$tr_change_type == "remove_dup")
-      return(.remove_dup(dat, inp_vars("tr_vars"), store = FALSE))
-
-    ## expand grid
-    if (input$tr_change_type == "expand")
-      return(.expand(dat, inp_vars("tr_vars"), store = FALSE))
-
-    ## show duplicates
-    if (input$tr_change_type == "show_dup")
-      return(.show_dup(dat, inp_vars("tr_vars"), store = FALSE))
-
-    if (input$tr_change_type == 'normalize') {
-      if (is_empty(input$tr_normalizer, "none")) {
-        return("Select a normalizing variable")
-      } else {
-        return(.normalize(dat, inp_vars("tr_vars"), input$tr_normalizer, .ext = input$tr_ext_nz, store = FALSE))
+    if (not_available(input$tr_vars)) {
+      if (input$tr_change_type == "none" && length(input$tr_vars) == 0) {
+        return("Select a transformation type or select variables to summarize")
+      } else if (input$tr_change_type == "none" && length(input$tr_vars) >  0) {
+        return("Select a transformation type or select variables to summarize")
+      } else if (input$tr_change_type == "type") {
+        return("Select one or more variables to change their type")
+      } else if (input$tr_change_type == "transform") {
+        return("Select one or more variables to apply a transformation")
+      } else if (input$tr_change_type == "rename") {
+        return("Select one or more variables to rename")
+      } else if (input$tr_change_type == "replace") {
+        return("Select one or more variables to replace")
+      } else if (input$tr_change_type == 'recode') {
+        return("Select a variable to recode")
+      } else if (input$tr_change_type == "bin") {
+        return("Select one or more variables to bin")
+      } else if (input$tr_change_type == 'reorg_levs') {
+        return("Select a variable of type factor to change the ordering and/or number of levels")
+      } else if (input$tr_change_type == 'normalize') {
+        return("Select one or more variables to normalize")
+      } else if (input$tr_change_type == "remove_na") {
+        return("Select one or more variables to see the effects of removing missing values")
+      } else if (input$tr_change_type %in% c("remove_dup","show_dup")) {
+        return("Select one or more variables to see the effects of removing duplicates")
+      } else if (input$tr_change_type == 'gather') {
+        return("Select one or more variables to gather")
+      } else if (input$tr_change_type == 'expand') {
+        return("Select one or more variables to expand")
       }
     }
 
-    if (input$tr_change_type == 'replace') {
-      vars <- input$tr_vars
-      rpl  <- input$tr_replace
-      if (available(rpl)) {
-        if (length(vars) != length(rpl))
-          return(paste0("The number of replacement variables (", length(rpl), ") is not equal to the number of variables to replace (", length(vars),")"))
-        return(.replace(dat, vars, rpl, store = FALSE))
+    ## get the active dataset, filter not applied when called from transform tab
+    dat <- .getdata_transform()
+
+    ## what data to pass on ...
+  	if (input$tr_change_type %in% c("","none"))
+   		return(select_(dat, .dots = input$tr_vars))
+
+    ## reorganize variables
+  	if (input$tr_change_type == "reorg_vars")
+   	  return(.reorg_vars(dat, inp_vars("tr_reorg_vars"), store = FALSE))
+
+    ## create training variable
+    if (input$tr_change_type == 'training')
+      return(.training(dat, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, seed = input$tr_training_seed, store = FALSE))
+
+    if (input$tr_change_type == 'create') {
+      if (input$tr_create == "") {
+        return("Specify an equation to create a new variable and press 'return'. **\n** See the help file for examples")
       } else {
-        return("Select one or more variable replacements")
+        return(.create(dat, input$tr_create, byvar = inp_vars("tr_vars"), store = FALSE))
       }
     }
 
-    ## selecting the columns to show
-		dat  <- select_(dat, .dots = input$tr_vars)
-    vars <- colnames(dat)
-
-    ## change in type is always done in-place
-    if (input$tr_change_type ==  "type") {
-      if (input$tr_typefunction == "none")
-        return("Select a transformation type for the selected variables")
-      else
-        return(.change_type(dat, input$tr_typefunction, inp_vars("tr_vars"), input$tr_typename, store = FALSE))
+    if (input$tr_change_type == 'tab2dat') {
+      if (is.null(input$tr_tab2dat) || input$tr_tab2dat == "none") {
+        return("Select a frequency variable")
+      } else if (!is_empty(input$tr_vars) && all(input$tr_vars == input$tr_tab2dat)) {
+        return("Select at least one variable that is not the frequency variable")
+      } else {
+        req(available(input$tr_tab2dat))
+        return(.tab2dat(dat, input$tr_tab2dat, vars = inp_vars("tr_vars"), store = FALSE))
+      }
     }
 
-    ## change in type is always done in-place
-    if (input$tr_change_type ==  "transform") {
-      if (input$tr_transfunction == "none")
-        return("Select a function to apply to the selected variable(s)")
-      else
-        return(.transform(dat, input$tr_transfunction, inp_vars("tr_vars"), input$tr_ext, store = FALSE))
-    }
-
-    if (input$tr_change_type == "reorg_levs") {
-        fct <- input$tr_vars[1]
-        if (is.factor(dat[[fct]]) || is.character(dat[[fct]])) {
-          return(.reorg_levs(dat, fct, input$tr_reorg_levs, input$tr_rorepl, input$tr_roname, store = FALSE))
+    if (input$tr_change_type == 'clip') {
+      if (input$tr_paste == "") {
+        return("Copy-and-paste data with a header row from a spreadsheet")
+      } else {
+        cpdat <- try(read.table(header = TRUE, comment.char = "", fill = TRUE, sep = "\t", as.is = TRUE, text = input$tr_paste), silent = TRUE)
+        if (is(cpdat, 'try-error')) {
+          return("The pasted data was not well formated. Please make sure the number of rows **\n** in the data in Radiant and in the spreadsheet are the same and try again.")
+        } else if (nrow(cpdat) != nrow(dat)) {
+          return("The pasted data does not have the correct number of rows. Please make sure **\n** the number of rows in the data in Radiant and in the spreadsheet are the **\n** same and try again.")
         } else {
-          return("Select a variable of type factor or character to change the ordering\nand/or number of levels")
-        }
-    }
-
-    if (input$tr_change_type ==  'recode') {
-      if (input$tr_recode == "") {
-        return("Specify a recode statement, assign a name to the recoded variable, and press 'return'. **\n** See the help file for examples")
-      } else {
-        return(.recode(dat, inp_vars("tr_vars")[1], input$tr_recode, input$tr_rcname, store = FALSE))
-      }
-    }
-
-    if (input$tr_change_type == 'rename') {
-      if (input$tr_rename == "") {
-        return("Specify new names for the selected variables (separated by a ',') and press 'return'")
-      } else {
-        if (any(input$tr_rename %in% varnames())) {
-          return("One or more of the new variables names already exists in the data. **\n** Change the specified names or use the Replace function")
-        } else {
-          return(.rename(dat, inp_vars("tr_vars"), input$tr_rename, store = FALSE))
+          return(as.data.frame(cpdat, check.names = FALSE) %>% factorizer)
+          # return(cpdat)
         }
       }
     }
-	}
+
+    ## filter data for holdout
+    if (input$tr_change_type == "holdout") {
+      if (!input$show_filter) return("No filter active. Click the 'Filter' checkbox and enter a filter")
+      return(.holdout(dat, inp_vars("tr_vars"), filt = input$data_filter, rev = input$tr_holdout_rev, store = FALSE))
+    }
+
+    ## spread a variable
+    if (input$tr_change_type == "spread") {
+      if (is_empty(input$tr_spread_key, "none") ||
+          is_empty(input$tr_spread_value, "none")) return("Select a Key and Value pair to spread")
+      return(.spread(dat, key = input$tr_spread_key, value = input$tr_spread_value, fill = input$tr_spread_fill, vars = inp_vars("tr_vars"), store = FALSE))
+    }
+
+    ## only use the functions below if variables have been selected
+    if (!is_empty(input$tr_vars)) {
+      if (not_available(input$tr_vars)) return()
+
+      ## remove missing values
+      if (input$tr_change_type == "remove_na")
+        return(.remove_na(dat, inp_vars("tr_vars"), store = FALSE))
+
+      ## bin variables
+      if (input$tr_change_type == "bin")
+        return(.bin(dat, inp_vars("tr_vars"), bins = input$tr_bin_n, rev = input$tr_bin_rev, .ext = input$tr_ext_bin, store = FALSE))
+               # bin_order = input$tr_bin_order, store = FALSE))
+
+      ## gather variables
+      if (input$tr_change_type == "gather") {
+        if (is_empty(input$tr_gather_key) || is_empty(input$tr_gather_value))
+          return("Provide a name for the Key and Value variables")
+        return(.gather(dat, inp_vars("tr_vars"), key = input$tr_gather_key, value = input$tr_gather_value, store = FALSE))
+      }
+
+      ## remove duplicates
+      if (input$tr_change_type == "remove_dup")
+        return(.remove_dup(dat, inp_vars("tr_vars"), store = FALSE))
+
+      ## expand grid
+      if (input$tr_change_type == "expand")
+        return(.expand(dat, inp_vars("tr_vars"), store = FALSE))
+
+      ## show duplicates
+      if (input$tr_change_type == "show_dup")
+        return(.show_dup(dat, inp_vars("tr_vars"), store = FALSE))
+
+      if (input$tr_change_type == 'normalize') {
+        if (is_empty(input$tr_normalizer, "none")) {
+          return("Select a normalizing variable")
+        } else {
+          return(.normalize(dat, inp_vars("tr_vars"), input$tr_normalizer, .ext = input$tr_ext_nz, store = FALSE))
+        }
+      }
+
+      if (input$tr_change_type == 'replace') {
+        vars <- input$tr_vars
+        rpl  <- input$tr_replace
+        if (available(rpl)) {
+          if (length(vars) != length(rpl))
+            return(paste0("The number of replacement variables (", length(rpl), ") is not equal to the number of variables to replace (", length(vars),")"))
+          return(.replace(dat, vars, rpl, store = FALSE))
+        } else {
+          return("Select one or more variable replacements")
+        }
+      }
+
+      ## selecting the columns to show
+  		dat  <- select_(dat, .dots = input$tr_vars)
+      vars <- colnames(dat)
+
+      ## change in type is always done in-place
+      if (input$tr_change_type ==  "type") {
+        if (input$tr_typefunction == "none")
+          return("Select a transformation type for the selected variables")
+        else
+          return(.change_type(dat, input$tr_typefunction, inp_vars("tr_vars"), input$tr_typename, store = FALSE))
+      }
+
+      ## change in type is always done in-place
+      if (input$tr_change_type ==  "transform") {
+        if (input$tr_transfunction == "none")
+          return("Select a function to apply to the selected variable(s)")
+        else
+          return(.transform(dat, input$tr_transfunction, inp_vars("tr_vars"), input$tr_ext, store = FALSE))
+      }
+
+      if (input$tr_change_type == "reorg_levs") {
+          fct <- input$tr_vars[1]
+          if (is.factor(dat[[fct]]) || is.character(dat[[fct]])) {
+            return(.reorg_levs(dat, fct, input$tr_reorg_levs, input$tr_rorepl, input$tr_roname, store = FALSE))
+          } else {
+            return("Select a variable of type factor or character to change the ordering\nand/or number of levels")
+          }
+      }
+
+      if (input$tr_change_type ==  'recode') {
+        if (input$tr_recode == "") {
+          return("Specify a recode statement, assign a name to the recoded variable, and press 'return'. **\n** See the help file for examples")
+        } else {
+          return(.recode(dat, inp_vars("tr_vars")[1], input$tr_recode, input$tr_rcname, store = FALSE))
+        }
+      }
+
+      if (input$tr_change_type == 'rename') {
+        if (input$tr_rename == "") {
+          return("Specify new names for the selected variables (separated by a ',') and press 'return'")
+        } else {
+          if (any(input$tr_rename %in% varnames())) {
+            return("One or more of the new variables names already exists in the data. **\n** Change the specified names or use the Replace function")
+          } else {
+            return(.rename(dat, inp_vars("tr_vars"), input$tr_rename, store = FALSE))
+          }
+        }
+      }
+  	}
 
   return(invisible())
 })
 
 output$transform_data <- reactive({
-  dat <- transform_main()
+
+  withProgress(message = "Applying transformation", value = 1, {
+    dat <- transform_main()
+  })
   if (is.null(dat) || is.character(dat) || nrow(dat) == 0 || ncol(dat) == 0) {
     tr_snippet()
   } else {
@@ -944,7 +947,10 @@ tr_snippet <- reactive({
 output$transform_summary <- renderPrint({
   req(input$tr_hide == FALSE)
 
- 	dat <- transform_main()
+  withProgress(message = "Applying transformation", value = 1, {
+ 	  dat <- transform_main()
+  })
+
   ## with isolate on the summary wouldn't update when the dataset was changed
   if (is.null(dat)) return(invisible())
   if (is.character(dat)) {
@@ -970,7 +976,8 @@ output$transform_summary <- renderPrint({
 })
 
 observeEvent(input$tr_store, {
-	dat <- transform_main()
+  dat <- transform_main()
+ 
 	if (is.null(dat)) return()
 	if (is.character(dat)) return()
   if (min(dim(dat)) == 0) return()
