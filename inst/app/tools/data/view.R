@@ -65,7 +65,8 @@ output$dataviewer <- DT::renderDataTable({
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
 
   isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
-  if (sum(isBigFct) > 0) dat[,isBigFct] <- select(dat, which(isBigFct)) %>% mutate_each(funs(as.character))
+  if (sum(isBigFct) > 0) 
+    dat[,isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
 
   withProgress(message = "Generating view table", value = 1,
     DT::datatable(dat, filter = fbox, selection = "none",

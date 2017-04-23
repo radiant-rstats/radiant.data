@@ -12,7 +12,7 @@
 #' @export
 ## doing a global search
 Search <- function(pattern, df, ignore.case = TRUE, fixed = FALSE) {
-  mutate_each(df, funs(grepl(pattern, as.character(.), ignore.case = ignore.case, fixed = fixed))) %>%
+  mutate_all(df, funs(grepl(pattern, as.character(.), ignore.case = ignore.case, fixed = fixed))) %>%
     transmute(., sel = rowSums(.) > 0) %>%
     .[["sel"]]
 }

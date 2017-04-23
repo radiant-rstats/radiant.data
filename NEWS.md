@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data
+# CHANGES IN radiant.data 0.8
 
 ## NEW FEATURES
 
@@ -39,7 +39,9 @@
 - which.pmax produced a list but needed to be integer
 - To customized predictions in radiant.model indexr must be able to customize the prediction dataframe
 - describe now correctly resets the working directory on exit
+- removed all calls to summarise_each and mutate_each from dplyr
 
 ## Deprecated
-- varp_rm deprecated in favor of varpop 
-- sdp_rm deprecated in favor of sdpop 
+- varp_rm has been deprecated in favor of varpop 
+- sdp_rm has been deprecated in favor of sdpop 
+- mutate_each has been deprecated in favor of mutate_ext

@@ -281,32 +281,51 @@ make_train <- function(n = .7, nr = 100, seed = 1234) {
 
 #' Add tranformed variables to a data frame (NSE)
 #'
-#' @details Wrapper for dplyr::mutate_each that allows custom variable name extensions
+#' @details Wrapper for dplyr::mutate_at that allows custom variable name extensions
 #'
-#' @param tbl Data frame to add transformed variables to
-#' @param funs Function(s) to apply (e.g., funs(log))
+#' @param .tbl Data frame to add transformed variables to
+#' @param .funs Function(s) to apply (e.g., funs(log))
 #' @param ... Variables to transform
 #' @param .ext Extension to add for each variable
 #'
 #' @examples
-#' mutate_each(mtcars, funs(log), mpg, cyl, .ext = "_log")
+#' mutate_ext(mtcars, funs(log), mpg, cyl, .ext = "_log")
+#' mutate_ext(mtcars, funs(log), .ext = "_log")
 #'
 #' @importFrom pryr named_dots
 #'
 #' @export
-mutate_each <- function(tbl, funs, ..., .ext = "") {
+mutate_ext <- function(.tbl, .funs, ..., .ext = "") {
 
-  if (.ext == "") {
-    dplyr::mutate_each(tbl, funs, ...)
+  if (is_empty(.ext)) {
+    dplyr::mutate_at(.tbl, .cols = vars(...), .funs = funs)
   } else {
     vars <- pryr::named_dots(...) %>% names
-    if (is.null(vars)) vars <- colnames(tbl)
+    if (is.null(vars)) vars <- colnames(.tbl)
 
     new <- paste0(vars, .ext)
-    tbl[,new] <-
-      tbl %>% mutate_each_(funs, vars = vars) %>% select_(.dots = vars) %>%
+    .tbl[,new] <-
+      mutate_at(.tbl, .cols = vars, .funs = .funs) %>% select_(.dots = vars) %>%
       set_colnames(new)
-    tbl
+    .tbl
+  }
+}
+
+#' Temporary fix for mutate_if when the predicate is false for all columns 
+#'
+#' @details See https://github.com/tidyverse/dplyr/issues/2617
+#'
+#' @param .tbl Data frame
+#' @param .predicate Predicate
+#' @param .funs Function(s) to apply (e.g., funs(log))
+#' @param ... Additional arguments
+#'
+#' @export
+mutate_if_tmp <- function (.tbl, .predicate, .funs, ...) {
+  if (sum(sapply(.tbl, .predicate)) > 0) { 
+    mutate_if(.tbl, .predicate, .funs, ...)
+  } else {
+    .tbl
   }
 }
 
@@ -404,11 +423,11 @@ getsummary <- function(dat, dc = getclass(dat)) {
     select(dat, which(isNum)) %>%
       tidyr::gather_("variable", "values", cn, factor_key = TRUE) %>%
       group_by_("variable") %>%
-      summarise_each(funs(n = length, n_missing = n_missing, n_distinct = n_distinct,
+      summarise_all(funs(n = length, n_missing = n_missing, n_distinct = n_distinct,
                      mean = mean_rm, median = median_rm, min = min_rm, max = max_rm,
                      `25%` = p25, `75%` = p75, sd = sd_rm, se = se)) %>%
       data.frame(check.names = FALSE) %>%
-      mutate_each(funs(if (is.numeric(.)) round(., 3) else .)) %>%
+      mutate_if_tmp(is.numeric, funs(round(., 3))) %>%
       set_colnames(c("", colnames(.)[-1])) %>%
       print(row.names = FALSE)
     cat("\n")
@@ -422,9 +441,9 @@ getsummary <- function(dat, dc = getclass(dat)) {
 
   if (sum(isDate) > 0) {
     cat("Earliest dates:\n")
-    select(dat, which(isDate)) %>% summarise_each(funs(min)) %>% as.data.frame %>% print(., row.names = FALSE)
+    select(dat, which(isDate)) %>% summarise_all(funs(min)) %>% as.data.frame %>% print(., row.names = FALSE)
     cat("\nFinal dates:\n")
-    select(dat, which(isDate)) %>% summarise_each(funs(max)) %>% as.data.frame %>% print(., row.names = FALSE)
+    select(dat, which(isDate)) %>% summarise_all(funs(max)) %>% as.data.frame %>% print(., row.names = FALSE)
     cat("\n")
   }
 
@@ -433,9 +452,9 @@ getsummary <- function(dat, dc = getclass(dat)) {
     min_time <- function(x) sort(x) %>% head(1)
 
     cat("Earliest time:\n")
-    select(dat, which(isPeriod)) %>% summarise_each(funs(min_time)) %>% as.data.frame %>% print(., row.names = FALSE)
+    select(dat, which(isPeriod)) %>% summarise_all(funs(min_time)) %>% as.data.frame %>% print(., row.names = FALSE)
     cat("\nFinal time:\n")
-    select(dat, which(isPeriod)) %>% summarise_each(funs(max_time)) %>% as.data.frame %>% print(., row.names = FALSE)
+    select(dat, which(isPeriod)) %>% summarise_all(funs(max_time)) %>% as.data.frame %>% print(., row.names = FALSE)
     cat("\n")
   }
 
@@ -454,8 +473,8 @@ getsummary <- function(dat, dc = getclass(dat)) {
   }
   if (sum(isLogic) > 0) {
     cat("Summarize logical variables:\n")
-    select(dat, which(isLogic)) %>% summarise_each(funs(sum_rm, mean_rm, n_missing)) %>%
-      mutate_each(funs(if (is.numeric(.)) round(., 4) else .)) %>%
+    select(dat, which(isLogic)) %>% summarise_all(funs(sum_rm, mean_rm, n_missing)) %>%
+      mutate_if_tmp(is.numeric, funs(round(., 4))) %>%
       matrix(ncol = 3) %>%
       data.frame %>%
       set_colnames(c("# TRUE", "% TRUE", "n_missing")) %>%
@@ -481,7 +500,7 @@ table2data <- function(dat, freq = tail(colnames(dat),1)) {
   lapply(1:nrow(dat), blowup) %>%
   bind_rows %>%
   select_(paste0("-",freq)) %>%
-  mutate_each(funs(as.factor))
+  mutate_all(funs(as.factor))
 }
 
 #' Generate list of levels and unique values

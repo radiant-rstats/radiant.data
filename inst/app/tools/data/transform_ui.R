@@ -281,16 +281,16 @@ output$ui_Transform <- renderUI({
   if (!store || !is.character(dataset)) {
     fun <- get(fun)
     if (is_empty(.ext)) {
-      mutate_each_(dataset, funs(fun), vars)
+      mutate_at(dataset, .cols = vars, .funs = funs(fun))
     } else {
-      mutate_each_(dataset, funs(fun), vars) %>% set_colnames(paste0(vars, .ext))
+      mutate_at(dataset, .cols = vars, .funs = funs(fun)) %>% set_colnames(paste0(vars, .ext))
     }
   } else {
     if (store_dat == "") store_dat <- dataset
     if (is_empty(.ext)) {
-      paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "),")\n")
+      paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_at(r_data[[\"",dataset,"\"]], .cols = vars(", paste0(vars, collapse = ", "), "), .funs = funs(", fun, "))\n")
     } else {
-      paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+      paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_ext(r_data[[\"",dataset,"\"]], funs(", fun, "), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
     }
   }
 }
@@ -304,17 +304,17 @@ output$ui_Transform <- renderUI({
   if (!store && !is.character(dataset)) {
     fun <- get(fun)
     if (is_empty(.ext)) {
-      mutate_each_(dataset, funs(fun), vars)
+      mutate_at(dataset, .cols = vars, .funs = funs(fun))
     } else {
-      mutate_each_(dataset, funs(fun), vars) %>% set_colnames(paste0(vars, .ext))
+      mutate_at(dataset, .cols = vars, .funs = funs(fun)) %>% set_colnames(paste0(vars, .ext))
     }
   } else {
 
     if (store_dat == "") store_dat <- dataset
     if (is_empty(.ext)) {
-      paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "), ")\n")
+      paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_at(r_data[[\"",dataset,"\"]], .cols = vars(", paste0(vars, collapse = ", "), "), .funs = funs(", fun, "))\n")
     } else {
-      paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+      paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_ext(r_data[[\"",dataset,"\"]], funs(", fun, "), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
     }
   }
 }
@@ -441,7 +441,7 @@ observeEvent(input$tr_change_type, {
       set_colnames(paste0(vars, .ext))
   } else {
     if (store_dat == "") store_dat <- dataset
-    paste0("## normalize variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(normalize(.,",nzvar,")), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+    paste0("## normalize variables\nr_data[[\"",store_dat,"\"]] <- mutate_ext(r_data[[\"",dataset,"\"]], funs(normalize(.,",nzvar,")), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
   }
 }
 
@@ -543,15 +543,14 @@ observeEvent(input$tr_change_type, {
     if (is.na(bins) || !is.integer(bins)) return("Please specify the (integer) number of bins to use")
     xt <- function(x, bins, rev) radiant.data::xtile(x, bins, rev = rev)
     select_(dataset, .dots = vars) %>%
-    # mutate_each(funs(radiant.data::xtile(.,bins, rev = rev))) %>%
-    mutate_each(funs(xt(., bins, rev = rev))) %>%
+    mutate_all(funs(xt(., bins, rev = rev))) %>%
     set_colnames(paste0(vars, .ext))
   } else {
     if (store_dat == "") store_dat <- dataset
     if (rev)
-      paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(xtile(.,",bins,", rev = TRUE)), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+      paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_ext(r_data[[\"",dataset,"\"]], funs(xtile(.,",bins,", rev = TRUE)), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
     else
-      paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(xtile(.,",bins,")), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+      paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_ext(r_data[[\"",dataset,"\"]], funs(xtile(.,",bins,")), .ext = \"", .ext, "\", ", paste0(vars, collapse = ", "), ")\n")
   }
 }
 

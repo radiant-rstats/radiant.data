@@ -6,7 +6,7 @@ All transformations applied in the _Data > Transform_ tab can be logged. If, for
 
 ```r
 ## transform variable
-r_data[['diamonds']] <- mutate_each(r_data[['diamonds']], funs(log), ext = '_log', price, carat)
+r_data[["diamonds"]] <- mutate_ext(r_data[["diamonds"]], funs(log), price, carat, .ext = "_log")
 ```
 
 This is an important feature if you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to transform the data and to generate results, i.e., your work is now reproducible.

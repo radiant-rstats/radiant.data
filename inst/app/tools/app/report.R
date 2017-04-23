@@ -155,10 +155,11 @@ output$report <- renderUI({
       vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
       wordWrap = TRUE, height = "auto", selectionId = "rmd_selection",
       value = state_init("rmd_report", init) %>% esc_slash,
-      hotkeys = list(runKeyRmd = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
+      hotkeys = list(runKeyRmd = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
+      autoComplete = "enabled"),
     htmlOutput("rmd_knitted"),
     getdeps()
-  )
+  ) 
 })
 
 valsRmd <- reactiveValues(knit = 0)

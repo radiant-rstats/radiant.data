@@ -29,6 +29,7 @@
 #' @examples
 #' visualize("diamonds", "price:x", type = "dist")
 #' visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
+#' \dontrun{
 #' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
 #'   type = "bar", fun = "median")
 #' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
@@ -41,6 +42,7 @@
 #'   gridExtra::grid.arrange(grobs = ., top = "Histograms", ncol = 2)
 #' visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "bar",
 #'   facet_row = "cut", fill = "cut")
+#' }
 #'
 #' @export
 visualize <- function(dataset, xvar,
@@ -131,15 +133,15 @@ visualize <- function(dataset, xvar,
     xvar <- cn[which(fl[1] == cn):which(fl[2] == cn)]
   }
 
-  ## convertising factor variables if needed
+  ## converting character variables if needed
   isChar <- dc == "character"
   if (sum(isChar) > 0) {
     if (type == "density") {
-      dat[,isChar] <- select(dat, which(isChar)) %>% mutate_each(funs(as_numeric))
+      dat[,isChar] <- select(dat, which(isChar)) %>% mutate_all(funs(as_numeric))
       if ("character" %in% getclass(select(dat,which(isChar))))
         return("Character variable(s) were not converted to numeric for plotting.\nTo use these variables in a plot convert them to numeric\nvariables (or factors) in the Data > Transform tab")
     } else {
-      dat[,isChar] <- select(dat, which(isChar)) %>% mutate_each(funs(as_factor))
+      dat[,isChar] <- select(dat, which(isChar)) %>% mutate_all(funs(as_factor))
       nrlev <- sapply(dat, function(x) if (is.factor(x)) length(levels(x)) else 0)
       if (max(nrlev) > 500)
         return("Character variable(s) were not converted to factors for plotting.\nTo use these variable in a plot convert them to factors\n(or numeric variables) in the Data > Transform tab")
@@ -163,7 +165,7 @@ visualize <- function(dataset, xvar,
   if (type == "bar") {
     isFctY <- "factor" == dc & names(dc) %in% yvar
     if (sum(isFctY)) {
-      dat[,isFctY] <- select(dat, which(isFctY)) %>% mutate_each(funs(as.integer(. == levels(.)[1])))
+      dat[,isFctY] <- select(dat, which(isFctY)) %>% mutate_all(funs(as.integer(. == levels(.)[1])))
       dc[isFctY] <- "integer"
     }
   }
@@ -181,14 +183,14 @@ visualize <- function(dataset, xvar,
     if (any(!dc[xvar] %in% c("integer","numeric")))
       return("'Log X' is only meaningful for X-variables of type integer or numeric")
     to_log <- (dc[xvar] %in% c("integer","numeric")) %>% xvar[.]
-    dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_each(funs(log_trans))
+    dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_all(funs(log_trans))
   }
 
   if ("log_y" %in% axes) {
     if (any(!dc[yvar] %in% c("integer","numeric")))
       return("'Log Y' is only meaningful for Y-variables of type integer or numeric")
     to_log <- (dc[yvar] %in% c("integer","numeric")) %>% yvar[.]
-    dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_each(funs(log_trans))
+    dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_all(funs(log_trans))
   }
 
   ## combining Y-variables if needed
@@ -337,7 +339,8 @@ visualize <- function(dataset, xvar,
         if (color == 'none') {
           if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
-            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, j)) %>% summarise_each(make_funs(fun))
+            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, j)) %>% 
+              summarise_all(make_funs(fun))
             colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j)) + geom_line(aes(group = 1))
             if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point()
@@ -347,7 +350,8 @@ visualize <- function(dataset, xvar,
         } else {
           if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else unique(c(i, byvar))
-            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, color, j)) %>% summarise_each(make_funs(fun))
+            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, color, j)) %>% 
+              summarise_all(make_funs(fun))
             colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j, color = color, group = color)) + geom_line()
             if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point()
@@ -371,7 +375,8 @@ visualize <- function(dataset, xvar,
       if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       for (j in yvar) {
         tbv <- if (is.null(byvar)) i else c(i, byvar)
-        tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, j)) %>% summarise_each(make_funs(fun))
+        tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, j)) %>% 
+          summarise_all(make_funs(fun))
         colnames(tmp)[ncol(tmp)] <- j
 
         if ("sort" %in% axes && facet_row == "." && facet_col == ".") {

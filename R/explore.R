@@ -54,26 +54,29 @@ explore <- function(dataset,
   dc <- getclass(dat)
   isFctNum <- "factor" == dc & names(dc) %in% setdiff(vars,byvar)
   if (sum(isFctNum)) {
-    dat[,isFctNum] <- select(dat, which(isFctNum)) %>% mutate_each(funs(as.integer(. == levels(.)[1])))
+    dat[,isFctNum] <- select(dat, which(isFctNum)) %>% 
+      mutate_all(funs(as.integer(. == levels(.)[1])))
     dc[isFctNum] <- "integer"
   }
 
   isLogNum <- "logical" == dc & names(dc) %in% setdiff(vars,byvar)
   if (sum(isLogNum)) {
-    dat[,isLogNum] <- select(dat, which(isLogNum)) %>% mutate_each(funs(as.integer))
+    dat[,isLogNum] <- select(dat, which(isLogNum)) %>% 
+      mutate_all(funs(as.integer))
     dc[isLogNum] <- "integer"
   }
 
   ## summaries only for numeric variables
-  isNum <- dc %>% {which("numeric" == . | "integer" == .)}
+  # isNum <- dc %>% {which("numeric" == . | "integer" == .)}
 
   ## avoid using .._rm as function name
   pfun <- make_funs(fun)
 
   if (is_empty(byvar)) {
-    tab <- dat %>% select(isNum) %>%
+    isNum <- dc %>% {which("numeric" == . | "integer" == .)}
+    tab <- dat %>% select_(.dots = names(isNum)) %>%
       gather("variable", "value", factor_key = TRUE) %>%
-      group_by_("variable")  %>% summarise_each(pfun)
+      group_by_("variable")  %>% summarise_all(pfun)
 
     ## order by the variable names selected
     tab <- tab[match(vars, tab[[1]]),]
@@ -83,7 +86,8 @@ explore <- function(dataset,
 
     ## convert categorical variables to factors if needed
     ## needed to deal with empty/missing values
-    dat[,byvar] <- select_(dat, .dots = byvar) %>% mutate_each(funs(empty_level(.)))
+    dat[,byvar] <- select_(dat, .dots = byvar) %>% 
+      mutate_all(funs(empty_level(.)))
 
     ## avoiding issues with n_missing and n_distinct in dplyr
     ## have to reverse this later
@@ -98,7 +102,7 @@ explore <- function(dataset,
     names(pfun) %<>% fix_uscore
 
     tab <- dat %>% group_by_(.dots = byvar) %>%
-      summarise_each(pfun)
+      summarise_all(pfun)
 
     ## avoiding issues with n_missing and n_distinct
     names(pfun) %<>% sub("n.","n_",.)
@@ -151,7 +155,7 @@ explore <- function(dataset,
     }
   }
 
-  tab <- ungroup(tab) %>% mutate_each(funs(check_int))
+  tab <- ungroup(tab) %>% mutate_all(funs(check_int))
 
   ## convert to data.frame to maintain attributes
   tab <- as.data.frame(tab, as.is = TRUE)
@@ -263,7 +267,9 @@ flip <- function(expl, top = "fun") {
   } else if (top[1] == "byvar" && length(cvars) > 0) {
     expl$tab %<>% gather(".function", "value", -(1:(length(cvars)+1))) %>% spread_(cvars[1], "value")
     expl$tab[[".function"]] %<>% factor(., levels = names(expl$pfun))
-    colnames(expl$tab) <- gsub(" ", ".", colnames(expl$tab))
+
+    ## ensure we don't have invalid column names
+    colnames(expl$tab) <- make.names(colnames(expl$tab))
   }
 
   expl$tab
@@ -637,7 +643,7 @@ ln <- function(x, na.rm = TRUE) if (na.rm) log(na.omit(x)) else log(x)
 #' @param na.rm If TRUE missing values are removed before calculation
 #' @return Logical. TRUE is there is variability
 #' @examples
-#' summarise_each(diamonds, funs(does_vary)) %>% as.logical
+#' summarise_all(diamonds, funs(does_vary)) %>% as.logical
 #'
 #' @export
 does_vary <- function(x, na.rm = TRUE) {
@@ -646,7 +652,6 @@ does_vary <- function(x, na.rm = TRUE) {
     FALSE
   } else {
     if (is.factor(x) || is.character(x)) {
-      # n_distinct(x, na.rm = na.rm) > 1
       length(unique(x)) > 1
     } else {
       abs(max_rm(x, na.rm = na.rm) - min_rm(x, na.rm = na.rm)) > .Machine$double.eps^0.5

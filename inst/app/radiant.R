@@ -119,9 +119,7 @@ saveStateOnRefresh <- function(session = session) {
 
 groupable_vars <- reactive({
   .getdata() %>%
-    # summarise_each(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
-                        # is.character(.) || ((n_distinct(., na.rm = TRUE)/n()) < .30))) %>%
-    summarise_each(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
+    summarise_all(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
                         is.character(.) || ((length(unique(.))/n()) < .30))) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
@@ -129,7 +127,7 @@ groupable_vars <- reactive({
 
 groupable_vars_nonum <- reactive({
   .getdata() %>%
-    summarise_each(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
+    summarise_all(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
                    is.character(.))) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
@@ -139,8 +137,7 @@ groupable_vars_nonum <- reactive({
 ## used in compare proportions
 two_level_vars <- reactive({
   .getdata() %>%
-    # summarise_each(funs(n_distinct(., na.rm = TRUE))) %>%
-    summarise_each(funs(length(unique(.)))) %>%
+    summarise_all(funs(length(unique(.)))) %>%
     { . == 2 } %>%
     which(.) %>%
     varnames()[.]
@@ -149,7 +146,7 @@ two_level_vars <- reactive({
 ## used in visualize - don't plot Y-variables that don't vary
 varying_vars <- reactive({
   .getdata() %>%
-    summarise_each(funs(does_vary(.))) %>%
+    summarise_all(funs(does_vary(.))) %>%
     as.logical %>%
     which %>%
     varnames()[.]
@@ -208,10 +205,10 @@ is_date <- function(x) inherits(x, c("Date", "POSIXlt", "POSIXct"))
 r_drop <- function(x, drop = c("dataset","data_filter")) x[-which(x %in% drop)]
 
 ## convert a date variable to character for printing
-d2c <- function(x) if (is_date(x)) as.character(x) else x
+# d2c <- function(x) if (is_date(x)) as.character(x) else x
 
 ## truncate character fields for show_data_snippet
-trunc_char <- function(x) if (is.character(x)) strtrim(x,40) else x
+# trunc_char <- function(x) if (is.character(x)) strtrim(x,40) else x
 
 ## show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt = "") {
@@ -222,8 +219,8 @@ show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt =
   ## name exists
   dat <- dat[1:min(nshow, nr),, drop = FALSE]
   dat %>%
-    mutate_each(funs(trunc_char)) %>%
-    mutate_each(funs(d2c)) %>%
+    mutate_if_tmp(is_date, as.character) %>%
+    mutate_if_tmp(is.character, funs(strtrim(., 40))) %>%
     xtable::xtable(.) %>%
     print(type = 'html',  print.results = FALSE, include.rownames = FALSE,
           sanitize.text.function = identity,
@@ -455,7 +452,7 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
         tabsort <- c()
         for (i in order[[1]]) {
           cname <- cn[i[[1]] + 1] %>% gsub("^\\s+|\\s+$", "", .)
-          if (grepl("[^0-9a-zA-Z]", cname) || grepl("^[0-9]", cname))
+          if (grepl("[^0-9a-zA-Z_\\.]", cname) || grepl("^[0-9]", cname))
             cname <- paste0("`", cname, "`")
           if (i[[2]] == "desc") cname <- paste0("desc(", cname, ")")
           tabsort <- c(tabsort, cname)

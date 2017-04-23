@@ -9,7 +9,7 @@
 
 The first step is to install R. For mac go to <a href="https://cran.r-project.org/bin/macosx/" target="_blank">https://cran.r-project.org/bin/macosx/</a>. For windows get the latest release from <a href="https://cran.r-project.org/bin/windows/base/release.htm" target="_blank">https://cran.r-project.org/bin/windows/base/release.htm</a>
 
-> **Important:** Windows users **must** install R in directory C:\\R\\R-3.3.2
+> **Important:** Windows users **must** install R in directory C:\\R\\R-3.3.4
 
 To automate the remaining steps in the install process open R and copy-and-paste the command below, press return, and accept all default settings during the install process:
 
@@ -47,14 +47,17 @@ For a step-by-step tutorial see the `Install Radiant on Windows` or `Install Rad
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/o32VNc7EZUM" frameborder="0" allowfullscreen></iframe>
 
+## Using Radiant for Model Evaluation
+
+The state file used in the demo is available for download from [GitHub](https://radiant-rstats.github.io/docs/examples/demo-state2-dvd-rnd.rda) 
+
+<iframe width="640" height="375" src="https://www.youtube.com/embed/9fugq5dXNhk" frameborder="0" allowfullscreen></iframe>
+
 <!--
 ## Visualizing data
 
 <iframe width="640" height="375" src="" frameborder="0" allowfullscreen></iframe>
 
-## Generating predictions from regression and GLM
-
-<iframe width="640" height="375" src="//www.youtube.com/embed/Xp1REGAewGU" frameborder="0" allowfullscreen></iframe>
 -->
 
 ## License

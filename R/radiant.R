@@ -182,13 +182,12 @@ factorizer <- function(dat, safx = 30) {
   }
   toFct <-
     select(dat, which(isChar)) %>%
-    # summarise_each(funs(n() < 101 | (n_distinct(.) < 100 & (n_distinct(.)/length(.)) < (1/safx)))) %>%
-    summarise_each(funs(fab)) %>%
+    summarise_all(funs(fab)) %>%
     select(which(. == TRUE)) %>% 
     names
   if (length(toFct) == 0) return(dat)
   
-  mutate_each_(dat, funs(as.factor), vars = toFct)
+  mutate_at(dat, .cols = toFct, .funs = funs(as.factor))
 }
 
 #' Load an rda or rds file and add it to the radiant data list (r_data) if available
@@ -704,7 +703,7 @@ formatdf <- function(tbl, dec = 3, perc = FALSE, mark = "") {
     }
   }
 
-  mutate_each(tbl, funs(frm))
+  mutate_all(tbl, .funs = funs(frm))
 }
 
 #' Format a number with a specified number of decimal places, thousand sep, and a symbol
@@ -742,15 +741,12 @@ formatnr <- function(x, sym = "", dec = 2, perc = FALSE, mark = ",") {
 #' @return Data frame with rounded doubles
 #'
 #' @examples
-#' data.frame(x = c("a","b"), y = c(1L, 2L), z = c(-0.0005, 3.1)) %>%
+#' data.frame(x = as.factor(c("a","b")), y = c(1L, 2L), z = c(-0.0005, 3.1)) %>%
 #'   rounddf(dec = 3)
 #'
 #' @export
-rounddf <- function(tbl, dec = 3) {
-  mutate_each(tbl,
-    funs(if (is.double(.)) round(., dec) else .)
-  )
-}
+rounddf <- function(tbl, dec = 3) 
+  mutate_if_tmp(tbl, is.double, .funs = funs(round(., dec)))
 
 #' Find a user's dropbox folder
 #'
