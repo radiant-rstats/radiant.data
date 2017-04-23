@@ -19,4 +19,3 @@ foo <- "some text" \%>\% add_class("text")
 foo <- "some text" \%>\% add_class(c("text","another class"))
 
 }
-

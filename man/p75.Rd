@@ -21,4 +21,3 @@ p75(x, na.rm = TRUE)
 p75(rnorm(100))
 
 }
-

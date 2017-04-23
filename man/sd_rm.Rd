@@ -21,4 +21,3 @@ Standard deviation with na.rm = TRUE
 sd_rm(rnorm(100))
 
 }
-

@@ -19,4 +19,3 @@ Number of missing values
 n_missing(c("a","b",NA))
 
 }
-

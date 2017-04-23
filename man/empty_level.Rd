@@ -15,4 +15,3 @@ Variable with updated levels
 \description{
 Convert categorical variables to factors and deal with empty/missing values (used in pivotr and explore)
 }
-

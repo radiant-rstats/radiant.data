@@ -19,4 +19,3 @@ Weighted standard deviation
 \details{
 Calculated a weighted standard deviation
 }
-

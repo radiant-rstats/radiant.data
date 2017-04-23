@@ -24,4 +24,3 @@ See \url{http://radiant-rstats.github.io/docs/data/view.html} for an example in 
 \seealso{
 See \code{\link{grepl}} for a more detailed description of the function arguments
 }
-

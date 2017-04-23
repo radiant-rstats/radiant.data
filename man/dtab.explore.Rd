@@ -37,4 +37,3 @@ tab <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"), to
 
 \code{\link{summary.pivotr}} to print a plain text table
 }
-

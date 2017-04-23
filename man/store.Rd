@@ -14,4 +14,3 @@ store(object, ...)
 \description{
 Method to store variables in a dataset in Radiant
 }
-

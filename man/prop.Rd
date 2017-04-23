@@ -24,4 +24,3 @@ prop(rep(0, 10))
 prop(factor(c(rep("a", 20), rep("b", 10))))
 
 }
-

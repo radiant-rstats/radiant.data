@@ -21,4 +21,3 @@ p25(x, na.rm = TRUE)
 p25(rnorm(100))
 
 }
-

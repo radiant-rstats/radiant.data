@@ -21,4 +21,3 @@ Coefficient of variation
 cv(runif (100))
 
 }
-

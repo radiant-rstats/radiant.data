@@ -23,4 +23,3 @@ ci_label("two.sided",.95)
 ci_label("greater",.9)
 
 }
-

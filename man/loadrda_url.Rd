@@ -15,4 +15,3 @@ Data frame
 \description{
 Load an rda file from a url
 }
-

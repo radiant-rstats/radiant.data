@@ -14,4 +14,3 @@ render(object, ...)
 \description{
 Method to render objects (i.e., htmlwidgets and rmarkdown files)
 }
-

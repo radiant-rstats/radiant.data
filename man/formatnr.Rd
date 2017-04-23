@@ -32,4 +32,3 @@ formatnr(data.frame(a = c(.1, .99)), perc = TRUE)
 formatnr(data.frame(a = 1000), sym = "$", dec = 0)
 
 }
-

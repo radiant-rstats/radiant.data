@@ -21,4 +21,3 @@ Sum with na.rm = TRUE
 sum_rm(1:200)
 
 }
-

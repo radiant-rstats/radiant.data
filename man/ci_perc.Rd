@@ -25,4 +25,3 @@ ci_perc(0:100, "greater",.95)
 ci_perc(0:100, "two.sided",.80)
 
 }
-

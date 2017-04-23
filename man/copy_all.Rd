@@ -19,4 +19,3 @@ Equivalent of source with local=TRUE for all package functions. Adapted from fun
 copy_all(radiant.data)
 
 }
-

@@ -14,4 +14,3 @@
 \description{
 Method to render rmarkdown documents
 }
-

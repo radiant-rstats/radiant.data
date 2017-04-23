@@ -15,4 +15,3 @@ Path to Dropbox account
 \description{
 Find a user's dropbox folder
 }
-

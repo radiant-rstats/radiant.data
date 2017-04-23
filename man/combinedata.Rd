@@ -38,4 +38,3 @@ avengers \%>\% combinedata(superheroes, type = "bind_rows")
 avengers \%>\% combinedata(superheroes, add = "publisher", type = "bind_rows")
 
 }
-

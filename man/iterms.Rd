@@ -25,4 +25,3 @@ paste0("var", 1:3) \%>\% iterms(3)
 paste0("var", 1:3) \%>\% iterms(2, sep = ".")
 
 }
-

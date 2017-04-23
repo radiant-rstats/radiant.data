@@ -14,4 +14,3 @@ dtab(object, ...)
 \description{
 Method to create datatables
 }
-

@@ -22,4 +22,3 @@ Get variable class information for each column in a data.frame
 getclass(mtcars)
 
 }
-

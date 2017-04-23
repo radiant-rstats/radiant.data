@@ -22,4 +22,3 @@ Add the summarized data to the r_data list in Radiant or return it. See \url{htt
 \seealso{
 \code{\link{pivotr}} to generate summaries
 }
-

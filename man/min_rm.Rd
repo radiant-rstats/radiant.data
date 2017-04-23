@@ -21,4 +21,3 @@ Min with na.rm = TRUE
 min_rm(runif (100))
 
 }
-

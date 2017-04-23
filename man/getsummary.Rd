@@ -17,4 +17,3 @@ Create data.frame summary
 \details{
 Used in Radiant's Data > Transform tab
 }
-

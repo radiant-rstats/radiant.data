@@ -23,4 +23,3 @@ Generate a variable used to selected a training sample
 make_train(.5, 10)
 
 }
-

@@ -6,4 +6,3 @@
 \description{
 Exporting the kurtosi function from the psych package
 }
-

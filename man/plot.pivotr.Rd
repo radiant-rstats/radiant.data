@@ -34,4 +34,3 @@ pivotr("diamonds", cvars = c("cut","clarity","color")) \%>\% plot
 
 \code{\link{summary.pivotr}} to show summaries
 }
-

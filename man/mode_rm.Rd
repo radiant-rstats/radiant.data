@@ -21,4 +21,3 @@ Mode with na.rm = TRUE
 mode_rm(diamonds$cut)
 
 }
-

@@ -21,4 +21,3 @@ Natural log
 ln(runif(10,1,2))
 
 }
-

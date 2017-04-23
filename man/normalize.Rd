@@ -17,4 +17,3 @@ x/y
 \description{
 Normalize a variable x by a variable y
 }
-

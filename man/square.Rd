@@ -15,4 +15,3 @@ x^2
 \description{
 Calculate square of a variable
 }
-

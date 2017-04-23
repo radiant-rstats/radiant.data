@@ -34,7 +34,6 @@ pivotr <- function(dataset,
 
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   dat <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
-  # if (!is_string(dataset)) dataset <- deparse(substitute(dataset))
   if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## in case : was used vor cvars
@@ -59,7 +58,7 @@ pivotr <- function(dataset,
   }
 
   ## convert categorical variables to factors and deal with empty/missing values
-  dat[,cvars] <- select_(dat, .dots = cvars) %>% mutate_each(funs(empty_level(.)))
+  dat[,cvars] <- select_(dat, .dots = cvars) %>% mutate_all(funs(empty_level(.)))
 
   sel <- function(x, nvar, cvar = c()) if (nvar == "n") x else select_(x, .dots = c(nvar,cvar))
   sfun <- function(x, nvar, cvars = "", fun = fun) {
@@ -67,8 +66,8 @@ pivotr <- function(dataset,
       if (all(cvars == "")) count_(x) else count_(x, cvars)
     } else {
       dat <-
-        mutate_each_(x, funs_("as.numeric"), vars = nvar) %>%
-        summarise_each_(make_funs(fun), vars = nvar)
+        mutate_at(x, .cols = nvar, .funs = funs(as.numeric)) %>%
+        summarise_at(.cols = nvar, .funs = make_funs(fun))
       colnames(dat)[ncol(dat)] <- nvar
       dat
     }
@@ -86,7 +85,7 @@ pivotr <- function(dataset,
   if (length(cvars) == 1) {
     tab <-
       bind_rows(
-        mutate_each_(tab, funs(as.character), vars = cvars),
+        mutate_at(tab, .cols = cvars, .funs = funs(as.character)),
         bind_cols(data.frame("Total") %>% setNames(cvars), total %>% set_colnames(nvar))
       )
 
@@ -97,7 +96,7 @@ pivotr <- function(dataset,
       group_by_(.dots = cvars[1]) %>%
       sel(nvar,cvars[1]) %>%
       sfun(nvar, cvars[1], fun) %>%
-      mutate_each_(funs(as.character), vars = cvars[1])
+      mutate_at(.cols = cvars[1], .funs = funs(as.character))
 
     row_total <-
       dat %>%
@@ -109,7 +108,9 @@ pivotr <- function(dataset,
       set_colnames("Total")
 
     ## creating cross tab
-    tab <- spread_(tab, cvars[1], nvar) %>% ungroup %>% mutate_each_(funs(as.character), vars = cvars[-1])
+    tab <- spread_(tab, cvars[1], nvar) %>% ungroup %>% 
+      mutate_at(.cols = cvars[-1], .funs = funs(as.character))
+
     tab <-
       bind_rows(
         tab,
@@ -143,6 +144,9 @@ pivotr <- function(dataset,
   }
 
   nrow_tab <- nrow(tab) - 1
+
+  ## ensure we don't have invalid column names
+  colnames(tab) <- make.names(colnames(tab))
 
   ## filtering the table if desired
   if (tabfilt != "")
@@ -228,7 +232,7 @@ summary.pivotr <- function(object,
 
       cst <- object$tab_freq %>% filter(.[[1]] != "Total") %>%
         select(-which(names(.) %in% c(object$cvars, "Total")))  %>%
-        mutate_each(funs(ifelse (is.na(.), 0, .))) %>%
+        mutate_all(funs(ifelse (is.na(.), 0, .))) %>%
         {sshhr(chisq.test(., correct = FALSE))}
 
       res <- tidy(cst)
@@ -301,7 +305,7 @@ dtab.pivotr  <- function(object,
   } else {
     sketch = shiny::withTags(table(
       thead(
-        tr(th(colspan = length(c(cvars,cn)), cvar, class = "text-center")),
+        tr(th(colspan = length(c(cvars,cn)), cvar, class = "dt-center")),
         tr(lapply(c(cvars,cn), th))
       ),
       tfoot(
@@ -318,6 +322,7 @@ dtab.pivotr  <- function(object,
   dom <- if (nrow(tab) < 11) "t" else "ltip"
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
   dt_tab <- {if (!perc) rounddf(tab, dec) else tab} %>%
+  # dt_tab <- tab %>%
   DT::datatable(container = sketch, selection = "none", rownames = FALSE,
     filter = fbox,
     style = "bootstrap",

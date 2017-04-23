@@ -18,4 +18,3 @@ is_not(NULL)
 is_not(c())
 
 }
-

@@ -19,4 +19,3 @@ Make a list of functions-as-formulas to pass to dplyr
 make_funs(c("mean", "sum_rm"))
 
 }
-

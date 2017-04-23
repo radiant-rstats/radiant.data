@@ -21,4 +21,3 @@ Variance with na.rm = TRUE
 var_rm(rnorm(100))
 
 }
-

@@ -23,4 +23,3 @@ as.integer(as.factor(5:10))
 as_integer(c("a","b"))
 
 }
-

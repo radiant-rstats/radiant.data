@@ -24,4 +24,3 @@ as_numeric(c("a","b"))
 as_numeric(c("3","4"))
 
 }
-

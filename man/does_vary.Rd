@@ -18,7 +18,6 @@ Logical. TRUE is there is variability
 Does a vector have non-zero variability?
 }
 \examples{
-summarise_each(diamonds, funs(does_vary)) \%>\% as.logical
+summarise_all(diamonds, funs(does_vary)) \%>\% as.logical
 
 }
-

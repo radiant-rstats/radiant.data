@@ -18,8 +18,7 @@ Data frame with rounded doubles
 Round double in a data.frame to a specified number of decimal places
 }
 \examples{
-data.frame(x = c("a","b"), y = c(1L, 2L), z = c(-0.0005, 3.1)) \%>\%
+data.frame(x = as.factor(c("a","b")), y = c(1L, 2L), z = c(-0.0005, 3.1)) \%>\%
   rounddf(dec = 3)
 
 }
-

@@ -21,4 +21,3 @@ p90(x, na.rm = TRUE)
 p90(rnorm(100))
 
 }
-

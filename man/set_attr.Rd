@@ -20,4 +20,3 @@ Alias used to add an attribute
 foo <- data.frame(price = 1:5) \%>\% set_attr("desc", "price set in experiment ...")
 
 }
-

@@ -17,4 +17,3 @@ Data frame with factors
 \description{
 Convert character to factors as needed
 }
-

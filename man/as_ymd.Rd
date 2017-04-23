@@ -19,4 +19,3 @@ Convert input in year-month-day format to date
 as_ymd("2013-1-1")
 
 }
-

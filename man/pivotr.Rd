@@ -43,4 +43,3 @@ result <- pivotr("diamonds", cvars = "cut", nvar = "price")$tab
 result <- pivotr("diamonds", cvars = "cut", normalize = "total")$tab
 
 }
-

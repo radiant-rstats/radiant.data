@@ -15,4 +15,3 @@ Diamond prices
 A sample of 3,000 from the diamonds dataset bundeled with ggplot2. Description provided in attr(diamonds,"description")
 }
 \keyword{datasets}
-

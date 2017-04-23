@@ -21,4 +21,3 @@ Add ordered argument to lubridate::month
 \seealso{
 See the \code{\link[lubridate]{month}} function in the lubridate package for additional details
 }
-

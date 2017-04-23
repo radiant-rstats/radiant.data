@@ -18,4 +18,3 @@ Convert input in month-day-year-hour-minute format to date-time
 \examples{
 as_mdy_hm("1-1-2014 12:15")
 }
-

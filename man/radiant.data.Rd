@@ -4,6 +4,7 @@
 \name{radiant.data}
 \alias{radiant.data}
 \alias{radiant.data-package}
+\alias{radiant.data}
 \title{radiant.data}
 \usage{
 radiant.data()
@@ -16,4 +17,3 @@ Launch Radiant in the default browser
 \details{
 See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
 }
-

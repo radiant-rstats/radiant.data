@@ -17,4 +17,3 @@ Filtered data frame
 \description{
 Filter data with user-specified expression
 }
-

@@ -21,4 +21,3 @@ Mean with na.rm = TRUE
 mean_rm(runif (100))
 
 }
-

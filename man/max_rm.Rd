@@ -21,4 +21,3 @@ Max with na.rm = TRUE
 max_rm(runif (100))
 
 }
-

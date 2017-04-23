@@ -17,4 +17,3 @@ Data frame in r_data or in the calling enviroment
 \description{
 Load an rda or rds file and add it to the radiant data list (r_data) if available
 }
-

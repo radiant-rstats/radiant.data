@@ -26,4 +26,3 @@ as_mdy("2-1-2014") \%>\% week
 as_mdy("2-1-2014") \%>\% wday(label = TRUE)
 }
 }
-

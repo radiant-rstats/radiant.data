@@ -9,4 +9,3 @@ install_webshot()
 \description{
 Install webshot and phantomjs
 }
-

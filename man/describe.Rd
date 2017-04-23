@@ -12,4 +12,3 @@ describe(name)
 \description{
 Show dataset desription, if available, in html form in Rstudio viewer or default browser
 }
-

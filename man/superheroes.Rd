@@ -15,4 +15,3 @@ Super heroes
 List of super heroes from \url{http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html}. The dataset is used to illustrate data merging / joining. Description provided in attr(superheroes,"description")
 }
 \keyword{datasets}
-

@@ -27,4 +27,3 @@ result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"),
 
 \code{\link{dtab.explore}} to create the DT table
 }
-

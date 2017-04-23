@@ -18,4 +18,3 @@ indexr(dataset, vars = "", filt = "", cmd = "")
 \description{
 Find index corrected for missing values and filters
 }
-

@@ -24,4 +24,3 @@ refactor(diamonds$cut, c("Premium","Ideal")) \%>\% head
 refactor(diamonds$cut, c("Premium","Ideal"), "Other") \%>\% head
 
 }
-

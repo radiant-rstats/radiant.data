@@ -21,4 +21,3 @@ Standard error
 se(rnorm(100))
 
 }
-

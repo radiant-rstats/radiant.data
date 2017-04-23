@@ -20,4 +20,3 @@ Print/draw method for grobs produced by gridExtra
 \details{
 Print method for ggplot grobs created using grid.arrange. Code is based on \url{https://github.com/baptiste/gridextra/blob/master/inst/testing/shiny.R}
 }
-

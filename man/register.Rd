@@ -23,4 +23,3 @@ Register a data.frame in the datasetlist in Radiant
 \details{
 Store data frame in Radiant r_data list if available
 }
-

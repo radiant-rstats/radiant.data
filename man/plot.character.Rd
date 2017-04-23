@@ -14,4 +14,3 @@
 \description{
 Don't try to plot strings
 }
-

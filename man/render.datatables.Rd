@@ -14,4 +14,3 @@
 \description{
 Method to render DT tabels
 }
-

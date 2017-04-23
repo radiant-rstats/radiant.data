@@ -65,6 +65,7 @@ See \url{http://radiant-rstats.github.io/docs/data/visualize.html} for an exampl
 \examples{
 visualize("diamonds", "price:x", type = "dist")
 visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
+\dontrun{
 visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
   type = "bar", fun = "median")
 visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
@@ -77,6 +78,6 @@ visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) \%>\%
   gridExtra::grid.arrange(grobs = ., top = "Histograms", ncol = 2)
 visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "bar",
   facet_row = "cut", fill = "cut")
-
 }
 
+}

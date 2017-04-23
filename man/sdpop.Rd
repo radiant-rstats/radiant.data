@@ -21,4 +21,3 @@ Standard deviation for the population
 sdpop(rnorm(100))
 
 }
-

@@ -18,4 +18,3 @@ Create data.frame from a table
 data.frame(price = c("$200","$300"), sale = c(10, 2)) \%>\% table2data
 
 }
-

@@ -25,4 +25,3 @@ is_string(c("data","data"))
 is_string(NULL)
 
 }
-

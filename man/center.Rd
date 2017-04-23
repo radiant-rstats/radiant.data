@@ -17,4 +17,3 @@ If x is a numberic variable return x - mean(x)
 \description{
 Center
 }
-

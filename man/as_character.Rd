@@ -12,4 +12,3 @@ as_character(x)
 \description{
 Wrapper for as.character
 }
-

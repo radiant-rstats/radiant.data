@@ -17,4 +17,3 @@ If x is a numberic variable return center(x) / mean(x)
 \description{
 Standardize
 }
-

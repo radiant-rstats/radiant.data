@@ -14,4 +14,3 @@ as_factor(x, ordered = FALSE)
 \description{
 Wrapper for factor with ordered = FALSE
 }
-

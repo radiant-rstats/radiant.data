@@ -15,4 +15,3 @@ Avengers
 List of avengers. The dataset is used to illustrate data merging / joining. Description provided in attr(avengers,"description")
 }
 \keyword{datasets}
-

@@ -23,4 +23,3 @@ Data.frame with specified columns and rows
 \description{
 Get data for analysis functions
 }
-

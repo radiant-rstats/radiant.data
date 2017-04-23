@@ -31,4 +31,3 @@ is_empty("   ")
 is_empty(" something  ")
 
 }
-

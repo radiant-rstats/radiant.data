@@ -21,4 +21,3 @@ Variance for the population
 varpop(rnorm(100))
 
 }
-

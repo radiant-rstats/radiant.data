@@ -21,4 +21,3 @@ Median with na.rm = TRUE
 median_rm(runif (100))
 
 }
-

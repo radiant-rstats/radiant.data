@@ -21,4 +21,3 @@ Standard error for proportion
 seprop(c(rep(1L, 10), rep(0L, 10)))
 
 }
-

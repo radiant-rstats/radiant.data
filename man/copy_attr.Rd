@@ -16,4 +16,3 @@ copy_attr(to, from, attr)
 \description{
 Copy attributes from on object to another
 }
-

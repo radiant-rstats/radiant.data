@@ -21,4 +21,3 @@ p95(x, na.rm = TRUE)
 p95(rnorm(100))
 
 }
-

@@ -21,4 +21,3 @@ p10(x, na.rm = TRUE)
 p10(rnorm(100))
 
 }
-

@@ -28,4 +28,3 @@ data.frame(x = c(1L, 2L), y = c(0.05, 0.8)) \%>\%
   formatdf(dec = 2, perc = TRUE)
 
 }
-

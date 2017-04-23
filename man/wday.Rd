@@ -21,4 +21,3 @@ Add ordered argument to lubridate::wday
 \seealso{
 See the \code{\link[lubridate]{wday}} function in the lubridate package for additional details
 }
-

@@ -42,4 +42,3 @@ ret <-  pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") \%>\
 
 \code{\link{summary.pivotr}} to print a plain text table
 }
-

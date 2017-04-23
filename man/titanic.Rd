@@ -15,4 +15,3 @@ Survival data for the Titanic
 Survival data for the Titanic. Description provided in attr(titanic,"description")
 }
 \keyword{datasets}
-

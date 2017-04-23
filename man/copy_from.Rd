@@ -22,4 +22,3 @@ Equivalent of source with local=TRUE for package functions. Written by smbache, 
 copy_from(radiant.data, getdata)
 
 }
-

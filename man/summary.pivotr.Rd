@@ -36,4 +36,3 @@ pivotr("diamonds", cvars = "cut:clarity", nvar = "price") \%>\% summary
 \seealso{
 \code{\link{pivotr}} to create the pivot-table using dplyr
 }
-

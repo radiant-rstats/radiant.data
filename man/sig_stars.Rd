@@ -22,4 +22,3 @@ Add stars to output from broom's `tidy` function
 sig_stars(c(.0009, .049, .009, .4, .09))
 
 }
-

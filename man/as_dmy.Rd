@@ -19,4 +19,3 @@ Convert input in day-month-year format to date
 as_dmy("1-2-2014")
 
 }
-

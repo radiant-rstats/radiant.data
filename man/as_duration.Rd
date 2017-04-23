@@ -12,4 +12,3 @@ as_duration(x)
 \description{
 Wrapper for lubridate's as.duration function. Result converted to numeric
 }
-

@@ -6,4 +6,3 @@
 \description{
 Exporting the skew function from the psych package
 }
-

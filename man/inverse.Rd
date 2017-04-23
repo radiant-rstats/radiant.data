@@ -15,4 +15,3 @@ inverse(x)
 \description{
 Calculate inverse of a variable
 }
-

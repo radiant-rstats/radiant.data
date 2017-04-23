@@ -2,13 +2,14 @@
 % Please edit documentation in R/deprecated.R
 \docType{package}
 \name{radiant.data-deprecated}
+\alias{radiant.data-deprecated}
+\alias{mutate_each}
 \alias{dfprint}
 \alias{nrprint}
-\alias{radiant.data-deprecated}
 \alias{radiant.data-deprecated-package}
 \title{Deprecated function(s) in the radiant.data package}
 \usage{
-dfprint(...)
+mutate_each(...)
 }
 \arguments{
 \item{...}{Parameters to be passed to the updated functions}
@@ -20,6 +21,7 @@ radiant. They will eventually be  removed.
 \section{Details}{
 
 \tabular{rl}{
+  \code{mutate_each} is now a synonym for \code{\link{mutate_ext}}, \code{\link{mutate_at}}, or \code{\link{mutate_all}}\cr
   \code{dfprint} is now a synonym for \code{\link{formatdf}}\cr
   \code{nrprint} is now a synonym for \code{\link{formatnr}}\cr
   \code{varp_rm} is now a synonym for \code{\link{varpop}}\cr

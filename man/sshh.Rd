@@ -19,4 +19,3 @@ Adapted from \url{http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-cu
 sshh( library(dplyr) )
 
 }
-

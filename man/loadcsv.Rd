@@ -30,4 +30,3 @@ Data frame with (some) variables converted to factors
 \description{
 Load a csv file with read.csv and read_csv
 }
-

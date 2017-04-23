@@ -21,4 +21,3 @@ p05(x, na.rm = TRUE)
 p05(rnorm(100))
 
 }
-
