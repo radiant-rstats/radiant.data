@@ -44,4 +44,4 @@
 ## Deprecated
 - varp_rm has been deprecated in favor of varpop 
 - sdp_rm has been deprecated in favor of sdpop 
-- mutate_each has been deprecated in favor of mutate_ext
+- mutate_each has been deprecated in favor of mutate_at, mutate_all, and radiant.data::mutate_ext
