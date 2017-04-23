@@ -272,6 +272,12 @@ output$ui_Transform <- renderUI({
 	)
 })
 
+## ensure no variables are selected 'by accident' when creating a new variable
+observeEvent(input$tr_change_type, {
+  if (input$tr_change_type == "create" || input$tr_change_type == "spread")
+    updateSelectInput(session = session, inputId = "tr_vars", selected = character(0))
+})
+
 .change_type <- function(dataset, fun,
                          vars = "",
                          .ext = "",
@@ -318,12 +324,6 @@ output$ui_Transform <- renderUI({
     }
   }
 }
-
-## ensure no variables are selected 'by accident' when creating a new variable
-observeEvent(input$tr_change_type, {
-  if (input$tr_change_type == "create" || input$tr_change_type == "spread")
-    updateSelectInput(session = session, inputId = "tr_vars", selected = character(0))
-})
 
 .create <- function(dataset, cmd,
                     byvar = "",
@@ -509,13 +509,6 @@ observeEvent(input$tr_change_type, {
   }
 }
 
-# df <- data.frame(row = rep(c(1, 51), each = 3),
-#                  var = c("Sepal.Length", "Species", "Species_num"),
-#                  value = c(5.1, "setosa", 1, 7.0, "versicolor", 2))
-
-# df %>% spread(var, value)
-# df %>% spread(var, value, convert = TRUE)
-
 .expand <- function(dataset,
                     vars = "",
                     store_dat = "",
@@ -580,10 +573,7 @@ observeEvent(input$tr_change_type, {
 
 ## Make a training variable that selects randomly by ID
 # http://rpackages.ianhowson.com/cran/dplyr/man/group_indices.html
-## Make a training variable that selects randomly within ID
 # http://rpackages.ianhowson.com/cran/dplyr/man/sample.html
-## search for stratified sampling and cluster sampling
-## link to sampling menu?
 
 .reorg_levs <- function(dataset, fct, levs,
                         repl = NA,
@@ -715,9 +705,6 @@ observeEvent(input$tr_change_type, {
       paste0("## create holdout sample\nr_data[[\"",store_dat,"\"]] <- getdata(\"",dataset,"\", filt = \"", filt, "\", na.rm = FALSE) %>% select(", paste0(vars, collapse = ", "),")\n")
   }
 }
-
-# .sort ......
-# arrange_(mtcars, .dots = c("desc(cyl)","mpg"))
 
 inp_vars <- function(inp, rval = "") {
 	if (is_empty(input[[inp]]) || !available(input[[inp]])) rval else input[[inp]]

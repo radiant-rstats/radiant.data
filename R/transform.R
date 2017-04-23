@@ -427,7 +427,9 @@ getsummary <- function(dat, dc = getclass(dat)) {
                      mean = mean_rm, median = median_rm, min = min_rm, max = max_rm,
                      `25%` = p25, `75%` = p75, sd = sd_rm, se = se)) %>%
       data.frame(check.names = FALSE) %>%
-      mutate_if_tmp(is.numeric, funs(round(., 3))) %>%
+      ## can't use mutate_if here due to https://github.com/tidyverse/dplyr/issues/2243 
+      # mutate_if_tmp(is.numeric, funs(round(., 3))) %>%
+      mutate_all(funs(if (is.numeric(.)) round(., 3) else .)) %>%
       set_colnames(c("", colnames(.)[-1])) %>%
       print(row.names = FALSE)
     cat("\n")
@@ -595,3 +597,8 @@ refactor <- function(x, levs = levels(x), repl = NA) {
   
   factor(x, levels = levs)
 }
+
+###############################
+## function below not exported
+###############################
+.recode. <- function(x, cmd) car::Recode(x, cmd)
