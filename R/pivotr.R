@@ -85,22 +85,22 @@ pivotr <- function(dataset,
   if (length(cvars) == 1) {
     tab <-
       bind_rows(
-        mutate_at(tab, .cols = cvars, .funs = funs(as.character)),
+        # mutate_at(tab, .cols = cvars, .funs = funs(as.character)),
+        mutate_at(ungroup(tab), .cols = cvars, .funs = funs(as.character)),
         bind_cols(data.frame("Total") %>% setNames(cvars), total %>% set_colnames(nvar))
       )
 
   } else {
 
     col_total <-
-      dat %>%
-      group_by_(.dots = cvars[1]) %>%
+      group_by_(dat, .dots = cvars[1]) %>%
       sel(nvar,cvars[1]) %>%
       sfun(nvar, cvars[1], fun) %>%
+      ungroup %>%
       mutate_at(.cols = cvars[1], .funs = funs(as.character))
 
     row_total <-
-      dat %>%
-      group_by_(.dots = cvars[-1]) %>%
+      group_by_(dat, .dots = cvars[-1]) %>%
       sfun(nvar, cvars[-1], fun) %>%
       ungroup %>%
       select(ncol(.)) %>%
