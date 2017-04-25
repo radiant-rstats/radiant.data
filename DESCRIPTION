@@ -31,7 +31,7 @@ Imports:
     DT (>= 0.2),
     readr (>= 1.1.0),
     scales (>= 0.4.0),
-    curl (>= 2.5),
+    curl (>= 2.3),
     rstudioapi (>= 0.6),
     import (>= 1.1.0),
     base64enc,
