@@ -27,7 +27,6 @@ globalVariables(c("r_environment", "session", "r_data", "r_state", ".",
 #' @importFrom stats as.formula chisq.test dbinom median na.omit quantile sd setNames var weighted.mean
 #' @importFrom utils combn head install.packages read.table tail
 #' @importFrom import from
-#' @importFrom feather feather read_feather write_feather
 NULL
 
 #' Exporting rownames_to_column from tibble
