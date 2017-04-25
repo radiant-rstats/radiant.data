@@ -112,6 +112,7 @@ observeEvent(input$to_global_save, {
 })
 
 output$ui_Manage <- renderUI({
+
   data_types_in <- c("rda" = "rda", "rds" = "rds", "state" = "state", "csv" = "csv",
                   "clipboard" = "clipboard", "from global workspace" = "from_global",
                   "examples" = "examples", "feather" = "feather",
@@ -122,6 +123,10 @@ output$ui_Manage <- renderUI({
   if (!isTRUE(getOption("radiant.local"))) {
     data_types_in <- data_types_in[-which(data_types_in == "from_global")]
     data_types_out <- data_types_out[-which(data_types_out == "to_global")]
+  }
+  if (!("feather" %in% rownames(utils::installed.packages()))) {
+    data_types_in <- data_types_in[-which(data_types_in == "feather")]
+    data_types_out <- data_types_out[-which(data_types_out == "feather")]
   }
 
   tagList(
