@@ -30,7 +30,8 @@ loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRU
     upload_error_handler(objname,ret)
   } else {
     ret <- paste0("### Clipboard data\nData copied from clipboard on ", lubridate::now())
-    r_data[[objname]] <- dat %>% as.data.frame(check.names = FALSE) %>% factorizer
+    colnames(dat) <- make.names(colnames(dat))
+    r_data[[objname]] <- factorizer(dat)
   }
 
   r_data[[paste0(objname,"_descr")]] <- ret
@@ -91,7 +92,8 @@ loadUserData <- function(fname, uFile, ext,
         upload_error_handler(objname,"### More than one R object contained in the data.")
       }
     } else {
-      r_data[[objname]] <- as.data.frame(get(robjname)) %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
+      # r_data[[objname]] <- as.data.frame(get(robjname)) %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
+      r_data[[objname]] <- as.data.frame(get(robjname)) %>% {set_colnames(., make.names(colnames(.)))}
     }
   } else if (ext == 'rds') {
     ## objname will hold the name of the object(s) inside the R datafile
@@ -99,23 +101,27 @@ loadUserData <- function(fname, uFile, ext,
     if (is(robj, 'try-error')) {
       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in rds format.")
     } else {
-      r_data[[objname]] <- as.data.frame(robj) %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
+      r_data[[objname]] <- as.data.frame(robj) %>% {set_colnames(., make.names(colnames(.)))}
     }
   } else if (ext == 'feather') {
-    robj <- feather::feather(uFile)
-    if (is(robj, 'try-error')) {
-      upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in feather format.")
+    if (!("feather" %in% rownames(utils::installed.packages()))) {
+      upload_error_handler(objname, "### The feather package is not installed. Please use install.packages('feather')")
     } else {
-      n_max <- if (is_not(n_max) || n_max == -1) Inf else n_max
-      nrows <- nrow(robj)
-      if (n_max > nrows) n_max <- nrows
-      r_data[[objname]] <- robj[1:n_max,] %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
+      robj <- feather::feather(uFile)
+      if (is(robj, 'try-error')) {
+        upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in feather format.")
+      } else {
+        n_max <- if (is_not(n_max) || n_max == -1) Inf else n_max
+        nrows <- nrow(robj)
+        if (n_max > nrows) n_max <- nrows
+        r_data[[objname]] <- robj[1:n_max,] %>% {set_colnames(., make.names(colnames(.)))}
+      }
     }
-    robj <- robj[1:nrows,]
+    # robj <- robj[1:nrows,]
   } else if (ext == 'csv') {
     r_data[[objname]] <- loadcsv(uFile, .csv = .csv, header = header, n_max = n_max, sep = sep, dec = dec, saf = man_str_as_factor) %>%
       {if (is.character(.)) upload_error_handler(objname, "### There was an error loading the data") else .} %>%
-      {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
+      {set_colnames(., make.names(colnames(.)))}
 
   } else if (ext != "---") {
 
