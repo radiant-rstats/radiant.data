@@ -199,12 +199,12 @@ observeEvent(input$explore_report, {
 
   ## get the state of the dt table
   ts <- dt_state("explore")
-  xcmd <- "#render(dtab(result"
+  xcmd <- "#dtab(result"
   if (!is_empty(input$expl_dec, 3))
     xcmd <- paste0(xcmd, ", dec = ", input$expl_dec)
   if (!is_empty(r_state$explore_state$length, 10))
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$explore_state$length)
-  xcmd <- paste0(xcmd, "))\n#store(result, name = \"", input$expl_dat, "\")")
+  xcmd <- paste0(xcmd, ") %>% render\n#store(result, name = \"", input$expl_dat, "\")")
 
   inp_main <- clean_args(expl_inputs(), expl_args)
   if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)

@@ -322,7 +322,7 @@ observeEvent(input$pivotr_report, {
 
   ## get the state of the dt table
   ts <- dt_state("pivotr")
-  xcmd <- paste0("#render(dtab(result")
+  xcmd <- paste0("#dtab(result")
   if (!is_empty(input$pvt_format, "none"))
     xcmd <- paste0(xcmd, ", format = \"", input$pvt_format, "\"")
   if (isTRUE(input$pvt_perc))
@@ -331,7 +331,7 @@ observeEvent(input$pivotr_report, {
     xcmd <- paste0(xcmd, ", dec = ", input$pvt_dec)
   if (!is_empty(r_state$pivotr_state$length, 10))
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$pivotr_state$length)
-  xcmd <- paste0(xcmd, "))\n#store(result, name = \"", input$pvt_dat, "\")")
+  xcmd <- paste0(xcmd, ") %>% render\n#store(result, name = \"", input$pvt_dat, "\")")
 
   inp_main <- clean_args(pvt_inputs(), pvt_args)
   if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)
