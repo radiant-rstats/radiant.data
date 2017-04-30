@@ -1,4 +1,13 @@
-# CHANGES IN radiant.data 0.8
+# CHANGES IN radiant.data 0.8.2
+
+## NEW FEATURES
+
+* experimenting with plotly
+
+## BUG FIXES
+
+
+# CHANGES IN radiant.data 0.8.1
 
 ## NEW FEATURES
 

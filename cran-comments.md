@@ -24,6 +24,8 @@ spelled word (see below). The spelling is correct however.
 
 Possibly mis-spelled words in DESCRIPTION:
   Analytics (2:40)
+  
+## Previous cran-comments
 
 ## Resubmission
 
