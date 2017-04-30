@@ -28,6 +28,8 @@ import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
   invisible()
 }
 
+import_fs("radiant.data", libs = "plotly", incl = "ggplotly")
+
 init_data <- function() {
 
   ## Joe Cheng: "Datasets can change over time (i.e., the changedata function).
@@ -172,7 +174,7 @@ help_menu <- function(hlp) {
       tabPanel("Help", uiOutput(hlp), icon = icon("question")),
       tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
       tabPanel("About", uiOutput("help_about"), icon = icon("info")),
-      tabPanel(tags$a("", href = "http://radiant-rstats.github.io/docs/", target = "_blank",
+      tabPanel(tags$a("", href = "https://radiant-rstats.github.io/docs/", target = "_blank",
                list(icon("globe"), "Radiant docs"))),
       tabPanel(tags$a("", href = "https://github.com/radiant-rstats/radiant/issues", target = "_blank",
                list(icon("github"), "Report issue")))

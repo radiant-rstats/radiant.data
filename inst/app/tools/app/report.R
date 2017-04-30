@@ -128,7 +128,8 @@ getdeps <- function() {
     htmltools::tagList(),
     c(
       htmlwidgets:::getDependency("DiagrammeR","DiagrammeR"),
-      htmlwidgets:::getDependency("datatables","DT")
+      htmlwidgets:::getDependency("datatables","DT"),
+      htmlwidgets:::getDependency("plotly","plotly")
     )
   )
 }
@@ -178,7 +179,9 @@ scrub <- . %>%
 cleanout <- . %>%
   gsub("DiagrammeR::renderDiagrammeR", "", .) %>% ## leave for legacy reasons
   gsub("DT::renderDataTable", "", .) %>%          ## leave for legacy reasons
-  gsub("render(", "(", ., fixed = TRUE)
+  gsub("render(", "(", ., fixed = TRUE) %>%
+  # gsub("render\\(([^```]*)\\)", "\\1", ., perl = TRUE) %>%
+  gsub("\\s*%>%\\s+render\\s*[\n]", "\n", .)
 
 ## Based on http://stackoverflow.com/a/31797947/1974918
 knitItSave <- function(text) {

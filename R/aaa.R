@@ -27,6 +27,7 @@ globalVariables(c("r_environment", "session", "r_data", "r_state", ".",
 #' @importFrom stats as.formula chisq.test dbinom median na.omit quantile sd setNames var weighted.mean
 #' @importFrom utils combn head install.packages read.table tail
 #' @importFrom import from
+#' @importFrom plotly ggplotly
 NULL
 
 #' Exporting rownames_to_column from tibble
@@ -89,6 +90,13 @@ NULL
 #' @importFrom psych skew
 #' @name skew
 #' @rdname skew.re
+#' @export
+NULL
+
+#' Exporting the ggplotly function from the plotly package
+#' @importFrom plotly ggplotly
+#' @name ggplotly
+#' @rdname ggplotly
 #' @export
 NULL
 

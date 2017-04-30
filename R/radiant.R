@@ -428,6 +428,10 @@ viewdata <- function(dataset,
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
 
+  isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
+  if (sum(isBigFct) > 0) 
+    dat[,isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
+
   shinyApp(
     ui = fluidPage(title = title,
       includeCSS(file.path(system.file(package = "radiant.data"),"app/www/style.css")),
@@ -918,6 +922,16 @@ render <- function(object, ...) UseMethod("render", object)
 #' @export
 render.datatables <- function(object, ...) DT::renderDataTable(object)
 
+#' Method to render plotly plots
+#'
+#' @param object ggplotly object
+#' @param ... Additional arguments
+#'
+#' @importFrom plotly renderPlotly
+#'
+#' @export
+render.plotly <- function(object, ...) plotly::renderPlotly(object)
+
 #' Method to render rmarkdown documents
 #'
 #' @param object File path to an R-markdown file
@@ -960,9 +974,8 @@ describe <- function(name) {
   owd <- setwd(tempdir())
   on.exit(setwd(owd))
 
-  ## generate html and open on the Rstudio viewer or in the default browser
+  ## generate html and open in the Rstudio viewer or in the default browser
   description %>% knitr::knit2html(text = .) %>% cat(file = "index.html")
-  # description %>% cat(file = "index.Rmd"); rmarkdown::render("index.Rmd", quiet = TRUE)
   ## based on https://support.rstudio.com/hc/en-us/articles/202133558-Extending-RStudio-with-the-Viewer-Pane
   viewer <- getOption("viewer", default = browseURL)
   viewer("index.html")
