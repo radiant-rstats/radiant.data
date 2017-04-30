@@ -19,7 +19,7 @@ Search(pattern, df, ignore.case = TRUE, fixed = FALSE)
 Search for a string in all columns of a data.frame
 }
 \details{
-See \url{http://radiant-rstats.github.io/docs/data/view.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/data/view.html} for an example in Radiant
 }
 \seealso{
 See \code{\link{grepl}} for a more detailed description of the function arguments

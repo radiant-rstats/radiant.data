@@ -2,7 +2,7 @@
 % Please edit documentation in R/visualize.R
 \name{visualize}
 \alias{visualize}
-\title{Visualize data using ggplot2 \url{http://docs.ggplot2.org/current/}}
+\title{Visualize data using ggplot2 \url{http://ggplot2.tidyverse.org}}
 \usage{
 visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   type = "dist", facet_row = ".", facet_col = ".", color = "none",
@@ -57,10 +57,10 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 Generated plots
 }
 \description{
-Visualize data using ggplot2 \url{http://docs.ggplot2.org/current/}
+Visualize data using ggplot2 \url{http://ggplot2.tidyverse.org}
 }
 \details{
-See \url{http://radiant-rstats.github.io/docs/data/visualize.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/data/visualize.html} for an example in Radiant
 }
 \examples{
 visualize("diamonds", "price:x", type = "dist")

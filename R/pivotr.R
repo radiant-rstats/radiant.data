@@ -1,6 +1,6 @@
 #' Create a pivot table using dplyr
 #'
-#' @details Create a pivot-table. See \url{http://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
+#' @details Create a pivot-table. See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
 #' @param dataset Name of the dataframe to change
 #' @param cvars Categorical variables
@@ -178,7 +178,7 @@ pivotr <- function(dataset,
 
 #' Summary method for pivotr
 #'
-#' @details See \url{http://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{pivotr}}
 #' @param perc Display numbers as percentages (TRUE or FALSE)
@@ -256,7 +256,7 @@ summary.pivotr <- function(object,
 
 #' Make a pivot tabel in DT
 #'
-#' @details See \url{http://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{pivotr}}
 #' @param format Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")
@@ -370,7 +370,7 @@ dtab.pivotr  <- function(object,
 
 #' Plot method for the pivotr function
 #'
-#' @details See \url{http://radiant-rstats.github.io/docs/data/pivotr} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/data/pivotr} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{pivotr}}
 #' @param type Plot type to use ("fill" or "dodge" (default))
@@ -441,7 +441,7 @@ plot.pivotr <- function(x,
 
 #' Store method for the pivort function
 #'
-#' @details Add the summarized data to the r_data list in Radiant or return it. See \url{http://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
+#' @details Add the summarized data to the r_data list in Radiant or return it. See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{pivotr}}
 #' @param name Name to assign to the dataset

@@ -1,6 +1,6 @@
-#' Visualize data using ggplot2 \url{http://docs.ggplot2.org/current/}
+#' Visualize data using ggplot2 \url{http://ggplot2.tidyverse.org}
 #'
-#' @details See \url{http://radiant-rstats.github.io/docs/data/visualize.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/data/visualize.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param xvar One or more variables to display along the X-axis of the plot
@@ -471,6 +471,10 @@ visualize <- function(dataset, xvar,
 
   if (custom)
     if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
+
+  # plty = TRUE
+  # if (plty)
+  #   plot_list <- lapply(plot_list, plotly::ggplotly)
 
   sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = min(length(plot_list), 2))) %>%
     {if (shiny) . else print(.)}

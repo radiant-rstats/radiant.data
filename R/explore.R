@@ -1,6 +1,6 @@
 #' Explore data
 #'
-#' @details See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param vars (Numerical) variables to summaries
@@ -173,7 +173,7 @@ explore <- function(dataset,
 
 #' Summary method for the explore function
 #'
-#' @details See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{explore}}
 #' @param dec Number of decimals to show
@@ -215,7 +215,7 @@ summary.explore <- function(object, dec = 3, ...) {
 
 #' Store method for the explore function
 #'
-#' @details Add the summarized data to the r_data list in Radiant or return it. See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
+#' @details Add the summarized data to the r_data list in Radiant or return it. See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{explore}}
 #' @param name Name to assign to the dataset
@@ -246,7 +246,7 @@ store.explore <- function(object, name, ...) {
 
 #' Flip the DT table to put Function, Variable, or Group by on top
 #'
-#' @details See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
 #' @param expl Return value from \code{\link{explore}}
 #' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by. "fun" is the default
@@ -277,7 +277,7 @@ flip <- function(expl, top = "fun") {
 
 #' Make a tabel of summary statistics in DT
 #'
-#' @details See \url{http://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{explore}}
 #' @param dec Number of decimals to show

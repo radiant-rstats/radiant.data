@@ -16,7 +16,7 @@ combinedata(dataset, cmb_dataset, by = "", add = "", type = "inner_join",
 
 \item{add}{Variables to add from `cmb_dataset`}
 
-\item{type}{The main bind and join types from the dplyr package are provided. \bold{inner_join} returns all rows from x with matching values in y, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. \bold{left_join} returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. \bold{right_join} is equivalent to a left join for datasets y and x. \bold{full_join} combines two datasets, keeping rows and columns that appear in either. \bold{semi_join} returns all rows from x with matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. \bold{anti_join} returns all rows from x without matching values in y, keeping only columns from x. \bold{bind_rows} and \bold{bind_cols} are also included, as are \bold{intersect}, \bold{union}, and \bold{setdiff}. See \url{http://radiant-rstats.github.io/docs/data/combine.html} for further details}
+\item{type}{The main bind and join types from the dplyr package are provided. \bold{inner_join} returns all rows from x with matching values in y, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. \bold{left_join} returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. \bold{right_join} is equivalent to a left join for datasets y and x. \bold{full_join} combines two datasets, keeping rows and columns that appear in either. \bold{semi_join} returns all rows from x with matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. \bold{anti_join} returns all rows from x without matching values in y, keeping only columns from x. \bold{bind_rows} and \bold{bind_cols} are also included, as are \bold{intersect}, \bold{union}, and \bold{setdiff}. See \url{https://radiant-rstats.github.io/docs/data/combine.html} for further details}
 
 \item{name}{Name for the combined dataset}
 
@@ -29,7 +29,7 @@ If list `r_data` exists the combined dataset is added as `name`. Else the combin
 Combine datasets using dplyr's bind and join functions
 }
 \details{
-See \url{http://radiant-rstats.github.io/docs/data/combine.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/data/combine.html} for an example in Radiant
 }
 \examples{
 avengers \%>\% combinedata(superheroes, type = "bind_cols")

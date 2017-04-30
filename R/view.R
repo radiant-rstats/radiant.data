@@ -1,6 +1,6 @@
 #' Search for a string in all columns of a data.frame
 #'
-#' @details See \url{http://radiant-rstats.github.io/docs/data/view.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/data/view.html} for an example in Radiant
 #'
 #' @param pattern String to match
 #' @param df Data.frame to search

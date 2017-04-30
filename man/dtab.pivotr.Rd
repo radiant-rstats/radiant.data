@@ -28,7 +28,7 @@
 Make a pivot tabel in DT
 }
 \details{
-See \url{http://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 }
 \examples{
 pivotr("diamonds", cvars = "cut") \%>\% dtab
