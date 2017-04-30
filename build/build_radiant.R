@@ -3,8 +3,18 @@ setwd("~/gh/")
 
 rv <- R.Version()
 rv <- paste0(rv$major,".", strsplit(rv$minor,".", fixed = TRUE)[[1]][1])
+
+rvprompt <- readline(prompt = paste0("Running for R version: ", rv, ". Is that what you wanted y/n: "))
+if (grepl("[nN]", rvprompt)) stop("Change R-version")
+
 dirsrc <- file.path("minicran/src/contrib")
-dirmac <- file.path("minicran/bin/macosx/mavericks/contrib",rv)
+
+if (rv == "3.3") {
+  dirmac <- file.path("minicran/bin/macosx/mavericks/contrib",rv)
+} else {
+  dirmac <- file.path("minicran/bin/macosx/el-capitan/contrib",rv)
+}
+
 dirwin <- file.path("minicran/bin/windows/contrib",rv)
 
 if (!file.exists(dirsrc)) dir.create(dirsrc, recursive = TRUE)
