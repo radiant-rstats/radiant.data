@@ -323,7 +323,12 @@ mutate_ext <- function(.tbl, .funs, ..., .ext = "") {
 #' @export
 mutate_if_tmp <- function (.tbl, .predicate, .funs, ...) {
   if (sum(sapply(.tbl, .predicate)) > 0) { 
-    mutate_if(.tbl, .predicate, .funs, ...)
+    rn <- rownames(.tbl)
+    cn <- colnames(.tbl)
+    colnames(.tbl) <- make.names(cn)
+    mutate_if(.tbl, .predicate, .funs, ...) %>%
+      set_colnames(cn) %>%
+      set_rownames(rn)
   } else {
     .tbl
   }
