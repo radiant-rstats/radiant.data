@@ -1014,13 +1014,13 @@ render.datatables <- function(object, ...) DT::renderDataTable(object)
 # }
 
 #' @export
-knit_print.datatables <- function(object, ...) {
-  # if (isTRUE(object$called_from_knitIt))
-    # render(object)
+knit_print.datatables <- function(x, ...) {
+  # if (isTRUE(x$called_from_knitIt))
+    # render(x)
   # else
-    # object
+    # x
 
-  DT::renderDataTable(object)
+  DT::renderDataTable(x)
 }
 
 #' Method to render plotly plots
