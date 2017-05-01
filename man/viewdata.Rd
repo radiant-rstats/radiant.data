@@ -2,12 +2,12 @@
 % Please edit documentation in R/radiant.R
 \name{viewdata}
 \alias{viewdata}
-\title{View data}
+\title{View data in a shiny-app}
 \usage{
 viewdata(dataset, vars = "", filt = "", rows = NULL, na.rm = FALSE)
 }
 \arguments{
-\item{dataset}{Name of the dataframe to change}
+\item{dataset}{Data.frame or name of the dataframe to view}
 
 \item{vars}{Variables to show (default is all)}
 
@@ -18,7 +18,7 @@ viewdata(dataset, vars = "", filt = "", rows = NULL, na.rm = FALSE)
 \item{na.rm}{Remove rows with missing values (default is FALSE)}
 }
 \description{
-View data
+View data in a shiny-app
 }
 \details{
 View, search, sort, etc. your data
