@@ -399,11 +399,11 @@ changedata <- function(dataset,
   }
 }
 
-#' View data
+#' View data in a shiny-app
 #'
 #' @details View, search, sort, etc. your data
 #'
-#' @param dataset Name of the dataframe to change
+#' @param dataset Data.frame or name of the dataframe to view
 #' @param vars Variables to show (default is all)
 #' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
 #' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
@@ -424,7 +424,7 @@ viewdata <- function(dataset,
                      na.rm = FALSE) {
 
   ## based on http://rstudio.github.io/DT/server.html
-  dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = FALSE)
+  dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = na.rm)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
 
@@ -460,6 +460,89 @@ viewdata <- function(dataset,
     }
   )
 }
+
+#' Create a DT table with bootstrap theme
+#'
+#' @details View, search, sort, etc. your data. For styling options see \url{http://rstudio.github.io/DT/functions.html}
+#'
+#' @param object Data.frame to display
+#' @param vars Variables to show (default is all)
+#' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
+#' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
+#' @param na.rm Remove rows with missing values (default is FALSE)
+#' @param dec Number of decimal places to show. Default is no rounding (NULL)
+#' @param filter Show filter in DT table. Options are "none", "top", "bottom"
+#' @param pageLength Number of rows to show in table
+#' @param rownames Show data.frame rownames. Default is FALSE
+#' @param ... Additional arguments
+#'
+#' @examples
+#' dtab(mtcars)
+#'
+#' @export
+dtab.data.frame <- function(object, 
+                            vars = "", 
+                            filt = "", 
+                            rows = NULL,
+                            na.rm = FALSE,
+                            dec = 3, 
+                            filter = "top", 
+                            pageLength = 10,
+                            rownames = FALSE, 
+                            ...) {
+
+  dat <- getdata(object, vars, filt = filt, rows = rows, na.rm = na.rm)
+
+  isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
+  if (sum(isBigFct) > 0) 
+    dat[,isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
+
+  ## for display options see https://datatables.net/reference/option/dom
+  dom <- if (pageLength == -1 || nrow(dat) < pageLength) "t" else "ltip"
+  dt_tab <- rounddf(dat, dec) %>%
+    DT::datatable( 
+      selection = "none",
+      rownames = rownames,
+      filter = filter,
+      escape = FALSE,
+      style = "bootstrap",
+      options = list(
+        dom = dom,
+        search = list(regex = TRUE),
+        columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all"),
+                          list(className = "dt-center", targets = "_all")),
+        autoWidth = TRUE,
+        processing = FALSE,
+        pageLength = pageLength,
+        lengthMenu = list(c(5, 10, 25, 50, -1), c("5","10","25","50","All"))
+      )
+    ) 
+
+  ## see https://github.com/yihui/knitr/issues/1198
+  dt_tab$dependencies <- c(
+    list(rmarkdown::html_dependency_bootstrap("bootstrap")), dt_tab$dependencies
+  )
+
+  if (exists("r_environment") && isTRUE(r_environment$called_from_knitIt)) 
+    # render(dt_tab) 
+    dt_tab$called_from_knitIt <- TRUE
+  else 
+    dt_tab$called_from_knitIt <- TRUE
+
+  dt_tab
+}
+
+#' Create a DT table with bootstrap theme
+#'
+#' @details View, search, sort, etc. your data. For styling options see \url{http://rstudio.github.io/DT/functions.html}
+#'
+#' @param ... Arguments to pass on to dtab.data.frame
+#'
+#' @examples
+#' dtab("mtcars")
+#'
+#' @export
+dtab.character <- function(...) dtab.data.frame(...)
 
 #' Get variable class
 #'
@@ -922,6 +1005,24 @@ render <- function(object, ...) UseMethod("render", object)
 #' @export
 render.datatables <- function(object, ...) DT::renderDataTable(object)
 
+# knit_print <- function (x, ...) {
+#   if (need_screenshot(x, ...) && !"datatables" %in% class(x)) {
+#   #   html_screenshot(x)
+#   } else {
+#     UseMethod("knit_print")
+#   }
+# }
+
+#' @export
+knit_print.datatables <- function(object, ...) {
+  # if (isTRUE(object$called_from_knitIt))
+    # render(object)
+  # else
+    # object
+
+  DT::renderDataTable(object)
+}
+
 #' Method to render plotly plots
 #'
 #' @param object ggplotly object
@@ -947,6 +1048,14 @@ render.character <- function(object, ...) {
     stop("R-markdown file not found")
   }
 }
+
+#' Method to avoid re-rendering a shiny.render.function
+#'
+#' @param object Shiny render function
+#' @param ... Additional arguments 
+#'
+#' @export
+render.shiny.render.function <- function(object, ...) object
 
 #' Method to create datatables
 #'

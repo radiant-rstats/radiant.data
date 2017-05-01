@@ -365,6 +365,9 @@ dtab.pivotr  <- function(object,
     list(rmarkdown::html_dependency_bootstrap('bootstrap')), dt_tab$dependencies
   )
 
+  # if (exists("r_environment") && isTRUE(r_environment$called_from_knitIt)) 
+  #   render(dt_tab)
+  # else
   dt_tab
 }
 

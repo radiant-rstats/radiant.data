@@ -21,9 +21,6 @@
 #' result <- explore("diamonds", c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))
 #' summary(result)
 #' diamonds %>% explore("price", byvar = "cut", fun = c("length", "n_distinct"))
-
-# explore(dataset = "diamonds", vars = c("price", "carat"), byvar = "cut", fun = c("length", "mean_rm", "sd_rm", "min_rm", "max_rm"), top = "byvar", tabsort = "variable", nr = 10)
-
 #'
 #' @seealso \code{\link{summary.explore}} to show summaries
 #'
@@ -352,6 +349,9 @@ dtab.explore <- function(object,
     list(rmarkdown::html_dependency_bootstrap('bootstrap')), dt_tab$dependencies
   )
 
+  # if (exists("r_environment") && isTRUE(r_environment$called_from_knitIt)) 
+  #   render(dt_tab)
+  # else
   dt_tab
 }
 

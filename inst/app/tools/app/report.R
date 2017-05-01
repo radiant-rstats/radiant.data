@@ -20,6 +20,8 @@ This is an example of the type of report you can write in Radiant.
 1. And numbered
 2. lists
 
+Note: Markdown is used to format the report. Go to [commonmark.org](http://commonmark.org/help/) for an interactive tutorial.
+
 ### Math
 
 You can even include math if you want:
@@ -53,6 +55,20 @@ knitr::kable(df, align = \"ccc\")
 
 To align the columns use `l` for left, `r` for right, and `c` for center. In the example above each column is centered. For additional information about formatting tables see
 https://www.rforge.net/doc/packages/knitr/kable.html
+
+It is also possible to generate interactive tables using the DT package. In Radiant you can use the `dtab` function to display a data.frame as a nicely formatted table:
+
+```{r}
+dtab(df) %>% render
+```
+
+The DT package has various [formatting options](http://rstudio.github.io/DT/functions.html). For example, to remove the filter boxes and display the `Prior probability` column as a percentage we could use the command below:
+
+```{r}
+dtab(df, filter = \"none\") %>% DT::formatPercentage(\"Prior probability\", 1) %>% render
+```
+
+> Note that adding `%>% render` to display the table is not required when using `dtab` outside of Radiant
 
 ### Documenting analysis results in Radiant
 
@@ -173,7 +189,10 @@ scrub <- . %>%
   gsub("&lt;!--/html_preserve--&gt;","",.) %>%
   gsub("&lt;!--html_preserve--&gt;","",.) %>%
   gsub("&lt;!&ndash;html_preserve&ndash;&gt;","",.) %>%
-  gsub("&lt;!&ndash;/html_preserve&ndash;&gt;","",.)  ## knitr adds this
+  gsub("&lt;!&ndash;/html_preserve&ndash;&gt;","",.) %>%
+  gsub("&lt;!&ndash;/html_preserve&ndash;&gt;","",.)
+
+  ## knitr adds this
 
 ## cleanout widgets not needed outside shiny apps
 cleanout <- . %>%
@@ -230,7 +249,14 @@ knitItSave <- function(text) {
 knitIt <- function(text) {
   ## fragment also available with rmarkdown
   ## http://rmarkdown.rstudio.com/html_fragment_format.html
+
+  # knitr::opts_chunk$set(screenshot.force = FALSE)
+  # r_environment$called_from_knitIt <- TRUE
+
   md <- knitr::knit(text = paste0("\n`r options(width = 250)`\n",text), envir = r_environment)
+
+  # r_environment$called_from_knitIt <- FALSE
+  # knitr::opts_chunk$set(screenshot.force = TRUE)
 
   ## add basic styling to tables
   paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),

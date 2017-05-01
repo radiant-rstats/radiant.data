@@ -10,7 +10,7 @@ globalVariables(c("r_environment", "session", "r_data", "r_state", ".",
 #' @import ggplot2 shiny dplyr
 #' @importFrom car Recode
 #' @importFrom rstudioapi insertText isAvailable
-#' @importFrom knitr knit2html knit
+#' @importFrom knitr knit2html knit knit_print
 #' @importFrom markdown markdownToHTML
 #' @importFrom rmarkdown render html_dependency_bootstrap pdf_document html_document word_document
 #' @importFrom pryr where object_size
@@ -28,6 +28,13 @@ globalVariables(c("r_environment", "session", "r_data", "r_state", ".",
 #' @importFrom utils combn head install.packages read.table tail
 #' @importFrom import from
 #' @importFrom plotly ggplotly
+NULL
+
+#' Exporting knit_print from knitr
+#' @importFrom knitr knit_print
+#' @name knit_print
+#' @rdname knit_print
+#' @export
 NULL
 
 #' Exporting rownames_to_column from tibble
