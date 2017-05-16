@@ -177,16 +177,16 @@ factorizer <- function(dat, safx = 30) {
   fab <- function(x) {
     n <- length(x)
     if (n < 101) return(TRUE)
-    nd <- length(unique(x)) 
+    nd <- length(unique(x))
     nd < 100 && (nd/n < (1/safx))
   }
   toFct <-
     select(dat, which(isChar)) %>%
     summarise_all(funs(fab)) %>%
-    select(which(. == TRUE)) %>% 
+    select(which(. == TRUE)) %>%
     names
   if (length(toFct) == 0) return(dat)
-  
+
   mutate_at(dat, .cols = toFct, .funs = funs(as.factor))
 }
 
@@ -429,7 +429,7 @@ viewdata <- function(dataset,
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
 
   isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
-  if (sum(isBigFct) > 0) 
+  if (sum(isBigFct) > 0)
     dat[,isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
 
   shinyApp(
@@ -473,6 +473,7 @@ viewdata <- function(dataset,
 #' @param dec Number of decimal places to show. Default is no rounding (NULL)
 #' @param filter Show filter in DT table. Options are "none", "top", "bottom"
 #' @param pageLength Number of rows to show in table
+#' @param dom Table control elements to show on the page. See \link{https://datatables.net/reference/option/dom}
 #' @param rownames Show data.frame rownames. Default is FALSE
 #' @param ... Additional arguments
 #'
@@ -480,27 +481,30 @@ viewdata <- function(dataset,
 #' dtab(mtcars)
 #'
 #' @export
-dtab.data.frame <- function(object, 
-                            vars = "", 
-                            filt = "", 
+dtab.data.frame <- function(object,
+                            vars = "",
+                            filt = "",
                             rows = NULL,
                             na.rm = FALSE,
-                            dec = 3, 
-                            filter = "top", 
+                            dec = 3,
+                            filter = "top",
                             pageLength = 10,
-                            rownames = FALSE, 
+                            dom = "",
+                            rownames = FALSE,
                             ...) {
 
   dat <- getdata(object, vars, filt = filt, rows = rows, na.rm = na.rm)
 
   isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
-  if (sum(isBigFct) > 0) 
+  if (sum(isBigFct) > 0)
     dat[,isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
 
   ## for display options see https://datatables.net/reference/option/dom
-  dom <- if (pageLength == -1 || nrow(dat) < pageLength) "t" else "ltip"
+  if (is_empty(dom)) 
+    dom <- if (pageLength == -1 || nrow(dat) < pageLength) "t" else "lftip"
+
   dt_tab <- rounddf(dat, dec) %>%
-    DT::datatable( 
+    DT::datatable(
       selection = "none",
       rownames = rownames,
       filter = filter,
@@ -516,18 +520,17 @@ dtab.data.frame <- function(object,
         pageLength = pageLength,
         lengthMenu = list(c(5, 10, 25, 50, -1), c("5","10","25","50","All"))
       )
-    ) 
+    )
 
   ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(
     list(rmarkdown::html_dependency_bootstrap("bootstrap")), dt_tab$dependencies
   )
 
-  if (exists("r_environment") && isTRUE(r_environment$called_from_knitIt)) 
-    # render(dt_tab) 
-    dt_tab$called_from_knitIt <- TRUE
-  else 
-    dt_tab$called_from_knitIt <- TRUE
+  # if (exists("r_environment") && isTRUE(r_environment$called_from_knitIt))
+  #   # render(dt_tab)
+  # else
+  #   dt_tab$called_from_knitIt <- TRUE
 
   dt_tab
 }
@@ -832,7 +835,7 @@ formatnr <- function(x, sym = "", dec = 2, perc = FALSE, mark = ",") {
 #'   rounddf(dec = 3)
 #'
 #' @export
-rounddf <- function(tbl, dec = 3) 
+rounddf <- function(tbl, dec = 3)
   mutate_if_tmp(tbl, is.double, .funs = funs(round(., dec)))
 
 #' Find a user's dropbox folder
@@ -999,29 +1002,51 @@ render <- function(object, ...) UseMethod("render", object)
 
 #' Method to render DT tabels
 #'
-#' @param object DT table plot
+#' @param object DT table
 #' @param ... Additional arguments
 #'
 #' @export
 render.datatables <- function(object, ...) DT::renderDataTable(object)
 
 # knit_print <- function (x, ...) {
-#   if (need_screenshot(x, ...) && !"datatables" %in% class(x)) {
-#   #   html_screenshot(x)
+#   # if (need_screenshot(x, ...) && !"datatables" %in% class(x)) {
+#   if (isTRUE(attr(x, "shiny"))) {
+#     # shiny::knit_print.shiny.render.function(
+#       x <- render(x)
+#     # )
 #   } else {
+#   #   knitr::knit_print(x)
+#   # }
+#   # } else if (need_screenshot(x, ...)) {
+#   #   html_screenshot(x)
+#   # } else {
 #     UseMethod("knit_print")
 #   }
 # }
 
-#' @export
-knit_print.datatables <- function(x, ...) {
-  # if (isTRUE(x$called_from_knitIt))
-    # render(x)
-  # else
+# knit_print.datatables <- function(x, ...) {
+  # if (isTRUE(attr(x, "shiny"))) {
+  # if (exists("r_environment") && isTRUE(r_environment$shiny)) {
+    # shiny::knit_print.shiny.render.function(
+      # DT::renderDataTable(x)
+    # )
+  # } else {
+    # knitr::knit_print(htmlwidgets::toHTML(x, standalone = FALSE, knitrOptions = NULL), 
+    #     options = NULL, ...)
+    # htmlwidgets::knit_print.htmlwidget(x)
+    # knitr::knit_print.htmlwidget(x)
     # x
+  # }
 
-  DT::renderDataTable(x)
-}
+  # } else {
+    # shiny::knit_print.htmlwidget(x)
+    # knitr::knit_print(x)
+  # }
+    # x
+  # shin::knit_print.(x)
+  # htmlwidgets:::knit_print.htmlwidget(x)
+  # attr(x, "shiny")
+# }
 
 #' Method to render plotly plots
 #'
@@ -1052,7 +1077,7 @@ render.character <- function(object, ...) {
 #' Method to avoid re-rendering a shiny.render.function
 #'
 #' @param object Shiny render function
-#' @param ... Additional arguments 
+#' @param ... Additional arguments
 #'
 #' @export
 render.shiny.render.function <- function(object, ...) object
@@ -1061,6 +1086,10 @@ render.shiny.render.function <- function(object, ...) object
 #'
 #' @param object Object of relevant class to render
 #' @param ... Additional arguments
+#'
+#' @seealso See \code{\link{dtab.explore}} to create the an interactivce table from an \code{\link{explore}} object
+#' @seealso See \code{\link{dtab.pivotr}} to create the an interactivce table from a \code{\link{pivotr}} object
+#' @seealso See \code{\link{dtab.data.frame}} to create an interactive table from a data.frame
 #'
 #' @export
 dtab <- function(object, ...) UseMethod("dtab", object)
