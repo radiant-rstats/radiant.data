@@ -289,7 +289,7 @@ output$plot_pivot <- renderPlot({
     sshhr(.plot_pivot()) %>% print
   })
   return(invisible())
-}, width = pvt_plot_width, height = pvt_plot_height)
+}, width = pvt_plot_width, height = pvt_plot_height, res = 96)
 
 observeEvent(input$pvt_store, {
   dat <- .pivotr()

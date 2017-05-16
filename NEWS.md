@@ -1,8 +1,9 @@
-# CHANGES IN radiant.data 0.8.2
+# CHANGES IN radiant.data 0.8.3
 
 ## NEW FEATURES
 
-* experimenting with plotly
+* Adding plotly to imports for interactive plots in _R > Report_
+* Set default `res = 96` for `renderPlot`
 
 ## BUG FIXES
 

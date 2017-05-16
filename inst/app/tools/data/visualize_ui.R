@@ -288,7 +288,7 @@ output$visualize <- renderPlot({
       }
     }
   })
-}, width = viz_plot_width, height = viz_plot_height)
+}, width = viz_plot_width, height = viz_plot_height, res = 96)
 
 .visualize <- reactive({
   req(input$viz_pause == FALSE, cancelOutput = TRUE)
@@ -313,7 +313,9 @@ output$visualize <- renderPlot({
 
   req(!is.null(input$viz_color) || !is.null(input$viz_fill))
 
-  viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)
+  viz_inputs() %>%
+    { .$shiny <- TRUE; . } %>%
+    do.call(visualize, .)
 })
 
 observeEvent(input$visualize_report, {

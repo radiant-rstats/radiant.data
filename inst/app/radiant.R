@@ -309,7 +309,7 @@ register_plot_output <- function(fun_name, rfun_name,
         withProgress(message = 'Making plot', value = 1, print(.))
       }
     }
-  }, width=get(width_fun), height=get(height_fun))
+  }, width=get(width_fun), height=get(height_fun), res = 96)
 
   return(invisible())
 }
