@@ -34,7 +34,7 @@ Imports:
     curl (>= 2.5),
     rstudioapi (>= 0.6),
     import (>= 1.1.0),
-    plotly (>= 4.6.0),
+    plotly (>= 4.5.6),
     base64enc,
     methods
 Suggests:
