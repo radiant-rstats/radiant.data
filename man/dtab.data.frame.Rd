@@ -5,7 +5,7 @@
 \title{Create a DT table with bootstrap theme}
 \usage{
 \method{dtab}{data.frame}(object, vars = "", filt = "", rows = NULL,
-  na.rm = FALSE, dec = 3, filter = "top", pageLength = 10,
+  na.rm = FALSE, dec = 3, filter = "top", pageLength = 10, dom = "",
   rownames = FALSE, ...)
 }
 \arguments{
@@ -24,6 +24,8 @@
 \item{filter}{Show filter in DT table. Options are "none", "top", "bottom"}
 
 \item{pageLength}{Number of rows to show in table}
+
+\item{dom}{Table control elements to show on the page. See \url{https://datatables.net/reference/option/dom}}
 
 \item{rownames}{Show data.frame rownames. Default is FALSE}
 

@@ -7,7 +7,7 @@
 \method{render}{datatables}(object, ...)
 }
 \arguments{
-\item{object}{DT table plot}
+\item{object}{DT table}
 
 \item{...}{Additional arguments}
 }
