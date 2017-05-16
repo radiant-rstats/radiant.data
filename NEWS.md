@@ -7,7 +7,6 @@
 
 ## BUG FIXES
 
-
 # CHANGES IN radiant.data 0.8.1
 
 ## NEW FEATURES

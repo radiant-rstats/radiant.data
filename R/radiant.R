@@ -473,7 +473,7 @@ viewdata <- function(dataset,
 #' @param dec Number of decimal places to show. Default is no rounding (NULL)
 #' @param filter Show filter in DT table. Options are "none", "top", "bottom"
 #' @param pageLength Number of rows to show in table
-#' @param dom Table control elements to show on the page. See \link{https://datatables.net/reference/option/dom}
+#' @param dom Table control elements to show on the page. See \url{https://datatables.net/reference/option/dom}
 #' @param rownames Show data.frame rownames. Default is FALSE
 #' @param ... Additional arguments
 #'

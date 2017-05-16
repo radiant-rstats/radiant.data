@@ -328,6 +328,7 @@ mutate_if_tmp <- function (.tbl, .predicate, .funs, ...) {
     colnames(.tbl) <- make.names(cn)
     mutate_if(.tbl, .predicate, .funs, ...) %>%
       set_colnames(cn) %>%
+      as.data.frame %>%
       set_rownames(rn)
   } else {
     .tbl
