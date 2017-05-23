@@ -213,7 +213,7 @@ output$pivotr_chi2 <- renderPrint({
   req(input$pvt_chi2)
   req(input$pvt_dec)
   .pivotr() %>% {if (is.null(.)) return(invisible())
-                 else summary(., chi2 = TRUE, dec = input$pvt_dec)}
+                 else summary(., chi2 = TRUE, dec = input$pvt_dec, shiny = TRUE)}
 })
 
 output$dl_pivot_tab <- downloadHandler(
