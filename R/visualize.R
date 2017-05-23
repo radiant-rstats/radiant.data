@@ -13,6 +13,9 @@
 #' @param color Adds color to a scatter plot to generate a 'heat map'. For a line plot one line is created for each group and each is assigned a different color
 #' @param fill Display bar, distribution, and density plots by group, each with a different color. Also applied to surface plots to generate a 'heat map'
 #' @param size Numeric variable used to scale the size of scatter-plot points
+#' @param fillcol Color used for bars, boxes, etc. when no color or fill variable is specified
+#' @param linecol Color for lines when no color variable is specified
+#' @param pointcol Color for points when no color variable is specified
 #' @param bins Number of bins used for a histogram (1 - 50)
 #' @param smooth Adjust the flexibility of the loess line for scatter plots
 #' @param fun Set the summary measure for line and bar plots when the X-variable is a factor (default is "mean"). Also used to plot an error bar in a scatter plot when the X-variable is a factor. Options are "mean" and/or "median"
@@ -27,9 +30,9 @@
 #' @return Generated plots
 #'
 #' @examples
-#' visualize("diamonds", "price:x", type = "dist")
-#' visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
-#' \dontrun{
+#' visualize("diamonds", "price:cut", type = "dist", fillcol = "red")
+#' visualize("diamonds", "carat:cut", yvar = "price", type = "scatter", 
+#'   pointcol = "blue", fun = c("mean", "median"), linecol = c("red","green"))
 #' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
 #'   type = "bar", fun = "median")
 #' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
@@ -42,7 +45,6 @@
 #'   gridExtra::grid.arrange(grobs = ., top = "Histograms", ncol = 2)
 #' visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "bar",
 #'   facet_row = "cut", fill = "cut")
-#' }
 #'
 #' @export
 visualize <- function(dataset, xvar,
@@ -55,6 +57,9 @@ visualize <- function(dataset, xvar,
                       color = "none",
                       fill = "none",
                       size = "none",
+                      fillcol = "blue",
+                      linecol = "black",
+                      pointcol = linecol[1],
                       bins = 10,
                       smooth = 1,
                       fun = "mean",
@@ -69,12 +74,19 @@ visualize <- function(dataset, xvar,
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- xvar
 
-  if (!type %in% c("scatter","line")) color <- "none"
+  if (!type %in% c("scatter","line","box")) color <- "none"
   if (!type %in% c("bar","dist","density","surface")) fill <- "none"
   if (type != "scatter") {
     check %<>% sub("line","",.) %>% sub("loess","",.)
-    fun <- fun[1]  # only scatter can deal with multiple functions
+    if (length(fun) > 1) {
+      fun <- fun[1]  ## only scatter can deal with multiple functions
+      message("No more than one function (", fun, ") will be used for plots of type", type)
+    }
     size <- "none"
+  }
+  if (type == "scatter" && length(fun) > 3) {
+    fun <- fun[1:3]  ## only scatter can deal with multiple functions, max 3 for now
+    message("No more than three functions (", paste(fun, collapse = ", "), ") can be used with scatter plots")
   }
   if (!type %in% c("scatter","box")) check %<>% sub("jitter","",.)
 
@@ -234,10 +246,12 @@ visualize <- function(dataset, xvar,
       }
 
       hist_par <- list(alpha = alpha, position = "identity")
+      if (fill == "none") hist_par[["fill"]] <- fillcol
       plot_list[[i]] <- ggplot(dat, aes_string(x = i))
       if ("density" %in% axes && !"factor" %in% dc[i]) {
-        hist_par <- list(aes(y = ..density..), alpha = alpha, position = "identity")
-        plot_list[[i]] <- plot_list[[i]] + geom_density(color = "blue", size = .5)
+        # hist_par <- list(aes(y = ..density..), alpha = alpha, position = "identity")
+        hist_par <- c(list(aes(y = ..density..)), hist_par)
+        plot_list[[i]] <- plot_list[[i]] + geom_density(color = linecol, size = .5)
       }
       if ("factor" %in% dc[i]) {
         plot_fun <- get("geom_bar")
@@ -254,7 +268,7 @@ visualize <- function(dataset, xvar,
     for (i in xvar) {
       plot_list[[i]] <- ggplot(dat, aes_string(x = i)) +
         if (fill == "none")
-          geom_density(adjust = smooth, color = "blue", fill = "blue", alpha = alpha, size = 1)
+          geom_density(adjust = smooth, color = linecol, fill = fillcol, alpha = alpha, size = 1)
         else
           geom_density(adjust = smooth, alpha = alpha, size = 1)
 
@@ -264,10 +278,18 @@ visualize <- function(dataset, xvar,
 
     itt <- 1
     if ("jitter" %in% check) {
-      gs <- geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.1))
+      if (color == "none") {
+        gs <- geom_jitter(alpha = alpha, color = pointcol, position = position_jitter(width = 0.4, height = 0.1))
+      } else {
+        gs <- geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.1))
+      }
       check <- sub("jitter","", check)
     } else {
-      gs <- geom_point(alpha = alpha)
+      if (color == "none") {
+        gs <- geom_point(alpha = alpha, color = pointcol)
+      } else {
+        gs <- geom_point(alpha = alpha)
+      }
     }
 
     for (i in xvar) {
@@ -286,27 +308,59 @@ visualize <- function(dataset, xvar,
           ymin <- min(dat[[j]]) %>% {if (. > 0) 0 else .}
           plot_list[[itt]] <- plot_list[[itt]] + ylim(ymin,ymax)
 
-          if ("mean" %in% fun) {
-            meanf <- function(y) {
-              y <- mean(y)
+          fun1 <- function(y) {
+            y <- get(fun[1])(y)
+            data.frame(ymin = y, ymax = y, y = y)
+          }
+          plot_list[[itt]] <- plot_list[[itt]] +
+            stat_summary(fun.data = fun1, aes(fill = fun[1]), 
+              geom = "crossbar", show.legend = TRUE, color = linecol[1])
+
+          if (length(fun) > 1) {
+            fun2 <- function(y) {
+              y <- get(fun[2])(y)
               data.frame(ymin = y, ymax = y, y = y)
             }
+            if (length(linecol) == 1) linecol <- c(linecol, "blue")
             plot_list[[itt]] <- plot_list[[itt]] +
-              stat_summary(fun.data = meanf, geom = "crossbar", color = "blue")
+              stat_summary(fun.data = fun2, aes(fill = fun[2]),
+                geom = "crossbar", show.legend = FALSE, color = linecol[2])
           }
 
-          if ("median" %in% fun) {
-            medianf <- function(y) {
-              y <- median(y)
+          if (length(fun) == 3) {
+            fun3 <- function(y) {
+              y <- get(fun[3])(y)
               data.frame(ymin = y, ymax = y, y = y)
             }
+            if (length(linecol) == 2) linecol <- c(linecol, "red")
             plot_list[[itt]] <- plot_list[[itt]] +
-              stat_summary(fun.data = medianf, geom = "crossbar", color = "red")
+              stat_summary(fun.data = fun3, aes(fill = fun[3]),
+                geom = "crossbar", show.legend = FALSE, color = linecol[3])
           }
+
+
+          ## adding a legend if needed
+          if (length(fun) > 1 && length(linecol) > 1) {
+            plot_list[[itt]] <- plot_list[[itt]] + 
+              scale_fill_manual(name = "", values = linecol, labels = fun) +
+              ## next line based on https://stackoverflow.com/a/25294787/1974918
+              guides(fill = guide_legend(override.aes = list(color = NULL)))
+          }
+
+          ## Not working for some reason
+          # fun_list <- list()
+          # for (f in seq_along(fun)) {
+          #   fun_list[[f]] <- function(y) {
+          #     y <- get(fun[deparse(f)])(y, na.rm = TRUE)
+          #     data.frame(ymin = y, ymax = y, y = y)
+          #   }
+          #   plot_list[[itt]] <- plot_list[[itt]] +
+          #     stat_summary(fun.data = fun_list[[f]], geom = "crossbar", color = c("red", "green", "blue")[f])
+          # }
 
           nr <- nrow(dat)
           if (nr > 1000 || nr != length(unique(dat[[i]])))
-            plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
+            plot_list[[itt]]$labels$y %<>% paste0(., " (", paste(fun, collapse = ", "), ")")
 
         }
 
@@ -342,10 +396,10 @@ visualize <- function(dataset, xvar,
             tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, j)) %>% 
               summarise_all(make_funs(fun))
             colnames(tmp)[ncol(tmp)] <- j
-            plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j)) + geom_line(aes(group = 1))
-            if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point()
+            plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j)) + geom_line(aes(group = 1), color = linecol)
+            if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point(color = linecol)
           } else {
-            plot_list[[itt]] <- ggplot(dat, aes_string(x = i, y = j)) + geom_line()
+            plot_list[[itt]] <- ggplot(dat, aes_string(x = i, y = j)) + geom_line(color = linecol)
           }
         } else {
           if (dc[i] %in% c("factor","date")) {
@@ -388,7 +442,14 @@ visualize <- function(dataset, xvar,
         }
 
         plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j)) +
-          geom_bar(stat = "identity", position = "dodge", alpha = alpha)
+          {if (fill == "none") {
+            geom_bar(stat = "identity", position = "dodge", alpha = alpha, fill = fillcol)
+           } else {
+            geom_bar(stat = "identity", position = "dodge", alpha = alpha)
+           }}
+
+        if (!custom && (fill == "none" || fill == i))
+          plot_list[[itt]] <- plot_list[[itt]] + theme(legend.position = "none")
 
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
 
@@ -403,9 +464,16 @@ visualize <- function(dataset, xvar,
     for (i in xvar) {
       if (!"factor" %in% dc[i]) dat[[i]] %<>% as_factor
       for (j in yvar) {
-        plot_list[[itt]] <- ggplot(dat, aes_string(x = i, y = j, fill = i)) +
-                          geom_boxplot(alpha = alpha) +
-                          theme(legend.position = "none")
+        if (color == "none") {
+          plot_list[[itt]] <- ggplot(dat, aes_string(x = i, y = j)) +
+                              geom_boxplot(alpha = alpha, fill = fillcol)
+        } else {
+          plot_list[[itt]] <- ggplot(dat, aes_string(x = i, y = j, fill = color)) +
+                              geom_boxplot(alpha = alpha)
+        }
+
+        if (!custom && (color == "none" || color == i))
+          plot_list[[itt]] <- plot_list[[itt]] + theme(legend.position = "none")
 
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
 
@@ -453,8 +521,8 @@ visualize <- function(dataset, xvar,
   if ("line" %in% check) {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] +
-        sshhr(geom_smooth(method = "lm", fill = "blue", alpha = .1, size = .75,
-                          linetype = "dashed", color = "black"))
+        sshhr(geom_smooth(method = "lm", fill = fillcol, alpha = .1, size = .75,
+                          linetype = "dashed", color = linecol))
   }
 
   if ("loess" %in% check) {
@@ -465,8 +533,12 @@ visualize <- function(dataset, xvar,
   }
 
   if ("flip" %in% axes) {
-    for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + coord_flip()
+    ## reverse legend ordering if available
+    for (i in 1:length(plot_list)) {
+      plot_list[[i]] <- plot_list[[i]] + coord_flip() +
+        guides(fill = guide_legend(reverse = TRUE)) +
+        guides(color = guide_legend(reverse = TRUE))
+    }
   }
 
   if (custom)

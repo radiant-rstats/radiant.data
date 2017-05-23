@@ -245,7 +245,6 @@ summary.pivotr <- function(object,
         if (shiny) HTML(paste0("</br><hr>", l1, "</br>", l2)) else cat(paste0(l1, l2))
       } else {
         note <- "\nNote: Test conducted on unfiltered table"
-        ## filtering is client side in Data > Pivot so can't determine if tab filters are being applied
         if (shiny) HTML(paste0("</br><hr>", l1, "</br>", l2, "</br><hr>", note)) else cat(paste0(l1, l2, note))
       }
     } else {
@@ -322,9 +321,12 @@ dtab.pivotr  <- function(object,
   dom <- if (nrow(tab) < 11) "t" else "ltip"
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
   dt_tab <- {if (!perc) rounddf(tab, dec) else tab} %>%
-  # dt_tab <- tab %>%
-  DT::datatable(container = sketch, selection = "none", rownames = FALSE,
+  DT::datatable(
+    container = sketch, 
+    selection = "none", 
+    rownames = FALSE,
     filter = fbox,
+    # extension = "KeyTable",
     style = "bootstrap",
     options = list(
       dom = dom,
@@ -365,9 +367,6 @@ dtab.pivotr  <- function(object,
     list(rmarkdown::html_dependency_bootstrap('bootstrap')), dt_tab$dependencies
   )
 
-  # if (exists("r_environment") && isTRUE(r_environment$called_from_knitIt)) 
-  #   render(dt_tab)
-  # else
   dt_tab
 }
 
@@ -379,6 +378,7 @@ dtab.pivotr  <- function(object,
 #' @param type Plot type to use ("fill" or "dodge" (default))
 #' @param perc Use percentage on the y-axis
 #' @param flip Flip the axes in a plot (FALSE or TRUE)
+#' @param fillcol Fill color for bar-plot when only one categorical variable has been selected (default is "blue")
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -394,6 +394,7 @@ plot.pivotr <- function(x,
                         type = "dodge",
                         perc = FALSE,
                         flip = FALSE,
+                        fillcol = "blue",
                         ...) {
 
   object <- x; rm(x)
@@ -403,7 +404,7 @@ plot.pivotr <- function(x,
 
   if (length(cvars) == 1) {
     p <- ggplot(na.omit(tab), aes_string(x = cvars, y = nvar)) +
-        geom_bar(stat="identity", position = "dodge", alpha=.7)
+        geom_bar(stat="identity", position = "dodge", alpha=.7, fill = fillcol)
   } else if (length(cvars) == 2) {
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
