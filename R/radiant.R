@@ -157,7 +157,7 @@ getdata <- function(dataset,
   } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%  ## ungroup data if needed
         { if (filt == "") . else filterdata(., filt) } %>%         ## apply data_filter
         { if (is.null(rows)) . else .[rows,, drop = FALSE] } %>%
-        { if (vars[1] == "" || is.null(vars)) . else select_(., .dots = vars) } %>%
+        { if (is_empty(vars[1])) . else select_(., .dots = vars) } %>%
         { if (na.rm) na.omit(.) else . }
         ## line below may cause an error https://github.com/hadley/dplyr/issues/219
         # { if (na.rm) { if (anyNA(.)) na.omit(.) else . } else . }
@@ -436,16 +436,15 @@ viewdata <- function(dataset,
     ui = fluidPage(title = title,
       includeCSS(file.path(system.file(package = "radiant.data"),"app/www/style.css")),
       fluidRow(DT::dataTableOutput("tbl")),
-      tags$button(id = "stop", type = "button",
-                  class = "btn btn-danger action-button shiny-bound-input",
-                  onclick = "window.close();", "Stop")
+      actionButton("stop", "Stop", class = "btn-danger", onclick = "window.close();")
     ),
     server = function(input, output, session) {
       widget <- DT::datatable(dat, selection = "none",
         rownames = FALSE, style = "bootstrap",
         filter = fbox, escape = FALSE,
-        # extensions = 'KeyTable'# ,
+        extensions = "KeyTable",
         options = list(
+          keys = TRUE,
           search = list(regex = TRUE),
           columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all"),
                             list(className = "dt-center", targets = "_all")),
@@ -474,6 +473,7 @@ viewdata <- function(dataset,
 #' @param filter Show filter in DT table. Options are "none", "top", "bottom"
 #' @param pageLength Number of rows to show in table
 #' @param dom Table control elements to show on the page. See \url{https://datatables.net/reference/option/dom}
+#' @param style Table formatting style ("bootstrap" or "default")
 #' @param rownames Show data.frame rownames. Default is FALSE
 #' @param ... Additional arguments
 #'
@@ -490,6 +490,7 @@ dtab.data.frame <- function(object,
                             filter = "top",
                             pageLength = 10,
                             dom = "",
+                            style = "bootstrap",
                             rownames = FALSE,
                             ...) {
 
@@ -509,9 +510,11 @@ dtab.data.frame <- function(object,
       rownames = rownames,
       filter = filter,
       escape = FALSE,
-      style = "bootstrap",
+      extension = "KeyTable",
+      style = style,
       options = list(
         dom = dom,
+        keys = TRUE,
         search = list(regex = TRUE),
         columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all"),
                           list(className = "dt-center", targets = "_all")),
