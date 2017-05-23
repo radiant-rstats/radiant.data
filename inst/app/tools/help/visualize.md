@@ -101,3 +101,29 @@ gridExtra::grid.arrange(grobs = plot_list, top = "Three bar plots", ncol = 1)
 ```
 
 See the <a href="https://cran.r-project.org/web/packages/gridExtra/vignettes/arrangeGrob.html">gridExtra vignette</a> for additional information on how to customize groups of plots.
+
+
+### Making plots interactive in _R > Report_
+
+It is possible to transform (most) plots generated in Radiant into interactive graphics using the `plotly` library. After setting `custom = TRUE` you can use the `ggplotly` function to convert a single plot. See example below:
+
+```r
+visualize(dataset = "diamonds", xvar = c("price", "carat", "clarity", "cut"), custom = TRUE) %>%
+  ggplotly %>%
+  render
+```
+
+If more than one plot is created, you can use the `subplot` function from the `plotly` package. Provide a value for the `nrows` argument to setup the plot layout grid. In the example below four plots are created. Because `nrow = 2` the plots will be displayed in a 2 X 2 grid. 
+
+```r
+visualize(dataset = "diamonds", xvar = c("carat", "clarity", "cut", "color"), custom = TRUE) %>%
+  subplot(nrows = 2) %>%
+  render
+```
+
+For additional information on the `plotly` library see the links below:
+
+* Getting started: https://plot.ly/r/getting-started/
+* Reference: https://plot.ly/r/reference/
+* Book: https://cpsievert.github.io/plotly_book
+* Code: https://github.com/ropensci/plotly

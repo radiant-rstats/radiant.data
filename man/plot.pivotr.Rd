@@ -4,7 +4,8 @@
 \alias{plot.pivotr}
 \title{Plot method for the pivotr function}
 \usage{
-\method{plot}{pivotr}(x, type = "dodge", perc = FALSE, flip = FALSE, ...)
+\method{plot}{pivotr}(x, type = "dodge", perc = FALSE, flip = FALSE,
+  fillcol = "blue", ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{pivotr}}}
@@ -14,6 +15,8 @@
 \item{perc}{Use percentage on the y-axis}
 
 \item{flip}{Flip the axes in a plot (FALSE or TRUE)}
+
+\item{fillcol}{Fill color for bar-plot when only one categorical variable has been selected (default is "blue")}
 
 \item{...}{further arguments passed to or from other methods}
 }

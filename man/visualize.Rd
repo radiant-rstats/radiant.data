@@ -6,7 +6,8 @@
 \usage{
 visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   type = "dist", facet_row = ".", facet_col = ".", color = "none",
-  fill = "none", size = "none", bins = 10, smooth = 1, fun = "mean",
+  fill = "none", size = "none", fillcol = "blue", linecol = "black",
+  pointcol = linecol[1], bins = 10, smooth = 1, fun = "mean",
   check = "", axes = "", alpha = 0.5, ylim = "none", data_filter = "",
   shiny = FALSE, custom = FALSE)
 }
@@ -32,6 +33,12 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 \item{fill}{Display bar, distribution, and density plots by group, each with a different color. Also applied to surface plots to generate a 'heat map'}
 
 \item{size}{Numeric variable used to scale the size of scatter-plot points}
+
+\item{fillcol}{Color used for bars, boxes, etc. when no color or fill variable is specified}
+
+\item{linecol}{Color for lines when no color variable is specified}
+
+\item{pointcol}{Color for points when no color variable is specified}
 
 \item{bins}{Number of bins used for a histogram (1 - 50)}
 
@@ -63,9 +70,9 @@ Visualize data using ggplot2 \url{http://ggplot2.tidyverse.org}
 See \url{https://radiant-rstats.github.io/docs/data/visualize.html} for an example in Radiant
 }
 \examples{
-visualize("diamonds", "price:x", type = "dist")
-visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
-\dontrun{
+visualize("diamonds", "price:cut", type = "dist", fillcol = "red")
+visualize("diamonds", "carat:cut", yvar = "price", type = "scatter", 
+  pointcol = "blue", fun = c("mean", "median"), linecol = c("red","green"))
 visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
   type = "bar", fun = "median")
 visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
@@ -78,6 +85,5 @@ visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) \%>\%
   gridExtra::grid.arrange(grobs = ., top = "Histograms", ncol = 2)
 visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "bar",
   facet_row = "cut", fill = "cut")
-}
 
 }

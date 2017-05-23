@@ -6,7 +6,7 @@
 \usage{
 \method{dtab}{data.frame}(object, vars = "", filt = "", rows = NULL,
   na.rm = FALSE, dec = 3, filter = "top", pageLength = 10, dom = "",
-  rownames = FALSE, ...)
+  style = "bootstrap", rownames = FALSE, ...)
 }
 \arguments{
 \item{object}{Data.frame to display}
@@ -26,6 +26,8 @@
 \item{pageLength}{Number of rows to show in table}
 
 \item{dom}{Table control elements to show on the page. See \url{https://datatables.net/reference/option/dom}}
+
+\item{style}{Table formatting style ("bootstrap" or "default")}
 
 \item{rownames}{Show data.frame rownames. Default is FALSE}
 
