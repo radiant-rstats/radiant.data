@@ -25,7 +25,7 @@ stop_radiant <- function(rmd = FALSE) {
 
       if (!is_empty(input$rmd_report)) {
         rmd_report <-
-          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(", lib, ")))\n#loadr('~/radiant.sessions/r_data.rda')\n```\n\n") %>%
+          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, dpi = 96, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(", lib, ")))\n#loadr('~/radiant.sessions/r_data.rda')\n```\n\n") %>%
           paste0(., input$rmd_report) %>% gsub("\\\\\\\\","\\\\",.) %>%
           cleanout(.)
         if (!rmd) {
