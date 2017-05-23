@@ -330,6 +330,7 @@ dtab.explore <- function(object,
     DT::datatable(container = sketch, selection = "none",
       rownames = FALSE,
       filter = fbox,
+      # extension = "KeyTable",
       style = "bootstrap",
       options = list(
         dom = dom,

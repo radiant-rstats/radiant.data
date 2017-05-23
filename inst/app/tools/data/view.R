@@ -69,8 +69,13 @@ output$dataviewer <- DT::renderDataTable({
     dat[,isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
 
   withProgress(message = "Generating view table", value = 1,
-    DT::datatable(dat, filter = fbox, selection = "none",
-      rownames = FALSE, style = "bootstrap", escape = FALSE,
+    DT::datatable(dat, 
+      filter = fbox, 
+      selection = "none",
+      rownames = FALSE, 
+      # extension = "KeyTable",
+      escape = FALSE,
+      style = "bootstrap", 
       options = list(
         stateSave = TRUE,   ## maintains state
         searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),

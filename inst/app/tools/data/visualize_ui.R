@@ -118,14 +118,16 @@ output$ui_viz_color <- renderUI({
 
   if (isTRUE(input$viz_comby) && length(input$viz_yvar) > 1) vars <- c("None" = "none")
   selectizeInput("viz_color", "Color", vars, multiple = FALSE,
-    selected = state_single("viz_color", vars, init = "none"))
+    selected = state_single("viz_color", vars, init = "none")
+  )
 })
 
 output$ui_viz_fill <- renderUI({
   vars <- c("None" = "none", groupable_vars())
   if (isTRUE(input$viz_combx) && length(input$viz_xvar) > 1) vars <- vars[1]
   selectizeInput("viz_fill", "Fill", vars, multiple = FALSE,
-    selected = state_single("viz_fill", vars, init = "none"))
+    selected = state_single("viz_fill", vars, init = "none")
+  )
 })
 
 output$ui_viz_size <- renderUI({

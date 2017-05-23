@@ -385,11 +385,7 @@ observeEvent(input$uploadState, {
   tmpEnv <- new.env(parent = emptyenv())
   load(inFile$datapath, envir = tmpEnv)
 
-  ## remove characters that may cause problems in shinyAce
-  # if (!is.null(tmpEnv$r_state$rmd_report))
-    # tmpEnv$r_state$rmd_report %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
-
-  ## remove characters that may cause problems in shinyAce
+  ## remove characters that may cause problems in shinyAce from r_state
   if (!is.null(tmpEnv$r_state)) {
     for (i in names(tmpEnv$r_state)) {
       if (is.character(tmpEnv$r_state[[i]])) {
@@ -398,7 +394,7 @@ observeEvent(input$uploadState, {
     }
   }
 
-  ## remove characters that may cause problems in shinyAce
+  ## remove characters that may cause problems in shinyAce from r_data
   if (!is.null(tmpEnv$r_data)) {
     for (i in names(tmpEnv$r_data)) {
       if (is.character(tmpEnv$r_data[[i]])) {
