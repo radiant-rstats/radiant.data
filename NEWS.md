@@ -1,11 +1,16 @@
-# CHANGES IN radiant.data 0.8.3
+# CHANGES IN radiant.data 0.8.4
 
 ## NEW FEATURES
 
-* Adding plotly to imports for interactive plots in _R > Report_
-* Set default `res = 96` for `renderPlot`
+* Export `ggplotly` from `plotly` for interactive plots in _R > Report_
+* Export `subplot` from `plotly` for grids of interactive plots in _R > Report_
+* Set default `res = 96` for `renderPlot` and `dpi = 96` for `knitr::opts_chunk`
+* Add `fillcol`, `linecol`, and `pointcol` to `visualize` to set plot colors when no `fill` or `color` variable has been selected
+* Reverse legend ordering in _Data > Visualize_ when axes are flipped using `coor_flip()`
 
 ## BUG FIXES
+
+* Chi-sqaure results were not displayed correctly in _Data > Pivot_
 
 # CHANGES IN radiant.data 0.8.1
 
@@ -15,19 +20,19 @@
 - Support for loading and saving feather files, including specifying the maximum number of rows to load through _Data > Manage_
 - Added author and year arguments to help modals in inst/app/radiant.R (thanks @kmezhoud)
 - Added size argument for scatter plots to create bubble charts (thanks @andrewsali)
-- Example and CSS formatting for tables in R > Report
+- Example and CSS formatting for tables in _R > Report_
 - Added `seed` argument to `make_train`
 - Added `prop`, `sdprop`, etc. for working with proportions
 - Set `ylim` in `visualize` for multiple plots
-- Show progress indicator when saving reports from R > Report
+- Show progress indicator when saving reports from _R > Report_
 - `copy_attr` convenience function
 - `refactor` function to keep only a subset of levels in a factor and recode the remaining (and first) level to, for example, other
 - `register` function to add a (transformed) dataset to the dataset dropdown
 - Remember name of state files loaded and suggest that name when re-saving the state
 - Show dataset name in output if dataframe passed directly to analysis function
-- R-notebooks are now the default option for output saved from R > Report and R > Code
-- Improved documentation on how to customize plots in R > Report
-- Keyboard short-cut to put code into R > Report (ALT-enter)
+- R-notebooks are now the default option for output saved from _R > Report_ and _R > Code_
+- Improved documentation on how to customize plots in _R > Report_
+- Keyboard short-cut to put code into _R > Report_ (ALT-enter)
 
 ## BUG FIXES
 
