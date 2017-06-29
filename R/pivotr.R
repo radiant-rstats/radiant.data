@@ -108,7 +108,7 @@ pivotr <- function(dataset,
       set_colnames("Total")
 
     ## creating cross tab
-    tab <- spread_(tab, cvars[1], nvar) %>% ungroup %>% 
+    tab <- spread_(tab, cvars[1], nvar) %>% ungroup %>%
       mutate_at(.cols = cvars[-1], .funs = funs(as.character))
 
     tab <-
@@ -124,7 +124,7 @@ pivotr <- function(dataset,
   }
 
   ## resetting factor levels
-  ind <- ifelse (length(cvars) > 1, -1, 1)
+  ind <- ifelse(length(cvars) > 1, -1, 1)
   levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
 
   for (i in cvars[ind])
@@ -133,7 +133,7 @@ pivotr <- function(dataset,
   ## frequency table for chi-square test
   tab_freq <- tab
 
-  isNum <- if (length(cvars) == 1) -1 else -c(1:(length(cvars)-1))
+  isNum <- if (length(cvars) == 1) -1 else -c(1:(length(cvars) - 1))
   if (normalize == "total") {
     tab[,isNum] %<>% {. / total[[1]]}
   } else if (normalize == "row") {
@@ -232,7 +232,7 @@ summary.pivotr <- function(object,
 
       cst <- object$tab_freq %>% filter(.[[1]] != "Total") %>%
         select(-which(names(.) %in% c(object$cvars, "Total")))  %>%
-        mutate_all(funs(ifelse (is.na(.), 0, .))) %>%
+        mutate_all(funs(ifelse(is.na(.), 0, .))) %>%
         {sshhr(chisq.test(., correct = FALSE))}
 
       res <- tidy(cst)
@@ -322,8 +322,8 @@ dtab.pivotr  <- function(object,
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
   dt_tab <- {if (!perc) rounddf(tab, dec) else tab} %>%
   DT::datatable(
-    container = sketch, 
-    selection = "none", 
+    container = sketch,
+    selection = "none",
     rownames = FALSE,
     filter = fbox,
     # extension = "KeyTable",
@@ -404,25 +404,25 @@ plot.pivotr <- function(x,
 
   if (length(cvars) == 1) {
     p <- ggplot(na.omit(tab), aes_string(x = cvars, y = nvar)) +
-        geom_bar(stat="identity", position = "dodge", alpha=.7, fill = fillcol)
+        geom_bar(stat = "identity", position = "dodge", alpha = .7, fill = fillcol)
   } else if (length(cvars) == 2) {
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
-    dots <- paste0("factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2]),collapse="','"),"'))")
+    dots <- paste0("factor(", cvars[1], ", levels = c('", paste0(setdiff(colnames(tab), cvars[2]), collapse = "','"), "'))")
     p <- tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2])) %>% na.omit %>%
         mutate_(.dots = setNames(dots,cvars[1])) %>%
         ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
-          geom_bar(stat="identity", position = type, alpha=.7)
+          geom_bar(stat = "identity", position = type, alpha = .7)
   } else if (length(cvars) == 3) {
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
-    dots <- paste0("factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2:3]),collapse="','"),"'))")
+    dots <- paste0("factor(", cvars[1], ", levels = c('", paste0(setdiff(colnames(tab), cvars[2:3]), collapse = "','"), "'))")
     p <- tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2:3])) %>% na.omit %>%
         mutate_(.dots = setNames(dots,cvars[1])) %>%
         ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
-          geom_bar(stat="identity", position = type, alpha=.7) +
+          geom_bar(stat = "identity", position = type, alpha = .7) +
           facet_grid(paste(cvars[3], '~ .'))
   } else {
     ## No plot returned if more than 3 grouping variables are selected
@@ -434,7 +434,7 @@ plot.pivotr <- function(x,
 
   if (nvar == "n") {
     if (!is_empty(object$normalize, "None"))
-      p <- p + ylab(ifelse (perc, "Percentage", "Proportion"))
+      p <- p + ylab(ifelse(perc, "Percentage", "Proportion"))
   } else {
     p <- p + ylab(paste0(nvar, " (",names(make_funs(object$fun)),")"))
   }

@@ -415,7 +415,7 @@ weighted.sd <- function(x, wt, na.rm = TRUE) {
 getsummary <- function(dat, dc = getclass(dat)) {
 
   isFct <- "factor" == dc
-  isNum <- "numeric" == dc | "integer" == dc | "Duration" == dc
+  isNum <- dc %in% c("numeric", "integer", "Duration")
   isDate <- "date" == dc
   isChar <- "character" == dc
   isLogic <- "logical" == dc

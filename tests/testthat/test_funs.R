@@ -1,4 +1,3 @@
-
 context("Radiant functions")
 
 test_that("set_attr", {
@@ -40,23 +39,24 @@ test_that("changedata", {
 })
 
 test_that("getclass", {
-  expect_equal(getclass(diamonds), sapply(diamonds,class) %>% tolower)
+  expect_equal(getclass(diamonds), sapply(diamonds, class) %>% tolower)
 })
 
 test_that("is_empty", {
   expect_true(is_empty(""))
   expect_true(is_empty(NULL))
+  expect_true(is_empty(NA))
   expect_false(is_empty(3))
   expect_true(is_empty(c()))
   expect_true(is_empty("nothing", empty = "nothing"))
 })
 
 test_that("options", {
-  options("width" = 10)
-  options("scipen" = 0)
+  options(width = 10)
+  options(scipen = 0)
   radiant.data:::.onLoad("","")
-  expect_equal(options()$width, 200)
-  expect_equal(options()$scipen, 100)
+  expect_equal(getOption("width"), 250)
+  expect_equal(getOption("scipen"), 100)
 })
 
 test_that("filter", {

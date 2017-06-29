@@ -22,7 +22,11 @@ import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
       lib <- import_names[[i]]
       ## replace with character.only option when new version of import is posted to CRAN
       ## https://github.com/smbache/import/issues/11
-      eval(parse(text = paste0("import::from(",lib,", '",paste0(fun,collapse="', '"),"')")))
+      eval(
+        parse(text =
+          paste0("import::from(", lib, ", '", paste0(fun, collapse = "', '"), "')")
+        )
+      )
     }
   }
   invisible()

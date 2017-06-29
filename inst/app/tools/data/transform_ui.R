@@ -1,27 +1,30 @@
 ## UI-elements for transform
 output$ui_tr_vars <- renderUI({
   vars <- varnames()
-  if (not_available(vars)) return()
+  req(available(vars))
   selectInput("tr_vars", "Select variable(s):", choices  = vars,
     multiple = TRUE, size = min(8, length(vars)), selectize = FALSE)
 })
 
 output$ui_tr_replace <- renderUI({
+  validate(
+    need(available(input$tr_vars), "Select one or more variables to replace")
+  )
   vars <- varnames()
   selectInput("tr_replace", "Select replacement variables:", choices  = vars,
     multiple = TRUE, size = min(2, length(vars)), selectize = FALSE)
 })
 
 output$ui_tr_normalizer <- renderUI({
-  isNum <- "numeric" == .getclass() | "integer" == .getclass()
+  isNum <- .getclass() %in%  c("numeric", "integer")
   vars <- varnames()[isNum]
-  if (length(vars) == 0) return(NULL)
+  if (length(vars) == 0) return()
   selectInput("tr_normalizer", "Normalizing variable:", c("None" = "none", vars),
               selected = "none")
 })
 
 output$ui_tr_tab2dat <- renderUI({
-  isNum <- "numeric" == .getclass() | "integer" == .getclass()
+  isNum <- .getclass() %in%  c("numeric", "integer")
   vars <- varnames()[isNum]
   selectInput("tr_tab2dat", "Frequency variable:", c("None" = "none", vars),
               selected = "none")
@@ -29,10 +32,9 @@ output$ui_tr_tab2dat <- renderUI({
 
 output$ui_tr_gather <- renderUI({
   tagList(
-    # HTML("<label>Key-Value labels:</label>"),
     tags$table(
-      tags$td(returnTextInput("tr_gather_key", "Key name:", "key")),
-      tags$td(returnTextInput("tr_gather_value", "Value name:", "value"))
+      tags$td(returnTextInput("tr_gather_key", "Key name:", value = "key")),
+      tags$td(returnTextInput("tr_gather_value", "Value name:", value = "value"))
     )
   )
 })
@@ -41,11 +43,9 @@ output$ui_tr_spread <- renderUI({
   req(input$tr_change_type)
   vars <- c("None" = "none", varnames())
   tagList(
-    # selectInput("tr_spread_key", "Key:", choices  = vars, selected = "none", multiple = TRUE),
     selectizeInput("tr_spread_key", "Key(s):", choices  = vars[-1],
       selected = NULL, multiple = TRUE,
-      options = list(placeholder = "None",
-                     plugins = list("remove_button", "drag_drop"))),
+      options = list(placeholder = "None", plugins = list("remove_button", "drag_drop"))),
     selectInput("tr_spread_value", "Value:", choices  = vars, selected = "none", multiple = FALSE),
     numericInput("tr_spread_fill", "Fill:", value = NA)
   )
@@ -62,10 +62,14 @@ output$ui_tr_reorg_vars <- renderUI({
 
 output$ui_tr_reorg_levs <- renderUI({
   req(input$tr_change_type)
-	if (not_available(input$tr_vars)) return()
+  validate(
+    need(available(input$tr_vars), "Select a single variable of type factor or character")
+  )
   fctCol <- input$tr_vars[1]
-	isFct <- "factor" == .getclass()[fctCol] || "character" == .getclass()[fctCol]
-  if (!isFct) return()
+  isFct <- .getclass()[fctCol] %in% c("factor", "character")
+  validate(
+    need(isFct, "Selected variable is not of type factor or character")
+  )
   fct <- .getdata_transform()[[fctCol]]
   levs <- if (is.factor(fct)) levels(fct) else levels(as_factor(fct))
 
@@ -74,7 +78,10 @@ output$ui_tr_reorg_levs <- renderUI({
       selected = levs, multiple = TRUE,
       options = list(placeholder = "Select level(s)",
                      plugins = list("remove_button", "drag_drop"))),
-    textInput("tr_rorepl", "Replacement level name:", value = NA)
+    textInput("tr_rorepl", "Replacement level name:", 
+      placehold = "Provide name for missing levels",
+      value = NA
+    )
   )  
 })
 
@@ -92,35 +99,62 @@ ext_options <- list("none" = "", "log" = "_ln", "exp" = "_exp",
 output$ui_tr_ext <- renderUI({
   trfun <- input$tr_transfunction
   if (is_empty(trfun)) trfun <- "none"
-  .ext <- ext_options[[trfun]]
-  returnTextInput("tr_ext", "Variable name extension:", .ext)
+  returnTextInput("tr_ext", "Variable name extension:", 
+    value = ext_options[[trfun]]
+  )
 })
 
 output$ui_tr_ext_nz <- renderUI({
   if (is_empty(input$tr_normalizer, "none")) return()
-  .ext <- paste0("_", input$tr_normalizer)
-  returnTextInput("tr_ext_nz", "Variable name extension:", .ext)
+  returnTextInput("tr_ext_nz", "Variable name extension:", 
+    value = paste0("_", input$tr_normalizer)
+  )
 })
 
 output$ui_tr_rcname <- renderUI({
   if (is_empty(input$tr_vars)) return()
-  rcname <- paste0(input$tr_vars, "_rc")
-  returnTextInput("tr_rcname", "Recoded variable name:", rcname)
+  returnTextInput("tr_rcname", "Recoded variable name:", 
+    value = paste0(input$tr_vars[1], "_rc")
+  )
 })
 
 output$ui_tr_ext_bin <- renderUI({
   if (is_empty(input$tr_vars)) return()
-  returnTextInput("tr_ext_bin", "Variable name extension:", "_dec")
+  returnTextInput("tr_ext_bin", "Variable name extension:", 
+    value = "_dec"
+  )
 })
 
 output$ui_tr_roname <- renderUI({
   if (is_empty(input$tr_vars)) return()
-  returnTextInput("tr_roname", "Variable name:", input$tr_vars[1])
+  returnTextInput("tr_roname", "Variable name:", 
+    value = input$tr_vars[1]
+  )
 })
 
 output$ui_tr_typename <- renderUI({
   if (is_empty(input$tr_vars)) return()
-  returnTextInput("tr_typename", "Variable name extension:", "")
+  returnTextInput("tr_typename", "Variable name extension:", 
+    value = "", 
+    placeholder = "Add extension to variable name"
+  )
+})
+
+output$ui_tr_rename <- renderUI({
+  validate(
+    need(available(input$tr_vars), "Select one or more variables to rename")
+  )
+  # req(input$tr_vars)
+  if (length(input$tr_vars) < 2) {
+    mess <- "Type a new name for the selected variable and press return" 
+  } else {
+    mess <- "Type new names for the selected variables, separated by a , and press return" 
+  }
+  returnTextAreaInput("tr_rename", "Rename variable(s):", 
+    value = "",
+    rows = 3,
+    placeholder = mess 
+  )
 })
 
 output$ui_tr_dataset <- renderUI({
@@ -212,7 +246,10 @@ output$ui_Transform <- renderUI({
       uiOutput("ui_tr_spread")
     ),
     conditionalPanel(condition = "input.tr_change_type == 'create'",
-	    returnTextAreaInput("tr_create", "Create (e.g., x = y - z):", "")
+      returnTextAreaInput("tr_create", "Create:", 
+        rows = 3,
+        placeholder = "Type a formula to create a new variable (e.g., x = y - z) and press return" 
+      )
     ),
     conditionalPanel(condition = "input.tr_change_type == 'bin'",
       numericInput("tr_bin_n", label = "Nr bins:", min = 2, value = 10),
@@ -230,14 +267,22 @@ output$ui_Transform <- renderUI({
       checkboxInput("tr_holdout_rev", "Reverse filter", value = TRUE)
     ),
     conditionalPanel(condition = "input.tr_change_type == 'clip'",
-    	HTML("<label>Paste from spreadsheet:</label>"),
-    	tags$textarea(class="form-control", id="tr_paste", rows=3, "")
+      textAreaInput("tr_paste", "Paste from spreadsheet:",
+        rows = 3, 
+        value = "",
+        resize = "vertical",
+        placeholder = "Copy-and-paste data with a header row from a spreadsheet",
+      )
     ),
     conditionalPanel(condition = "input.tr_change_type == 'recode'",
-	    returnTextAreaInput("tr_recode", "Recode (e.g., lo:20 = 1):", "")
+	    returnTextAreaInput("tr_recode", "Recode:",
+        value = "",
+        rows = 3,
+        placeholder = "Select a variable, specificy how it should be recoded (e.g., lo:20 = 0; else = 1), and press return" 
+      )
     ),
     conditionalPanel(condition = "input.tr_change_type == 'rename'",
-      returnTextAreaInput("tr_rename", "Rename (separate by , ):", "")
+      uiOutput("ui_tr_rename")
     ),
     conditionalPanel(condition = "input.tr_change_type == 'replace'",
       uiOutput("ui_tr_replace")
@@ -375,7 +420,7 @@ observeEvent(input$tr_change_type, {
                     store_dat = "",
                     store = TRUE) {
 
-  cmd <- cmd %>% gsub("\\n","", .) %>% gsub("\"","\'",.)
+  cmd <- cmd %>% gsub("\\n","",.) %>% gsub("\"","\'",.)
   if (is_empty(rcname)) rcname <- paste0(var, "_rc")
 
   if (!store || !is.character(dataset)) {
@@ -397,8 +442,10 @@ observeEvent(input$tr_change_type, {
                     store_dat = "",
                     store = TRUE) {
 
-  rnm <- rnm %>% gsub("\\s","", .) %>% gsub(";",",", .)
+  # rnm <- rnm %>% gsub("\\s","", .) %>% gsub(";",",", .)
+  rnm <- rnm %>% gsub(";",",", .)
   if (gsub("\\s","",rnm) != "") rnm <- unlist(strsplit(rnm, ",")) %>% .[1:min(length(.),length(var))]
+  rnm <- make.names(rnm)
 
   if (!store || !is.character(dataset)) {
     if (rnm[1] == "") return(dataset)
@@ -713,7 +760,6 @@ inp_vars <- function(inp, rval = "") {
 transform_main <- reactive({
 
     req(input$tr_change_type)
-
     if (not_available(input$tr_vars)) {
       if (input$tr_change_type == "none" && length(input$tr_vars) == 0) {
         return("Select a transformation type or select variables to summarize")
@@ -732,7 +778,7 @@ transform_main <- reactive({
       } else if (input$tr_change_type == "bin") {
         return("Select one or more variables to bin")
       } else if (input$tr_change_type == 'reorg_levs') {
-        return("Select a variable of type factor to change the ordering and/or number of levels")
+        return("Select a single variable of type factor to change the ordering and/or number of levels")
       } else if (input$tr_change_type == 'normalize') {
         return("Select one or more variables to normalize")
       } else if (input$tr_change_type == "remove_na") {
@@ -891,7 +937,7 @@ transform_main <- reactive({
       }
 
       if (input$tr_change_type ==  'recode') {
-        if (input$tr_recode == "") {
+        if (is_empty(input$tr_recode)) {
           return("Specify a recode statement, assign a name to the recoded variable, and press 'return'. **\n** See the help file for examples")
         } else {
           return(.recode(dat, inp_vars("tr_vars")[1], input$tr_recode, input$tr_rcname, store = FALSE))
@@ -899,7 +945,7 @@ transform_main <- reactive({
       }
 
       if (input$tr_change_type == 'rename') {
-        if (input$tr_rename == "") {
+        if (is_empty(input$tr_rename)) {
           return("Specify new names for the selected variables (separated by a ',') and press 'return'")
         } else {
           if (any(input$tr_rename %in% varnames())) {
