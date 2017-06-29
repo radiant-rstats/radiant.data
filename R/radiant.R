@@ -287,7 +287,7 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max
   if (.csv == FALSE) {
     cn <- read.table(fn, header = header, sep = sep, dec = dec, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1)
     dat <- sshhr(try(readr::read_delim(fn, sep, locale = readr::locale(decimal_mark = dec, grouping_mark = sep), col_names = colnames(cn), skip = header, n_max = n_max), silent = TRUE))
-    if (!is(dat, 'try-error')) {
+    if (!is(dat, "try-error")) {
       prb <- readr::problems(dat)
       if (nrow(prb) > 0) {
         tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
@@ -300,7 +300,7 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max
     rprob <- "Used read.csv to load file"
   }
 
-  if (is(dat, 'try-error')) return("### There was an error loading the data. Please make sure the data are in csv format.")
+  if (is(dat, "try-error")) return("### There was an error loading the data. Please make sure the data are in csv format.")
   if (saf) dat <- factorizer(dat, safx)
   dat %>% {set_colnames(., make.names(colnames(.)))} %>% set_attr("description", rprob)
 }
@@ -345,7 +345,7 @@ loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", n_max = In
 
 #' Load an rda file from a url
 #'
-#' @param rda_url URL for the csv file
+#' @param rda_url URL for the rda file
 #'
 #' @return Data frame
 #'
@@ -363,6 +363,81 @@ loadrda_url <- function(rda_url) {
     if (length(robj) > 1) message("The connection contains multiple R-objects. Only the first will be returned.")
     close(con)
     get(robj)
+  }
+}
+
+#' Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux
+#'
+#' @param ... Strings used to determine which file types are available for selection (e.g., "csv" or "pdf")
+#'
+#' @return Vector of paths to files selected by the user
+#'
+#' @examples
+#' if (interactive()) {
+#' choose.files("pdf", "csv")
+#' }
+#'
+#' @export
+choose.files <- function(...) {
+  argv <- unlist(list(...))
+  os_type <- Sys.info()["sysname"]
+  if (os_type == "Windows") {
+    if (length(argv) > 0) {
+      argv <- c(paste0("Files of type ", argv), paste0("*.", argv))
+      argv <- matrix(argv, nrow = length(argv)/2, ncol = 2)
+    } else {
+      argv <- c("All files", "*.*")
+    }
+    utils::choose.files(filters = argv)
+  } else if (os_type == "Darwin") {
+    pth <- file.path(system.file(package = "radiant.data"), "app/www/scpt/choose.files.scpt")
+    if (length(argv) > 0)
+      argv <- paste0("\"", paste0(unlist(argv), collapse = "\" \""), "\"")
+    fpath <- suppressWarnings(
+      system(
+        paste0("osascript -l JavaScript ", pth, " ", argv),
+        intern = TRUE
+      )
+    )
+    if (length(fpath) > 0) {
+      fpath <- strsplit(fpath, ", ")[[1]]
+      gsub("Path\\(\"(.*)\"\\)", "\\1", fpath)
+    } else {
+      character(0)
+    }
+  } else {
+    file.choose()
+  }
+}
+
+#' Select a directory. Uses JavaScript on Mac, utils::choose.dir on Windows, and dirname(file.choose()) on Linux
+#'
+#' @param ... Arguments passed to  utils::choose.dir on Windows
+#'
+#' @return Path to the directory selected by the user
+#'
+#' @examples
+#' if (interactive()) {
+#' choose.dir()
+#' }
+#'
+#' @export
+choose.dir <- function(...) {
+  os_type <- Sys.info()["sysname"]
+  if (os_type == "Windows") {
+    utils::choose.dir(...)
+  } else if (os_type == "Darwin") {
+    pth <- file.path(system.file(package = "radiant.data"), "app/www/scpt/choose.dir.scpt")
+    dpath <- suppressWarnings(
+      system(paste0("osascript -l JavaScript ", pth), intern = TRUE)
+    )
+    if (length(dpath) > 0) {
+      gsub("Path\\(\"(.*)\"\\)", "\\1", dpath)
+    } else {
+      character(0)
+    }
+  } else {
+    dirname(file.choose())
   }
 }
 
@@ -501,7 +576,7 @@ dtab.data.frame <- function(object,
     dat[,isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
 
   ## for display options see https://datatables.net/reference/option/dom
-  if (is_empty(dom)) 
+  if (is_empty(dom))
     dom <- if (pageLength == -1 || nrow(dat) < pageLength) "t" else "lftip"
 
   dt_tab <- rounddf(dat, dec) %>%
@@ -519,6 +594,7 @@ dtab.data.frame <- function(object,
         columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all"),
                           list(className = "dt-center", targets = "_all")),
         autoWidth = TRUE,
+        # scrollX = TRUE, ## column filter location gets messed up
         processing = FALSE,
         pageLength = pageLength,
         lengthMenu = list(c(5, 10, 25, 50, -1), c("5","10","25","50","All"))
@@ -841,7 +917,7 @@ formatnr <- function(x, sym = "", dec = 2, perc = FALSE, mark = ",") {
 rounddf <- function(tbl, dec = 3)
   mutate_if_tmp(tbl, is.double, .funs = funs(round(., dec)))
 
-#' Find a user's dropbox folder
+#' Find a user's Dropbox folder
 #'
 #' @param account If multiple accounts exist specifies the one to use. By default, the first account listed is used
 #'
@@ -855,12 +931,15 @@ find_dropbox <- function(account = 1) {
    if (length(account) >  1)
      stop("find_dropbox can only return the path for one account at a time")
 
-  if (Sys.info()["sysname"] == "Windows") {
+  os_type <- Sys.info()["sysname"]
+  if (os_type == "Windows") {
     fp <- file.path(Sys.getenv("APPDATA"),"Dropbox/info.json") %>% gsub("\\\\","/",.)
     if (!file.exists(fp)) {
       fp <- file.path(Sys.getenv("LOCALAPPDATA"),"Dropbox/info.json") %>%
         gsub("\\\\","/",.)
     }
+  } else if (os_type == "Darwin") {
+    fp <- "~/.dropbox/info.json"
   } else {
     fp <- "~/.dropbox/info.json"
   }
@@ -884,6 +963,56 @@ find_dropbox <- function(account = 1) {
     normalizePath("~/../Dropbox", winslash = "/")
   } else {
     stop("Failed to uncover the path to a Dropbox account")
+  }
+}
+
+#' Find a user's Google Drive folder
+#'
+#' @return Path to Google Drive folder
+#'
+#' @export
+find_gdrive <- function() {
+
+  os_type <- Sys.info()["sysname"]
+  if (os_type == "Windows") {
+    fp <- file.path(Sys.getenv("LOCALAPPDATA"),"Google/Drive/sync_config.db") %>%
+        gsub("\\\\","/",.)
+  } else if (os_type == "Darwin") {
+    fp <- "~/Library/Application Support/Google/Drive/user_default/sync_config.db"
+  } else if (os_type == "Linux") {
+    ## http://www.techrepublic.com/article/how-to-mount-your-google-drive-on-linux-with-google-drive-ocamlfuse/
+    ## Linux update suggested by Chris Armstrong (https://github.com/chrisarm)
+    fp <- normalizePath("~/google_drive")
+    if(file.exists(file.path(fp, ".grive"))){
+      return(fp)
+    } else {
+      stop("Please install grive2 and use '~/google_drive' as your grive directory (http://www.techrepublic.com/article/how-to-sync-your-google-cloud-on-linux-with-grive2/)", call. = FALSE)
+    }
+  } else {
+    stop("find_gdrive not supported on this platform")
+  }
+
+  if (file.exists(fp)) {
+    if (!requireNamespace("DBI", quietly = TRUE)) {
+      stop("DBI package is needed for this function to work. Please install it", call. = FALSE)
+      if (!requireNamespace("RSQLite", quietly = TRUE)) {
+        stop("RSQLite package is needed for this function to work. Please install it", call. = FALSE)
+      }
+    }
+
+    fp <- normalizePath(fp, winslash = "/")
+    con <- DBI::dbConnect(RSQLite::SQLite(), fp)
+    ret <- DBI::dbGetQuery(con, 'select data_value from data where entry_key = "local_sync_root_path"') %>%
+      as.character %>%
+      normalizePath(winslash = "/")
+    DBI::dbDisconnect(con)
+    return(ret)
+  } else if (file.exists("~/Google Drive")) {
+    normalizePath("~/Google Drive", winslash = "/")
+  } else if (file.exists("~/../Google Drive")) {
+    normalizePath("~/../Google Drive", winslash = "/")
+  } else {
+    stop("Failed to uncover the path to a Google Drive folder")
   }
 }
 
@@ -930,9 +1059,16 @@ store <- function(object, ...) UseMethod("store", object)
 store.character <- function(object, ...) {
   mess <- paste0("Unable to store output. The returned message was:\n\n", object)
   if (exists("r_environment")) {
-    session$sendCustomMessage(type = "message", message = gsub("\n", " ", mess))
-    # string_to_break <-"alert(\"Line1.\\nLine2.\");"
-    # session$sendCustomMessage(type='jsCode', list(value = string_to_break ))
+    # session$sendCustomMessage(type = "message", message = gsub("\n", " ", mess))
+    ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+    showModal(
+      modalDialog(title = "Data Stored",
+        span(mess),
+        footer = modalButton("OK"),
+        size = "s",
+        easyClose = TRUE
+      )
+    )
   } else {
     message(mess)
   }
@@ -1034,7 +1170,7 @@ render.datatables <- function(object, ...) DT::renderDataTable(object)
       # DT::renderDataTable(x)
     # )
   # } else {
-    # knitr::knit_print(htmlwidgets::toHTML(x, standalone = FALSE, knitrOptions = NULL), 
+    # knitr::knit_print(htmlwidgets::toHTML(x, standalone = FALSE, knitrOptions = NULL),
     #     options = NULL, ...)
     # htmlwidgets::knit_print.htmlwidget(x)
     # knitr::knit_print.htmlwidget(x)

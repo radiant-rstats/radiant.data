@@ -7,7 +7,7 @@
 loadrda_url(rda_url)
 }
 \arguments{
-\item{rda_url}{URL for the csv file}
+\item{rda_url}{URL for the rda file}
 }
 \value{
 Data frame

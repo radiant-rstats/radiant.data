@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{find_dropbox}
 \alias{find_dropbox}
-\title{Find a user's dropbox folder}
+\title{Find a user's Dropbox folder}
 \usage{
 find_dropbox(account = 1)
 }
@@ -13,5 +13,5 @@ find_dropbox(account = 1)
 Path to Dropbox account
 }
 \description{
-Find a user's dropbox folder
+Find a user's Dropbox folder
 }

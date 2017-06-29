@@ -39,7 +39,7 @@ output$ui_data <- renderUI({
                    downloadLink("dl_view_tab", "", class = "fa fa-download alignright"),
                    DT::dataTableOutput("dataviewer")),
           tabPanel("Visualize",
-                   plot_downloader(".visualize", width = viz_plot_width(), height = viz_plot_height(), pre = ""),
+                   plot_downloader(".visualize", width = viz_plot_width, height = viz_plot_height, pre = ""),
                    plotOutput("visualize", width = "100%", height = "100%")),
           tabPanel("Pivot",
                    conditionalPanel("input.pvt_tab == true",
@@ -48,8 +48,8 @@ output$ui_data <- renderUI({
                    ),
                    conditionalPanel("input.pvt_chi2 == true", htmlOutput("pivotr_chi2")),
                    conditionalPanel("input.pvt_plot == true",
-                     HTML("<br><br>"),
-                     plot_downloader("pivot", width = pvt_plot_width(), height = pvt_plot_height()),
+                     br(), br(),
+                     plot_downloader("pivot", width = pvt_plot_width, height = pvt_plot_height),
                      plotOutput("plot_pivot", width = "100%", height = "100%")
                    )
           ),

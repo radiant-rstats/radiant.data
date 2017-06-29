@@ -5,16 +5,16 @@
 output$ui_fileUpload <- renderUI({
   req(input$dataType)
   if (input$dataType == "csv") {
-    fileInput('uploadfile', '', multiple = TRUE,
-      accept = c('text/csv','text/comma-separated-values',
-                 'text/tab-separated-values', 'text/plain','.csv','.tsv'))
+    fileInput("uploadfile", "", multiple = TRUE,
+      accept = c("text/csv","text/comma-separated-values",
+                 "text/tab-separated-values", "text/plain",".csv",".tsv"))
   } else if (input$dataType %in% c("rda","rds")) {
-    fileInput('uploadfile', '', multiple = TRUE,
+    fileInput("uploadfile", "", multiple = TRUE,
       accept = c(".rda",".rds",".rdata"))
   } else if (input$dataType == "feather") {
     tagList(
       numericInput("feather_n_max", label = "Maximum rows to read:", value = Inf, max = Inf, step = 1000),
-      fileInput('uploadfile', '', multiple = TRUE, accept = ".feather")
+      fileInput("uploadfile", "", multiple = TRUE, accept = ".feather")
     )
   } else if (input$dataType == "url_rda") {
     with(tags, table(
@@ -38,7 +38,13 @@ output$ui_clipboard_load <- renderUI({
     actionButton("loadClipData", "Paste", icon = icon("paste"))
   } else {
     tagList(
-      tags$textarea(class = "form-control", id = "load_cdata", rows = "5"),
+      textAreaInput("load_cdata", "Copy-and-paste data below:",
+        rows = 5,
+        resize = "vertical",
+        value = "",
+        placeholder = "Copy-and-paste data with a header row from a spreadsheet"
+      ),
+      br(),
       actionButton("loadClipData", "Paste", icon = icon("paste"))
     )
   }
@@ -48,13 +54,12 @@ output$ui_clipboard_save <- renderUI({
   if (isTRUE(getOption("radiant.local"))) {
     actionButton("saveClipData", "Copy data", icon = icon("copy"))
   } else {
-    tagList(
-      "<label>Add data description:</label><br>" %>% HTML,
-      tags$textarea(class="form-control", id="save_cdata",
-        rows="5",
-        capture.output(write.table(.getdata_transform(), file = "", row.names = FALSE,
-                       sep = "\t")) %>%
-          paste(collapse = "\n"))
+    textAreaInput("save_cdata", "Copy-and-paste data below:",
+      rows = 5,
+      resize = "vertical",
+      value = capture.output(
+        write.table(.getdata_transform(), file = "", row.names = FALSE, sep = "\t")
+      ) %>% paste(collapse = "\n")
     )
   }
 })
@@ -386,10 +391,12 @@ observeEvent(input$uploadState, {
   load(inFile$datapath, envir = tmpEnv)
 
   ## remove characters that may cause problems in shinyAce from r_state
+  # https://stackoverflow.com/questions/22549146/ace-text-editor-displays-text-characters-in-place-of-spaces
   if (!is.null(tmpEnv$r_state)) {
     for (i in names(tmpEnv$r_state)) {
       if (is.character(tmpEnv$r_state[[i]])) {
-        tmpEnv$r_state[[i]] %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
+        tmpEnv$r_state[[i]] %<>% fixMS(.)
+        # tmpEnv$r_state[[i]] %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
       }
     }
   }
@@ -398,7 +405,8 @@ observeEvent(input$uploadState, {
   if (!is.null(tmpEnv$r_data)) {
     for (i in names(tmpEnv$r_data)) {
       if (is.character(tmpEnv$r_data[[i]])) {
-        tmpEnv$r_data[[i]] %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
+        tmpEnv$r_data[[i]] %<>% fixMS(.)
+        # tmpEnv$r_data[[i]] %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
       }
     }
   }
