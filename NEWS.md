@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data 0.8.4
+# CHANGES IN radiant.data 0.8.5
 
 ## NEW FEATURES
 
@@ -7,6 +7,9 @@
 * Set default `res = 96` for `renderPlot` and `dpi = 96` for `knitr::opts_chunk`
 * Add `fillcol`, `linecol`, and `pointcol` to `visualize` to set plot colors when no `fill` or `color` variable has been selected
 * Reverse legend ordering in _Data > Visualize_ when axes are flipped using `coor_flip()`
+* Added functions to choose.files and choose.dir. Uses JavaScript on Mac, utils::choose.files and utils::choose.dir on Windows, and reverts to file.choose on Linux
+* Added `find_gdrive` to determine the path to a user's local Google Drive folder if available
+* `fixMs` for encoding in reports on Windows
 
 ## BUG FIXES
 

@@ -135,7 +135,10 @@ output$ui_saveReport <- renderUI({
   }
 })
 
-esc_slash <- function(x) gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2",x)
+esc_slash <- function(x) {
+  gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2", x) %>% 
+    fixMS(.)
+}
 
 ## Thanks to @timelyportfolio for this comment/fix
 ## https://github.com/timelyportfolio/functionplotR/issues/1#issuecomment-224369431
@@ -238,7 +241,7 @@ knitItSave <- function(text) {
   preserved <- htmltools::extractPreserveChunks(md)
 
   ## Render the HTML, and then restore the preserved chunks
-  markdown::markdownToHTML(text = gsub("\\\\\\\\","\\\\",preserved$value),
+  markdown::markdownToHTML(text = gsub("\\\\\\\\", "\\\\", preserved$value) %>% fixMS(.),
                            header = dep_html,
                            options = c("mathjax", "base64_images"),
                            stylesheet = file.path(getOption("radiant.path.data"),"app/www/bootstrap.min.css")) %>%
@@ -259,7 +262,10 @@ knitIt <- function(text) {
   #   )
   # }
 
-  md <- knitr::knit(text = paste0("\n`r options(width = 250)`\n",text), envir = r_environment)
+  md <- knitr::knit(
+    text = paste0("\n`r options(width = 250)`\n", text), 
+    envir = r_environment
+  )
 
   # r_environment$shiny <- FALSE
   # knitr::opts_chunk$set(screenshot.force = TRUE)
@@ -268,7 +274,7 @@ knitIt <- function(text) {
   ret <- paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
         paste0("<script type='text/javascript' src='", getOption("radiant.mathjax.path"),"/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
         "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>%
-  gsub("<table>","<table class='table table-condensed table-hover'",.) %>%
+  gsub("<table>","<table class='table table-condensed table-hover'>",.) %>%
   scrub %>%
   HTML
 }
@@ -309,7 +315,9 @@ output$saveReport <- downloadHandler(
 
         report <-
           ifelse (is_empty(input$rmd_selection), input$rmd_report, input$rmd_selection) %>%
-          gsub("\\\\\\\\","\\\\",.) %>% cleanout(.)
+          gsub("\\\\\\\\", "\\\\", .) %>% 
+          cleanout(.) %>% 
+          fixMS(.)
 
         sopts <- if (input$rmd_save_report == "PDF") ", screenshot.opts = list(vheight = 1200)" else ""
 
@@ -346,7 +354,7 @@ if (!exists(\"r_environment\")) library(", lib, ")
             zip_util = Sys.getenv("R_ZIPCMD", "zip")
             flags = "-r9X"
             os_type <- Sys.info()["sysname"]
-            if (os_type == 'Windows') {
+            if (os_type == "Windows") {
               wz <- suppressWarnings(system("where zip", intern = TRUE))
               if (!grepl("zip", wz)) {
                 wz <- suppressWarnings(system("where 7z", intern = TRUE))
@@ -373,7 +381,7 @@ if (!exists(\"r_environment\")) library(", lib, ")
                 HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
                 PDF = rmarkdown::pdf_document(),
                 Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"),"app/www/style.docx"))
-              ), envir = r_environment)
+              ), envir = r_environment) 
               file.rename(out, file)
             } else {
               knitItSave(report) %>% cat(file = file, sep = "\n")
@@ -428,7 +436,6 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
   if (xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
 
   if (figs)
-    # cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,", dpi = 96}\n",cmd,"\n```\n")
     cmd <- paste0("\n```{r fig.width=", round(7*fig.width/650,2),", fig.height=",round(6*fig.height/650,2),", dpi = 96}\n",cmd,"\n```\n")
   else
     cmd <- paste0("\n```{r}\n",cmd,"\n```\n")
@@ -465,6 +472,7 @@ update_report_fun <- function(cmd) {
     } else if (state_init("rmd_manual", "Auto paste") == "To R") {
       withProgress(message = 'Putting R-command in Rstudio', value = 1,
         gsub("(```\\{.*\\}\n)|(```\n)","",cmd) %>% cleanout(.) %>%
+        fixMS(.) %>%
         rstudioapi::insertText(.)
       )
     } else {

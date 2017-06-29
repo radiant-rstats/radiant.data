@@ -251,18 +251,29 @@ print.capture_plot <- function(x, ...) {
 ################################################################
 
 ## textarea where the return key submits the content
-returnTextAreaInput <- function(inputId, label = NULL, value = "") {
+returnTextAreaInput <- function(inputId, 
+                                label = NULL, 
+                                rows = 2,
+                                placeholder = NULL, 
+                                resize = "vertical", 
+                                value = "") {
   tagList(
     tags$label(label, `for` = inputId),br(),
-    tags$textarea(value, id=inputId, type = "text", rows="2",
-                  class="returnTextArea form-control")
+    tags$textarea(value, id = inputId, type = "text", rows = rows,
+                  placeholder = placeholder,
+                  resize = resize,
+                  class = "returnTextArea form-control")
   )
 }
 
-returnTextInput <- function(inputId, label = NULL, value = "") {
+returnTextInput <- function(inputId, 
+                            label = NULL, 
+                            placeholder = NULL, 
+                            value = "") {
   tagList(
     tags$label(label, `for` = inputId),
     tags$input(id = inputId, type = "text", value = value,
+               placeholder = placeholder,
                class = "returnTextInput form-control")
   )
 }
@@ -303,10 +314,10 @@ register_plot_output <- function(fun_name, rfun_name,
     ## when no analysis was conducted (e.g., no variables selected)
     get(rfun_name)() %>% { if (is.null(.)) " " else . } %>%
     { if (is.character(.)) {
-        plot(x = 1, type = 'n', main = paste0("\n\n\n\n\n\n\n\n",.) ,
-             axes = FALSE, xlab = "", ylab = "")
+        plot(x = 1, type = "n", main = paste0("\n\n\n\n\n\n\n\n",.) ,
+             axes = FALSE, xlab = "", ylab = "", cex.main = .9)
       } else {
-        withProgress(message = 'Making plot', value = 1, print(.))
+        withProgress(message = "Making plot", value = 1, print(.))
       }
     }
   }, width=get(width_fun), height=get(height_fun), res = 96)
@@ -314,8 +325,8 @@ register_plot_output <- function(fun_name, rfun_name,
   return(invisible())
 }
 
-plot_downloader <- function(plot_name, width = plot_width(),
-                            height = plot_height(), pre = ".plot_", po = "dl_") {
+plot_downloader <- function(plot_name, width = plot_width,
+                            height = plot_height, pre = ".plot_", po = "dl_") {
 
   ## link and output name
   lnm <- paste0(po, plot_name)
@@ -327,11 +338,17 @@ plot_downloader <- function(plot_name, width = plot_width(),
 
         ## download graphs in higher resolution than shown in GUI (504 dpi)
         pr <- 7
-        png(file=file, width = width*pr, height = height*pr, res=72*pr)
+
+        ## fix for https://github.com/radiant-rstats/radiant/issues/20
+        w <- if (any(c("reactiveExpr","function") %in% class(width))) width()*pr else width*pr
+        h <- if (any(c("reactiveExpr","function") %in% class(height))) height()*pr else height*pr
+
+        png(file=file, width = w, height = h, res=72*pr)
           print(get(paste0(pre, plot_name))())
         dev.off()
     }
   )
+
   downloadLink(lnm, "", class = "fa fa-download alignright")
 }
 
@@ -360,7 +377,7 @@ help_modal <- function(modal_title, link, help_file,
                        author = "Vincent Nijs",
                        year = lubridate::year(lubridate::now())) {
   sprintf("<div class='modal fade' id='%s' tabindex='-1' role='dialog' aria-labelledby='%s_label' aria-hidden='true'>
-            <div class='modal-dialog'>
+            <div class='modal-dialog modal-dialog-lg'>
               <div class='modal-content'>
                 <div class='modal-header'>
                   <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
@@ -406,7 +423,7 @@ inclMD <- function(path) {
                            stylesheet = "")
 }
 
-# inclRmd <- function(path, r_environment = parent.frame()) {
+## function to render .Rmd files to html
 inclRmd <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = '\n') %>%
   knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE,
@@ -611,4 +628,24 @@ cf <- function(...) {
   cat(paste0("\n--- called from: ", environmentName(parent.frame()), " (", lubridate::now(), ")\n"), file = "~/r_cat.txt", append = TRUE)
   out <- paste0(capture.output(...), collapse = "\n")
   cat("--\n", out, "\n--", sep = "\n", file = "~/r_cat.txt", append = TRUE)
+}
+
+## Replace windows smart quotes etc.
+fixMS <- function(text) {
+  ## based on https://stackoverflow.com/a/1262210/1974918
+  gsub("\xC2\xAB", '"', text) %>%
+  gsub("\xC2\xBB", '"', .) %>%
+  gsub("\xE2\x80\x98", "'", .) %>%
+  gsub("\xE2\x80\x99", "'", .) %>%
+  gsub("\xE2\x80\x9A", "'", .) %>%
+  gsub("\xE2\x80\x9B", "'", .) %>%
+  gsub("\xE2\x80\x9C", '"', .) %>%
+  gsub("\xE2\x80\x9D", '"', .) %>%
+  gsub("\xE2\x80\x9E", '"', .) %>%
+  gsub("\xE2\x80\x9F", '"', .) %>%
+  gsub("\xE2\x80\xB9", "'", .) %>%
+  gsub("\xE2\x80\xBA", "'", .) %>%
+  gsub("\r","\n",.)
+  # enc2native(.)
+  # enc2utf8(.)
 }
