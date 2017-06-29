@@ -65,8 +65,8 @@ output$ui_expl_byvar <- renderUI({
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
     selected = state_multiple("expl_byvar", vars),
     multiple = TRUE,
-    options = list(placeholder = 'Select group-by variable',
-                   plugins = list('remove_button', 'drag_drop'))
+    options = list(placeholder = "Select group-by variable",
+                   plugins = list("remove_button", "drag_drop"))
   )
 })
 
@@ -142,6 +142,7 @@ expl_reset <- function(var, ncol) {
 output$explore <- DT::renderDataTable({
   expl <- .explore()
   if (is.null(expl)) return(data.frame())
+
   expl$shiny <- TRUE
 
   ## resetting DT when changes occur
@@ -189,9 +190,18 @@ observeEvent(input$expl_store, {
   store(dat, name)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
-  ## alert user about new dataset
-  session$sendCustomMessage(type = "message",
-    message = paste0("Dataset '", name, "' was successfully added to the datasets dropdown. Add code to R > Report to (re)create the results by clicking the report icon on the bottom left of your screen.")
+  ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+  showModal(
+    modalDialog(title = "Data Stored",
+      span(
+        paste0("Dataset '", name, "' was successfully added to the
+                datasets dropdown. Add code to R > Report to (re)create
+                the results by clicking the report icon on the bottom
+                left of your screen.")),
+      footer = modalButton("OK"),
+      size = "s",
+      easyClose = TRUE
+    )
   )
 })
 

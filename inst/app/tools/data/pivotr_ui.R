@@ -13,7 +13,8 @@ output$ui_pvt_cvars <- renderUI({
   withProgress(message = "Acquiring variable information", value = 1, {
     vars <- groupable_vars()
   })
-  req(available(vars))
+
+  if (not_available(vars)) return()
 
   isolate({
     ## if nothing is selected pvt_cvars is also null
@@ -30,8 +31,8 @@ output$ui_pvt_cvars <- renderUI({
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
     selected = state_multiple("pvt_cvars", vars),
     multiple = TRUE,
-    options = list(placeholder = 'Select categorical variables',
-                   plugins = list('remove_button', 'drag_drop'))
+    options = list(placeholder = "Select categorical variables",
+                   plugins = list("remove_button", "drag_drop"))
   )
 })
 
@@ -161,6 +162,10 @@ pvt_plot_inputs <- reactive({
 })
 
 .pivotr <- reactive({
+
+  ## reset r_state value as needed
+  if (!available(input$pvt_cvars)) r_state$pvt_cvars <<- input$pvt_cvars
+
   req(available(input$pvt_cvars))
   req(!any(input$pvt_nvar %in% input$pvt_cvars))
 
@@ -201,7 +206,7 @@ output$pivotr <- DT::renderDataTable({
   order <- r_state$pivotr_state$order
   pageLength <- r_state$pivotr_state$length
 
-  withProgress(message = 'Generating pivot table', value = 1,
+  withProgress(message = "Generating pivot table", value = 1,
     dtab(pvt, format = input$pvt_format, perc = input$pvt_perc,
             dec = input$pvt_dec, searchCols = searchCols, order = order,
             pageLength = pageLength)
@@ -300,9 +305,18 @@ observeEvent(input$pvt_store, {
   store(dat, name)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
-  ## alert user about new dataset
-  session$sendCustomMessage(type = "message",
-    message = paste0("Dataset '", name, "' was successfully added to the datasets dropdown. Add code to R > Report to (re)create the results by clicking the report icon on the bottom left of your screen.")
+  ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+  showModal(
+    modalDialog(title = "Data Stored",
+      span(
+        paste0("Dataset '", name, "' was successfully added to the
+                datasets dropdown. Add code to R > Report to (re)create
+                the results by clicking the report icon on the bottom
+                left of your screen.")),
+      footer = modalButton("OK"),
+      size = "s",
+      easyClose = TRUE
+    )
   )
 })
 

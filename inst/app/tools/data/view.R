@@ -65,17 +65,17 @@ output$dataviewer <- DT::renderDataTable({
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
 
   isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
-  if (sum(isBigFct) > 0) 
+  if (sum(isBigFct) > 0)
     dat[,isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
 
   withProgress(message = "Generating view table", value = 1,
-    DT::datatable(dat, 
-      filter = fbox, 
+    DT::datatable(dat,
+      filter = fbox,
       selection = "none",
-      rownames = FALSE, 
+      rownames = FALSE,
       # extension = "KeyTable",
       escape = FALSE,
-      style = "bootstrap", 
+      style = "bootstrap",
       options = list(
         stateSave = TRUE,   ## maintains state
         searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
@@ -85,6 +85,7 @@ output$dataviewer <- DT::renderDataTable({
         columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all"),
                           list(className = "dt-center", targets = "_all")),
         autoWidth = TRUE,
+        # scrollX = TRUE, ## column filter location gets messed up
         processing = FALSE,
         pageLength = {if (is.null(r_state$dataviewer_state$length)) 10 else r_state$dataviewer_state$length},
         lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10","25","50","All"))
@@ -96,19 +97,27 @@ output$dataviewer <- DT::renderDataTable({
 
 observeEvent(input$view_store, {
   data_filter <- if (input$show_filter) input$data_filter else ""
-  cmd <- .viewcmd()
+  # cmd <- .viewcmd()
 
   getdata(input$dataset, vars = input$view_vars, filt = data_filter,
           rows = input$dataviewer_rows_all, na.rm = FALSE) %>%
-    save2env(input$dataset, input$view_dat, cmd)
+    save2env(input$dataset, input$view_dat, .viewcmd())
 
   updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
 
-  ## alert user about new dataset
-  session$sendCustomMessage(type = "message",
-    message = paste0("Dataset '", input$view_dat, "' was successfully added to the datasets dropdown. Add code to R > Report to (re)create the dataset by clicking the report icon on the bottom left of your screen.")
+  ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+  showModal(
+    modalDialog(title = "Data Stored",
+      span(
+        paste0("Dataset '", input$view_dat, "' was successfully added to
+               the datasets dropdown. Add code to R > Report to (re)create
+               the dataset by clicking the report icon on the bottom left
+               of your screen.")),
+      footer = modalButton("OK"),
+      size = "s",
+      easyClose = TRUE
+    )
   )
-
 })
 
 output$dl_view_tab <- downloadHandler(

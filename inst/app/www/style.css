@@ -44,17 +44,13 @@ table.dataTable tfoot td, table.dataTable thead td {
   overflow-y: initial !important
 }
 
-.modal-body{
-  height: 600px;
+.modal-sm {
+  width: 600px;
+}
+
+.modal-body {
+  max-height: 600px;
   overflow-y: auto;
-}
-
-.modal {
-  background: rgba(255, 255, 255, 0.8); /* The color depends on your template */
-}
-
-.modal-backdrop {
-  display: none;
 }
 
 img {
@@ -68,7 +64,8 @@ pre, code, pre code {
   background-color: #ffffff;
 }
 
-#data_filter, #tr_transform, #tr_recode, #tr_rename, #tr_paste {
+#data_filter, #tr_transform, #tr_recode, #tr_rename,
+#tr_paste, #tr_create {
   max-width: 234px;
 }
 
