@@ -59,7 +59,7 @@ visualize <- function(dataset, xvar,
                       size = "none",
                       fillcol = "blue",
                       linecol = "black",
-                      pointcol = linecol[1],
+                      pointcol = "black",
                       bins = 10,
                       smooth = 1,
                       fun = "mean",
@@ -279,9 +279,9 @@ visualize <- function(dataset, xvar,
     itt <- 1
     if ("jitter" %in% check) {
       if (color == "none") {
-        gs <- geom_jitter(alpha = alpha, color = pointcol, position = position_jitter(width = 0.4, height = 0.1))
+        gs <- geom_jitter(alpha = alpha, color = pointcol, position = position_jitter(width = 0.4, height = 0.05))
       } else {
-        gs <- geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.1))
+        gs <- geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.05))
       }
       check <- sub("jitter","", check)
     } else {
@@ -309,38 +309,42 @@ visualize <- function(dataset, xvar,
           plot_list[[itt]] <- plot_list[[itt]] + ylim(ymin,ymax)
 
           fun1 <- function(y) {
-            y <- get(fun[1])(y)
-            data.frame(ymin = y, ymax = y, y = y)
-          }
-          plot_list[[itt]] <- plot_list[[itt]] +
-            stat_summary(fun.data = fun1, aes(fill = fun[1]), 
-              geom = "crossbar", show.legend = TRUE, color = linecol[1])
-
-          if (length(fun) > 1) {
-            fun2 <- function(y) {
-              y <- get(fun[2])(y)
+              y <- get(fun[1])(y)
               data.frame(ymin = y, ymax = y, y = y)
-            }
-            if (length(linecol) == 1) linecol <- c(linecol, "blue")
-            plot_list[[itt]] <- plot_list[[itt]] +
-              stat_summary(fun.data = fun2, aes(fill = fun[2]),
-                geom = "crossbar", show.legend = FALSE, color = linecol[2])
           }
 
-          if (length(fun) == 3) {
-            fun3 <- function(y) {
-              y <- get(fun[3])(y)
-              data.frame(ymin = y, ymax = y, y = y)
-            }
-            if (length(linecol) == 2) linecol <- c(linecol, "red")
+          if (length(fun) == 1) {
             plot_list[[itt]] <- plot_list[[itt]] +
-              stat_summary(fun.data = fun3, aes(fill = fun[3]),
-                geom = "crossbar", show.legend = FALSE, color = linecol[3])
-          }
+              stat_summary(fun.data = fun1, aes(fill = fun[1]), 
+                geom = "crossbar", show.legend = FALSE, color = linecol[1])
+          } else {
+            plot_list[[itt]] <- plot_list[[itt]] +
+              stat_summary(fun.data = fun1, aes(fill = fun[1]), 
+                geom = "crossbar", show.legend = TRUE, color = linecol[1])
 
+            if (length(fun) > 1) {
+              fun2 <- function(y) {
+                y <- get(fun[2])(y)
+                data.frame(ymin = y, ymax = y, y = y)
+              }
+              if (length(linecol) == 1) linecol <- c(linecol, "blue")
+              plot_list[[itt]] <- plot_list[[itt]] +
+                stat_summary(fun.data = fun2, aes(fill = fun[2]),
+                  geom = "crossbar", show.legend = FALSE, color = linecol[2])
+            }
 
-          ## adding a legend if needed
-          if (length(fun) > 1 && length(linecol) > 1) {
+            if (length(fun) == 3) {
+              fun3 <- function(y) {
+                y <- get(fun[3])(y)
+                data.frame(ymin = y, ymax = y, y = y)
+              }
+              if (length(linecol) == 2) linecol <- c(linecol, "red")
+              plot_list[[itt]] <- plot_list[[itt]] +
+                stat_summary(fun.data = fun3, aes(fill = fun[3]),
+                  geom = "crossbar", show.legend = FALSE, color = linecol[3])
+            }
+
+            ## adding a legend if needed
             plot_list[[itt]] <- plot_list[[itt]] + 
               scale_fill_manual(name = "", values = linecol, labels = fun) +
               ## next line based on https://stackoverflow.com/a/25294787/1974918
@@ -515,7 +519,7 @@ visualize <- function(dataset, xvar,
   if ("jitter" %in% check) {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] +
-        geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.1))
+        geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.05))
   }
 
   if ("line" %in% check) {
