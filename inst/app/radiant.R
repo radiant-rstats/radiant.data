@@ -618,6 +618,8 @@ state_multiple <- function(var, vals, init = character(0)) {
 
 .state_multiple <- function(var, vals, init = character(0)) {
   rs <- r_state[[var]]
+  r_state[[var]] <<- NULL
+
   ## "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)
   if (is_empty(rs)) vals[vals %in% init] else vals[vals %in% rs]
 }
