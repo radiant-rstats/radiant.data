@@ -2,18 +2,18 @@
 
 ### Transform command log
 
-All transformations applied in the _Data > Transform_ tab can be logged. If, for example, you apply a `log` transformation to numeric variables the following code is generated and put in the `Transform command log` window at the bottom of your screen when you click the `Store` button.
+All transformations applied in the _Data > Transform_ tab can be logged. If, for example, you apply a `Ln (natural log)` transformation to numeric variables the following code is generated and put in the `Transform command log` window at the bottom of your screen when you click the `Store` button.
 
 ```r
 ## transform variable
-r_data[["diamonds"]] <- mutate_ext(r_data[["diamonds"]], funs(log), price, carat, .ext = "_log")
+r_data[["diamonds"]] <- mutate_ext(r_data[["diamonds"]], funs(log), .ext = "_ln", price, carat)
 ```
 
 This is an important feature if you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to transform the data and to generate results, i.e., your work is now reproducible.
 
 To add commands contained in the command log window to a report in <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_R > Report_</a> click the <i title="report results" class="fa fa-edit"></i> icon.
 
-### Filter
+### Filter data
 
 Even if a filter has been specified it will be ignored for (most) functions available in _Data > Transform_. To create a new dataset based on a filter navigate to the <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank">_Data > View_</a> tab and click the `Store` button. Alternatively, to create a new dataset based on a filter, select `Split data > Holdout sample` from the `Transformation type` dropdown.
 
@@ -96,7 +96,7 @@ lo:20 = 'Low'; else = 'High'
 
 #### Reorder or remove levels
 
-If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the $\times$ to remove them. Note that, by default, removing one or more levels will introduce missing values in the data. If you prefer to recode the removed levels into a new level, for example "other", simply type "other" in the `Replacement level name` input box and press `return`. If the resulting factor levels appear as intended, press `Store` to commit the changes. To temporarily exclude levels from the data use the `Filter` box (see the help file linked in the <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank">_Data > View_</a> tab).
+If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the $\times$ to remove them. Note that, by default, removing one or more levels will introduce missing values in the data. If you prefer to recode the removed levels into a new level, for example "other", simply type "other" in the `Replacement level name` input box and press `return`. If the resulting factor levels appear as intended, press `Store` to commit the changes. To temporarily exclude levels from the data use the `Filter data` box (see the help file linked in the <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank">_Data > View_</a> tab).
 
 #### Rename
 

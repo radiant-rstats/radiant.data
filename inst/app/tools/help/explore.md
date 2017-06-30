@@ -26,9 +26,9 @@ For a `factor` it captures the occurence of the first level.
 * `sdprop` and `varprop` calculate the sample standard deviation and variance for a proportion
 * `sdpop` and `varpop` calculate the population standard deviation and variance
 
-### Filter
+### Filter data
 
-Use the `Filter` box to select (or omit) specific sets of rows from the data. See the helpfile for <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank">_Data > View_</a> for details.
+Use the `Filter data` box to select (or omit) specific sets of rows from the data. See the helpfile for <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank">_Data > View_</a> for details.
 
 ### Pause explore
 

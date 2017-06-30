@@ -780,10 +780,10 @@ bind_rows(avengers, superheroes)
    <th style="text-align:left;"> alignment </th>
    <th style="text-align:left;"> gender </th>
    <th style="text-align:left;"> publisher </th>
-   <th style="text-align:left;"> name </th>
-   <th style="text-align:left;"> alignment </th>
-   <th style="text-align:left;"> gender </th>
-   <th style="text-align:left;"> publisher </th>
+   <th style="text-align:left;"> name1 </th>
+   <th style="text-align:left;"> alignment1 </th>
+   <th style="text-align:left;"> gender1 </th>
+   <th style="text-align:left;"> publisher1 </th>
   </tr>
  </thead>
 <tbody>

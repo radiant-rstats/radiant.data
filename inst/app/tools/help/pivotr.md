@@ -12,9 +12,9 @@ You can also create a bar chart based on the generated table (see image above). 
 
 > Note that when a categorical variable (`factor`) is selected from the `Numeric variable` dropdown it is converted to a 0-1 (binary) variable where the first level is coded as 1 and all other levels as 0.
 
-### Filter
+### Filter data
 
-Use the `Filter` box to select (or omit) specific sets of rows from the data to tabulate. See the help file for <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank">_Data > View_</a> for details.
+Use the `Filter data` box to select (or omit) specific sets of rows from the data to tabulate. See the help file for <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank">_Data > View_</a> for details.
 
 ### Pause pivot
 
