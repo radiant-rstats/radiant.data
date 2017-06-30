@@ -1,8 +1,11 @@
 ## build for windows
-# devtools::install("../radiant.data")
-# devtools::build("../radiant.data", binary = TRUE)
+rv <- R.Version()
+rv <- paste0(rv$major,".", strsplit(rv$minor,".", fixed = TRUE)[[1]][1])
 
-## build for windows
+rvprompt <- readline(prompt = paste0("Running for R version: ", rv, ". Is that what you wanted y/n: "))
+if (grepl("[nN]", rvprompt))
+  stop("Change R-version using Rstudio > Tools > Global Options > Rversion")
+
 app <- "radiant.data"
 path <- "../"
 devtools::install(file.path(path, app))
