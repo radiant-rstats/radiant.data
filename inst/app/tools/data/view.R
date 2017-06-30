@@ -17,8 +17,6 @@ output$ui_view_vars <- renderUI({
     selectize = FALSE, size = min(15, length(vars)))
 })
 
-## see if you can figure out how to reset the indices for sorting and
-## filtering variables as variable selection changes
 output$ui_View <- renderUI({
   tagList(
     wellPanel(
@@ -29,14 +27,9 @@ output$ui_View <- renderUI({
         tags$td(actionButton("view_store", "Store"), style="padding-top:30px;")
       )
     ),
-    # help_modal('View','view_help',inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/view.md")) %>% gsub("`","",.))
     help_and_report('View','view',inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/view.md")) %>% gsub("`","",.))
   )
 })
-
-my_dataTablesFilter = function(data, req) {
-  ## to implement
-}
 
 observeEvent(input$dataviewer_search_columns, {
   r_state$dataviewer_search_columns <<- input$dataviewer_search_columns
