@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data 0.8.5
+# CHANGES IN radiant.data 0.8.6
 
 ## NEW FEATURES
 
@@ -14,6 +14,7 @@
 ## BUG FIXES
 
 * Chi-sqaure results were not displayed correctly in _Data > Pivot_
+* Fix for `state_multiple`
 
 # CHANGES IN radiant.data 0.8.1
 
