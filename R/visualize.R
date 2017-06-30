@@ -314,6 +314,11 @@ visualize <- function(dataset, xvar,
           }
 
           if (length(fun) == 1) {
+
+            ## need some contrast in this case
+            if (pointcol[1] == "black" && linecol[1] == "black") 
+              linecol[1] <- "blue"
+
             plot_list[[itt]] <- plot_list[[itt]] +
               stat_summary(fun.data = fun1, aes(fill = fun[1]), 
                 geom = "crossbar", show.legend = FALSE, color = linecol[1])
