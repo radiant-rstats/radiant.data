@@ -274,15 +274,15 @@ viz_plot_height <- reactive({
 output$visualize <- renderPlot({
   if (not_available(input$viz_xvar)) {
     return(
-      plot(x = 1, type = 'n',
+      plot(x = 1, type = "n",
       main="\nPlease select variables from the dropdown menus to create a plot",
-      axes = FALSE, xlab = "", ylab = "")
+      axes = FALSE, xlab = "", ylab = "", cex.main = .9)
     )
   }
 
-  withProgress(message = 'Making plot', value = 1, {
+  withProgress(message = "Making plot", value = 1, {
     .visualize() %>% { if (is.character(.)) {
-        plot(x = 1, type = 'n', main = paste0("\n",.), axes = FALSE, xlab = "", ylab = "")
+        plot(x = 1, type = "n", main = paste0("\n",.), axes = FALSE, xlab = "", ylab = "", cex.main = .9)
       } else if (is.null(.)) {
         return(invisible())
       } else {

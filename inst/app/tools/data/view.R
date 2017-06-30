@@ -3,7 +3,7 @@
 #############################################
 output$ui_view_vars <- renderUI({
   vars <- varnames()
-  if (not_available(vars)) return()
+  req(available(vars))
   isolate({
     if (not_available(r_state$view_vars)) {
       r_state$view_vars <<- NULL
@@ -15,6 +15,11 @@ output$ui_view_vars <- renderUI({
   selectInput("view_vars", "Select variables to show:", choices  = vars,
     selected = state_multiple("view_vars", vars, vars), multiple = TRUE,
     selectize = FALSE, size = min(15, length(vars)))
+})
+
+## not clear why this is needed because state_multiple should handle this 
+observeEvent(is.null(input$view_vars), {
+  if ("view_vars" %in% names(input)) r_state$view_vars <<- NULL
 })
 
 output$ui_View <- renderUI({

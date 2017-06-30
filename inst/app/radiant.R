@@ -278,11 +278,13 @@ returnTextInput <- function(inputId,
   )
 }
 
-plot_width <- function()
+plot_width <- function() {
   if (is.null(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
+}
 
-plot_height <- function()
+plot_height <- function() {
   if (is.null(input$viz_plot_height)) r_data$plot_height else input$viz_plot_height
+}
 
 ## fun_name is a string of the main function name
 ## rfun_name is a string of the reactive wrapper that calls the main function

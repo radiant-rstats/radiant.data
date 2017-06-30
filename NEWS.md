@@ -14,6 +14,7 @@
 ## BUG FIXES
 
 * Chi-sqaure results were not displayed correctly in _Data > Pivot_
+* Fix for `state_multiple`
 
 # CHANGES IN radiant.data 0.8.1
 
