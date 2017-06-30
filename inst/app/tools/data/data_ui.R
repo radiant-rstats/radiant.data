@@ -17,17 +17,19 @@ output$ui_data <- renderUI({
         wellPanel(
           uiOutput("ui_datasets"),
           conditionalPanel("input.tabs_data != 'Manage'",
-            checkboxInput('show_filter', 'Filter (e.g., price > 5000)', value = state_init("show_filter",FALSE)),
+            checkboxInput("show_filter", "Filter data", value = state_init("show_filter",FALSE)),
             conditionalPanel("input.show_filter == true",
-              returnTextAreaInput("data_filter", label = "", value = state_init("data_filter")),
+              returnTextAreaInput("data_filter", label = "", 
+                value = state_init("data_filter"),
+                placeholder = "Provide a filter (e.g., price >  5000) and press return"
+              ),
               uiOutput("ui_filter_error")))
         ),
         conditionalPanel("input.tabs_data == 'Manage'", uiOutput("ui_Manage")),
         conditionalPanel("input.tabs_data == 'View'", uiOutput("ui_View")),
         conditionalPanel("input.tabs_data == 'Visualize'", uiOutput("ui_Visualize")),
         conditionalPanel("input.tabs_data == 'Pivot'",uiOutput("ui_Pivotr")),
-        conditionalPanel("input.tabs_data == 'Explore'",
-                         uiOutput("ui_Explore")),
+        conditionalPanel("input.tabs_data == 'Explore'", uiOutput("ui_Explore")),
         conditionalPanel("input.tabs_data == 'Transform'", uiOutput("ui_Transform")),
         conditionalPanel("input.tabs_data == 'Combine'", uiOutput("ui_Combine"))),
       mainPanel(
