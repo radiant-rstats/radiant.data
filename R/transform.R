@@ -4,7 +4,7 @@
 #' @return If x is a numberic variable return x - mean(x)
 #' @export
 center <- function(x, na.rm = TRUE)
-	if (is.numeric(x)) { x - mean(x, na.rm = na.rm) } else x
+  if (is.numeric(x)) { x - mean(x, na.rm = na.rm) } else x
 
 #' Standardize
 #' @param x Input variable
@@ -12,7 +12,7 @@ center <- function(x, na.rm = TRUE)
 #' @return If x is a numberic variable return center(x) / mean(x)
 #' @export
 standardize <- function(x, na.rm = TRUE) {
-	if (is.numeric(x)) {
+  if (is.numeric(x)) {
     center(x, na.rm = na.rm) / sd(x, na.rm = na.rm)
   } else {
     x

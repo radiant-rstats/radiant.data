@@ -1,7 +1,7 @@
 # use https://github.com/jimhester/covr
 if (!require(covr)) {
- 	install.packages("covr")
- 	library(covr)
+  install.packages("covr")
+  library(covr)
 }
 
 setwd("~/gh/radiant.data")
