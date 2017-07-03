@@ -668,7 +668,7 @@ does_vary <- function(x, na.rm = TRUE) {
 #'
 #' @export
 make_funs <- function(x) {
-  xclean <- gsub("_rm$","",x) %>% sub("length","n",.)
+  xclean <- gsub("_rm$","",x) %>% sub("length", "n",.)
   env <- if (exists("radiant.data")) environment(radiant.data::radiant.data) else parent.frame()
   dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula, env = env) %>% setNames(xclean))
 }
@@ -685,7 +685,7 @@ empty_level <- function(x) {
     x <- factor(x, levels = levs)
     x[is.na(x)] <- "NA"
   } else if (any(is.na(x))) {
-    x <- factor(x, levels = c(levs,"NA"))
+    x <- factor(x, levels = unique(c(levs, "NA")))
     x[is.na(x)] <- "NA"
   }
   x

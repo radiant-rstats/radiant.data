@@ -128,7 +128,7 @@ pivotr <- function(dataset,
   levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
 
   for (i in cvars[ind])
-    tab[[i]] %<>% factor(., levels = c(levs[[i]],"Total"))
+    tab[[i]] %<>% factor(., levels = unique(c(levs[[i]], "Total")))
 
   ## frequency table for chi-square test
   tab_freq <- tab
@@ -436,7 +436,7 @@ plot.pivotr <- function(x,
     if (!is_empty(object$normalize, "None"))
       p <- p + ylab(ifelse(perc, "Percentage", "Proportion"))
   } else {
-    p <- p + ylab(paste0(nvar, " (",names(make_funs(object$fun)),")"))
+    p <- p + ylab(paste0(nvar, " (", names(make_funs(object$fun)), ")"))
   }
 
   sshhr(p)
