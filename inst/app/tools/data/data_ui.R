@@ -36,34 +36,49 @@ output$ui_data <- renderUI({
         tabsetPanel(id = "tabs_data",
           tabPanel("Manage", htmlOutput("htmlDataExample"),
             conditionalPanel("input.man_add_descr == false", uiOutput("dataDescriptionHTML")),
-            conditionalPanel("input.man_add_descr == true", uiOutput("dataDescriptionMD"))),
+            conditionalPanel("input.man_add_descr == true", uiOutput("dataDescriptionMD"))
+          ),
           tabPanel("View",
-                   downloadLink("dl_view_tab", "", class = "fa fa-download alignright"),
-                   DT::dataTableOutput("dataviewer")),
+            downloadLink("dl_view_tab", "", class = "fa fa-download alignright"),
+            DT::dataTableOutput("dataviewer")
+          ),
           tabPanel("Visualize",
-                   plot_downloader(".visualize", width = viz_plot_width, height = viz_plot_height, pre = ""),
-                   plotOutput("visualize", width = "100%", height = "100%")),
+            conditionalPanel("input.viz_pause == false",
+              plot_downloader(".visualize", width = viz_plot_width, height = viz_plot_height, pre = "")
+            ),
+            plotOutput("visualize", width = "100%", height = "100%")
+          ),
           tabPanel("Pivot",
-                   conditionalPanel("input.pvt_tab == true",
-                     downloadLink("dl_pivot_tab", "", class = "fa fa-download alignright"),
-                     DT::dataTableOutput("pivotr")
-                   ),
-                   conditionalPanel("input.pvt_chi2 == true", htmlOutput("pivotr_chi2")),
-                   conditionalPanel("input.pvt_plot == true",
-                     br(), br(),
-                     plot_downloader("pivot", width = pvt_plot_width, height = pvt_plot_height),
-                     plotOutput("plot_pivot", width = "100%", height = "100%")
-                   )
+            conditionalPanel("input.pvt_tab == true",
+              conditionalPanel("input.pvt_pause == false",
+                downloadLink("dl_pivot_tab", "", class = "fa fa-download alignright")
+              ),
+              DT::dataTableOutput("pivotr")
+            ),
+            conditionalPanel("input.pvt_chi2 == true", htmlOutput("pivotr_chi2")),
+            conditionalPanel("input.pvt_plot == true", br(), br(),
+              conditionalPanel("input.pvt_pause == false",
+                plot_downloader("pivot", width = pvt_plot_width, height = pvt_plot_height)
+              ),
+              plotOutput("plot_pivot", width = "100%", height = "100%")
+            )
           ),
           tabPanel("Explore",
-                   downloadLink("dl_explore_tab", "", class = "fa fa-download alignright"),
-                   DT::dataTableOutput("explore")),
+            conditionalPanel("input.expl_pause == false",
+              downloadLink("dl_explore_tab", "", class = "fa fa-download alignright")
+            ),
+            DT::dataTableOutput("explore")),
           tabPanel("Transform",
-                   htmlOutput("transform_data"),
-                   verbatimTextOutput("transform_summary"),
-                   uiOutput("ui_tr_log")),
-          tabPanel("Combine", htmlOutput("cmb_data1"), htmlOutput("cmb_data2"),
-                   htmlOutput("cmb_possible"), htmlOutput("cmb_data"))
+            htmlOutput("transform_data"),
+            verbatimTextOutput("transform_summary"),
+            uiOutput("ui_tr_log")
+          ),
+          tabPanel("Combine", 
+            htmlOutput("cmb_data1"), 
+            htmlOutput("cmb_data2"), 
+            htmlOutput("cmb_possible"), 
+            htmlOutput("cmb_data")
+          )
         )
       )
     )

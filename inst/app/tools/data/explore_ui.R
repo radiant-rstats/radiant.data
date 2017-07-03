@@ -170,8 +170,8 @@ output$explore <- DT::renderDataTable({
 output$dl_explore_tab <- downloadHandler(
   filename = function() { paste0("explore_tab.csv") },
   content = function(file) {
-    dat <- .explore()
-    if (is.null(dat)) {
+    dat <- try(.explore(), silent = TRUE)
+    if (is(dat, "try-error") || is.null(dat)) {
       write.csv(data_frame("Data" = "[Empty]"),file, row.names = FALSE)
     } else {
       rows <- input$explore_rows_all
@@ -197,7 +197,8 @@ observeEvent(input$expl_store, {
         paste0("Dataset '", name, "' was successfully added to the
                 datasets dropdown. Add code to R > Report to (re)create
                 the results by clicking the report icon on the bottom
-                left of your screen.")),
+                left of your screen.")
+      ),
       footer = modalButton("OK"),
       size = "s",
       easyClose = TRUE
@@ -222,10 +223,12 @@ observeEvent(input$explore_report, {
   inp_main <- c(inp_main, nr = ts$nr)
 
   inp_out <- list(clean_args(expl_sum_inputs(), expl_sum_args[-1]))
-  update_report(inp_main = inp_main,
-                fun_name = "explore",
-                inp_out = inp_out,
-                outputs = c("summary"),
-                figs = FALSE,
-                xcmd = xcmd)
+  update_report(
+    inp_main = inp_main, 
+    fun_name = "explore", 
+    inp_out = inp_out, 
+    outputs = c("summary"), 
+    figs = FALSE, 
+    xcmd = xcmd
+  )
 })

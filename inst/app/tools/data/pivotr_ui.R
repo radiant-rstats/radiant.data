@@ -1,7 +1,6 @@
 ############################################
 ## Pivotr - combination of Explore and View
 ############################################
-
 pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
                    "Total" = "total")
 pvt_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
@@ -15,7 +14,6 @@ output$ui_pvt_cvars <- renderUI({
   })
 
   if (not_available(vars)) return()
-
   isolate({
     ## if nothing is selected pvt_cvars is also null
     if ("pvt_cvars" %in% names(input) && is.null(input$pvt_cvars)) {
@@ -31,8 +29,7 @@ output$ui_pvt_cvars <- renderUI({
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
     selected = state_multiple("pvt_cvars", vars),
     multiple = TRUE,
-    options = list(placeholder = "Select categorical variables",
-                   plugins = list("remove_button", "drag_drop"))
+    options = list(placeholder = "Select categorical variables", plugins = list("remove_button", "drag_drop"))
   )
 })
 
@@ -52,10 +49,11 @@ output$ui_pvt_nvar <- renderUI({
 
 output$ui_pvt_fun <- renderUI({
   r_funs <- getOption("radiant.functions")
-  selectizeInput("pvt_fun", label = "Apply function:",
-                 choices = r_funs,
-                 selected = state_single("pvt_fun", r_funs, "mean_rm"),
-                 multiple = FALSE)
+  selectizeInput("pvt_fun", "Apply function:",
+    choices = r_funs,
+    selected = state_single("pvt_fun", r_funs, "mean_rm"),
+    multiple = FALSE
+  )
 })
 
 output$ui_pvt_normalize  <- renderUI({
@@ -84,8 +82,10 @@ output$ui_Pivotr <- renderUI({
       conditionalPanel("input.pvt_nvar != 'None'", uiOutput("ui_pvt_fun")),
       uiOutput("ui_pvt_normalize"),
       uiOutput("ui_pvt_format"),
-      numericInput("pvt_dec", label = "Decimals:",
-                   value = state_init("pvt_dec", 3), min = 0),
+      numericInput("pvt_dec", "Decimals:", 
+        value = state_init("pvt_dec", 3), 
+        min = 0
+      ),
       with(tags, table(
         tr(
           td(checkboxInput("pvt_tab", "Show table  ", value = state_init("pvt_tab", TRUE))),
@@ -104,7 +104,8 @@ output$ui_Pivotr <- renderUI({
         radioButtons("pvt_type", label = "Plot type:",
           pvt_type,
           selected = state_init("pvt_type", "dodge"),
-          inline = TRUE),
+          inline = TRUE
+        ),
         checkboxInput("pvt_flip", "Flip", value = state_init("pvt_flip", FALSE))
       )
     ),
@@ -114,9 +115,11 @@ output$ui_Pivotr <- renderUI({
         tags$td(actionButton("pvt_store", "Store"), style = "padding-top:30px;")
       )
     ),
-    help_and_report(modal_title = "Pivotr",
-                    fun_name = "pivotr",
-                    help_file = inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/pivotr.md")))
+    help_and_report(
+      modal_title = "Pivotr", 
+      fun_name = "pivotr", 
+      help_file = inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/pivotr.md"))
+    )
   )
 })
 
@@ -207,29 +210,39 @@ output$pivotr <- DT::renderDataTable({
   pageLength <- r_state$pivotr_state$length
 
   withProgress(message = "Generating pivot table", value = 1,
-    dtab(pvt, format = input$pvt_format, perc = input$pvt_perc,
-            dec = input$pvt_dec, searchCols = searchCols, order = order,
-            pageLength = pageLength)
+    dtab(
+      pvt, 
+      format = input$pvt_format, 
+      perc = input$pvt_perc, 
+      dec = input$pvt_dec, 
+      searchCols = searchCols, 
+      order = order, 
+      pageLength = pageLength
+    )
   )
-
 })
 
 output$pivotr_chi2 <- renderPrint({
   req(input$pvt_chi2)
   req(input$pvt_dec)
-  .pivotr() %>% {if (is.null(.)) return(invisible())
-                 else summary(., chi2 = TRUE, dec = input$pvt_dec, shiny = TRUE)}
+  .pivotr() %>% 
+    {if (is.null(.)) 
+       return(invisible()) 
+     else 
+       summary(., chi2 = TRUE, dec = input$pvt_dec, shiny = TRUE)
+    }
 })
 
 output$dl_pivot_tab <- downloadHandler(
   filename = function() { paste0("pivot_tab.csv") },
   content = function(file) {
-    dat <- .pivotr()
-    if (is.null(dat)) {
+    dat <- try(.pivotr(), silent = TRUE)
+    if (is(dat, "try-error") || is.null(dat)) {
       write.csv(data_frame("Data" = "[Empty]"),file, row.names = FALSE)
     } else {
       rows <- isolate(r_data$pvt_rows)
-      dat$tab %>% {if (is.null(rows)) . else .[c(rows,nrow(.)),, drop = FALSE]} %>%
+      dat$tab %>% 
+        {if (is.null(rows)) . else .[c(rows, nrow(.)), , drop = FALSE]} %>%
         write.csv(file, row.names = FALSE)
     }
   }
@@ -237,21 +250,23 @@ output$dl_pivot_tab <- downloadHandler(
 
 pvt_plot_width <- function() 750
 pvt_plot_height <- function() {
-   pvt <- .pivotr()
-   if (is.null(pvt)) return(400)
-   pvt %<>% pvt_sorter(rows = r_data$pvt_rows)
-   if (length(input$pvt_cvars) > 2) {
-       pvt$tab %>% .[[input$pvt_cvars[3]]] %>%
-         levels %>%
-         length %>% {. * 200}
-   } else if (input$pvt_flip) {
-      if (length(input$pvt_cvars) == 2)
-        max(400, ncol(pvt$tab) * 15)
-      else
-        max(400, nrow(pvt$tab) * 15)
-   } else {
-      400
-   }
+  pvt <- .pivotr()
+  if (is.null(pvt)) return(400)
+  pvt %<>% pvt_sorter(rows = r_data$pvt_rows)
+  if (length(input$pvt_cvars) > 2) {
+    pvt$tab %>% 
+      .[[input$pvt_cvars[3]]] %>%
+      levels %>%
+      length %>% 
+      {. * 200}
+  } else if (input$pvt_flip) {
+    if (length(input$pvt_cvars) == 2)
+      max(400, ncol(pvt$tab) * 15)
+    else
+      max(400, nrow(pvt$tab) * 15)
+  } else {
+    400
+  }
 }
 
 pvt_sorter <- function(pvt, rows = NULL) {
@@ -281,24 +296,27 @@ observeEvent(input$pivotr_rows_all, {
 
 .plot_pivot <- reactive({
   pvt <- .pivotr()
-
   if (is.null(pvt)) return(invisible())
+  # pvt <- try(.pivotr(), silent = TRUE)
+  # if (is(pvt, "try-error") || is.null(pvt)) return(NULL)
   if (!is_empty(input$pvt_tab, FALSE))
     pvt <- pvt_sorter(pvt, rows = r_data$pvt_rows)
-    pvt_plot_inputs() %>% { do.call(plot, c(list(x = pvt), .)) }
+
+  pvt_plot_inputs() %>% 
+    {do.call(plot, c(list(x = pvt), .))}
 })
 
 output$plot_pivot <- renderPlot({
   if (is_empty(input$pvt_plot, FALSE)) return(invisible())
-  withProgress(message = 'Making plot', value = 1, {
+  withProgress(message = "Making plot", value = 1, {
     sshhr(.plot_pivot()) %>% print
   })
   return(invisible())
 }, width = pvt_plot_width, height = pvt_plot_height, res = 96)
 
 observeEvent(input$pvt_store, {
-  dat <- .pivotr()
-  if (is.null(dat)) return()
+  dat <- try(.pivotr(), silent = TRUE)
+  if (is(dat, "try-error") || is.null(dat)) return()
   name <- input$pvt_dat
   rows <- input$pivotr_rows_all
   dat$tab %<>% {if (is.null(rows)) . else .[rows,, drop = FALSE]}
@@ -353,12 +371,14 @@ observeEvent(input$pivotr_report, {
   inp_main <- c(inp_main, nr = ts$nr - 1)
 
   ## update R > Report
-  update_report(inp_main = inp_main,
-                fun_name = "pivotr",
-                outputs = outputs,
-                inp_out = inp_out,
-                figs = figs,
-                fig.width = pvt_plot_width(),
-                fig.height = pvt_plot_height(),
-                xcmd = xcmd)
+  update_report(
+    inp_main = inp_main, 
+    fun_name = "pivotr", 
+    outputs = outputs, 
+    inp_out = inp_out, 
+    figs = figs, 
+    fig.width = pvt_plot_width(), 
+    fig.height = pvt_plot_height(), 
+    xcmd = xcmd
+  )
 })

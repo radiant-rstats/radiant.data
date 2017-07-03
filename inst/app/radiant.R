@@ -327,8 +327,11 @@ register_plot_output <- function(fun_name, rfun_name,
   return(invisible())
 }
 
-plot_downloader <- function(plot_name, width = plot_width,
-                            height = plot_height, pre = ".plot_", po = "dl_") {
+plot_downloader <- function(plot_name, 
+                            width = plot_width, 
+                            height = plot_height, 
+                            pre = ".plot_", 
+                            po = "dl_") {
 
   ## link and output name
   lnm <- paste0(po, plot_name)
@@ -339,14 +342,20 @@ plot_downloader <- function(plot_name, width = plot_width,
     content = function(file) {
 
         ## download graphs in higher resolution than shown in GUI (504 dpi)
-        pr <- 7
+        pr <- 5
 
         ## fix for https://github.com/radiant-rstats/radiant/issues/20
-        w <- if (any(c("reactiveExpr","function") %in% class(width))) width()*pr else width*pr
-        h <- if (any(c("reactiveExpr","function") %in% class(height))) height()*pr else height*pr
+        w <- if (any(c("reactiveExpr", "function") %in% class(width))) width() * pr else width * pr
+        h <- if (any(c("reactiveExpr", "function") %in% class(height))) height() * pr else height * pr
 
-        png(file=file, width = w, height = h, res=72*pr)
-          print(get(paste0(pre, plot_name))())
+        plot <- try(get(paste0(pre, plot_name))(), silent = TRUE)
+        if (is(plot, "try-error") || is.character(plot) || is.null(plot)) {
+          plot <- ggplot() + labs(title = "Plot not available")
+          pr <- 1; w <- h <- 500 
+        }
+
+        png(file = file, width = w, height = h, res = 96 * pr)
+          print(plot)
         dev.off()
     }
   )

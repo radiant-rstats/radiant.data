@@ -122,9 +122,13 @@ output$dl_view_tab <- downloadHandler(
   filename = function() { paste0("view_tab.csv") },
   content = function(file) {
     data_filter <- if (input$show_filter) input$data_filter else ""
-    getdata(input$dataset, vars = input$view_vars, filt = data_filter,
-            rows = input$dataviewer_rows_all, na.rm = FALSE) %>%
-      write.csv(file, row.names = FALSE)
+    getdata(
+      input$dataset, 
+      vars = input$view_vars, 
+      filt = data_filter, rows = 
+      input$dataviewer_rows_all, 
+      na.rm = FALSE
+    ) %>% write.csv(file, row.names = FALSE)
   }
 )
 
