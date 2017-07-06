@@ -223,8 +223,7 @@ output$pivotr <- DT::renderDataTable({
 })
 
 output$pivotr_chi2 <- renderPrint({
-  req(input$pvt_chi2)
-  req(input$pvt_dec)
+  req(input$pvt_chi2, input$pvt_dec)
   .pivotr() %>% 
     {if (is.null(.)) 
        return(invisible()) 
@@ -297,8 +296,6 @@ observeEvent(input$pivotr_rows_all, {
 .plot_pivot <- reactive({
   pvt <- .pivotr()
   if (is.null(pvt)) return(invisible())
-  # pvt <- try(.pivotr(), silent = TRUE)
-  # if (is(pvt, "try-error") || is.null(pvt)) return(NULL)
   if (!is_empty(input$pvt_tab, FALSE))
     pvt <- pvt_sorter(pvt, rows = r_data$pvt_rows)
 
