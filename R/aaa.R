@@ -8,6 +8,7 @@ globalVariables(c("r_environment", "session", "r_data", "r_state", ".",
 #' @name radiant.data
 #' @docType package
 #' @import ggplot2 shiny dplyr
+#' @importFrom rlang parse_exprs
 #' @importFrom car Recode
 #' @importFrom rstudioapi insertText isAvailable
 #' @importFrom knitr knit2html knit knit_print

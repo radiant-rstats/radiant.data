@@ -47,5 +47,5 @@ diamonds \%>\% explore("price", byvar = "cut", fun = c("length", "n_distinct"))
 
 }
 \seealso{
-\code{\link{summary.explore}} to show summaries
+See \code{\link{summary.explore}} to show summaries
 }

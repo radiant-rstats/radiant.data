@@ -21,11 +21,11 @@ mutate_each <- function(...) {
   nm <- pryr::named_dots(...)
   if (".ext" %in% names(nm)) {
     .Deprecated("mutate_ext", package = "radiant.data")
-    mutate_ext(...)
+    radiant.data::mutate_ext(...)
   } else {
     .Deprecated("mutate_at", package = "dplyr")
     .Deprecated("mutate_all", package = "dplyr")
-    dplyr::mutate_each(...)
+    dplyr::mutate_at(...)
   }
 }
 dfprint <- function(...) {
@@ -44,4 +44,20 @@ sdp_rm <- function(...) {
   .Deprecated("sdpop", package = "radiant.data")
   sdpop(...)
 }
+
+## keeping code incase mutate_if still causes problems in dplyr > 0.7.1
+# mutate_if_tmp <- function (.tbl, .predicate, .funs, ...) {
+#   if (sum(sapply(.tbl, .predicate)) > 0) { 
+#     rn <- rownames(.tbl)
+#     cn <- colnames(.tbl)
+#     colnames(.tbl) <- make.names(cn)
+#     mutate_if(.tbl, .predicate, .funs, ...) %>%
+#       set_colnames(cn) %>%
+#       as.data.frame %>%
+#       set_rownames(rn)
+#   } else {
+#     .tbl
+#   }
+# }
+
 NULL

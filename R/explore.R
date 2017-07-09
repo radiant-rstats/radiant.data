@@ -22,7 +22,7 @@
 #' summary(result)
 #' diamonds %>% explore("price", byvar = "cut", fun = c("length", "n_distinct"))
 #'
-#' @seealso \code{\link{summary.explore}} to show summaries
+#' @seealso See \code{\link{summary.explore}} to show summaries
 #'
 #' @export
 explore <- function(dataset,
@@ -37,14 +37,13 @@ explore <- function(dataset,
                     shiny = FALSE) {
 
   tvars <- vars
-  if (!is_empty(byvar)) tvars %<>% c(byvar) %>% unique
+  if (!is_empty(byvar)) tvars <- unique(c(tvars, byvar))
 
   dat <- getdata(dataset, tvars, filt = data_filter, na.rm = FALSE)
-  # if (!is_string(dataset)) dataset <- deparse(substitute(dataset))
   if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## in case : was used
-  vars <- colnames(head(dat) %>% select_(.dots = vars))
+  vars <- setdiff(colnames(dat), byvar)
 
   ## converting factors for integer (1st level)
   ## see also R/visualize.R
@@ -56,7 +55,7 @@ explore <- function(dataset,
     dc[isFctNum] <- "integer"
   }
 
-  isLogNum <- "logical" == dc & names(dc) %in% setdiff(vars,byvar)
+  isLogNum <- "logical" == dc & names(dc) %in% setdiff(vars, byvar)
   if (sum(isLogNum)) {
     dat[,isLogNum] <- select(dat, which(isLogNum)) %>% 
       mutate_all(funs(as.integer))
@@ -71,9 +70,9 @@ explore <- function(dataset,
 
   if (is_empty(byvar)) {
     isNum <- dc %>% {which("numeric" == . | "integer" == .)}
-    tab <- dat %>% select_(.dots = names(isNum)) %>%
+    tab <- dat %>% select_at(.vars = names(isNum)) %>%
       gather("variable", "value", factor_key = TRUE) %>%
-      group_by_("variable")  %>% summarise_all(pfun)
+      group_by_at("variable")  %>% summarise_all(pfun)
 
     ## order by the variable names selected
     tab <- tab[match(vars, tab[[1]]),]
@@ -83,7 +82,7 @@ explore <- function(dataset,
 
     ## convert categorical variables to factors if needed
     ## needed to deal with empty/missing values
-    dat[,byvar] <- select_(dat, .dots = byvar) %>% 
+    dat[,byvar] <- select_at(dat, .vars = byvar) %>% 
       mutate_all(funs(empty_level(.)))
 
     ## avoiding issues with n_missing and n_distinct in dplyr
@@ -98,11 +97,11 @@ explore <- function(dataset,
 
     names(pfun) %<>% fix_uscore
 
-    tab <- dat %>% group_by_(.dots = byvar) %>%
+    tab <- dat %>% group_by_at(.vars = byvar) %>%
       summarise_all(pfun)
 
     ## avoiding issues with n_missing and n_distinct
-    names(pfun) %<>% sub("n.","n_",.)
+    names(pfun) %<>% sub("n.", "n_", .)
 
     ## setting up column names to work with gather code below
     if (length(vars) == 1) {
@@ -113,7 +112,7 @@ explore <- function(dataset,
     ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
     tab %<>% gather("variable", "value", -(1:length(byvar))) %>%
       separate(variable, into = c("variable", "fun"), sep = "_(?=[^_]*$)") %>%
-      mutate(fun = fix_uscore(fun, ".","_")) %>%
+      mutate(fun = fix_uscore(fun, ".", "_")) %>%
       mutate(fun = factor(fun, levels = names(pfun)), variable = factor(variable, levels = vars)) %>%
       spread_("fun","value")
 
@@ -128,14 +127,13 @@ explore <- function(dataset,
 
   ## filtering the table if desired from R > Report
   if (tabfilt != "")
-    tab <- filterdata(tab, tabfilt) %>% droplevels
+    tab <- filterdata(tab, tabfilt)
 
   ## sorting the table if desired from R > Report
   if (!identical(tabsort, "")) {
-    if (grepl(",", tabsort))
-      tabsort <- strsplit(tabsort,",")[[1]] %>% gsub("^\\s+|\\s+$", "", .)
-
-    tab %<>% arrange_(.dots = tabsort)
+    tabsort <- gsub(",", ";", tabsort)
+    # tab %<>% arrange_(.dots = tabsort)
+    tab %<>% arrange(!!! rlang::parse_exprs(tabsort))
   }
 
   ## ensure factors ordered as in the (sorted) table

@@ -27,14 +27,14 @@ test_that("sshhr", {
 })
 
 test_that("getdata", {
- getdata("mtcars","mpg:disp", filt = "mpg > 20", rows = 1:5) %>%
- expect_equal(.,mtcars[mtcars$mpg > 20,c("mpg","cyl","disp")][1:5,1:3] %>% set_rownames(1:5))
+ getdata("mtcars", "mpg:disp", filt = "mpg > 20", rows = 1:5) %>%
+ expect_equal(., mtcars[mtcars$mpg > 20, c("mpg","cyl","disp")][1:5,1:3] %>% set_rownames(1:5))
 })
 
 test_that("changedata", {
   r_data <<- list() %>% { .$dat <- data.frame(a = 1:20); . }
-  changedata("dat",20:1, "b")
-  expect_equal(r_data$dat,data.frame(a = 1:20, b = 20:1))
+  changedata("dat", 20:1, "b")
+  expect_equal(r_data$dat, data.frame(a = 1:20, b = 20:1))
   rm(r_data, envir = .GlobalEnv)
 })
 
@@ -59,7 +59,29 @@ test_that("options", {
   expect_equal(getOption("scipen"), 100)
 })
 
+test_that("select colon", {
+  dat <- getdata("diamonds", vars = "price:clarity")
+  expect_equal(colnames(dat), c("price", "carat", "clarity"))
+})
+
+test_that("select character vector", {
+  dat <- getdata("diamonds", vars = c("price", "carat", "clarity"))
+  expect_equal(colnames(dat), c("price", "carat", "clarity"))
+})
+
 test_that("filter", {
   dat <- getdata("diamonds", filt = "cut == 'Very Good'")
   expect_equal(nrow(dat), 677)
+})
+
+test_that("filterdata", {
+  dat <- filterdata(diamonds, filt = "cut == 'Very Good' & price > 5000")
+  expect_equal(nrow(dat), 187)
+  expect_equal(sum(dat$price), 1700078)
+})
+
+test_that("filterdata factor", {
+  dat <- filterdata(diamonds, filt = "clarity %in% c('SI2','SI1') & price > 18000")
+  expect_equal(nrow(dat), 14)
+  expect_equal(sum(dat$price), 256587)
 })

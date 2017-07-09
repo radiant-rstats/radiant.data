@@ -116,9 +116,10 @@ output$ui_Explore <- renderUI({
 
 .explore <- reactive({
   if (not_available(input$expl_vars) || is.null(input$expl_top)) return()
+  if (!is_empty(input$expl_byvar) && not_available(input$expl_byvar)) return()
   if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) return()
   req(input$expl_pause == FALSE, cancelOutput = TRUE)
-  withProgress(message = 'Calculating', value = 1, {
+  withProgress(message = "Calculating", value = 1, {
     sshhr( do.call(explore, expl_inputs()) )
   })
 })

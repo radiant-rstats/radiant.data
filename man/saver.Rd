@@ -7,12 +7,9 @@
 saver(objname, file)
 }
 \arguments{
-\item{objname}{Name of the data frame}
+\item{objname}{Name of a data.frame or a data.frame}
 
 \item{file}{File name and path as a string. Extension must be either rda or rds}
-}
-\value{
-Data frame in r_data
 }
 \description{
 Save data.frame as an rda or rds file from Radiant

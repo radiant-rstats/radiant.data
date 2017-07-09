@@ -1,7 +1,7 @@
 Package: radiant.data
 Title: Data Menu for Radiant: Business Analytics using R and Shiny
-Version: 0.8.6
-Date: 2017-6-29
+Version: 0.8.7.1
+Date: 2017-7-7
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description: The Radiant Data menu includes interfaces for loading, saving,
     viewing, visualizing, summarizing, transforming, and combining data. It also
@@ -13,9 +13,10 @@ Depends:
     ggplot2 (>= 2.1.0),
     lubridate (>= 1.6.0),
     tidyr (>= 0.6),
-    dplyr (>= 0.5)
+    dplyr (>= 0.7.1)
 Imports:
     tibble (>= 1.3),
+    rlang (>= 0.1.1),
     broom (>= 0.4.2),
     car (>= 2.1.3),
     grid (>= 3.3.1),

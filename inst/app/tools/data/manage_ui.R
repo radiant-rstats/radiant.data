@@ -385,29 +385,42 @@ observeEvent(input$loadClipData, {
 #######################################
 # Load previous state
 #######################################
-observeEvent(input$uploadState, {
+output$refreshOnUpload <- renderUI({
   inFile <- input$uploadState
+  if (is.null(inFile)) return(invisible())
   tmpEnv <- new.env(parent = emptyenv())
   load(inFile$datapath, envir = tmpEnv)
 
+  if (is.null(tmpEnv$r_state) && is.null(tmpEnv$r_data)) {
+    ## don't destroy session when attempting to load a 
+    ## file that is not a statefile
+    # saveSession()
+    mess <- paste0("Unable to restore state from the selected file. Choose another statefile or select 'rda' from the 'Load data of type' dropdown and try again")
+    showModal(
+      modalDialog(title = "Restore State Failed",
+        span(mess),
+        footer = modalButton("OK"),
+        size = "s",
+        easyClose = TRUE
+      )
+    )
+    return(invisible())
+  }
+
   ## remove characters that may cause problems in shinyAce from r_state
-  # https://stackoverflow.com/questions/22549146/ace-text-editor-displays-text-characters-in-place-of-spaces
+  ## https://stackoverflow.com/questions/22549146/ace-text-editor-displays-text-characters-in-place-of-spaces
   if (!is.null(tmpEnv$r_state)) {
     for (i in names(tmpEnv$r_state)) {
-      if (is.character(tmpEnv$r_state[[i]])) {
+      if (is.character(tmpEnv$r_state[[i]])) 
         tmpEnv$r_state[[i]] %<>% fixMS(.)
-        # tmpEnv$r_state[[i]] %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
-      }
     }
   }
 
   ## remove characters that may cause problems in shinyAce from r_data
   if (!is.null(tmpEnv$r_data)) {
     for (i in names(tmpEnv$r_data)) {
-      if (is.character(tmpEnv$r_data[[i]])) {
+      if (is.character(tmpEnv$r_data[[i]])) 
         tmpEnv$r_data[[i]] %<>% fixMS(.)
-        # tmpEnv$r_data[[i]] %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
-      }
     }
   }
 
@@ -421,14 +434,9 @@ observeEvent(input$uploadState, {
   )
 
   rm(tmpEnv)
-})
 
-output$refreshOnUpload <- renderUI({
-  inFile <- input$uploadState
-  if (!is.null(inFile)) {
-    ## Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
-    tags$script("window.location.reload();")
-  }
+  ## Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
+  tags$script("window.location.reload();")
 })
 
 #######################################

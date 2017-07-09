@@ -36,8 +36,9 @@ pivotr <- function(dataset,
   dat <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
   if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
-  ## in case : was used vor cvars
-  if (length(vars) < ncol(dat)) cvars <- colnames(dat) %>% {.[. != nvar]}
+  ## in case : was used for cvars
+  # if (length(vars) < ncol(dat)) cvars <- colnames(dat) %>% {.[. != nvar]}
+  cvars <- setdiff(colnames(dat), nvar)
 
   ## in the unlikely event that n is a variable in the dataset
   if ("n" %in% colnames(dat)) {
@@ -58,16 +59,17 @@ pivotr <- function(dataset,
   }
 
   ## convert categorical variables to factors and deal with empty/missing values
-  dat[,cvars] <- select_(dat, .dots = cvars) %>% mutate_all(funs(empty_level(.)))
+  # dat[, cvars] <- select_(dat, .dots = cvars) %>% mutate_all(funs(empty_level(.)))
+  dat <- mutate_at(dat, .vars = cvars, .funs = funs(empty_level(.)))
 
-  sel <- function(x, nvar, cvar = c()) if (nvar == "n") x else select_(x, .dots = c(nvar,cvar))
+  sel <- function(x, nvar, cvar = c()) if (nvar == "n") x else select_at(x, .vars = c(nvar, cvar))
   sfun <- function(x, nvar, cvars = "", fun = fun) {
     if (nvar == "n") {
-      if (all(cvars == "")) count_(x) else count_(x, cvars)
+      if (identical(cvars, "")) count(x) else count(select_at(x, .vars = cvars))
     } else {
       dat <-
-        mutate_at(x, .cols = nvar, .funs = funs(as.numeric)) %>%
-        summarise_at(.cols = nvar, .funs = make_funs(fun))
+        mutate_at(x, .vars = nvar, .funs = funs(as.numeric)) %>%
+        summarise_at(.vars = nvar, .funs = make_funs(fun))
       colnames(dat)[ncol(dat)] <- nvar
       dat
     }
@@ -75,7 +77,7 @@ pivotr <- function(dataset,
 
   ## main tab
   tab <- dat %>%
-    group_by_(.dots = cvars) %>%
+    group_by_at(.vars = cvars) %>%
     sfun(nvar, cvars, fun)
 
   ## total
@@ -85,22 +87,21 @@ pivotr <- function(dataset,
   if (length(cvars) == 1) {
     tab <-
       bind_rows(
-        # mutate_at(tab, .cols = cvars, .funs = funs(as.character)),
-        mutate_at(ungroup(tab), .cols = cvars, .funs = funs(as.character)),
+        mutate_at(ungroup(tab), .vars = cvars, .funs = funs(as.character)),
         bind_cols(data.frame("Total") %>% setNames(cvars), total %>% set_colnames(nvar))
       )
 
   } else {
 
     col_total <-
-      group_by_(dat, .dots = cvars[1]) %>%
+      group_by_at(dat, .vars = cvars[1]) %>%
       sel(nvar,cvars[1]) %>%
       sfun(nvar, cvars[1], fun) %>%
       ungroup %>%
-      mutate_at(.cols = cvars[1], .funs = funs(as.character))
+      mutate_at(.vars = cvars[1], .funs = funs(as.character))
 
     row_total <-
-      group_by_(dat, .dots = cvars[-1]) %>%
+      group_by_at(dat, .vars = cvars[-1]) %>%
       sfun(nvar, cvars[-1], fun) %>%
       ungroup %>%
       select(ncol(.)) %>%
@@ -109,7 +110,7 @@ pivotr <- function(dataset,
 
     ## creating cross tab
     tab <- spread_(tab, cvars[1], nvar) %>% ungroup %>%
-      mutate_at(.cols = cvars[-1], .funs = funs(as.character))
+      mutate_at(.vars = cvars[-1], .funs = funs(as.character))
 
     tab <-
       bind_rows(
@@ -125,7 +126,7 @@ pivotr <- function(dataset,
 
   ## resetting factor levels
   ind <- ifelse(length(cvars) > 1, -1, 1)
-  levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
+  levs <- lapply(select_at(dat, .vars = cvars[ind]), levels)
 
   for (i in cvars[ind])
     tab[[i]] %<>% factor(., levels = unique(c(levs[[i]], "Total")))
@@ -148,16 +149,20 @@ pivotr <- function(dataset,
   ## ensure we don't have invalid column names
   colnames(tab) <- make.names(colnames(tab))
 
+  # test <- c("100", "$300", " some", "Test", "_test")
+  # gsub("^([1-9])", ".\\1", test) %>%
+  # gsub("^[^a-zA-Z]", ".", .) %>%
+  # make.names(.)
+
   ## filtering the table if desired
   if (tabfilt != "")
-    tab <- tab[-nrow(tab),] %>% filterdata(tabfilt) %>% bind_rows(tab[nrow(tab),]) %>% droplevels
+    tab <- tab[-nrow(tab),] %>% filterdata(tabfilt) %>% bind_rows(tab[nrow(tab),])
 
   ## sorting the table if desired
   if (!identical(tabsort, "")) {
-    if (grepl(",", tabsort))
-      tabsort <- strsplit(tabsort,",")[[1]] %>% gsub("^\\s+|\\s+$", "", .)
-
-    tab[-nrow(tab),] %<>% arrange_(.dots = tabsort)
+    tabsort <- gsub(",", ";", tabsort)
+    # tab[-nrow(tab),] %<>% arrange_(.dots = tabsort)
+    tab[-nrow(tab),] %<>% arrange(!!! rlang::parse_exprs(tabsort))
 
     ## order factors as set in the sorted table
     tc <- if (length(cvars) == 1) cvars else cvars[-1] ## don't change top cv
@@ -190,6 +195,7 @@ pivotr <- function(dataset,
 #' @examples
 #' pivotr("diamonds", cvars = "cut") %>% summary(chi2 = TRUE)
 #' pivotr("diamonds", cvars = "cut", tabsort = "-n") %>% summary
+#' pivotr("diamonds", cvars = "cut", tabsort = "desc(n)") %>% summary
 #' pivotr("diamonds", cvars = "cut", tabfilt = "n > 700") %>% summary
 #' pivotr("diamonds", cvars = "cut:clarity", nvar = "price") %>% summary
 #'
@@ -385,6 +391,7 @@ dtab.pivotr  <- function(object,
 #' pivotr("diamonds", cvars = "cut") %>% plot
 #' pivotr("diamonds", cvars = c("cut","clarity")) %>% plot
 #' pivotr("diamonds", cvars = c("cut","clarity","color")) %>% plot
+# object <- pivotr("diamonds", cvars = c("cut","clarity","color"))
 #'
 #' @seealso \code{\link{pivotr}} to generate summaries
 #' @seealso \code{\link{summary.pivotr}} to show summaries
@@ -409,21 +416,33 @@ plot.pivotr <- function(x,
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
-    dots <- paste0("factor(", cvars[1], ", levels = c('", paste0(setdiff(colnames(tab), cvars[2]), collapse = "','"), "'))")
-    p <- tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2])) %>% na.omit %>%
-        mutate_(.dots = setNames(dots,cvars[1])) %>%
-        ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
-          geom_bar(stat = "identity", position = type, alpha = .7)
+    dots <- paste0("factor(", cvars[1], ", levels = c('", paste0(setdiff(colnames(tab), cvars[2]), collapse = "','"), "'))") %>%
+      rlang::parse_exprs(.) %>%
+      set_names(cvars[1])
+
+    p <- tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2])) %>%
+      na.omit %>%
+      mutate(!!! dots) %>%
+      ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
+        geom_bar(stat = "identity", position = type, alpha = .7)
   } else if (length(cvars) == 3) {
+
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
-    dots <- paste0("factor(", cvars[1], ", levels = c('", paste0(setdiff(colnames(tab), cvars[2:3]), collapse = "','"), "'))")
-    p <- tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2:3])) %>% na.omit %>%
-        mutate_(.dots = setNames(dots,cvars[1])) %>%
-        ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
-          geom_bar(stat = "identity", position = type, alpha = .7) +
-          facet_grid(paste(cvars[3], '~ .'))
+    tab
+    cvars
+
+    dots <- paste0("factor(", cvars[1], ", levels = c('", paste0(setdiff(colnames(tab), cvars[2:3]), collapse = "','"), "'))") %>%
+      rlang::parse_exprs(.) %>%
+      set_names(cvars[1])
+
+    p <- tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2:3])) %>%
+      na.omit %>%
+      mutate(!!! dots) %>%
+      ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
+        geom_bar(stat = "identity", position = type, alpha = .7) +
+        facet_grid(paste(cvars[3], '~ .'))
   } else {
     ## No plot returned if more than 3 grouping variables are selected
     return(invisible())

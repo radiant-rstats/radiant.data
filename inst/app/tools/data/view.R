@@ -49,7 +49,7 @@ output$dataviewer <- DT::renderDataTable({
   if (not_available(input$view_vars)) return(data.frame())
   req(input$view_pause == FALSE, cancelOutput = TRUE)
 
-  dat <- select_(.getdata(), .dots = input$view_vars)
+  dat <- select_at(.getdata(), .vars = input$view_vars)
 
   ## update state when view_vars changes
   if (!identical(r_state$view_vars, input$view_vars)) {

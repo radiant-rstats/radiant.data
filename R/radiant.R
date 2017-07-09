@@ -100,7 +100,6 @@ sshh <- function(...) {
 #' @export
 sshhr <- function(...) suppressWarnings( suppressMessages( ... ) )
 
-
 #' Filter data with user-specified expression
 #'
 #' @param dat Data frame to filter
@@ -113,8 +112,9 @@ filterdata <- function(dat, filt = "") {
   if (grepl("([^=!<>])=([^=])", filt)) {
     message("Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
   } else {
-    seldat <- try(filter_(dat, filt), silent = TRUE)
-    if (is(seldat, 'try-error')) {
+    # seldat <- try(filter_(dat, filt), silent = TRUE)
+    seldat <- try(filter(dat, !! rlang::parse_expr(filt)), silent = TRUE)
+    if (is(seldat, "try-error")) {
       message(paste0("Invalid filter: \"", attr(seldat,"condition")$message,"\". Update or remove the expression"))
     } else {
       return(droplevels(seldat))
@@ -140,7 +140,7 @@ getdata <- function(dataset,
                     rows = NULL,
                     na.rm = TRUE) {
 
-  filt %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
+  filt %<>% gsub("\\n", "", .) %>% gsub("\"", "\'" , .)
   { if (!is_string(dataset)) {
       dataset
     } else if (exists("r_environment") && !is.null(r_environment$r_data[[dataset]])) {
@@ -157,7 +157,8 @@ getdata <- function(dataset,
   } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%  ## ungroup data if needed
         { if (filt == "") . else filterdata(., filt) } %>%         ## apply data_filter
         { if (is.null(rows)) . else .[rows,, drop = FALSE] } %>%
-        { if (is_empty(vars[1])) . else select_(., .dots = vars) } %>%
+        # { if (is_empty(vars[1])) . else select_(., .dots = vars) } %>%
+        { if (is_empty(vars[1])) . else select(., !!! rlang::parse_exprs(paste0(vars, collapse = ";"))) } %>%
         { if (na.rm) na.omit(.) else . }
         ## line below may cause an error https://github.com/hadley/dplyr/issues/219
         # { if (na.rm) { if (anyNA(.)) na.omit(.) else . } else . }
@@ -187,68 +188,73 @@ factorizer <- function(dat, safx = 30) {
     names
   if (length(toFct) == 0) return(dat)
 
-  mutate_at(dat, .cols = toFct, .funs = funs(as.factor))
+  mutate_at(dat, .vars = toFct, .funs = funs(as.factor))
 }
 
 #' Load an rda or rds file and add it to the radiant data list (r_data) if available
 #'
-#' @param fn File name and path as a string. Extension must be either rda or rds
+#' @param file File name and path as a string. Extension must be either rda or rds
 #' @param objname Name to use for the data frame. Defaults to the file name
-#'
+#' @param rlist If TRUE, uses "r_data" list to store the data.frame. If FALSE, loads data.frame into calling environment 
+#' 
 #' @return Data frame in r_data or in the calling enviroment
 #'
 #' @export
-loadr <- function(fn, objname = "") {
+loadr <- function(file, objname = "", rlist = TRUE) {
 
-  filename <- basename(fn)
+  filename <- basename(file)
   ext <- tolower(tools::file_ext(filename))
-  if (!ext %in% c("rda","rds")) {
-    message("File must have extension rda or rds")
-    return()
-  }
+  if (!ext %in% c("rda", "rds"))
+    stop("File must have extension rda or rds")
 
   ## objname is used as the name of the data.frame
   if (objname == "")
-    objname <- sub(paste0(".",ext,"$"),"", filename)
+    objname <- sub(paste0(".", ext, "$"), "", filename)
 
   if (ext == "rds") {
     loadfun <- readRDS
   } else {
-    loadfun <- function(fn) load(fn) %>% get
+    loadfun <- function(f) load(f) %>% get
   }
 
-  if (exists("r_environment") || exists("r_data")) {
-    if (exists("r_environment")) {
-      env <- r_environment
-    } else if (exists("r_data")) {
+  shiny <- exists("r_environment")
+
+  if (!shiny) {
+    if (rlist) {
+      if (!exists("r_data")) 
+        assign("r_data", list(), envir = parent.frame())
+
       env <- pryr::where("r_data")
-    }
-
-    env$r_data[[objname]] <- loadfun(fn)
-    env$r_data[[paste0(objname,"_descr")]] <- attr(env$r_data[[objname]], "description")
-    env$r_data[['datasetlist']] <- c(objname, env$r_data[['datasetlist']]) %>% unique
-
+    } else {
+      assign(objname, loadfun(file), envir = parent.frame())
+      return(invisible())
+    } 
   } else {
-    assign(objname, loadfun(fn), envir = parent.frame())
+    env <- r_environment
   }
+
+  env$r_data[[objname]] <- loadfun(file)
+
+  if (shiny) {
+    env$r_data[[paste0(objname,"_descr")]] <- attr(env$r_data[[objname]], "description")
+    env$r_data[["datasetlist"]] <- c(objname, env$r_data[["datasetlist"]]) %>% unique
+  }
+
+  return(invisible())
 }
 
 #' Save data.frame as an rda or rds file from Radiant
 #'
-#' @param objname Name of the data frame
+#' @param objname Name of a data.frame or a data.frame
 #' @param file File name and path as a string. Extension must be either rda or rds
-#'
-#' @return Data frame in r_data
 #'
 #' @export
 saver <- function(objname, file) {
 
   filename <- basename(file)
   ext <- tolower(tools::file_ext(filename))
-  if (!ext %in% c("rda","rds")) {
-    message("File must have extension rda or rds")
-    return()
-  }
+  if (!ext %in% c("rda","rds")) 
+    stop("File must have extension rda or rds")
 
   if (!is.character(objname)) {
     dat <- objname
@@ -915,7 +921,7 @@ formatnr <- function(x, sym = "", dec = 2, perc = FALSE, mark = ",") {
 #'
 #' @export
 rounddf <- function(tbl, dec = 3)
-  mutate_if_tmp(tbl, is.double, .funs = funs(round(., dec)))
+  mutate_if(tbl, is.double, .funs = funs(round(., dec)))
 
 #' Find a user's Dropbox folder
 #'
@@ -1090,21 +1096,26 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
 
   ## customizing data if a command was used
   if (!is_empty(cmd)) {
-    pred_cmd <- gsub("\"","\'", cmd) %>% gsub(" ","",.)
+    pred_cmd <- gsub("\"", "\'", cmd) %>% gsub("\\s+", "", .)
     cmd_vars <-
       strsplit(pred_cmd, ";")[[1]] %>% strsplit(., "=") %>%
-      sapply("[", 1) %>% gsub(" ","",.)
-    dots <- strsplit(pred_cmd, ";")[[1]] %>% gsub(" ","",.)
-    for (i in seq_along(dots))
-      dots[[i]] <- sub(paste0(cmd_vars[[i]],"="),"",dots[[i]])
+      sapply("[", 1) %>% gsub("\\s+", "", .)
 
-    dat <- try(mutate_(dat, .dots = setNames(dots, cmd_vars)), silent = TRUE)
+    # dots <- strsplit(pred_cmd, ";")[[1]] %>% gsub(" ","",.)
+    # for (i in seq_along(dots))
+    #   dots[[i]] <- sub(paste0(cmd_vars[[i]], "="), "", dots[[i]])
+    # dat <- try(mutate_(dat, .dots = setNames(dots, cmd_vars)), silent = TRUE)
+
+    dots <- rlang::parse_exprs(pred_cmd) %>%
+        set_names(cmd_vars)
+
+    dat <- try(mutate(dat, !!! dots), silent = TRUE)
   }
 
   ind <-
     mutate(dat, imf___ = 1:nrows) %>%
     {if (filt == "") . else filterdata(., filt)} %>%
-    select_(.dots = unique(c("imf___", vars))) %>%
+    select_at(.vars = unique(c("imf___", vars))) %>%
     na.omit %>%
     .[["imf___"]]
 

@@ -4,10 +4,10 @@
 \alias{show_duplicated}
 \title{Show all rows with duplicated values (not just the first or last)}
 \usage{
-show_duplicated(tbl, ...)
+show_duplicated(.tbl, ...)
 }
 \arguments{
-\item{tbl}{Data frame to add transformed variables to}
+\item{.tbl}{Data frame to add transformed variables to}
 
 \item{...}{Variables used to evaluate row uniqueness}
 }

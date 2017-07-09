@@ -1,3 +1,7 @@
+# CHANGES IN radiant.data 0.8.7.1
+
+* Upgraded dplyr dependency to 0.7.1
+
 # CHANGES IN radiant.data 0.8.6
 
 ## NEW FEATURES

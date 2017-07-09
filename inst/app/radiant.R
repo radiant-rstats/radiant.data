@@ -67,14 +67,15 @@ saveStateOnRefresh <- function(session = session) {
 ## get active dataset and apply data-filter if available
 .getdata <- reactive({
   req(input$dataset)
-  selcom <- input$data_filter %>% gsub("\\n","", .) %>% gsub("\"","\'",.)
+  selcom <- input$data_filter %>% gsub("\\n", "", .) %>% gsub("\"", "\'", .)
   if (is_empty(selcom) || input$show_filter == FALSE) {
     isolate(r_data$filter_error <- "")
   } else if (grepl("([^=!<>])=([^=])",selcom)) {
     isolate(r_data$filter_error <- "Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
   } else {
-    seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
-    if (is(seldat, 'try-error')) {
+    # seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
+    seldat <- try(filter(r_data[[input$dataset]], !! rlang::parse_expr(gsub(",", "&", selcom))), silent = TRUE)
+    if (is(seldat, "try-error")) {
       isolate(r_data$filter_error <- paste0("Invalid filter: \"", attr(seldat,"condition")$message,"\". Update or remove the expression"))
     } else {
       isolate(r_data$filter_error <- "")
@@ -204,12 +205,6 @@ is_date <- function(x) inherits(x, c("Date", "POSIXlt", "POSIXct"))
 ## drop elements from .._args variables obtained using formals
 r_drop <- function(x, drop = c("dataset","data_filter")) x[-which(x %in% drop)]
 
-## convert a date variable to character for printing
-# d2c <- function(x) if (is_date(x)) as.character(x) else x
-
-## truncate character fields for show_data_snippet
-# trunc_char <- function(x) if (is.character(x)) strtrim(x,40) else x
-
 ## show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt = "") {
 
@@ -219,14 +214,14 @@ show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt =
   ## name exists
   dat <- dat[1:min(nshow, nr),, drop = FALSE]
   dat %>%
-    mutate_if_tmp(is_date, as.character) %>%
-    mutate_if_tmp(is.character, funs(strtrim(., 40))) %>%
+    mutate_if(is_date, as.character) %>%
+    mutate_if(is.character, funs(strtrim(., 40))) %>%
     xtable::xtable(.) %>%
-    print(type = 'html',  print.results = FALSE, include.rownames = FALSE,
+    print(type = "html",  print.results = FALSE, include.rownames = FALSE,
           sanitize.text.function = identity,
           html.table.attributes = "class='table table-condensed table-hover snippet'") %>%
     paste0(title, .) %>%
-    {if (nr <= nshow) . else paste0(.,'\n<label>', nshow,' of ', formatnr(nr,dec = 0), ' rows shown. See View-tab for details.</label>')} %>%
+    {if (nr <= nshow) . else paste0(., "\n<label>", nshow, " of ", formatnr(nr,dec = 0), " rows shown. See View-tab for details.</label>")} %>%
     enc2utf8
 }
 
@@ -258,11 +253,16 @@ returnTextAreaInput <- function(inputId,
                                 resize = "vertical", 
                                 value = "") {
   tagList(
-    tags$label(label, `for` = inputId),br(),
-    tags$textarea(value, id = inputId, type = "text", rows = rows,
-                  placeholder = placeholder,
-                  resize = resize,
-                  class = "returnTextArea form-control")
+    tags$label(label, `for` = inputId), br(),
+    tags$textarea(
+      value, 
+      id = inputId, 
+      type = "text", 
+      rows = rows,
+      placeholder = placeholder,
+      resize = resize,
+      class = "returnTextArea form-control"
+    )
   )
 }
 
@@ -272,9 +272,13 @@ returnTextInput <- function(inputId,
                             value = "") {
   tagList(
     tags$label(label, `for` = inputId),
-    tags$input(id = inputId, type = "text", value = value,
-               placeholder = placeholder,
-               class = "returnTextInput form-control")
+    tags$input(
+      id = inputId, 
+      type = "text", 
+      value = value,
+      placeholder = placeholder,
+      class = "returnTextInput form-control"
+    )
   )
 }
 
@@ -645,6 +649,10 @@ cf <- function(...) {
 
 ## Replace windows smart quotes etc.
 fixMS <- function(text) {
+
+  ## to remove all non-ascii symbols use ...
+  ## gsub("[\x80-\xFF]", "", .)
+
   ## based on https://stackoverflow.com/a/1262210/1974918
   gsub("\xC2\xAB", '"', text) %>%
   gsub("\xC2\xBB", '"', .) %>%
@@ -659,6 +667,4 @@ fixMS <- function(text) {
   gsub("\xE2\x80\xB9", "'", .) %>%
   gsub("\xE2\x80\xBA", "'", .) %>%
   gsub("\r","\n",.)
-  # enc2native(.)
-  # enc2utf8(.)
 }

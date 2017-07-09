@@ -195,14 +195,14 @@ visualize <- function(dataset, xvar,
     if (any(!dc[xvar] %in% c("integer","numeric")))
       return("'Log X' is only meaningful for X-variables of type integer or numeric")
     to_log <- (dc[xvar] %in% c("integer","numeric")) %>% xvar[.]
-    dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_all(funs(log_trans))
+    dat[, to_log] <- select_at(dat, .vars = to_log) %>% mutate_all(funs(log_trans))
   }
 
   if ("log_y" %in% axes) {
     if (any(!dc[yvar] %in% c("integer","numeric")))
       return("'Log Y' is only meaningful for Y-variables of type integer or numeric")
     to_log <- (dc[yvar] %in% c("integer","numeric")) %>% yvar[.]
-    dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_all(funs(log_trans))
+    dat[, to_log] <- select_at(dat, .vars = to_log) %>% mutate_all(funs(log_trans))
   }
 
   ## combining Y-variables if needed
@@ -225,7 +225,7 @@ visualize <- function(dataset, xvar,
   if (combx && length(xvar) > 1) {
     if (!is_empty(fill, "none")) return("Cannot use Fill when combining X-variables")
     if (facet_row %in% xvar || facet_col %in% xvar) return("Facet row or column variables cannot be part of\nX-variables when combining Y-variables")
-    if (any(!getclass(select_(dat, .dots = xvar)) %in% c("numeric","integer"))) return("Cannot combine plots for non-numeric variables")
+    if (any(!getclass(select_at(dat, .vars = xvar)) %in% c("numeric","integer"))) return("Cannot combine plots for non-numeric variables")
 
     dat <- gather_(dat, "xvar", "values", gather_cols = xvar, factor_key = TRUE)
     xvar <- "values"
@@ -258,7 +258,7 @@ visualize <- function(dataset, xvar,
         if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       } else {
         plot_fun <- get("geom_histogram")
-        hist_par[["binwidth"]] <- select_(dat, .dots = i) %>% range %>% {diff(.)/(bins-1)}
+        hist_par[["binwidth"]] <- select_at(dat, .vars = i) %>% range %>% {diff(.)/(bins-1)}
       }
 
       plot_list[[i]] <- plot_list[[i]] + do.call(plot_fun, hist_par)
@@ -402,7 +402,7 @@ visualize <- function(dataset, xvar,
         if (color == 'none') {
           if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
-            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, j)) %>% 
+            tmp <- dat %>% group_by_at(.vars = tbv) %>% select_at(.vars = c(tbv, j)) %>% 
               summarise_all(make_funs(fun))
             colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j)) + geom_line(aes(group = 1), color = linecol)
@@ -413,7 +413,7 @@ visualize <- function(dataset, xvar,
         } else {
           if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else unique(c(i, byvar))
-            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, color, j)) %>% 
+            tmp <- dat %>% group_by_at(.vars = tbv) %>% select_at(.vars = c(tbv, color, j)) %>% 
               summarise_all(make_funs(fun))
             colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j, color = color, group = color)) + geom_line()
@@ -438,15 +438,15 @@ visualize <- function(dataset, xvar,
       if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       for (j in yvar) {
         tbv <- if (is.null(byvar)) i else c(i, byvar)
-        tmp <- dat %>% group_by_(.dots = tbv) %>% select_(.dots = c(tbv, j)) %>% 
+        tmp <- dat %>% group_by_at(.vars = tbv) %>% select_at(.vars = c(tbv, j)) %>% 
           summarise_all(make_funs(fun))
         colnames(tmp)[ncol(tmp)] <- j
 
         if ("sort" %in% axes && facet_row == "." && facet_col == ".") {
           if ("flip" %in% axes)
-            tmp <- arrange_(ungroup(tmp), j)
+            tmp <- arrange_at(ungroup(tmp), .vars = j)
           else
-            tmp <- arrange_(ungroup(tmp), paste0("desc(",j,")"))
+            tmp <- arrange_at(ungroup(tmp), .vars = j, .funs = funs(desc(.)))
           tmp[[i]] %<>% factor(., levels = unique(.))
         }
 

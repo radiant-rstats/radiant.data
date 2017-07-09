@@ -305,6 +305,9 @@ observeEvent(input$pivotr_rows_all, {
 
 output$plot_pivot <- renderPlot({
   if (is_empty(input$pvt_plot, FALSE)) return(invisible())
+  validate(
+    need(length(input$pvt_cvars) < 4, "Plots created for at most 3 categorical variables") 
+  )
   withProgress(message = "Making plot", value = 1, {
     sshhr(.plot_pivot()) %>% print
   })

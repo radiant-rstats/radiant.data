@@ -4,12 +4,14 @@
 \alias{loadr}
 \title{Load an rda or rds file and add it to the radiant data list (r_data) if available}
 \usage{
-loadr(fn, objname = "")
+loadr(file, objname = "", rlist = TRUE)
 }
 \arguments{
-\item{fn}{File name and path as a string. Extension must be either rda or rds}
+\item{file}{File name and path as a string. Extension must be either rda or rds}
 
 \item{objname}{Name to use for the data frame. Defaults to the file name}
+
+\item{rlist}{If TRUE, uses "r_data" list to store the data.frame. If FALSE, loads data.frame into calling environment}
 }
 \value{
 Data frame in r_data or in the calling enviroment
