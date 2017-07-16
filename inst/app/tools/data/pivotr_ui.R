@@ -197,7 +197,9 @@ observeEvent(input$pivotr_state, {
 
 output$pivotr <- DT::renderDataTable({
   pvt <- .pivotr()
-  if (is.null(pvt)) return(data.frame())
+  ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
+  # if (is.null(pvt)) return()
+  req(!is.null(pvt))
 
   if (!identical(r_state$pvt_cvars, input$pvt_cvars)) {
     r_state$pvt_cvars <<- input$pvt_cvars

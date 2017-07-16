@@ -46,7 +46,9 @@ observeEvent(input$dataviewer_state, {
 })
 
 output$dataviewer <- DT::renderDataTable({
-  if (not_available(input$view_vars)) return(data.frame())
+  ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
+  # if (not_available(input$view_vars)) return()
+  req(available(input$view_vars))
   req(input$view_pause == FALSE, cancelOutput = TRUE)
 
   dat <- select_at(.getdata(), .vars = input$view_vars)

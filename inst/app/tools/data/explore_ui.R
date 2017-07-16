@@ -142,7 +142,9 @@ expl_reset <- function(var, ncol) {
 
 output$explore <- DT::renderDataTable({
   expl <- .explore()
-  if (is.null(expl)) return(data.frame())
+  ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
+  # if (is.null(expl)) return()
+  req(!is.null(expl))
 
   expl$shiny <- TRUE
 
