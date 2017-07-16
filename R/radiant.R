@@ -158,7 +158,7 @@ getdata <- function(dataset,
         { if (filt == "") . else filterdata(., filt) } %>%         ## apply data_filter
         { if (is.null(rows)) . else .[rows,, drop = FALSE] } %>%
         # { if (is_empty(vars[1])) . else select_(., .dots = vars) } %>%
-        { if (is_empty(vars[1])) . else select(., !!! rlang::parse_exprs(paste0(vars, collapse = ";"))) } %>%
+        { if (is_empty(vars[1])) . else select(., !!! if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)} %>%
         { if (na.rm) na.omit(.) else . }
         ## line below may cause an error https://github.com/hadley/dplyr/issues/219
         # { if (na.rm) { if (anyNA(.)) na.omit(.) else . } else . }
@@ -195,8 +195,8 @@ factorizer <- function(dat, safx = 30) {
 #'
 #' @param file File name and path as a string. Extension must be either rda or rds
 #' @param objname Name to use for the data frame. Defaults to the file name
-#' @param rlist If TRUE, uses "r_data" list to store the data.frame. If FALSE, loads data.frame into calling environment 
-#' 
+#' @param rlist If TRUE, uses "r_data" list to store the data.frame. If FALSE, loads data.frame into calling environment
+#'
 #' @return Data frame in r_data or in the calling enviroment
 #'
 #' @export
@@ -221,14 +221,14 @@ loadr <- function(file, objname = "", rlist = TRUE) {
 
   if (!shiny) {
     if (rlist) {
-      if (!exists("r_data")) 
+      if (!exists("r_data"))
         assign("r_data", list(), envir = parent.frame())
 
       env <- pryr::where("r_data")
     } else {
       assign(objname, loadfun(file), envir = parent.frame())
       return(invisible())
-    } 
+    }
   } else {
     env <- r_environment
   }
@@ -253,7 +253,7 @@ saver <- function(objname, file) {
 
   filename <- basename(file)
   ext <- tolower(tools::file_ext(filename))
-  if (!ext %in% c("rda","rds")) 
+  if (!ext %in% c("rda","rds"))
     stop("File must have extension rda or rds")
 
   if (!is.character(objname)) {
