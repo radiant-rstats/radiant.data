@@ -241,10 +241,12 @@ knitItSave <- function(text) {
   preserved <- htmltools::extractPreserveChunks(md)
 
   ## Render the HTML, and then restore the preserved chunks
-  markdown::markdownToHTML(text = gsub("\\\\\\\\", "\\\\", preserved$value) %>% fixMS(.),
-                           header = dep_html,
-                           options = c("mathjax", "base64_images"),
-                           stylesheet = file.path(getOption("radiant.path.data"),"app/www/bootstrap.min.css")) %>%
+  markdown::markdownToHTML(
+    text = gsub("\\\\\\\\", "\\\\", preserved$value) %>% fixMS(.), 
+    header = dep_html, 
+    options = c("mathjax", "base64_images"), 
+    stylesheet = file.path(getOption("radiant.path.data"),"app/www/bootstrap.min.css")
+  ) %>%
   htmltools::restorePreserveChunks(preserved$chunks)
 }
 

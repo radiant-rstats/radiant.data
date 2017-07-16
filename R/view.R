@@ -70,7 +70,6 @@ register <- function(new = "", org = "", descr = "", envir = parent.frame(), ...
   } else if (exists("r_data")) {
     env <- pryr::where("r_data")
   } else {
-    # message("Dataset ", new, " created in ", environmentName(envir), " environment")
     message("Nothing registered. Function not called from a shiny app")
     return(invisible())
   }
