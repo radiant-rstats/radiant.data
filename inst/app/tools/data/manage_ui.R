@@ -100,7 +100,7 @@ observeEvent(input$from_global_load, {
   updateSelectInput(session, "dataset", label = "Datasets:",
                     choices = r_data$datasetlist,
                     selected = r_data$datasetlist[1])
-  updateSelectInput(session, "dataType", selected = "rda")
+  updateSelectInput(session, "dataType", selected = "rds")
 })
 
 observeEvent(input$to_global_save, {
@@ -113,16 +113,16 @@ observeEvent(input$to_global_save, {
   updateSelectInput(session, "dataset", label = "Datasets:",
                     choices = r_data$datasetlist,
                     selected = r_data$datasetlist[1])
-  updateSelectInput(session, "saveAs", selected = "rda")
+  updateSelectInput(session, "saveAs", selected = "rds")
 })
 
 output$ui_Manage <- renderUI({
 
-  data_types_in <- c("rda" = "rda", "rds" = "rds", "state" = "state", "csv" = "csv",
+  data_types_in <- c("rds" = "rds", "rda" = "rda", "state" = "state", "csv" = "csv",
                   "clipboard" = "clipboard", "from global workspace" = "from_global",
                   "examples" = "examples", "feather" = "feather",
                   "rda (url)" = "url_rda", "csv (url)" = "url_csv")
-  data_types_out <- c("rda" = "rda", "rds" = "rds", "state" = "state", "csv" = "csv",
+  data_types_out <- c("rds" = "rds", "rda" = "rda", "state" = "state", "csv" = "csv",
                       "feather" = "feather",
                       "clipboard" = "clipboard", "to global workspace" = "to_global")
   if (!isTRUE(getOption("radiant.local"))) {
@@ -136,7 +136,7 @@ output$ui_Manage <- renderUI({
 
   tagList(
     wellPanel(
-      selectInput("dataType", label = "Load data of type:", data_types_in, selected = "rda"),
+      selectInput("dataType", label = "Load data of type:", data_types_in, selected = "rds"),
       conditionalPanel(condition = "input.dataType != 'clipboard' &&
                                     input.dataType != 'examples'",
         conditionalPanel("input.dataType == 'csv' | input.dataType == 'url_csv'",
@@ -167,7 +167,7 @@ output$ui_Manage <- renderUI({
       )
     ),
     wellPanel(
-      selectInput("saveAs", label = "Save data to type:", data_types_out, selected = "rda"),
+      selectInput("saveAs", label = "Save data to type:", data_types_out, selected = "rds"),
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
         uiOutput("ui_clipboard_save")
       ),
@@ -249,7 +249,7 @@ observeEvent(input$removeDataButton, {
 # 'saving' data to clipboard
 observeEvent(input$saveClipData, {
   saveClipboardData()
-  updateRadioButtons(session = session, inputId = "saveAs", selected = "rda")
+  updateRadioButtons(session = session, inputId = "saveAs", selected = "rds")
 })
 
 output$downloadData <- downloadHandler(
@@ -258,7 +258,7 @@ output$downloadData <- downloadHandler(
 
     ext <- input$saveAs
 
-    if (ext == 'csv') {
+    if (ext == "csv") {
       readr::write_csv(.getdata_transform(), file)
     } else {
 
@@ -268,9 +268,9 @@ output$downloadData <- downloadHandler(
       if (!is.null(input$man_data_descr) && input$man_data_descr != "")
         attr(tmp[[robj]],"description") <- r_data[[paste0(robj,"_descr")]]
 
-      if (ext == 'rds') {
+      if (ext == "rds") {
         saveRDS(tmp[[robj]], file = file)
-      } else if (ext == 'feather') {
+      } else if (ext == "feather") {
         feather::write_feather(tmp[[robj]], file)
       } else {
         save(list = robj, file = file, envir = tmp)
@@ -284,7 +284,7 @@ observeEvent(input$uploadfile, {
   inFile <- input$uploadfile
   ## iterating through the files to upload
   for (i in 1:(dim(inFile)[1]))
-    loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType,
+    loadUserData(inFile[i, "name"], inFile[i, "datapath"], input$dataType,
                  .csv = input$man_read.csv,
                  header = input$man_header,
                  man_str_as_factor = input$man_str_as_factor,
@@ -377,7 +377,7 @@ observeEvent(input$loadExampleData, {
 observeEvent(input$loadClipData, {
   ## reading data from clipboard
   loadClipboardData()
-  updateSelectInput(session = session, inputId = "dataType", selected = "rda")
+  updateSelectInput(session = session, inputId = "dataType", selected = "rds")
   updateSelectInput(session, "dataset", label = "Datasets:",
                     choices = r_data$datasetlist, selected = "copy_and_paste")
 })
