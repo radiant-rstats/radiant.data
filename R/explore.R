@@ -110,11 +110,11 @@ explore <- function(dataset,
     }
 
     ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
-    tab %<>% gather("variable", "value", -(1:length(byvar))) %>%
+    tab %<>% gather("variable", "value", !! -(1:length(byvar))) %>%
       separate(variable, into = c("variable", "fun"), sep = "_(?=[^_]*$)") %>%
       mutate(fun = fix_uscore(fun, ".", "_")) %>%
       mutate(fun = factor(fun, levels = names(pfun)), variable = factor(variable, levels = vars)) %>%
-      spread_("fun","value")
+      spread("fun", "value")
 
     rm(fix_uscore)
   }
@@ -132,7 +132,6 @@ explore <- function(dataset,
   ## sorting the table if desired from R > Report
   if (!identical(tabsort, "")) {
     tabsort <- gsub(",", ";", tabsort)
-    # tab %<>% arrange_(.dots = tabsort)
     tab %<>% arrange(!!! rlang::parse_exprs(tabsort))
   }
 
@@ -257,10 +256,12 @@ store.explore <- function(object, name, ...) {
 flip <- function(expl, top = "fun") {
   cvars <- expl$byvar %>% {if (is_empty(.[1])) character(0) else .}
   if (top[1] == "var") {
-    expl$tab %<>% gather(".function", "value", -(1:(length(cvars)+1))) %>% spread_("variable", "value")
+    expl$tab %<>% gather(".function", "value", !! -(1:(length(cvars)+1))) %>% 
+      spread("variable", "value")
     expl$tab[[".function"]] %<>% factor(., levels = names(expl$pfun))
   } else if (top[1] == "byvar" && length(cvars) > 0) {
-    expl$tab %<>% gather(".function", "value", -(1:(length(cvars)+1))) %>% spread_(cvars[1], "value")
+    expl$tab %<>% gather(".function", "value", !! -(1:(length(cvars)+1))) %>% 
+      spread(!! cvars[1], "value")
     expl$tab[[".function"]] %<>% factor(., levels = names(expl$pfun))
 
     ## ensure we don't have invalid column names
@@ -666,9 +667,10 @@ does_vary <- function(x, na.rm = TRUE) {
 #'
 #' @export
 make_funs <- function(x) {
-  xclean <- gsub("_rm$","",x) %>% sub("length", "n",.)
+  xclean <- gsub("_rm$", "", x) %>% sub("length", "n", .)
   env <- if (exists("radiant.data")) environment(radiant.data::radiant.data) else parent.frame()
-  dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula, env = env) %>% setNames(xclean))
+  dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula, env = env) %>% 
+    setNames(xclean))
 }
 
 #' Convert categorical variables to factors and deal with empty/missing values (used in pivotr and explore)

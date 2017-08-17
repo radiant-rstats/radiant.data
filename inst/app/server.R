@@ -1,3 +1,5 @@
+# options(shiny.trace=TRUE)
+
 shinyServer(function(input, output, session) {
 
   ## source shared functions

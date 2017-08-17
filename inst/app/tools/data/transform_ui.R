@@ -532,7 +532,7 @@ observeEvent(input$tr_change_type, {
                     store = TRUE) {
 
   if (!store && !is.character(dataset)) {
-    gather_(dataset, key, value, vars, factor_key = TRUE)
+    gather(dataset, !! key, !! value, !! vars, factor_key = TRUE)
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## Gather columns\nr_data[[\"",store_dat,"\"]] <- gather(r_data[[\"",dataset,"\"]], ", key, ", ", value, ", ", paste0(vars, collapse = ", "),", factor_key = TRUE)\n")
@@ -556,7 +556,7 @@ observeEvent(input$tr_change_type, {
       dataset <- unite_(dataset, paste(key, collapse = "_"), key)
       key <- paste(key, collapse = "_")
     }
-    spread_(dataset, key, value, fill = fill)
+    spread(dataset, !! key, !! value, fill = fill)
   } else {
     if (store_dat == "") store_dat <- dataset
     cmd <- ""

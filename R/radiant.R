@@ -112,7 +112,6 @@ filterdata <- function(dat, filt = "") {
   if (grepl("([^=!<>])=([^=])", filt)) {
     message("Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
   } else {
-    # seldat <- try(filter_(dat, filt), silent = TRUE)
     seldat <- try(filter(dat, !! rlang::parse_expr(filt)), silent = TRUE)
     if (is(seldat, "try-error")) {
       message(paste0("Invalid filter: \"", attr(seldat,"condition")$message,"\". Update or remove the expression"))
@@ -157,7 +156,6 @@ getdata <- function(dataset,
   } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%  ## ungroup data if needed
         { if (filt == "") . else filterdata(., filt) } %>%         ## apply data_filter
         { if (is.null(rows)) . else .[rows,, drop = FALSE] } %>%
-        # { if (is_empty(vars[1])) . else select_(., .dots = vars) } %>%
         { if (is_empty(vars[1])) . else select(., !!! if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)} %>%
         { if (na.rm) na.omit(.) else . }
         ## line below may cause an error https://github.com/hadley/dplyr/issues/219

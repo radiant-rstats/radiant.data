@@ -213,7 +213,7 @@ visualize <- function(dataset, xvar,
     if (!is_empty(size, "none")) return("Cannot use Size when combining Y-variables")
     if (facet_row %in% yvar || facet_col %in% yvar) return("Facet row or column variables cannot be part of\nY-variables when combining Y-variables")
 
-    dat <- gather_(dat, "yvar", "values", gather_cols = yvar, factor_key = TRUE)
+    dat <- gather(dat, "yvar", "values", !! yvar, factor_key = TRUE)
     yvar <- "values"
     byvar <- if (is.null(byvar)) "yvar" else c("yvar", byvar)
     color <- fill <- "yvar"
@@ -227,7 +227,7 @@ visualize <- function(dataset, xvar,
     if (facet_row %in% xvar || facet_col %in% xvar) return("Facet row or column variables cannot be part of\nX-variables when combining Y-variables")
     if (any(!getclass(select_at(dat, .vars = xvar)) %in% c("numeric","integer"))) return("Cannot combine plots for non-numeric variables")
 
-    dat <- gather_(dat, "xvar", "values", gather_cols = xvar, factor_key = TRUE)
+    dat <- gather(dat, "xvar", "values", !! xvar, factor_key = TRUE)
     xvar <- "values"
     byvar <- if (is.null(byvar)) "xvar" else c("xvar", byvar)
     color <- fill <- "xvar"

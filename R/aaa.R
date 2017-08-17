@@ -18,7 +18,7 @@ globalVariables(c("r_environment", "session", "r_data", "r_state", ".",
 #' @importFrom magrittr %<>% %T>% %$% set_rownames set_colnames set_names divide_by add extract2
 #' @importFrom lubridate is.Date is.POSIXt now year month wday week hour minute second ymd mdy dmy ymd_hms hms hm as.duration parse_date_time
 #' @importFrom tibble rownames_to_column as_data_frame data_frame
-#' @importFrom tidyr gather_ gather spread spread_ separate
+#' @importFrom tidyr gather spread separate
 #' @importFrom grid textGrob gpar
 #' @importFrom gridExtra grid.arrange
 #' @importFrom shinyAce aceEditor updateAceEditor

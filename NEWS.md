@@ -1,3 +1,7 @@
+# CHANGES IN radiant.data 0.8.7.2
+
+* Upgraded tidyr dependency to 0.7
+
 # CHANGES IN radiant.data 0.8.7.1
 
 * Upgraded dplyr dependency to 0.7.1

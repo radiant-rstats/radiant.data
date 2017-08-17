@@ -59,7 +59,6 @@ pivotr <- function(dataset,
   }
 
   ## convert categorical variables to factors and deal with empty/missing values
-  # dat[, cvars] <- select_(dat, .dots = cvars) %>% mutate_all(funs(empty_level(.)))
   dat <- mutate_at(dat, .vars = cvars, .funs = funs(empty_level(.)))
 
   sel <- function(x, nvar, cvar = c()) if (nvar == "n") x else select_at(x, .vars = c(nvar, cvar))
@@ -109,15 +108,19 @@ pivotr <- function(dataset,
       set_colnames("Total")
 
     ## creating cross tab
-    tab <- spread_(tab, cvars[1], nvar) %>% ungroup %>%
+    tab <- spread(tab, !! cvars[1], !! nvar) %>% 
+      ungroup %>%
       mutate_at(.vars = cvars[-1], .funs = funs(as.character))
 
     tab <-
       bind_rows(
         tab,
         bind_cols(
-          t(rep("Total",length(cvars[-1]))) %>% as.data.frame %>% setNames(cvars[-1]) ,
-          data.frame(t(col_total[[2]])) %>% set_colnames(col_total[[1]])
+          t(rep("Total",length(cvars[-1]))) %>% 
+            as.data.frame %>% 
+            setNames(cvars[-1]),
+          data.frame(t(col_total[[2]])) %>% 
+            set_colnames(col_total[[1]])
         )
       ) %>% bind_cols(row_total)
 
@@ -149,11 +152,6 @@ pivotr <- function(dataset,
   ## ensure we don't have invalid column names
   colnames(tab) <- make.names(colnames(tab))
 
-  # test <- c("100", "$300", " some", "Test", "_test")
-  # gsub("^([1-9])", ".\\1", test) %>%
-  # gsub("^[^a-zA-Z]", ".", .) %>%
-  # make.names(.)
-
   ## filtering the table if desired
   if (tabfilt != "")
     tab <- tab[-nrow(tab),] %>% filterdata(tabfilt) %>% bind_rows(tab[nrow(tab),])
@@ -161,7 +159,6 @@ pivotr <- function(dataset,
   ## sorting the table if desired
   if (!identical(tabsort, "")) {
     tabsort <- gsub(",", ";", tabsort)
-    # tab[-nrow(tab),] %<>% arrange_(.dots = tabsort)
     tab[-nrow(tab),] %<>% arrange(!!! rlang::parse_exprs(tabsort))
 
     ## order factors as set in the sorted table
@@ -420,7 +417,7 @@ plot.pivotr <- function(x,
       rlang::parse_exprs(.) %>%
       set_names(cvars[1])
 
-    p <- tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2])) %>%
+    p <- tab %>% gather(!! cvars[1], !! nvar, !! setdiff(colnames(.),cvars[2])) %>%
       na.omit %>%
       mutate(!!! dots) %>%
       ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
@@ -437,7 +434,7 @@ plot.pivotr <- function(x,
       rlang::parse_exprs(.) %>%
       set_names(cvars[1])
 
-    p <- tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2:3])) %>%
+    p <- tab %>% gather(!! cvars[1], !! nvar, !! setdiff(colnames(.),cvars[2:3])) %>%
       na.omit %>%
       mutate(!!! dots) %>%
       ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +

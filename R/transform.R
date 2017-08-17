@@ -406,7 +406,7 @@ getsummary <- function(dat, dc = getclass(dat)) {
 
     cat("Summarize numeric variables:\n")
     select(dat, which(isNum)) %>%
-      tidyr::gather_("variable", "values", cn, factor_key = TRUE) %>%
+      gather("variable", "values", !! cn, factor_key = TRUE) %>%
       group_by_at(.vars = "variable") %>%
       summarise_all(
         funs(
