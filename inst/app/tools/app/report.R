@@ -43,13 +43,13 @@ Year  |  Outcome  |  Prior probability
 Note that the columns are left-aligned, right-aligned, and centered using a `:`. Alternatively you can create a `tibble` with the information to be put in the table and use `knitr`'s `kable` function to generate the desired output. See example below:
 
 ```{r}
-df <- tibble(
+tbl <- tibble(
   Year = c(2013, 2014, 2015),
   Outcome = c(\"Win\", \"Loss\", \"Win\"),
   `Prior probability` = c(0.30, 0.25, 0.20)
 )
 
-knitr::kable(df, align = \"ccc\")
+knitr::kable(tbl, align = \"ccc\")
 ```
 
 To align the columns use `l` for left, `r` for right, and `c` for center. In the example above each column is centered. For additional information about formatting tables see
@@ -58,13 +58,13 @@ https://www.rforge.net/doc/packages/knitr/kable.html
 It is also possible to generate interactive tables using the DT package. In Radiant you can use the `dtab` function to display a data.frame as a nicely formatted table:
 
 ```{r}
-dtab(df) %>% render
+dtab(tbl) %>% render
 ```
 
 The DT package has various [formatting options](http://rstudio.github.io/DT/functions.html). For example, to remove the filter boxes and display the `Prior probability` column as a percentage we could use the command below:
 
 ```{r}
-dtab(df, filter = \"none\") %>% DT::formatPercentage(\"Prior probability\", 1) %>% render
+dtab(tbl, filter = \"none\") %>% DT::formatPercentage(\"Prior probability\", 1) %>% render
 ```
 
 > Note that adding `%>% render` to display the table is not required when using `dtab` outside of Radiant
