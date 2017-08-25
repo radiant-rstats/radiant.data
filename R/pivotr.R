@@ -33,11 +33,12 @@ pivotr <- function(dataset,
                    shiny = FALSE) {
 
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
+  fill <- if (nvar == "None") 0 else NA
   dat <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
-  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
+  if (!is_string(dataset))
+    dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## in case : was used for cvars
-  # if (length(vars) < ncol(dat)) cvars <- colnames(dat) %>% {.[. != nvar]}
   cvars <- setdiff(colnames(dat), nvar)
 
   ## in the unlikely event that n is a variable in the dataset
@@ -108,7 +109,7 @@ pivotr <- function(dataset,
       set_colnames("Total")
 
     ## creating cross tab
-    tab <- spread(tab, !! cvars[1], !! nvar) %>% 
+    tab <- spread(tab, !! cvars[1], !! nvar, fill = fill) %>%
       ungroup %>%
       mutate_at(.vars = cvars[-1], .funs = funs(as.character))
 
@@ -116,10 +117,10 @@ pivotr <- function(dataset,
       bind_rows(
         tab,
         bind_cols(
-          t(rep("Total",length(cvars[-1]))) %>% 
-            as.data.frame %>% 
+          t(rep("Total",length(cvars[-1]))) %>%
+            as.data.frame %>%
             setNames(cvars[-1]),
-          data.frame(t(col_total[[2]])) %>% 
+          data.frame(t(col_total[[2]])) %>%
             set_colnames(col_total[[1]])
         )
       ) %>% bind_cols(row_total)
