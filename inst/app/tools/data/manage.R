@@ -94,7 +94,6 @@ loadUserData <- function(fname, uFile, ext,
         upload_error_handler(objname,"### More than one R object contained in the data.")
       }
     } else {
-      # r_data[[objname]] <- as.data.frame(get(robjname)) %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
       r_data[[objname]] <- as.data.frame(get(robjname)) %>% {set_colnames(., make.names(colnames(.)))}
     }
   } else if (ext == "rds") {

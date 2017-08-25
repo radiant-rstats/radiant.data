@@ -239,7 +239,7 @@ output$dl_pivot_tab <- downloadHandler(
   content = function(file) {
     dat <- try(.pivotr(), silent = TRUE)
     if (is(dat, "try-error") || is.null(dat)) {
-      write.csv(data_frame("Data" = "[Empty]"),file, row.names = FALSE)
+      write.csv(tibble("Data" = "[Empty]"),file, row.names = FALSE)
     } else {
       rows <- isolate(r_data$pvt_rows)
       dat$tab %>% 

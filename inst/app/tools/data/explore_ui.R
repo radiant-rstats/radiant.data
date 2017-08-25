@@ -175,7 +175,7 @@ output$dl_explore_tab <- downloadHandler(
   content = function(file) {
     dat <- try(.explore(), silent = TRUE)
     if (is(dat, "try-error") || is.null(dat)) {
-      write.csv(data_frame("Data" = "[Empty]"),file, row.names = FALSE)
+      write.csv(tibble("Data" = "[Empty]"),file, row.names = FALSE)
     } else {
       rows <- input$explore_rows_all
       dat$tab %>% {if (is.null(rows)) . else .[rows,, drop = FALSE]} %>%

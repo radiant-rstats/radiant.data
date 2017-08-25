@@ -40,15 +40,14 @@ Year  |  Outcome  |  Prior probability
 2014  | Loss      |  0.25
 2015  | Win       |  0.20
 
-Note that the columns are left-aligned, right-aligned, and centered using a `:`. Alternatively you can create a `data.frame` with the information to be put in the table and use `knitr`'s `kable` function to generate the desired output. See example below:
+Note that the columns are left-aligned, right-aligned, and centered using a `:`. Alternatively you can create a `tibble` with the information to be put in the table and use `knitr`'s `kable` function to generate the desired output. See example below:
 
 ```{r}
-df <- data.frame(
-        Year = c(2013, 2014, 2015),
-        Outcome = c(\"Win\", \"Loss\", \"Win\"),
-        `Prior probability` = c(0.30, 0.25, 0.20),
-        check.names = FALSE
-      )
+df <- tibble(
+  Year = c(2013, 2014, 2015),
+  Outcome = c(\"Win\", \"Loss\", \"Win\"),
+  `Prior probability` = c(0.30, 0.25, 0.20)
+)
 
 knitr::kable(df, align = \"ccc\")
 ```
@@ -136,7 +135,7 @@ output$ui_saveReport <- renderUI({
 })
 
 esc_slash <- function(x) {
-  gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2", x) %>% 
+  gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2", x) %>%
     fixMS(.)
 }
 
@@ -179,7 +178,7 @@ output$report <- renderUI({
       autoComplete = "enabled"),
     htmlOutput("rmd_knitted"),
     getdeps()
-  ) 
+  )
 })
 
 valsRmd <- reactiveValues(knit = 0)
@@ -242,9 +241,9 @@ knitItSave <- function(text) {
 
   ## Render the HTML, and then restore the preserved chunks
   markdown::markdownToHTML(
-    text = gsub("\\\\\\\\", "\\\\", preserved$value) %>% fixMS(.), 
-    header = dep_html, 
-    options = c("mathjax", "base64_images"), 
+    text = gsub("\\\\\\\\", "\\\\", preserved$value) %>% fixMS(.),
+    header = dep_html,
+    options = c("mathjax", "base64_images"),
     stylesheet = file.path(getOption("radiant.path.data"),"app/www/bootstrap.min.css")
   ) %>%
   htmltools::restorePreserveChunks(preserved$chunks)
@@ -265,7 +264,7 @@ knitIt <- function(text) {
   # }
 
   md <- knitr::knit(
-    text = paste0("\n`r options(width = 250)`\n", text), 
+    text = paste0("\n`r options(width = 250)`\n", text),
     envir = r_environment
   )
 
@@ -317,8 +316,8 @@ output$saveReport <- downloadHandler(
 
         report <-
           ifelse (is_empty(input$rmd_selection), input$rmd_report, input$rmd_selection) %>%
-          gsub("\\\\\\\\", "\\\\", .) %>% 
-          cleanout(.) %>% 
+          gsub("\\\\\\\\", "\\\\", .) %>%
+          cleanout(.) %>%
           fixMS(.)
 
         sopts <- if (input$rmd_save_report == "PDF") ", screenshot.opts = list(vheight = 1200)" else ""
@@ -383,7 +382,7 @@ if (!exists(\"r_environment\")) library(", lib, ")
                 HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
                 PDF = rmarkdown::pdf_document(),
                 Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"),"app/www/style.docx"))
-              ), envir = r_environment) 
+              ), envir = r_environment)
               file.rename(out, file)
             } else {
               knitItSave(report) %>% cat(file = file, sep = "\n")
