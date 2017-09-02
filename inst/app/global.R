@@ -122,10 +122,6 @@ options(radiant.shared_ui =
                tabPanel("View state", uiOutput("view_state"), icon = icon("user"))
     ),
 
-    ## works but badly aligned in navbar
-    # tabPanel(tags$a(id = "quitApp", href = "#", class = "action-button",
-    #          list(icon("power-off"), ""), onclick = "window.close();")),
-
     ## stop app *and* close browser window
     navbarMenu("", icon = icon("power-off"),
                tabPanel(actionLink("stop_radiant", "Stop", icon = icon("stop"),

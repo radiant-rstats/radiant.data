@@ -88,7 +88,7 @@ visualize <- function(dataset, xvar,
     fun <- fun[1:3]  ## only scatter can deal with multiple functions, max 3 for now
     message("No more than three functions (", paste(fun, collapse = ", "), ") can be used with scatter plots")
   }
-  if (!type %in% c("scatter","box")) check %<>% sub("jitter","",.)
+  if (!type %in% c("scatter","box")) check %<>% sub("jitter", "", .)
 
   ## variable to use if bar chart is specified
   byvar <- NULL
@@ -132,15 +132,15 @@ visualize <- function(dataset, xvar,
 
   ## so you can also pass-in a data.frame
   dat <- getdata(dataset, vars, filt = data_filter)
-  # if (!is_string(dataset)) dataset <- deparse(substitute(dataset))
-  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
+  if (!is_string(dataset)) 
+    dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## get class
   dc <- getclass(dat)
 
   ## if : is used to specify a range of variables
   if (length(vars) < ncol(dat)) {
-    fl <- strsplit(xvar,":") %>% unlist
+    fl <- strsplit(xvar, ":") %>% unlist
     cn <- colnames(dat)
     xvar <- cn[which(fl[1] == cn):which(fl[2] == cn)]
   }
@@ -149,11 +149,11 @@ visualize <- function(dataset, xvar,
   isChar <- dc == "character"
   if (sum(isChar) > 0) {
     if (type == "density") {
-      dat[,isChar] <- select(dat, which(isChar)) %>% mutate_all(funs(as_numeric))
+      dat[, isChar] <- select(dat, which(isChar)) %>% mutate_all(funs(as_numeric))
       if ("character" %in% getclass(select(dat,which(isChar))))
         return("Character variable(s) were not converted to numeric for plotting.\nTo use these variables in a plot convert them to numeric\nvariables (or factors) in the Data > Transform tab")
     } else {
-      dat[,isChar] <- select(dat, which(isChar)) %>% mutate_all(funs(as_factor))
+      dat[, isChar] <- select(dat, which(isChar)) %>% mutate_all(funs(as_factor))
       nrlev <- sapply(dat, function(x) if (is.factor(x)) length(levels(x)) else 0)
       if (max(nrlev) > 500)
         return("Character variable(s) were not converted to factors for plotting.\nTo use these variable in a plot convert them to factors\n(or numeric variables) in the Data > Transform tab")
@@ -177,7 +177,7 @@ visualize <- function(dataset, xvar,
   if (type == "bar") {
     isFctY <- "factor" == dc & names(dc) %in% yvar
     if (sum(isFctY)) {
-      dat[,isFctY] <- select(dat, which(isFctY)) %>% mutate_all(funs(as.integer(. == levels(.)[1])))
+      dat[, isFctY] <- select(dat, which(isFctY)) %>% mutate_all(funs(as.integer(. == levels(.)[1])))
       dc[isFctY] <- "integer"
     }
   }

@@ -11,7 +11,7 @@ To rename a dataset loaded in Radiant click the `Rename data` check box, enter a
 
 ### Load data
 
-The best way to load and save data for use in Radiant (and R) is to use the R-data format (rda or rds). These are binary files that can be stored compactly and read into R quickly. Select `rda` (or `rds`) from the `Load data of type` dropdown and click `Browse` to locate the file(s) you want to load on your computer.
+The best way to load and save data for use in Radiant (and R) is to use the R-data format (rds or rda). These are binary files that can be stored compactly and read into R quickly. Select `rds` (or `rda`) from the `Load data of type` dropdown and click `Browse` to locate the file(s) you want to load on your computer.
 
 You can get data from a spreadsheet (e.g., Excel or Google sheets) into Radiant in two ways. First, you can save data from the spreadsheet in csv format and then, in Radiant, choose `csv` from the `Load data of type` dropdown. Most likely you will have a header row in the csv file with variable names. If the data are not comma separated you can choose semicolon or tab separated. To load a csv file click 'Browse' and locate the file on your computer.
 
@@ -27,10 +27,10 @@ If `csv` data is available online choose `csv (url)` from the dropdown, paste th
 
 ### Save data
 
-As mentioned above, the most convenient way to get data in and out of Radiant is to use the R-data format (rda or rds). Choose `rda` (or `rds`) from the `Save data to type` dropdown and click the `Save` button to save the selected dataset to file.
+As mentioned above, the most convenient way to get data in and out of Radiant is to use the R-data format (rds or rda). Choose `rds` (or `rda`) from the `Save data to type` dropdown and click the `Save` button to save the selected dataset to file.
 
 Again, it is good practice to add a description of the data and variables to each file you use. To add a description for your own data click the 'Add/edit data description' check-box, add text to the text-input window shown in
-<a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format, and then click the `Update description` button. When you save the data as an rda (or rds) file the description you created (or edited) will automatically be added to the file as an `attribute`.
+<a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format, and then click the `Update description` button. When you save the data as an rds (or rda) file the description you created (or edited) will automatically be added to the file as an `attribute`.
 
 Getting data from Radiant into a spreadsheet can be achieved in two ways. First, you can save data in csv format and load the file into the spreadsheet (i.e., choose `csv` from the `Save data to type` dropdown and click the `Save` button). Alternatively, you can copy the data from Radiant into the clipboard by choosing `clipboard` from the dropdown and clicking the `Copy` button, open the spreadsheet, and paste the data from Radiant using CTRL-V (or CMD-V on mac).
 
@@ -52,4 +52,4 @@ If data are loaded in memory that you no longer need in the current session chec
 
 ### Using commands to load and save data
 
-The `loadr` command can be used in _R > Report_ or _R > Code_ to load data from a file directly into the active Radiant session and add it to the `Datasets` dropdown. The `saver` command can be used to extract  data from Radiant and save it to disk. Data can be loaded or saved as `rda` or `rds` format depending on the file extension chosen. These commands can also be used without the Radiant browser interface. See `?loadr` and `?saver` for details.
+The `loadr` command can be used in _R > Report_ or _R > Code_ to load data from a file directly into the active Radiant session and add it to the `Datasets` dropdown. The `saver` command can be used to extract  data from Radiant and save it to disk. Data can be loaded or saved as `rds` or `rda` format depending on the file extension chosen. These commands can also be used without the Radiant browser interface. See `?loadr` and `?saver` for details.

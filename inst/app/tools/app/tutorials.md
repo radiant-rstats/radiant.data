@@ -5,25 +5,23 @@
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/7L3hDpLw53I" frameborder="0" allowfullscreen></iframe>
 
-## Installing Radiant
+## Installing Radiant on Windows
 
-The first step is to install R. For mac go to <a href="https://cran.r-project.org/bin/macosx/" target="_blank">https://cran.r-project.org/bin/macosx/</a>. For windows get the latest release from <a href="https://cran.r-project.org/bin/windows/base/release.htm" target="_blank">https://cran.r-project.org/bin/windows/base/release.htm</a>
+For Windows, download and run the all-in-one installer for <a href="http://rady.ucsd.edu/faculty/directory/nijs/pub/docs/radiant/Rady-Radiant-Installer-64bit.exe">R, Rstudio, and Radiant</a>. For a video tutorial see the `Install Radiant on Windows` video below:
 
-> **Important:** Windows users **must** install R in directory C:\\R\\R-3.3.4
+<iframe width="640" height="375" src="https://www.youtube.com/embed/iaB4mTrm2Co" frameborder="0" allowfullscreen></iframe>
 
-To automate the remaining steps in the install process open R and copy-and-paste the command below, press return, and accept all default settings during the install process:
+> Credits: Thanks go to Brandon Salas at the Rady School of Management for creating the Windows installer
+
+## Installing Radiant on Mac
+
+For Mac, first download and install R from <a href="https://cran.r-project.org/bin/macosx/" target="_blank">https://cran.r-project.org/bin/macosx/</a>. After R has been installed, open R, copy-and-paste the command below into R, and press return. Accept all default settings during the install process:
 
 ```r
 source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/install.R")
 ```
 
-For a step-by-step tutorial see the `Install Radiant on Windows` or `Install Radiant on Mac` video:
-
-**Install Radiant on Windows**
-
-<iframe width="640" height="375" src="https://www.youtube.com/embed/efQM6WqrHG0" frameborder="0" allowfullscreen></iframe>
-
-**Install Radiant on Mac**
+For a video tutorial see the `Install Radiant on Mac` video below:
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/WheqHpobMZg" frameborder="0" allowfullscreen></iframe>
 

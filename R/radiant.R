@@ -306,7 +306,10 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max
 
   if (is(dat, "try-error")) return("### There was an error loading the data. Please make sure the data are in csv format.")
   if (saf) dat <- factorizer(dat, safx)
-  dat %>% {set_colnames(., make.names(colnames(.)))} %>% set_attr("description", rprob)
+  dat %>% 
+    as.data.frame(.) %>%
+    {set_colnames(., make.names(colnames(.)))} %>% 
+    set_attr("description", rprob)
 }
 
 #' Load a csv file with from a url
@@ -336,6 +339,7 @@ loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", n_max = In
              quote = "\"", fill = TRUE, stringsAsFactors = saf,
              sep = sep, dec = dec, nrows = n_max), silent = TRUE)
            )
+
     close(con)
 
     if (is(dat, 'try-error'))
@@ -343,7 +347,8 @@ loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", n_max = In
 
     if (saf) dat <- factorizer(dat, safx)
 
-    dat %>% {set_colnames(., make.names(colnames(.)))}
+    dat %>% 
+      {set_colnames(., make.names(colnames(.)))}
   }
 }
 
@@ -993,7 +998,7 @@ find_gdrive <- function() {
       stop("Please install grive2 and use '~/google_drive' as your grive directory (http://www.techrepublic.com/article/how-to-sync-your-google-cloud-on-linux-with-grive2/)", call. = FALSE)
     }
   } else {
-    stop("find_gdrive not supported on this platform")
+    stop("find_gdrive not supported on this platform", call. = FALSE)
   }
 
   if (file.exists(fp)) {
