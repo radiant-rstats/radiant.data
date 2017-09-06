@@ -1,3 +1,8 @@
+ul, ol {
+  /* Make bullet left-flush, value chosen by experimentation */
+  padding-left: 18px;
+}
+
 .table {
   width: auto;
 }

@@ -144,8 +144,10 @@ output$ui_viz_axes <- renderUI({
   ind <- 1
   if (input$viz_type %in% c("line","scatter","surface")) {
     ind <- 1:3
-  } else if (input$viz_type %in% c("dist","density")) {
+  } else if (input$viz_type == "dist") {
     ind <- c(1:2, 5)
+  } else if (input$viz_type == "density") {
+    ind <- 1:2
   } else if (input$viz_type %in% c("bar","box")) {
     ind <- c(1, 3)
   }
@@ -223,17 +225,21 @@ output$ui_Visualize <- renderUI({
       uiOutput("ui_viz_axes"),
       conditionalPanel(condition = "input.viz_type == 'dist'",
         sliderInput("viz_bins", label = "Number of bins:",
-          min = 1, max = 50, value = state_init("viz_bins",10),
-          step = 1)
+          value = state_init("viz_bins", 10),
+          min = 2, max = 50, step = 1
+        )
       ),
       conditionalPanel("input.viz_type == 'density' |
                        (input.viz_type == 'scatter' & (input.viz_check && input.viz_check.indexOf('loess') >= 0))",
         sliderInput("viz_smooth", label = "Smooth:",
-                    value = state_init("viz_smooth", 1),
-                    min = 0.1, max = 3, step = .1)
+          value = state_init("viz_smooth", 1),
+          min = 0.1, max = 3, step = .1
+        )
       ),
-      sliderInput("viz_alpha", label = "Opacity:", min = 0, max = 1,
-        value = state_init("viz_alpha",.5), step = .01),
+      sliderInput("viz_alpha", label = "Opacity:", 
+        value = state_init("viz_alpha",.5), 
+        min = 0, max = 1, step = .01
+      ),
       tags$table(
         tags$td(numericInput("viz_plot_height", label = "Plot height:", min = 100,
                              max = 2000, step = 50,
@@ -316,27 +322,31 @@ output$visualize <- renderPlot({
   req(!is.null(input$viz_color) || !is.null(input$viz_fill))
 
   viz_inputs() %>%
-    { .$shiny <- TRUE; . } %>%
+    {.$shiny <- TRUE; .} %>%
     do.call(visualize, .)
 })
 
 observeEvent(input$visualize_report, {
   ## resetting hidden elements to default values
   vi <- viz_inputs()
-  if (input$viz_type != "dist") vi$bins <- viz_args$bins
-  if (!input$viz_type %in% c("density","scatter") ||
-      !"loess" %in% input$viz_check) vi$smooth <- viz_args$smooth
-
-  if (!input$viz_type %in% c("scatter", "box") &&
-      "jitter" %in% input$viz_check) vi$check <- setdiff(vi$check, "jitter")
-
-  if (!input$viz_type %in% "scatter") vi$size <- "none"
+  if (input$viz_type != "dist") 
+    vi$bins <- viz_args$bins
+  if (!input$viz_type %in% c("density","scatter") || !"loess" %in% input$viz_check) 
+    vi$smooth <- viz_args$smooth
+  if (!input$viz_type %in% c("scatter", "box") && "jitter" %in% input$viz_check) 
+    vi$check <- setdiff(vi$check, "jitter")
+  if (!input$viz_type %in% "scatter") 
+    vi$size <- "none"
 
   inp_main <- clean_args(vi, viz_args)
   inp_main[["custom"]] <- FALSE
-  update_report(inp_main = inp_main,
-                fun_name = "visualize", outputs = character(0),
-                pre_cmd = "", figs = TRUE,
-                fig.width = viz_plot_width(),
-                fig.height = viz_plot_height())
+  update_report(
+    inp_main = inp_main, 
+    fun_name = "visualize", 
+    outputs = character(0), 
+    pre_cmd = "", 
+    figs = TRUE, 
+    fig.width = viz_plot_width(), 
+    fig.height = viz_plot_height()
+  )
 })

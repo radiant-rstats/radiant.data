@@ -67,7 +67,7 @@ loadUserData <- function(fname, uFile, ext,
   if (fext == "tsv" && ext == "csv") ext <- "tsv"
 
   ## objname is used as the name of the data.frame, make case insensitive
-  objname <- sub(paste0(".",ext,"$"),"", filename, ignore.case = TRUE)
+  objname <- sub(paste0(".", ext, "$"),"", filename, ignore.case = TRUE)
 
   ## if ext isn't in the filename nothing was replaced and so ...
   if (objname == filename) {

@@ -32,7 +32,7 @@ output$view_state <- renderUI({
 output$saveStateNav <- downloadHandler(
   filename = function() { 
     if (is.null(r_state$state_name)) {
-      paste0("radiant-state-",Sys.Date(),".rda") 
+      paste0("radiant-state-", Sys.Date(), ".rda") 
     } else {
       r_state$state_name
     }

@@ -6,10 +6,12 @@ All transformations applied in the _Data > Transform_ tab can be logged. If, for
 
 ```r
 ## transform variable
-r_data[["diamonds"]] <- mutate_ext(r_data[["diamonds"]], 
-																	 .vars = vars(price, carat), 
-																	 .funs = funs(log), 
-																	 .ext = "_ln")
+r_data[["diamonds"]] <- mutate_ext(
+  r_data[["diamonds"]], 
+  .vars = vars(price, carat), 
+  .funs = funs(log), 
+  .ext = "_ln"
+)
 ```
 
 This is an important feature if you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to transform the data and to generate results, i.e., your work is now reproducible.
@@ -244,7 +246,7 @@ rec_iq = xtile(recency, 5)
 rec_iq = xtile(recency, 5, rev = TRUE)
 ```
 
-18. To remove text from entries in a character or factor variable use `sub` to remove only the first instance or `gsub` to remove all instances. For example, suppose a each row for a variable `bk_score` has the letters "ltv" before a number (e.g., "ltv150"). We could replace each occurrence of "ltv" by "" as follows:
+19. To remove text from entries in a character or factor variable use `sub` to remove only the first instance or `gsub` to remove all instances. For example, suppose a each row for a variable `bk_score` has the letters "ltv" before a number (e.g., "ltv150"). We could replace each occurrence of "ltv" by "" as follows:
 
 ```r
 bk_score = sub("ltv", "", bk_score)
@@ -262,7 +264,6 @@ Choose `Remove missing` from the `Transformation type` drop-down to eliminate ro
 #### Reorder or remove variables
 
 Choose `Reorder/Remove variables` from the `Transformation type` drop-down. Drag-and-drop variables to reorder them in the data. To remove a variable click the $\times$ symbol next to the label. Press `Store` to commit the changes.
-
 
 #### Remove duplicates
 

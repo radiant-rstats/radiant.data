@@ -2,12 +2,12 @@
 % Please edit documentation in R/radiant.R
 \name{loadr}
 \alias{loadr}
-\title{Load an rda or rds file and add it to the radiant data list (r_data) if available}
+\title{Load an rds, rda, or csv file and add it to the radiant data list (r_data) if available}
 \usage{
 loadr(file, objname = "", rlist = TRUE)
 }
 \arguments{
-\item{file}{File name and path as a string. Extension must be either rda or rds}
+\item{file}{File name and path as a string. Extension must be either rds, rda, or csv}
 
 \item{objname}{Name to use for the data frame. Defaults to the file name}
 
@@ -17,5 +17,5 @@ loadr(file, objname = "", rlist = TRUE)
 Data frame in r_data or in the calling enviroment
 }
 \description{
-Load an rda or rds file and add it to the radiant data list (r_data) if available
+Load an rds, rda, or csv file and add it to the radiant data list (r_data) if available
 }

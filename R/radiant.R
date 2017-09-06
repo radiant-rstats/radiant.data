@@ -189,9 +189,9 @@ factorizer <- function(dat, safx = 30) {
   mutate_at(dat, .vars = toFct, .funs = funs(as.factor))
 }
 
-#' Load an rda or rds file and add it to the radiant data list (r_data) if available
+#' Load an rds, rda, or csv file and add it to the radiant data list (r_data) if available
 #'
-#' @param file File name and path as a string. Extension must be either rda or rds
+#' @param file File name and path as a string. Extension must be either rds, rda, or csv
 #' @param objname Name to use for the data frame. Defaults to the file name
 #' @param rlist If TRUE, uses "r_data" list to store the data.frame. If FALSE, loads data.frame into calling environment
 #'
@@ -202,8 +202,8 @@ loadr <- function(file, objname = "", rlist = TRUE) {
 
   filename <- basename(file)
   ext <- tolower(tools::file_ext(filename))
-  if (!ext %in% c("rda", "rds"))
-    stop("File must have extension rda or rds")
+  if (!ext %in% c("rds", "rda", "csv"))
+    stop("File must have extension rds, rda, or csv")
 
   ## objname is used as the name of the data.frame
   if (objname == "")
@@ -211,8 +211,10 @@ loadr <- function(file, objname = "", rlist = TRUE) {
 
   if (ext == "rds") {
     loadfun <- readRDS
-  } else {
+  } else if (ext == "rda") {
     loadfun <- function(f) load(f) %>% get
+  } else {
+    loadfun <- readr::read_csv
   }
 
   shiny <- exists("r_environment")
