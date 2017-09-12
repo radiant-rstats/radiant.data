@@ -441,24 +441,6 @@ full_join(superheroes, publishers, by = "publisher")
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> Batman </td>
-   <td style="text-align:left;"> good </td>
-   <td style="text-align:left;"> male </td>
-   <td style="text-align:left;"> DC </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Joker </td>
-   <td style="text-align:left;"> bad </td>
-   <td style="text-align:left;"> male </td>
-   <td style="text-align:left;"> DC </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Catwoman </td>
-   <td style="text-align:left;"> bad </td>
-   <td style="text-align:left;"> female </td>
-   <td style="text-align:left;"> DC </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> Magneto </td>
    <td style="text-align:left;"> bad </td>
    <td style="text-align:left;"> male </td>
@@ -475,6 +457,24 @@ full_join(superheroes, publishers, by = "publisher")
    <td style="text-align:left;"> bad </td>
    <td style="text-align:left;"> female </td>
    <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Batman </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> DC </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Joker </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> DC </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Catwoman </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> DC </td>
   </tr>
 </tbody>
 </table>
@@ -613,12 +613,12 @@ As you might expect, apart from row and variable order, a full join of `publishe
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> Marvel </td>
-   <td style="text-align:left;"> 1939 </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> DC </td>
    <td style="text-align:left;"> 1934 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Marvel </td>
+   <td style="text-align:left;"> 1939 </td>
   </tr>
 </tbody>
 </table>
