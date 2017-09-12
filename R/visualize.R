@@ -31,7 +31,7 @@
 #'
 #' @examples
 #' visualize("diamonds", "price:cut", type = "dist", fillcol = "red")
-#' visualize("diamonds", "carat:cut", yvar = "price", type = "scatter", 
+#' visualize("diamonds", "carat:cut", yvar = "price", type = "scatter",
 #'   pointcol = "blue", fun = c("mean", "median"), linecol = c("red","green"))
 #' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
 #'   type = "bar", fun = "median")
@@ -132,7 +132,7 @@ visualize <- function(dataset, xvar,
 
   ## so you can also pass-in a data.frame
   dat <- getdata(dataset, vars, filt = data_filter)
-  if (!is_string(dataset)) 
+  if (!is_string(dataset))
     dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## get class
@@ -249,7 +249,6 @@ visualize <- function(dataset, xvar,
       if (fill == "none") hist_par[["fill"]] <- fillcol
       plot_list[[i]] <- ggplot(dat, aes_string(x = i))
       if ("density" %in% axes && !"factor" %in% dc[i]) {
-        # hist_par <- list(aes(y = ..density..), alpha = alpha, position = "identity")
         hist_par <- c(list(aes(y = ..density..)), hist_par)
         plot_list[[i]] <- plot_list[[i]] + geom_density(color = linecol, size = .5)
       }
@@ -258,7 +257,7 @@ visualize <- function(dataset, xvar,
         if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       } else {
         plot_fun <- get("geom_histogram")
-        hist_par[["binwidth"]] <- select_at(dat, .vars = i) %>% range %>% {diff(.)/(bins-1)}
+        hist_par[["binwidth"]] <- select_at(dat, .vars = i) %>% range %>% {diff(.) / (bins - 1)}
       }
 
       plot_list[[i]] <- plot_list[[i]] + do.call(plot_fun, hist_par)
@@ -316,15 +315,15 @@ visualize <- function(dataset, xvar,
           if (length(fun) == 1) {
 
             ## need some contrast in this case
-            if (pointcol[1] == "black" && linecol[1] == "black") 
+            if (pointcol[1] == "black" && linecol[1] == "black")
               linecol[1] <- "blue"
 
             plot_list[[itt]] <- plot_list[[itt]] +
-              stat_summary(fun.data = fun1, aes(fill = fun[1]), 
+              stat_summary(fun.data = fun1, aes(fill = fun[1]),
                 geom = "crossbar", show.legend = FALSE, color = linecol[1])
           } else {
             plot_list[[itt]] <- plot_list[[itt]] +
-              stat_summary(fun.data = fun1, aes(fill = fun[1]), 
+              stat_summary(fun.data = fun1, aes(fill = fun[1]),
                 geom = "crossbar", show.legend = TRUE, color = linecol[1])
 
             if (length(fun) > 1) {
@@ -350,7 +349,7 @@ visualize <- function(dataset, xvar,
             }
 
             ## adding a legend if needed
-            plot_list[[itt]] <- plot_list[[itt]] + 
+            plot_list[[itt]] <- plot_list[[itt]] +
               scale_fill_manual(name = "", values = linecol, labels = fun) +
               ## next line based on https://stackoverflow.com/a/25294787/1974918
               guides(fill = guide_legend(override.aes = list(color = NULL)))
@@ -402,7 +401,7 @@ visualize <- function(dataset, xvar,
         if (color == 'none') {
           if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
-            tmp <- dat %>% group_by_at(.vars = tbv) %>% select_at(.vars = c(tbv, j)) %>% 
+            tmp <- dat %>% group_by_at(.vars = tbv) %>% select_at(.vars = c(tbv, j)) %>%
               summarise_all(make_funs(fun))
             colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j)) + geom_line(aes(group = 1), color = linecol)
@@ -413,7 +412,7 @@ visualize <- function(dataset, xvar,
         } else {
           if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else unique(c(i, byvar))
-            tmp <- dat %>% group_by_at(.vars = tbv) %>% select_at(.vars = c(tbv, color, j)) %>% 
+            tmp <- dat %>% group_by_at(.vars = tbv) %>% select_at(.vars = c(tbv, color, j)) %>%
               summarise_all(make_funs(fun))
             colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j, color = color, group = color)) + geom_line()
@@ -438,7 +437,7 @@ visualize <- function(dataset, xvar,
       if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       for (j in yvar) {
         tbv <- if (is.null(byvar)) i else c(i, byvar)
-        tmp <- dat %>% group_by_at(.vars = tbv) %>% select_at(.vars = c(tbv, j)) %>% 
+        tmp <- dat %>% group_by_at(.vars = tbv) %>% select_at(.vars = c(tbv, j)) %>%
           summarise_all(make_funs(fun))
         colnames(tmp)[ncol(tmp)] <- j
 

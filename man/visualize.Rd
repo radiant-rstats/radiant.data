@@ -71,7 +71,7 @@ See \url{https://radiant-rstats.github.io/docs/data/visualize.html} for an examp
 }
 \examples{
 visualize("diamonds", "price:cut", type = "dist", fillcol = "red")
-visualize("diamonds", "carat:cut", yvar = "price", type = "scatter", 
+visualize("diamonds", "carat:cut", yvar = "price", type = "scatter",
   pointcol = "blue", fun = c("mean", "median"), linecol = c("red","green"))
 visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
   type = "bar", fun = "median")
