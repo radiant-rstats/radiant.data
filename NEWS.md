@@ -1,3 +1,7 @@
+# CHANGES IN radiant.data 0.8.7.5
+
+* Added preview options to _Data > Manage_ based on https://github.com/radiant-rstats/radiant/issues/30
+
 # CHANGES IN radiant.data 0.8.7.4
 
 * Upgraded tidyr dependency to 0.7

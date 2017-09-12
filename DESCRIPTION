@@ -1,7 +1,7 @@
 Package: radiant.data
 Title: Data Menu for Radiant: Business Analytics using R and Shiny
-Version: 0.8.7.4
-Date: 2017-9-5
+Version: 0.8.7.5
+Date: 2017-9-11
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description: The Radiant Data menu includes interfaces for loading, saving,
     viewing, visualizing, summarizing, transforming, and combining data. It also
@@ -33,7 +33,7 @@ Imports:
     readr (>= 1.1.0),
     scales (>= 0.4.0),
     curl (>= 2.5),
-    rstudioapi (>= 0.6),
+    rstudioapi (>= 0.7),
     import (>= 1.1.0),
     plotly (>= 4.5.6),
     base64enc,
