@@ -291,37 +291,44 @@ observeEvent(input$uploadfile, {
                  sep = input$man_sep, dec = input$man_dec,
                  n_max = n_max)
 
-  updateSelectInput(session, "dataset", label = "Datasets:",
-                    choices = r_data$datasetlist,
-                    selected = r_data$datasetlist[1])
+  updateSelectInput(session, "dataset", 
+    label = "Datasets:", 
+    choices = r_data$datasetlist, 
+    selected = r_data$datasetlist[1]
+  )
 })
 
 observeEvent(input$url_rda_load, {
   ## loading rda file from url, example https://radiant-rstats.github.io/docs/examples/houseprices.rda
   if (input$url_rda == "") return()
   objname <- "rda_url"
-  con <- tempfile()
-  con <- try(curl::curl_download(gsub("^\\s+|\\s+$", "", input$url_rda), con), silent = TRUE)
+  con <- try(curl::curl_download(gsub("^\\s+|\\s+$", "", input$url_rda), tempfile()), silent = TRUE)
 
-  if (is(con, 'try-error')) {
+  if (is(con, "try-error")) {
     upload_error_handler(objname, "### There was an error loading the r-data file from the provided url.")
   } else {
-    robjname <- load(con)
-    if (length(robjname) > 1) {
-      if (sum(robjname %in% c("r_state", "r_data")) == 2) {
-        upload_error_handler(objname,"### To restore app state from a state-file please choose the 'state' option from the dropdown.")
-      } else {
-        upload_error_handler(objname,"### More than one R object is contained in the specified data file.")
-      }
+    robjname <- try(load(con), silent = TRUE)
+    if (is(robjname, "try-error")) {
+      upload_error_handler(objname, "### There was an error loading the r-data file from the provided url.")
     } else {
-      r_data[[objname]] <- as.data.frame(get(robjname))
-      r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
-      r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
-      updateSelectInput(session, "dataset", label = "Datasets:",
-                        choices = r_data$datasetlist,
-                        selected = r_data$datasetlist[1])
+      if (length(robjname) > 1) {
+        if (sum(robjname %in% c("r_state", "r_data")) == 2) {
+          upload_error_handler(objname,"### To restore app state from a state-file please choose the 'state' option from the dropdown.")
+        } else {
+          upload_error_handler(objname,"### More than one R object is contained in the specified data file.")
+        }
+      } else {
+        r_data[[objname]] <- as.data.frame(get(robjname))
+      }
     }
   }
+  r_data[["datasetlist"]] <<- c(objname, r_data[["datasetlist"]]) %>% unique
+  r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
+  updateSelectInput(session, "dataset", 
+    label = "Datasets:", 
+    choices = r_data$datasetlist, 
+    selected = r_data$datasetlist[1]
+  )
 })
 
 observeEvent(input$url_csv_load, {
@@ -332,25 +339,32 @@ observeEvent(input$url_csv_load, {
   con <- tempfile()
   ret <- try(curl::curl_download(gsub("^\\s+|\\s+$", "", input$url_csv), con), silent = TRUE)
 
-  if (is(ret, 'try-error')) {
+  if (is(ret, "try-error")) {
     upload_error_handler(objname, "### There was an error loading the csv file from the provided url.")
   } else {
-    dat <- loadcsv(con, .csv = input$man_read.csv, header = input$man_header,
-                   sep = input$man_sep, dec = input$man_dec,
-                   saf = input$man_str_as_factor)
+    dat <- loadcsv(con, 
+      .csv = input$man_read.csv, 
+      header = input$man_header, 
+      n_max = input$man_n_max, 
+      sep = input$man_sep, 
+      dec = input$man_dec, 
+      saf = input$man_str_as_factor
+    )
 
     if (is.character(dat)) {
       upload_error_handler(objname, dat)
     } else {
       r_data[[objname]] <- dat
-      r_data[[paste0(objname,"_descr")]] <- attr(dat, "description") %>% paste("\n\nUrl:", input$url_csv)
-      r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
     }
-
-    updateSelectInput(session, "dataset", label = "Datasets:",
-                      choices = r_data$datasetlist,
-                      selected = r_data$datasetlist[1])
   }
+
+  r_data[["datasetlist"]] <<- c(objname, r_data[["datasetlist"]]) %>% unique
+  r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
+  updateSelectInput(session, "dataset", 
+    label = "Datasets:", 
+    choices = r_data$datasetlist, 
+    selected = r_data$datasetlist[1]
+  )
 })
 
 ## loading all examples files (linked to help files)
@@ -515,6 +529,11 @@ output$ui_datasets <- renderUI({
       checkboxInput("man_rename_data","Rename data", FALSE),
       conditionalPanel(condition = "input.man_rename_data == true",
         uiOutput("uiRename")
+      ),
+      radioButtons("dman_preview", "Display:", 
+        c("preview" = "preview", "str" = "str", "summary" = "summary"), 
+        selected = "preview", 
+        inline = TRUE
       )
     )
   )
@@ -523,17 +542,22 @@ output$ui_datasets <- renderUI({
 output$uiRename <- renderUI({
   tags$table(
     tags$td(textInput("data_rename", NULL, input$dataset)),
-    tags$td(actionButton('renameButton', 'Rename'), style="padding-top:5px;")
+    tags$td(actionButton("renameButton", "Rename"), style = "padding-top:5px;")
   )
 })
 
 output$htmlDataExample <- renderText({
-
   if (is.null(.getdata())) return()
-
   ## Show only the first 10 (or 20) rows
-  # r_data[[paste0(input$dataset,"_descr")]] %>%
-  #   { is_empty(.) %>% ifelse (., 20, 10) } %>%
-  #   show_data_snippet(nshow = .)
   show_data_snippet(nshow = 10)
+})
+
+output$strData <- renderPrint({
+  req(is.data.frame(.getdata()))
+  str(r_data[[input$dataset]])
+})
+
+output$summaryData <- renderPrint({
+  req(is.data.frame(.getdata()))
+  getsummary(r_data[[input$dataset]])
 })

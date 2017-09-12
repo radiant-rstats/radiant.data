@@ -34,7 +34,10 @@ output$ui_data <- renderUI({
         conditionalPanel("input.tabs_data == 'Combine'", uiOutput("ui_Combine"))),
       mainPanel(
         tabsetPanel(id = "tabs_data",
-          tabPanel("Manage", htmlOutput("htmlDataExample"),
+          tabPanel("Manage", 
+            conditionalPanel("input.dman_preview == 'preview'", h2("Data preview"), htmlOutput("htmlDataExample")),
+            conditionalPanel("input.dman_preview == 'str'", h2("Data structure"), verbatimTextOutput("strData")),
+            conditionalPanel("input.dman_preview == 'summary'", h2("Data summary"), verbatimTextOutput("summaryData")),
             conditionalPanel("input.man_add_descr == false", uiOutput("dataDescriptionHTML")),
             conditionalPanel("input.man_add_descr == true", uiOutput("dataDescriptionMD"))
           ),
