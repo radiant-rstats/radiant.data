@@ -17,7 +17,7 @@ output$ui_view_vars <- renderUI({
     selectize = FALSE, size = min(15, length(vars)))
 })
 
-## not clear why this is needed because state_multiple should handle this 
+## not clear why this is needed because state_multiple should handle this
 observeEvent(is.null(input$view_vars), {
   if ("view_vars" %in% names(input)) r_state$view_vars <<- NULL
 })
@@ -121,14 +121,14 @@ observeEvent(input$view_store, {
 })
 
 output$dl_view_tab <- downloadHandler(
-  filename = function() { paste0("view_tab.csv") },
+  filename = function() { paste0(input$dataset, "_view.csv") },
   content = function(file) {
     data_filter <- if (input$show_filter) input$data_filter else ""
     getdata(
-      input$dataset, 
-      vars = input$view_vars, 
-      filt = data_filter, rows = 
-      input$dataviewer_rows_all, 
+      input$dataset,
+      vars = input$view_vars,
+      filt = data_filter, rows =
+      input$dataviewer_rows_all,
       na.rm = FALSE
     ) %>% write.csv(file, row.names = FALSE)
   }

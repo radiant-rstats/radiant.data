@@ -171,7 +171,7 @@ output$explore <- DT::renderDataTable({
 })
 
 output$dl_explore_tab <- downloadHandler(
-  filename = function() { paste0("explore_tab.csv") },
+  filename = function() { paste0(input$dataset, "_expl.csv") },
   content = function(file) {
     dat <- try(.explore(), silent = TRUE)
     if (is(dat, "try-error") || is.null(dat)) {
@@ -227,11 +227,11 @@ observeEvent(input$explore_report, {
 
   inp_out <- list(clean_args(expl_sum_inputs(), expl_sum_args[-1]))
   update_report(
-    inp_main = inp_main, 
-    fun_name = "explore", 
-    inp_out = inp_out, 
-    outputs = c("summary"), 
-    figs = FALSE, 
+    inp_main = inp_main,
+    fun_name = "explore",
+    inp_out = inp_out,
+    outputs = c("summary"),
+    figs = FALSE,
     xcmd = xcmd
   )
 })

@@ -19,7 +19,7 @@ output$ui_data <- renderUI({
           conditionalPanel("input.tabs_data != 'Manage'",
             checkboxInput("show_filter", "Filter data", value = state_init("show_filter",FALSE)),
             conditionalPanel("input.show_filter == true",
-              returnTextAreaInput("data_filter", label = "", 
+              returnTextAreaInput("data_filter", label = "",
                 value = state_init("data_filter"),
                 placeholder = "Provide a filter (e.g., price >  5000) and press return"
               ),
@@ -34,7 +34,7 @@ output$ui_data <- renderUI({
         conditionalPanel("input.tabs_data == 'Combine'", uiOutput("ui_Combine"))),
       mainPanel(
         tabsetPanel(id = "tabs_data",
-          tabPanel("Manage", 
+          tabPanel("Manage",
             conditionalPanel("input.dman_preview == 'preview'", h2("Data preview"), htmlOutput("htmlDataExample")),
             conditionalPanel("input.dman_preview == 'str'", h2("Data structure"), verbatimTextOutput("strData")),
             conditionalPanel("input.dman_preview == 'summary'", h2("Data summary"), verbatimTextOutput("summaryData")),
@@ -76,10 +76,10 @@ output$ui_data <- renderUI({
             verbatimTextOutput("transform_summary"),
             uiOutput("ui_tr_log")
           ),
-          tabPanel("Combine", 
-            htmlOutput("cmb_data1"), 
-            htmlOutput("cmb_data2"), 
-            htmlOutput("cmb_possible"), 
+          tabPanel("Combine",
+            htmlOutput("cmb_data1"),
+            htmlOutput("cmb_data2"),
+            htmlOutput("cmb_possible"),
             htmlOutput("cmb_data")
           )
         )

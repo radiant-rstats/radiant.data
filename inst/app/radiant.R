@@ -335,18 +335,22 @@ plot_downloader <- function(plot_name,
                             width = plot_width, 
                             height = plot_height, 
                             pre = ".plot_", 
-                            po = "dl_") {
+                            po = "dl_",
+                            fname = plot_name) {
 
   ## link and output name
   lnm <- paste0(po, plot_name)
 
   ## create an output
   output[[lnm]] <- downloadHandler(
-    filename = function() { paste0(plot_name, ".png") },
+    filename = function() { 
+      paste0(fname, ".png") 
+    },
     content = function(file) {
 
         ## download graphs in higher resolution than shown in GUI (504 dpi)
         pr <- 5
+
 
         ## fix for https://github.com/radiant-rstats/radiant/issues/20
         w <- if (any(c("reactiveExpr", "function") %in% class(width))) width() * pr else width * pr

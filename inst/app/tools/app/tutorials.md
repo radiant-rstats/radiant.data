@@ -43,7 +43,7 @@ For a video tutorial see the `Install Radiant on Mac` video below:
 
 ## Reproducible analysis
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/o32VNc7EZUM" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/pNNQc2lHR8Q" frameborder="0" allowfullscreen></iframe>
 
 ## Using Radiant for Model Evaluation
 

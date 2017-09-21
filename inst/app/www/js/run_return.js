@@ -15,3 +15,12 @@ $(document).keydown(function(event) {
     $("#visualize_report").click();
   }
 });
+
+// $(document).keydown(function(event) {
+  // if ((event.metaKey || event.ctrlKey) && event.keyCode == 83) {
+  // if ((event.metaKey || event.ctrlKey) && event.keyCode == 13) {
+    // $("#saveStateNav").click();
+    // document.getElementById('saveStateNav').click();
+    // $("#saveStateNav").trigger("click");
+  // }
+// });
