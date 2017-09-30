@@ -245,7 +245,8 @@ visualize <- function(dataset, xvar,
         dc[i] <- "factor"
       }
 
-      hist_par <- list(alpha = alpha, position = "identity")
+      hist_par <- list(alpha = alpha, position = "stack")
+      if (combx) hist_par[["position"]] <- "identity"
       if (fill == "none") hist_par[["fill"]] <- fillcol
       plot_list[[i]] <- ggplot(dat, aes_string(x = i))
       if ("density" %in% axes && !"factor" %in% dc[i]) {
