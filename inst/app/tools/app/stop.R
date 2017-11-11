@@ -24,22 +24,32 @@ stop_radiant <- function(rmd = FALSE) {
       lib <- if ("radiant" %in% installed.packages()) "radiant" else "radiant.data"
 
       if (!is_empty(input$rmd_report)) {
-        rmd_report <-
-          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, dpi = 96, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(", lib, ")))\n#loadr('~/radiant.sessions/r_data.rda')\n```\n\n") %>%
-          paste0(., input$rmd_report) %>% gsub("\\\\\\\\","\\\\",.) %>%
+        lib <- "radiant"
+        rmd_report <- paste0("---
+title: \"Radiant report\"
+author: \"\"
+date: \"`r Sys.Date()`\"
+output:
+  html_document:
+    highlight: textmate
+    theme: spacelab
+    df_print: paged
+    code_download: true
+    code_folding: hide
+    toc: yes
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, echo = TRUE, cache = FALSE, dpi = 96, message = FALSE, warning = FALSE)
+library(", lib, ")
+load(\"~/radiant.sessions/r_data.rda\")
+```
+
+<style type='text/css'> .table { width: auto; } ul, ol { padding-left: 18px; }</style>\n\n") %>%
+
+          paste0(input$rmd_report) %>%
+          gsub("\\\\\\\\","\\\\",.) %>%
           cleanout(.)
-        if (!rmd) {
-          os_type <- Sys.info()["sysname"]
-          if (os_type == 'Windows') {
-            cat(rmd_report, file = "clipboard")
-            stop_message %<>% paste0(., "Report content was copied to the clipboard.\n")
-          } else if (os_type == "Darwin") {
-            out <- pipe("pbcopy")
-            cat(rmd_report, file = out)
-            close(out)
-            stop_message %<>% paste0(., "Report content was copied to the clipboard.\n")
-          }
-        }
       }
       ## removing r_environment and r_sessions
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
@@ -48,8 +58,8 @@ stop_radiant <- function(rmd = FALSE) {
       message(stop_message)
 
       if (rstudioapi::isAvailable() && !is_empty(input$rmd_report) && rmd) {
-        path <- file.path(normalizePath("~"),"radiant.sessions")
-        saver(get("r_data", envir = .GlobalEnv), file = file.path(path, "r_data.rda"))
+        path <- file.path(normalizePath("~"), "radiant.sessions")
+        save(list = "r_data", envir = .GlobalEnv, file = file.path(path, "r_data.rda"))
         stopApp(rstudioapi::insertText(rmd_report))
       } else {
         stopApp()

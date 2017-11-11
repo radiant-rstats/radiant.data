@@ -308,9 +308,9 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max
 
   if (is(dat, "try-error")) return("### There was an error loading the data. Please make sure the data are in csv format.")
   if (saf) dat <- factorizer(dat, safx)
-  dat %>% 
+  dat %>%
     as.data.frame(.) %>%
-    {set_colnames(., make.names(colnames(.)))} %>% 
+    {set_colnames(., make.names(colnames(.)))} %>%
     set_attr("description", rprob)
 }
 
@@ -349,7 +349,7 @@ loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", n_max = In
 
     if (saf) dat <- factorizer(dat, safx)
 
-    dat %>% 
+    dat %>%
       {set_colnames(., make.names(colnames(.)))}
   }
 }

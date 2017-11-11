@@ -339,9 +339,9 @@ output$saveReport <- downloadHandler(
         }
 
         init <-
-paste0(yml, "```{r setup, include=FALSE}
+paste0(yml, "```{r setup, include = FALSE}
 ## initial settings
-knitr::opts_chunk$set(comment=NA, echo=", ech, ", error = TRUE, cache = FALSE, message=FALSE, dpi = 96, warning=FALSE", sopts, ")
+knitr::opts_chunk$set(comment = NA, echo = ", ech, ", error = TRUE, cache = FALSE, message=FALSE, dpi = 96, warning = FALSE", sopts, ")
 
 ## width to use when printing tables etc.
 options(width = 250)
