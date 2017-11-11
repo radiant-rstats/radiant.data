@@ -3,6 +3,7 @@
 * Added preview options to _Data > Manage_ based on https://github.com/radiant-rstats/radiant/issues/30
 * Add selected dataset name as default table download name in _Data > View_, _Data > Pivot_, and _Data > Explore_
 * Use "stack" as the default for histograms and frequency charts in _Data > Visualize_
+* Fix for large numbers in _Data > Explore_ that could cause an integer overflow
 * Cleanup `Stop & Report` option in navbar
 
 # CHANGES IN radiant.data 0.8.7.4
