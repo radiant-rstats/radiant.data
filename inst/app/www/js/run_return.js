@@ -16,6 +16,12 @@ $(document).keydown(function(event) {
   }
 });
 
+// from https://stackoverflow.com/a/33251536/1974918 by Dean Attali
+$(document).on("shiny:connected", function(e) {
+  var jsWidth = screen.width;
+  Shiny.onInputChange("GetScreenWidth", jsWidth);
+});
+
 // $(document).keydown(function(event) {
   // if ((event.metaKey || event.ctrlKey) && event.keyCode == 83) {
   // if ((event.metaKey || event.ctrlKey) && event.keyCode == 13) {

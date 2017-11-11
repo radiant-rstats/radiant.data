@@ -142,8 +142,8 @@ explore <- function(dataset,
   ## frequencies turned into doubles earlier ...
   check_int <- function(x) {
     if (is.double(x) && length(na.omit(x)) > 0) {
-      x_int <- as.integer(round(x,.Machine$double.rounding))
-      if (all(x == x_int)) x_int else x
+      x_int <- sshhr(as.integer(round(x, .Machine$double.rounding)))
+      if (isTRUE(all.equal(x, x_int, check.attributes = FALSE))) x_int else x
     } else {
       x
     }
