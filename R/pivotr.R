@@ -33,7 +33,7 @@ pivotr <- function(dataset,
                    shiny = FALSE) {
 
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
-  fill <- if (nvar == "None") 0 else NA
+  fill <- if (nvar == "None") 0L else NA
   dat <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
   if (!is_string(dataset))
     dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
