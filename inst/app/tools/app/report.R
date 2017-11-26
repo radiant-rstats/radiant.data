@@ -4,7 +4,9 @@
 rmd_switch <- c("Switch tab", "Don't switch tab")
 rmd_manual <- c("Manual paste", "Auto paste")
 rmd_report_choices <- c("HTML","Rmd")
-if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user))) {
+
+# if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user))) {
+if (rstudioapi::isAvailable() || isTRUE(getOption("radiant.report"))) {
   rmd_manual <- c(rmd_manual, "To Rmd", "To R")
   rmd_report_choices <- c("Notebook", "HTML", "PDF","Word","Rmd")
 }
@@ -113,8 +115,9 @@ observeEvent(input$rmd_manual, {
 })
 
 output$ui_rmd_save_report <- renderUI({
-  local <- getOption("radiant.local")
-  if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+  # local <- getOption("radiant.local")
+  # if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+  if (isTRUE(getOption("radiant.report"))) {
     selectInput(inputId = "rmd_save_report", label = NULL,
       choices = rmd_report_choices,
       selected = state_init("rmd_save_report", "Notebook"),
@@ -126,8 +129,9 @@ output$ui_rmd_save_report <- renderUI({
 })
 
 output$ui_saveReport <- renderUI({
-  local <- getOption("radiant.local")
-  if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+  # local <- getOption("radiant.local")
+  # if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+  if (isTRUE(getOption("radiant.report"))) {
     downloadButton("saveReport", "Save report")
   } else {
     invisible()
@@ -208,7 +212,7 @@ cleanout <- . %>%
 knitItSave <- function(text) {
 
   ## Read input and convert to Markdown
-  md <- knitr::knit(text = paste0("\n`r options(width = 250)`\n",cleanout(text)), envir = r_environment)
+  md <- knitr::knit(text = paste0("\n`r options(width = 250)`\n", cleanout(text)), envir = r_environment)
 
   ## Get dependencies from knitr
   deps <- knitr::knit_meta()
@@ -263,6 +267,12 @@ knitIt <- function(text) {
   #   )
   # }
 
+  pdir <- rstudioapi::getActiveProject()
+  if (!is.null(pdir)) {
+    owd <- setwd(pdir)
+    on.exit(setwd(owd))
+  }
+
   md <- knitr::knit(
     text = paste0("\n`r options(width = 250)`\n", text),
     envir = r_environment
@@ -283,8 +293,8 @@ knitIt <- function(text) {
 output$rmd_knitted <- renderUI({
   req(valsRmd$knit != 1)
   isolate({
-    if (!isTRUE(getOption("radiant.local")) && is.null(session$user)) {
-      HTML("<h2>Rmd file is not evaluated when running Radiant on open-source Shiny Server</h2>")
+    if (!isTRUE(getOption("radiant.report"))) {
+      HTML("<h2>Rmarkdown report was not evaluated. If you have sudo access to the server set options(radiant.report = TRUE) in .Rprofile for the shiny user </h2>")
     } else if (input$rmd_report != "") {
       withProgress(message = "Knitting report", value = 1, {
         if (is_empty(input$rmd_selection))
@@ -310,12 +320,13 @@ output$saveReport <- downloadHandler(
     ))
   },
   content = function(file) {
-    local <- getOption("radiant.local")
-    if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+    # local <- getOption("radiant.local")
+    # if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+    if (isTRUE(getOption("radiant.report"))) {
       isolate({
-        ## temporarily switch to the temp dir, in case you do not have write
-        ## permission to the current working directory
-        owd <- setwd(tempdir())
+        pdir <- rstudioapi::getActiveProject()
+        tdir <- tempdir()
+        owd <- ifelse(is.null(pdir), setwd(tdir), setwd(pdir))
         on.exit(setwd(owd))
 
         lib <- if ("radiant" %in% installed.packages()) "radiant" else "radiant.data"
@@ -333,6 +344,9 @@ output$saveReport <- downloadHandler(
         } else if (input$rmd_save_report == "HTML") {
           yml <- "---\ntitle: \"\"\noutput:\n  html_document:\n    highlight: textmate\n    theme: spacelab\n    df_print: paged\n    toc: yes\n---\n\n"
           ech <- "FALSE"
+        } else if (input$rmd_save_report %in% c("Rmd", "Rmd & Data (zip)")) {
+          yml <- "---\ntitle: \"\"\noutput:\n  html_document:\n    highlight: textmate\n    theme: spacelab\n    df_print: paged\n    toc: yes\n    code_folding: hide\n    code_download: true\n---\n\n"
+          ech <- "TRUE"
         } else {
           yml <- "---\ntitle: \"\"\noutput:\n  html_notebook:\n    highlight: textmate\n    theme: spacelab\n    toc: yes\n    code_folding: hide\n---\n\n"
           ech <- "TRUE"
@@ -341,7 +355,15 @@ output$saveReport <- downloadHandler(
         init <-
 paste0(yml, "```{r setup, include = FALSE}
 ## initial settings
-knitr::opts_chunk$set(comment = NA, echo = ", ech, ", error = TRUE, cache = FALSE, message=FALSE, dpi = 96, warning = FALSE", sopts, ")
+knitr::opts_chunk$set(
+  comment = NA, 
+  echo = ", ech, ", 
+  error = TRUE, 
+  cache = FALSE, 
+  message = FALSE, 
+  dpi = 96, 
+  warning = FALSE", sopts," 
+)
 
 ## width to use when printing tables etc.
 options(width = 250)
@@ -356,7 +378,7 @@ if (!exists(\"r_environment\")) library(", lib, ")
           withProgress(message = "Preparing Rmd & Data zip file", value = 1, {
             r_data <- toList(r_data)
             save(r_data, file = "r_data.rda")
-              cat(init, file = "report.Rmd", sep = "\n")
+            cat(init, file = "report.Rmd", sep = "\n")
 
             zip_util = Sys.getenv("R_ZIPCMD", "zip")
             flags = "-r9X"
@@ -373,15 +395,18 @@ if (!exists(\"r_environment\")) library(", lib, ")
             }
 
             zip(file, c("report.Rmd", "r_data.rda"), flags = flags, zip = zip_util)
+            file.remove("report.Rmd", "r_data.rda")
           })
         } else if (input$rmd_save_report == "Rmd") {
-            cat(init, file = file, sep = "\n")
+          cat(init, file = file, sep = "\n")
         } else {
           ## on linux ensure you have you have pandoc > 1.14 installed
           ## you may need to use http://pandoc.org/installing.html#installing-from-source
           ## also check the logs to make sure its not complaining about missing files
           withProgress(message = paste0("Saving report to ", input$rmd_save_report), value = 1,
-            if (rstudioapi::isAvailable() || !isTRUE(local)) {
+            if (rstudioapi::isAvailable() || !isTRUE(getOption("radiant.local"))) {
+              # cat(init, file = file.path(tdir, "report.Rmd"), sep = "\n")
+              # out <- rmarkdown::render(file.path(tdir, "report.Rmd"), switch(input$rmd_save_report,
               cat(init, file = "report.Rmd", sep = "\n")
               out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
                 Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "hide"),
@@ -389,6 +414,7 @@ if (!exists(\"r_environment\")) library(", lib, ")
                 PDF = rmarkdown::pdf_document(),
                 Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"),"app/www/style.docx"))
               ), envir = r_environment)
+              file.remove("report.Rmd")
               file.rename(out, file)
             } else {
               knitItSave(report) %>% cat(file = file, sep = "\n")

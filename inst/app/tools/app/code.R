@@ -1,9 +1,9 @@
 ################################################################
 # Run R-code within Radiant using the shinyAce editor
 ################################################################
-
 rcode_choices <- c("HTML","R-code")
-if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user))) {
+# if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user))) {
+if (rstudioapi::isAvailable() || isTRUE(getOption("radiant.report"))) {
   if (rstudioapi::isAvailable()) {
     rcode_choices <- c("Notebook","HTML","PDF","Word","R-code")
   } else {
@@ -43,8 +43,9 @@ help(package = 'radiant.data')
 # transform_main() %>% head"
 
 output$ui_rcode_save <- renderUI({
-  local <- getOption("radiant.local")
-  if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+  # local <- getOption("radiant.local")
+  # if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+  if (isTRUE(getOption("radiant.report"))) {
     selectInput(inputId = "rcode_save", label = NULL,
       choices = rcode_choices,
       selected = state_init("rcode_save", "Notebook"),
@@ -56,8 +57,9 @@ output$ui_rcode_save <- renderUI({
 })
 
 output$ui_saveCodeReport <- renderUI({
-  local <- getOption("radiant.local")
-  if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+  # local <- getOption("radiant.local")
+  # if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+  if (isTRUE(getOption("radiant.report"))) {
     downloadButton("saveCodeReport", "Save")
   } else {
     invisible()
@@ -99,17 +101,25 @@ observe({
 output$rcode_output <- renderUI({
   if (valsCode$code == 1) return()
   isolate({
-    if (!isTRUE(getOption("radiant.local")) && is.null(session$user)) {
-      HTML("<h2>Rmd file is not evaluated when running Radiant on open-source Shiny Server</h2>")
+    if (!isTRUE(getOption("radiant.report"))) {
+      HTML("<h2>R-code was not evaluated. If you have sudo access to the server set options(radiant.report = TRUE) in .Rprofile for the shiny user </h2>")
     } else {
       rcode_edit <-
         ifelse (is_empty(input$rcode_selection), input$rcode_edit, input$rcode_selection)
 
-      paste0("```{r cache = FALSE, echo = TRUE}\n", rcode_edit ,"\n```") %>%
-        ## need r_environment so changes are reflected in the shiny environment
-        knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_environment) %>%
-        scrub %>%
-        HTML
+      pdir <- rstudioapi::getActiveProject()
+      if (!is.null(pdir)) {
+        owd <- setwd(pdir)
+        on.exit(setwd(owd))
+      }
+
+      withProgress(message = "Running R-code", value = 1, {
+        paste0("```{r cache = FALSE, echo = TRUE}\n", rcode_edit ,"\n```") %>%
+          ## need r_environment so changes are reflected in the shiny environment
+          knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_environment) %>%
+          scrub %>%
+          HTML
+      })
     }
   })
 })
@@ -121,31 +131,41 @@ output$saveCodeReport <- downloadHandler(
     ))
   },
   content = function(file) {
-    local <- getOption("radiant.local")
-    if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+    # local <- getOption("radiant.local")
+    # if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
+    if (isTRUE(getOption("radiant.report"))) {
       isolate({
         ## temporarily switch to the temp dir, in case you do not have write
         ## permission to the current working directory
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
+        # owd <- setwd(tempdir())
+        # on.exit(setwd(owd))
+        pdir <- rstudioapi::getActiveProject()
+        if (!is.null(pdir)) {
+          owd <- setwd(pdir)
+          on.exit(setwd(owd))
+        }
 
         lib <- if ("radiant" %in% installed.packages()) "radiant" else "radiant.data"
 
         rcode <- ifelse (is_empty(input$rcode_selection), input$rcode_edit, input$rcode_selection)
 
         if (input$rcode_save == "R-code & Data (zip)") {
-          r_data <- toList(r_data)
-          save(r_data, file = "r_data.rda")
-          paste0("## Load radiant if needed\nlibrary(", lib, ")\n\n## Load data\nload(\"r_data.rda\")\n\n", rcode,"\n") %>%
-            cat(file = "rcode.R", sep = "\n")
-          zip(file, c("rcode.R","r_data.rda"))
+
+          withProgress(message = "Preparing R & Data zip file", value = 1, {
+            r_data <- toList(r_data)
+            save(r_data, file = "r_data.rda")
+            paste0("## Load radiant if needed\nlibrary(", lib, ")\n\n## Load data\nload(\"r_data.rda\")\n\n", rcode,"\n") %>%
+              cat(file = "rcode.R", sep = "\n")
+            zip(file, c("rcode.R", "r_data.rda"))
+            file.remove("rcode.R", "r_data.rda")
+          })
         } else if (input$rcode_save == "R-code") {
           paste0("## Load radiant if needed\nlibrary(", lib, ")\n\n", rcode,"\n") %>%
             cat(file = file, sep = "\n")
         } else {
 
           withProgress(message = paste0("Saving output to ", input$rcode_save), value = 1,
-            if (rstudioapi::isAvailable() || !isTRUE(local)) {
+            if (rstudioapi::isAvailable() || !isTRUE(getOption("radiant.local"))) {
               paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}\noptions(width = 250)\n\n", rcode,"\n```") %>%
                 cat(file = "rcode.Rmd", sep = "\n")
               out <- rmarkdown::render("rcode.Rmd", switch(input$rcode_save,
@@ -154,6 +174,7 @@ output$saveCodeReport <- downloadHandler(
                 PDF = rmarkdown::pdf_document(),
                 Word = rmarkdown::word_document()
               ), envir = r_environment)
+              file.remove("rcode.Rmd")
               file.rename(out, file)
             } else {
               paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}\n", rcode ,"\n```") %>%

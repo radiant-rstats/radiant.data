@@ -54,7 +54,7 @@ load(\"~/radiant.sessions/r_data.rda\")
       ## removing r_environment and r_sessions
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
       unlink("~/r_figures/", recursive = TRUE)
-      sshhr(try(rm(help_menu, make_url_patterns, import_fs, init_data, envir = .GlobalEnv), silent = TRUE))
+      sshhr(try(rm(help_menu, make_url_patterns, import_fs, init_data, navbar_proj, envir = .GlobalEnv), silent = TRUE))
       message(stop_message)
 
       if (rstudioapi::isAvailable() && !is_empty(input$rmd_report) && rmd) {

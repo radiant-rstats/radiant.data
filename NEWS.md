@@ -1,3 +1,10 @@
+# CHANGES IN radiant.data 0.8.8
+
+* Show Rstudio project information in navbar if available
+* If Rstudio project is used R > Report and R > Code will use the project directory as base. This allows users to use relative paths and making it easier to share (reproducible) code
+* Specify options in .Rprofile for upload memory limit and running R > Report on server
+* `find_project` function based on `rstudioapi`
+
 # CHANGES IN radiant.data 0.8.7.8
 
 * Added preview options to _Data > Manage_ based on https://github.com/radiant-rstats/radiant/issues/30
