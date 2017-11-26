@@ -4,12 +4,14 @@
 \alias{ci_label}
 \title{Labels for confidence intervals}
 \usage{
-ci_label(alt = "two.sided", cl = 0.95)
+ci_label(alt = "two.sided", cl = 0.95, dec = 3)
 }
 \arguments{
 \item{alt}{Type of hypothesis ("two.sided","less","greater")}
 
 \item{cl}{Confidence level}
+
+\item{dec}{Number of decimal places}
 }
 \value{
 A character vector with labels for a confidence interval

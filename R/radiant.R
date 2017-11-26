@@ -808,6 +808,7 @@ print.gtable <- function(x, ...) {
 #'
 #' @param alt Type of hypothesis ("two.sided","less","greater")
 #' @param cl Confidence level
+#' @param dec Number of decimal places
 #'
 #' @return A character vector with labels for a confidence interval
 #'
@@ -817,7 +818,7 @@ print.gtable <- function(x, ...) {
 #' ci_label("greater",.9)
 #'
 #' @export
-ci_label <- function(alt = "two.sided", cl = .95) {
+ci_label <- function(alt = "two.sided", cl = .95, dec = 3) {
   if (alt == "less") {
     c("0%", paste0(100*cl,"%"))
   } else if (alt == "greater") {
@@ -825,7 +826,7 @@ ci_label <- function(alt = "two.sided", cl = .95) {
   } else {
     {100 * (1-cl)/2} %>%
       c(., 100 - .) %>%
-      round(1) %>%
+      round(dec) %>%
       paste0(.,"%")
   }
 }
@@ -846,9 +847,9 @@ ci_label <- function(alt = "two.sided", cl = .95) {
 #' @export
 ci_perc <- function(dat, alt = "two.sided", cl = .95) {
   probs <- if (alt == 'two.sided') {
-    ((1-cl)/2) %>% c(., 1 - .)
+    ((1 - cl) / 2) %>% c(., 1 - .)
   } else if (alt == 'less') {
-    1-cl
+    1 - cl
   } else {
     cl
   }
@@ -1027,6 +1028,22 @@ find_gdrive <- function() {
   }
 }
 
+#' Find a rstudio project directory
+#'
+#' @return Path to rstudio project directory
+#'
+#' @export
+find_project <- function() {
+  if (!rstudioapi::isAvailable())
+    stop("Project directory cannot be found because application is not run from Rstudio")
+  fp <- rstudioapi::getActiveProject()
+  if (is.null(fp)) {
+    stop("Project directory cannot be found because application is not run from Rstudio project")
+  } else {
+    fp
+  }
+}
+
 #' Returns the index of the (parallel) maxima of the input values
 #'
 #' @param ... Numeric or character vectors of the same length
@@ -1070,7 +1087,6 @@ store <- function(object, ...) UseMethod("store", object)
 store.character <- function(object, ...) {
   mess <- paste0("Unable to store output. The returned message was:\n\n", object)
   if (exists("r_environment")) {
-    # session$sendCustomMessage(type = "message", message = gsub("\n", " ", mess))
     ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
     showModal(
       modalDialog(title = "Data Stored",
@@ -1105,11 +1121,6 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
     cmd_vars <-
       strsplit(pred_cmd, ";")[[1]] %>% strsplit(., "=") %>%
       sapply("[", 1) %>% gsub("\\s+", "", .)
-
-    # dots <- strsplit(pred_cmd, ";")[[1]] %>% gsub(" ","",.)
-    # for (i in seq_along(dots))
-    #   dots[[i]] <- sub(paste0(cmd_vars[[i]], "="), "", dots[[i]])
-    # dat <- try(mutate_(dat, .dots = setNames(dots, cmd_vars)), silent = TRUE)
 
     dots <- rlang::parse_exprs(pred_cmd) %>%
         set_names(cmd_vars)
