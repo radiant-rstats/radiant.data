@@ -267,7 +267,7 @@ knitIt <- function(text) {
   #   )
   # }
 
-  pdir <- ifelse(rstudioapi::isAvailable(), rstudioapi::getActiveProject(), NULL)
+  pdir <- if (rstudioapi::isAvailable()) rstudioapi::getActiveProject() else NULL
   if (!is.null(pdir)) {
     owd <- setwd(pdir)
     on.exit(setwd(owd))
@@ -324,7 +324,7 @@ output$saveReport <- downloadHandler(
     # if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
     if (isTRUE(getOption("radiant.report"))) {
       isolate({
-        pdir <- ifelse(rstudioapi::isAvailable(), rstudioapi::getActiveProject(), NULL)
+        pdir <- if (rstudioapi::isAvailable()) rstudioapi::getActiveProject() else NULL
         tdir <- tempdir()
         owd <- ifelse(is.null(pdir), setwd(tdir), setwd(pdir))
         on.exit(setwd(owd))

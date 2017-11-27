@@ -107,7 +107,7 @@ output$rcode_output <- renderUI({
       rcode_edit <-
         ifelse (is_empty(input$rcode_selection), input$rcode_edit, input$rcode_selection)
 
-      pdir <- ifelse(rstudioapi::isAvailable(), rstudioapi::getActiveProject(), NULL)
+      pdir <- if (rstudioapi::isAvailable()) rstudioapi::getActiveProject() else NULL
       if (!is.null(pdir)) {
         owd <- setwd(pdir)
         on.exit(setwd(owd))
@@ -139,7 +139,7 @@ output$saveCodeReport <- downloadHandler(
         ## permission to the current working directory
         # owd <- setwd(tempdir())
         # on.exit(setwd(owd))
-        pdir <- ifelse(rstudioapi::isAvailable(), rstudioapi::getActiveProject(), NULL)
+        pdir <- if (rstudioapi::isAvailable()) rstudioapi::getActiveProject() else NULL
         if (!is.null(pdir)) {
           owd <- setwd(pdir)
           on.exit(setwd(owd))
