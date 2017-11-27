@@ -64,13 +64,13 @@ if (!"package:radiant.data" %in% search())
 ## running local or on a server
 if (Sys.getenv('SHINY_PORT') == "") {
   options(radiant.local = TRUE)
-  options(radiant.report = getOption("radiant.report", default = TRUE)) 
+  options(radiant.report = getOption("radiant.report", default = TRUE))
   ## no limit to filesize locally
   # options(shiny.maxRequestSize = -1)
   options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = -1))
 } else {
   options(radiant.local = FALSE)
-  options(radiant.report = getOption("radiant.report", default = FALSE)) 
+  options(radiant.report = getOption("radiant.report", default = FALSE))
   ## limit upload filesize on server (10MB)
   # options(shiny.maxRequestSize = 10 * 1024^2)
   options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = 10 * 1024^2))
@@ -94,7 +94,7 @@ list("n" = "length", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
      "var" = "var_rm", "sd" = "sd_rm", "se" = "se", "cv" = "cv",
      "prop" = "prop", "varprop" = "varprop", "sdprop" = "sdprop", "seprop" = "seprop",
      "varpop" = "varpop", "sdpop" = "sdpop",
-     "2.5%" = "p025", "5%" = "p05", "10%" = "p10", "25%" = "p25", "75%" = "p75", 
+     "2.5%" = "p025", "5%" = "p05", "10%" = "p10", "25%" = "p25", "75%" = "p75",
      "90%" = "p90", "95%" = "p95", "97.5%" = "p975", "skew" = "skew","kurtosis" = "kurtosi") %>%
 options(radiant.functions = .)
 
@@ -251,12 +251,19 @@ options(radiant.versions = paste(radiant.versions, collapse = ", "))
 rm(tmp, radiant.versions)
 
 navbar_proj <- function(navbar) {
-  ## getting project information
-  proj <- rstudioapi::getActiveProject()
-  proj <- if (is.null(proj)) "Project: (None)" else paste0("Project: ", basename(proj))
-  if (!isTRUE(getOption("radiant.local"))) proj <- "Remote session" 
-  proj <- tags$span(class = "nav navbar-brand navbar-right", proj)
 
+  if (!isTRUE(getOption("radiant.local"))) {
+    proj <- "Remote session"
+  } else if (!rstudioapi::isAvailable()) {
+    sub(" version", "", R.version.string) %>% sub(" \\(*\\)", "", .)
+    proj <- paste0("R ", R.version$major, ".", R.version$minor)
+  } else {
+    ## getting project information
+    proj <- rstudioapi::getActiveProject()
+    proj <- if (is.null(proj)) "Project: (None)" else paste0("Project: ", basename(proj))
+  }
+
+  proj <- tags$span(class = "nav navbar-brand navbar-right", proj)
   ## based on: https://stackoverflow.com/a/40755608/1974918
   navbar[[3]][[1]]$children[[1]]$children[[2]] <- htmltools::tagAppendChild(
     navbar[[3]][[1]]$children[[1]]$children[[2]], proj)
