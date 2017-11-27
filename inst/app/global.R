@@ -94,8 +94,8 @@ list("n" = "length", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
      "var" = "var_rm", "sd" = "sd_rm", "se" = "se", "cv" = "cv",
      "prop" = "prop", "varprop" = "varprop", "sdprop" = "sdprop", "seprop" = "seprop",
      "varpop" = "varpop", "sdpop" = "sdpop",
-     "5%" = "p05", "10%" = "p10", "25%" = "p25", "75%" = "p75", "90%" = "p90",
-     "95%" = "p95", "skew" = "skew","kurtosis" = "kurtosi") %>%
+     "2.5%" = "p025", "5%" = "p05", "10%" = "p10", "25%" = "p25", "75%" = "p75", 
+     "90%" = "p90", "95%" = "p95", "97.5%" = "p975", "skew" = "skew","kurtosis" = "kurtosi") %>%
 options(radiant.functions = .)
 
 ## for report and code in menu R

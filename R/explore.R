@@ -368,6 +368,16 @@ dtab.explore <- function(object,
 #' @export
 n_missing <- function(x) sum(is.na(x))
 
+#' 2.5th percentile
+#' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return 2.5th percentile
+#' @examples
+#' p025(rnorm(100))
+#'
+#' @export
+p025 <- function(x, na.rm = TRUE) quantile(x,.025, na.rm = na.rm)
+
 #' 5th percentile
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
@@ -427,6 +437,16 @@ p90 <- function(x, na.rm = TRUE) quantile(x,.90, na.rm = na.rm)
 #'
 #' @export
 p95 <- function(x, na.rm = TRUE) quantile(x,.95, na.rm = na.rm)
+
+#' 97.5th percentile
+#' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return 97.5th percentile
+#' @examples
+#' p975(rnorm(100))
+#'
+#' @export
+p975 <- function(x, na.rm = TRUE) quantile(x,.975, na.rm = na.rm)
 
 #' Coefficient of variation
 #' @param x Input variable
