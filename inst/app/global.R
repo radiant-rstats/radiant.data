@@ -252,15 +252,12 @@ rm(tmp, radiant.versions)
 
 navbar_proj <- function(navbar) {
 
-  if (!isTRUE(getOption("radiant.local"))) {
-    proj <- "Remote session"
-  } else if (!rstudioapi::isAvailable()) {
-    sub(" version", "", R.version.string) %>% sub(" \\(*\\)", "", .)
-    proj <- paste0("R ", R.version$major, ".", R.version$minor)
-  } else {
+  if (rstudioapi::isAvailable()) {
     ## getting project information
     proj <- rstudioapi::getActiveProject()
     proj <- if (is.null(proj)) "Project: (None)" else paste0("Project: ", basename(proj))
+  } else {
+    proj <- paste0("R ", R.version$major, ".", R.version$minor)
   }
 
   proj <- tags$span(class = "nav navbar-brand navbar-right", proj)
