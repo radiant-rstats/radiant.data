@@ -2,15 +2,22 @@ language: r
 r:
   - release
   - devel
+#r_github_packages:
+#  - kevinushey/sourcetools
 
-cache: packages
-warnings_are_errors: true
-sudo: required
-dist: trusty
+os:
+  - linux
+  - windows
+  - osx
 
-repos:
-  CRAN: https://cloud.r-project.org
-  minicran: https://radiant-rstats.github.io/minicran/
-
-r_github_packages:
-  - kevinushey/sourcetools
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      cache: packages
+      sudo: required
+    - os: osx
+      osx_image: xcode7.2
+      cache: packages
+    - os: windows
+      cache: packages
