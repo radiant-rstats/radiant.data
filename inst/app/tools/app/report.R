@@ -164,11 +164,11 @@ output$report <- renderUI({
         td(help_modal('Report','report_help',
            inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/report.md")))),
         td(HTML("&nbsp;&nbsp;")),
-        td(actionButton("evalRmd", "Knit report"), style= "padding-top:5px;"),
+        td(actionButton("evalRmd", "Knit report"), style = "padding-top:5px;"),
         td(uiOutput("ui_rmd_manual")),
         td(uiOutput("ui_rmd_switch")),
         td(uiOutput("ui_rmd_save_report")),
-        td(uiOutput("ui_saveReport"), style= "padding-top:5px;"),
+        td(uiOutput("ui_saveReport"), style = "padding-top:5px;"),
         td(HTML("<div class='form-group shiny-input-container'>
             <input id='load_rmd' name='load_rmd' type='file' accept='.rmd,.Rmd,.md'/>
           </div>"))
@@ -320,8 +320,6 @@ output$saveReport <- downloadHandler(
     ))
   },
   content = function(file) {
-    # local <- getOption("radiant.local")
-    # if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
     if (isTRUE(getOption("radiant.report"))) {
       isolate({
         pdir <- if (rstudioapi::isAvailable()) rstudioapi::getActiveProject() else NULL
@@ -332,7 +330,7 @@ output$saveReport <- downloadHandler(
         lib <- if ("radiant" %in% installed.packages()) "radiant" else "radiant.data"
 
         report <-
-          ifelse (is_empty(input$rmd_selection), input$rmd_report, input$rmd_selection) %>%
+          ifelse(is_empty(input$rmd_selection), input$rmd_report, input$rmd_selection) %>%
           gsub("\\\\\\\\", "\\\\", .) %>%
           cleanout(.) %>%
           fixMS(.)
@@ -356,13 +354,13 @@ output$saveReport <- downloadHandler(
 paste0(yml, "```{r setup, include = FALSE}
 ## initial settings
 knitr::opts_chunk$set(
-  comment = NA, 
-  echo = ", ech, ", 
-  error = TRUE, 
-  cache = FALSE, 
-  message = FALSE, 
-  dpi = 96, 
-  warning = FALSE", sopts," 
+  comment = NA,
+  echo = ", ech, ",
+  error = TRUE,
+  cache = FALSE,
+  message = FALSE,
+  dpi = 96,
+  warning = FALSE", sopts,"
 )
 
 ## width to use when printing tables etc.
@@ -370,8 +368,20 @@ options(width = 250)
 
 ## make all required libraries available by loading radiant package if needed
 if (!exists(\"r_environment\")) library(", lib, ")
-```\n
-<style type='text/css'> .table { width: auto; } ul, ol { padding-left: 18px; }</style>\n\n", report)
+```\n\n
+<style type='text/css'>
+  .table {
+    width: auto;
+  }
+  ul, ol {
+    padding-left: 18px;
+  }
+  pre, code, pre code {
+    overflow: auto;
+    white-space: pre;
+    background-color: #ffffff;
+  }
+</style>\n\n", report)
 
         if (input$rmd_save_report == "Rmd & Data (zip)") {
 
@@ -405,8 +415,6 @@ if (!exists(\"r_environment\")) library(", lib, ")
           ## also check the logs to make sure its not complaining about missing files
           withProgress(message = paste0("Saving report to ", input$rmd_save_report), value = 1,
             if (rstudioapi::isAvailable() || !isTRUE(getOption("radiant.local"))) {
-              # cat(init, file = file.path(tdir, "report.Rmd"), sep = "\n")
-              # out <- rmarkdown::render(file.path(tdir, "report.Rmd"), switch(input$rmd_save_report,
               cat(init, file = "report.Rmd", sep = "\n")
               out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
                 Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "hide"),

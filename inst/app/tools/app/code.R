@@ -43,8 +43,6 @@ help(package = 'radiant.data')
 # transform_main() %>% head"
 
 output$ui_rcode_save <- renderUI({
-  # local <- getOption("radiant.local")
-  # if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
   if (isTRUE(getOption("radiant.report"))) {
     selectInput(inputId = "rcode_save", label = NULL,
       choices = rcode_choices,
@@ -57,8 +55,6 @@ output$ui_rcode_save <- renderUI({
 })
 
 output$ui_saveCodeReport <- renderUI({
-  # local <- getOption("radiant.local")
-  # if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
   if (isTRUE(getOption("radiant.report"))) {
     downloadButton("saveCodeReport", "Save")
   } else {
@@ -72,9 +68,9 @@ output$rcode <- renderUI({
       table(
         td(help_modal('Code','code_help', inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/code.md")))),
         td(HTML("&nbsp;&nbsp;")),
-        td(actionButton("rEval", "Run code"), style= "padding-top:5px;"),
+        td(actionButton("rEval", "Run code"), style = "padding-top:5px;"),
         td(uiOutput("ui_rcode_save")),
-        td(uiOutput("ui_saveCodeReport"), style= "padding-top:5px;"),
+        td(uiOutput("ui_saveCodeReport"), style = "padding-top:5px;"),
         td(HTML("<div class='form-group shiny-input-container'>
             <input id='load_code' name='load_code' type='file' accept='.r,.R'/>
           </div>"))
@@ -83,10 +79,10 @@ output$rcode <- renderUI({
 
     shinyAce::aceEditor("rcode_edit", mode = "r",
       vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
-      height="auto",
+      height = "auto",
       selectionId = "rcode_selection",
       value = state_init("rcode_edit",rcode_example),
-      hotkeys = list(runKeyCode = list(win ="CTRL-ENTER", mac ="CMD-ENTER"))),
+      hotkeys = list(runKeyCode = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
     htmlOutput("rcode_output")
   )
 })
@@ -105,7 +101,7 @@ output$rcode_output <- renderUI({
       HTML("<h2>R-code was not evaluated. If you have sudo access to the server set options(radiant.report = TRUE) in .Rprofile for the shiny user </h2>")
     } else {
       rcode_edit <-
-        ifelse (is_empty(input$rcode_selection), input$rcode_edit, input$rcode_selection)
+        ifelse(is_empty(input$rcode_selection), input$rcode_edit, input$rcode_selection)
 
       pdir <- if (rstudioapi::isAvailable()) rstudioapi::getActiveProject() else NULL
       if (!is.null(pdir)) {
@@ -131,14 +127,10 @@ output$saveCodeReport <- downloadHandler(
     ))
   },
   content = function(file) {
-    # local <- getOption("radiant.local")
-    # if (isTRUE(local) || (!isTRUE(local) && !is.null(session$user))) {
     if (isTRUE(getOption("radiant.report"))) {
       isolate({
         ## temporarily switch to the temp dir, in case you do not have write
         ## permission to the current working directory
-        # owd <- setwd(tempdir())
-        # on.exit(setwd(owd))
         pdir <- if (rstudioapi::isAvailable()) rstudioapi::getActiveProject() else NULL
         if (!is.null(pdir)) {
           owd <- setwd(pdir)
@@ -147,7 +139,7 @@ output$saveCodeReport <- downloadHandler(
 
         lib <- if ("radiant" %in% installed.packages()) "radiant" else "radiant.data"
 
-        rcode <- ifelse (is_empty(input$rcode_selection), input$rcode_edit, input$rcode_selection)
+        rcode <- ifelse(is_empty(input$rcode_selection), input$rcode_edit, input$rcode_selection)
 
         if (input$rcode_save == "R-code & Data (zip)") {
 
