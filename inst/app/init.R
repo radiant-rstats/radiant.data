@@ -9,12 +9,9 @@
 # options(shiny.error = recover)
 # options(warn = 2)
 # options(warn = 0)
+
 ## turn off warnings globally
 # options(warn=-1)
-
-## set autoreload on if found TRUE in .Rprofile
-# options("autoreload")[[1]] %>%
-#   {options(shiny.autoreload = ifelse (!is.null(.) && ., TRUE, FALSE))}
 
 remove_session_files <- function(st = Sys.time()) {
   fl <- list.files(normalizePath("~/radiant.sessions/"), pattern = "*.rds",
@@ -188,9 +185,21 @@ isolate({
 ## 'sourcing' radiant's package functions in the server.R environment
 if (!"package:radiant.data" %in% search() && getOption("radiant.path.data") == "..") {
   ## for shiny-server and development
-  for (file in list.files("../../R", pattern="\\.(r|R)$", full.names = TRUE))
+  for (file in list.files("../../R", pattern = "\\.(r|R)$", full.names = TRUE))
     source(file, encoding = getOption("radiant.encoding"), local = TRUE)
 } else {
   ## for use with launcher
   radiant.data::copy_all(radiant.data)
 }
+
+## check every 10 seconds if width has been reset
+## https://github.com/rstudio/rstudio/issues/1870
+## https://community.rstudio.com/t/rstudio-resets-width-option-when-running-shiny-app-in-viewer/3661
+reactivePoll(10000, session,
+  checkFunc = function() {
+    if (getOption("width", default = 250) != 250) options(width = 250)
+  },
+  valueFunc = function() {
+    return()
+  }
+)
