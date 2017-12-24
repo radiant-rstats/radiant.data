@@ -1,11 +1,15 @@
 ul, ol {
-  /* Make bullet left-flush, value chosen by experimentation */
+  /* make bullet left-flush */
   padding-left: 18px;
 }
 
 .table {
   width: auto;
 }
+
+/*.pagedtable, .pagetable table {*/
+  /*width: auto;*/
+/*}*/
 
 .snippet th, .snippet td {
   text-align: center;
@@ -65,6 +69,9 @@ img {
 
 pre, code, pre code {
   overflow: auto;
+  /*From SO: https://stackoverflow.com/a/37073372/1974918 but doesn't seem to work */
+  /*overflow: scroll !important; */
+  /*-webkit-overflow-scrolling: touch !important;*/
   white-space: pre;
   background-color: #ffffff;
 }
