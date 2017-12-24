@@ -9,13 +9,9 @@ output$ui_fileUpload <- renderUI({
       accept = c("text/csv","text/comma-separated-values",
                  "text/tab-separated-values", "text/plain",".csv",".tsv"))
   } else if (input$dataType %in% c("rda","rds")) {
-    fileInput("uploadfile", "", multiple = TRUE,
-      accept = c(".rda",".rds",".rdata"))
+    fileInput("uploadfile", "", multiple = TRUE, accept = c(".rda",".rds",".rdata"))
   } else if (input$dataType == "feather") {
-    tagList(
-      numericInput("feather_n_max", label = "Maximum rows to read:", value = Inf, max = Inf, step = 1000),
-      fileInput("uploadfile", "", multiple = TRUE, accept = ".feather")
-    )
+    fileInput("uploadfile", "", multiple = TRUE, accept = ".feather")
   } else if (input$dataType == "url_rda") {
     with(tags, table(
       tr(
@@ -118,13 +114,13 @@ observeEvent(input$to_global_save, {
 
 output$ui_Manage <- renderUI({
 
-  data_types_in <- c("rds" = "rds", "rda" = "rda", "state" = "state", "csv" = "csv",
+  data_types_in <- c("rds" = "rds", "rda (rdata)" = "rda", "state" = "state", "csv" = "csv",
                   "clipboard" = "clipboard", "from global workspace" = "from_global",
                   "examples" = "examples", "feather" = "feather",
                   "rda (url)" = "url_rda", "csv (url)" = "url_csv")
   data_types_out <- c("rds" = "rds", "rda" = "rda", "state" = "state", "csv" = "csv",
-                      "feather" = "feather",
-                      "clipboard" = "clipboard", "to global workspace" = "to_global")
+                      "feather" = "feather", "clipboard" = "clipboard", 
+                      "to global workspace" = "to_global")
   if (!isTRUE(getOption("radiant.local"))) {
     data_types_in <- data_types_in[-which(data_types_in == "from_global")]
     data_types_out <- data_types_out[-which(data_types_out == "to_global")]
@@ -271,7 +267,10 @@ output$downloadData <- downloadHandler(
       if (ext == "rds") {
         saveRDS(tmp[[robj]], file = file)
       } else if (ext == "feather") {
-        feather::write_feather(tmp[[robj]], file)
+        ## temporary workaround until PR goes through https://stackoverflow.com/a/47898172/1974918
+        # feather::write_feather(tmp[[robj]], file)
+        # radiant.data::write_feather(tmp[[robj]], file, description = attr(tmp[[robj]], "description"))
+        radiant.data::write_feather(tmp[[robj]], file)
       } else {
         save(list = robj, file = file, envir = tmp)
       }
@@ -280,16 +279,21 @@ output$downloadData <- downloadHandler(
 )
 
 observeEvent(input$uploadfile, {
-  n_max <- if (is_not(input$man_n_max)) input$feather_n_max else input$man_n_max
   inFile <- input$uploadfile
   ## iterating through the files to upload
-  for (i in 1:(dim(inFile)[1]))
-    loadUserData(inFile[i, "name"], inFile[i, "datapath"], input$dataType,
-                 .csv = input$man_read.csv,
-                 header = input$man_header,
-                 man_str_as_factor = input$man_str_as_factor,
-                 sep = input$man_sep, dec = input$man_dec,
-                 n_max = n_max)
+  for (i in 1:(dim(inFile)[1])) {
+    loadUserData(
+      inFile[i, "name"], 
+      inFile[i, "datapath"], 
+      input$dataType, 
+      .csv = input$man_read.csv, 
+      header = input$man_header, 
+      man_str_as_factor = input$man_str_as_factor, 
+      sep = input$man_sep, 
+      dec = input$man_dec, 
+      n_max = input$man_n_max
+    )
+  }
 
   updateSelectInput(session, "dataset", 
     label = "Datasets:", 

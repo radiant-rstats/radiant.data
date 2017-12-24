@@ -61,8 +61,10 @@ loadUserData <- function(fname, uFile, ext,
   fext <- tools::file_ext(filename) %>% tolower
 
   ## switch extension if needed
+  if (fext == "rdata") ext <- "rdata"
   if (fext == "rds" && ext == "rda") ext <- "rds"
   if (fext == "rda" && ext == "rds") ext <- "rda"
+  if (fext == "rdata" && ext == "rds") ext <- "rdata"
   if (fext == "txt" && ext == "csv") ext <- "txt"
   if (fext == "tsv" && ext == "csv") ext <- "tsv"
 
@@ -81,7 +83,7 @@ loadUserData <- function(fname, uFile, ext,
     ext <- "---"
   }
 
-  if (ext == "rda") {
+  if (ext %in% c("rda","rdata")) {
     ## objname will hold the name of the object(s) inside the R datafile
     robjname <- try(load(uFile), silent = TRUE)
     if (is(robjname, "try-error")) {
@@ -105,17 +107,15 @@ loadUserData <- function(fname, uFile, ext,
       r_data[[objname]] <- as.data.frame(robj) %>% {set_colnames(., make.names(colnames(.)))}
     }
   } else if (ext == "feather") {
-    if (!("feather" %in% rownames(utils::installed.packages()))) {
+    if (!"feather" %in% rownames(utils::installed.packages())) {
       upload_error_handler(objname, "### The feather package is not installed. Please use install.packages('feather')")
     } else {
-      robj <- feather::feather(uFile)
+      robj <- feather::read_feather(uFile) %>% 
+        set_attr("description", feather::feather_metadata(uFile)$description)
       if (is(robj, "try-error")) {
         upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in feather format.")
       } else {
-        n_max <- if (is_not(n_max) || n_max == -1) Inf else n_max
-        nrows <- nrow(robj)
-        if (n_max > nrows) n_max <- nrows
-        r_data[[objname]] <- robj[1:n_max,] %>% {set_colnames(., make.names(colnames(.)))}
+        r_data[[objname]] <- robj %>% {set_colnames(., make.names(colnames(.)))}
       }
     }
   } else if (ext %in% c("tsv", "csv", "txt")) {
@@ -126,7 +126,7 @@ loadUserData <- function(fname, uFile, ext,
   } else if (ext != "---") {
 
     ret <- paste0("### The selected filetype is not currently supported (",fext,").")
-    upload_error_handler(objname,ret)
+    upload_error_handler(objname, ret)
   }
 
   r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
