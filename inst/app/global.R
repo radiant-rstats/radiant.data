@@ -112,8 +112,8 @@ options(radiant.nav_ui =
 options(radiant.shared_ui =
   tagList(
     navbarMenu("R",
-               tabPanel("Report", uiOutput("report"), icon = icon("edit")),
-               tabPanel("Code", uiOutput("rcode"), icon = icon("code"))
+               tabPanel("Report", uiOutput("rmd_view"), uiOutput("report"), icon = icon("edit")),
+               tabPanel("Code", uiOutput("rcode_view"), uiOutput("rcode"), icon = icon("code"))
     ),
 
     navbarMenu("", icon = icon("save"),
@@ -155,6 +155,7 @@ file.path(normalizePath("~"),"radiant.sessions") %>% {if (!file.exists(.)) dir.c
 addResourcePath("figures", file.path(getOption("radiant.path.data"), "app/tools/help/figures/"))
 addResourcePath("imgs", file.path(getOption("radiant.path.data"), "app/www/imgs/"))
 addResourcePath("js", file.path(getOption("radiant.path.data"), "app/www/js/"))
+addResourcePath("www", file.path(getOption("radiant.path.data"), "app/www/"))
 
 options(radiant.mathjax.path = "https://cdn.mathjax.org/mathjax/latest")
 
@@ -191,6 +192,7 @@ help_menu <- function(hlp) {
       tags$script(src = "js/message-handler.js"),
       tags$script(src = "js/run_return.js"),
       # tags$script(src = "js/draggable_modal.js"),
+      tags$link(rel = "stylesheet", type = "text/css", href = "www/style.css"),
       tags$link(rel = "shortcut icon", href = "imgs/icon.png")
     )
   )
@@ -267,3 +269,28 @@ navbar_proj <- function(navbar) {
 
   navbar
 }
+
+knit_print.data.frame = function(x, ...) {
+  res <- paste(c("", "", knitr::kable(x)), collapse = "\n")
+  # res <- paste(c("", "", rmarkdown::paged_table(x)), collapse = "\n")
+  knitr::asis_output(res)
+}
+
+## not sure why this doesn't work
+# knit_print.data.frame = function(x, ...) {
+#   res <- rmarkdown:::print.paged_df(x)
+#   knitr::asis_output(res)
+  # knitr::asis_output(
+  #   rmarkdown:::paged_table_html(x),
+  #   meta = list(dependencies = rmarkdown:::html_dependency_pagedtable())
+  # )
+# }
+
+## not sure why this doesn't work
+## https://github.com/yihui/knitr/issues/1399
+# knit_print.datatables <- function(x, ...) {
+#   res <- shiny::knit_print.shiny.render.function(
+#     DT::renderDataTable(x)
+#   )
+#   knitr::asis_output(res)
+# }
