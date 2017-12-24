@@ -1,14 +1,36 @@
-#' Launch Radiant in the default browser
+#' Launch radiant.data in default browser or Rstudio Viewer
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
 #'
+#' @param run Run radiant.data in an external browser ("browser") or in the Rstudio viewer ("viewer")
+#'
+#' @importFrom rstudioapi viewer
+#'
+#' @examples
+#' \dontrun{
+#' radiant.data::radiant.data()
+#' radiant.data::radiant.data("viewer")
+#' }
+#'
 #' @export
-radiant.data <- function() {
+radiant.data <- function(run = "browser") {
   if (!"package:radiant.data" %in% search()) {
-    if (!require(radiant.data)) stop("Calling radiant.data start function but radiant.data is not installed.")
+    if (!sshhr(require(radiant.data))) {
+      stop("\nCalling radiant.data start function but radiant.data is not installed.")
+    }
   }
-  runApp(system.file("app", package = "radiant.data"), launch.browser = TRUE)
+  run <- if (run == "viewer") {
+    message("\nStarting radiant.data in Rstudio Viewer ...")
+    rstudioapi::viewer
+  } else {
+    message("\nStarting radiant.data in default browser ...\n\nUse radiant.data::radiant.data(\"viewer\") to open radiant.data in Rstudio Viewer")
+    TRUE
+  }
+  suppressPackageStartupMessages(
+    shiny::runApp(system.file("app", package = "radiant.data"), launch.browser = run)
+  )
 }
+
 
 #' Install webshot and phantomjs
 #' @export
@@ -38,9 +60,12 @@ set_attr <- function(x, which, value) `attr<-`(x, which, value)
 #
 #' @export
 copy_attr <- function(to, from, attr) {
-  if (missing(attr)) attr <- attributes(from)
-  for (i in attr)
+  if (missing(attr)) {
+    attr <- attributes(from)
+  }
+  for (i in attr) {
     to <- set_attr(to, i, attributes(from)[[i]])
+  }
   to
 }
 
