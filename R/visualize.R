@@ -590,12 +590,12 @@ visualize <- function(dataset, xvar,
   }
 
   if (custom) {
-    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
+    if (length(plot_list) == 1) {
+      return(plot_list[[1]]) 
+    } else {
+      return(plot_list)
+    }
   }
-
-  # plty = TRUE
-  # if (plty)
-  #   plot_list <- lapply(plot_list, plotly::ggplotly)
 
   sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = min(length(plot_list), 2))) %>% {
     if (shiny) . else print(.)
