@@ -12,9 +12,11 @@ output$ui_view_vars <- renderUI({
     }
   })
 
-  selectInput("view_vars", "Select variables to show:", choices  = vars,
+  selectInput(
+    "view_vars", "Select variables to show:", choices = vars,
     selected = state_multiple("view_vars", vars, vars), multiple = TRUE,
-    selectize = FALSE, size = min(15, length(vars)))
+    selectize = FALSE, size = min(15, length(vars))
+  )
 })
 
 ## not clear why this is needed because state_multiple should handle this
@@ -28,11 +30,11 @@ output$ui_View <- renderUI({
       checkboxInput("view_pause", "Pause view", state_init("view_pause", FALSE)),
       uiOutput("ui_view_vars"),
       tags$table(
-        tags$td(textInput("view_dat", "Store filtered data as:", paste0(input$dataset,"_view"))),
-        tags$td(actionButton("view_store", "Store"), style="padding-top:30px;")
+        tags$td(textInput("view_dat", "Store filtered data as:", paste0(input$dataset, "_view"))),
+        tags$td(actionButton("view_store", "Store"), style = "padding-top:30px;")
       )
     ),
-    help_and_report('View','view',inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/view.md")) %>% gsub("`","",.))
+    help_and_report("View", "view", inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/view.md")) %>% gsub("`", "", .))
   )
 })
 
@@ -65,11 +67,14 @@ output$dataviewer <- DT::renderDataTable({
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
 
   isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
-  if (sum(isBigFct) > 0)
-    dat[,isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
+  if (sum(isBigFct) > 0) {
+    dat[, isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
+  }
 
-  withProgress(message = "Generating view table", value = 1,
-    DT::datatable(dat,
+  withProgress(
+    message = "Generating view table", value = 1,
+    DT::datatable(
+      dat,
       filter = fbox,
       selection = "none",
       rownames = FALSE,
@@ -77,18 +82,27 @@ output$dataviewer <- DT::renderDataTable({
       escape = FALSE,
       style = "bootstrap",
       options = list(
-        stateSave = TRUE,   ## maintains state
+        stateSave = TRUE, ## maintains state
         searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
         search = list(search = search, regex = TRUE),
-        order = {if (is.null(r_state$dataviewer_state$order)) list()
-                 else r_state$dataviewer_state$order},
-        columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all"),
-                          list(className = "dt-center", targets = "_all")),
+        order = {
+          if (is.null(r_state$dataviewer_state$order)) {
+            list()
+          } else {
+            r_state$dataviewer_state$order
+          }
+        },
+        columnDefs = list(
+          list(orderSequence = c("desc", "asc"), targets = "_all"),
+          list(className = "dt-center", targets = "_all")
+        ),
         autoWidth = TRUE,
         # scrollX = TRUE, ## column filter location gets messed up
         processing = FALSE,
-        pageLength = {if (is.null(r_state$dataviewer_state$length)) 10 else r_state$dataviewer_state$length},
-        lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10","25","50","All"))
+        pageLength = {
+          if (is.null(r_state$dataviewer_state$length)) 10 else r_state$dataviewer_state$length
+        },
+        lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
       ),
       callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
     )
@@ -99,20 +113,24 @@ observeEvent(input$view_store, {
   data_filter <- if (input$show_filter) input$data_filter else ""
   # cmd <- .viewcmd()
 
-  getdata(input$dataset, vars = input$view_vars, filt = data_filter,
-          rows = input$dataviewer_rows_all, na.rm = FALSE) %>%
+  getdata(
+    input$dataset, vars = input$view_vars, filt = data_filter,
+    rows = input$dataviewer_rows_all, na.rm = FALSE
+  ) %>%
     save2env(input$dataset, input$view_dat, .viewcmd())
 
   updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
 
   ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
   showModal(
-    modalDialog(title = "Data Stored",
+    modalDialog(
+      title = "Data Stored",
       span(
         paste0("Dataset '", input$view_dat, "' was successfully added to
                the datasets dropdown. Add code to R > Report to (re)create
                the dataset by clicking the report icon on the bottom left
-               of your screen.")),
+               of your screen.")
+      ),
       footer = modalButton("OK"),
       size = "s",
       easyClose = TRUE
@@ -121,21 +139,23 @@ observeEvent(input$view_store, {
 })
 
 output$dl_view_tab <- downloadHandler(
-  filename = function() { paste0(input$dataset, "_view.csv") },
+  filename = function() {
+    paste0(input$dataset, "_view.csv")
+  },
   content = function(file) {
     data_filter <- if (input$show_filter) input$data_filter else ""
     getdata(
       input$dataset,
       vars = input$view_vars,
       filt = data_filter, rows =
-      input$dataviewer_rows_all,
+        input$dataviewer_rows_all,
       na.rm = FALSE
     ) %>% write.csv(file, row.names = FALSE)
   }
 )
 
 .dataviewer <- reactive({
-  list(tab = .getdata()[1,])
+  list(tab = .getdata()[1, ])
 })
 
 .viewcmd <- function(mess = "") {
@@ -150,10 +170,10 @@ output$dl_view_tab <- downloadHandler(
   ind <- which(cn %in% vars)
 
   if (length(vars) == length(cn)) {
-    vars <- paste0(head(vars,1), ":", tail(vars,1))
+    vars <- paste0(head(vars, 1), ":", tail(vars, 1))
   } else if ((max(ind) - min(ind) + 1) == length(vars)) {
     vars <- paste0(cn[min(ind)], ":", cn[max(ind)])
-  } else if (length(vars) > (length(cn)/2)) {
+  } else if (length(vars) > (length(cn) / 2)) {
     vars <- paste0("-", setdiff(cn, vars), collapse = ", ")
   } else {
     vars <- paste0(vars, collapse = ", ")
@@ -161,14 +181,18 @@ output$dl_view_tab <- downloadHandler(
 
   ## create the command to filter and sort the data
   cmd <- paste0(cmd, "### filter and sort the dataset\nr_data[[\"", input$dataset, "\"]] %>%\n\tselect(", vars, ")")
-  if (input$show_filter && input$data_filter != "")
+  if (input$show_filter && input$data_filter != "") {
     cmd <- paste0(cmd, " %>%\n\tfilter(", input$data_filter, ")")
-  if (ts$search != "")
+  }
+  if (ts$search != "") {
     cmd <- paste0(cmd, " %>%\n\tfilter(Search(\"", ts$search, "\", .))")
-  if (ts$tabfilt != "")
+  }
+  if (ts$tabfilt != "") {
     cmd <- paste0(cmd, " %>%\n\tfilter(", ts$tabfilt, ")")
-  if (ts$tabsort != "")
+  }
+  if (ts$tabsort != "") {
     cmd <- paste0(cmd, " %>%\n\tarrange(", ts$tabsort, ")")
+  }
 
   paste0(cmd, " %>%\n\tstore(\"", dataset, "\", \"", input$dataset, "\")")
 }

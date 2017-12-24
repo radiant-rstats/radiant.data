@@ -12,31 +12,36 @@ expl_inputs <- reactive({
   expl_args$data_filter <- if (input$show_filter) input$data_filter else ""
   expl_args$dataset <- input$dataset
   for (i in r_drop(names(expl_args)))
-    expl_args[[i]] <- input[[paste0("expl_",i)]]
+    expl_args[[i]] <- input[[paste0("expl_", i)]]
 
   expl_args
 })
 
-expl_sum_args <- as.list(if (exists("summary.explore")) formals(summary.explore)
-                         else formals(radiant.data:::summary.explore))
+expl_sum_args <- as.list(if (exists("summary.explore")) {
+  formals(summary.explore)
+} else {
+  formals(radiant.data:::summary.explore)
+} )
 
 ## list of function inputs selected by user
 expl_sum_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(expl_sum_args))
-    expl_sum_args[[i]] <- input[[paste0("expl_",i)]]
+    expl_sum_args[[i]] <- input[[paste0("expl_", i)]]
   expl_sum_args
 })
 
 ## UI-elements for explore
 output$ui_expl_vars <- renderUI({
-  isNum <- .getclass() %in% c("integer","numeric","factor","logical")
+  isNum <- .getclass() %in% c("integer", "numeric", "factor", "logical")
   vars <- varnames()[isNum]
   if (not_available(vars)) return()
 
-  selectInput("expl_vars", label = "Numeric variable(s):", choices = vars,
-    selected = state_multiple("expl_vars",vars), multiple = TRUE,
-    size = min(8, length(vars)), selectize = FALSE)
+  selectInput(
+    "expl_vars", label = "Numeric variable(s):", choices = vars,
+    selected = state_multiple("expl_vars", vars), multiple = TRUE,
+    size = min(8, length(vars)), selectize = FALSE
+  )
 })
 
 output$ui_expl_byvar <- renderUI({
@@ -47,7 +52,9 @@ output$ui_expl_byvar <- renderUI({
 
   if (any(vars %in% input$expl_vars)) {
     vars <- setdiff(vars, input$expl_vars)
-    names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
+    names(vars) <- varnames() %>% {
+      .[match(vars, .)]
+    } %>% names()
   }
 
   isolate({
@@ -57,40 +64,53 @@ output$ui_expl_byvar <- renderUI({
     } else {
       if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
         vars <- unique(c(r_state$expl_byvar, vars))
-        names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
+        names(vars) <- varnames() %>% {
+          .[match(vars, .)]
+        } %>% names()
       }
     }
   })
 
-  selectizeInput("expl_byvar", label = "Group by:", choices = vars,
+  selectizeInput(
+    "expl_byvar", label = "Group by:", choices = vars,
     selected = state_multiple("expl_byvar", vars),
     multiple = TRUE,
-    options = list(placeholder = "Select group-by variable",
-                   plugins = list("remove_button", "drag_drop"))
+    options = list(
+      placeholder = "Select group-by variable",
+      plugins = list("remove_button", "drag_drop")
+    )
   )
 })
 
 output$ui_expl_fun <- renderUI({
   r_funs <- getOption("radiant.functions")
   isolate({
-    sel <- if (is_empty(input$expl_fun))  state_multiple("expl_fun", r_funs, default_funs)
-           else input$expl_fun
+    sel <- if (is_empty(input$expl_fun)) {
+      state_multiple("expl_fun", r_funs, default_funs)
+    } else {
+      input$expl_fun
+    }
   })
-  selectizeInput("expl_fun", label = "Apply function(s):",
-                 choices = r_funs, selected = sel, multiple = TRUE,
-                 options = list(placeholder = 'Select functions',
-                                plugins = list('remove_button', 'drag_drop'))
+  selectizeInput(
+    "expl_fun", label = "Apply function(s):",
+    choices = r_funs, selected = sel, multiple = TRUE,
+    options = list(
+      placeholder = "Select functions",
+      plugins = list("remove_button", "drag_drop")
     )
+  )
 })
 
-output$ui_expl_top  <- renderUI({
+output$ui_expl_top <- renderUI({
   if (is_empty(input$expl_vars)) return()
-  top_var = c("Function" = "fun", "Variables" = "var", "Group by" = "byvar")
+  top_var <- c("Function" = "fun", "Variables" = "var", "Group by" = "byvar")
   if (is_empty(input$expl_byvar)) top_var <- top_var[1:2]
-  selectizeInput("expl_top", label = "Column header:",
-                 choices = top_var,
-                 selected = state_single("expl_top", top_var, top_var[1]),
-                 multiple = FALSE)
+  selectizeInput(
+    "expl_top", label = "Column header:",
+    choices = top_var,
+    selected = state_single("expl_top", top_var, top_var[1]),
+    multiple = FALSE
+  )
 })
 
 output$ui_Explore <- renderUI({
@@ -105,12 +125,14 @@ output$ui_Explore <- renderUI({
     ),
     wellPanel(
       tags$table(
-        tags$td(textInput("expl_dat", "Store as:", paste0(input$dataset,"_expl"))),
+        tags$td(textInput("expl_dat", "Store as:", paste0(input$dataset, "_expl"))),
         tags$td(actionButton("expl_store", "Store"), style = "padding-top:30px;")
       )
     ),
-    help_and_report(modal_title = "Explore",fun_name = "explore",
-                    help_file = inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/explore.md")))
+    help_and_report(
+      modal_title = "Explore", fun_name = "explore",
+      help_file = inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/explore.md"))
+    )
   )
 })
 
@@ -120,7 +142,7 @@ output$ui_Explore <- renderUI({
   if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) return()
   req(input$expl_pause == FALSE, cancelOutput = TRUE)
   withProgress(message = "Calculating", value = 1, {
-    sshhr( do.call(explore, expl_inputs()) )
+    sshhr(do.call(explore, expl_inputs()))
   })
 })
 
@@ -154,7 +176,7 @@ output$explore <- DT::renderDataTable({
   expl_reset("expl_byvar", nc)
   expl_reset("expl_fun", nc)
   if (!is.null(r_state$expl_top) && !is.null(input$expl_top) &&
-      !identical(r_state$expl_top, input$expl_top)) {
+    !identical(r_state$expl_top, input$expl_top)) {
     r_state$expl_top <<- input$expl_top
     r_state$explore_state <<- list()
     r_state$explore_search_columns <<- rep("", nc)
@@ -164,22 +186,30 @@ output$explore <- DT::renderDataTable({
   order <- r_state$explore_state$order
   pageLength <- r_state$explore_state$length
 
-  withProgress(message = 'Generating explore table', value = 1,
-    dtab(expl, dec = input$expl_dec, searchCols = searchCols, order = order,
-         pageLength = pageLength)
+  withProgress(
+    message = "Generating explore table", value = 1,
+    dtab(
+      expl, dec = input$expl_dec, searchCols = searchCols, order = order,
+      pageLength = pageLength
+    )
   )
 })
 
 output$dl_explore_tab <- downloadHandler(
-  filename = function() { paste0(input$dataset, "_expl.csv") },
+  filename = function() {
+    paste0(input$dataset, "_expl.csv")
+  },
   content = function(file) {
     dat <- try(.explore(), silent = TRUE)
     if (is(dat, "try-error") || is.null(dat)) {
-      write.csv(tibble("Data" = "[Empty]"),file, row.names = FALSE)
+      write.csv(tibble("Data" = "[Empty]"), file, row.names = FALSE)
     } else {
       rows <- input$explore_rows_all
-      dat$tab %>% {if (is.null(rows)) . else .[rows,, drop = FALSE]} %>%
-      write.csv(file, row.names = FALSE)
+      dat$tab %>%
+        {
+          if (is.null(rows)) . else .[rows, , drop = FALSE]
+        } %>%
+        write.csv(file, row.names = FALSE)
     }
   }
 )
@@ -189,13 +219,16 @@ observeEvent(input$expl_store, {
   if (is.null(dat)) return()
   name <- input$expl_dat
   rows <- input$explore_rows_all
-  dat$tab %<>% {if (is.null(rows)) . else .[rows,, drop = FALSE]}
+  dat$tab %<>% {
+    if (is.null(rows)) . else .[rows, , drop = FALSE]
+  }
   store(dat, name)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
   ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
   showModal(
-    modalDialog(title = "Data Stored",
+    modalDialog(
+      title = "Data Stored",
       span(
         paste0("Dataset '", name, "' was successfully added to the
                 datasets dropdown. Add code to R > Report to (re)create
@@ -214,10 +247,12 @@ observeEvent(input$explore_report, {
   ## get the state of the dt table
   ts <- dt_state("explore")
   xcmd <- "#dtab(result"
-  if (!is_empty(input$expl_dec, 3))
+  if (!is_empty(input$expl_dec, 3)) {
     xcmd <- paste0(xcmd, ", dec = ", input$expl_dec)
-  if (!is_empty(r_state$explore_state$length, 10))
+  }
+  if (!is_empty(r_state$explore_state$length, 10)) {
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$explore_state$length)
+  }
   xcmd <- paste0(xcmd, ") %>% render\n#store(result, name = \"", input$expl_dat, "\")")
 
   inp_main <- clean_args(expl_inputs(), expl_args)

@@ -28,19 +28,21 @@
 explore <- function(dataset,
                     vars = "",
                     byvar = "",
-                    fun = c("mean_rm","sd_rm"),
+                    fun = c("mean_rm", "sd_rm"),
                     top = "fun",
                     tabfilt = "",
                     tabsort = "",
                     nr = NULL,
                     data_filter = "",
                     shiny = FALSE) {
-
   tvars <- vars
   if (!is_empty(byvar)) tvars <- unique(c(tvars, byvar))
 
   dat <- getdata(dataset, tvars, filt = data_filter, na.rm = FALSE)
-  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
+  if (!is_string(dataset)) {
+    dataset <- deparse(substitute(dataset)) %>%
+      set_attr("df", TRUE)
+  }
 
   ## in case : was used
   vars <- setdiff(colnames(dat), byvar)
@@ -48,56 +50,62 @@ explore <- function(dataset,
   ## converting factors for integer (1st level)
   ## see also R/visualize.R
   dc <- getclass(dat)
-  isFctNum <- "factor" == dc & names(dc) %in% setdiff(vars,byvar)
+  isFctNum <- "factor" == dc & names(dc) %in% setdiff(vars, byvar)
   if (sum(isFctNum)) {
-    dat[,isFctNum] <- select(dat, which(isFctNum)) %>% 
+    dat[, isFctNum] <- select(dat, which(isFctNum)) %>%
       mutate_all(funs(as.integer(. == levels(.)[1])))
     dc[isFctNum] <- "integer"
   }
 
   isLogNum <- "logical" == dc & names(dc) %in% setdiff(vars, byvar)
   if (sum(isLogNum)) {
-    dat[,isLogNum] <- select(dat, which(isLogNum)) %>% 
+    dat[, isLogNum] <- select(dat, which(isLogNum)) %>%
       mutate_all(funs(as.integer))
     dc[isLogNum] <- "integer"
   }
-
-  ## summaries only for numeric variables
-  # isNum <- dc %>% {which("numeric" == . | "integer" == .)}
 
   ## avoid using .._rm as function name
   pfun <- make_funs(fun)
 
   if (is_empty(byvar)) {
-    isNum <- dc %>% {which("numeric" == . | "integer" == .)}
-    tab <- dat %>% select_at(.vars = names(isNum)) %>%
+    isNum <- dc %>% {
+      which("numeric" == . | "integer" == .)
+    }
+    tab <- dat %>%
+      select_at(.vars = names(isNum)) %>%
       gather("variable", "value", factor_key = TRUE) %>%
-      group_by_at("variable")  %>% summarise_all(pfun)
+      group_by_at("variable") %>%
+      summarise_all(pfun)
 
     ## order by the variable names selected
-    tab <- tab[match(vars, tab[[1]]),]
+    tab <- tab[match(vars, tab[[1]]), ]
 
-    if (ncol(tab) == 2) colnames(tab) <- c("variable", names(pfun))
+    if (ncol(tab) == 2) {
+      colnames(tab) <- c("variable", names(pfun))
+    }
   } else {
 
     ## convert categorical variables to factors if needed
     ## needed to deal with empty/missing values
-    dat[,byvar] <- select_at(dat, .vars = byvar) %>% 
+    dat[, byvar] <- select_at(dat, .vars = byvar) %>%
       mutate_all(funs(empty_level(.)))
 
     ## avoiding issues with n_missing and n_distinct in dplyr
     ## have to reverse this later
     fix_uscore <- function(x, org = "_", repl = ".") {
-      stats <-  c("missing","distinct")
-      org <- paste0("n",org,stats)
-      repl <- paste0("n",repl,stats)
-      for (i in seq_along(org)) x %<>% sub(org[i],repl[i],.)
+      stats <- c("missing", "distinct")
+      org <- paste0("n", org, stats)
+      repl <- paste0("n", repl, stats)
+      for (i in seq_along(org)) {
+        x <- sub(org[i], repl[i], x)
+      }
       x
     }
 
     names(pfun) %<>% fix_uscore
 
-    tab <- dat %>% group_by_at(.vars = byvar) %>%
+    tab <- dat %>%
+      group_by_at(.vars = byvar) %>%
       summarise_all(pfun)
 
     ## avoiding issues with n_missing and n_distinct
@@ -120,14 +128,17 @@ explore <- function(dataset,
   }
 
   ## flip the table if needed
-  if (top != "fun")
-    tab <- list(tab = tab, byvar = byvar, pfun = pfun) %>% flip(top)
+  if (top != "fun") {
+    tab <- list(tab = tab, byvar = byvar, pfun = pfun) %>%
+      flip(top)
+  }
 
   nrow_tab <- nrow(tab)
 
   ## filtering the table if desired from R > Report
-  if (tabfilt != "")
+  if (tabfilt != "") {
     tab <- filterdata(tab, tabfilt)
+  }
 
   ## sorting the table if desired from R > Report
   if (!identical(tabsort, "")) {
@@ -136,8 +147,9 @@ explore <- function(dataset,
   }
 
   ## ensure factors ordered as in the (sorted) table
-  if (!is_empty(byvar) && top != "byvar")
+  if (!is_empty(byvar) && top != "byvar") {
     for (i in byvar) tab[[i]] %<>% factor(., levels = unique(.))
+  }
 
   ## frequencies turned into doubles earlier ...
   check_int <- function(x) {
@@ -156,7 +168,7 @@ explore <- function(dataset,
   attr(tab, "nrow") <- nrow_tab
   if (!is.null(nr)) {
     ind <- if (nr > nrow(tab)) 1:nrow(tab) else 1:nr
-    tab <- tab[ind,, drop = FALSE]
+    tab <- tab[ind, , drop = FALSE]
   }
 
   ## objects no longer needed
@@ -185,20 +197,24 @@ explore <- function(dataset,
 #'
 #' @export
 summary.explore <- function(object, dec = 3, ...) {
-
   cat("Explore\n")
   cat("Data        :", object$dataset, "\n")
-  if (object$data_filter %>% gsub("\\s","",.) != "")
-    cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
-  if (object$tabfilt != "")
+  if (object$data_filter %>% gsub("\\s", "", .) != "") {
+    cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
+  }
+  if (object$tabfilt != "") {
     cat("Table filter:", object$tabfilt, "\n")
-  if (object$tabsort[1] != "")
+  }
+  if (object$tabsort[1] != "") {
     cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
-  nr <- attr(object$tab,"nrow")
-  if (!is.null(nr) && !is.null(object$nr) && object$nr < nr)
+  }
+  nr <- attr(object$tab, "nrow")
+  if (!is.null(nr) && !is.null(object$nr) && object$nr < nr) {
     cat(paste0("Rows shown  : ", object$nr, " (out of ", nr, ")\n"))
-  if (object$byvar[1] != "")
+  }
+  if (object$byvar[1] != "") {
     cat("Grouped by  :", object$byvar, "\n")
+  }
   cat("Functions   :", names(object$pfun), "\n")
   cat("Top         :", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[object$top], "\n")
   cat("\n")
@@ -222,7 +238,7 @@ store.explore <- function(object, name, ...) {
   tab <- object$tab
 
   ## fix colnames as needed
-  colnames(tab) <- sub("^\\s+","", colnames(tab)) %>% sub("\\s+$","", .) %>% gsub("\\s+", "_", .)
+  colnames(tab) <- sub("^\\s+", "", colnames(tab)) %>% sub("\\s+$", "", .) %>% gsub("\\s+", "_", .)
 
   if (exists("r_environment")) {
     env <- r_environment
@@ -235,7 +251,7 @@ store.explore <- function(object, name, ...) {
   message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
 
   env$r_data[[name]] <- tab
-  env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
+  env$r_data[["datasetlist"]] <- c(name, env$r_data[["datasetlist"]]) %>% unique()
 }
 
 #' Flip the DT table to put Function, Variable, or Group by on top
@@ -254,13 +270,15 @@ store.explore <- function(object, name, ...) {
 #'
 #' @export
 flip <- function(expl, top = "fun") {
-  cvars <- expl$byvar %>% {if (is_empty(.[1])) character(0) else .}
+  cvars <- expl$byvar %>% {
+    if (is_empty(.[1])) character(0) else .
+  }
   if (top[1] == "var") {
-    expl$tab %<>% gather(".function", "value", !! -(1:(length(cvars)+1))) %>% 
+    expl$tab %<>% gather(".function", "value", !! -(1:(length(cvars) + 1))) %>%
       spread("variable", "value")
     expl$tab[[".function"]] %<>% factor(., levels = names(expl$pfun))
   } else if (top[1] == "byvar" && length(cvars) > 0) {
-    expl$tab %<>% gather(".function", "value", !! -(1:(length(cvars)+1))) %>% 
+    expl$tab %<>% gather(".function", "value", !! -(1:(length(cvars) + 1))) %>%
       spread(!! cvars[1], "value")
     expl$tab[[".function"]] %<>% factor(., levels = names(expl$pfun))
 
@@ -297,7 +315,6 @@ dtab.explore <- function(object,
                          order = NULL,
                          pageLength = NULL,
                          ...) {
-
   tab <- object$tab
   cn_all <- colnames(tab)
   cn_num <- cn_all[sapply(tab, is.numeric)]
@@ -305,28 +322,24 @@ dtab.explore <- function(object,
 
   top <- c("fun" = "Function", "var" = "Variables", "byvar" = paste0("Group by: ", object$byvar[1]))[object$top]
 
-  sketch = shiny::withTags(table(
-    thead(
-      tr(
-        th(" ", colspan = length(cn_cat)),
-        lapply(top, th, colspan = length(cn_num), class = "text-center")
-      ),
-      tr(lapply(cn_all, th))
+  sketch <- shiny::withTags(
+    table(
+      thead(
+        tr(
+          th(" ", colspan = length(cn_cat)),
+          lapply(top, th, colspan = length(cn_num), class = "text-center")
+        ),
+        tr(lapply(cn_all, th))
+      )
     )
-  ))
-
-  ## used when called from report function
-  # if (is.null(searchCols) && !is.null(sc)) {
-  #   searchCols <- rep("", ncol(tab))
-  #   for (i in sc) searchCols[i[[1]]] <- i[[2]]
-  #   searchCols <- gsub("'", "\\\"", searchCols) %>% lapply(function(x) list(search = x))
-  # }
+  )
 
   ## for display options see https://datatables.net/reference/option/dom
   dom <- if (nrow(tab) < 11) "t" else "ltip"
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
   dt_tab <- rounddf(tab, dec) %>%
-    DT::datatable(container = sketch, selection = "none",
+    DT::datatable(
+      container = sketch, selection = "none",
       rownames = FALSE,
       filter = fbox,
       # extension = "KeyTable",
@@ -336,22 +349,23 @@ dtab.explore <- function(object,
         stateSave = TRUE,
         searchCols = searchCols,
         order = order,
-        columnDefs = list(list(orderSequence = c('desc', 'asc'), targets = "_all")),
+        columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all")),
         processing = FALSE,
-        pageLength = {if (is.null(pageLength)) 10 else pageLength},
-        lengthMenu = list(c(5, 10, 25, 50, -1), c("5","10","25","50","All"))
+        pageLength = {
+          if (is.null(pageLength)) 10 else pageLength
+        },
+        lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
       ),
       callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
-    ) %>% DT::formatStyle(., cn_cat,  color = "white", backgroundColor = "grey")
+    ) %>%
+    DT::formatStyle(., cn_cat, color = "white", backgroundColor = "grey")
 
   ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(
-    list(rmarkdown::html_dependency_bootstrap('bootstrap')), dt_tab$dependencies
+    list(rmarkdown::html_dependency_bootstrap("bootstrap")),
+    dt_tab$dependencies
   )
 
-  # if (exists("r_environment") && isTRUE(r_environment$called_from_knitIt)) 
-  #   render(dt_tab)
-  # else
   dt_tab
 }
 
@@ -376,7 +390,7 @@ n_missing <- function(x) sum(is.na(x))
 #' p025(rnorm(100))
 #'
 #' @export
-p025 <- function(x, na.rm = TRUE) quantile(x,.025, na.rm = na.rm)
+p025 <- function(x, na.rm = TRUE) quantile(x, .025, na.rm = na.rm)
 
 #' 5th percentile
 #' @param x Input variable
@@ -386,7 +400,7 @@ p025 <- function(x, na.rm = TRUE) quantile(x,.025, na.rm = na.rm)
 #' p05(rnorm(100))
 #'
 #' @export
-p05 <- function(x, na.rm = TRUE) quantile(x,.05, na.rm = na.rm)
+p05 <- function(x, na.rm = TRUE) quantile(x, .05, na.rm = na.rm)
 
 #' 10th percentile
 #' @param x Input variable
@@ -396,7 +410,7 @@ p05 <- function(x, na.rm = TRUE) quantile(x,.05, na.rm = na.rm)
 #' p10(rnorm(100))
 #'
 #' @export
-p10 <- function(x, na.rm = TRUE) quantile(x,.1, na.rm = na.rm)
+p10 <- function(x, na.rm = TRUE) quantile(x, .1, na.rm = na.rm)
 
 #' 25th percentile
 #' @param x Input variable
@@ -406,7 +420,7 @@ p10 <- function(x, na.rm = TRUE) quantile(x,.1, na.rm = na.rm)
 #' p25(rnorm(100))
 #'
 #' @export
-p25 <- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
+p25 <- function(x, na.rm = TRUE) quantile(x, .25, na.rm = na.rm)
 
 #' 75th percentile
 #' @param x Input variable
@@ -416,7 +430,7 @@ p25 <- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
 #' p75(rnorm(100))
 #'
 #' @export
-p75 <- function(x, na.rm = TRUE) quantile(x,.75, na.rm = na.rm)
+p75 <- function(x, na.rm = TRUE) quantile(x, .75, na.rm = na.rm)
 
 #' 90th percentile
 #' @param x Input variable
@@ -426,7 +440,7 @@ p75 <- function(x, na.rm = TRUE) quantile(x,.75, na.rm = na.rm)
 #' p90(rnorm(100))
 #'
 #' @export
-p90 <- function(x, na.rm = TRUE) quantile(x,.90, na.rm = na.rm)
+p90 <- function(x, na.rm = TRUE) quantile(x, .90, na.rm = na.rm)
 
 #' 95th percentile
 #' @param x Input variable
@@ -436,7 +450,7 @@ p90 <- function(x, na.rm = TRUE) quantile(x,.90, na.rm = na.rm)
 #' p95(rnorm(100))
 #'
 #' @export
-p95 <- function(x, na.rm = TRUE) quantile(x,.95, na.rm = na.rm)
+p95 <- function(x, na.rm = TRUE) quantile(x, .95, na.rm = na.rm)
 
 #' 97.5th percentile
 #' @param x Input variable
@@ -446,7 +460,7 @@ p95 <- function(x, na.rm = TRUE) quantile(x,.95, na.rm = na.rm)
 #' p975(rnorm(100))
 #'
 #' @export
-p975 <- function(x, na.rm = TRUE) quantile(x,.975, na.rm = na.rm)
+p975 <- function(x, na.rm = TRUE) quantile(x, .975, na.rm = na.rm)
 
 #' Coefficient of variation
 #' @param x Input variable
@@ -558,9 +572,9 @@ se <- function(x, na.rm = TRUE) {
 prop <- function(x, na.rm = TRUE) {
   if (na.rm) x <- na.omit(x)
   if (is.numeric(x)) {
-    mean(x == max(x, 1))     ## gives proportion of max value in x
+    mean(x == max(x, 1)) ## gives proportion of max value in x
   } else if (is.factor(x)) {
-    mean(x == levels(x)[1])  ## gives proportion of first level in x
+    mean(x == levels(x)[1]) ## gives proportion of first level in x
   } else if (is.logical(x)) {
     mean(x)
   } else {
@@ -578,7 +592,7 @@ prop <- function(x, na.rm = TRUE) {
 #' @export
 varprop <- function(x, na.rm = TRUE) {
   p <- prop(x, na.rm = na.rm)
-  p*(1-p)
+  p * (1 - p)
 }
 
 #' Standard deviation for proportion
@@ -601,7 +615,7 @@ sdprop <- function(x, na.rm = TRUE) sqrt(varprop(x, na.rm = na.rm))
 #' @export
 seprop <- function(x, na.rm = TRUE) {
   if (na.rm) x <- na.omit(x)
-  sqrt(varprop(x, na.rm = FALSE)/length(x))
+  sqrt(varprop(x, na.rm = FALSE) / length(x))
 }
 
 #' Variance with na.rm = TRUE
@@ -625,7 +639,7 @@ var_rm <- function(x, na.rm = TRUE) var(x, na.rm = na.rm)
 varpop <- function(x, na.rm = TRUE) {
   if (na.rm) x <- na.omit(x)
   n <- length(x)
-  var(x) * ((n-1)/n)
+  var(x) * ((n - 1) / n)
 }
 
 #' Standard deviation for the population
@@ -656,7 +670,9 @@ sum_rm <- function(x, na.rm = TRUE) sum(x, na.rm = na.rm)
 #' ln(runif(10,1,2))
 #'
 #' @export
-ln <- function(x, na.rm = TRUE) if (na.rm) log(na.omit(x)) else log(x)
+ln <- function(x, na.rm = TRUE) {
+  if (na.rm) log(na.omit(x)) else log(x)
+}
 
 #' Does a vector have non-zero variability?
 #' @param x Input variable
@@ -674,7 +690,7 @@ does_vary <- function(x, na.rm = TRUE) {
     if (is.factor(x) || is.character(x)) {
       length(unique(x)) > 1
     } else {
-      abs(max_rm(x, na.rm = na.rm) - min_rm(x, na.rm = na.rm)) > .Machine$double.eps^0.5
+      abs(max_rm(x, na.rm = na.rm) - min_rm(x, na.rm = na.rm)) > .Machine$double.eps ^ 0.5
     }
   }
 }
@@ -689,7 +705,7 @@ does_vary <- function(x, na.rm = TRUE) {
 make_funs <- function(x) {
   xclean <- gsub("_rm$", "", x) %>% sub("length", "n", .)
   env <- if (exists("radiant.data")) environment(radiant.data::radiant.data) else parent.frame()
-  dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula, env = env) %>% 
+  dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula, env = env) %>%
     setNames(xclean))
 }
 

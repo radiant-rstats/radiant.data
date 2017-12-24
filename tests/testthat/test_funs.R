@@ -2,17 +2,17 @@ context("Radiant functions")
 
 test_that("set_attr", {
   foo <- . %>% set_attr("foo", "something")
-  expect_equal(3 %>% foo %>% attr("foo"), "something")
+  expect_equal(3 %>% foo() %>% attr("foo"), "something")
 })
 
 test_that("add_class", {
-  foo <- . %>% .^2 %>% add_class("foo")
-  expect_equal(3 %>% foo %>% class, c("foo","numeric"))
+  foo <- . %>% . ^ 2 %>% add_class("foo")
+  expect_equal(3 %>% foo() %>% class(), c("foo", "numeric"))
 })
 
 test_that("sig_star", {
   sig_stars(c(.0009, .049, .009, .4, .09)) %>%
-  expect_equal(c("***","*","**","","."))
+    expect_equal(c("***", "*", "**", "", "."))
 })
 
 test_that("sshh", {
@@ -23,23 +23,26 @@ test_that("sshh", {
 test_that("sshhr", {
   test <- 3 %>% set_names("test")
   expect_equal(sshhr(c(message("should be null"), test = 3)), test)
-  expect_equal(sshhr(c(warning("should be null"), test = 3)), c("should be null",test))
+  expect_equal(sshhr(c(warning("should be null"), test = 3)), c("should be null", test))
 })
 
 test_that("getdata", {
- getdata("mtcars", "mpg:disp", filt = "mpg > 20", rows = 1:5) %>%
- expect_equal(., mtcars[mtcars$mpg > 20, c("mpg","cyl","disp")][1:5,1:3] %>% set_rownames(1:5))
+  getdata("mtcars", "mpg:disp", filt = "mpg > 20", rows = 1:5) %>%
+    expect_equal(., mtcars[mtcars$mpg > 20, c("mpg", "cyl", "disp")][1:5, 1:3] %>% set_rownames(1:5))
 })
 
 test_that("changedata", {
-  r_data <<- list() %>% { .$dat <- data.frame(a = 1:20); . }
+  r_data <<- list() %>% {
+    .$dat <- data.frame(a = 1:20)
+    .
+  }
   changedata("dat", 20:1, "b")
   expect_equal(r_data$dat, data.frame(a = 1:20, b = 20:1))
   rm(r_data, envir = .GlobalEnv)
 })
 
 test_that("getclass", {
-  expect_equal(getclass(diamonds), sapply(diamonds, class) %>% tolower)
+  expect_equal(getclass(diamonds), sapply(diamonds, class) %>% tolower())
 })
 
 test_that("is_empty", {
@@ -54,7 +57,7 @@ test_that("is_empty", {
 test_that("options", {
   options(width = 10)
   options(scipen = 0)
-  radiant.data:::.onLoad("","")
+  radiant.data:::.onLoad("", "")
   expect_equal(getOption("width"), 250)
   expect_equal(getOption("scipen"), 100)
 })

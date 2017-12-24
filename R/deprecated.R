@@ -45,19 +45,4 @@ sdp_rm <- function(...) {
   sdpop(...)
 }
 
-## keeping code incase mutate_if still causes problems in dplyr > 0.7.1
-# mutate_if_tmp <- function (.tbl, .predicate, .funs, ...) {
-#   if (sum(sapply(.tbl, .predicate)) > 0) { 
-#     rn <- rownames(.tbl)
-#     cn <- colnames(.tbl)
-#     colnames(.tbl) <- make.names(cn)
-#     mutate_if(.tbl, .predicate, .funs, ...) %>%
-#       set_colnames(cn) %>%
-#       as.data.frame %>%
-#       set_rownames(rn)
-#   } else {
-#     .tbl
-#   }
-# }
-
 NULL

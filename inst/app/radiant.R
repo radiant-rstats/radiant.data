@@ -16,13 +16,13 @@ saveSession <- function(session = session) {
   }
 
   r_sessions[[r_ssuid]] <- list(
-    r_data    = toList(r_data),
+    r_data = toList(r_data),
     r_state = rs,
     timestamp = Sys.time()
   )
 
   ## saving session information to file
-  fn <- paste0(normalizePath("~/radiant.sessions"),"/r_", r_ssuid, ".rds")
+  fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", r_ssuid, ".rds")
   saveRDS(r_sessions[[r_ssuid]], file = fn)
 }
 
@@ -31,7 +31,7 @@ observeEvent(input$refresh_radiant, {
     fn <- normalizePath("~/radiant.sessions")
     file.remove(list.files(fn, full.names = TRUE))
   } else {
-    fn <- paste0(normalizePath("~/radiant.sessions"),"/r_", r_ssuid, ".rds")
+    fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", r_ssuid, ".rds")
     if (file.exists(fn)) unlink(fn, force = TRUE)
   }
 
@@ -43,10 +43,10 @@ saveStateOnRefresh <- function(session = session) {
     isolate({
       url_query <- parseQueryString(session$clientData$url_search)
       if (not_pressed(input$refresh_radiant) && not_pressed(input$stop_radiant) &&
-          is.null(input$uploadState) && !"fixed" %in% names(url_query)) {
+        is.null(input$uploadState) && !"fixed" %in% names(url_query)) {
 
         # withProgress(message = "Preparing session sharing", value = 1, {
-          saveSession(session)
+        saveSession(session)
         # })
       } else {
         if (is.null(input$uploadState)) {
@@ -70,13 +70,13 @@ saveStateOnRefresh <- function(session = session) {
   selcom <- input$data_filter %>% gsub("\\n", "", .) %>% gsub("\"", "\'", .)
   if (is_empty(selcom) || input$show_filter == FALSE) {
     isolate(r_data$filter_error <- "")
-  } else if (grepl("([^=!<>])=([^=])",selcom)) {
+  } else if (grepl("([^=!<>])=([^=])", selcom)) {
     isolate(r_data$filter_error <- "Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
   } else {
     # seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
     seldat <- try(filter(r_data[[input$dataset]], !! rlang::parse_expr(gsub(",", "&", selcom))), silent = TRUE)
     if (is(seldat, "try-error")) {
-      isolate(r_data$filter_error <- paste0("Invalid filter: \"", attr(seldat,"condition")$message,"\". Update or remove the expression"))
+      isolate(r_data$filter_error <- paste0("Invalid filter: \"", attr(seldat, "condition")$message, "\". Update or remove the expression"))
     } else {
       isolate(r_data$filter_error <- "")
       if ("grouped_df" %in% class(seldat)) {
@@ -93,16 +93,6 @@ saveStateOnRefresh <- function(session = session) {
     r_data[[input$dataset]]
   }
 })
-
-## same as .getdata but without filters etc.
-# .getdata_transform <- reactive({
-#   if (is.null(input$dataset)) return()
-#   if ("grouped_df" %in% class(r_data[[input$dataset]])) {
-#     ungroup(r_data[[input$dataset]])
-#   } else {
-#     r_data[[input$dataset]]
-#   }
-# })
 
 ## using a regular function to avoid a full data copy
 .getdata_transform <- function(dataset = input$dataset) {
@@ -121,16 +111,20 @@ saveStateOnRefresh <- function(session = session) {
 groupable_vars <- reactive({
   .getdata() %>%
     summarise_all(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
-                        is.character(.) || ((length(unique(.))/n()) < .30))) %>%
-    {which(. == TRUE)} %>%
+      is.character(.) || ((length(unique(.)) / n()) < .30))) %>%
+    {
+      which(. == TRUE)
+    } %>%
     varnames()[.]
 })
 
 groupable_vars_nonum <- reactive({
   .getdata() %>%
     summarise_all(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
-                   is.character(.))) %>%
-    {which(. == TRUE)} %>%
+      is.character(.))) %>%
+    {
+      which(. == TRUE)
+    } %>%
     varnames()[.]
 })
 
@@ -139,7 +133,9 @@ groupable_vars_nonum <- reactive({
 two_level_vars <- reactive({
   .getdata() %>%
     summarise_all(funs(length(unique(.)))) %>%
-    { . == 2 } %>%
+    {
+      . == 2
+    } %>%
     which(.) %>%
     varnames()[.]
 })
@@ -148,24 +144,26 @@ two_level_vars <- reactive({
 varying_vars <- reactive({
   .getdata() %>%
     summarise_all(funs(does_vary(.))) %>%
-    as.logical %>%
-    which %>%
+    as.logical() %>%
+    which() %>%
     varnames()[.]
 })
 
 ## getting variable names in active dataset and their class
 varnames <- reactive({
-  .getclass() %>% names %>%
+  .getclass() %>%
+    names() %>%
     set_names(., paste0(., " {", .getclass(), "}"))
 })
 
 ## cleaning up the arguments for data_filter and defaults passed to report
 clean_args <- function(rep_args, rep_default = list()) {
   if (!is.null(rep_args$data_filter)) {
-    if (rep_args$data_filter == "")
-      rep_args$data_filter  <- NULL
-    else
-      rep_args$data_filter %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
+    if (rep_args$data_filter == "") {
+      rep_args$data_filter <- NULL
+    } else {
+      rep_args$data_filter %<>% gsub("\\n", "", .) %>% gsub("\"", "\'", .)
+    }
   }
 
   if (length(rep_default) == 0) rep_default[names(rep_args)] <- ""
@@ -173,11 +171,13 @@ clean_args <- function(rep_args, rep_default = list()) {
   ## removing default arguments before sending to report feature
   for (i in names(rep_args)) {
     if (!is.language(rep_args[[i]]) && !is.call(rep_args[[i]]) && all(is.na(rep_args[[i]]))) {
-      rep_args[[i]] <- NULL; next
+      rep_args[[i]] <- NULL
+      next
     }
     if (!is.symbol(rep_default[[i]]) && !is.call(rep_default[[i]]) && all(is_not(rep_default[[i]]))) next
-    if (length(rep_args[[i]]) == length(rep_default[[i]]) && all(rep_args[[i]] == rep_default[[i]]))
+    if (length(rep_args[[i]]) == length(rep_default[[i]]) && all(rep_args[[i]] == rep_default[[i]])) {
       rep_args[[i]] <- NULL
+    }
   }
 
   rep_args
@@ -203,26 +203,29 @@ has_duplicates <- function(x)
 is_date <- function(x) inherits(x, c("Date", "POSIXlt", "POSIXct"))
 
 ## drop elements from .._args variables obtained using formals
-r_drop <- function(x, drop = c("dataset","data_filter")) x[-which(x %in% drop)]
+r_drop <- function(x, drop = c("dataset", "data_filter")) x[-which(x %in% drop)]
 
 ## show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt = "") {
-
   if (is.character(dat) && length(dat) == 1) dat <- getdata(dat, filt = filt, na.rm = FALSE)
   nr <- nrow(dat)
   ## avoid slice with variables outside of the df in case a column with the same
   ## name exists
-  dat <- dat[1:min(nshow, nr),, drop = FALSE]
+  dat <- dat[1:min(nshow, nr), , drop = FALSE]
   dat %>%
     mutate_if(is_date, as.character) %>%
     mutate_if(is.character, funs(strtrim(., 40))) %>%
     xtable::xtable(.) %>%
-    print(type = "html",  print.results = FALSE, include.rownames = FALSE,
-          sanitize.text.function = identity,
-          html.table.attributes = "class='table table-condensed table-hover snippet'") %>%
+    print(
+      type = "html", print.results = FALSE, include.rownames = FALSE,
+      sanitize.text.function = identity,
+      html.table.attributes = "class='table table-condensed table-hover snippet'"
+    ) %>%
     paste0(title, .) %>%
-    {if (nr <= nshow) . else paste0(., "\n<label>", nshow, " of ", formatnr(nr,dec = 0), " rows shown. See View-tab for details.</label>")} %>%
-    enc2utf8
+    {
+      if (nr <= nshow) . else paste0(., "\n<label>", nshow, " of ", formatnr(nr, dec = 0), " rows shown. See View-tab for details.</label>")
+    } %>%
+    enc2utf8()
 }
 
 suggest_data <- function(text = "", dat = "diamonds")
@@ -246,18 +249,18 @@ print.capture_plot <- function(x, ...) {
 ################################################################
 
 ## textarea where the return key submits the content
-returnTextAreaInput <- function(inputId, 
-                                label = NULL, 
+returnTextAreaInput <- function(inputId,
+                                label = NULL,
                                 rows = 2,
-                                placeholder = NULL, 
-                                resize = "vertical", 
+                                placeholder = NULL,
+                                resize = "vertical",
                                 value = "") {
   tagList(
     tags$label(label, `for` = inputId), br(),
     tags$textarea(
-      value, 
-      id = inputId, 
-      type = "text", 
+      value,
+      id = inputId,
+      type = "text",
       rows = rows,
       placeholder = placeholder,
       resize = resize,
@@ -266,15 +269,15 @@ returnTextAreaInput <- function(inputId,
   )
 }
 
-returnTextInput <- function(inputId, 
-                            label = NULL, 
-                            placeholder = NULL, 
+returnTextInput <- function(inputId,
+                            label = NULL,
+                            placeholder = NULL,
                             value = "") {
   tagList(
     tags$label(label, `for` = inputId),
     tags$input(
-      id = inputId, 
-      type = "text", 
+      id = inputId,
+      type = "text",
       value = value,
       placeholder = placeholder,
       class = "returnTextInput form-control"
@@ -300,7 +303,9 @@ register_print_output <- function(fun_name, rfun_name,
   output[[out_name]] <- renderPrint({
     ## when no analysis was conducted (e.g., no variables selected)
     get(rfun_name)() %>%
-      {if (is.character(.)) cat(.,"\n") else .} %>%
+      {
+        if (is.character(.)) cat(., "\n") else .
+      } %>%
       rm(.)
   })
   return(invisible())
@@ -318,23 +323,27 @@ register_plot_output <- function(fun_name, rfun_name,
   output[[out_name]] <- renderPlot({
 
     ## when no analysis was conducted (e.g., no variables selected)
-    get(rfun_name)() %>% { if (is.null(.)) " " else . } %>%
-    { if (is.character(.)) {
-        plot(x = 1, type = "n", main = paste0("\n\n\n\n\n\n\n\n",.) ,
-             axes = FALSE, xlab = "", ylab = "", cex.main = .9)
+    get(rfun_name)() %>% {
+      if (is.null(.)) " " else .
+    } %>% {
+      if (is.character(.)) {
+        plot(
+          x = 1, type = "n", main = paste0("\n\n\n\n\n\n\n\n", .),
+          axes = FALSE, xlab = "", ylab = "", cex.main = .9
+        )
       } else {
         withProgress(message = "Making plot", value = 1, print(.))
       }
     }
-  }, width=get(width_fun), height=get(height_fun), res = 96)
+  }, width = get(width_fun), height = get(height_fun), res = 96)
 
   return(invisible())
 }
 
-plot_downloader <- function(plot_name, 
-                            width = plot_width, 
-                            height = plot_height, 
-                            pre = ".plot_", 
+plot_downloader <- function(plot_name,
+                            width = plot_width,
+                            height = plot_height,
+                            pre = ".plot_",
                             po = "dl_",
                             fname = plot_name) {
 
@@ -343,28 +352,29 @@ plot_downloader <- function(plot_name,
 
   ## create an output
   output[[lnm]] <- downloadHandler(
-    filename = function() { 
-      paste0(fname, ".png") 
+    filename = function() {
+      paste0(fname, ".png")
     },
     content = function(file) {
 
-        ## download graphs in higher resolution than shown in GUI (504 dpi)
-        pr <- 5
+      ## download graphs in higher resolution than shown in GUI (504 dpi)
+      pr <- 5
 
 
-        ## fix for https://github.com/radiant-rstats/radiant/issues/20
-        w <- if (any(c("reactiveExpr", "function") %in% class(width))) width() * pr else width * pr
-        h <- if (any(c("reactiveExpr", "function") %in% class(height))) height() * pr else height * pr
+      ## fix for https://github.com/radiant-rstats/radiant/issues/20
+      w <- if (any(c("reactiveExpr", "function") %in% class(width))) width() * pr else width * pr
+      h <- if (any(c("reactiveExpr", "function") %in% class(height))) height() * pr else height * pr
 
-        plot <- try(get(paste0(pre, plot_name))(), silent = TRUE)
-        if (is(plot, "try-error") || is.character(plot) || is.null(plot)) {
-          plot <- ggplot() + labs(title = "Plot not available")
-          pr <- 1; w <- h <- 500 
-        }
+      plot <- try(get(paste0(pre, plot_name))(), silent = TRUE)
+      if (is(plot, "try-error") || is.character(plot) || is.null(plot)) {
+        plot <- ggplot() + labs(title = "Plot not available")
+        pr <- 1
+        w <- h <- 500
+      }
 
-        png(file = file, width = w, height = h, res = 96 * pr)
-          print(plot)
-        dev.off()
+      png(file = file, width = w, height = h, res = 96 * pr)
+      print(plot)
+      dev.off()
     }
   )
 
@@ -378,8 +388,9 @@ stat_tab_panel <- function(menu, tool, tool_ui, output_panels,
       wellPanel(
         HTML(paste("<label><strong>Menu:", menu, "</strong></label><br>")),
         HTML(paste("<label><strong>Tool:", tool, "</strong></label><br>")),
-        if (!is.null(data))
+        if (!is.null(data)) {
           HTML(paste("<label><strong>Data:", data, "</strong></label>"))
+        }
       ),
       uiOutput(tool_ui)
     ),
@@ -395,7 +406,8 @@ stat_tab_panel <- function(menu, tool, tool_ui, output_panels,
 help_modal <- function(modal_title, link, help_file,
                        author = "Vincent Nijs",
                        year = lubridate::year(lubridate::now())) {
-  sprintf("<div class='modal fade' id='%s' tabindex='-1' role='dialog' aria-labelledby='%s_label' aria-hidden='true'>
+  sprintf(
+    "<div class='modal fade' id='%s' tabindex='-1' role='dialog' aria-labelledby='%s_label' aria-hidden='true'>
             <div class='modal-dialog modal-dialog-lg'>
               <div class='modal-content'>
                 <div class='modal-header'>
@@ -409,14 +421,17 @@ help_modal <- function(modal_title, link, help_file,
             </div>
            </div>
            <i title='Help' class='fa fa-question' data-toggle='modal' data-target='#%s'></i>",
-           link, link, link, modal_title, help_file, author, year, link) %>%
-  enc2utf8 %>% HTML
+    link, link, link, modal_title, help_file, author, year, link
+  ) %>%
+    enc2utf8() %>%
+    HTML()
 }
 
 help_and_report <- function(modal_title, fun_name, help_file,
                             author = "Vincent Nijs",
                             year = lubridate::year(lubridate::now())) {
-  sprintf("<div class='modal fade' id='%s_help' tabindex='-1' role='dialog' aria-labelledby='%s_help_label' aria-hidden='true'>
+  sprintf(
+    "<div class='modal fade' id='%s_help' tabindex='-1' role='dialog' aria-labelledby='%s_help_label' aria-hidden='true'>
             <div class='modal-dialog'>
               <div class='modal-content'>
                 <div class='modal-header'>
@@ -432,22 +447,30 @@ help_and_report <- function(modal_title, fun_name, help_file,
            <i title='Help' class='fa fa-question alignleft' data-toggle='modal' data-target='#%s_help'></i>
            <i title='Report results' class='fa fa-edit action-button shiny-bound-input alignright' href='#%s_report' id='%s_report'></i>
            <div style='clear: both;'></div>",
-          fun_name, fun_name, fun_name, modal_title, help_file, author, year, fun_name, fun_name, fun_name) %>%
-  enc2utf8 %>% HTML %>% withMathJax
+    fun_name, fun_name, fun_name, modal_title, help_file, author, year, fun_name, fun_name, fun_name
+  ) %>%
+    enc2utf8() %>%
+    HTML() %>%
+    withMathJax()
 }
 
 ## function to render .md files to html
 inclMD <- function(path) {
-  markdown::markdownToHTML(path, fragment.only = TRUE, options = "",
-                           stylesheet = "")
+  markdown::markdownToHTML(
+    path, fragment.only = TRUE, options = "",
+    stylesheet = ""
+  )
 }
 
 ## function to render .Rmd files to html
 inclRmd <- function(path) {
-  paste(readLines(path, warn = FALSE), collapse = '\n') %>%
-  knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE,
-    envir = r_environment, options = "", stylesheet = "") %>%
-    HTML %>% withMathJax
+  paste(readLines(path, warn = FALSE), collapse = "\n") %>%
+    knitr::knit2html(
+      text = ., fragment.only = TRUE, quiet = TRUE,
+      envir = r_environment, options = "", stylesheet = ""
+    ) %>%
+    HTML() %>%
+    withMathJax()
 }
 
 ## capture the state of a dt table
@@ -458,7 +481,7 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
   if (is.null(search)) search <- ""
 
   ## table ordering
-  order <- input[[paste0(fun,"_state")]]$order
+  order <- input[[paste0(fun, "_state")]]$order
   if (length(order) == 0) {
     order <- "NULL"
   } else {
@@ -466,21 +489,26 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
   }
 
   ## column filters, gsub needed for factors
-  sc <- input[[paste0(fun, "_search_columns")]] %>% gsub("\\\"","'",.)
+  sc <- input[[paste0(fun, "_search_columns")]] %>% gsub("\\\"", "'", .)
   sci <- which(sc != "")
   nr_sc <- length(sci)
   if (nr_sc > 0) {
     sc <- list(lapply(sci, function(i) list(i, sc[i])))
   } else if (nr_sc == 0) {
-    sc <-  "NULL"
+    sc <- "NULL"
   }
 
-  dat <- get(paste0(".",fun))()$tab %>% {nr <<- nrow(.); .[1,,drop = FALSE]}
+  dat <- get(paste0(".", fun))()$tab %>% {
+    nr <<- nrow(.)
+    .[1, , drop = FALSE]
+  }
 
   if (order != "NULL" || sc != "NULL") {
 
     ## get variable class and name
-    gc <- getclass(dat) %>% {if (is_empty(vars[1])) . else .[vars]}
+    gc <- getclass(dat) %>% {
+      if (is_empty(vars[1])) . else .[vars]
+    }
     cn <- names(gc)
 
     if (length(cn) > 0) {
@@ -488,8 +516,9 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
         tabsort <- c()
         for (i in order[[1]]) {
           cname <- cn[i[[1]] + 1] %>% gsub("^\\s+|\\s+$", "", .)
-          if (grepl("[^0-9a-zA-Z_\\.]", cname) || grepl("^[0-9]", cname))
+          if (grepl("[^0-9a-zA-Z_\\.]", cname) || grepl("^[0-9]", cname)) {
             cname <- paste0("`", cname, "`")
+          }
           if (i[[2]] == "desc") cname <- paste0("desc(", cname, ")")
           tabsort <- c(tabsort, cname)
         }
@@ -502,11 +531,11 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
           cname <- cn[i[[1]]]
           type <- gc[cname]
           if (type == "factor") {
-            cname <- paste0(cname, " %in% ", sub("\\[","c(", i[[2]]) %>% sub("\\]",")", .))
-          } else if (type %in% c("numeric","integer")) {
+            cname <- paste0(cname, " %in% ", sub("\\[", "c(", i[[2]]) %>% sub("\\]", ")", .))
+          } else if (type %in% c("numeric", "integer")) {
             bnd <- strsplit(i[[2]], "...", fixed = TRUE)[[1]]
             cname <- paste0(cname, " >= ", bnd[1], " & ", cname, " <= ", bnd[2]) %>% gsub("  ", " ", .)
-          } else if (type %in% c("date","period")) {
+          } else if (type %in% c("date", "period")) {
             bnd <- strsplit(i[[2]], "...", fixed = TRUE)[[1]] %>% gsub(" ", "", .)
             cname <- paste0(cname, " >= '", bnd[1], "' & ", cname, " <= '", bnd[2], "'") %>% gsub("  ", " ", .)
           } else if (type == "character") {
@@ -540,21 +569,21 @@ find_env <- function(dataset) {
 save2env <- function(dat, dataset,
                      dat_name = dataset,
                      mess = "") {
-
   env <- find_env(dataset)
   env$r_data[[dat_name]] <- dat
   if (dataset != dat_name) {
     message(paste0("Dataset r_data$", dat_name, " created in ", environmentName(env), " environment\n"))
-    env$r_data[['datasetlist']] <- c(dat_name, env$r_data[['datasetlist']]) %>% unique
+    env$r_data[["datasetlist"]] <- c(dat_name, env$r_data[["datasetlist"]]) %>% unique()
   } else {
     message(paste0("Dataset r_data$", dataset, " changed in ", environmentName(env), " environment\n"))
   }
 
   ## set to previous description
-  env$r_data[[paste0(dat_name,"_descr")]] <- env$r_data[[paste0(dataset,"_descr")]]
+  env$r_data[[paste0(dat_name, "_descr")]] <- env$r_data[[paste0(dataset, "_descr")]]
 
-  if (mess != "")
-    env$r_data[[paste0(dat_name,"_descr")]] %<>% paste0("\n\n",mess)
+  if (mess != "") {
+    env$r_data[[paste0(dat_name, "_descr")]] %<>% paste0("\n\n", mess)
+  }
 }
 
 ## use the value in the input list if available and update r_state
@@ -563,8 +592,9 @@ state_init <- function(var, init = "", na.rm = TRUE) {
     ivar <- input[[var]]
     if (var %in% names(input) || length(ivar) > 0) {
       ivar <- input[[var]]
-      if ((na.rm && is_empty(ivar)) || length(ivar) == 0) 
+      if ((na.rm && is_empty(ivar)) || length(ivar) == 0) {
         r_state[[var]] <<- NULL
+      }
     } else {
       ivar <- .state_init(var, init, na.rm)
     }
@@ -602,10 +632,11 @@ state_single <- function(var, vals, init = character(0)) {
       if (length(ivar) > 0) r_state[[var]] <<- ivar
       ivar
     } else if (available(ivar) && any(ivar %in% vals)) {
-       ivar[ivar %in% vals]
+      ivar[ivar %in% vals]
     } else {
-      if (length(ivar) > 0 && all(ivar %in% c("None","none",".","")))
+      if (length(ivar) > 0 && all(ivar %in% c("None", "none", ".", ""))) {
         r_state[[var]] <<- ivar
+      }
       .state_single(var, vals, init = init)
     }
   })
@@ -628,8 +659,9 @@ state_multiple <- function(var, vals, init = character(0)) {
     } else if (available(ivar) && any(ivar %in% vals)) {
       ivar[ivar %in% vals]
     } else {
-      if (length(ivar) > 0 && all(ivar %in% c("None","none",".","")))
+      if (length(ivar) > 0 && all(ivar %in% c("None", "none", ".", ""))) {
         r_state[[var]] <<- ivar
+      }
       .state_multiple(var, vals, init = init)
     }
   })
@@ -659,16 +691,16 @@ fixMS <- function(text) {
 
   ## based on https://stackoverflow.com/a/1262210/1974918
   gsub("\xC2\xAB", '"', text) %>%
-  gsub("\xC2\xBB", '"', .) %>%
-  gsub("\xE2\x80\x98", "'", .) %>%
-  gsub("\xE2\x80\x99", "'", .) %>%
-  gsub("\xE2\x80\x9A", "'", .) %>%
-  gsub("\xE2\x80\x9B", "'", .) %>%
-  gsub("\xE2\x80\x9C", '"', .) %>%
-  gsub("\xE2\x80\x9D", '"', .) %>%
-  gsub("\xE2\x80\x9E", '"', .) %>%
-  gsub("\xE2\x80\x9F", '"', .) %>%
-  gsub("\xE2\x80\xB9", "'", .) %>%
-  gsub("\xE2\x80\xBA", "'", .) %>%
-  gsub("\r","\n",.)
+    gsub("\xC2\xBB", '"', .) %>%
+    gsub("\xE2\x80\x98", "'", .) %>%
+    gsub("\xE2\x80\x99", "'", .) %>%
+    gsub("\xE2\x80\x9A", "'", .) %>%
+    gsub("\xE2\x80\x9B", "'", .) %>%
+    gsub("\xE2\x80\x9C", '"', .) %>%
+    gsub("\xE2\x80\x9D", '"', .) %>%
+    gsub("\xE2\x80\x9E", '"', .) %>%
+    gsub("\xE2\x80\x9F", '"', .) %>%
+    gsub("\xE2\x80\xB9", "'", .) %>%
+    gsub("\xE2\x80\xBA", "'", .) %>%
+    gsub("\r", "\n", .)
 }

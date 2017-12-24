@@ -25,19 +25,21 @@ combinedata <- function(dataset, cmb_dataset,
                         type = "inner_join",
                         name = "",
                         data_filter = "") {
-
-  is_join <- grepl("_join",type)
-  if (is_join && by[1] == "")
+  is_join <- grepl("_join", type)
+  if (is_join && by[1] == "") {
     return(cat("No variables selected to join datasets\n"))
+  }
 
-  if (name == "")
-    name <- if (is_string(dataset)) paste0("cmb_",dataset) else "cmb_data"
+  if (name == "") {
+    name <- if (is_string(dataset)) paste0("cmb_", dataset) else "cmb_data"
+  }
 
   dat1 <- getdata(dataset, filt = data_filter, na.rm = FALSE)
-  if (all(add == ""))
+  if (all(add == "")) {
     dat2 <- getdata(cmb_dataset, na.rm = FALSE)
-  else
+  } else {
     dat2 <- getdata(cmb_dataset, unique(c(by, add)), na.rm = FALSE)
+  }
 
   descr1 <- attr(dat1, "description")
   descr2 <- attr(dat2, "description")
@@ -54,10 +56,12 @@ combinedata <- function(dataset, cmb_dataset,
   rm(dat1, dat2)
 
   mess <-
-    paste0("## Combined\n\nDatasets: ", dataset, " and ", cmb_dataset,
-           " (", type, ")", madd, "</br>\nOn: ", lubridate::now(), "\n\n", descr1,
-           ifelse(data_filter != "", paste0("\n\n**Data filter:** ", data_filter), ""),
-           "\n\n", descr2)
+    paste0(
+      "## Combined\n\nDatasets: ", dataset, " and ", cmb_dataset,
+      " (", type, ")", madd, "</br>\nOn: ", lubridate::now(), "\n\n", descr1,
+      ifelse(data_filter != "", paste0("\n\n**Data filter:** ", data_filter), ""),
+      "\n\n", descr2
+    )
 
   dat <- set_attr(dat, "description", mess)
 
@@ -70,7 +74,7 @@ combinedata <- function(dataset, cmb_dataset,
   }
 
   env$r_data[[name]] <- dat
-  env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
-  env$r_data[[paste0(name,"_descr")]] <- mess
+  env$r_data[["datasetlist"]] <- c(name, env$r_data[["datasetlist"]]) %>% unique()
+  env$r_data[[paste0(name, "_descr")]] <- mess
   message("\nCombined data added as ", name, "\n")
 }

@@ -31,12 +31,12 @@ pivotr <- function(dataset,
                    nr = NULL,
                    data_filter = "",
                    shiny = FALSE) {
-
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   fill <- if (nvar == "None") 0L else NA
   dat <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
-  if (!is_string(dataset))
+  if (!is_string(dataset)) {
     dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
+  }
 
   ## in case : was used for cvars
   cvars <- setdiff(colnames(dat), nvar)
@@ -44,8 +44,8 @@ pivotr <- function(dataset,
   ## in the unlikely event that n is a variable in the dataset
   if ("n" %in% colnames(dat)) {
     if (nvar == "n") nvar <- ".n"
-    colnames(dat) <- colnames(dat) %>% sub("^n$",".n",.)
-    cvars <- sub("^n$",".n",cvars)
+    colnames(dat) <- colnames(dat) %>% sub("^n$", ".n", .)
+    cvars <- sub("^n$", ".n", cvars)
   }
 
   if (nvar == "None") {
@@ -53,10 +53,14 @@ pivotr <- function(dataset,
   } else {
     ## converting factors for integer (1st level)
     ## see also R/visualize.R
-    if ("factor" %in% class(dat[[nvar]]) && fun[1] != "n_distinct")
-      dat[[nvar]] %<>% {as.integer(. == levels(.)[1])}
-    if ("logical" %in% class(dat[[nvar]]))
+    if ("factor" %in% class(dat[[nvar]]) && fun[1] != "n_distinct") {
+      dat[[nvar]] %<>% {
+        as.integer(. == levels(.)[1])
+      }
+    }
+    if ("logical" %in% class(dat[[nvar]])) {
       dat[[nvar]] %<>% as.integer
+    }
   }
 
   ## convert categorical variables to factors and deal with empty/missing values
@@ -90,42 +94,41 @@ pivotr <- function(dataset,
         mutate_at(ungroup(tab), .vars = cvars, .funs = funs(as.character)),
         bind_cols(data.frame("Total") %>% setNames(cvars), total %>% set_colnames(nvar))
       )
-
   } else {
-
     col_total <-
       group_by_at(dat, .vars = cvars[1]) %>%
-      sel(nvar,cvars[1]) %>%
+      sel(nvar, cvars[1]) %>%
       sfun(nvar, cvars[1], fun) %>%
-      ungroup %>%
+      ungroup() %>%
       mutate_at(.vars = cvars[1], .funs = funs(as.character))
 
     row_total <-
       group_by_at(dat, .vars = cvars[-1]) %>%
       sfun(nvar, cvars[-1], fun) %>%
-      ungroup %>%
+      ungroup() %>%
       select(ncol(.)) %>%
       bind_rows(total) %>%
       set_colnames("Total")
 
     ## creating cross tab
     tab <- spread(tab, !! cvars[1], !! nvar, fill = fill) %>%
-      ungroup %>%
+      ungroup() %>%
       mutate_at(.vars = cvars[-1], .funs = funs(as.character))
 
     tab <-
       bind_rows(
         tab,
         bind_cols(
-          t(rep("Total",length(cvars[-1]))) %>%
-            as.data.frame %>%
+          t(rep("Total", length(cvars[-1]))) %>%
+            as.data.frame() %>%
             setNames(cvars[-1]),
           data.frame(t(col_total[[2]])) %>%
             set_colnames(col_total[[1]])
         )
-      ) %>% bind_cols(row_total)
+      ) %>%
+      bind_cols(row_total)
 
-      rm(col_total, row_total)
+    rm(col_total, row_total)
   }
 
   ## resetting factor levels
@@ -140,12 +143,17 @@ pivotr <- function(dataset,
 
   isNum <- if (length(cvars) == 1) -1 else -c(1:(length(cvars) - 1))
   if (normalize == "total") {
-    tab[,isNum] %<>% {. / total[[1]]}
+    tab[, isNum] %<>% {
+      . / total[[1]]
+    }
   } else if (normalize == "row") {
-    if (!is.null(tab[["Total"]]))
-      tab[,isNum] %<>% {. / .[["Total"]]}
+    if (!is.null(tab[["Total"]])) {
+      tab[, isNum] %<>% {
+        . / .[["Total"]]
+      }
+    }
   } else if (length(cvars) > 1 && normalize == "column") {
-    tab[,isNum] %<>% apply(2, function(.) . / .[which(tab[,1] == "Total")])
+    tab[, isNum] %<>% apply(2, function(.) . / .[which(tab[, 1] == "Total")])
   }
 
   nrow_tab <- nrow(tab) - 1
@@ -154,24 +162,29 @@ pivotr <- function(dataset,
   colnames(tab) <- make.names(colnames(tab))
 
   ## filtering the table if desired
-  if (tabfilt != "")
-    tab <- tab[-nrow(tab),] %>% filterdata(tabfilt) %>% bind_rows(tab[nrow(tab),])
+  if (tabfilt != "") {
+    tab <- tab[-nrow(tab), ] %>%
+      filterdata(tabfilt) %>%
+      bind_rows(tab[nrow(tab), ])
+  }
 
   ## sorting the table if desired
   if (!identical(tabsort, "")) {
     tabsort <- gsub(",", ";", tabsort)
-    tab[-nrow(tab),] %<>% arrange(!!! rlang::parse_exprs(tabsort))
+    tab[-nrow(tab), ] %<>% arrange(!!! rlang::parse_exprs(tabsort))
 
     ## order factors as set in the sorted table
     tc <- if (length(cvars) == 1) cvars else cvars[-1] ## don't change top cv
-    for (i in tc) tab[[i]] %<>% factor(., levels = unique(.))
+    for (i in tc) {
+      tab[[i]] %<>% factor(., levels = unique(.))
+    }
   }
 
   tab <- as.data.frame(tab, as.is = TRUE)
   attr(tab, "nrow") <- nrow_tab
   if (!is.null(nr)) {
     ind <- if (nr >= nrow(tab)) 1:nrow(tab) else c(1:nr, nrow(tab))
-    tab <- tab[ind,, drop = FALSE]
+    tab <- tab[ind, , drop = FALSE]
   }
 
   rm(isNum, dat, sfun, sel, i, levs, total, ind, nrow_tab)
@@ -206,22 +219,26 @@ summary.pivotr <- function(object,
                            chi2 = FALSE,
                            shiny = FALSE,
                            ...) {
-
   if (!shiny) {
     cat("Pivot table\n")
     cat("Data        :", object$dataset, "\n")
-    if (object$data_filter %>% gsub("\\s","",.) != "")
-      cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
-    if (object$tabfilt != "")
+    if (object$data_filter %>% gsub("\\s", "", .) != "") {
+      cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
+    }
+    if (object$tabfilt != "") {
       cat("Table filter:", object$tabfilt, "\n")
-    if (object$tabsort[1] != "")
+    }
+    if (object$tabsort[1] != "") {
       cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
-    nr <- attr(object$tab,"nrow")
-    if (!is.null(nr) && !is.null(object$nr) && object$nr < nr)
+    }
+    nr <- attr(object$tab, "nrow")
+    if (!is.null(nr) && !is.null(object$nr) && object$nr < nr) {
       cat(paste0("Rows shown  : ", object$nr, " (out of ", nr, ")\n"))
+    }
     cat("Categorical :", object$cvars, "\n")
-    if (object$normalize != "None")
+    if (object$normalize != "None") {
       cat("Normalize by:", object$normalize, "\n")
+    }
     if (object$nvar != "n") {
       cat("Numeric     :", object$nvar, "\n")
       cat("Function    :", sub("_rm", "", object$fun), "\n")
@@ -233,18 +250,20 @@ summary.pivotr <- function(object,
 
   if (chi2) {
     if (length(object$cvars) < 3) {
-
-      cst <- object$tab_freq %>% filter(.[[1]] != "Total") %>%
-        select(-which(names(.) %in% c(object$cvars, "Total")))  %>%
+      cst <- object$tab_freq %>%
+        filter(.[[1]] != "Total") %>%
+        select(-which(names(.) %in% c(object$cvars, "Total"))) %>%
         mutate_all(funs(ifelse(is.na(.), 0, .))) %>%
-        {sshhr(chisq.test(., correct = FALSE))}
+        {
+          sshhr(chisq.test(., correct = FALSE))
+        }
 
       res <- tidy(cst)
-      if (dec < 4 && res$p.value < .001) res$p.value  <- "< .001"
+      if (dec < 4 && res$p.value < .001) res$p.value <- "< .001"
       res <- rounddf(res, dec)
 
       l1 <- paste0("Chi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value, "\n")
-      l2 <- paste0(sprintf("%.1f",100 * (sum(cst$expected < 5) / length(cst$expected))),"% of cells have expected values below 5\n")
+      l2 <- paste0(sprintf("%.1f", 100 * (sum(cst$expected < 5) / length(cst$expected))), "% of cells have expected values below 5\n")
       if (nrow(object$tab_freq) == nrow(object$tab)) {
         if (shiny) HTML(paste0("</br><hr>", l1, "</br>", l2)) else cat(paste0(l1, l2))
       } else {
@@ -280,36 +299,39 @@ summary.pivotr <- function(object,
 #' @seealso \code{\link{summary.pivotr}} to print a plain text table
 #'
 #' @export
-dtab.pivotr  <- function(object,
-                         format = "none",
-                         perc = FALSE,
-                         dec = 3,
-                         searchCols = NULL,
-                         order = NULL,
-                         pageLength = NULL,
-                         ...) {
-
+dtab.pivotr <- function(object,
+                        format = "none",
+                        perc = FALSE,
+                        dec = 3,
+                        searchCols = NULL,
+                        order = NULL,
+                        pageLength = NULL,
+                        ...) {
   tab <- object$tab
   cvar <- object$cvars[1]
-  cvars <- object$cvars %>% {if (length(.) > 1) .[-1] else .}
-  cn <- colnames(tab) %>% {.[-which(cvars %in% .)]}
+  cvars <- object$cvars %>% {
+    if (length(.) > 1) .[-1] else .
+  }
+  cn <- colnames(tab) %>% {
+    .[-which(cvars %in% .)]
+  }
 
   ## column names without total
   cn_nt <- if ("Total" %in% cn) cn[-which(cn == "Total")] else cn
 
-  tot <- tail(tab,1)[-(1:length(cvars))]
-  tot <- if (isTRUE(perc)) sprintf(paste0("%.", dec ,"f%%"), tot * 100) else round(tot,dec)
+  tot <- tail(tab, 1)[-(1:length(cvars))]
+  tot <- if (isTRUE(perc)) sprintf(paste0("%.", dec, "f%%"), tot * 100) else round(tot, dec)
 
   if (length(cvars) == 1 && cvar == cvars) {
-    sketch = shiny::withTags(table(
-      thead(tr(lapply(c(cvars,cn), th))),
-      tfoot(tr(lapply(c("Total",tot), th)))
+    sketch <- shiny::withTags(table(
+      thead(tr(lapply(c(cvars, cn), th))),
+      tfoot(tr(lapply(c("Total", tot), th)))
     ))
   } else {
-    sketch = shiny::withTags(table(
+    sketch <- shiny::withTags(table(
       thead(
-        tr(th(colspan = length(c(cvars,cn)), cvar, class = "dt-center")),
-        tr(lapply(c(cvars,cn), th))
+        tr(th(colspan = length(c(cvars, cn)), cvar, class = "dt-center")),
+        tr(lapply(c(cvars, cn), th))
       ),
       tfoot(
         tr(th(colspan = length(cvars), "Total"), lapply(tot, th))
@@ -324,41 +346,52 @@ dtab.pivotr  <- function(object,
   ## for display options see https://datatables.net/reference/option/dom
   dom <- if (nrow(tab) < 11) "t" else "ltip"
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
-  dt_tab <- {if (!perc) rounddf(tab, dec) else tab} %>%
-  DT::datatable(
-    container = sketch,
-    selection = "none",
-    rownames = FALSE,
-    filter = fbox,
-    # extension = "KeyTable",
-    style = "bootstrap",
-    options = list(
-      dom = dom,
-      stateSave = TRUE,
-      searchCols = searchCols,
-      order = order,
-      columnDefs = list(list(orderSequence = c('desc', 'asc'), targets = "_all")),
-      processing = FALSE,
-      pageLength = {if (is.null(pageLength)) 10 else pageLength},
-      lengthMenu = list(c(5, 10, 25, 50, -1), c("5","10","25","50","All"))
-    ),
-    callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
-  ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey") %>%
-        {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}
+  dt_tab <- {
+    if (!perc) rounddf(tab, dec) else tab
+  } %>%
+    DT::datatable(
+      container = sketch,
+      selection = "none",
+      rownames = FALSE,
+      filter = fbox,
+      # extension = "KeyTable",
+      style = "bootstrap",
+      options = list(
+        dom = dom,
+        stateSave = TRUE,
+        searchCols = searchCols,
+        order = order,
+        columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all")),
+        processing = FALSE,
+        pageLength = {
+          if (is.null(pageLength)) 10 else pageLength
+        },
+        lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
+      ),
+      callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+    ) %>%
+    DT::formatStyle(., cvars, color = "white", backgroundColor = "grey") %>%
+    {
+      if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .
+    }
 
   ## heat map with red or color_bar
   if (format == "color_bar") {
-    dt_tab %<>% DT::formatStyle(cn_nt,
-      background = DT::styleColorBar(range(tab[ , cn_nt], na.rm = TRUE), "lightblue"),
+    dt_tab %<>% DT::formatStyle(
+      cn_nt,
+      background = DT::styleColorBar(range(tab[, cn_nt], na.rm = TRUE), "lightblue"),
       backgroundSize = "98% 88%",
       backgroundRepeat = "no-repeat",
-      backgroundPosition = "center")
+      backgroundPosition = "center"
+    )
   } else if (format == "heat") {
     ## round seems to ensure that 'cuts' are ordered according to DT::stylInterval
     brks <- quantile(tab[, cn_nt], probs = seq(.05, .95, .05), na.rm = TRUE) %>% round(5)
     clrs <- seq(255, 40, length.out = length(brks) + 1) %>%
       round(0) %>%
-      {paste0("rgb(255,", ., ",", .,")")}
+      {
+        paste0("rgb(255,", ., ",", ., ")")
+      }
 
     dt_tab %<>% DT::formatStyle(cn_nt, backgroundColor = DT::styleInterval(brks, clrs))
   }
@@ -368,7 +401,7 @@ dtab.pivotr  <- function(object,
 
   ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(
-    list(rmarkdown::html_dependency_bootstrap('bootstrap')), dt_tab$dependencies
+    list(rmarkdown::html_dependency_bootstrap("bootstrap")), dt_tab$dependencies
   )
 
   dt_tab
@@ -401,15 +434,17 @@ plot.pivotr <- function(x,
                         flip = FALSE,
                         fillcol = "blue",
                         ...) {
-
-  object <- x; rm(x)
+  object <- x
+  rm(x)
   cvars <- object$cvars
   nvar <- object$nvar
-  tab <- object$tab %>% {filter(., .[[1]] != "Total")}
+  tab <- object$tab %>% {
+    filter(., .[[1]] != "Total")
+  }
 
   if (length(cvars) == 1) {
     p <- ggplot(na.omit(tab), aes_string(x = cvars, y = nvar)) +
-        geom_bar(stat = "identity", position = "dodge", alpha = .7, fill = fillcol)
+      geom_bar(stat = "identity", position = "dodge", alpha = .7, fill = fillcol)
   } else if (length(cvars) == 2) {
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
@@ -418,13 +453,13 @@ plot.pivotr <- function(x,
       rlang::parse_exprs(.) %>%
       set_names(cvars[1])
 
-    p <- tab %>% gather(!! cvars[1], !! nvar, !! setdiff(colnames(.),cvars[2])) %>%
-      na.omit %>%
+    p <- tab %>%
+      gather(!! cvars[1], !! nvar, !! setdiff(colnames(.), cvars[2])) %>%
+      na.omit() %>%
       mutate(!!! dots) %>%
       ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
-        geom_bar(stat = "identity", position = type, alpha = .7)
+      geom_bar(stat = "identity", position = type, alpha = .7)
   } else if (length(cvars) == 3) {
-
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
@@ -435,12 +470,13 @@ plot.pivotr <- function(x,
       rlang::parse_exprs(.) %>%
       set_names(cvars[1])
 
-    p <- tab %>% gather(!! cvars[1], !! nvar, !! setdiff(colnames(.),cvars[2:3])) %>%
-      na.omit %>%
+    p <- tab %>%
+      gather(!! cvars[1], !! nvar, !! setdiff(colnames(.), cvars[2:3])) %>%
+      na.omit() %>%
       mutate(!!! dots) %>%
       ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
-        geom_bar(stat = "identity", position = type, alpha = .7) +
-        facet_grid(paste(cvars[3], '~ .'))
+      geom_bar(stat = "identity", position = type, alpha = .7) +
+      facet_grid(paste(cvars[3], "~ ."))
   } else {
     ## No plot returned if more than 3 grouping variables are selected
     return(invisible())
@@ -450,8 +486,9 @@ plot.pivotr <- function(x,
   if (perc) p <- p + scale_y_continuous(labels = scales::percent)
 
   if (nvar == "n") {
-    if (!is_empty(object$normalize, "None"))
+    if (!is_empty(object$normalize, "None")) {
       p <- p + ylab(ifelse(perc, "Percentage", "Proportion"))
+    }
   } else {
     p <- p + ylab(paste0(nvar, " (", names(make_funs(object$fun)), ")"))
   }
@@ -475,7 +512,7 @@ store.pivotr <- function(object, name, ...) {
   tab <- object$tab
 
   ## fix colnames as needed
-  colnames(tab) <- sub("^\\s+","", colnames(tab)) %>% sub("\\s+$","", .) %>% gsub("\\s+", "_", .)
+  colnames(tab) <- sub("^\\s+", "", colnames(tab)) %>% sub("\\s+$", "", .) %>% gsub("\\s+", "_", .)
 
   if (exists("r_environment")) {
     env <- r_environment
@@ -488,5 +525,5 @@ store.pivotr <- function(object, name, ...) {
   message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
 
   env$r_data[[name]] <- tab
-  env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
+  env$r_data[["datasetlist"]] <- c(name, env$r_data[["datasetlist"]]) %>% unique()
 }

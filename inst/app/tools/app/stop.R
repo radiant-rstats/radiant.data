@@ -15,7 +15,10 @@ stop_radiant <- function(rmd = FALSE) {
     ## flush input and r_data into Rgui or Rstudio
     isolate({
       toList(input) %>%
-        {.$nav_radiant <- r_data$nav_radiant; .} %>%
+        {
+          .$nav_radiant <- r_data$nav_radiant
+          .
+        } %>%
         assign("r_state", ., envir = .GlobalEnv)
 
       assign("r_data", toList(r_data), envir = .GlobalEnv)
@@ -46,15 +49,14 @@ load(\"~/radiant.sessions/r_data.rda\")
 ```
 
 <style type='text/css'> .table { width: auto; } ul, ol { padding-left: 18px; }</style>\n\n") %>%
-
           paste0(input$rmd_report) %>%
-          gsub("\\\\\\\\","\\\\",.) %>%
+          gsub("\\\\\\\\", "\\\\", .) %>%
           cleanout(.)
       }
       ## removing r_environment and r_sessions
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
       unlink("~/r_figures/", recursive = TRUE)
-      sshhr(try(rm(help_menu, make_url_patterns, import_fs, init_data, navbar_proj, envir = .GlobalEnv), silent = TRUE))
+      sshhr(try(rm(help_menu, make_url_patterns, import_fs, init_data, navbar_proj, knit_print.data.frame, envir = .GlobalEnv), silent = TRUE))
       message(stop_message)
 
       if (rstudioapi::isAvailable() && !is_empty(input$rmd_report) && rmd) {

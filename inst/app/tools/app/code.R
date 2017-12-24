@@ -1,20 +1,21 @@
 ################################################################
 # Run R-code within Radiant using the shinyAce editor
 ################################################################
-rcode_choices <- c("HTML","R-code")
+rcode_choices <- c("HTML", "R-code")
 # if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user))) {
 if (rstudioapi::isAvailable() || isTRUE(getOption("radiant.report"))) {
   if (rstudioapi::isAvailable()) {
-    rcode_choices <- c("Notebook","HTML","PDF","Word","R-code")
+    rcode_choices <- c("Notebook", "HTML", "PDF", "Word", "R-code")
   } else {
-    rcode_choices <- c("Notebook","HTML","R-code")
+    rcode_choices <- c("Notebook", "HTML", "R-code")
   }
 }
-if (Sys.getenv("R_ZIPCMD") != "")
-  rcode_choices %<>% c(.,"R-code & Data (zip)")
+if (Sys.getenv("R_ZIPCMD") != "") {
+  rcode_choices %<>% c(., "R-code & Data (zip)")
+}
 
 rcode_example <-
-"## get the active dataset and show the first few observations
+  "## get the active dataset and show the first few observations
 .getdata() %>% head
 
 ## access a specific dataset by name
@@ -44,11 +45,13 @@ help(package = 'radiant.data')
 
 output$ui_rcode_save <- renderUI({
   if (isTRUE(getOption("radiant.report"))) {
-    selectInput(inputId = "rcode_save", label = NULL,
+    selectInput(
+      inputId = "rcode_save", label = NULL,
       choices = rcode_choices,
       selected = state_init("rcode_save", "Notebook"),
       multiple = FALSE, selectize = FALSE,
-      width = "120px")
+      width = "120px"
+    )
   } else {
     invisible()
   }
@@ -66,7 +69,7 @@ output$ui_load_code <- renderUI({
   if (isTRUE(getOption("radiant.local"))) {
     actionButton("load_code", "Load code", icon = icon("upload"))
   } else {
-     HTML("<div class='form-group shiny-input-container'>
+    HTML("<div class='form-group shiny-input-container'>
              <input id='load_code' name='load_code' type='file' accept='.R,.r'/>
            </div>")
   }
@@ -84,14 +87,17 @@ rcode_view_options <- c("Dual view" = "dual", "Preview only" = "pr_only", "Edito
 
 output$rcode <- renderUI({
   tagList(
-    with(tags,
+    with(
+      tags,
       table(
-        td(help_modal('Code','code_help', inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/code.md")))),
+        td(help_modal("Code", "code_help", inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/code.md")))),
         td(HTML("&nbsp;&nbsp;")),
         td(actionButton("rEval", "Run code"), style = "padding-top:5px;"),
-        td(selectInput("rcode_view", label = NULL, choices = rcode_view_options,
-                       selected = state_init("rcode_view", "dual"),
-                       multiple = FALSE, selectize = FALSE, width = "105px")),
+        td(selectInput(
+          "rcode_view", label = NULL, choices = rcode_view_options,
+          selected = state_init("rcode_view", "dual"),
+          multiple = FALSE, selectize = FALSE, width = "105px"
+        )),
         td(uiOutput("ui_rcode_save")),
         td(uiOutput("ui_saveCodeReport"), style = "padding-top:5px;"),
         td(uiOutput("ui_load_code"), style = "padding-top:5px;"),
@@ -99,12 +105,14 @@ output$rcode <- renderUI({
       )
     ),
 
-    shinyAce::aceEditor("rcode_edit", mode = "r",
+    shinyAce::aceEditor(
+      "rcode_edit", mode = "r",
       vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
       height = "auto",
       selectionId = "rcode_selection",
-      value = state_init("rcode_edit",rcode_example),
-      hotkeys = list(runKeyCode = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
+      value = state_init("rcode_edit", rcode_example),
+      hotkeys = list(runKeyCode = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))
+    ),
     htmlOutput("rcode_output")
   )
 })
@@ -150,11 +158,11 @@ output$rcode_output <- renderUI({
       }
 
       withProgress(message = "Running R-code", value = 1, {
-        paste0("```{r cache = FALSE, echo = TRUE}\n", rcode_edit ,"\n```") %>%
+        paste0("```{r cache = FALSE, echo = TRUE}\n", rcode_edit, "\n```") %>%
           ## need r_environment so changes are reflected in the shiny environment
           knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_environment) %>%
-          scrub %>%
-          HTML
+          scrub() %>%
+          HTML()
       })
     }
   })
@@ -182,23 +190,22 @@ output$saveCodeReport <- downloadHandler(
         rcode <- ifelse(is_empty(input$rcode_selection), input$rcode_edit, input$rcode_selection)
 
         if (input$rcode_save == "R-code & Data (zip)") {
-
           withProgress(message = "Preparing R & Data zip file", value = 1, {
             r_data <- toList(r_data)
             save(r_data, file = "r_data.rda")
-            paste0("## Load radiant if needed\nlibrary(", lib, ")\n\n## Load data\nload(\"r_data.rda\")\n\n", rcode,"\n") %>%
+            paste0("## Load radiant if needed\nlibrary(", lib, ")\n\n## Load data\nload(\"r_data.rda\")\n\n", rcode, "\n") %>%
               cat(file = "rcode.R", sep = "\n")
             zip(file, c("rcode.R", "r_data.rda"))
             file.remove("rcode.R", "r_data.rda")
           })
         } else if (input$rcode_save == "R-code") {
-          paste0("## Load radiant if needed\nlibrary(", lib, ")\n\n", rcode,"\n") %>%
+          paste0("## Load radiant if needed\nlibrary(", lib, ")\n\n", rcode, "\n") %>%
             cat(file = file, sep = "\n")
         } else {
-
-          withProgress(message = paste0("Saving output to ", input$rcode_save), value = 1,
+          withProgress(
+            message = paste0("Saving output to ", input$rcode_save), value = 1,
             if (rstudioapi::isAvailable() || !isTRUE(getOption("radiant.local"))) {
-              paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}\noptions(width = 250)\n\n", rcode,"\n```") %>%
+              paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}\noptions(width = 250)\n\n", rcode, "\n```") %>%
                 cat(file = "rcode.Rmd", sep = "\n")
               out <- rmarkdown::render("rcode.Rmd", switch(input$rcode_save,
                 Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "show"),
@@ -209,8 +216,9 @@ output$saveCodeReport <- downloadHandler(
               file.remove("rcode.Rmd")
               file.rename(out, file)
             } else {
-              paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}\n", rcode ,"\n```") %>%
-                knitItSave %>% cat(file = file, sep = "\n")
+              paste0("```{r cache = FALSE, error = TRUE, echo = TRUE}\n", rcode, "\n```") %>%
+                knitItSave() %>%
+                cat(file = file, sep = "\n")
             }
           )
         }
@@ -222,7 +230,7 @@ output$saveCodeReport <- downloadHandler(
 ## loading r-code from disk
 observeEvent(input$load_code, {
   if (isTRUE(getOption("radiant.local"))) {
-    path <- radiant.data::choose_files("R","r")
+    path <- radiant.data::choose_files("R", "r")
   } else {
     path <- input$load_code$datapath
   }
@@ -237,8 +245,8 @@ observeEvent(input$rcode_read_data, {
   cmd <- read_data("rcode")
   if (!is_empty(cmd)) {
     shinyAce::updateAceEditor(
-      session, 
-      "rcode_edit", 
+      session,
+      "rcode_edit",
       value = paste0(input$rcode_edit, "\n", cmd)
     )
   }

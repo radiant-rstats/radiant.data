@@ -4,8 +4,9 @@
 #'
 #' @export
 radiant.data <- function() {
-  if (!"package:radiant.data" %in% search())
+  if (!"package:radiant.data" %in% search()) {
     if (!require(radiant.data)) stop("Calling radiant.data start function but radiant.data is not installed.")
+  }
   runApp(system.file("app", package = "radiant.data"), launch.browser = TRUE)
 }
 
@@ -68,9 +69,10 @@ add_class <- function(x, cl) `class<-`(x, c(cl, class(x)))
 #'
 #' @export
 sig_stars <- function(pval) {
-  sapply(pval, function(x) x < c(.001,.01, .05, .1)) %>%
-    colSums %>% add(1) %>%
-    c("",".","*", "**", "***")[.]
+  sapply(pval, function(x) x < c(.001, .01, .05, .1)) %>%
+    colSums() %>%
+    add(1) %>%
+    c("", ".", "*", "**", "***")[.]
 }
 
 #' Hide warnings and messages and return invisible
@@ -84,7 +86,7 @@ sig_stars <- function(pval) {
 #'
 #' @export
 sshh <- function(...) {
-  suppressWarnings( suppressMessages( ... ) )
+  suppressWarnings(suppressMessages(...))
   invisible()
 }
 
@@ -98,7 +100,7 @@ sshh <- function(...) {
 #' sshhr( library(dplyr) )
 #'
 #' @export
-sshhr <- function(...) suppressWarnings( suppressMessages( ... ) )
+sshhr <- function(...) suppressWarnings(suppressMessages(...))
 
 #' Filter data with user-specified expression
 #'
@@ -114,7 +116,7 @@ filterdata <- function(dat, filt = "") {
   } else {
     seldat <- try(filter(dat, !! rlang::parse_expr(filt)), silent = TRUE)
     if (is(seldat, "try-error")) {
-      message(paste0("Invalid filter: \"", attr(seldat,"condition")$message,"\". Update or remove the expression"))
+      message(paste0("Invalid filter: \"", attr(seldat, "condition")$message, "\". Update or remove the expression"))
     } else {
       return(droplevels(seldat))
     }
@@ -138,9 +140,9 @@ getdata <- function(dataset,
                     filt = "",
                     rows = NULL,
                     na.rm = TRUE) {
-
-  filt %<>% gsub("\\n", "", .) %>% gsub("\"", "\'" , .)
-  { if (!is_string(dataset)) {
+  filt %<>% gsub("\\n", "", .) %>% gsub("\"", "\'", .)
+  {
+    if (!is_string(dataset)) {
       dataset
     } else if (exists("r_environment") && !is.null(r_environment$r_data[[dataset]])) {
       r_environment$r_data[[dataset]]
@@ -153,13 +155,24 @@ getdata <- function(dataset,
     } else {
       stop(message("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call"))
     }
-  } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%  ## ungroup data if needed
-        { if (filt == "") . else filterdata(., filt) } %>%         ## apply data_filter
-        { if (is.null(rows)) . else .[rows,, drop = FALSE] } %>%
-        { if (is_empty(vars[1])) . else select(., !!! if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)} %>%
-        { if (na.rm) na.omit(.) else . }
-        ## line below may cause an error https://github.com/hadley/dplyr/issues/219
-        # { if (na.rm) { if (anyNA(.)) na.omit(.) else . } else . }
+  } %>%
+    {
+      if ("grouped_df" %in% class(.)) ungroup(.) else .
+    } %>% ## ungroup data if needed
+    {
+      if (filt == "") . else filterdata(., filt)
+    } %>% ## apply data_filter
+    {
+      if (is.null(rows)) . else .[rows, , drop = FALSE]
+    } %>%
+    {
+      if (is_empty(vars[1])) . else select(., !!! if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)
+    } %>%
+    {
+      if (na.rm) na.omit(.) else .
+    }
+  ## line below may cause an error https://github.com/hadley/dplyr/issues/219
+  # { if (na.rm) { if (anyNA(.)) na.omit(.) else . } else . }
 }
 
 #' Convert character to factors as needed
@@ -177,13 +190,13 @@ factorizer <- function(dat, safx = 30) {
     n <- length(x)
     if (n < 101) return(TRUE)
     nd <- length(unique(x))
-    nd < 100 && (nd/n < (1/safx))
+    nd < 100 && (nd / n < (1 / safx))
   }
   toFct <-
     select(dat, which(isChar)) %>%
     summarise_all(funs(fab)) %>%
     select(which(. == TRUE)) %>%
-    names
+    names()
   if (length(toFct) == 0) return(dat)
 
   mutate_at(dat, .vars = toFct, .funs = funs(as.factor))
@@ -199,20 +212,21 @@ factorizer <- function(dat, safx = 30) {
 #'
 #' @export
 loadr <- function(file, objname = "", rlist = TRUE) {
-
   filename <- basename(file)
   ext <- tolower(tools::file_ext(filename))
-  if (!ext %in% c("rds", "rda", "csv"))
+  if (!ext %in% c("rds", "rda", "csv")) {
     stop("File must have extension rds, rda, or csv")
+  }
 
   ## objname is used as the name of the data.frame
-  if (objname == "")
+  if (objname == "") {
     objname <- sub(paste0(".", ext, "$"), "", filename)
+  }
 
   if (ext == "rds") {
     loadfun <- readRDS
   } else if (ext == "rda") {
-    loadfun <- function(f) load(f) %>% get
+    loadfun <- function(f) load(f) %>% get()
   } else {
     loadfun <- readr::read_csv
   }
@@ -221,8 +235,9 @@ loadr <- function(file, objname = "", rlist = TRUE) {
 
   if (!shiny) {
     if (rlist) {
-      if (!exists("r_data"))
+      if (!exists("r_data")) {
         assign("r_data", list(), envir = parent.frame())
+      }
 
       env <- pryr::where("r_data")
     } else {
@@ -236,8 +251,8 @@ loadr <- function(file, objname = "", rlist = TRUE) {
   env$r_data[[objname]] <- loadfun(file)
 
   if (shiny) {
-    env$r_data[[paste0(objname,"_descr")]] <- attr(env$r_data[[objname]], "description")
-    env$r_data[["datasetlist"]] <- c(objname, env$r_data[["datasetlist"]]) %>% unique
+    env$r_data[[paste0(objname, "_descr")]] <- attr(env$r_data[[objname]], "description")
+    env$r_data[["datasetlist"]] <- c(objname, env$r_data[["datasetlist"]]) %>% unique()
   }
 
   return(invisible())
@@ -250,11 +265,11 @@ loadr <- function(file, objname = "", rlist = TRUE) {
 #'
 #' @export
 saver <- function(objname, file) {
-
   filename <- basename(file)
   ext <- tolower(tools::file_ext(filename))
-  if (!ext %in% c("rda","rds"))
+  if (!ext %in% c("rda", "rds")) {
     stop("File must have extension rda or rds")
+  }
 
   if (!is.character(objname)) {
     dat <- objname
@@ -286,7 +301,6 @@ saver <- function(objname, file) {
 #'
 #' @export
 loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max = Inf, saf = TRUE, safx = 20) {
-
   rprob <- ""
   n_max <- if (is_not(n_max) || n_max == -1) Inf else n_max
 
@@ -297,7 +311,7 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max
       prb <- readr::problems(dat)
       if (nrow(prb) > 0) {
         tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
-        rprob <- knitr::kable(prb[1:(min(nrow(prb):10)),, drop = FALSE], align = 'l', format = 'html', table.attr = tab_big, caption = "Read issues (max 10 rows shown): Consider selecting read.csv to read the file (see check-box on the left). To reload the file you may need to refresh the browser first")
+        rprob <- knitr::kable(prb[1:(min(nrow(prb):10)), , drop = FALSE], align = "l", format = "html", table.attr = tab_big, caption = "Read issues (max 10 rows shown): Consider selecting read.csv to read the file (see check-box on the left). To reload the file you may need to refresh the browser first")
       }
       rm(prb)
     }
@@ -310,7 +324,9 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max
   if (saf) dat <- factorizer(dat, safx)
   dat %>%
     as.data.frame(.) %>%
-    {set_colnames(., make.names(colnames(.)))} %>%
+    {
+      set_colnames(., make.names(colnames(.)))
+    } %>%
     set_attr("description", rprob)
 }
 
@@ -332,25 +348,29 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max
 loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", n_max = Inf, saf = TRUE, safx = 20) {
   con <- curl(gsub("^\\s+|\\s+$", "", csv_url))
   try(open(con), silent = TRUE)
-  if (is(con, 'try-error')) {
+  if (is(con, "try-error")) {
     close(con)
     return("### There was an error loading the csv file from the provided url.")
   } else {
     dat <- sshhr(
-             try(read.table(con, header = header, comment.char = "",
-             quote = "\"", fill = TRUE, stringsAsFactors = saf,
-             sep = sep, dec = dec, nrows = n_max), silent = TRUE)
-           )
+      try(read.table(
+        con, header = header, comment.char = "",
+        quote = "\"", fill = TRUE, stringsAsFactors = saf,
+        sep = sep, dec = dec, nrows = n_max
+      ), silent = TRUE)
+    )
 
     close(con)
 
-    if (is(dat, 'try-error'))
+    if (is(dat, "try-error")) {
       return("### There was an error loading the data. Please make sure the data are in csv format.")
+    }
 
     if (saf) dat <- factorizer(dat, safx)
 
-    dat %>%
-      {set_colnames(., make.names(colnames(.)))}
+    dat %>% {
+      set_colnames(., make.names(colnames(.)))
+    }
   }
 }
 
@@ -366,7 +386,7 @@ loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", n_max = In
 loadrda_url <- function(rda_url) {
   con <- curl(gsub("^\\s+|\\s+$", "", rda_url))
   try(open(con), silent = TRUE)
-  if (is(con, 'try-error')) {
+  if (is(con, "try-error")) {
     close(con)
     return("### There was an error loading the rda file from the provided url.")
   } else {
@@ -394,7 +414,7 @@ choose_files <- function(...) {
   os_type <- Sys.info()["sysname"]
   if (os_type == "Windows") {
     if (length(argv) > 0) {
-      argv <- paste0(paste0("*.", argv), collapse = "; ") 
+      argv <- paste0(paste0("*.", argv), collapse = "; ")
       argv <- matrix(
         c("All files (*.*)", "*.*", argv, argv),
         nrow = 2, ncol = 2, byrow = TRUE
@@ -407,8 +427,9 @@ choose_files <- function(...) {
     utils::choose.files(filters = argv)
   } else if (os_type == "Darwin") {
     pth <- file.path(system.file(package = "radiant.data"), "app/www/scpt/choose.files.scpt")
-    if (length(argv) > 0)
+    if (length(argv) > 0) {
       argv <- paste0("\"", paste0(unlist(argv), collapse = "\" \""), "\"")
+    }
     fpath <- suppressWarnings(
       system(
         paste0("osascript -l JavaScript ", pth, " ", argv),
@@ -469,24 +490,24 @@ choose_dir <- function(...) {
 changedata <- function(dataset,
                        vars = c(),
                        var_names = names(vars)) {
-
   if (!is.character(dataset)) {
-    dataset[,var_names] <- vars
+    dataset[, var_names] <- vars
     return(dataset)
   } else if (exists("r_environment")) {
     message("Dataset ", dataset, " changed in r_environment\n")
-    r_environment$r_data[[dataset]][,var_names] <- vars
+    r_environment$r_data[[dataset]][, var_names] <- vars
   } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
     if (isTRUE(getOption("radiant.local"))) message("Dataset ", dataset, " loaded from r_data list\n")
     d_env <- pryr::where("r_data")
-    d_env$r_data[[dataset]][,var_names] <- vars
+    d_env$r_data[[dataset]][, var_names] <- vars
   } else if (exists(dataset)) {
     d_env <- pryr::where(dataset)
     message("Dataset ", dataset, " changed in ", environmentName(d_env), " environment\n")
-    d_env[[dataset]][,var_names] <- vars
+    d_env[[dataset]][, var_names] <- vars
   } else {
     paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
-      stop %>% return
+      stop() %>%
+      return()
   }
 }
 
@@ -520,33 +541,40 @@ viewdata <- function(dataset,
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
 
   isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
-  if (sum(isBigFct) > 0)
-    dat[,isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
+  if (sum(isBigFct) > 0) {
+    dat[, isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
+  }
 
   shinyApp(
-    ui = fluidPage(title = title,
-      includeCSS(file.path(system.file(package = "radiant.data"),"app/www/style.css")),
+    ui = fluidPage(
+      title = title,
+      includeCSS(file.path(system.file(package = "radiant.data"), "app/www/style.css")),
       fluidRow(DT::dataTableOutput("tbl")),
       actionButton("stop", "Stop", class = "btn-danger", onclick = "window.close();")
     ),
     server = function(input, output, session) {
-      widget <- DT::datatable(dat, selection = "none",
+      widget <- DT::datatable(
+        dat, selection = "none",
         rownames = FALSE, style = "bootstrap",
         filter = fbox, escape = FALSE,
         extensions = "KeyTable",
         options = list(
           keys = TRUE,
           search = list(regex = TRUE),
-          columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all"),
-                            list(className = "dt-center", targets = "_all")),
+          columnDefs = list(
+            list(orderSequence = c("desc", "asc"), targets = "_all"),
+            list(className = "dt-center", targets = "_all")
+          ),
           autoWidth = TRUE,
           processing = FALSE,
           pageLength = 10,
-          lengthMenu = list(c(5, 10, 25, 50, -1), c("5","10","25","50","All"))
+          lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
         )
       )
       output$tbl <- DT::renderDataTable(widget)
-      observeEvent(input$stop, {stopApp("Stopped viewdata")})
+      observeEvent(input$stop, {
+        stopApp("Stopped viewdata")
+      })
     }
   )
 }
@@ -584,16 +612,17 @@ dtab.data.frame <- function(object,
                             style = "bootstrap",
                             rownames = FALSE,
                             ...) {
-
   dat <- getdata(object, vars, filt = filt, rows = rows, na.rm = na.rm)
 
   isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
-  if (sum(isBigFct) > 0)
-    dat[,isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
+  if (sum(isBigFct) > 0) {
+    dat[, isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
+  }
 
   ## for display options see https://datatables.net/reference/option/dom
-  if (is_empty(dom))
+  if (is_empty(dom)) {
     dom <- if (pageLength == -1 || nrow(dat) < pageLength) "t" else "lftip"
+  }
 
   dt_tab <- rounddf(dat, dec) %>%
     DT::datatable(
@@ -607,13 +636,15 @@ dtab.data.frame <- function(object,
         dom = dom,
         keys = TRUE,
         search = list(regex = TRUE),
-        columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all"),
-                          list(className = "dt-center", targets = "_all")),
+        columnDefs = list(
+          list(orderSequence = c("desc", "asc"), targets = "_all"),
+          list(className = "dt-center", targets = "_all")
+        ),
         autoWidth = TRUE,
         # scrollX = TRUE, ## column filter location gets messed up
         processing = FALSE,
         pageLength = pageLength,
-        lengthMenu = list(c(5, 10, 25, 50, -1), c("5","10","25","50","All"))
+        lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
       )
     )
 
@@ -656,11 +687,11 @@ dtab.character <- function(...) dtab.data.frame(...)
 #' @export
 getclass <- function(dat) {
   sapply(dat, function(x) class(x)[1]) %>%
-    sub("ordered","factor", .) %>%
-    sub("POSIXct","date", .) %>%
-    sub("POSIXlt","date", .) %>%
-    sub("Date","date", .) %>%
-    sub("Period","period", .)
+    sub("ordered", "factor", .) %>%
+    sub("POSIXct", "date", .) %>%
+    sub("POSIXlt", "date", .) %>%
+    sub("Date", "date", .) %>%
+    sub("Period", "period", .)
 }
 
 #' Is a character variable defined
@@ -683,7 +714,7 @@ getclass <- function(dat) {
 #' is_empty(" something  ")
 #'
 #' @export
-is_empty <- function(x, empty = "\\s*") if (is_not(x) || grepl(paste0("^",empty,"$"), x)) TRUE else FALSE
+is_empty <- function(x, empty = "\\s*") if (is_not(x) || grepl(paste0("^", empty, "$"), x)) TRUE else FALSE
 
 #' Is input a string?
 #'
@@ -717,10 +748,12 @@ is_string <- function(x) if (length(x) == 1 && is.character(x) && !is_empty(x)) 
 #'
 #' @export
 iterms <- function(vars, nway, sep = ":") {
-  if (!nway %in% c(2,3)) return(character(0))
+  if (!nway %in% c(2, 3)) return(character(0))
   it <- c()
   for (i in 2:nway) {
-    it %<>% {c(., combn(vars, i) %>% apply(2, paste, collapse = sep))}
+    it %<>% {
+      c(., combn(vars, i) %>% apply(2, paste, collapse = sep))
+    }
     ## lm doesn't evaluate a:a
     # if (i == 2) it <- c(it, paste(vars, vars, sep = "*"))
     # if (i == 3) it <- c(it, paste(vars, vars, vars, sep = "*"))
@@ -745,20 +778,25 @@ copy_from <- function(.from, ...) {
   # copied from import:::symbol_list and import:::symbol_as_character by @smbache
   dots <- eval(substitute(alist(...)), parent.frame(), parent.frame())
   names <- names(dots)
-  unnamed <- if (is.null(names)) 1:length(dots)
-             else which(names == "")
+  unnamed <- if (is.null(names)) {
+    1:length(dots)
+  } else {
+    which(names == "")
+  }
   dots <- vapply(dots, as.character, character(1))
   names(dots)[unnamed] <- dots[unnamed]
 
   symbols <- dots
-  parent  <- parent.frame()
-  from    <- as.character(substitute(.from))
+  parent <- parent.frame()
+  from <- as.character(substitute(.from))
 
   for (s in seq_along(symbols)) {
     fn <- get(symbols[s], envir = asNamespace(from), inherits = TRUE)
-    assign(names(symbols)[s],
-           eval.parent(call("function", formals(fn), body(fn))),
-           parent)
+    assign(
+      names(symbols)[s],
+      eval.parent(call("function", formals(fn), body(fn))),
+      parent
+    )
   }
 
   invisible(NULL)
@@ -775,20 +813,21 @@ copy_from <- function(.from, ...) {
 #'
 #' @export
 copy_all <- function(.from) {
-
   from <- as.character(substitute(.from))
 
-  ls(getNamespace(from), all.names=TRUE) %>%
+  ls(getNamespace(from), all.names = TRUE) %>%
     .[grep("^\\.", ., invert = TRUE)] %>%
-    set_names(.,.) -> symbols
+    set_names(., .) -> symbols
 
-  parent  <- parent.frame()
+  parent <- parent.frame()
 
   for (s in seq_along(symbols)) {
     fn <- get(symbols[s], envir = asNamespace(from), inherits = TRUE)
-    assign(names(symbols)[s],
-           eval.parent(call("function", formals(fn), body(fn))),
-           parent)
+    assign(
+      names(symbols)[s],
+      eval.parent(call("function", formals(fn), body(fn))),
+      parent
+    )
   }
 
   invisible(NULL)
@@ -825,14 +864,16 @@ print.gtable <- function(x, ...) {
 #' @export
 ci_label <- function(alt = "two.sided", cl = .95, dec = 3) {
   if (alt == "less") {
-    c("0%", paste0(100*cl,"%"))
+    c("0%", paste0(100 * cl, "%"))
   } else if (alt == "greater") {
-    c(paste0(100*(1-cl),"%"), "100%")
+    c(paste0(100 * (1 - cl), "%"), "100%")
   } else {
-    {100 * (1-cl)/2} %>%
+    {
+      100 * (1 - cl) / 2
+    } %>%
       c(., 100 - .) %>%
       round(dec) %>%
-      paste0(.,"%")
+      paste0(., "%")
   }
 }
 
@@ -851,9 +892,9 @@ ci_label <- function(alt = "two.sided", cl = .95, dec = 3) {
 #'
 #' @export
 ci_perc <- function(dat, alt = "two.sided", cl = .95) {
-  probs <- if (alt == 'two.sided') {
+  probs <- if (alt == "two.sided") {
     ((1 - cl) / 2) %>% c(., 1 - .)
-  } else if (alt == 'less') {
+  } else if (alt == "less") {
     1 - cl
   } else {
     cl
@@ -878,7 +919,6 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #'
 #' @export
 formatdf <- function(tbl, dec = 3, perc = FALSE, mark = "") {
-
   frm <- function(x) {
     if (is.double(x)) {
       formatnr(x, dec = dec, perc = perc, mark = mark)
@@ -913,10 +953,11 @@ formatdf <- function(tbl, dec = 3, perc = FALSE, mark = "") {
 #' @export
 formatnr <- function(x, sym = "", dec = 2, perc = FALSE, mark = ",") {
   if ("data.frame" %in% class(x)) x <- x[[1]]
-  if (perc)
+  if (perc) {
     paste0(sym, formatC(100 * x, digits = dec, big.mark = mark, format = "f"), "%")
-  else
+  } else {
     paste0(sym, formatC(x, digits = dec, big.mark = mark, format = "f"))
+  }
 }
 
 #' Round double in a data.frame to a specified number of decimal places
@@ -944,16 +985,16 @@ rounddf <- function(tbl, dec = 3)
 #'
 #' @export
 find_dropbox <- function(account = 1) {
-
-   if (length(account) >  1)
-     stop("find_dropbox can only return the path for one account at a time")
+  if (length(account) > 1) {
+    stop("find_dropbox can only return the path for one account at a time")
+  }
 
   os_type <- Sys.info()["sysname"]
   if (os_type == "Windows") {
-    fp <- file.path(Sys.getenv("APPDATA"),"Dropbox/info.json") %>% gsub("\\\\","/",.)
+    fp <- file.path(Sys.getenv("APPDATA"), "Dropbox/info.json") %>% gsub("\\\\", "/", .)
     if (!file.exists(fp)) {
-      fp <- file.path(Sys.getenv("LOCALAPPDATA"),"Dropbox/info.json") %>%
-        gsub("\\\\","/",.)
+      fp <- file.path(Sys.getenv("LOCALAPPDATA"), "Dropbox/info.json") %>%
+        gsub("\\\\", "/", .)
     }
   } else if (os_type == "Darwin") {
     fp <- "~/.dropbox/info.json"
@@ -965,8 +1006,9 @@ find_dropbox <- function(account = 1) {
     fp <- normalizePath(fp, winslash = "/")
     dbinfo <- jsonlite::fromJSON(fp)
     ldb <- length(dbinfo)
-    if (ldb > 1)
+    if (ldb > 1) {
       message("Multiple dropbox folders found. By default the first folder is used.\nTo select, for example, the third dropbox folder use find_dropbox(3).\nAlternatively, specify the type of dropbox account, e.g., find_dropbox('personal')")
+    }
     if (is.numeric(account) && account > ldb) {
       stop(paste0("Invalid account number. Choose a number between 1 and ", ldb))
     } else if (is.character(account) && !account %in% names(dbinfo)) {
@@ -989,18 +1031,17 @@ find_dropbox <- function(account = 1) {
 #'
 #' @export
 find_gdrive <- function() {
-
   os_type <- Sys.info()["sysname"]
   if (os_type == "Windows") {
-    fp <- file.path(Sys.getenv("LOCALAPPDATA"),"Google/Drive/sync_config.db") %>%
-        gsub("\\\\","/",.)
+    fp <- file.path(Sys.getenv("LOCALAPPDATA"), "Google/Drive/sync_config.db") %>%
+      gsub("\\\\", "/", .)
   } else if (os_type == "Darwin") {
     fp <- "~/Library/Application Support/Google/Drive/user_default/sync_config.db"
   } else if (os_type == "Linux") {
     ## http://www.techrepublic.com/article/how-to-mount-your-google-drive-on-linux-with-google-drive-ocamlfuse/
     ## Linux update suggested by Chris Armstrong (https://github.com/chrisarm)
     fp <- normalizePath("~/google_drive")
-    if(file.exists(file.path(fp, ".grive"))){
+    if (file.exists(file.path(fp, ".grive"))) {
       return(fp)
     } else {
       stop("Please install grive2 and use '~/google_drive' as your grive directory (http://www.techrepublic.com/article/how-to-sync-your-google-cloud-on-linux-with-grive2/)", call. = FALSE)
@@ -1020,7 +1061,7 @@ find_gdrive <- function() {
     fp <- normalizePath(fp, winslash = "/")
     con <- DBI::dbConnect(RSQLite::SQLite(), fp)
     ret <- DBI::dbGetQuery(con, 'select data_value from data where entry_key = "local_sync_root_path"') %>%
-      as.character %>%
+      as.character() %>%
       normalizePath(winslash = "/")
     DBI::dbDisconnect(con)
     return(ret)
@@ -1039,8 +1080,9 @@ find_gdrive <- function() {
 #'
 #' @export
 find_project <- function() {
-  if (!rstudioapi::isAvailable())
+  if (!rstudioapi::isAvailable()) {
     stop("Project directory cannot be found because application is not run from Rstudio")
+  }
   fp <- rstudioapi::getActiveProject()
   if (is.null(fp)) {
     stop("Project directory cannot be found because application is not run from Rstudio project")
@@ -1094,7 +1136,8 @@ store.character <- function(object, ...) {
   if (exists("r_environment")) {
     ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
     showModal(
-      modalDialog(title = "Data Stored",
+      modalDialog(
+        title = "Data Stored",
         span(mess),
         footer = modalButton("OK"),
         size = "s",
@@ -1116,28 +1159,33 @@ store.character <- function(object, ...) {
 #' @export
 indexr <- function(dataset, vars = "", filt = "", cmd = "") {
   dat <- getdata(dataset, na.rm = FALSE)
-  if (is_empty(vars) || sum(vars %in% colnames(dat)) != length(vars))
+  if (is_empty(vars) || sum(vars %in% colnames(dat)) != length(vars)) {
     vars <- colnames(dat)
+  }
   nrows <- nrow(dat)
 
   ## customizing data if a command was used
   if (!is_empty(cmd)) {
     pred_cmd <- gsub("\"", "\'", cmd) %>% gsub("\\s+", "", .)
     cmd_vars <-
-      strsplit(pred_cmd, ";")[[1]] %>% strsplit(., "=") %>%
-      sapply("[", 1) %>% gsub("\\s+", "", .)
+      strsplit(pred_cmd, ";")[[1]] %>%
+      strsplit(., "=") %>%
+      sapply("[", 1) %>%
+      gsub("\\s+", "", .)
 
     dots <- rlang::parse_exprs(pred_cmd) %>%
-        set_names(cmd_vars)
+      set_names(cmd_vars)
 
     dat <- try(mutate(dat, !!! dots), silent = TRUE)
   }
 
   ind <-
     mutate(dat, imf___ = 1:nrows) %>%
-    {if (filt == "") . else filterdata(., filt)} %>%
+    {
+      if (filt == "") . else filterdata(., filt)
+    } %>%
     select_at(.vars = unique(c("imf___", vars))) %>%
-    na.omit %>%
+    na.omit() %>%
     .[["imf___"]]
 
   list(nr = nrows, ind = ind)
@@ -1202,27 +1250,27 @@ render.datatables <- function(object, ...) {
 # }
 
 # knit_print.datatables <- function(x, ...) {
-  # if (isTRUE(attr(x, "shiny"))) {
-  # if (exists("r_environment") && isTRUE(r_environment$shiny)) {
-    # shiny::knit_print.shiny.render.function(
-      # DT::renderDataTable(x)
-    # )
-  # } else {
-    # knitr::knit_print(htmlwidgets::toHTML(x, standalone = FALSE, knitrOptions = NULL),
-    #     options = NULL, ...)
-    # htmlwidgets::knit_print.htmlwidget(x)
-    # knitr::knit_print.htmlwidget(x)
-    # x
-  # }
+# if (isTRUE(attr(x, "shiny"))) {
+# if (exists("r_environment") && isTRUE(r_environment$shiny)) {
+# shiny::knit_print.shiny.render.function(
+# DT::renderDataTable(x)
+# )
+# } else {
+# knitr::knit_print(htmlwidgets::toHTML(x, standalone = FALSE, knitrOptions = NULL),
+#     options = NULL, ...)
+# htmlwidgets::knit_print.htmlwidget(x)
+# knitr::knit_print.htmlwidget(x)
+# x
+# }
 
-  # } else {
-    # shiny::knit_print.htmlwidget(x)
-    # knitr::knit_print(x)
-  # }
-    # x
-  # shin::knit_print.(x)
-  # htmlwidgets:::knit_print.htmlwidget(x)
-  # attr(x, "shiny")
+# } else {
+# shiny::knit_print.htmlwidget(x)
+# knitr::knit_print(x)
+# }
+# x
+# shin::knit_print.(x)
+# htmlwidgets:::knit_print.htmlwidget(x)
+# attr(x, "shiny")
 # }
 
 #' Method to render plotly plots
@@ -1289,8 +1337,9 @@ describe <- function(name) {
   dat <- if (is.character(name)) getdata(name) else name
 
   description <- attr(dat, "description")
-  if (is_empty(description))
+  if (is_empty(description)) {
     return(str(dat))
+  }
 
   owd <- setwd(tempdir())
   on.exit(setwd(owd))
@@ -1302,7 +1351,7 @@ describe <- function(name) {
   viewer("index.html")
 }
 
-#' Workaround to add description using feather::write_feather 
+#' Workaround to add description using feather::write_feather
 #'
 #' @param x A data frame to write to disk
 #' @param path Path to feather file

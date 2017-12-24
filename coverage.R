@@ -6,7 +6,7 @@ if (!require(covr)) {
 
 setwd("~/gh/radiant.data")
 
-#cov <- package_coverage(type = "all")
+# cov <- package_coverage(type = "all")
 cov <- package_coverage(type = "example")
 shine(cov)
 

@@ -5,24 +5,28 @@ output$view_state <- renderUI({
   sidebarLayout(
     sidebarPanel(
       wellPanel(
-        checkboxInput('show_input', 'Show input', FALSE),
-        checkboxInput('show_data', 'Show r_data', FALSE),
-        checkboxInput('show_state', 'Show state', FALSE),
-        checkboxInput('show_session', 'Show session', FALSE)
+        checkboxInput("show_input", "Show input", FALSE),
+        checkboxInput("show_data", "Show r_data", FALSE),
+        checkboxInput("show_state", "Show state", FALSE),
+        checkboxInput("show_session", "Show session", FALSE)
       ),
-      help_modal('View state','state_help',inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/state.md")))
+      help_modal("View state", "state_help", inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/state.md")))
     ),
     mainPanel(
-      conditionalPanel(condition = "input.show_input == true",
+      conditionalPanel(
+        condition = "input.show_input == true",
         verbatimTextOutput("show_input")
       ),
-      conditionalPanel(condition = "input.show_data == true",
+      conditionalPanel(
+        condition = "input.show_data == true",
         verbatimTextOutput("show_data")
       ),
-      conditionalPanel(condition = "input.show_state == true",
+      conditionalPanel(
+        condition = "input.show_state == true",
         verbatimTextOutput("show_state")
       ),
-      conditionalPanel(condition = "input.show_session == true",
+      conditionalPanel(
+        condition = "input.show_session == true",
         verbatimTextOutput("show_session")
       )
     )
@@ -30,9 +34,9 @@ output$view_state <- renderUI({
 })
 
 output$saveStateNav <- downloadHandler(
-  filename = function() { 
+  filename = function() {
     if (is.null(r_state$state_name)) {
-      paste0("radiant-state-", Sys.Date(), ".rda") 
+      paste0("radiant-state-", Sys.Date(), ".rda")
     } else {
       r_state$state_name
     }
@@ -70,7 +74,9 @@ output$show_data <- renderPrint({
   input$show_data ## only update when you toggle the checkbox
   isolate({
     cat("r_data list:\n")
-    toList(r_data) %>% {str(.[sort(names(.))])}
+    toList(r_data) %>% {
+      str(.[sort(names(.))])
+    }
   })
 })
 

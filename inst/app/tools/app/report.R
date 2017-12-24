@@ -1,17 +1,26 @@
 ################################################################
 # Create dynamic reports using Radiant and the shinyAce editor
 ################################################################
-rmd_switch <- c("Switch tab" = "switch", "Don't switch tab" = "no_switch")
-rmd_manual <- c("Auto paste" = "auto", "Manual paste" = "manual")
-rmd_report_choices <- c("HTML","Rmd")
+rmd_switch <- c(
+  "Switch tab" = "switch", 
+  "Don't switch tab" = "no_switch"
+)
+rmd_manual <- c(
+  "Auto paste" = "auto",
+  "Manual paste" = "manual"
+)
+rmd_report_choices <- c("HTML", "Rmd")
 
-# if (rstudioapi::isAvailable() || (!isTRUE(getOption("radiant.local")) && !is.null(session$user))) {
 if (rstudioapi::isAvailable() || isTRUE(getOption("radiant.report"))) {
-  rmd_manual <- c(rmd_manual, "To Rmd (Rstudio)" = "To Rmd", "To R (Rstudio)" = "To R")
-  rmd_report_choices <- c("Notebook", "HTML", "PDF","Word","Rmd")
+  rmd_manual <- c(
+    rmd_manual,
+    "To Rmd (Rstudio)" = "To Rmd",
+    "To R (Rstudio)" = "To R"
+  )
+  rmd_report_choices <- c("Notebook", "HTML", "PDF", "Word", "Rmd")
 }
 
-rmd_report_choices %<>% c(.,"Rmd & Data (zip)")
+rmd_report_choices %<>% c(., "Rmd & Data (zip)")
 rmd_example <- "## Sample report
 
 This is an example of the type of report you can write in Radiant.
@@ -89,35 +98,45 @@ labs(title = \"Diamond prices\", x = \"Carats\", y = \"Price ($)\")
 "
 
 output$ui_rmd_manual <- renderUI({
-  selectInput(inputId = "rmd_manual", label = NULL,
+  selectInput(
+    inputId = "rmd_manual", label = NULL,
     choices = rmd_manual,
     selected = state_init("rmd_manual", "auto"),
     multiple = FALSE, selectize = FALSE,
-    width = "140px")
+    width = "140px"
+  )
 })
 
 output$ui_rmd_view <- renderUI({
-  rmd_view_options <- c("Dual view" = "dual", "Preview only" = "pr_only", "Editor only" = "ed_only")
+  rmd_view_options <- c(
+    "Dual view" = "dual",
+    "Preview only" = "pr_only",
+    "Editor only" = "ed_only"
+  )
   req(input$rmd_manual)
   init <- if (input$rmd_manual == "To Rmd") "pr_only" else "dual"
 
-  selectInput("rmd_view", label = NULL, choices = rmd_view_options,
-    # selected = state_init("rmd_view", "dual"),
+  selectInput(
+    "rmd_view", label = NULL, choices = rmd_view_options,
     selected = state_init("rmd_view", init),
-    multiple = FALSE, selectize = FALSE, width = "120px")
+    multiple = FALSE, selectize = FALSE, width = "120px"
+  )
 })
 
 output$ui_rmd_switch <- renderUI({
   req(input$rmd_manual)
-  if (!input$rmd_manual %in% c("manual","auto"))
+  if (!input$rmd_manual %in% c("manual", "auto")) {
     init <- "no_switch"
-  else
+  } else {
     init <- "switch"
-  selectInput(inputId = "rmd_switch", label = NULL,
+  }
+  selectInput(
+    inputId = "rmd_switch", label = NULL,
     choices = rmd_switch,
     selected = state_init("rmd_switch", init),
     multiple = FALSE, selectize = FALSE,
-    width = "140px")
+    width = "140px"
+  )
 })
 
 observeEvent(input$rmd_manual, {
@@ -136,11 +155,13 @@ observeEvent(input$rmd_manual, {
 
 output$ui_rmd_save_report <- renderUI({
   if (isTRUE(getOption("radiant.report"))) {
-    selectInput(inputId = "rmd_save_report", label = NULL,
+    selectInput(
+      inputId = "rmd_save_report", label = NULL,
       choices = rmd_report_choices,
       selected = state_init("rmd_save_report", "Notebook"),
       multiple = FALSE, selectize = FALSE,
-      width = "105px")
+      width = "105px"
+    )
   } else {
     invisible()
   }
@@ -163,7 +184,7 @@ output$ui_rmd_read_data <- renderUI({
 })
 
 esc_slash <- function(x) {
-  gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2", x) %>%
+  gsub("([^\\])\\\\([^\\\\$])", "\\1\\\\\\\\\\2", x) %>%
     fixMS(.)
 }
 
@@ -173,9 +194,9 @@ getdeps <- function() {
   htmltools::attachDependencies(
     htmltools::tagList(),
     c(
-      htmlwidgets:::getDependency("DiagrammeR","DiagrammeR"),
-      htmlwidgets:::getDependency("datatables","DT"),
-      htmlwidgets:::getDependency("plotly","plotly")
+      htmlwidgets:::getDependency("DiagrammeR", "DiagrammeR"),
+      htmlwidgets:::getDependency("datatables", "DT"),
+      htmlwidgets:::getDependency("plotly", "plotly")
     )
   )
 }
@@ -184,7 +205,7 @@ output$ui_load_rmd <- renderUI({
   if (isTRUE(getOption("radiant.local"))) {
     actionButton("load_rmd", "Load report", icon = icon("upload"))
   } else {
-     HTML("<div class='form-group shiny-input-container'>
+    HTML("<div class='form-group shiny-input-container'>
              <input id='load_rmd' name='load_rmd' type='file' accept='.rmd,.Rmd,.md'/>
            </div>")
   }
@@ -193,10 +214,13 @@ output$ui_load_rmd <- renderUI({
 output$report <- renderUI({
   init <- isolate(if (is_empty(input$rmd_report)) rmd_example else esc_slash(input$rmd_report))
   tagList(
-    with(tags,
+    with(
+      tags,
       table(
-        td(help_modal('Report','report_help',
-           inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/report.md")))),
+        td(help_modal(
+          "Report", "report_help",
+          inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/report.md"))
+        )),
         td(HTML("&nbsp;&nbsp;")),
         td(actionButton("evalRmd", "Knit report"), style = "padding-top:5px;"),
         td(uiOutput("ui_rmd_manual")),
@@ -209,12 +233,14 @@ output$report <- renderUI({
         # td(shinyFiles::shinyFilesButton("my_shiny_file", "Select data", "Select one or more datasets", TRUE), style = "padding-top:5px;")
       )
     ),
-    shinyAce::aceEditor("rmd_report", mode = "markdown",
+    shinyAce::aceEditor(
+      "rmd_report", mode = "markdown",
       vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
       wordWrap = TRUE, height = "auto", selectionId = "rmd_selection",
-      value = state_init("rmd_report", init) %>% esc_slash,
+      value = state_init("rmd_report", init) %>% esc_slash(),
       hotkeys = list(runKeyRmd = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
-      autoComplete = "enabled"),
+      autoComplete = "enabled"
+    ),
     htmlOutput("rmd_knitted"),
     getdeps()
   )
@@ -244,16 +270,16 @@ observe({
 })
 
 scrub <- . %>%
-  gsub("&lt;!--/html_preserve--&gt;","",.) %>%
-  gsub("&lt;!--html_preserve--&gt;","",.) %>%
-  gsub("&lt;!&ndash;html_preserve&ndash;&gt;","",.) %>%
-  gsub("&lt;!&ndash;/html_preserve&ndash;&gt;","",.) %>%
-  gsub("&lt;!&ndash;/html_preserve&ndash;&gt;","",.)  ## knitr adds this
+  gsub("&lt;!--/html_preserve--&gt;", "", .) %>%
+  gsub("&lt;!--html_preserve--&gt;", "", .) %>%
+  gsub("&lt;!&ndash;html_preserve&ndash;&gt;", "", .) %>%
+  gsub("&lt;!&ndash;/html_preserve&ndash;&gt;", "", .) %>%
+  gsub("&lt;!&ndash;/html_preserve&ndash;&gt;", "", .) ## knitr adds this
 
 ## cleanout widgets not needed outside shiny apps
 cleanout <- . %>%
   gsub("DiagrammeR::renderDiagrammeR", "", .) %>% ## leave for legacy reasons
-  gsub("DT::renderDataTable", "", .)              ## leave for legacy reasons
+  gsub("DT::renderDataTable", "", .) ## leave for legacy reasons
 
 ## Based on http://stackoverflow.com/a/31797947/1974918
 knitItSave <- function(text) {
@@ -267,19 +293,29 @@ knitItSave <- function(text) {
   ## Convert script dependencies into data URIs, and stylesheet
   ## dependencies into inline stylesheets
   dep_scripts <-
-    lapply(deps, function(x) {lapply(x$script, function(script) file.path(x$src$file, script))}) %>%
-    unlist %>% unique
+    lapply(deps, function(x) {
+      lapply(x$script, function(script) file.path(x$src$file, script))
+    }) %>%
+    unlist() %>%
+    unique()
   dep_stylesheets <-
-    lapply(deps, function(x) {lapply(x$stylesheet, function(stylesheet) file.path(x$src$file, stylesheet))}) %>%
-    unlist %>% unique
+    lapply(deps, function(x) {
+      lapply(x$stylesheet, function(stylesheet) file.path(x$src$file, stylesheet))
+    }) %>%
+    unlist() %>%
+    unique()
   dep_html <- c(
     sapply(dep_scripts, function(script) {
-      sprintf('<script type="text/javascript" src="%s"></script>',
-              base64enc::dataURI(file = script))
+      sprintf(
+        '<script type="text/javascript" src="%s"></script>',
+        base64enc::dataURI(file = script)
+      )
     }),
     sapply(dep_stylesheets, function(sheet) {
-      sprintf('<style>%s</style>',
-              paste(sshhr(readLines(sheet)), collapse = "\n"))
+      sprintf(
+        "<style>%s</style>",
+        paste(sshhr(readLines(sheet)), collapse = "\n")
+      )
     })
   )
 
@@ -291,9 +327,9 @@ knitItSave <- function(text) {
     text = gsub("\\\\\\\\", "\\\\", preserved$value) %>% fixMS(.),
     header = dep_html,
     options = c("mathjax", "base64_images"),
-    stylesheet = file.path(getOption("radiant.path.data"),"app/www/bootstrap.min.css")
+    stylesheet = file.path(getOption("radiant.path.data"), "app/www/bootstrap.min.css")
   ) %>%
-  htmltools::restorePreserveChunks(preserved$chunks)
+    htmltools::restorePreserveChunks(preserved$chunks)
 }
 
 
@@ -313,12 +349,14 @@ knitIt <- function(text) {
   )
 
   ## add basic styling to tables
-  ret <- paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
-        paste0("<script type='text/javascript' src='", getOption("radiant.mathjax.path"),"/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
-        "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>%
-  gsub("<table>","<table class='table table-condensed table-hover'>",.) %>%
-  scrub %>%
-  HTML
+  ret <- paste(
+    markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
+    paste0("<script type='text/javascript' src='", getOption("radiant.mathjax.path"), "/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
+    "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = "\n"
+  ) %>%
+    gsub("<table>", "<table class='table table-condensed table-hover'>", .) %>%
+    scrub() %>%
+    HTML()
 }
 
 output$rmd_knitted <- renderUI({
@@ -328,10 +366,9 @@ output$rmd_knitted <- renderUI({
       HTML("<h2>Rmarkdown report was not evaluated. If you have sudo access to the server set options(radiant.report = TRUE) in .Rprofile for the shiny user </h2>")
     } else if (input$rmd_report != "") {
       withProgress(message = "Knitting report", value = 1, {
-
         if (input$rmd_manual == "To Rmd") {
           report <- rstudioapi::getSourceEditorContext()
-          path <- basename(report$path) %>% tools::file_ext(.) %>% tolower
+          path <- basename(report$path) %>% tools::file_ext(.) %>% tolower()
 
           if (is_empty(path) || path != "rmd") {
             report <- "#### _R > Report_ is set to generate code in an rmarkdown document in Rstudio ('To Rmd (Rstudio)').\n#### Please check that you have an Rmd file open in Rstudio and that the file has been saved to disk.\n#### If you want to use the editor in Radiant instead, change 'To Rmd' to 'Auto paste'."
@@ -386,9 +423,8 @@ output$saveReport <- downloadHandler(
         #   fixMS(.)
 
         if (input$rmd_manual == "To Rmd") {
-
           report <- rstudioapi::getSourceEditorContext()
-          path <- basename(report$path) %>% tools::file_ext(.) %>% tolower
+          path <- basename(report$path) %>% tools::file_ext(.) %>% tolower()
 
           if (is_empty(path) || path != "rmd") {
             report <- "#### _R > Report_ is set to generate code in an rmarkdown document in Rstudio ('To Rmd').\n#### Please check that you have an Rmd file open in Rstudio and that the file has been saved to disk.\n#### If you want to use the editor in Radiant instead, change 'To Rmd' to 'Auto paste'."
@@ -416,7 +452,8 @@ output$saveReport <- downloadHandler(
         sopts <- if (input$rmd_save_report == "PDF") ", screenshot.opts = list(vheight = 1200)" else ""
 
         if (input$rmd_save_report %in% c("PDF", "Word")) {
-          yml <- ""; ech <- "FALSE"
+          yml <- ""
+          ech <- "FALSE"
         } else if (input$rmd_save_report == "HTML") {
           yml <- "---\ntitle: \"\"\noutput:\n  html_document:\n    highlight: textmate\n    theme: spacelab\n    df_print: paged\n    toc: yes\n---\n\n"
           ech <- "FALSE"
@@ -429,7 +466,7 @@ output$saveReport <- downloadHandler(
         }
 
         init <-
-paste0(yml, "```{r setup, include = FALSE}
+          paste0(yml, "```{r setup, include = FALSE}
 ## initial settings
 knitr::opts_chunk$set(
   comment = NA,
@@ -438,7 +475,7 @@ knitr::opts_chunk$set(
   cache = FALSE,
   message = FALSE,
   dpi = 96,
-  warning = FALSE", sopts,"
+  warning = FALSE", sopts, "
 )
 
 ## width to use when printing tables etc.
@@ -462,22 +499,21 @@ if (!exists(\"r_environment\")) library(", lib, ")
 </style>\n\n", report)
 
         if (input$rmd_save_report == "Rmd & Data (zip)") {
-
           withProgress(message = "Preparing Rmd & Data zip file", value = 1, {
             r_data <- toList(r_data)
             save(r_data, file = "r_data.rda")
             cat(init, file = "report.Rmd", sep = "\n")
 
-            zip_util = Sys.getenv("R_ZIPCMD", "zip")
-            flags = "-r9X"
+            zip_util <- Sys.getenv("R_ZIPCMD", "zip")
+            flags <- "-r9X"
             os_type <- Sys.info()["sysname"]
             if (os_type == "Windows") {
               wz <- suppressWarnings(system("where zip", intern = TRUE))
               if (!grepl("zip", wz)) {
                 wz <- suppressWarnings(system("where 7z", intern = TRUE))
                 if (grepl("7z", wz)) {
-                  zip_util = "7z"
-                  flags = "a"
+                  zip_util <- "7z"
+                  flags <- "a"
                 }
               }
             }
@@ -491,14 +527,15 @@ if (!exists(\"r_environment\")) library(", lib, ")
           ## on linux ensure you have you have pandoc > 1.14 installed
           ## you may need to use http://pandoc.org/installing.html#installing-from-source
           ## also check the logs to make sure its not complaining about missing files
-          withProgress(message = paste0("Saving report to ", input$rmd_save_report), value = 1,
+          withProgress(
+            message = paste0("Saving report to ", input$rmd_save_report), value = 1,
             if (rstudioapi::isAvailable() || !isTRUE(getOption("radiant.local"))) {
               cat(init, file = "report.Rmd", sep = "\n")
               out <- rmarkdown::render("report.Rmd", switch(input$rmd_save_report,
                 Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "hide"),
                 HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
                 PDF = rmarkdown::pdf_document(),
-                Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"),"app/www/style.docx"))
+                Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"), "app/www/style.docx"))
               ), envir = r_environment)
               file.remove("report.Rmd")
               file.rename(out, file)
@@ -520,18 +557,18 @@ read_data <- function(type = "rmd") {
     ## normalize path to avoid issues on windoze
     path <- normalizePath(path, winslash = "/")
     filename <- basename(path)
-    fext <- tools::file_ext(filename) %>% tolower
+    fext <- tools::file_ext(filename) %>% tolower()
     ## objname is used as the name of the data.frame, make case insensitive
-    objname <- sub(paste0(".", fext, "$"),"", filename, ignore.case = TRUE)
+    objname <- sub(paste0(".", fext, "$"), "", filename, ignore.case = TRUE)
 
     pdir <- if (rstudioapi::isAvailable()) rstudioapi::getActiveProject() else ""
     dbdir <- try(find_dropbox(), silent = TRUE)
-    dbdir <- if (is(dbdir, "try-error")) "" else paste0(dbdir,"/")
+    dbdir <- if (is(dbdir, "try-error")) "" else paste0(dbdir, "/")
     gddir <- try(find_gdrive(), silent = TRUE)
-    gddir <- if (is(gddir, "try-error")) "" else paste0(gddir,"/")
+    gddir <- if (is(gddir, "try-error")) "" else paste0(gddir, "/")
 
     if (!is_empty(pdir) && grepl(pdir, path)) {
-      path <- paste0("\"", sub(paste0(pdir,"/"), "", path), "\"")
+      path <- paste0("\"", sub(paste0(pdir, "/"), "", path), "\"")
     } else if (grepl(dbdir, path)) {
       path <- paste0("file.path(find_dropbox(), \"", sub(dbdir, "", path), "\")")
     } else if (grepl(gddir, path)) {
@@ -548,7 +585,7 @@ read_data <- function(type = "rmd") {
       cmd <- paste0("r_data[[\"", objname, "\"]] <- readr::read_csv(", path, ", n_max = Inf)\nregister(\"", objname, "\")")
     } else if (fext == "tsv") {
       cmd <- paste0("r_data[[\"", objname, "\"]] <- readr::read_tsv(", path, ")\nregister(\"", objname, "\")")
-    } else if (fext %in% c("xls","xlsx")) {
+    } else if (fext %in% c("xls", "xlsx")) {
       cmd <- paste0("r_data[[\"", objname, "\"]] <- readxl::read_excel(", path, ", sheet = 1)\nregister(\"", objname, "\")")
     } else if (fext == "feather") {
       cmd <- paste0("r_data[[\"", objname, "\"]] <- feather::read_feather(", path, ", columns = c())\nregister(\"", objname, "\", desc = feather::feather_metadata(", path, ")$description)")
@@ -582,13 +619,13 @@ observeEvent(input$rmd_read_data, {
 observeEvent(input$load_rmd, {
   ## loading rmd report from disk
   if (isTRUE(getOption("radiant.local"))) {
-    path <- radiant.data::choose_files("Rmd","rmd","md","html")
+    path <- radiant.data::choose_files("Rmd", "rmd", "md", "html")
   } else {
     path <- input$load_rmd$datapath
   }
 
   if (!is_empty(path)) {
-    fext <- tools::file_ext(path) %>% tolower
+    fext <- tools::file_ext(path) %>% tolower()
     if (fext == "html") {
       ## based on http://rmarkdown.rstudio.com/r_notebook_format.html
       rmd <- try(rmarkdown::parse_html_notebook(path), silent = TRUE)
@@ -615,7 +652,6 @@ update_report <- function(inp_main = "",
                           figs = TRUE,
                           fig.width = 7,
                           fig.height = 7) {
-
   cmd <- ""
   if (inp_main[1] != "") {
     cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
@@ -635,8 +671,8 @@ update_report <- function(inp_main = "",
       }
       if (inp_out[i] != "" && length(inp_out[[i]]) > 0) {
         cmd <- deparse(inp_out[[i]], control = c("keepNA"), width.cutoff = 500L) %>%
-                 sub("list\\(", paste0(outputs[i], "\\(", inp, ", "), .) %>%
-                 paste0(cmd, "\n", .)
+          sub("list\\(", paste0(outputs[i], "\\(", inp, ", "), .) %>%
+          paste0(cmd, "\n", .)
       } else {
         cmd <- paste0(cmd, "\n", outputs[i], "(", inp, ")")
       }
@@ -645,17 +681,19 @@ update_report <- function(inp_main = "",
 
   if (xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
 
-  if (figs)
-    cmd <- paste0("\n```{r fig.width = ", round(7 * fig.width / 650, 2),", fig.height = ", round(7 * fig.height / 650, 2),", dpi = 96}\n", cmd, "\n```\n")
-  else
+  if (figs) {
+    cmd <- paste0("\n```{r fig.width = ", round(7 * fig.width / 650, 2), ", fig.height = ", round(7 * fig.height / 650, 2), ", dpi = 96}\n", cmd, "\n```\n")
+  } else {
     cmd <- paste0("\n```{r}\n", cmd, "\n```\n")
+  }
 
   update_report_fun(cmd)
 }
 
 observeEvent(input$rmd_report, {
-  if (input$rmd_report != rmd_example)
+  if (input$rmd_report != rmd_example) {
     r_state$rmd_report <<- esc_slash(input$rmd_report)
+  }
 })
 
 update_report_fun <- function(cmd) {
@@ -671,15 +709,18 @@ update_report_fun <- function(cmd) {
       } else if (os_type == "Linux") {
         cat("Clipboard not supported on linux")
       }
-      withProgress(message = "Putting command in clipboard", value = 1,
+      withProgress(
+        message = "Putting command in clipboard", value = 1,
         cat("")
       )
     } else if (state_init("rmd_manual", "auto") == "To Rmd") {
-      withProgress(message = "Putting Rmd chunk in Rstudio", value = 1,
+      withProgress(
+        message = "Putting Rmd chunk in Rstudio", value = 1,
         rstudioapi::insertText(Inf, fixMS(cmd))
       )
     } else if (state_init("rmd_manual", "auto") == "To R") {
-      withProgress(message = "Putting R-command in Rstudio", value = 1,
+      withProgress(
+        message = "Putting R-command in Rstudio", value = 1,
         gsub("(```\\{.*\\}\n)|(```\n)", "", cmd) %>%
           fixMS(.) %>%
           rstudioapi::insertText(Inf, .)
@@ -688,9 +729,10 @@ update_report_fun <- function(cmd) {
       if (is_empty(r_state$rmd_report)) {
         r_state$rmd_report <<- paste0("## Your report title\n", cmd)
       } else {
-        r_state$rmd_report <<- paste0(esc_slash(r_state$rmd_report),"\n",cmd)
+        r_state$rmd_report <<- paste0(esc_slash(r_state$rmd_report), "\n", cmd)
       }
-      withProgress(message = "Updating report", value = 1,
+      withProgress(
+        message = "Updating report", value = 1,
         shinyAce::updateAceEditor(
           session, "rmd_report",
           value = esc_slash(r_state$rmd_report)
@@ -698,7 +740,8 @@ update_report_fun <- function(cmd) {
       )
     }
 
-    if (state_init("rmd_switch", "switch") == "switch")
+    if (state_init("rmd_switch", "switch") == "switch") {
       updateTabsetPanel(session, "nav_radiant", selected = "Report")
+    }
   })
 }

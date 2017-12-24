@@ -29,7 +29,6 @@ Search <- function(pattern, df, ignore.case = TRUE, fixed = FALSE) {
 #'
 #' @export
 store.data.frame <- function(object, new = "", org = "", envir = parent.frame(), ...) {
-
   if (is_empty(new)) {
     return(object)
   } else if (exists("r_environment")) {
@@ -43,12 +42,13 @@ store.data.frame <- function(object, new = "", org = "", envir = parent.frame(),
   }
 
   ## use data description from the original if available
-  if (is_empty(attr(object, "description")) && !is_empty(org))
+  if (is_empty(attr(object, "description")) && !is_empty(org)) {
     attr(object, "description") <- env$r_data[[paste0(org, "_descr")]]
+  }
 
   env$r_data[[new]] <- object
-  env$r_data[[paste0(new,"_descr")]] <- attr(object, "description")
-  env$r_data[["datasetlist"]] <- c(new, env$r_data[["datasetlist"]]) %>% unique
+  env$r_data[[paste0(new, "_descr")]] <- attr(object, "description")
+  env$r_data[["datasetlist"]] <- c(new, env$r_data[["datasetlist"]]) %>% unique()
 }
 
 #' Register a data.frame in the datasetlist in Radiant
@@ -59,7 +59,6 @@ store.data.frame <- function(object, new = "", org = "", envir = parent.frame(),
 #'
 #' @export
 register <- function(new, org = "", descr = "") {
-
   if (exists("r_environment")) {
     env <- r_environment
     if (!is_string(new) || is_empty(env$r_data[[new]])) {
@@ -72,17 +71,17 @@ register <- function(new, org = "", descr = "") {
   }
 
   if (!is.data.frame(env$r_data[[new]]) & is.list(env$r_data[[new]])) {
-    env$r_data[["dtree_list"]] <- c(new, env$r_data[["dtree_list"]]) %>% unique
+    env$r_data[["dtree_list"]] <- c(new, env$r_data[["dtree_list"]]) %>% unique()
   } else {
     ## use data description from the original if available
     if (!is_empty(descr)) {
-      env$r_data[[paste0(new,"_descr")]] <- descr
+      env$r_data[[paste0(new, "_descr")]] <- descr
     } else if (is_empty(env$r_data[[paste0(new, "_descr")]]) && !is_empty(org)) {
-      env$r_data[[paste0(new,"_descr")]] <- env$r_data[[paste0(org,"_descr")]]
+      env$r_data[[paste0(new, "_descr")]] <- env$r_data[[paste0(org, "_descr")]]
     } else {
-      env$r_data[[paste0(new,"_descr")]] <- attr(env$r_data[[new]], "description")
+      env$r_data[[paste0(new, "_descr")]] <- attr(env$r_data[[new]], "description")
     }
 
-    env$r_data[["datasetlist"]] <- c(new, env$r_data[["datasetlist"]]) %>% unique
+    env$r_data[["datasetlist"]] <- c(new, env$r_data[["datasetlist"]]) %>% unique()
   }
 }
