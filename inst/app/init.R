@@ -208,11 +208,11 @@ if (!"package:radiant.data" %in% search() && getOption("radiant.path.data") == "
   radiant.data::copy_all(radiant.data)
 }
 
-## check every 10 seconds if width has been reset
+## check every 5 seconds if width has been reset
 ## https://github.com/rstudio/rstudio/issues/1870
 ## https://community.rstudio.com/t/rstudio-resets-width-option-when-running-shiny-app-in-viewer/3661
 reactivePoll(
-  10000,
+  5000,
   session,
   checkFunc = function() {
     if (getOption("width", default = 250) != 250) options(width = 250)
