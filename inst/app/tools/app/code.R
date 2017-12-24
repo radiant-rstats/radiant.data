@@ -62,6 +62,26 @@ output$ui_saveCodeReport <- renderUI({
   }
 })
 
+output$ui_load_code <- renderUI({
+  if (isTRUE(getOption("radiant.local"))) {
+    actionButton("load_code", "Load code", icon = icon("upload"))
+  } else {
+     HTML("<div class='form-group shiny-input-container'>
+             <input id='load_code' name='load_code' type='file' accept='.R,.r'/>
+           </div>")
+  }
+})
+
+output$ui_rcode_read_data <- renderUI({
+  if (rstudioapi::isAvailable() & rstudioapi::getVersion() > "1.1") {
+    actionButton("rcode_read_data", "Read files", icon = icon("book"))
+  } else {
+    invisible()
+  }
+})
+
+rcode_view_options <- c("Dual view" = "dual", "Preview only" = "pr_only", "Editor only" = "ed_only")
+
 output$rcode <- renderUI({
   tagList(
     with(tags,
@@ -69,11 +89,13 @@ output$rcode <- renderUI({
         td(help_modal('Code','code_help', inclMD(file.path(getOption("radiant.path.data"),"app/tools/help/code.md")))),
         td(HTML("&nbsp;&nbsp;")),
         td(actionButton("rEval", "Run code"), style = "padding-top:5px;"),
+        td(selectInput("rcode_view", label = NULL, choices = rcode_view_options,
+                       selected = state_init("rcode_view", "dual"),
+                       multiple = FALSE, selectize = FALSE, width = "105px")),
         td(uiOutput("ui_rcode_save")),
         td(uiOutput("ui_saveCodeReport"), style = "padding-top:5px;"),
-        td(HTML("<div class='form-group shiny-input-container'>
-            <input id='load_code' name='load_code' type='file' accept='.r,.R'/>
-          </div>"))
+        td(uiOutput("ui_load_code"), style = "padding-top:5px;"),
+        td(uiOutput("ui_rcode_read_data"), style = "padding-top:5px;")
       )
     ),
 
@@ -93,6 +115,24 @@ observe({
   input$runKeyCode
   if (!is.null(input$rEval)) isolate(valsCode$code <- valsCode$code + 1)
 })
+
+output$rcode_view <- renderUI({
+  req(input$rcode_view)
+  if (input$rcode_view == "ed_only") {
+    tags$head(tags$style(
+      HTML("#rcode_edit {right: 0; left: 0;} #rcode_output {left: 200%; right: -100%;}")
+    ))
+  } else if (input$rcode_view == "pr_only") {
+    tags$head(tags$style(
+      HTML("#rcode_edit {right: 200%; left: -100%;} #rcode_output {left: 0; right: 0;}")
+    ))
+  } else {
+    tags$head(tags$style(
+      HTML("#rcode_edit {right: 50%; left: 0;} #rcode_output {left: 50%; right: 0;}")
+    ))
+  }
+})
+
 
 output$rcode_output <- renderUI({
   if (valsCode$code == 1) return()
@@ -181,7 +221,25 @@ output$saveCodeReport <- downloadHandler(
 
 ## loading r-code from disk
 observeEvent(input$load_code, {
-  inFile <- input$load_code
-  paste0(readLines(inFile$datapath), collapse = "\n") %>%
-    shinyAce::updateAceEditor(session, "rcode_edit", value = .)
+  if (isTRUE(getOption("radiant.local"))) {
+    path <- radiant.data::choose_files("R","r")
+  } else {
+    path <- input$load_code$datapath
+  }
+
+  if (!is_empty(path)) {
+    paste0(readLines(path), collapse = "\n") %>%
+      shinyAce::updateAceEditor(session, "rcode_edit", value = .)
+  }
+})
+
+observeEvent(input$rcode_read_data, {
+  cmd <- read_data("rcode")
+  if (!is_empty(cmd)) {
+    shinyAce::updateAceEditor(
+      session, 
+      "rcode_edit", 
+      value = paste0(input$rcode_edit, "\n", cmd)
+    )
+  }
 })
