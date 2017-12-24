@@ -385,17 +385,22 @@ loadrda_url <- function(rda_url) {
 #'
 #' @examples
 #' if (interactive()) {
-#' choose.files("pdf", "csv")
+#' choose_files("pdf", "csv")
 #' }
 #'
 #' @export
-choose.files <- function(...) {
+choose_files <- function(...) {
   argv <- unlist(list(...))
   os_type <- Sys.info()["sysname"]
   if (os_type == "Windows") {
     if (length(argv) > 0) {
-      argv <- c(paste0("Files of type ", argv), paste0("*.", argv))
-      argv <- matrix(argv, nrow = length(argv)/2, ncol = 2)
+      argv <- paste0(paste0("*.", argv), collapse = "; ") 
+      argv <- matrix(
+        c("All files (*.*)", "*.*", argv, argv),
+        nrow = 2, ncol = 2, byrow = TRUE
+      )
+      # argv <- c(paste0("Files of type ", argv), paste0("*.", argv))
+      # argv <- matrix(argv, nrow = length(argv)/2, ncol = 2)
     } else {
       argv <- c("All files", "*.*")
     }
@@ -429,11 +434,11 @@ choose.files <- function(...) {
 #'
 #' @examples
 #' if (interactive()) {
-#' choose.dir()
+#' choose_dir()
 #' }
 #'
 #' @export
-choose.dir <- function(...) {
+choose_dir <- function(...) {
   os_type <- Sys.info()["sysname"]
   if (os_type == "Windows") {
     utils::choose.dir(...)
@@ -1172,7 +1177,13 @@ render <- function(object, ...) UseMethod("render", object)
 #' @param ... Additional arguments
 #'
 #' @export
-render.datatables <- function(object, ...) DT::renderDataTable(object)
+render.datatables <- function(object, ...) {
+  if (exists("r_environment")) {
+    DT::renderDataTable(object)
+  } else {
+    object
+  }
+}
 
 # knit_print <- function (x, ...) {
 #   # if (need_screenshot(x, ...) && !"datatables" %in% class(x)) {
@@ -1222,7 +1233,13 @@ render.datatables <- function(object, ...) DT::renderDataTable(object)
 #' @importFrom plotly renderPlotly
 #'
 #' @export
-render.plotly <- function(object, ...) plotly::renderPlotly(object)
+render.plotly <- function(object, ...) {
+  if (exists("r_environment")) {
+    plotly::renderPlotly(object)
+  } else {
+    object
+  }
+}
 
 #' Method to render rmarkdown documents
 #'
@@ -1283,4 +1300,25 @@ describe <- function(name) {
   ## based on https://support.rstudio.com/hc/en-us/articles/202133558-Extending-RStudio-with-the-Viewer-Pane
   viewer <- getOption("viewer", default = browseURL)
   viewer("index.html")
+}
+
+#' Workaround to add description using feather::write_feather 
+#'
+#' @param x A data frame to write to disk
+#' @param path Path to feather file
+#' @param description Data description
+#'
+#' @importFrom feather write_feather
+#'
+#' @export
+write_feather <- function(x, path, description = attr(x, "description")) {
+  if (!"feather" %in% rownames(utils::installed.packages())) {
+    stop("The feather package is not installed. Please use install.packages('feather')")
+  }
+  fw_args <- as.list(formals(feather::write_feather))
+  if ("description" %in% names(fw_args)) {
+    feather::write_feather(x, path, if (is.null(description)) "" else description)
+  } else {
+    feather::write_feather(x, path)
+  }
 }
