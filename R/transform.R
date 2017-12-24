@@ -462,7 +462,7 @@ getsummary <- function(dat, dc = getclass(dat)) {
           se = se
         )
       ) %>%
-      data.frame(check.names = FALSE) %>%
+      data.frame(check.names = FALSE, stringsAsFactors = FALSE) %>%
       mutate_if(is.numeric, funs(round(., 3))) %>%
       set_colnames(c("", colnames(.)[-1])) %>%
       print(row.names = FALSE)
@@ -515,7 +515,7 @@ getsummary <- function(dat, dc = getclass(dat)) {
       summarise_all(funs(sum_rm, mean_rm, n_missing)) %>%
       mutate_if(is.numeric, funs(round(., 4))) %>%
       matrix(ncol = 3) %>%
-      data.frame() %>%
+      data.frame(stringsAsFactors = FALSE) %>%
       set_colnames(c("# TRUE", "% TRUE", "n_missing")) %>%
       set_rownames(names(dat)[isLogic]) %>%
       print()

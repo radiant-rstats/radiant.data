@@ -2,7 +2,7 @@
 globalVariables(c(
   "r_environment", "session", "r_data", "r_state", ".",
   ".rs.restartR", "..density..", "Total", "tfoot", "thead",
-  "tr", "th", "variable", "y", "matches"
+  "tr", "th", "variable", "y"
 ))
 
 #' radiant.data
@@ -25,6 +25,7 @@ globalVariables(c(
 #' @importFrom gridExtra grid.arrange
 #' @importFrom shinyAce aceEditor updateAceEditor
 #' @importFrom readr read_delim read_csv write_csv read_rds write_rds locale problems
+#' @importFrom readxl read_excel
 #' @importFrom base64enc dataURI
 #' @importFrom methods is
 #' @importFrom stats as.formula chisq.test dbinom median na.omit quantile sd setNames var weighted.mean

@@ -122,7 +122,7 @@ pivotr <- function(dataset,
           t(rep("Total", length(cvars[-1]))) %>%
             as.data.frame() %>%
             setNames(cvars[-1]),
-          data.frame(t(col_total[[2]])) %>%
+          data.frame(t(col_total[[2]]), stringsAsFactors = FALSE) %>%
             set_colnames(col_total[[1]])
         )
       ) %>%
@@ -447,7 +447,7 @@ plot.pivotr <- function(x,
       geom_bar(stat = "identity", position = "dodge", alpha = .7, fill = fillcol)
   } else if (length(cvars) == 2) {
     ctot <- which(colnames(tab) == "Total")
-    if (length(ctot) > 0) tab %<>% select(-matches("Total"))
+    if (length(ctot) > 0) tab %<>% select(setdiff(colnames(.), "Total"))
 
     dots <- paste0("factor(", cvars[1], ", levels = c('", paste0(setdiff(colnames(tab), cvars[2]), collapse = "','"), "'))") %>%
       rlang::parse_exprs(.) %>%
@@ -461,10 +461,7 @@ plot.pivotr <- function(x,
       geom_bar(stat = "identity", position = type, alpha = .7)
   } else if (length(cvars) == 3) {
     ctot <- which(colnames(tab) == "Total")
-    if (length(ctot) > 0) tab %<>% select(-matches("Total"))
-
-    tab
-    cvars
+    if (length(ctot) > 0) tab %<>% select(setdiff(colnames(.), "Total"))
 
     dots <- paste0("factor(", cvars[1], ", levels = c('", paste0(setdiff(colnames(tab), cvars[2:3]), collapse = "','"), "'))") %>%
       rlang::parse_exprs(.) %>%
@@ -487,10 +484,10 @@ plot.pivotr <- function(x,
 
   if (nvar == "n") {
     if (!is_empty(object$normalize, "None")) {
-      p <- p + ylab(ifelse(perc, "Percentage", "Proportion"))
+      p <- p + labs(y = ifelse(perc, "Percentage", "Proportion"))
     }
   } else {
-    p <- p + ylab(paste0(nvar, " (", names(make_funs(object$fun)), ")"))
+    p <- p + labs(y = paste0(nvar, " (", names(make_funs(object$fun)), ")"))
   }
 
   sshhr(p)

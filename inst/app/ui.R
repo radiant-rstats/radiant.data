@@ -2,6 +2,11 @@
 navbar_proj(
   do.call(
     navbarPage,
-    c("Radiant", getOption("radiant.nav_ui"), getOption("radiant.shared_ui"), help_menu("help_data_ui"))
+    c(
+      "Radiant",
+      getOption("radiant.nav_ui"),
+      getOption("radiant.shared_ui"),
+      help_menu("help_data_ui")
+    )
   )
 )

@@ -683,7 +683,7 @@ observeEvent(input$tr_change_type, {
       ifelse(. < 0 || is.na(.) || . > nr, .7, .)
     }
     # if (is_empty(vars)) {
-    data.frame(make_train(n, nr, seed)) %>% setNames(name)
+    data.frame(make_train(n, nr, seed), stringsAsFactors = FALSE) %>% setNames(name)
     # } else {
     #   dat <- dataset %>% group_by_at(.vars = vars)
     #   nr <- length(attr(dat, "indices"))
@@ -705,7 +705,7 @@ observeEvent(input$tr_change_type, {
                         store = TRUE) {
   if (is_empty(name)) name <- fct
   if (!store || !is.character(dataset)) {
-    data.frame(refactor(dataset[[fct]], levs = levs, repl = repl)) %>%
+    data.frame(refactor(dataset[[fct]], levs = levs, repl = repl), stringsAsFactors = FALSE) %>%
       setNames(name)
   } else {
     if (store_dat == "") store_dat <- dataset

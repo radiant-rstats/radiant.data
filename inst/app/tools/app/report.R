@@ -416,12 +416,6 @@ output$saveReport <- downloadHandler(
 
         lib <- if ("radiant" %in% installed.packages()) "radiant" else "radiant.data"
 
-        # report <-
-        #   ifelse(is_empty(input$rmd_selection), input$rmd_report, input$rmd_selection) %>%
-        #   gsub("\\\\\\\\", "\\\\", .) %>%
-        #   cleanout(.) %>%
-        #   fixMS(.)
-
         if (input$rmd_manual == "To Rmd") {
           report <- rstudioapi::getSourceEditorContext()
           path <- basename(report$path) %>% tools::file_ext(.) %>% tolower()
@@ -558,9 +552,11 @@ read_data <- function(type = "rmd") {
     path <- normalizePath(path, winslash = "/")
     filename <- basename(path)
     fext <- tools::file_ext(filename) %>% tolower()
+    
     ## objname is used as the name of the data.frame, make case insensitive
     objname <- sub(paste0(".", fext, "$"), "", filename, ignore.case = TRUE)
 
+    ## parse path
     pdir <- if (rstudioapi::isAvailable()) rstudioapi::getActiveProject() else ""
     dbdir <- try(find_dropbox(), silent = TRUE)
     dbdir <- if (is(dbdir, "try-error")) "" else paste0(dbdir, "/")
@@ -577,6 +573,11 @@ read_data <- function(type = "rmd") {
       path <- paste0("\"", path, "\"")
     }
 
+    ## see find_gdrive and find_dropbox
+    ## gets parsed by report code can't have \\\\ att
+    # path <- gsub("^\\\\", "\\\\\\\\", path)
+
+    ## generate code
     if (fext %in% c("rda", "rdata")) {
       cmd <- paste0("loadr(", path, ", objname = \"", objname, "\")")
     } else if (fext == "rds") {
