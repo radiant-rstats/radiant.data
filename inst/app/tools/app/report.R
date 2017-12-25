@@ -650,12 +650,27 @@ update_report <- function(inp_main = "",
                           post_cmd = "",
                           xcmd = "",
                           outputs = c("summary", "plot"),
+                          wrap = FALSE,
                           figs = TRUE,
                           fig.width = 7,
                           fig.height = 7) {
+
+  depr <- function(x, wrap) {
+    if (wrap) {
+      x <- sapply(x, function(x) deparse(x, control = "keepNA", width.cutoff = 40L))
+      for (i in names(x)) {
+        x[[i]] <- paste0(x[[i]], collapse = paste0("\n", paste0(rep(" ", nchar(i) + 7), collapse = "")))
+      }
+      x <- paste0(paste0(paste0("\n  ", names(x)), " = ", x), collapse = ", ")
+      x <- paste0("list(", x, "\n)")
+    } else {
+      x <- deparse(x, control = c("keepNA"), width.cutoff = 500L)
+    }
+    x
+  }
   cmd <- ""
   if (inp_main[1] != "") {
-    cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
+    cmd <- depr(inp_main, wrap = wrap) %>%
       paste(collapse = "") %>%
       sub("list", fun_name, .) %>%
       paste0(pre_cmd, .) %>%

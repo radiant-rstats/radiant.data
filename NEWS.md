@@ -11,6 +11,7 @@
 * _R > Report_ Read button to generate code to load various types of files in report (e.g., jpg, png, md, Rmd, R). If Radiant was started from an Rstudio project, the file paths used will be relative to the project root. Paths to files synced to local Dropbox or Google Drive folder will use the `find_dropbox` and `find_gdrive` functions to enhances reproducibility.
 * _R > Report_ Load Report button can be used to Load Rmarkdown file in the editor. It will also extract the source code from Notebook and HTML filels with embedded Rmarkdown
 * _R > Report_ will read Rmd directly from Rstudio when "To Rmd (Rstudio)" is selected. This will make it possible to use Rstudio Server Pro's _Share project_ option for realtime collaboration in Radiant
+* Long lines of code generated for _R > Report_ will be wrapped to enhance readability 
 
 # CHANGES IN radiant.data 0.8.7.8
 
