@@ -4,7 +4,7 @@
 \alias{find_project}
 \title{Find a rstudio project directory}
 \usage{
-find_project()
+find_project(mess = TRUE)
 }
 \value{
 Path to rstudio project directory

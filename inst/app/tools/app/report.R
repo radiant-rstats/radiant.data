@@ -655,23 +655,62 @@ update_report <- function(inp_main = "",
                           fig.width = 7,
                           fig.height = 7) {
 
-  depr <- function(x, wrap) {
+  depr <- function(x, wrap = FALSE) {
     if (wrap) {
-      x <- sapply(x, function(x) deparse(x, control = "keepNA", width.cutoff = 40L))
       for (i in names(x)) {
-        x[[i]] <- paste0(x[[i]], collapse = paste0("\n", paste0(rep(" ", nchar(i) + 7), collapse = "")))
+        tmp <- x[[i]]
+        wco <- ifelse(max(nchar(tmp)) > 20, 20L, 55L)
+        tmp <- deparse(tmp, control = "keepNA", width.cutoff = wco)
+        if ((nchar(i) + sum(nchar(tmp)) < 70) | (length(tmp) == 2 & tmp[2] == ")")) { 
+          tmp <- paste0(tmp, collapse = "")
+        }
+        if (length(tmp) > 1) {
+          tmp <- c("c(", sub("^c\\(", "", tmp))
+          if (tail(tmp, 1) != ")") {
+            tmp <- c(sub("\\)$", "", tmp), ")")
+          }
+        }
+        x[[i]] <- paste0(tmp, collapse = "\n    ") %>%
+          sub("[ ]+\\)", "  \\)", .)
       }
       x <- paste0(paste0(paste0("\n  ", names(x)), " = ", x), collapse = ", ")
       x <- paste0("list(", x, "\n)")
     } else {
-      x <- deparse(x, control = c("keepNA"), width.cutoff = 500L)
+      x <- deparse(x, control = c("keepNA"), width.cutoff = 500L) %>%
+        paste(collapse = "")
     }
     x
   }
+
+  ## testing depr
+  # library(radiant)
+  # x <- list(const = c("q 535", "cost 2", "salvage .5", "price 5"), 
+  #           norm = "E 0 144.571;", 
+  #           form = c("D = 928.313 - 78.607 * price + E", "prof = -cost*q + price * pmin(q, D) + salvage * pmax(0, q - D)"), 
+  #           seed = 1234, 
+  #           name = "simdat")
+  # x <- list(
+  #   nr = 5, 
+  #   vars = c("incidental", "A3403", "A3402", "B757"), 
+  #   sum_vars = c("total", "RCNC1", "RCNC1_prof", "RCNC2", "CTC", "HIC", "HIC_prof"), 
+  #   form = c(
+  #     "## RCNC1_net = RCNC1 - .2 * pmax(RCNC1 - .1*total - .9*total, 0)", 
+  #     "RCNC1_net = RCNC1 - 0.2 * pmax(RCNC1_prof, 0)", 
+  #     "## HIC_net = HIC - .035 * pmax(HIC - total, 0)", 
+  #     "HIC_net = HIC - .035 * pmax(HIC_prof, 0)", 
+  #     "HIC_MIN_CTC = HIC_net - CTC", 
+  #     "HIC_LT_CTC = HIC_net < CTC"
+  #   ), 
+  #   seed = 1234, 
+  #   name = "repdat", 
+  #   sim = "simdat"
+  # )
+
+  # cat(depr(x, TRUE))
+
   cmd <- ""
   if (inp_main[1] != "") {
     cmd <- depr(inp_main, wrap = wrap) %>%
-      paste(collapse = "") %>%
       sub("list", fun_name, .) %>%
       paste0(pre_cmd, .) %>%
       paste0(., post_cmd)

@@ -1094,16 +1094,21 @@ find_gdrive <- function() {
 #' @return Path to rstudio project directory
 #'
 #' @export
-find_project <- function() {
+find_project <- function(mess = TRUE) {
   if (!rstudioapi::isAvailable()) {
-    stop("Project directory cannot be found because application is not run from Rstudio")
-  }
-  fp <- rstudioapi::getActiveProject()
-  if (is.null(fp)) {
-    stop("Project directory cannot be found because application is not run from Rstudio project")
+    if (mess) {
+      message("Project directory cannot be found because application is not run from Rstudio")
+    }
+    pdir <- ""
   } else {
-    fp
+    pdir <- rstudioapi::getActiveProject()
+    if (is_empty(pdir)) {
+      if (mess) {
+        message("Project directory cannot be found because application is not run from Rstudio project")
+      }
+    }
   }
+  return(pdir)
 }
 
 #' Returns the index of the (parallel) maxima of the input values
