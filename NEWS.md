@@ -14,6 +14,7 @@
 * Long lines of code generated for _Report > Rmd_ will be wrapped to enhance readability 
 * _Report > R_ is now equivalent to _Report > Rmd_ but in R-code format
 * Enhance keyboard shortcuts
+* Enhanced editing features in _Report > Rmd_ and _Report > R_ based on updates to `shinyAce`
 
 # CHANGES IN radiant.data 0.8.7.8
 
