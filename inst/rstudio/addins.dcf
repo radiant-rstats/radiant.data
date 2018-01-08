@@ -1,4 +1,9 @@
-Name: Radiant - Data
-Description: Start Radiant - Data
+Name: Start radiant.data (viewer)
+Description: Start radiant.data in rstudio viewer
+Binding: radiant.data_viewer
+Interactive: true
+
+Name: Start radiant.data (browser)
+Description: Start radiant.data in default browser
 Binding: radiant.data
 Interactive: true

@@ -129,13 +129,13 @@ observeEvent(input$to_global_save, {
 
 output$ui_Manage <- renderUI({
   data_types_in <- c(
-    "rds" = "rds", "rda (rdata)" = "rda", "state" = "state", "csv" = "csv",
+    "rds" = "rds", "rda (rdata)" = "rda", "radiant state file" = "state", "csv" = "csv",
     "clipboard" = "clipboard", "from global workspace" = "from_global",
     "examples" = "examples", "feather" = "feather",
     "rda (url)" = "url_rda", "csv (url)" = "url_csv"
   )
   data_types_out <- c(
-    "rds" = "rds", "rda" = "rda", "state" = "state", "csv" = "csv",
+    "rds" = "rds", "rda" = "rda", "radiant state file" = "state", "csv" = "csv",
     "feather" = "feather", "clipboard" = "clipboard",
     "to global workspace" = "to_global"
   )
@@ -188,7 +188,8 @@ output$ui_Manage <- renderUI({
       ),
       conditionalPanel(
         condition = "input.dataType == 'state'",
-        fileInput("uploadState", "Load previous app state:", accept = ".rda"),
+        # fileInput("uploadState", "Load radiant state file (.rda):", accept = ".rda"),
+        fileInput("state_load", "Load radiant state file (.rda):", accept = ".rda"),
         uiOutput("refreshOnUpload")
       )
     ),
@@ -200,7 +201,7 @@ output$ui_Manage <- renderUI({
       ),
       conditionalPanel(
         condition = "input.saveAs == 'state'",
-        HTML("<label>Save current app state:</label><br/>"),
+        HTML("<label>Save radiant state file (.rda):</label><br/>"),
         downloadButton("saveState", "Save")
       ),
       conditionalPanel(
@@ -219,12 +220,19 @@ output$ui_Manage <- renderUI({
       conditionalPanel(
         condition = "input.man_show_remove == true",
         uiOutput("uiRemoveDataset"),
-        actionButton("removeDataButton", "Remove data")
+        actionButton("removeDataButton", "Remove data", icon = icon("trash"), class = "btn-danger")
       )
     ),
     help_modal("Manage", "manage_help", inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/manage.md")))
   )
 })
+
+## need to set suspendWhenHidden to FALSE so that the href for the 
+## download handler is set and keyboard shortcuts will work
+## see https://shiny.rstudio.com/reference/shiny/0.11/outputOptions.html
+## see https://stackoverflow.com/questions/48117501/click-link-in-navbar-menu
+## https://stackoverflow.com/questions/3871358/get-all-the-href-attributes-of-a-web-site
+# outputOptions(output, "state_load", suspendWhenHidden = FALSE)
 
 ## updating the dataset description
 observeEvent(input$updateDescr, {
@@ -243,11 +251,17 @@ output$dataDescriptionHTML <- renderUI({
 })
 
 output$dataDescriptionMD <- renderUI({
+  ## avoid all sorts of 'helpful' behavior from your browser
+  ## based on https://stackoverflow.com/a/35514029/1974918
   tagList(
     "<label>Add data description:</label><br>" %>% HTML(),
     tags$textarea(
-      class = "form-control", id = "man_data_descr",
-      rows = "15", style = "width:650px;",
+      id = "man_data_descr",
+      rows = 15, 
+      style = "width: 650px;",
+      class = "form-control", 
+      autocorrect = "off", 
+      autocapitalize="off",
       descr_out(r_data[[paste0(input$dataset, "_descr")]], "md")
     )
   )
@@ -360,12 +374,12 @@ observeEvent(input$url_rda_load, {
     } else {
       if (length(robjname) > 1) {
         if (sum(robjname %in% c("r_state", "r_data")) == 2) {
-          upload_error_handler(objname, "### To restore app state from a state-file please choose the 'state' option from the dropdown.")
+          upload_error_handler(objname, "### To restore app state from a radiant state file please choose the 'radiant state file' option from the dropdown.")
         } else {
           upload_error_handler(objname, "### More than one R object is contained in the specified data file.")
         }
       } else {
-        r_data[[objname]] <- as.data.frame(get(robjname))
+        r_data[[objname]] <- as.data.frame(get(robjname), stringsAsFactors = FALSE)
       }
     }
   }
@@ -454,7 +468,8 @@ observeEvent(input$loadClipData, {
 # Load previous state
 #######################################
 output$refreshOnUpload <- renderUI({
-  inFile <- input$uploadState
+  # inFile <- input$uploadState
+  inFile <- input$state_load
   if (is.null(inFile)) return(invisible())
   tmpEnv <- new.env(parent = emptyenv())
   load(inFile$datapath, envir = tmpEnv)
@@ -463,10 +478,10 @@ output$refreshOnUpload <- renderUI({
     ## don't destroy session when attempting to load a
     ## file that is not a statefile
     # saveSession()
-    mess <- paste0("Unable to restore state from the selected file. Choose another statefile or select 'rda' from the 'Load data of type' dropdown and try again")
+    mess <- paste0("Unable to restore radiant state from the selected file. Choose another state file or select 'rda' from the 'Load data of type' dropdown and try again")
     showModal(
       modalDialog(
-        title = "Restore State Failed",
+        title = "Restore radiant state failed",
         span(mess),
         footer = modalButton("OK"),
         size = "s",
@@ -481,7 +496,7 @@ output$refreshOnUpload <- renderUI({
   if (!is.null(tmpEnv$r_state)) {
     for (i in names(tmpEnv$r_state)) {
       if (is.character(tmpEnv$r_state[[i]])) {
-        tmpEnv$r_state[[i]] %<>% fixMS(.)
+        tmpEnv$r_state[[i]] %<>% fixMS()
       }
     }
   }
@@ -496,7 +511,8 @@ output$refreshOnUpload <- renderUI({
   }
 
   ## storing statename for later use if needed
-  tmpEnv$r_state$state_name <- inFile$name
+  # tmpEnv$r_state$state_name <- inFile$name
+  tmpEnv$r_state$radiant_state_name <- inFile$name
 
   r_sessions[[r_ssuid]] <- list(
     r_data = tmpEnv$r_data,
@@ -514,24 +530,39 @@ output$refreshOnUpload <- renderUI({
 # Save state
 #######################################
 saveState <- function(filename) {
-  withProgress(
-    message = "Preparing state file", value = 1,
-    isolate({
-      LiveInputs <- toList(input)
-      r_state[names(LiveInputs)] <- LiveInputs
-      r_data <- toList(r_data)
-      save(r_state, r_data, file = filename)
-    })
-  )
+
+  ## not clear how to pause the download handler
+  ## until Rmd and report are synced  
+  # if (isTRUE(input$rmd_manual == "To Rmd")) {
+
+  #   showModal(
+  #     modalDialog(
+  #       title = "R > Report",
+  #       span(
+  #         paste0("Do you want to sync the Rmd file content with the report in Radiant before you save the state file?
+  #       ),
+  #       footer = modalButton("OK"),
+  #       size = "s",
+  #       easyClose = TRUE
+  #     )
+  #   )
+
+  # } else {
+    withProgress(
+      message = "Preparing radiant state file", value = 1,
+      isolate({
+        LiveInputs <- toList(input)
+        r_state[names(LiveInputs)] <- LiveInputs
+        r_data <- toList(r_data)
+        save(r_state, r_data, file = filename)
+      })
+    )
+  # }
 }
 
 output$saveState <- downloadHandler(
   filename = function() {
-    if (is.null(r_state$state_name)) {
-      paste0("radiant-state-", Sys.Date(), ".rda")
-    } else {
-      r_state$state_name
-    }
+    state_name()
   },
   content = function(file) {
     saveState(file)

@@ -12,7 +12,7 @@ descr_out <- function(descr, ret_type = "html") {
 
 ## create an empty data.frame and return error message as description
 upload_error_handler <- function(objname, ret)
-  r_data[[objname]] <<- data.frame(matrix(rep("", 12), nrow = 2)) %>% 
+  r_data[[objname]] <<- data.frame(matrix(rep("", 12), nrow = 2), stringsAsFactors = FALSE) %>% 
     set_attr("description", ret)
 
 loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRUE, sep = "\t") {
@@ -26,7 +26,7 @@ loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRU
         read.table(text = input$load_cdata, header = header, sep = sep, comment.char = "", fill = TRUE, as.is = TRUE)
       }
     }
-  } %>% as.data.frame(check.names = TRUE), silent = TRUE))
+  } %>% as.data.frame(check.names = TRUE, stringsAsFactors = FALSE), silent = TRUE))
 
   if (is(dat, "try-error") || nrow(dat) == 0) {
     if (ret == "") ret <- c("### Data in clipboard was not well formatted. Try exporting the data to csv format.")
@@ -98,7 +98,7 @@ loadUserData <- function(fname, uFile, ext,
         upload_error_handler(objname, "### More than one R object contained in the data.")
       }
     } else {
-      r_data[[objname]] <- as.data.frame(get(robjname)) %>% {
+      r_data[[objname]] <- as.data.frame(get(robjname), stringsAsFactors = FALSE) %>% {
         set_colnames(., make.names(colnames(.)))
       }
     }
@@ -108,7 +108,7 @@ loadUserData <- function(fname, uFile, ext,
     if (is(robj, "try-error")) {
       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in rds format.")
     } else {
-      r_data[[objname]] <- as.data.frame(robj) %>% {
+      r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE) %>% {
         set_colnames(., make.names(colnames(.)))
       }
     }

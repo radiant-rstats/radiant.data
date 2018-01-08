@@ -2,6 +2,7 @@
 output$ui_tr_vars <- renderUI({
   vars <- varnames()
   req(available(vars))
+  ## updates set of selected variables each time `tr_type` is changed
   req(input$tr_change_type)
   lab <- if (input$tr_change_type == "create") "Group by:" else "Select variable(s)"
   selectInput(
@@ -106,7 +107,17 @@ output$ui_tr_reorg_levs <- renderUI({
 output$ui_tr_log <- renderUI({
   tagList(
     HTML("<label>Transform command log:</label><br>"),
-    tags$textarea(state_init("tr_log", ""), id = "tr_log", type = "text", rows = 5, class = "form-control")
+    tags$textarea(
+      state_init("tr_log", ""), 
+      id = "tr_log", 
+      type = "text", 
+      rows = 5, 
+      autocomplete = "off",
+      autocorrect = "off", 
+      autocapitalize = "off", 
+      spellcheck = "false",
+      class = "form-control"
+    )
   )
 })
 
@@ -200,7 +211,7 @@ output$ui_tr_dataset <- renderUI({
   }
   tags$table(
     tags$td(textInput("tr_dataset", "Store changes in:", tr_dataset)),
-    tags$td(actionButton("tr_store", "Store"), style = "padding-top:30px;")
+    tags$td(actionButton("tr_store", "Store", icon = icon("plus"), class = "btn-success"), style = "padding-top:30px;")
   )
 })
 
@@ -370,11 +381,10 @@ output$ui_Transform <- renderUI({
       conditionalPanel(
         "input.tr_change_type == 'type'",
         uiOutput("ui_tr_typename")
-      ),
-      conditionalPanel(
-        condition = "input.tr_change_type != 'none'",
-        uiOutput("ui_tr_dataset")
       )
+    ),
+    conditionalPanel("input.tr_change_type != 'none'",
+      wellPanel(uiOutput("ui_tr_dataset"))
     ),
     help_and_report(
       modal_title = "Transform",
@@ -440,6 +450,7 @@ observeEvent(input$tr_change_type, {
                     byvar = "",
                     store_dat = "",
                     store = TRUE) {
+  
   if (!store || !is.character(dataset)) {
     cmd <- gsub("\\s+", "", cmd)
 
@@ -505,7 +516,7 @@ observeEvent(input$tr_change_type, {
     if (is(nvar, "try-error")) {
       paste0("The recode command was not valid. The error message was:\n", attr(nvar, "condition")$message, "\nPlease try again. Examples are shown in the help file (click the ? icon).")
     } else {
-      as.data.frame(nvar) %>% setNames(rcname)
+      as.data.frame(nvar, stringsAsFactors = FALSE) %>% setNames(rcname)
     }
   } else {
     if (store_dat == "") store_dat <- dataset
@@ -916,7 +927,7 @@ transform_main <- reactive({
       } else if (nrow(cpdat) != nrow(dat)) {
         return("The pasted data does not have the correct number of rows. Please make sure **\n** the number of rows in the data in Radiant and in the spreadsheet are the **\n** same and try again.")
       } else {
-        return(as.data.frame(cpdat, check.names = FALSE) %>% factorizer())
+        return(as.data.frame(cpdat, check.names = FALSE, stringsAsFactors = FALSE) %>% factorizer())
       }
     }
   }
@@ -1050,9 +1061,9 @@ transform_main <- reactive({
 })
 
 output$transform_data <- reactive({
-  withProgress(message = "Applying transformation", value = 1, {
+  # withProgress(message = "Applying transformation", value = 1, {
     dat <- transform_main()
-  })
+  # })
   if (is.null(dat) || is.character(dat) || nrow(dat) == 0 || ncol(dat) == 0) {
     tr_snippet()
   } else {
@@ -1065,9 +1076,9 @@ tr_snippet <- reactive({
 })
 
 output$transform_summary <- renderPrint({
-  req(input$tr_hide == FALSE)
+  req(!isTRUE(input$tr_hide))
 
-  withProgress(message = "Applying transformation", value = 1, {
+  withProgress(message = "Generating summary statistics", value = 1, {
     dat <- transform_main()
   })
 
@@ -1098,7 +1109,10 @@ output$transform_summary <- renderPrint({
 })
 
 observeEvent(input$tr_store, {
-  dat <- transform_main()
+
+  withProgress(message = "Storing transformations", value = 1, {
+    dat <- transform_main()
+  })
 
   if (is.null(dat)) return()
   if (is.character(dat)) return()
@@ -1188,7 +1202,7 @@ observeEvent(input$tr_store, {
     r_data[[dataset]][, colnames(dat)] <- dat
     r_data[[dataset]][, input$tr_replace] <- list(NULL)
   } else if (input$tr_change_type == "clip") {
-    cmd <- paste0("## using the clipboard for data transformation is not reproducible - no command generated\n")
+    cmd <- paste0("## using the clipboard for data transformation may seem convenient]\n## but it is not 'reproducible' - no command generated\n")
     r_data[[dataset]][, colnames(dat)] <- dat
   }
 
@@ -1218,7 +1232,20 @@ observeEvent(input$tr_change_type, {
 })
 
 observeEvent(input$transform_report, {
-  cmd <- paste0("```{r}\n", input$tr_log, "\n```\n")
-  updateTextInput(session, "tr_log", value = "")
-  update_report_fun(cmd)
+  if (!is_empty(input$tr_log)) {
+    # cmd <- paste0("```{r}\n", input$tr_log, "\n```\n") %>%
+    #   gsub("\n{2,}", "\n", .) %>%
+    #   gsub("[^{r}]\n{1}## ", "\n\n## ", .)
+
+    # updateTextInput(session, "tr_log", value = "")
+    # update_report_fun(cmd)
+
+    cmd <- gsub("\n{2,}", "\n", input$tr_log) %>%
+      sub("^\n", "", .) %>%
+      sub("\n$", "", .)
+      # gsub("[^{r}]\n{1}## ", "\n\n## ", .)
+
+    updateTextInput(session, "tr_log", value = "")
+    update_report(cmd = cmd, outputs = NULL)
+  }
 })

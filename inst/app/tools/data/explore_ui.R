@@ -35,7 +35,8 @@ expl_sum_inputs <- reactive({
 output$ui_expl_vars <- renderUI({
   isNum <- .getclass() %in% c("integer", "numeric", "factor", "logical")
   vars <- varnames()[isNum]
-  if (not_available(vars)) return()
+  # if (not_available(vars)) return()
+  req(available(vars))
 
   selectInput(
     "expl_vars", label = "Numeric variable(s):", choices = vars,
@@ -48,13 +49,14 @@ output$ui_expl_byvar <- renderUI({
   withProgress(message = "Acquiring variable information", value = 1, {
     vars <- groupable_vars()
   })
-  if (not_available(vars)) return()
+  # if (not_available(vars)) return()
+  req(available(vars))
 
   if (any(vars %in% input$expl_vars)) {
     vars <- setdiff(vars, input$expl_vars)
-    names(vars) <- varnames() %>% {
-      .[match(vars, .)]
-    } %>% names()
+    names(vars) <- varnames() %>% 
+      {.[match(vars, .)]} %>% 
+      names()
   }
 
   isolate({
@@ -113,10 +115,40 @@ output$ui_expl_top <- renderUI({
   )
 })
 
+output$ui_expl_run <- renderUI({
+  ## updates when dataset changes
+  req(input$dataset)
+  actionButton("expl_run", "Create table", width = "100%", icon = icon("play"), class = "btn-success")
+})
+
+observe({
+  ## dep on most inputs
+  input$data_filter
+  # input$pvt_format
+  # input$pvt_dec
+  # input$pvt_perc
+  # dep on most inputs
+  sapply(r_drop(names(expl_args)), function(x) input[[paste0("expl_", x)]])
+
+  ## notify user when the plot needed to be updated
+  ## based on https://stackoverflow.com/questions/45478521/listen-to-reactive-invalidation-in-shiny
+  if (pressed(input$expl_run) && !is.null(input$expl_vars)) {
+    if (isTRUE(attr(expl_inputs, "observable")$.invalidated)) {
+      ## added fa-spin class based on https://stackoverflow.com/a/47165104/1974918
+      updateActionButton(session, "expl_run", "Update table", icon = icon("refresh", class = "fa-spin"))
+    } else {
+      updateActionButton(session, "expl_run", "Create table", icon = icon("play"))
+    }
+  }
+})
+
 output$ui_Explore <- renderUI({
   tagList(
     wellPanel(
-      checkboxInput("expl_pause", "Pause explore", state_init("expl_pause", FALSE)),
+      uiOutput("ui_expl_run")
+    ),
+    wellPanel(
+      # checkboxInput("expl_pause", "Pause explore", state_init("expl_pause", FALSE)),
       uiOutput("ui_expl_vars"),
       uiOutput("ui_expl_byvar"),
       uiOutput("ui_expl_fun"),
@@ -126,7 +158,7 @@ output$ui_Explore <- renderUI({
     wellPanel(
       tags$table(
         tags$td(textInput("expl_dat", "Store as:", paste0(input$dataset, "_expl"))),
-        tags$td(actionButton("expl_store", "Store"), style = "padding-top:30px;")
+        tags$td(actionButton("expl_store", "Store", icon = icon("plus")), style = "padding-top:30px;")
       )
     ),
     help_and_report(
@@ -136,14 +168,14 @@ output$ui_Explore <- renderUI({
   )
 })
 
-.explore <- reactive({
+.explore <- eventReactive(input$expl_run, {
   if (not_available(input$expl_vars) || is.null(input$expl_top)) return()
   if (!is_empty(input$expl_byvar) && not_available(input$expl_byvar)) return()
   if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) return()
-  req(input$expl_pause == FALSE, cancelOutput = TRUE)
-  withProgress(message = "Calculating", value = 1, {
+  # req(input$expl_pause == FALSE, cancelOutput = TRUE)
+  # withProgress(message = "Calculating", value = 1, {
     sshhr(do.call(explore, expl_inputs()))
-  })
+  # })
 })
 
 observeEvent(input$explore_search_columns, {
@@ -163,36 +195,38 @@ expl_reset <- function(var, ncol) {
 }
 
 output$explore <- DT::renderDataTable({
-  expl <- .explore()
-  ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
-  # if (is.null(expl)) return()
-  req(!is.null(expl))
+  input$expl_run
+  withProgress(message = "Generating explore table", value = 1, {
+    isolate({
+      expl <- .explore()
+      ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
+      # if (is.null(expl)) return()
+      req(!is.null(expl))
 
-  expl$shiny <- TRUE
+      expl$shiny <- TRUE
 
-  ## resetting DT when changes occur
-  nc <- ncol(expl$tab)
-  expl_reset("expl_vars", nc)
-  expl_reset("expl_byvar", nc)
-  expl_reset("expl_fun", nc)
-  if (!is.null(r_state$expl_top) && !is.null(input$expl_top) &&
-    !identical(r_state$expl_top, input$expl_top)) {
-    r_state$expl_top <<- input$expl_top
-    r_state$explore_state <<- list()
-    r_state$explore_search_columns <<- rep("", nc)
-  }
+      ## resetting DT when changes occur
+      nc <- ncol(expl$tab)
+      expl_reset("expl_vars", nc)
+      expl_reset("expl_byvar", nc)
+      expl_reset("expl_fun", nc)
+      if (!is.null(r_state$expl_top) && !is.null(input$expl_top) &&
+        !identical(r_state$expl_top, input$expl_top)) {
+        r_state$expl_top <<- input$expl_top
+        r_state$explore_state <<- list()
+        r_state$explore_search_columns <<- rep("", nc)
+      }
 
-  searchCols <- lapply(r_state$explore_search_columns, function(x) list(search = x))
-  order <- r_state$explore_state$order
-  pageLength <- r_state$explore_state$length
+      searchCols <- lapply(r_state$explore_search_columns, function(x) list(search = x))
+      order <- r_state$explore_state$order
+      pageLength <- r_state$explore_state$length
+    })
 
-  withProgress(
-    message = "Generating explore table", value = 1,
     dtab(
       expl, dec = input$expl_dec, searchCols = searchCols, order = order,
       pageLength = pageLength
     )
-  )
+  })
 })
 
 output$dl_explore_tab <- downloadHandler(
@@ -246,14 +280,14 @@ observeEvent(input$explore_report, {
 
   ## get the state of the dt table
   ts <- dt_state("explore")
-  xcmd <- "#dtab(result"
+  xcmd <- "# dtab(result"
   if (!is_empty(input$expl_dec, 3)) {
     xcmd <- paste0(xcmd, ", dec = ", input$expl_dec)
   }
   if (!is_empty(r_state$explore_state$length, 10)) {
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$explore_state$length)
   }
-  xcmd <- paste0(xcmd, ") %>% render\n#store(result, name = \"", input$expl_dat, "\")")
+  xcmd <- paste0(xcmd, ") %>% render()\n# store(result, name = \"", input$expl_dat, "\")")
 
   inp_main <- clean_args(expl_inputs(), expl_args)
   if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)

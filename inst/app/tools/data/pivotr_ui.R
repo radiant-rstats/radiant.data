@@ -8,13 +8,63 @@ pvt_normalize <- c(
 pvt_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
 pvt_type <- c("Dodge" = "dodge", "Fill" = "fill")
 
+## list of function arguments
+pvt_args <- as.list(formals(pivotr))
+
+## list of function inputs selected by user
+pvt_inputs <- reactive({
+
+  # input$pvt_format
+  # input$pvt_dec
+  # input$pvt_perc
+
+  ## loop needed because reactive values don't allow single bracket indexing
+  pvt_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  pvt_args$dataset <- input$dataset
+  for (i in r_drop(names(pvt_args)))
+    pvt_args[[i]] <- input[[paste0("pvt_", i)]]
+
+  pvt_args
+})
+
+pvt_sum_args <- as.list(if (exists("summary.pivotr")) {
+  formals(summary.pivotr)
+} else {
+  formals(radiant.data:::summary.pivotr)
+} )
+
+## list of function inputs selected by user
+pvt_sum_inputs <- reactive({
+  ## loop needed because reactive values don't allow single bracket indexing
+  for (i in names(pvt_sum_args))
+    pvt_sum_args[[i]] <- input[[paste0("pvt_", i)]]
+  pvt_sum_args
+})
+
+pvt_plot_args <- as.list(if (exists("plot.pivotr")) {
+  formals(plot.pivotr)
+} else {
+  formals(radiant.data:::plot.pivotr)
+} )
+
+## list of function inputs selected by user
+pvt_plot_inputs <- reactive({
+  ## loop needed because reactive values don't allow single bracket indexing
+  for (i in names(pvt_plot_args))
+    pvt_plot_args[[i]] <- input[[paste0("pvt_", i)]]
+  pvt_plot_args
+})
+
+
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
   withProgress(message = "Acquiring variable information", value = 1, {
     vars <- groupable_vars()
   })
 
-  if (not_available(vars)) return()
+  # if (not_available(vars)) return()
+  req(available(vars))
+
   isolate({
     ## if nothing is selected pvt_cvars is also null
     if ("pvt_cvars" %in% names(input) && is.null(input$pvt_cvars)) {
@@ -43,11 +93,9 @@ output$ui_pvt_nvar <- renderUI({
 
   if (any(vars %in% input$pvt_cvars)) {
     vars <- setdiff(vars, input$pvt_cvars)
-    names(vars) <- varnames() %>% {
-      .[which(. %in% vars)]
-    } %>% {
-      c("None", names(.))
-    }
+    names(vars) <- varnames() %>% 
+      {.[which(. %in% vars)]} %>% 
+      {c("None", names(.))}
   }
 
   selectizeInput(
@@ -58,13 +106,19 @@ output$ui_pvt_nvar <- renderUI({
 })
 
 output$ui_pvt_fun <- renderUI({
+  req(input$pvt_nvar)
   r_funs <- getOption("radiant.functions")
   selectizeInput(
-    "pvt_fun", "Apply function:",
+    "pvt_fun", 
+    "Apply function:",
     choices = r_funs,
     selected = state_single("pvt_fun", r_funs, "mean_rm"),
     multiple = FALSE
   )
+})
+
+observeEvent(input$pvt_nvar == "None", {
+  updateSelectInput(session, "pvt_fun", selected = "mean_rm")
 })
 
 output$ui_pvt_normalize <- renderUI({
@@ -89,10 +143,39 @@ output$ui_pvt_format <- renderUI({
   )
 })
 
+output$ui_pvt_run <- renderUI({
+  ## updates when dataset changes
+  req(input$dataset)
+  actionButton("pvt_run", "Create pivot table", width = "100%", icon = icon("play"), class = "btn-success")
+})
+
+observe({
+  ## dep on most inputs
+  input$data_filter
+  # input$pvt_format
+  # input$pvt_dec
+  # input$pvt_perc
+  # dep on most inputs
+  sapply(r_drop(names(pvt_args)), function(x) input[[paste0("pvt_", x)]])
+
+  ## notify user when the plot needed to be updated
+  ## based on https://stackoverflow.com/questions/45478521/listen-to-reactive-invalidation-in-shiny
+  if (pressed(input$pvt_run) && !is.null(input$pvt_cvars)) {
+    if (isTRUE(attr(pvt_inputs, "observable")$.invalidated)) {
+      updateActionButton(session, "pvt_run", "Update pivot table", icon = icon("refresh", class = "fa-spin"))
+    } else {
+      updateActionButton(session, "pvt_run", "Create pivot table", icon = icon("play"))
+    }
+  }
+})
+
 output$ui_Pivotr <- renderUI({
   tagList(
     wellPanel(
-      checkboxInput("pvt_pause", "Pause pivot", state_init("pvt_pause", FALSE)),
+      uiOutput("ui_pvt_run")
+    ),
+    wellPanel(
+      # checkboxInput("pvt_pause", "Pause pivot", state_init("pvt_pause", FALSE)),
       uiOutput("ui_pvt_cvars"),
       uiOutput("ui_pvt_nvar"),
       conditionalPanel("input.pvt_nvar != 'None'", uiOutput("ui_pvt_fun")),
@@ -134,7 +217,7 @@ output$ui_Pivotr <- renderUI({
     wellPanel(
       tags$table(
         tags$td(textInput("pvt_dat", "Store as:", paste0(input$dataset, "_pvt"))),
-        tags$td(actionButton("pvt_store", "Store"), style = "padding-top:30px;")
+        tags$td(actionButton("pvt_store", "Store", icon = icon("plus")), style = "padding-top:30px;")
       )
     ),
     help_and_report(
@@ -145,8 +228,6 @@ output$ui_Pivotr <- renderUI({
   )
 })
 
-pvt_args <- as.list(formals(pivotr))
-
 observeEvent(input$pvt_nvar, {
   ## only allow chi2 if frequencies are shown
   if (input$pvt_nvar != "None") {
@@ -154,46 +235,8 @@ observeEvent(input$pvt_nvar, {
   }
 })
 
-## list of function inputs selected by user
-pvt_inputs <- reactive({
-  ## loop needed because reactive values don't allow single bracket indexing
-  pvt_args$data_filter <- if (input$show_filter) input$data_filter else ""
-  pvt_args$dataset <- input$dataset
-  for (i in r_drop(names(pvt_args)))
-    pvt_args[[i]] <- input[[paste0("pvt_", i)]]
-
-  pvt_args
-})
-
-pvt_sum_args <- as.list(if (exists("summary.pivotr")) {
-  formals(summary.pivotr)
-} else {
-  formals(radiant.data:::summary.pivotr)
-} )
-
-## list of function inputs selected by user
-pvt_sum_inputs <- reactive({
-  ## loop needed because reactive values don't allow single bracket indexing
-  for (i in names(pvt_sum_args))
-    pvt_sum_args[[i]] <- input[[paste0("pvt_", i)]]
-  pvt_sum_args
-})
-
-pvt_plot_args <- as.list(if (exists("plot.pivotr")) {
-  formals(plot.pivotr)
-} else {
-  formals(radiant.data:::plot.pivotr)
-} )
-
-## list of function inputs selected by user
-pvt_plot_inputs <- reactive({
-  ## loop needed because reactive values don't allow single bracket indexing
-  for (i in names(pvt_plot_args))
-    pvt_plot_args[[i]] <- input[[paste0("pvt_", i)]]
-  pvt_plot_args
-})
-
-.pivotr <- reactive({
+# .pivotr <- reactive({
+.pivotr <- eventReactive(input$pvt_run, {
 
   ## reset r_state value as needed
   if (!available(input$pvt_cvars)) r_state$pvt_cvars <<- input$pvt_cvars
@@ -209,11 +252,7 @@ pvt_plot_inputs <- reactive({
     req(available(pvti$nvar))
   }
 
-  req(input$pvt_pause == FALSE, cancelOutput = TRUE)
-
-  withProgress(message = "Calculating", value = 1, {
-    sshhr(do.call(pivotr, pvti))
-  })
+  sshhr(do.call(pivotr, pvti))
 })
 
 observeEvent(input$pivotr_search_columns, {
@@ -226,23 +265,27 @@ observeEvent(input$pivotr_state, {
 })
 
 output$pivotr <- DT::renderDataTable({
-  pvt <- .pivotr()
-  ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
-  # if (is.null(pvt)) return()
-  req(!is.null(pvt))
+  input$pvt_run
+  withProgress(message = "Generating pivot table", value = 1, {
 
-  if (!identical(r_state$pvt_cvars, input$pvt_cvars)) {
-    r_state$pvt_cvars <<- input$pvt_cvars
-    r_state$pivotr_state <<- list()
-    r_state$pivotr_search_columns <<- rep("", ncol(pvt$tab))
-  }
+    isolate({
+      pvt <- .pivotr()
+      ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
+      # if (is.null(pvt)) return()
+      req(!is.null(pvt))
 
-  searchCols <- lapply(r_state$pivotr_search_columns, function(x) list(search = x))
-  order <- r_state$pivotr_state$order
-  pageLength <- r_state$pivotr_state$length
+      if (!identical(r_state$pvt_cvars, input$pvt_cvars)) {
+        r_state$pvt_cvars <<- input$pvt_cvars
+        r_state$pivotr_state <<- list()
+        r_state$pivotr_search_columns <<- rep("", ncol(pvt$tab))
+      }
 
-  withProgress(
-    message = "Generating pivot table", value = 1,
+      searchCols <- lapply(r_state$pivotr_search_columns, function(x) list(search = x))
+      order <- r_state$pivotr_state$order
+      pageLength <- r_state$pivotr_state$length
+
+    })
+
     dtab(
       pvt,
       format = input$pvt_format,
@@ -252,7 +295,7 @@ output$pivotr <- DT::renderDataTable({
       order = order,
       pageLength = pageLength
     )
-  )
+  })
 })
 
 output$pivotr_chi2 <- renderPrint({
@@ -338,15 +381,18 @@ observeEvent(input$pivotr_rows_all, {
 })
 
 .plot_pivot <- reactive({
+# .plot_pivot <- eventReactive(input$pvt_run, {
   pvt <- .pivotr()
   if (is.null(pvt)) return(invisible())
   if (!is_empty(input$pvt_tab, FALSE)) {
     pvt <- pvt_sorter(pvt, rows = r_data$pvt_rows)
   }
 
-  pvt_plot_inputs() %>% {
-    do.call(plot, c(list(x = pvt), .))
-  }
+  withProgress(message = "Making plot", value = 1, {
+    pvt_plot_inputs() %>% {
+      do.call(plot, c(list(x = pvt), .))
+    }
+  })
 })
 
 output$plot_pivot <- renderPlot({
@@ -354,9 +400,7 @@ output$plot_pivot <- renderPlot({
   validate(
     need(length(input$pvt_cvars) < 4, "Plots created for at most 3 categorical variables")
   )
-  withProgress(message = "Making plot", value = 1, {
-    sshhr(.plot_pivot()) %>% print()
-  })
+  sshhr(.plot_pivot()) %>% print()
   return(invisible())
 }, width = pvt_plot_width, height = pvt_plot_height, res = 96)
 
@@ -403,7 +447,7 @@ observeEvent(input$pivotr_report, {
 
   ## get the state of the dt table
   ts <- dt_state("pivotr")
-  xcmd <- paste0("#dtab(result")
+  xcmd <- paste0("# dtab(result")
   if (!is_empty(input$pvt_format, "none")) {
     xcmd <- paste0(xcmd, ", format = \"", input$pvt_format, "\"")
   }
@@ -416,11 +460,15 @@ observeEvent(input$pivotr_report, {
   if (!is_empty(r_state$pivotr_state$length, 10)) {
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$pivotr_state$length)
   }
-  xcmd <- paste0(xcmd, ") %>% render\n#store(result, name = \"", input$pvt_dat, "\")")
+  xcmd <- paste0(xcmd, ") %>% render()\n# store(result, name = \"", input$pvt_dat, "\")")
 
   inp_main <- clean_args(pvt_inputs(), pvt_args)
-  if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)
-  if (ts$tabfilt != "") inp_main <- c(inp_main, tabfilt = ts$tabfilt)
+  if (ts$tabsort != "") {
+    inp_main <- c(inp_main, tabsort = ts$tabsort)
+  }
+  if (ts$tabfilt != "") {
+    inp_main <- c(inp_main, tabfilt = ts$tabfilt)
+  }
   inp_main <- c(inp_main, nr = ts$nr - 1)
 
   ## update R > Report

@@ -14,13 +14,14 @@ viz_args <- as.list(formals(visualize))
 ## list of function inputs selected by user
 viz_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
-  viz_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  viz_args$data_filter <- if (isTRUE(input$show_filter)) input$data_filter else ""
   viz_args$dataset <- input$dataset
   viz_args$shiny <- input$shiny
   for (i in r_drop(names(viz_args)))
     viz_args[[i]] <- input[[paste0("viz_", i)]]
   # isolate({
-  # cat(paste0(names(viz_args), " ", viz_args, collapse = ", "), file = stderr(), "\n")
+  #   # cat(paste0(names(viz_args), " ", viz_args, collapse = ", "), file = stderr(), "\n")
+  #   cat(paste0(names(viz_args), " = ", viz_args, collapse = ", "), "\n")
   # })
   viz_args
 })
@@ -212,10 +213,58 @@ output$ui_viz_check <- renderUI({
   )
 })
 
+output$ui_viz_run <- renderUI({
+  ## updates when dataset changes
+  req(input$dataset)
+  actionButton("viz_run", "Create plot", width = "100%", icon = icon("play"), class = "btn-success")
+  ## this didn't seem to work quite like the observe below
+  ## https://stackoverflow.com/questions/43641103/change-color-actionbutton-shiny-r
+})
+
+## class is not passed on
+# updateActionButton <- function(session, inputId, 
+#                                label = NULL, 
+#                                icon = NULL, 
+#                                class = NULL) {
+#     if (!is.null(icon)) 
+#         icon <- as.character(shiny:::validateIcon(icon))
+#     message <- shiny:::dropNulls(list(label = label, icon = icon, class = class))
+#     session$sendInputMessage(inputId, message)
+# }
+
+observe({
+  ## dep on most inputs
+  input$data_filter
+  # for (i in r_drop(names(viz_args))) {
+  #   cat(paste0("viz_", i, " = ", input[[paste0("viz_", i)]]), "\n")
+  # }; cat("\n")
+  # dep on most inputs
+  sapply(r_drop(names(viz_args)), function(x) input[[paste0("viz_", x)]])
+
+  ## tried with .visualize but didn't quite work
+  # isolate({
+  #   print(paste0(attr(.visualize, "observable")$.invalidated, " ", 
+  #                attr(viz_inputs, "observable")$.invalidated))
+  # })
+
+  ## notify user when the plot needed to be updated
+  ## based on https://stackoverflow.com/questions/45478521/listen-to-reactive-invalidation-in-shiny
+  if (pressed(input$viz_run) && !is.null(input$viz_xvar)) {
+    if (isTRUE(attr(viz_inputs, "observable")$.invalidated)) {
+      updateActionButton(session, "viz_run", "Update plot", icon = icon("refresh", class = "fa-spin"))
+    } else {
+      updateActionButton(session, "viz_run", "Create plot", icon = icon("play"))
+    }
+  }
+})
+
 output$ui_Visualize <- renderUI({
   tagList(
     wellPanel(
-      checkboxInput("viz_pause", "Pause plotting", state_init("viz_pause", FALSE)),
+      uiOutput("ui_viz_run")
+    ),
+    wellPanel(
+      # checkboxInput("viz_pause", "Pause plotting", state_init("viz_pause", FALSE)),
       uiOutput("ui_viz_type"),
       conditionalPanel(
         condition = "input.viz_type != 'dist' & input.viz_type != 'density'",
@@ -306,11 +355,13 @@ output$ui_Visualize <- renderUI({
   )
 })
 
-viz_plot_width <- reactive({
+# viz_plot_width <- reactive({
+viz_plot_width <- eventReactive(input$viz_run, {
   if (is_empty(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
 })
 
-viz_plot_height <- reactive({
+# viz_plot_height <- reactive({
+viz_plot_height <- eventReactive(input$viz_run, {
   if (is_empty(input$viz_plot_height)) {
     r_data$plot_height
   } else {
@@ -336,22 +387,21 @@ output$visualize <- renderPlot({
       )
     )
   }
-
-  withProgress(message = "Making plot", value = 1, {
-    .visualize() %>% {
-      if (is.character(.)) {
-        plot(x = 1, type = "n", main = paste0("\n", .), axes = FALSE, xlab = "", ylab = "", cex.main = .9)
-      } else if (is.null(.)) {
-        return(invisible())
-      } else {
-        print(.)
-      }
+  .visualize() %>% {
+    if (is.character(.)) {
+      plot(x = 1, type = "n", main = paste0("\n", .), axes = FALSE, xlab = "", ylab = "", cex.main = .9)
+    } else if (is.null(.)) {
+      return(invisible())
+    } else {
+      print(.)
     }
-  })
+  }
 }, width = viz_plot_width, height = viz_plot_height, res = 96)
 
-.visualize <- reactive({
-  req(input$viz_pause == FALSE, cancelOutput = TRUE)
+# .visualize <- reactive({
+.visualize <- eventReactive(input$viz_run, {
+  
+   # req(input$viz_pause == FALSE, cancelOutput = TRUE)
   req(input$viz_type)
 
   ## need dependency on ..
@@ -374,14 +424,15 @@ output$visualize <- renderPlot({
 
   req(!is.null(input$viz_color) || !is.null(input$viz_fill))
 
-  viz_inputs() %>%
-    {
-      .$shiny <- TRUE
-      .
-    } %>%
-    do.call(visualize, .)
+  withProgress(message = "Making plot", value = 1, {
+    inp <- viz_inputs()
+    inp$shiny <- TRUE
+      # {.$shiny <- TRUE; .} %>%
+    do.call(visualize, inp)
+  })
 })
 
+# observeEvent(input$visualize_report && pressed(input$viz_run), {
 observeEvent(input$visualize_report, {
   ## resetting hidden elements to default values
   vi <- viz_inputs()
@@ -399,7 +450,10 @@ observeEvent(input$visualize_report, {
   }
 
   inp_main <- clean_args(vi, viz_args)
-  inp_main[["custom"]] <- FALSE
+  # inp_main[["custom"]] <- FALSE
+  inp_main$custom <- FALSE
+  # print(inp_main)
+
   update_report(
     inp_main = inp_main,
     fun_name = "visualize",
