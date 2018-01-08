@@ -72,6 +72,8 @@ It is important to note that these filters are _persistent_ and will be applied 
 </tbody>
 </table>
 
+Filters can also be used with R-code to quickly view a sample from the selected dataset. For example, `runif(nrow(.)) > .9` could be used to sample approximately 10% of the rows in the data and `1:nrow(.) < 101` would select only the first 100 rows in the data. Note: `.` references the currently selected dataset.
+
 ### Pause view
 
 For very large datasets it can useful to click `Pause view` before selecting variables, entering filters, etc. When you are ready to generate the table make sure that `Pause view` is no longer checked. When `Pause view` is un-checked, any input change will generate a new table.
@@ -103,4 +105,4 @@ It is important to note that column sorting, column filters, and search are **no
 
 To download the data in _csv_ format click the <i title='Download' class='fa fa-download'></i> icon on the top right of your screen.
 
-Click the report (<i title='Report results' class='fa fa-edit'></i>) icon on the bottom left of your screen or press `ALT-enter` on your keyboard to add the filter and sort commands used by Radiant to a (reproducible) report in <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_R > Report_</a>.
+Click the report (<i title='Report results' class='fa fa-edit'></i>) icon on the bottom left of your screen or press `ALT-enter` on your keyboard to add the filter and sort commands used by Radiant to a (reproducible) report in <a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank">_Report > Rmd_</a>.

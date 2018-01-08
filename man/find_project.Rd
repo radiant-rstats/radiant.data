@@ -6,6 +6,9 @@
 \usage{
 find_project(mess = TRUE)
 }
+\arguments{
+\item{mess}{Show or hide messages (default mess = TRUE)}
+}
 \value{
 Path to rstudio project directory
 }

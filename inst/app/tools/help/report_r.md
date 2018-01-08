@@ -1,6 +1,6 @@
 > Run R-code
 
-The code feature allows you to run R-code with access to all functions and data in Radiant. By clicking the `Run code` button, the code will be evaluated and the output will be shown on the right of the _R > Code_ page. To evaluate only a part of the code use the cursor to select a section and press `CTRL-enter` (`CMD-enter` on mac).
+The code feature allows you to run R-code with access to all functions and data in Radiant. By clicking the `Run code` button, the code will be evaluated and the output will be shown on the right of the _Report > R_ page. To evaluate only a part of the code use the cursor to select a section and press `CTRL-enter` (`CMD-enter` on mac).
 
 You can load an R-code file into Radiant by clicking the `Load code` button and selecting an .r or .R file. If you started Radiant from Rstudio you can save a report in HTML, Word, or PDF format by selecting the desired format from the drop-down manu and clicking `Save`. To save just the code choose `R-code` from the dropdown and press the `Save` button.
 

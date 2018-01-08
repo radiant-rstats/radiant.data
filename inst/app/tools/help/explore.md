@@ -34,6 +34,6 @@ Use the `Filter data` box to select (or omit) specific sets of rows from the dat
 
 For large datasets it can useful to click `Pause explore` before selecting categorical and numerical variables, entering filters, etc. When you are ready to generate the explore table make sure that `Pause explore` is no longer checked. When `Pause explore` is not checked, any input changes will automatically result in a new table.
 
-### R > Report
+### Report > Rmd
 
-Add code to <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_R > Report_</a> to (re)create the summary table by clicking the <i title="report results" class="fa fa-edit"></i> icon on the bottom left of your screen or by pressing `ALT-enter` on your keyboard.
+Add code to <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_Report > Rmd_</a> to (re)create the summary table by clicking the <i title="report results" class="fa fa-edit"></i> icon on the bottom left of your screen or by pressing `ALT-enter` on your keyboard.

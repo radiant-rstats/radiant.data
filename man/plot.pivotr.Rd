@@ -5,7 +5,7 @@
 \title{Plot method for the pivotr function}
 \usage{
 \method{plot}{pivotr}(x, type = "dodge", perc = FALSE, flip = FALSE,
-  fillcol = "blue", ...)
+  fillcol = "blue", opacity = 0.5, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{pivotr}}}
@@ -17,6 +17,8 @@
 \item{flip}{Flip the axes in a plot (FALSE or TRUE)}
 
 \item{fillcol}{Fill color for bar-plot when only one categorical variable has been selected (default is "blue")}
+
+\item{opacity}{Opacity for plot elements (0 to 1)}
 
 \item{...}{further arguments passed to or from other methods}
 }

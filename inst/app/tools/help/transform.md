@@ -16,7 +16,7 @@ r_data[["diamonds"]] <- mutate_ext(
 
 This is an important feature if you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to transform the data and to generate results, i.e., your work is now reproducible.
 
-To add commands contained in the command log window to a report in <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_R > Report_</a> click the <i title="report results" class="fa fa-edit"></i> icon.
+To add commands contained in the command log window to a report in <a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank">_Report > Rmd_</a> click the <i title="report results" class="fa fa-edit"></i> icon.
 
 ### Filter data
 
