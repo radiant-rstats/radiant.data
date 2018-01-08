@@ -43,13 +43,15 @@ saveStateOnRefresh <- function(session = session) {
     isolate({
       url_query <- parseQueryString(session$clientData$url_search)
       if (not_pressed(input$refresh_radiant) && not_pressed(input$stop_radiant) &&
-        is.null(input$uploadState) && !"fixed" %in% names(url_query)) {
+        is.null(input$state_load) && !"fixed" %in% names(url_query)) {
+        # is.null(input$uploadState) && !"fixed" %in% names(url_query)) {
 
         # withProgress(message = "Preparing session sharing", value = 1, {
         saveSession(session)
         # })
       } else {
-        if (is.null(input$uploadState)) {
+        # if (is.null(input$uploadState)) {
+        if (is.null(input$state_load)) {
           if (exists("r_sessions")) {
             sshhr(try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE))
             sshhr(try(rm(r_ssuid), silent = TRUE))
@@ -67,14 +69,20 @@ saveStateOnRefresh <- function(session = session) {
 ## get active dataset and apply data-filter if available
 .getdata <- reactive({
   req(input$dataset)
-  selcom <- input$data_filter %>% gsub("\\n", "", .) %>% gsub("\"", "\'", .)
+  selcom <- input$data_filter %>% 
+    gsub("\\n", "", .) %>% 
+    gsub("\"", "\'", .) %>%
+    fixMS()
   if (is_empty(selcom) || input$show_filter == FALSE) {
     isolate(r_data$filter_error <- "")
   } else if (grepl("([^=!<>])=([^=])", selcom)) {
-    isolate(r_data$filter_error <- "Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
+    isolate(r_data$filter_error <- "Invalid filter: Never use = in a filter! Use == instead (e.g., city == 'San Diego'). Update or remove the expression")
   } else {
-    # seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
-    seldat <- try(filter(r_data[[input$dataset]], !! rlang::parse_expr(gsub(",", "&", selcom))), silent = TRUE)
+    ## %>% need here so . will be available
+    seldat <- try(
+      r_data[[input$dataset]] %>% filter(!! rlang::parse_expr(selcom)), 
+      silent = TRUE
+    )
     if (is(seldat, "try-error")) {
       isolate(r_data$filter_error <- paste0("Invalid filter: \"", attr(seldat, "condition")$message, "\". Update or remove the expression"))
     } else {
@@ -112,9 +120,7 @@ groupable_vars <- reactive({
   .getdata() %>%
     summarise_all(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
       is.character(.) || ((length(unique(.)) / n()) < .30))) %>%
-    {
-      which(. == TRUE)
-    } %>%
+    {which(. == TRUE)} %>%
     varnames()[.]
 })
 
@@ -122,20 +128,15 @@ groupable_vars_nonum <- reactive({
   .getdata() %>%
     summarise_all(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
       is.character(.))) %>%
-    {
-      which(. == TRUE)
-    } %>%
+    {which(. == TRUE)} %>%
     varnames()[.]
 })
-
 
 ## used in compare proportions
 two_level_vars <- reactive({
   .getdata() %>%
     summarise_all(funs(length(unique(.)))) %>%
-    {
-      . == 2
-    } %>%
+    {. == 2} %>%
     which(.) %>%
     varnames()[.]
 })
@@ -191,9 +192,10 @@ not_available <- function(x)
 available <- function(x) not_available(x) == FALSE
 
 ## check if a button was NOT pressed
-not_pressed <- function(x) if (is.null(x) || x == 0) TRUE else FALSE
+not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
 
-pressed <- function(x) if (!is.null(x) && x > 0) TRUE else FALSE
+## check if a button was pressed
+pressed <- function(x) ifelse(!is.null(x) && x > 0, TRUE, FALSE)
 
 ## check for duplicate entries
 has_duplicates <- function(x)
@@ -255,6 +257,9 @@ returnTextAreaInput <- function(inputId,
                                 placeholder = NULL,
                                 resize = "vertical",
                                 value = "") {
+
+  ## avoid all sorts of 'helpful' behavior from your browser
+  ## see https://stackoverflow.com/a/35514029/1974918
   tagList(
     tags$label(label, `for` = inputId), br(),
     tags$textarea(
@@ -264,15 +269,110 @@ returnTextAreaInput <- function(inputId,
       rows = rows,
       placeholder = placeholder,
       resize = resize,
+      autocomplete = "off",
+      autocorrect = "off", 
+      autocapitalize = "off", 
+      spellcheck = "false",
       class = "returnTextArea form-control"
     )
   )
 }
 
+## from https://github.com/rstudio/shiny/blob/master/R/utils.R
+`%AND%` <- function(x, y) {
+  if (!is.null(x) && !is.na(x))
+    if (!is.null(y) && !is.na(y))
+      return(y)
+  return(NULL)
+}
+
+## using a custom version of textInput to avoid browser "smartness"
+textInput <- function (inputId, label, 
+                       value = "", 
+                       width = NULL, 
+                       placeholder = NULL, 
+                       autocomplete = "off", 
+                       autocorrect = "off", 
+                       autocapitalize = "off", 
+                       spellcheck = "false",
+                       ...) {
+
+  value <- restoreInput(id = inputId, default = value)
+  div(
+    class = "form-group shiny-input-container", 
+    style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
+    label %AND% tags$label(label, `for` = inputId), 
+    tags$input(
+      id = inputId, 
+      type = "text", 
+      class = "form-control", 
+      value = value, 
+      placeholder = placeholder,
+      autocomplete = autocomplete, 
+      autocorrect = autocorrect, 
+      autocapitalize = autocapitalize, 
+      spellcheck = spellcheck,
+      ...
+    )
+  )
+}
+
+## using a custom version of textAreaInput to avoid browser "smartness"
+textAreaInput <- function(inputId, label, 
+                          value = "", 
+                          width = NULL, 
+                          height = NULL, 
+                          cols = NULL, 
+                          rows = NULL, 
+                          placeholder = NULL, 
+                          resize = NULL,
+                          autocomplete = "off", 
+                          autocorrect = "off", 
+                          autocapitalize = "off", 
+                          spellcheck = "true",
+                          ...) {
+
+  value <- restoreInput(id = inputId, default = value)
+  if (!is.null(resize)) {
+    resize <- match.arg(
+      resize, 
+      c("both", "none", "vertical", "horizontal")
+    )
+  }
+  style <- paste(if (!is.null(width)) 
+      paste0("width: ", validateCssUnit(width), ";"), if (!is.null(height)) 
+      paste0("height: ", validateCssUnit(height), ";"), if (!is.null(resize)) 
+      paste0("resize: ", resize, ";"))
+  if (length(style) == 0) 
+      style <- NULL
+  div(
+    class = "form-group shiny-input-container", 
+    label %AND% tags$label(label, `for` = inputId), 
+    tags$textarea(
+      id = inputId, 
+      class = "form-control", 
+      placeholder = placeholder, 
+      style = style, 
+      rows = rows, 
+      cols = cols, 
+      autocomplete = autocomplete, 
+      autocorrect = autocorrect, 
+      autocapitalize = autocapitalize, 
+      spellcheck = spellcheck,
+      ...,
+      value
+    )
+  )
+}
+
+
+## avoid all sorts of 'helpful' behavior from your browser
+## based on https://stackoverflow.com/a/35514029/1974918
 returnTextInput <- function(inputId,
                             label = NULL,
                             placeholder = NULL,
                             value = "") {
+
   tagList(
     tags$label(label, `for` = inputId),
     tags$input(
@@ -280,6 +380,10 @@ returnTextInput <- function(inputId,
       type = "text",
       value = value,
       placeholder = placeholder,
+      autocomplete = "off",
+      autocorrect = "off", 
+      autocapitalize = "off", 
+      spellcheck = "false",
       class = "returnTextInput form-control"
     )
   )
@@ -323,17 +427,16 @@ register_plot_output <- function(fun_name, rfun_name,
   output[[out_name]] <- renderPlot({
 
     ## when no analysis was conducted (e.g., no variables selected)
-    get(rfun_name)() %>% {
-      if (is.null(.)) " " else .
-    } %>% {
-      if (is.character(.)) {
-        plot(
-          x = 1, type = "n", main = paste0("\n\n\n\n\n\n\n\n", .),
-          axes = FALSE, xlab = "", ylab = "", cex.main = .9
-        )
-      } else {
-        withProgress(message = "Making plot", value = 1, print(.))
-      }
+    p <- get(rfun_name)()
+    if (is.null(p)) p <- "Nothing to plot ...\nPlease re-run the calculations and try again"
+    if (is.character(p)) {
+      plot(
+        x = 1, type = "n", main = paste0("\n\n\n\n\n\n\n\n", p),
+        axes = FALSE, xlab = "", ylab = "", cex.main = .9
+      )
+    } else {
+      # withProgress(message = "Making plot", value = 1, print(.))
+      print(p)
     }
   }, width = get(width_fun), height = get(height_fun), res = 96)
 
@@ -681,26 +784,4 @@ cf <- function(...) {
   cat(paste0("\n--- called from: ", environmentName(parent.frame()), " (", lubridate::now(), ")\n"), file = "~/r_cat.txt", append = TRUE)
   out <- paste0(capture.output(...), collapse = "\n")
   cat("--\n", out, "\n--", sep = "\n", file = "~/r_cat.txt", append = TRUE)
-}
-
-## Replace windows smart quotes etc.
-fixMS <- function(text) {
-
-  ## to remove all non-ascii symbols use ...
-  ## gsub("[\x80-\xFF]", "", .)
-
-  ## based on https://stackoverflow.com/a/1262210/1974918
-  gsub("\xC2\xAB", '"', text) %>%
-    gsub("\xC2\xBB", '"', .) %>%
-    gsub("\xE2\x80\x98", "'", .) %>%
-    gsub("\xE2\x80\x99", "'", .) %>%
-    gsub("\xE2\x80\x9A", "'", .) %>%
-    gsub("\xE2\x80\x9B", "'", .) %>%
-    gsub("\xE2\x80\x9C", '"', .) %>%
-    gsub("\xE2\x80\x9D", '"', .) %>%
-    gsub("\xE2\x80\x9E", '"', .) %>%
-    gsub("\xE2\x80\x9F", '"', .) %>%
-    gsub("\xE2\x80\xB9", "'", .) %>%
-    gsub("\xE2\x80\xBA", "'", .) %>%
-    gsub("\r", "\n", .)
 }
