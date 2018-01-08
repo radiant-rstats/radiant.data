@@ -1,36 +1,89 @@
-#' Launch radiant.data in default browser or Rstudio Viewer
+#' Launch radiant apps in default browser or Rstudio viewer
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
 #'
-#' @param run Run radiant.data in an external browser ("browser") or in the Rstudio viewer ("viewer")
+#' @param package Radiant package to start. One of "radiant.data", "radiant.design", "radiant.basics", "radiant.model", "radiant.multivariate", "radiant"
+#' @param run Run radiant app in an external browser ("browser") or in the Rstudio viewer ("viewer")
 #'
-#' @importFrom rstudioapi viewer
+#' @importFrom shiny paneViewer
 #'
 #' @examples
 #' \dontrun{
-#' radiant.data::radiant.data()
-#' radiant.data::radiant.data("viewer")
+#' launch()
+#' launch("viewer")
 #' }
 #'
 #' @export
-radiant.data <- function(run = "browser") {
-  if (!"package:radiant.data" %in% search()) {
-    if (!sshhr(require(radiant.data))) {
-      stop("\nCalling radiant.data start function but radiant.data is not installed.")
+launch <- function(package = "radiant.data", run = "browser") {
+  ## check if package attached
+  if (!paste0("package:", package) %in% search()) {
+    if (!suppressWarnings(suppressMessages(suppressPackageStartupMessages(require(package, character.only = TRUE)))))  {
+      stop(sprintf("Calling %s start function but %s is not installed.", package, package))
     }
   }
+
+  ## from Yihui's DT::datatable function
+  oop <- base::options(
+    width = max(getOption("width", 250), 250),
+    scipen = max(getOption("scipen", 100), 100),
+    max.print = max(getOption("max.print", 5000), 5000),
+    stringsAsFactors = FALSE,
+    radiant.launch_dir = normalizePath(getwd(), winslash = "/")
+  )
+  on.exit(base::options(oop), add = TRUE)
+
   run <- if (run == "viewer") {
-    message("\nStarting radiant.data in Rstudio Viewer ...")
-    rstudioapi::viewer
+    if (is_empty(Sys.getenv("RSTUDIO"))) {
+      message(sprintf("\nStarting %s in default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in Rstudio viewer", package, package, package, package))
+      options(radiant.launch = "browser")
+      TRUE
+    } else {
+      if (rstudioapi::getVersion() < "1.1") {
+        stop(sprintf("Rstudio version 1.1 or later required. Use %s::%s() to open %s in your default browser or download the latest version of Rstudio from https://www.rstudio.com/products/rstudio/download/", package, package, package))
+      }
+      message(sprintf("\nStarting %s in Rstudio viewer ...\n\nUse %s::%s() to open %s in default browser", package, package, package, package))
+      options(radiant.launch = "viewer")
+      ## using eval(parse(text = ...)) to avoid foreign function call warnings
+      # eval(parse(text = "function(url) {invisible(.Call('rs_shinyviewer', url, getwd(), 2))}"))
+      ## see previous issue with paneViewer https://github.com/rstudio/DT/issues/379
+      shiny::paneViewer(minHeight = "maximize")
+
+    }
   } else {
-    message("\nStarting radiant.data in default browser ...\n\nUse radiant.data::radiant.data(\"viewer\") to open radiant.data in Rstudio Viewer")
+    message(sprintf("\nStarting %s in default browser ...\n\nUse %s::%s_viewer() to open %s in Rstudio viewer", package, package, package, package))
+    options(radiant.launch = "browser")
     TRUE
   }
+
+  ## supress... to avoid ERROR: [on_request_read] connection reset by peer in viewer
+  # suppressWarnings(suppressMessages(suppressPackageStartupMessages(
   suppressPackageStartupMessages(
-    shiny::runApp(system.file("app", package = "radiant.data"), launch.browser = run)
+    shiny::runApp(system.file("app", package = package), launch.browser = run)
   )
 }
 
+#' Launch radiant.data in default browser
+#'
+#' @details See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
+#'
+#' @examples
+#' \dontrun{
+#' radiant.data()
+#' radiant.data("viewer")
+#' }
+#' @export
+radiant.data <- function() launch(package = "radiant.data", run = "browser")
+
+#' Launch radiant.data in the Rstudio viewer
+#'
+#' @details See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
+#'
+#' @examples
+#' \dontrun{
+#' radiant.data_viewer()
+#' }
+#' @export
+radiant.data_viewer <- function() launch(package = "radiant.data", run = "viewer")
 
 #' Install webshot and phantomjs
 #' @export
@@ -139,7 +192,11 @@ filterdata <- function(dat, filt = "") {
   if (grepl("([^=!<>])=([^=])", filt)) {
     message("Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
   } else {
-    seldat <- try(filter(dat, !! rlang::parse_expr(filt)), silent = TRUE)
+    seldat <- try(
+      ## %>% need here so . will be available
+      dat %>% filter(!! rlang::parse_expr(filt)),
+      silent = TRUE
+    )
     if (is(seldat, "try-error")) {
       message(paste0("Invalid filter: \"", attr(seldat, "condition")$message, "\". Update or remove the expression"))
     } else {
@@ -165,24 +222,27 @@ getdata <- function(dataset,
                     filt = "",
                     rows = NULL,
                     na.rm = TRUE) {
-  filt %<>% gsub("\\n", "", .) %>% gsub("\"", "\'", .)
-  {
-    if (!is_string(dataset)) {
-      dataset
-    } else if (exists("r_environment") && !is.null(r_environment$r_data[[dataset]])) {
-      r_environment$r_data[[dataset]]
-    } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
-      if (isTRUE(getOption("radiant.local"))) message("Dataset ", dataset, " loaded from r_data list\n")
-      r_data[[dataset]]
-    } else if (exists(dataset)) {
-      d_env <- pryr::where(dataset)
-      d_env[[dataset]]
-    } else {
-      stop(message("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call"))
-    }
-  } %>%
+
+  filt <- gsub("\\n", "", filt) %>%
+    gsub("\"", "\'", .)
+
+  ## extra {} around if (...) required to pass tests
+  {if (!is_string(dataset)) {
+    dataset
+  } else if (exists("r_environment") && !is.null(r_environment$r_data[[dataset]])) {
+    r_environment$r_data[[dataset]]
+  } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
+    if (isTRUE(getOption("radiant.local"))) message("Dataset ", dataset, " loaded from r_data list\n")
+    r_data[[dataset]]
+  } else if (exists(dataset)) {
+    d_env <- pryr::where(dataset)
+    d_env[[dataset]]
+  } else {
+    paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
+      stop(call. = FALSE)
+  }} %>%
     {if ("grouped_df" %in% class(.)) ungroup(.) else .} %>% ## ungroup data if needed
-    {if (filt == "") . else filterdata(., filt)} %>% ## apply data_filter
+    {if (filt == "") . else filterdata(., filt)} %>%        ## apply data_filter
     {if (is.null(rows)) . else .[rows, , drop = FALSE]} %>%
     {if (is_empty(vars[1])) . else select(., !!! if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)} %>%
     {if (na.rm) na.omit(.) else .}
@@ -338,10 +398,8 @@ loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max
   if (is(dat, "try-error")) return("### There was an error loading the data. Please make sure the data are in csv format.")
   if (saf) dat <- factorizer(dat, safx)
   dat %>%
-    as.data.frame(.) %>%
-    {
-      set_colnames(., make.names(colnames(.)))
-    } %>%
+    as.data.frame(stringsAsFactors = FALSE) %>%
+    {set_colnames(., make.names(colnames(.)))} %>%
     set_attr("description", rprob)
 }
 
@@ -570,8 +628,15 @@ viewdata <- function(dataset,
     server = function(input, output, session) {
       widget <- DT::datatable(
         dat, selection = "none",
-        rownames = FALSE, style = "bootstrap",
-        filter = fbox, escape = FALSE,
+        rownames = FALSE,
+        style = "bootstrap",
+        filter = fbox,
+        escape = FALSE,
+        ## must use fillContainer = FALSE to address
+        ## see https://github.com/rstudio/DT/issues/367
+        ## https://github.com/rstudio/DT/issues/379
+        # fillContainer = FALSE,
+        ## works with client-side processing
         extensions = "KeyTable",
         options = list(
           keys = TRUE,
@@ -588,7 +653,7 @@ viewdata <- function(dataset,
       )
       output$tbl <- DT::renderDataTable(widget)
       observeEvent(input$stop, {
-        stopApp("Stopped viewdata")
+        stopApp(cat("Stopped viewdata"))
       })
     }
   )
@@ -627,6 +692,7 @@ dtab.data.frame <- function(object,
                             style = "bootstrap",
                             rownames = FALSE,
                             ...) {
+
   dat <- getdata(object, vars, filt = filt, rows = rows, na.rm = na.rm)
 
   isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
@@ -641,22 +707,26 @@ dtab.data.frame <- function(object,
 
   dt_tab <- rounddf(dat, dec) %>%
     DT::datatable(
+      filter = filter,
       selection = "none",
       rownames = rownames,
-      filter = filter,
+      ## must use fillContainer = FALSE to address
+      ## see https://github.com/rstudio/DT/issues/367
+      ## https://github.com/rstudio/DT/issues/379
+      fillContainer = FALSE,
+      ## only works with client-side processing
+      # extension = "KeyTable",
       escape = FALSE,
-      extension = "KeyTable",
       style = style,
       options = list(
         dom = dom,
-        keys = TRUE,
+        # keys = TRUE,
         search = list(regex = TRUE),
         columnDefs = list(
           list(orderSequence = c("desc", "asc"), targets = "_all"),
           list(className = "dt-center", targets = "_all")
         ),
         autoWidth = TRUE,
-        # scrollX = TRUE, ## column filter location gets messed up
         processing = FALSE,
         pageLength = pageLength,
         lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
@@ -667,11 +737,6 @@ dtab.data.frame <- function(object,
   dt_tab$dependencies <- c(
     list(rmarkdown::html_dependency_bootstrap("bootstrap")), dt_tab$dependencies
   )
-
-  # if (exists("r_environment") && isTRUE(r_environment$called_from_knitIt))
-  #   # render(dt_tab)
-  # else
-  #   dt_tab$called_from_knitIt <- TRUE
 
   dt_tab
 }
@@ -1093,22 +1158,25 @@ find_gdrive <- function() {
 #'
 #' @return Path to rstudio project directory
 #'
+#' @param mess Show or hide messages (default mess = TRUE)
+#'
+#' @importFrom rstudioapi isAvailable getActiveProject
+#'
 #' @export
 find_project <- function(mess = TRUE) {
-  if (!rstudioapi::isAvailable()) {
-    if (mess) {
-      message("Project directory cannot be found because application is not run from Rstudio")
-    }
-    pdir <- ""
-  } else {
+  if (rstudioapi::isAvailable()) {
     pdir <- rstudioapi::getActiveProject()
-    if (is_empty(pdir)) {
+    if (is.null(pdir)) {
       if (mess) {
         message("Project directory cannot be found because application is not run from Rstudio project")
       }
+      ""
+    } else {
+      normalizePath(pdir, winslash = "/")
     }
+  } else {
+    ""
   }
-  return(pdir)
 }
 
 #' Returns the index of the (parallel) maxima of the input values
@@ -1196,7 +1264,8 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
     dots <- rlang::parse_exprs(pred_cmd) %>%
       set_names(cmd_vars)
 
-    dat <- try(mutate(dat, !!! dots), silent = TRUE)
+    # dat <- try(mutate(dat, !!! dots), silent = TRUE)
+    dat <- try(dat %>% mutate(!!! dots), silent = TRUE)
   }
 
   ind <-
@@ -1246,7 +1315,8 @@ render <- function(object, ...) UseMethod("render", object)
 #'
 #' @export
 render.datatables <- function(object, ...) {
-  if (exists("r_environment")) {
+  ## hack for rmarkdown from Report > Rmd and Report > R
+  if (exists("r_environment") && !getOption("radiant.rmarkdown", FALSE)) {
     DT::renderDataTable(object)
   } else {
     object
@@ -1302,7 +1372,16 @@ render.datatables <- function(object, ...) {
 #'
 #' @export
 render.plotly <- function(object, ...) {
-  if (exists("r_environment")) {
+  ## hack for rmarkdown from R > Report and R > Code
+  if (exists("r_environment") && !getOption("radiant.radiant_render", FALSE)) {
+    ## avoid the ID-not-used-by-Shiny message
+    object$elementId <- NULL
+
+    if (is.null(object$height)) {
+      ## see https://github.com/ropensci/plotly/issues/1171
+      message("\n\nThe height of ggplotly objects may not be correct in Preview. The height will be correctly displayed in saved reports however.\n\n")
+    }
+
     plotly::renderPlotly(object)
   } else {
     object
@@ -1390,4 +1469,30 @@ write_feather <- function(x, path, description = attr(x, "description")) {
   } else {
     feather::write_feather(x, path)
   }
+}
+
+#' Replace Windows smart quotes etc.
+#'
+#' @param text Text to be parsed
+#'
+#' @export
+fixMS <- function(text) {
+
+  ## to remove all non-ascii symbols use ...
+  ## gsub("[\x80-\xFF]", "", .)
+
+  ## based on https://stackoverflow.com/a/1262210/1974918
+  gsub("\xC2\xAB", '"', text) %>%
+    gsub("\xC2\xBB", '"', .) %>%
+    gsub("\xE2\x80\x98", "'", .) %>%
+    gsub("\xE2\x80\x99", "'", .) %>%
+    gsub("\xE2\x80\x9A", "'", .) %>%
+    gsub("\xE2\x80\x9B", "'", .) %>%
+    gsub("\xE2\x80\x9C", '"', .) %>%
+    gsub("\xE2\x80\x9D", '"', .) %>%
+    gsub("\xE2\x80\x9E", '"', .) %>%
+    gsub("\xE2\x80\x9F", '"', .) %>%
+    gsub("\xE2\x80\xB9", "'", .) %>%
+    gsub("\xE2\x80\xBA", "'", .) %>%
+    gsub("\r", "\n", .)
 }
