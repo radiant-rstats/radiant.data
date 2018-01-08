@@ -477,9 +477,16 @@ getsummary <- function(dat, dc = getclass(dat)) {
 
   if (sum(isDate) > 0) {
     cat("Earliest dates:\n")
-    select(dat, which(isDate)) %>% summarise_all(funs(min)) %>% as.data.frame() %>% print(., row.names = FALSE)
+    select(dat, which(isDate)) %>% 
+      summarise_all(funs(min)) %>% 
+      as.data.frame(stringsAsFactors = FALSE) %>% 
+      print(row.names = FALSE)
     cat("\nFinal dates:\n")
-    select(dat, which(isDate)) %>% summarise_all(funs(max)) %>% as.data.frame() %>% print(., row.names = FALSE)
+    select(dat, which(isDate)) %>% 
+      summarise_all(funs(max)) %>% 
+      as.data.frame(stringsAsFactors = FALSE) %>% 
+      print(row.names = FALSE)
+
     cat("\n")
   }
 
@@ -488,9 +495,15 @@ getsummary <- function(dat, dc = getclass(dat)) {
     min_time <- function(x) sort(x) %>% head(1)
 
     cat("Earliest time:\n")
-    select(dat, which(isPeriod)) %>% summarise_all(funs(min_time)) %>% as.data.frame() %>% print(., row.names = FALSE)
+    select(dat, which(isPeriod)) %>% 
+      summarise_all(funs(min_time)) %>% 
+      as.data.frame(stringsAsFactors = FALSE) %>% 
+      print(row.names = FALSE)
     cat("\nFinal time:\n")
-    select(dat, which(isPeriod)) %>% summarise_all(funs(max_time)) %>% as.data.frame() %>% print(., row.names = FALSE)
+    select(dat, which(isPeriod)) %>% 
+      summarise_all(funs(max_time)) %>% 
+      as.data.frame(stringsAsFactors = FALSE) %>% 
+      print(row.names = FALSE)
     cat("\n")
   }
 
@@ -499,12 +512,16 @@ getsummary <- function(dat, dc = getclass(dat)) {
     if (nrow(dat) < 10 ^ 5) {
       cat("Summarize character variables (< 20 unique values shown):\n")
       select(dat, which(isChar)) %>% lapply(unique) %>% {
-        for (i in names(.)) cat(i, paste0("(n_distinct ", length(.[[i]]), "): "), .[[i]][1:min(20, length(.[[i]]))], "\n")
+        for (i in names(.)) {
+          cat(i, paste0("(n_distinct ", length(.[[i]]), "): "), .[[i]][1:min(20, length(.[[i]]))], "\n")
+        }
       }
     } else {
       cat("Summarize character variables (< 20 values shown):\n")
       select(dat, which(isChar)) %>% {
-        for (i in names(.)) cat(i, ":", .[[i]][1:min(20, length(.[[i]]))], "\n")
+        for (i in names(.)) {
+          cat(i, ":", .[[i]][1:min(20, length(.[[i]]))], "\n")
+        }
       }
     }
     cat("\n")

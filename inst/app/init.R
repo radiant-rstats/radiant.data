@@ -126,6 +126,28 @@ if (exists("r_data")) {
   r_state <- list()
 }
 
+## legacy, to deal with state files created before
+## Report > Rmd and Report > R name change
+if (isTRUE(r_state$nav_radiant == "Code")) {
+  r_state$nav_radiant <- "R"
+} else if (isTRUE(r_state$nav_radiant == "Report")) {
+  r_state$nav_radiant <- "Rmd"
+}
+
+## legacy, to deal with state files created before
+## name change to rmd_edit
+if (!is.null(r_state$rmd_report) && is.null(r_state$rmd_edit)) {
+  r_state$rmd_edit <- r_state$rmd_report
+  r_state$rmd_report <- NULL
+}
+
+## legacy, to deal with state files created before
+## name change to rmd_edit
+if (!is.null(r_state$rcode_edit) && is.null(r_state$r_edit)) {
+  r_state$r_edit <- r_state$rcode_edit
+  r_state$rcode_edit <- NULL
+}
+
 ## identify the shiny environment
 r_environment <- environment()
 
@@ -182,7 +204,8 @@ if (!is.null(r_state$nav_radiant)) {
     ## check if shiny set the main tab to the desired value
     if (is.null(input$nav_radiant)) return()
     if (input$nav_radiant != r_state$nav_radiant) return()
-    nav_radiant_tab <- getOption("radiant.url.list")[[r_state$nav_radiant]] %>% names()
+    nav_radiant_tab <- getOption("radiant.url.list")[[r_state$nav_radiant]] %>%
+      names()
 
     if (!is.null(nav_radiant_tab) && !is.null(r_state[[nav_radiant_tab]])) {
       updateTabsetPanel(session, nav_radiant_tab, selected = r_state[[nav_radiant_tab]])
@@ -198,15 +221,38 @@ isolate({
   if (is.null(r_data$plot_width)) r_data$plot_width <- 650
 })
 
-## 'sourcing' radiant's package functions in the server.R environment
-if (!"package:radiant.data" %in% search() && getOption("radiant.path.data") == "..") {
-  ## for shiny-server and development
-  for (file in list.files("../../R", pattern = "\\.(r|R)$", full.names = TRUE))
-    source(file, encoding = getOption("radiant.encoding"), local = TRUE)
-} else {
-  ## for use with launcher
+if (getOption("radiant.from.package", default = TRUE)) {
+  ## launch using installed radiant.data package
   radiant.data::copy_all(radiant.data)
+  # cat("\nGetting radiant.data from source ...\n")
+} else {
+  ## for shiny-server and development
+  for (file in list.files("../../R", pattern = "\\.(r|R)$", full.names = TRUE)) {
+    source(file, encoding = getOption("radiant.encoding"), local = TRUE)
+  }
+  # cat("\nGetting radiant.data from source ...\n")
 }
+
+## popup to suggest changing the working directory
+# if (getOption("radiant.project_dirx", "none") == "none") {
+#   showModal(
+#     modalDialog(
+#       title = "Directory Conflict",
+#       span(
+#         "Radiant is set to use an R document in Rstudio 
+#         ('To R (Rstudio)'). However, the active document in 
+#         Rstudio does not seem to be of type .R. Please open an 
+#         existing .R file or create a new one in Rstudio. The 
+#         file must be saved to disk before it can be accessed. If 
+#         you want to use the editor in Radiant instead, change 
+#         'To R (Rstudio)' to 'Auto paste' or 'Manual paste'."
+#       ),
+#       footer = modalButton("OK"),
+#       size = "s",
+#       easyClose = TRUE
+#     )
+#   )
+# }
 
 ## check every 5 seconds if width has been reset
 ## https://github.com/rstudio/rstudio/issues/1870

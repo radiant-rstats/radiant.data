@@ -325,7 +325,7 @@ visualize <- function(dataset, xvar,
 
           fun1 <- function(y) {
             y <- get(fun[1])(y)
-            data.frame(ymin = y, ymax = y, y = y)
+            data.frame(ymin = y, ymax = y, y = y, stringsAsFactors = FALSE)
           }
 
           if (length(fun) == 1) {
@@ -350,7 +350,7 @@ visualize <- function(dataset, xvar,
             if (length(fun) > 1) {
               fun2 <- function(y) {
                 y <- get(fun[2])(y)
-                data.frame(ymin = y, ymax = y, y = y)
+                data.frame(ymin = y, ymax = y, y = y, stringsAsFactors = FALSE)
               }
               if (length(linecol) == 1) linecol <- c(linecol, "blue")
               plot_list[[itt]] <- plot_list[[itt]] +
@@ -363,7 +363,7 @@ visualize <- function(dataset, xvar,
             if (length(fun) == 3) {
               fun3 <- function(y) {
                 y <- get(fun[3])(y)
-                data.frame(ymin = y, ymax = y, y = y)
+                data.frame(ymin = y, ymax = y, y = y, stringsAsFactors = FALSE)
               }
               if (length(linecol) == 2) linecol <- c(linecol, "red")
               plot_list[[itt]] <- plot_list[[itt]] +
@@ -385,7 +385,7 @@ visualize <- function(dataset, xvar,
           # for (f in seq_along(fun)) {
           #   fun_list[[f]] <- function(y) {
           #     y <- get(fun[deparse(f)])(y, na.rm = TRUE)
-          #     data.frame(ymin = y, ymax = y, y = y)
+          #     data.frame(ymin = y, ymax = y, y = y, stringsAsFactors = FALSE)
           #   }
           #   plot_list[[itt]] <- plot_list[[itt]] +
           #     stat_summary(fun.data = fun_list[[f]], geom = "crossbar", color = c("red", "green", "blue")[f])

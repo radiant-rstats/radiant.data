@@ -28,7 +28,11 @@ Search <- function(pattern, df, ignore.case = TRUE, fixed = FALSE) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-store.data.frame <- function(object, new = "", org = "", envir = parent.frame(), ...) {
+store.data.frame <- function(object, 
+                             new = "", 
+                             org = "", 
+                             envir = parent.frame(), ...) {
+
   if (is_empty(new)) {
     return(object)
   } else if (exists("r_environment")) {
@@ -61,7 +65,7 @@ store.data.frame <- function(object, new = "", org = "", envir = parent.frame(),
 register <- function(new, org = "", descr = "") {
   if (exists("r_environment")) {
     env <- r_environment
-    if (!is_string(new) || is_empty(env$r_data[[new]])) {
+    if (!is_string(new) || is.null(env$r_data[[new]])) {
       message("No dataset with that name has been loaded in Radiant")
       return(invisible())
     }
