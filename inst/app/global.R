@@ -1,3 +1,5 @@
+# print(getwd())
+
 ## based on https://github.com/rstudio/shiny/issues/1237
 suppressWarnings(
   try(
@@ -5,6 +7,22 @@ suppressWarnings(
     silent = TRUE
   )
 )
+
+## determining how radiant was launched
+# rpl <- getOption("radiant.launch")
+# if (is.null(rpl)) {
+## should this be set in global?
+if (is.null(getOption("radiant.launch"))) {
+  ## also use Rstudio's file dialog if opening in Window
+  if (exists(".rs.readUiPref") && .rs.readUiPref("shiny_viewer_type") %in% c(2, 3)) {
+    options(radiant.launch = "viewer")
+  } else {
+    options(radiant.launch = "browser")
+  }
+} # else {
+  # options(radiant.launch = rpl)
+# }
+# rm(rpl)
 
 ## function to load/import required packages and functions
 import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
@@ -34,8 +52,6 @@ import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
   invisible()
 }
 
-import_fs("radiant.data", libs = "plotly", incl = "ggplotly")
-
 init_data <- function() {
 
   ## Joe Cheng: "Datasets can change over time (i.e., the changedata function).
@@ -61,11 +77,6 @@ init_data <- function() {
   r_data
 }
 
-## import required functions and packages
-if (!"package:radiant.data" %in% search()) {
-  import_fs("radiant.data", libs = c("magrittr", "ggplot2", "lubridate", "tidyr", "dplyr", "broom", "tibble"))
-}
-
 ## running local or on a server
 if (Sys.getenv("SHINY_PORT") == "") {
   options(radiant.local = TRUE)
@@ -82,13 +93,36 @@ if (Sys.getenv("SHINY_PORT") == "") {
 ## encoding
 options(radiant.encoding = "UTF-8")
 
-## path to use for local or server use
-ifelse(grepl("radiant.data", getwd()) && file.exists("../../inst"), "..", system.file(package = "radiant.data")) %>%
-  options(radiant.path.data = .)
+## hack for rmarkdown from Report > Rmd and Report > R
+options(radiant.radiant_render = FALSE)
 
-## print options
-options(width = 250, scipen = 100)
-options(max.print = max(getOption("max.print"), 5000))
+## path to use for local or server use
+options(radiant.path.data =
+  ifelse(grepl("radiant.data", getwd()) && file.exists("../../inst"), "..", system.file(package = "radiant.data"))
+)
+
+## import required functions and packages
+options(radiant.from.package = TRUE)
+## if radiant.data is not in search main function from dplyr etc. won't be available
+if (!"package:radiant.data" %in% search()) {
+  import_fs("radiant.data", libs = c("magrittr", "ggplot2", "lubridate", "tidyr", "dplyr", "broom", "tibble"))
+  if (getOption("radiant.path.data") == "..") {
+    options(radiant.from.package = FALSE)
+  }
+}
+
+## seem to need this regardless ... check
+import_fs("radiant.data", libs = "plotly", incl = c("ggplotly", "subplot"))
+
+## basic options when run on server
+if (!getOption("radiant.local", default = FALSE)) {
+  options(
+    width = max(getOption("width"), 250),
+    scipen = max(getOption("scipen"), 100),
+    max.print = max(getOption("max.print"), 5000),
+    stringsAsFactors = FALSE
+  )
+}
 
 ## list of function arguments
 list(
@@ -117,62 +151,6 @@ knitr::opts_chunk$set(
   # screenshot.force = FALSE,
 )
 
-options(
-  radiant.nav_ui =
-    list(
-      windowTitle = "Radiant", id = "nav_radiant", inverse = TRUE,
-      collapsible = TRUE, tabPanel("Data", withMathJax(), uiOutput("ui_data"))
-    )
-)
-
-options(
-  radiant.shared_ui =
-    tagList(
-      navbarMenu(
-        "R",
-        tabPanel("Report", uiOutput("rmd_view"), uiOutput("report"), icon = icon("edit")),
-        tabPanel("Code", uiOutput("rcode_view"), uiOutput("rcode"), icon = icon("code"))
-      ),
-
-      navbarMenu(
-        "", icon = icon("save"),
-        tabPanel(downloadLink("saveStateNav", " Save state", class = "fa fa-download")),
-        ## waiting for this feature in Shiny
-        # tabPanel(tags$a(id = "loadStateNav", href = "", class = "shiny-input-container",
-        #                 type='file', accept='.rmd,.Rmd,.md', list(icon("refresh"), "Refresh"))),
-        # tabPanel(uploadLink("loadState", "Load state"), icon = icon("folder-open")),
-        tabPanel(actionLink("shareState", "Share state", icon = icon("share"))),
-        tabPanel("View state", uiOutput("view_state"), icon = icon("user"))
-      ),
-
-      ## stop app *and* close browser window
-      navbarMenu(
-        "", icon = icon("power-off"),
-        tabPanel(actionLink(
-          "stop_radiant", "Stop", icon = icon("stop"),
-          onclick = "setTimeout(function(){window.close();}, 100); "
-        )),
-        if (rstudioapi::isAvailable()) {
-          tabPanel(actionLink(
-            "stop_radiant_rmd", "Stop & Report", icon = icon("stop"),
-            onclick = "setTimeout(function(){window.close();}, 100); "
-          ))
-        } else {
-          tabPanel("")
-        },
-        tabPanel(tags$a(
-          id = "refresh_radiant", href = "#", class = "action-button",
-          list(icon("refresh"), "Refresh"), onclick = "window.location.reload();"
-        )),
-        ## had to remove class = "action-button" to make this work
-        tabPanel(tags$a(
-          id = "new_session", href = "./", target = "_blank",
-          list(icon("plus"), "New session")
-        ))
-      )
-    )
-)
-
 ## environment to hold session information
 r_sessions <- new.env(parent = emptyenv())
 
@@ -187,20 +165,45 @@ addResourcePath("imgs", file.path(getOption("radiant.path.data"), "app/www/imgs/
 addResourcePath("js", file.path(getOption("radiant.path.data"), "app/www/js/"))
 addResourcePath("www", file.path(getOption("radiant.path.data"), "app/www/"))
 
-options(radiant.mathjax.path = "https://cdn.mathjax.org/mathjax/latest")
+## cdn.mathjax.org has been retired
+## use local MathJax if available
+local_mathjax <- Sys.getenv("RMARKDOWN_MATHJAX_PATH")
+withMathJax <- shiny::withMathJax
+## from https://github.com/rstudio/rmarkdown/blob/master/R/shiny.R
+if (nzchar(local_mathjax)) {
+  addResourcePath("latest", local_mathjax)
+  options(radiant.mathjax.path = "latest")
+  ## override shiny::withMathJax to use local MathJax
+  withMathJax <- function (...)  {
+    path <- "latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
+            ..., tags$script(HTML("if (window.MathJax) MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);")))
+  }
+} else {
+  options(radiant.mathjax.path = "https://mathjax.rstudio.com/latest")
+}
+rm(local_mathjax)
 
-# using mathjax bundeled with Rstudio if available
-# if (Sys.getenv("RMARKDOWN_MATHJAX_PATH") == "") {
-#   options(radiant.mathjax.path = "https://cdn.mathjax.org/mathjax/latest")
-# } else {
-#   options(radiant.mathjax.path = Sys.getenv("RMARKDOWN_MATHJAX_PATH"))
-# }
-
-# withMathJaxR <- function (...)  {
-#   path <- paste0(getOption("radiant.mathjax.path"),"/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
-#   tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
-#           ..., tags$script(HTML("if (window.MathJax) MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);")))
-# }
+get_zip_info <- function() {
+  flags <- "-r9X"
+  zip_util <- Sys.getenv("R_ZIPCMD", "zip")
+  if (Sys.info()["sysname"] == "Windows") {
+    wz <- suppressWarnings(system("where zip", intern = TRUE))
+    if (!grepl("zip", wz)) {
+      wz <- suppressWarnings(system("where 7z", intern = TRUE))
+      if (isTRUE(grepl("7z", wz))) {
+        zip_util <- "7z"
+        flags <- "a"
+      } else {
+        zip_util <- ""
+        flags <- ""
+      }
+    }
+  }
+  options(radiant.zip = c(flags, zip_util))
+}
+get_zip_info()
+rm(get_zip_info)
 
 ## function to generate help, must be in global because used in ui.R
 help_menu <- function(hlp) {
@@ -208,6 +211,7 @@ help_menu <- function(hlp) {
     navbarMenu(
       "", icon = icon("question-circle"),
       tabPanel("Help", uiOutput(hlp), icon = icon("question")),
+      tabPanel(actionLink("help_keyboard", "Keyboard shortcuts", icon = icon("keyboard-o"))),
       tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
       tabPanel("About", uiOutput("help_about"), icon = icon("info")),
       tabPanel(tags$a(
@@ -224,8 +228,8 @@ help_menu <- function(hlp) {
       tags$script(src = "js/returnTextAreaBinding.js"),
       tags$script(src = "js/returnTextInputBinding.js"),
       tags$script(src = "js/video_reset.js"),
-      tags$script(src = "js/message-handler.js"),
       tags$script(src = "js/run_return.js"),
+      # tags$script(src = "js/message-handler.js"),
       # tags$script(src = "js/draggable_modal.js"),
       tags$link(rel = "stylesheet", type = "text/css", href = "www/style.css"),
       tags$link(rel = "shortcut icon", href = "imgs/icon.png")
@@ -255,7 +259,9 @@ options(
       "Pivot" = "data/pivot/",
       "Explore" = "data/explore/",
       "Transform" = "data/transform/",
-      "Combine" = "data/combine/"
+      "Combine" = "data/combine/",
+      "Rmd" = "report/rmd/",
+      "R" = "report/r/"
     )))
 )
 
@@ -293,36 +299,66 @@ if (length(tmp) > 0) {
 options(radiant.versions = paste(radiant.versions, collapse = ", "))
 rm(tmp, radiant.versions)
 
-options(radiant.project_dir = radiant.data::find_project())
-options(radiant.write_dir = ifelse(radiant.data::is_empty(getOption("radiant.project_dir")), "~/", ""))
+if (getOption("radiant.local", FALSE)) {
+  options(radiant.project_dir = radiant.data::find_project(mess = FALSE))
+  options(radiant.write_dir = ifelse(radiant.data::is_empty(getOption("radiant.project_dir")), "~/", ""))
+  if (radiant.data::is_empty(getOption("radiant.launch_dir"))) {
+    if (radiant.data::is_empty(getOption("radiant.project_dir"))) {
+      options(radiant.launch_dir = "~")
+    } else {
+      options(radiant.launch_dir = getOption("radiant.project_dir"))
+    }
+  }
+
+  dbdir <- try(radiant.data::find_dropbox(), silent = TRUE)
+  dbdir <- if (is(dbdir, "try-error")) "" else paste0(dbdir, "/")
+  options(radiant.dropbox_dir = dbdir)
+  rm(dbdir)
+
+  gddir <- try(radiant.data::find_gdrive(), silent = TRUE)
+  gddir <- if (is(gddir, "try-error")) "" else paste0(gddir, "/")
+  options(radiant.gdrive_dir = gddir)
+  rm(gddir)
+}
 
 navbar_proj <- function(navbar) {
-  if (rstudioapi::isAvailable()) {
+  # if (rstudioapi::isAvailable()) {
     ## getting project information
-    pdir <- getOption("radiant.project_dir", "")
+    # pdir <- radiant.data::find_project()
+    pdir <- getOption("radiant.project_dir", default = "")
     proj <- if (radiant.data::is_empty(pdir)) {
-      "Project: (None)" 
+      "Project: (None)"
     } else {
       paste0("Project: ", basename(pdir))
     }
-  } else {
-    proj <- paste0("R ", R.version$major, ".", R.version$minor)
-  }
+  # } else {
+  #   proj <- paste0("R ", R.version$major, ".", R.version$minor)
+  # }
 
   proj <- tags$span(class = "nav navbar-brand navbar-right", proj)
   ## based on: https://stackoverflow.com/a/40755608/1974918
   navbar[[3]][[1]]$children[[1]]$children[[2]] <- htmltools::tagAppendChild(
-    navbar[[3]][[1]]$children[[1]]$children[[2]], 
+    navbar[[3]][[1]]$children[[1]]$children[[2]],
     proj
   )
 
   navbar
 }
 
+## Shiny Ace themes
+## No space in R toolbar right now
+## based on: https://stackoverflow.com/a/6364905/1974918
+# themes <- getAceThemes()
+# names(themes) <- strsplit(themes, "_") %>%
+#   sapply(theme, function(x) paste0(toupper(substring(x, 1, 1)), substr(x, 2, 100L), collapse = " "))
+
 knit_print.data.frame <- function(x, ...) {
-  res <- paste(c("", "", knitr::kable(x)), collapse = "\n")
   # res <- paste(c("", "", rmarkdown::paged_table(x)), collapse = "\n")
-  knitr::asis_output(res)
+  paste(c("", "", knitr::kable(x)), collapse = "\n") %>%
+    knitr::asis_output()
+  # knitr::kable(x, table.attr = "class = 'table table-condensed table-hover'") %>%
+    # paste(c("", "", .), collapse = "\n") %>%
+    # knitr::asis_output()
 }
 
 ## not sure why this doesn't work
@@ -343,3 +379,88 @@ knit_print.data.frame <- function(x, ...) {
 #   )
 #   knitr::asis_output(res)
 # }
+
+options(
+  radiant.nav_ui =
+    list(
+      windowTitle = "Radiant",
+      id = "nav_radiant",
+      inverse = TRUE,
+      collapsible = TRUE,
+      position = "fixed-top",
+      tabPanel("Data", withMathJax(), uiOutput("ui_data"))
+    )
+)
+
+## looking to add state upload option to navbar
+# state_files <- tabPanel(
+#   if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+#     # using a download handler
+#     downloadLink("state_save", "  Save radiant state file", class = "fa fa-save")
+#   } else {
+#     actionLink("state_save", "  Save radiant state file", icon = icon("save"))
+#   }
+# )
+
+# state_files <- 
+#   if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+#     # using a download handler
+#     tabPanel(downloadLink("state_save", "  Save radiant state file", class = "fa fa-save"))
+#   } else {
+#     tabPanel(actionLink("state_save", "  Save radiant state file", icon = icon("save"))),
+#     tabPanel(actionLink("state_load", "  Load radiant state file", icon = icon("open")))
+#   }
+
+## try creating an upload link https://stackoverflow.com/a/11406690/1974918
+
+options(
+  radiant.shared_ui =
+    tagList(
+      navbarMenu("Report",
+        tabPanel("Rmd",
+          uiOutput("rmd_view"),
+          uiOutput("report_rmd"),
+          icon = icon("edit")
+        ),
+        tabPanel("R",
+          uiOutput("r_view"),
+          uiOutput("report_r"),
+          icon = icon("code")
+        )
+      ),
+      navbarMenu("",
+        icon = icon("save"),
+        tabPanel(
+          if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+            # using a download handler
+            downloadLink("state_save", "  Save radiant state file", class = "fa fa-save")
+          } else {
+            actionLink("state_save", "  Save radiant state file", icon = icon("save"))
+          }
+        ),
+        # state_files,
+        # waiting for this feature in Shiny
+        # tabPanel(tags$a(id = "loadStateNav", href = "", class = "shiny-input-container",
+                        # type='file', accept='.rmd,.Rmd,.md', list(icon("refresh"), "Refresh"))),
+        # tabPanel(uploadLink("loadState", "Load state"), icon = icon("folder-open")),
+        tabPanel(actionLink("state_share", "Share state", icon = icon("share"))),
+        tabPanel("View state", uiOutput("state_view"), icon = icon("user"))
+      ),
+
+      ## stop app *and* close browser window
+      navbarMenu("", icon = icon("power-off"),
+        tabPanel(actionLink("stop_radiant", "Stop", icon = icon("stop"),
+          onclick = "setTimeout(function(){window.close();}, 100); "
+        )),
+        tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
+          list(icon("refresh"), "Refresh"), onclick = "window.location.reload();"
+        )),
+        ## had to remove class = "action-button" to make this work
+        tabPanel(tags$a(
+          id = "new_session", href = "./", target = "_blank",
+          list(icon("plus"), "New session")
+        ))
+      )
+      # , navbarMenu("X", tabPanel(actionLink("state_save_extra", "Save", style = "hidden")))
+    )
+)

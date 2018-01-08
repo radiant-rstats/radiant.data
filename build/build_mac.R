@@ -7,3 +7,7 @@ curr <- getwd()
 setwd(path)
 system(paste0("R CMD INSTALL --build ", f))
 setwd(curr)
+
+## https://stackoverflow.com/a/37292839/1974918
+# devtools::build() %>%
+  # install.packages(repos = NULL, type = "source")

@@ -1,3 +1,6 @@
+# library(radiant.data)
+# library(testthat)
+
 context("Radiant functions")
 
 test_that("set_attr", {
@@ -52,14 +55,6 @@ test_that("is_empty", {
   expect_false(is_empty(3))
   expect_true(is_empty(c()))
   expect_true(is_empty("nothing", empty = "nothing"))
-})
-
-test_that("options", {
-  options(width = 10)
-  options(scipen = 0)
-  radiant.data:::.onLoad("", "")
-  expect_equal(getOption("width"), 250)
-  expect_equal(getOption("scipen"), 100)
 })
 
 test_that("select colon", {
