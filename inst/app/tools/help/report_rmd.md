@@ -1,4 +1,4 @@
-> Create a (reproducible) report
+> Create a (reproducible) report using Rmarkdown
 
 The best way to store your work in Radiant is use to use the _Report > Rmd_ feature and save a state file with all your results and settings. The report feature in Radiant should be used in conjunction with the <i title='Report results' class='fa fa-edit'></i> icons shown on the bottom of the (left) side bar on all analysis pages.
 
