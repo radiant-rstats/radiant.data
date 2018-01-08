@@ -31,6 +31,7 @@ pivotr <- function(dataset,
                    nr = NULL,
                    data_filter = "",
                    shiny = FALSE) {
+
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   fill <- if (nvar == "None") 0L else NA
   dat <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
@@ -92,7 +93,7 @@ pivotr <- function(dataset,
     tab <-
       bind_rows(
         mutate_at(ungroup(tab), .vars = cvars, .funs = funs(as.character)),
-        bind_cols(data.frame("Total") %>% setNames(cvars), total %>% set_colnames(nvar))
+        bind_cols(data.frame("Total", stringsAsFactors = FALSE) %>% setNames(cvars), total %>% set_colnames(nvar))
       )
   } else {
     col_total <-
@@ -120,7 +121,7 @@ pivotr <- function(dataset,
         tab,
         bind_cols(
           t(rep("Total", length(cvars[-1]))) %>%
-            as.data.frame() %>%
+            as.data.frame(stringsAsFactors = FALSE) %>%
             setNames(cvars[-1]),
           data.frame(t(col_total[[2]]), stringsAsFactors = FALSE) %>%
             set_colnames(col_total[[1]])
@@ -162,7 +163,7 @@ pivotr <- function(dataset,
   colnames(tab) <- make.names(colnames(tab))
 
   ## filtering the table if desired
-  if (tabfilt != "") {
+  if (!is_empty(tabfilt)) {
     tab <- tab[-nrow(tab), ] %>%
       filterdata(tabfilt) %>%
       bind_rows(tab[nrow(tab), ])
@@ -180,7 +181,8 @@ pivotr <- function(dataset,
     }
   }
 
-  tab <- as.data.frame(tab, as.is = TRUE)
+  # tab <- as.data.frame(tab, as.is = TRUE)
+  tab <- as.data.frame(tab, stringsAsFactors = FALSE)
   attr(tab, "nrow") <- nrow_tab
   if (!is.null(nr)) {
     ind <- if (nr >= nrow(tab)) 1:nrow(tab) else c(1:nr, nrow(tab))
@@ -354,6 +356,11 @@ dtab.pivotr <- function(object,
       selection = "none",
       rownames = FALSE,
       filter = fbox,
+      ## must use fillContainer = FALSE to address
+      ## see https://github.com/rstudio/DT/issues/367
+      ## https://github.com/rstudio/DT/issues/379
+      fillContainer = FALSE,
+      ## only works with client-side processing
       # extension = "KeyTable",
       style = "bootstrap",
       options = list(
@@ -362,6 +369,7 @@ dtab.pivotr <- function(object,
         searchCols = searchCols,
         order = order,
         columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all")),
+        autoWidth = TRUE,
         processing = FALSE,
         pageLength = {
           if (is.null(pageLength)) 10 else pageLength
@@ -371,9 +379,7 @@ dtab.pivotr <- function(object,
       callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
     ) %>%
     DT::formatStyle(., cvars, color = "white", backgroundColor = "grey") %>%
-    {
-      if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .
-    }
+    {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}
 
   ## heat map with red or color_bar
   if (format == "color_bar") {
@@ -416,6 +422,7 @@ dtab.pivotr <- function(object,
 #' @param perc Use percentage on the y-axis
 #' @param flip Flip the axes in a plot (FALSE or TRUE)
 #' @param fillcol Fill color for bar-plot when only one categorical variable has been selected (default is "blue")
+#' @param opacity Opacity for plot elements (0 to 1)
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -433,6 +440,7 @@ plot.pivotr <- function(x,
                         perc = FALSE,
                         flip = FALSE,
                         fillcol = "blue",
+                        opacity = 0.5,
                         ...) {
   object <- x
   rm(x)
@@ -444,7 +452,7 @@ plot.pivotr <- function(x,
 
   if (length(cvars) == 1) {
     p <- ggplot(na.omit(tab), aes_string(x = cvars, y = nvar)) +
-      geom_bar(stat = "identity", position = "dodge", alpha = .7, fill = fillcol)
+      geom_bar(stat = "identity", position = "dodge", alpha = opacity, fill = fillcol)
   } else if (length(cvars) == 2) {
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(setdiff(colnames(.), "Total"))
@@ -458,7 +466,7 @@ plot.pivotr <- function(x,
       na.omit() %>%
       mutate(!!! dots) %>%
       ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
-      geom_bar(stat = "identity", position = type, alpha = .7)
+      geom_bar(stat = "identity", position = type, alpha = opacity)
   } else if (length(cvars) == 3) {
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(setdiff(colnames(.), "Total"))
@@ -472,7 +480,7 @@ plot.pivotr <- function(x,
       na.omit() %>%
       mutate(!!! dots) %>%
       ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
-      geom_bar(stat = "identity", position = type, alpha = .7) +
+      geom_bar(stat = "identity", position = type, alpha = opacity) +
       facet_grid(paste(cvars[3], "~ ."))
   } else {
     ## No plot returned if more than 3 grouping variables are selected

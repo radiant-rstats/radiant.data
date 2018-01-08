@@ -143,7 +143,7 @@ explore <- function(dataset,
   ## sorting the table if desired from R > Report
   if (!identical(tabsort, "")) {
     tabsort <- gsub(",", ";", tabsort)
-    tab %<>% arrange(!!! rlang::parse_exprs(tabsort))
+    tab <- tab %>% arrange(!!! rlang::parse_exprs(tabsort))
   }
 
   ## ensure factors ordered as in the (sorted) table
@@ -164,7 +164,7 @@ explore <- function(dataset,
   tab <- ungroup(tab) %>% mutate_all(funs(check_int))
 
   ## convert to data.frame to maintain attributes
-  tab <- as.data.frame(tab, as.is = TRUE)
+  tab <- as.data.frame(tab, stringsAsFactors = FALSE)
   attr(tab, "nrow") <- nrow_tab
   if (!is.null(nr)) {
     ind <- if (nr > nrow(tab)) 1:nrow(tab) else 1:nr
@@ -339,9 +339,15 @@ dtab.explore <- function(object,
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
   dt_tab <- rounddf(tab, dec) %>%
     DT::datatable(
-      container = sketch, selection = "none",
+      container = sketch, 
+      selection = "none",
       rownames = FALSE,
       filter = fbox,
+      ## must use fillContainer = FALSE to address
+      ## see https://github.com/rstudio/DT/issues/367
+      ## https://github.com/rstudio/DT/issues/379
+      fillContainer = FALSE,
+      ## only works with client-side processing
       # extension = "KeyTable",
       style = "bootstrap",
       options = list(
@@ -350,6 +356,9 @@ dtab.explore <- function(object,
         searchCols = searchCols,
         order = order,
         columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all")),
+        autoWidth = TRUE,
+        # scrollX = FALSE, ## column filter location gets messed up
+        # scrollY = FALSE, ## column filter location gets messed up
         processing = FALSE,
         pageLength = {
           if (is.null(pageLength)) 10 else pageLength

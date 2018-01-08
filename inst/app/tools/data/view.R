@@ -27,11 +27,10 @@ observeEvent(is.null(input$view_vars), {
 output$ui_View <- renderUI({
   tagList(
     wellPanel(
-      checkboxInput("view_pause", "Pause view", state_init("view_pause", FALSE)),
       uiOutput("ui_view_vars"),
       tags$table(
         tags$td(textInput("view_dat", "Store filtered data as:", paste0(input$dataset, "_view"))),
-        tags$td(actionButton("view_store", "Store"), style = "padding-top:30px;")
+        tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success"), style = "padding-top:30px;")
       )
     ),
     help_and_report("View", "view", inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/view.md")) %>% gsub("`", "", .))
@@ -51,7 +50,7 @@ output$dataviewer <- DT::renderDataTable({
   ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
   # if (not_available(input$view_vars)) return()
   req(available(input$view_vars))
-  req(input$view_pause == FALSE, cancelOutput = TRUE)
+  # req(input$view_pause == FALSE, cancelOutput = TRUE)
 
   dat <- select_at(.getdata(), .vars = input$view_vars)
 
@@ -78,6 +77,11 @@ output$dataviewer <- DT::renderDataTable({
       filter = fbox,
       selection = "none",
       rownames = FALSE,
+      ## must use fillContainer = FALSE to address
+      ## see https://github.com/rstudio/DT/issues/367
+      ## https://github.com/rstudio/DT/issues/379
+      fillContainer = FALSE,
+      ## only works with client-side processing
       # extension = "KeyTable",
       escape = FALSE,
       style = "bootstrap",
@@ -97,7 +101,6 @@ output$dataviewer <- DT::renderDataTable({
           list(className = "dt-center", targets = "_all")
         ),
         autoWidth = TRUE,
-        # scrollX = TRUE, ## column filter location gets messed up
         processing = FALSE,
         pageLength = {
           if (is.null(r_state$dataviewer_state$length)) 10 else r_state$dataviewer_state$length
@@ -111,8 +114,6 @@ output$dataviewer <- DT::renderDataTable({
 
 observeEvent(input$view_store, {
   data_filter <- if (input$show_filter) input$data_filter else ""
-  # cmd <- .viewcmd()
-
   getdata(
     input$dataset, vars = input$view_vars, filt = data_filter,
     rows = input$dataviewer_rows_all, na.rm = FALSE
@@ -198,6 +199,7 @@ output$dl_view_tab <- downloadHandler(
 }
 
 observeEvent(input$view_report, {
-  cmd <- paste0("```{r}\n", .viewcmd(), "\n```\n")
-  update_report_fun(cmd)
+  # cmd <- paste0("```{r}\n", .viewcmd(), "\n```\n")
+  # update_report_fun(cmd)
+  update_report(cmd = .viewcmd(), outputs = NULL)
 })
