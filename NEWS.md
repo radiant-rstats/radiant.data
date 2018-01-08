@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data 0.8.9.0
+# CHANGES IN radiant.data 0.9.0
 
 * Show Rstudio project information in navbar if available
 * If Rstudio project is used _R > Report_ and _R > Code_ will use the project directory as base. This allows users to use relative paths and making it easier to share (reproducible) code
@@ -6,12 +6,14 @@
 * `find_project` function based on `rstudioapi`
 * Overflow `pre` and `code` blocks in HTML reports generated in _R > Report_
 * Read rdata files through _Data > Manage_
-* _R > Report_ option to view Editor, Preview, or Both
-* _R > Report_ Read button to generate code to load various types of data (e.g., rda, rds, xls, yaml, feather)
-* _R > Report_ Read button to generate code to load various types of files in report (e.g., jpg, png, md, Rmd, R). If Radiant was started from an Rstudio project, the file paths used will be relative to the project root. Paths to files synced to local Dropbox or Google Drive folder will use the `find_dropbox` and `find_gdrive` functions to enhances reproducibility.
-* _R > Report_ Load Report button can be used to Load Rmarkdown file in the editor. It will also extract the source code from Notebook and HTML filels with embedded Rmarkdown
-* _R > Report_ will read Rmd directly from Rstudio when "To Rmd (Rstudio)" is selected. This will make it possible to use Rstudio Server Pro's _Share project_ option for realtime collaboration in Radiant
-* Long lines of code generated for _R > Report_ will be wrapped to enhance readability 
+* _Report > Rmd_ option to view Editor, Preview, or Both
+* _Report > Rmd_ Read button to generate code to load various types of data (e.g., rda, rds, xls, yaml, feather)
+* _Report > Rmd_ Read button to generate code to load various types of files in report (e.g., jpg, png, md, Rmd, R). If Radiant was started from an Rstudio project, the file paths used will be relative to the project root. Paths to files synced to local Dropbox or Google Drive folder will use the `find_dropbox` and `find_gdrive` functions to enhances reproducibility.
+* _Report > Rmd_ Load Report button can be used to load Rmarkdown file in the editor. It will also extract the source code from Notebook and HTML files with embedded Rmarkdown
+* _Report > Rmd_ will read Rmd directly from Rstudio when "To Rstudio (Rmd)" is selected. This will make it possible to use Rstudio Server Pro's _Share project_ option for realtime collaboration in Radiant
+* Long lines of code generated for _Report > Rmd_ will be wrapped to enhance readability 
+* _Report > R_ is now equivalent to _Report > Rmd_ but in R-code format
+* Enhance keyboard shortcuts
 
 # CHANGES IN radiant.data 0.8.7.8
 

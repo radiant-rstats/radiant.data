@@ -5,4 +5,5 @@ coverage.R
 ^.*\.sublime-project$
 ^\.travis\.yml$
 ^build$
+^tests/testthat/data$
 cran-comments.md

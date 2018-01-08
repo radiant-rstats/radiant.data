@@ -57,7 +57,7 @@ help_switch <- function(help_all, help_str, help_on = TRUE) {
 help_data <- c(
   "Manage" = "manage.md", "View" = "view.md", "Visualize" = "visualize.md",
   "Pivot" = "pivotr.md", "Explore" = "explore.md", "Transform" = "transform.md",
-  "Combine" = "combine.md", "Report" = "report.md", "Code" = "code.md"
+  "Combine" = "combine.md", "Report > Rmd" = "report_rmd.md", "Report > R" = "report_r.md"
 )
 output$help_data <- reactive(append_help("help_data", file.path(getOption("radiant.path.data"), "app/tools/help/")))
 
@@ -85,6 +85,46 @@ output$help_data_ui <- renderUI({
     mainPanel(
       HTML(paste0("<h2>Select help files to show and search</h2><hr>")),
       htmlOutput("help_data")
+    )
+  )
+})
+
+observeEvent(input$help_keyboard, {
+  showModal(
+    modalDialog(
+      title = "Keyboard shortcuts",
+      h4("General"),
+      ## based on https://github.com/swarm-lab/editR/blob/master/inst/app/bits/keyboard.R
+      withTags(
+        table(style = "width: 80%; margin-left: 10%;",
+          tr(class = "border_bottom",
+             td(b("Function")), td(b("Mac")), td(b("Windows & Linux"))),
+          tr(class = "padding_top",
+             td("Save state"), td("Shift-CMD-s"), td("Shift-CTRL-s")),
+          tr(class = "border_bottom padding_bottom",
+             td("Report"), td("ALT-return"), td("ALT-return")),
+          tr(class = "border_bottom padding_bottom",
+             td("Download"), td("CMD-s"), td("CTRL-s")),
+          tr(class = "border_bottom padding_bottom",
+             td("Green button"), td("CMD-return"), td("CTRL-return")),
+          tr(class = "border_bottom padding_bottom",
+             td("Blue button save"), td("CMD-s"), td("CTRL-s")),
+          tr(class = "border_bottom padding_bottom",
+             td("Blue button load"), td("CMD-o"), td("CTRL-o"))
+        )
+      ),
+      # h4("Report"),
+      # withTags(
+      #   table(style = "width: 80%; margin-left: 10%;",
+      #     tr(class = "border_bottom",
+      #        td(b("Function")), td(b("Mac")), td(b("Windows & Linux"))),
+      #     tr(class = "padding_top",
+      #       td("Read files"), td("Shift-CMD-o"), td("Shift-CTRL-o"))
+      #   )
+      # ),
+      footer = modalButton("OK"),
+      size = "s",
+      easyClose = TRUE
     )
   )
 })

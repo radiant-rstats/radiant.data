@@ -1,7 +1,7 @@
 #######################################
 # State menu
 #######################################
-output$view_state <- renderUI({
+output$state_view <- renderUI({
   sidebarLayout(
     sidebarPanel(
       wellPanel(
@@ -33,20 +33,73 @@ output$view_state <- renderUI({
   )
 })
 
-output$saveStateNav <- downloadHandler(
-  filename = function() {
-    if (is.null(r_state$state_name)) {
-      paste0("radiant-state-", Sys.Date(), ".rda")
+state_name <- function(out = paste0("radiant-state-", Sys.Date(), ".rda"), full.name = FALSE) {
+  rsn <- r_state$radiant_state_name
+  ldir <- getOption("radiant.launch_dir", default = "~")
+  pdir <- getOption("radiant.project_dir", default = ldir)
+  ## legacy
+  if (is_empty(rsn)) rsn <- r_state$state_name 
+  if (!is_empty(rsn)) {
+    fn <- rsn 
+  } else {
+    if (!is_empty(pdir)) {
+      # ldir <- basename(ldir)
+      fn <- paste0(basename(pdir), "-state.rda")
+      # r_state$radiant_state_name <<- pdir
+      r_state$radiant_state_name <<- fn
     } else {
-      r_state$state_name
+      fn <- out
     }
-  },
-  content = function(file) {
-    saveState(file)
   }
-)
 
-observeEvent(input$shareState, {
+  ## legacy 
+  if (tools::file_ext(fn) != "rda") {
+    fn <- paste0(fn, ".rda")
+  } 
+  ## legacy 
+  if (!grepl("state", fn)) {
+    fn <- sub("\\.rda$", "-state.rda", fn)
+  } 
+
+  if (full.name) {
+    file.path(pdir, fn)
+  } else {
+    fn
+  }
+}
+if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  output$state_save <- downloadHandler(
+    input$viz_run,
+    filename = function() {
+      state_name()
+    },
+    content = function(file) {
+      saveState(file)
+    }
+  )
+
+  ## need to set suspendWhenHidden to FALSE so that the href for the 
+  ## download handler is set and keyboard shortcuts will work
+  ## see https://shiny.rstudio.com/reference/shiny/0.11/outputOptions.html
+  ## see https://stackoverflow.com/questions/48117501/click-link-in-navbar-menu
+  ## https://stackoverflow.com/questions/3871358/get-all-the-href-attributes-of-a-web-site
+  outputOptions(output, "state_save", suspendWhenHidden = FALSE)
+} else {
+  observeEvent(input$state_save, {
+    path <- rstudioapi::selectFile(
+      caption = "Radiant state file name",
+      path = state_name(full.name = TRUE),
+      filter = "Radiant state file (*.rda)",
+      existing = FALSE
+    )
+    if (!is(path, "try-error") && !is_empty(path)) {
+      r_state$radiant_state_name <<- path 
+      saveState(path)
+    }
+  })
+}
+
+observeEvent(input$state_share, {
   withProgress(message = "Preparing session sharing", value = 1, {
     saveSession(session)
   })

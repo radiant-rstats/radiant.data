@@ -1,0 +1,15 @@
+.table {
+  width: auto;
+}
+
+img {
+  max-width: 85% !important;
+  height: auto;
+}
+
+pre, code, pre code {
+  overflow: auto;
+  white-space: pre;
+  word-wrap: normal;
+  background-color: #ffffff;
+}
