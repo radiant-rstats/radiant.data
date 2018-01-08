@@ -46,6 +46,19 @@ table.dataTable tfoot td, table.dataTable thead td {
   margin-right: 10px;
 }
 
+
+/* trying out https://stackoverflow.com/questions/45062397/make-bootstrap-modal-draggable-and-keep-background-usable/45062993
+#manage_help {
+  position: relative;
+}
+
+.modal-dialog {
+  position: fixed;
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+}*/
+
 .modal-dialog {
   padding-top: 80px;
   padding-left: 80px;
@@ -69,11 +82,15 @@ img {
 
 pre, code, pre code {
   overflow: auto;
-  /*From SO: https://stackoverflow.com/a/37073372/1974918 but doesn't seem to work */
-  /*overflow: scroll !important; */
-  /*-webkit-overflow-scrolling: touch !important;*/
   white-space: pre;
+  /* based on https://stackoverflow.com/a/30338814/1974918*/
+  word-wrap: normal;
   background-color: #ffffff;
+}
+
+#state_save {
+  font-family: FontAwesome, "Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: black;
 }
 
 #data_filter, #tr_transform, #tr_recode, #tr_rename,
@@ -94,7 +111,7 @@ pre, code, pre code {
 }
 
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
-#rmd_report, #rcode_edit {
+#rmd_edit, #r_edit {
   position: absolute;
   top: 100px;
   bottom: 0;
@@ -104,7 +121,7 @@ pre, code, pre code {
 }
 
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
-#rmd_knitted, #rcode_output {
+#rmd_knitted, #r_knitted {
   position: absolute;
   top: 100px;
   bottom: 0;
@@ -114,8 +131,19 @@ pre, code, pre code {
   overflow-y: scroll;
 }
 
+/* Needed in combination with navbarPage with fixed-top */
+/* based on https://stackoverflow.com/a/19231861/1974918 */
+body {
+  padding-top: 55px;
+}
+
 .navbar {
   margin-bottom: 5px;
+  background-color: black;
+  /* ace bg */
+  /*background-color: #002240;*/
+  /* sublime bg */
+  /*background-color: #0f364b;*/
 }
 
 .navbar .nav > li > a {
@@ -125,4 +153,9 @@ pre, code, pre code {
 
 .nav-tabs {
   margin-bottom: 10px;
+}
+
+.btn-file-solitary {
+  /* border radius same as other buttons in shiny */
+  border-radius: 4px !important;
 }
