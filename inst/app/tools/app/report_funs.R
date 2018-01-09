@@ -29,12 +29,17 @@ file_upload_button <- function(inputId, label = "",
   )
 }
 
-esc_slash <- function(x) {
-  # gsub("([^\\])\\\\([^\\\\$])", "\\1\\\\\\\\\\2", x) %>%
-    # fixMS(.)
-  fixMS(x)
+if (Sys.info()["sysname"] == "Windows") {
+  esc_slash <- function(x) {
+    ## gsub("([^\\])\\\\([^\\\\$])", "\\1\\\\\\\\\\2", x) %>%
+    # gsub("\\", "\\\\", x) %>%
+    gsub("\\\\", "\\\\\\\\", x) %>%
+    # encodeString(x) %>%
+      fixMS()
+  }
+} else {
+  esc_slash <- function(x) fixMS(x)
 }
-
 ## Thanks to @timelyportfolio for this comment/fix
 ## https://github.com/timelyportfolio/functionplotR/issues/1#issuecomment-224369431
 ## needed to include deps in saved reports rendered using rmarkdown
@@ -662,6 +667,7 @@ report_save_content <- function(file, type = "rmd") {
 
           # setup_report(report, save_type = save_type, lib = lib) %>%
           setup_report(report, save_type = "Rmd", lib = lib) %>%
+            esc_slash() %>%
             cat(file = "report.Rmd", sep = "\n")
 
           # zip_util <- Sys.getenv("R_ZIPCMD", "zip")
@@ -713,6 +719,7 @@ report_save_content <- function(file, type = "rmd") {
         })
       } else if (save_type == "Rmd") {
         setup_report(report, save_type = "Rmd", lib = lib) %>%
+          esc_slash() %>%
           cat(file = file, sep = "\n")
       } else if (save_type == "R") {
         cat(report, file = file, sep = "\n")
@@ -726,7 +733,7 @@ report_save_content <- function(file, type = "rmd") {
           report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
         }
 
-        init <- setup_report(report, save_type = save_type, lib = lib)
+        init <- setup_report(esc_slash(report), save_type = save_type, lib = lib)
 
         ## on linux ensure you have you have pandoc > 1.14 installed
         ## you may need to use http://pandoc.org/installing.html#installing-from-source
@@ -735,7 +742,7 @@ report_save_content <- function(file, type = "rmd") {
           if (isTRUE(rmarkdown::pandoc_available())) {
             ## have to use current dir so (relative) paths work properly
             tmp_fn <- tempfile(pattern = "report-", tmpdir = ".", fileext = ".Rmd")
-            cat(init, file = tmp_fn, sep = "\n")
+            cat(esc_slash(init), file = tmp_fn, sep = "\n")
             out <- rmarkdown::render(tmp_fn, switch(save_type,
               Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "hide"),
               HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
