@@ -14,8 +14,15 @@ suppressWarnings(
 ## should this be set in global?
 if (is.null(getOption("radiant.launch"))) {
   ## also use Rstudio's file dialog if opening in Window
-  if (exists(".rs.readUiPref") && .rs.readUiPref("shiny_viewer_type") %in% c(2, 3)) {
-    options(radiant.launch = "viewer")
+  if (exists(".rs.readUiPref")) {
+    if (is.null(.rs.readUiPref("shiny_viewer_type"))) {
+      .rs.writeUiPref("shiny_viewer_typ", 2)
+      options(radiant.launch = "viewer")
+    } else if (.rs.readUiPref("shiny_viewer_type") %in% c(2, 3)) {
+      options(radiant.launch = "viewer")
+    } else {
+      options(radiant.launch = "browser")
+    }
   } else {
     options(radiant.launch = "browser")
   }
