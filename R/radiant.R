@@ -1120,8 +1120,8 @@ find_gdrive <- function() {
   } else if (os_type == "Linux") {
     ## http://www.techrepublic.com/article/how-to-mount-your-google-drive-on-linux-with-google-drive-ocamlfuse/
     ## Linux update suggested by Chris Armstrong (https://github.com/chrisarm)
-    fp <- normalizePath("~/google_drive")
-    if (file.exists(file.path(fp, ".grive"))) {
+    # fp <- normalizePath("~/google_drive")
+    if (file.exists(file.path("~/google_drive/.grive"))) {
       return(fp)
     } else {
       stop("Please install grive2 and use '~/google_drive' as your grive directory (http://www.techrepublic.com/article/how-to-sync-your-google-cloud-on-linux-with-grive2/)", call. = FALSE)
