@@ -181,25 +181,23 @@ output$dl_view_tab <- downloadHandler(
   }
 
   ## create the command to filter and sort the data
-  cmd <- paste0(cmd, "### filter and sort the dataset\nr_data[[\"", input$dataset, "\"]] %>%\n\tselect(", vars, ")")
+  cmd <- paste0(cmd, "### filter and sort the dataset\nr_data[[\"", input$dataset, "\"]] %>%\n  select(", vars, ")")
   if (input$show_filter && input$data_filter != "") {
-    cmd <- paste0(cmd, " %>%\n\tfilter(", input$data_filter, ")")
+    cmd <- paste0(cmd, " %>%\n  filter(", input$data_filter, ")")
   }
   if (ts$search != "") {
-    cmd <- paste0(cmd, " %>%\n\tfilter(Search(\"", ts$search, "\", .))")
+    cmd <- paste0(cmd, " %>%\n  filter(Search(\"", ts$search, "\", .))")
   }
   if (ts$tabfilt != "") {
-    cmd <- paste0(cmd, " %>%\n\tfilter(", ts$tabfilt, ")")
+    cmd <- paste0(cmd, " %>%\n  filter(", ts$tabfilt, ")")
   }
   if (ts$tabsort != "") {
-    cmd <- paste0(cmd, " %>%\n\tarrange(", ts$tabsort, ")")
+    cmd <- paste0(cmd, " %>%\n  arrange(", ts$tabsort, ")")
   }
 
-  paste0(cmd, " %>%\n\tstore(\"", dataset, "\", \"", input$dataset, "\")")
+  paste0(cmd, " %>%\n  store(\"", dataset, "\", \"", input$dataset, "\")")
 }
 
 observeEvent(input$view_report, {
-  # cmd <- paste0("```{r}\n", .viewcmd(), "\n```\n")
-  # update_report_fun(cmd)
-  update_report(cmd = .viewcmd(), outputs = NULL)
+  update_report(cmd = .viewcmd(), outputs = NULL, figs = FALSE)
 })
