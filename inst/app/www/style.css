@@ -159,3 +159,10 @@ body {
   /* border radius same as other buttons in shiny */
   border-radius: 4px !important;
 }
+
+/* likely due to bootstrap css, font set to white
+with dark themes against a white background
+see https://github.com/ajaxorg/ace/issues/3071 */
+.ace_replace_form, .ace_search_field, .ace_replacebtn, .ace_searchbtn {
+  color: black;
+}
