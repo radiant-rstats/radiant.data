@@ -13,11 +13,6 @@ pvt_args <- as.list(formals(pivotr))
 
 ## list of function inputs selected by user
 pvt_inputs <- reactive({
-
-  # input$pvt_format
-  # input$pvt_dec
-  # input$pvt_perc
-
   ## loop needed because reactive values don't allow single bracket indexing
   pvt_args$data_filter <- if (input$show_filter) input$data_filter else ""
   pvt_args$dataset <- input$dataset
@@ -93,8 +88,8 @@ output$ui_pvt_nvar <- renderUI({
 
   if (any(vars %in% input$pvt_cvars)) {
     vars <- setdiff(vars, input$pvt_cvars)
-    names(vars) <- varnames() %>% 
-      {.[which(. %in% vars)]} %>% 
+    names(vars) <- varnames() %>%
+      {.[which(. %in% vars)]} %>%
       {c("None", names(.))}
   }
 
@@ -109,7 +104,7 @@ output$ui_pvt_fun <- renderUI({
   req(input$pvt_nvar)
   r_funs <- getOption("radiant.functions")
   selectizeInput(
-    "pvt_fun", 
+    "pvt_fun",
     "Apply function:",
     choices = r_funs,
     selected = state_single("pvt_fun", r_funs, "mean_rm"),
@@ -152,9 +147,7 @@ output$ui_pvt_run <- renderUI({
 observe({
   ## dep on most inputs
   input$data_filter
-  # input$pvt_format
-  # input$pvt_dec
-  # input$pvt_perc
+  input$show_filter
   # dep on most inputs
   sapply(r_drop(names(pvt_args)), function(x) input[[paste0("pvt_", x)]])
 

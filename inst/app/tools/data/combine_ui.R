@@ -7,14 +7,10 @@ cmb_args <- as.list(formals(combinedata))
 ## list of function inputs selected by user
 cmb_inputs <- reactive({
   cmb_args$data_filter <- ifelse(input$show_filter, input$data_filter, "")
-  # cmb_args$dataset <- input$dataset
-  # cmb_args$cmb_dataset <- input$cmb_dataset
-
   cmb_args$x <- input$dataset
   cmb_args$y <- input$cmb_y
 
   ## loop needed because reactive values don't allow single bracket indexing
-  # for (i in r_drop(names(cmb_args), drop = c("dataset", "cmb_dataset", "data_filter")))
   for (i in r_drop(names(cmb_args), drop = c("x", "y", "data_filter"))) {
     cmb_args[[i]] <- input[[paste0("cmb_", i)]]
   }
@@ -23,17 +19,6 @@ cmb_inputs <- reactive({
   if (!grepl("_join", cmb_args$type)) cmb_args$by <- ""
   cmb_args
 })
-
-# output$ui_cmb_dataset <- renderUI({
-#   datasetlist <- r_data$datasetlist
-#   if (length(datasetlist) < 2) return()
-#   # req(length(datasetlist) > 1)
-#   cmb_datasets <- datasetlist[-which(input$dataset == datasetlist)]
-#   selectInput(
-#     inputId = "cmb_dataset", label = "Combine with:",
-#     choices = cmb_datasets, selected = state_init("cmb_dataset"), multiple = FALSE
-#   )
-# })
 
 output$ui_cmb_y <- renderUI({
   datasetlist <- r_data$datasetlist
@@ -46,18 +31,21 @@ output$ui_cmb_y <- renderUI({
   )
 })
 
-
 output$ui_cmb_by <- renderUI({
   req(input$cmb_y)
-  vars1 <- varnames()
-  vars2 <- colnames(r_data[[input$cmb_y]])
-  vars <- intersect(vars1, vars2)
+  x <- varnames()
+  y <- colnames(r_data[[input$cmb_y]])
+  vars <- intersect(x, y)
   if (length(vars) == 0) return()
-  vars <- vars1[vars1 %in% vars] ## need variable labels from varnames()
+  vars <- x[x %in% vars] ## need variable labels from varnames()
   selectInput(
-    "cmb_by", "Join by:", choices = vars,
+    "cmb_by",
+    "Join by:",
+    choices = vars,
     selected = state_multiple("cmb_by", vars, vars),
-    multiple = TRUE, size = min(5, length(vars)), selectize = FALSE
+    multiple = TRUE,
+    size = min(5, length(vars)),
+    selectize = FALSE
   )
 })
 
@@ -65,9 +53,13 @@ output$ui_cmb_add <- renderUI({
   req(input$cmb_y)
   vars <- colnames(r_data[[input$cmb_y]])
   selectInput(
-    "cmb_add", "Variables to add:", choices = vars,
+    "cmb_add",
+    "Variables to add:",
+    choices = vars,
     selected = state_multiple("cmb_add", vars, vars),
-    multiple = TRUE, size = min(5, length(vars)), selectize = FALSE
+    multiple = TRUE,
+    size = min(5, length(vars)),
+    selectize = FALSE
   )
 })
 
@@ -83,13 +75,12 @@ cmb_type <- c(
 output$ui_cmb_store <- renderUI({
   ## updates when dataset changes
   req(input$dataset)
-  # actionButton("cmb_store", "Create table", width = "100%", icon = icon("play"), class = "btn-success")
   actionButton("cmb_store", "Combine", icon = icon("plus"), class = "btn-success")
-  # actionButton("cmb_store", "Combine", icon = icon("plus"), class = "btn-success")
 })
 
 observe({
   input$data_filter
+  input$show_filter
   # dep on most inputs
   sapply(r_drop(names(cmb_args)), function(x) input[[paste0("cmb_", x)]])
 
@@ -104,8 +95,6 @@ observe({
     }
   }
 })
-
-
 
 output$ui_Combine <- renderUI({
   tagList(
@@ -137,8 +126,6 @@ output$ui_Combine <- renderUI({
 
 observeEvent(input$cmb_store, {
   ## combining datasets
-  # dataset <- input$dataset
-  # cmb_y <- input$cmb_y
   result <- try(do.call(combinedata, cmb_inputs()), silent = TRUE)
   if (is(result, "try-error")) {
     r_data[["cmb_error"]] <- attr(result, "condition")$message
@@ -152,8 +139,10 @@ observeEvent(input$cmb_store, {
 observeEvent(input$combine_report, {
   update_report(
     inp_main = clean_args(cmb_inputs(), cmb_args),
-    fun_name = "combinedata", outputs = character(0),
-    pre_cmd = "", figs = FALSE
+    fun_name = "combinedata",
+    outputs = character(0),
+    pre_cmd = "",
+    figs = FALSE
   )
 })
 

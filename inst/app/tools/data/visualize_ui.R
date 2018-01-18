@@ -222,11 +222,11 @@ output$ui_viz_run <- renderUI({
 })
 
 ## class is not passed on
-# updateActionButton <- function(session, inputId, 
-#                                label = NULL, 
-#                                icon = NULL, 
+# updateActionButton <- function(session, inputId,
+#                                label = NULL,
+#                                icon = NULL,
 #                                class = NULL) {
-#     if (!is.null(icon)) 
+#     if (!is.null(icon))
 #         icon <- as.character(shiny:::validateIcon(icon))
 #     message <- shiny:::dropNulls(list(label = label, icon = icon, class = class))
 #     session$sendInputMessage(inputId, message)
@@ -235,15 +235,18 @@ output$ui_viz_run <- renderUI({
 observe({
   ## dep on most inputs
   input$data_filter
+  input$show_filter
+  # viz_args()$data_filter
   # for (i in r_drop(names(viz_args))) {
   #   cat(paste0("viz_", i, " = ", input[[paste0("viz_", i)]]), "\n")
   # }; cat("\n")
   # dep on most inputs
+  # sapply(r_drop(names(viz_args)), function(x) input[[paste0("viz_", x)]])
   sapply(r_drop(names(viz_args)), function(x) input[[paste0("viz_", x)]])
 
   ## tried with .visualize but didn't quite work
   # isolate({
-  #   print(paste0(attr(.visualize, "observable")$.invalidated, " ", 
+  #   print(paste0(attr(.visualize, "observable")$.invalidated, " ",
   #                attr(viz_inputs, "observable")$.invalidated))
   # })
 
@@ -400,7 +403,7 @@ output$visualize <- renderPlot({
 
 # .visualize <- reactive({
 .visualize <- eventReactive(input$viz_run, {
-  
+
    # req(input$viz_pause == FALSE, cancelOutput = TRUE)
   req(input$viz_type)
 
@@ -450,9 +453,7 @@ observeEvent(input$visualize_report, {
   }
 
   inp_main <- clean_args(vi, viz_args)
-  # inp_main[["custom"]] <- FALSE
   inp_main$custom <- FALSE
-  # print(inp_main)
 
   update_report(
     inp_main = inp_main,

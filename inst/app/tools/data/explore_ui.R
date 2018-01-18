@@ -54,8 +54,8 @@ output$ui_expl_byvar <- renderUI({
 
   if (any(vars %in% input$expl_vars)) {
     vars <- setdiff(vars, input$expl_vars)
-    names(vars) <- varnames() %>% 
-      {.[match(vars, .)]} %>% 
+    names(vars) <- varnames() %>%
+      {.[match(vars, .)]} %>%
       names()
   }
 
@@ -124,9 +124,7 @@ output$ui_expl_run <- renderUI({
 observe({
   ## dep on most inputs
   input$data_filter
-  # input$pvt_format
-  # input$pvt_dec
-  # input$pvt_perc
+  input$show_filter
   # dep on most inputs
   sapply(r_drop(names(expl_args)), function(x) input[[paste0("expl_", x)]])
 
