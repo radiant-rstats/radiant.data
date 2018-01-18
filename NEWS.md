@@ -1,3 +1,9 @@
+# CHANGES IN radiant.data 0.9.0.3
+
+* Cleanup now also occurs when the stop button is used in Rstudio to close the app
+* Fix in `read_files` for SQLite data names
+* Known issue: The Rstudio viewer may not always close the viewer window when trying to stop the application with the `Stop` link in the navbar. As a work-around, use Rstudio's stop buttons instead. 
+
 # CHANGES IN radiant.data 0.9.0
 
 * Show Rstudio project information in navbar if available

@@ -439,10 +439,11 @@ read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
       cmd <- paste0(to, " <- yaml::yaml.load_file(", pp$rpath, ")\nregister(\"", pp$objname, "\")") %>%
        paste0("\n", pp$objname, " <- ", "\"\n", paste0(readLines(pp$path), collapse = "\n"),"\n\"")
     } else if (grepl("sqlite", pp$fext)) {
+      obj <- paste0(pp$objname, "_tab1")
       cmd <- "## see https://db.rstudio.com/dplyr/\n" %>%
-        paste0("library(DBI)\ncon <- dbConnect(RSQLite::SQLite(), dbname = ", pp$rpath, ")\ntables <- dbListTables(con)\ntab <- tbl(con, from = tables[1])")
+        paste0("library(DBI)\ncon <- dbConnect(RSQLite::SQLite(), dbname = ", pp$rpath, ")\n(tables <- dbListTables(con))\n", obj, " <- tbl(con, from = tables[1])")
       if (radiant) {
-        cmd <- paste0(cmd, "\n", to, " <- collect(tab)\nregister(\"tab\")")
+        cmd <- paste0(cmd, "\n", sub(pp$objname, obj, to), " <- collect(", obj, ")\nregister(\"", obj, "\")")
       }
     } else if (pp$fext == "sql") {
       cmd <- "## see http://rmarkdown.rstudio.com/authoring_knitr_engines.html\n" %>%
