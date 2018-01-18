@@ -409,7 +409,7 @@ options(
 #   }
 # )
 
-# state_files <- 
+# state_files <-
 #   if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
 #     # using a download handler
 #     tabPanel(downloadLink("state_save", "  Save radiant state file", class = "fa fa-save"))
@@ -459,6 +459,7 @@ options(
         tabPanel(actionLink("stop_radiant", "Stop", icon = icon("stop"),
           onclick = "setTimeout(function(){window.close();}, 100); "
         )),
+        # tabPanel(actionLink("stop_radiant", "Stop", icon = icon("stop"))),
         tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
           list(icon("refresh"), "Refresh"), onclick = "window.location.reload();"
         )),
@@ -468,6 +469,26 @@ options(
           list(icon("plus"), "New session")
         ))
       )
-      # , navbarMenu("X", tabPanel(actionLink("state_save_extra", "Save", style = "hidden")))
     )
 )
+
+## cleanup the global environment if stop button is pressed in Rstudio
+## based on barbara's reply to
+## https://community.rstudio.com/t/rstudio-viewer-window-not-closed-on-shiny-stopapp/4158/7?u=vnijs
+onStop(function() {
+  ## don't run if the stop button was pressed in Radiant
+  if (!exists("r_data")) {
+    unlink("~/r_figures/", recursive = TRUE)
+    clean_up_list <- c(
+      "r_sessions", "help_menu", "make_url_patterns", "import_fs",
+      "init_data", "navbar_proj", "knit_print.data.frame", "withMathJax"
+    )
+    suppressWarnings(
+      suppressMessages(
+        res <- sapply(clean_up_list, function(x) if (exists(x, envir = .GlobalEnv)) rm(list = x, envir = .GlobalEnv))
+      )
+    )
+    message("Stopped Radiant\n")
+    stopApp()
+  }
+})

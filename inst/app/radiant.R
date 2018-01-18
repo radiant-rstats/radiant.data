@@ -7,17 +7,13 @@ toList <- function(x) reactiveValuesToList(x) %>% .[!sapply(., is.null)]
 
 saveSession <- function(session = session) {
   if (!exists("r_sessions")) return()
-  if (exists("r_state") && !is_empty(r_state)) {
-    rs <- r_state
-    rs_input <- toList(input)
-    rs[names(rs_input)] <- rs_input
-  } else {
-    rs <- toList(input)
-  }
+
+  LiveInputs <- toList(input)
+  r_state[names(LiveInputs)] <- LiveInputs
 
   r_sessions[[r_ssuid]] <- list(
     r_data = toList(r_data),
-    r_state = rs,
+    r_state = r_state,
     timestamp = Sys.time()
   )
 
@@ -42,15 +38,12 @@ saveStateOnRefresh <- function(session = session) {
   session$onSessionEnded(function() {
     isolate({
       url_query <- parseQueryString(session$clientData$url_search)
-      if (not_pressed(input$refresh_radiant) && not_pressed(input$stop_radiant) &&
-        is.null(input$state_load) && !"fixed" %in% names(url_query)) {
-        # is.null(input$uploadState) && !"fixed" %in% names(url_query)) {
-
-        # withProgress(message = "Preparing session sharing", value = 1, {
+      if (not_pressed(input$refresh_radiant) &&
+          not_pressed(input$stop_radiant) &&
+          is.null(input$state_load) &&
+          !"fixed" %in% names(url_query)) {
         saveSession(session)
-        # })
       } else {
-        # if (is.null(input$uploadState)) {
         if (is.null(input$state_load)) {
           if (exists("r_sessions")) {
             sshhr(try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE))
@@ -69,8 +62,8 @@ saveStateOnRefresh <- function(session = session) {
 ## get active dataset and apply data-filter if available
 .getdata <- reactive({
   req(input$dataset)
-  selcom <- input$data_filter %>% 
-    gsub("\\n", "", .) %>% 
+  selcom <- input$data_filter %>%
+    gsub("\\n", "", .) %>%
     gsub("\"", "\'", .) %>%
     fixMS()
   if (is_empty(selcom) || input$show_filter == FALSE) {
@@ -78,9 +71,9 @@ saveStateOnRefresh <- function(session = session) {
   } else if (grepl("([^=!<>])=([^=])", selcom)) {
     isolate(r_data$filter_error <- "Invalid filter: Never use = in a filter! Use == instead (e.g., city == 'San Diego'). Update or remove the expression")
   } else {
-    ## %>% need here so . will be available
+    ## %>% needed here so . will be available
     seldat <- try(
-      r_data[[input$dataset]] %>% filter(!! rlang::parse_expr(selcom)), 
+      r_data[[input$dataset]] %>% filter(!! rlang::parse_expr(selcom)),
       silent = TRUE
     )
     if (is(seldat, "try-error")) {
@@ -270,8 +263,8 @@ returnTextAreaInput <- function(inputId,
       placeholder = placeholder,
       resize = resize,
       autocomplete = "off",
-      autocorrect = "off", 
-      autocapitalize = "off", 
+      autocorrect = "off",
+      autocapitalize = "off",
       spellcheck = "false",
       class = "returnTextArea form-control"
     )
@@ -287,30 +280,30 @@ returnTextAreaInput <- function(inputId,
 }
 
 ## using a custom version of textInput to avoid browser "smartness"
-textInput <- function (inputId, label, 
-                       value = "", 
-                       width = NULL, 
-                       placeholder = NULL, 
-                       autocomplete = "off", 
-                       autocorrect = "off", 
-                       autocapitalize = "off", 
+textInput <- function (inputId, label,
+                       value = "",
+                       width = NULL,
+                       placeholder = NULL,
+                       autocomplete = "off",
+                       autocorrect = "off",
+                       autocapitalize = "off",
                        spellcheck = "false",
                        ...) {
 
   value <- restoreInput(id = inputId, default = value)
   div(
-    class = "form-group shiny-input-container", 
+    class = "form-group shiny-input-container",
     style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
-    label %AND% tags$label(label, `for` = inputId), 
+    label %AND% tags$label(label, `for` = inputId),
     tags$input(
-      id = inputId, 
-      type = "text", 
-      class = "form-control", 
-      value = value, 
+      id = inputId,
+      type = "text",
+      class = "form-control",
+      value = value,
       placeholder = placeholder,
-      autocomplete = autocomplete, 
-      autocorrect = autocorrect, 
-      autocapitalize = autocapitalize, 
+      autocomplete = autocomplete,
+      autocorrect = autocorrect,
+      autocapitalize = autocapitalize,
       spellcheck = spellcheck,
       ...
     )
@@ -318,46 +311,46 @@ textInput <- function (inputId, label,
 }
 
 ## using a custom version of textAreaInput to avoid browser "smartness"
-textAreaInput <- function(inputId, label, 
-                          value = "", 
-                          width = NULL, 
-                          height = NULL, 
-                          cols = NULL, 
-                          rows = NULL, 
-                          placeholder = NULL, 
+textAreaInput <- function(inputId, label,
+                          value = "",
+                          width = NULL,
+                          height = NULL,
+                          cols = NULL,
+                          rows = NULL,
+                          placeholder = NULL,
                           resize = NULL,
-                          autocomplete = "off", 
-                          autocorrect = "off", 
-                          autocapitalize = "off", 
+                          autocomplete = "off",
+                          autocorrect = "off",
+                          autocapitalize = "off",
                           spellcheck = "true",
                           ...) {
 
   value <- restoreInput(id = inputId, default = value)
   if (!is.null(resize)) {
     resize <- match.arg(
-      resize, 
+      resize,
       c("both", "none", "vertical", "horizontal")
     )
   }
-  style <- paste(if (!is.null(width)) 
-      paste0("width: ", validateCssUnit(width), ";"), if (!is.null(height)) 
-      paste0("height: ", validateCssUnit(height), ";"), if (!is.null(resize)) 
+  style <- paste(if (!is.null(width))
+      paste0("width: ", validateCssUnit(width), ";"), if (!is.null(height))
+      paste0("height: ", validateCssUnit(height), ";"), if (!is.null(resize))
       paste0("resize: ", resize, ";"))
-  if (length(style) == 0) 
+  if (length(style) == 0)
       style <- NULL
   div(
-    class = "form-group shiny-input-container", 
-    label %AND% tags$label(label, `for` = inputId), 
+    class = "form-group shiny-input-container",
+    label %AND% tags$label(label, `for` = inputId),
     tags$textarea(
-      id = inputId, 
-      class = "form-control", 
-      placeholder = placeholder, 
-      style = style, 
-      rows = rows, 
-      cols = cols, 
-      autocomplete = autocomplete, 
-      autocorrect = autocorrect, 
-      autocapitalize = autocapitalize, 
+      id = inputId,
+      class = "form-control",
+      placeholder = placeholder,
+      style = style,
+      rows = rows,
+      cols = cols,
+      autocomplete = autocomplete,
+      autocorrect = autocorrect,
+      autocapitalize = autocapitalize,
       spellcheck = spellcheck,
       ...,
       value
@@ -381,8 +374,8 @@ returnTextInput <- function(inputId,
       value = value,
       placeholder = placeholder,
       autocomplete = "off",
-      autocorrect = "off", 
-      autocapitalize = "off", 
+      autocorrect = "off",
+      autocapitalize = "off",
       spellcheck = "false",
       class = "returnTextInput form-control"
     )
