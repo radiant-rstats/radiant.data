@@ -72,7 +72,7 @@ Year  |  Outcome  |  Prior probability
 Note that the columns are left-aligned, right-aligned, and centered using a `:`. Alternatively you can create a `tibble` with the information to be put in the table and use `knitr`'s `kable` function to generate the desired output. See example below:
 
 ```{r}
-tbl <- tibble(
+tbl <- tibble::tibble(
   Year = c(2013, 2014, 2015),
   Outcome = c(\"Win\", \"Loss\", \"Win\"),
   `Prior probability` = c(0.30, 0.25, 0.20)
@@ -660,16 +660,13 @@ observeEvent(input$rmd_load, {
 
 observeEvent(input$rmd_read_files, {
   cmd <- read_files(type = "rmd")
-  # if (!is_empty(cmd)) update_report_fun(cmd, type = "rmd")
   if (!is_empty(cmd)) {
     update_report_fun(cmd, type = "rmd", read_files = TRUE)
   }
 })
 
 observeEvent(input$rmd_edit, {
-  # if (input$rmd_edit != rmd_example) {
   if (!identical(input$rmd_edit, rmd_example)) {
     r_state$rmd_edit <<- esc_slash(input$rmd_edit)
   }
 })
-

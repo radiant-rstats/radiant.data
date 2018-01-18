@@ -15,7 +15,6 @@ file_upload_button <- function(inputId, label = "",
     label <-  paste0("</br><label>", label, "</label></br>")
   }
 
-  # fileInput("rmd_load", "", multiple = FALSE, accept = c(".Rmd", ".rmd", ".md", ".html"))
   HTML(
     paste0(label, "
       <label class='input-group-btn'>
@@ -80,8 +79,8 @@ rstudio_context <- function(type = "rmd") {
     ## path will be empty of new file hasn't been save yet
     list(path = "", rpath = "", base = "", base_name = "", ext = "", content = "")
   } else {
-    path <- normalizePath(path, winslash = "/") 
-    pdir <- getOption("radiant.project_dir", default = "") 
+    path <- normalizePath(path, winslash = "/")
+    pdir <- getOption("radiant.project_dir", default = "")
 
     sel <- rse$selection[[1]][["text"]]
     if (is_empty(sel)) {
@@ -92,18 +91,18 @@ rstudio_context <- function(type = "rmd") {
 
     base <- basename(path)
     # ext <- tools::file_ext(path)
-    base_name <- sub(paste0(".", ext), "", base) 
+    base_name <- sub(paste0(".", ext), "", base)
 
     rpath <- if (is_empty(pdir)) {
-      path 
+      path
     } else {
       sub(paste0(pdir, "/"), "", path)
     }
 
     list(
-      path = path, 
+      path = path,
       rpath = rpath,
-      base = base, 
+      base = base,
       base_name = sub(paste0(".", ext, "$"), "", base),
       ext = tolower(ext),
       content = content
@@ -122,10 +121,10 @@ cleanout <- . %>%
   gsub("DiagrammeR::renderDiagrammeR", "", .) %>% ## leave for legacy reasons
   gsub("DT::renderDataTable", "", .) ## leave for legacy reasons
 
-setup_report <- function(report, ech, 
-                         add_yml = TRUE, 
-                         type = "rmd", 
-                         save_type = "Notebook", 
+setup_report <- function(report, ech,
+                         add_yml = TRUE,
+                         type = "rmd",
+                         save_type = "Notebook",
                          lib = "radiant") {
 
   # report <- gsub("\\\\\\\\", "\\\\", report) %>%
@@ -142,7 +141,7 @@ setup_report <- function(report, ech,
 
   ## screenshot option
   sopts <- if (save_type == "PDF") {
-    ", screenshot.opts = list(vheight = 1200)" 
+    ", screenshot.opts = list(vheight = 1200)"
   } else {
     ""
   }
@@ -200,7 +199,7 @@ if (!exists(\"r_environment\")) library(", lib, ")
 
 ## load data (add path)
 # r_data <- readr::read_rds(\"r_data.rds\")
-```\n\n
+```
 
 ```{css, echo = FALSE}
 .table {
@@ -279,7 +278,7 @@ knit_it <- function(report, type = "rmd") {
     ## replacing \\ at the end of a line by \\\\ so multi-line equations work
     report <- gsub("\\\\\\\\\\s*\n", "\\\\\\\\\\\\\\\\\n", report)
     ## goal: only replace \\ when between $...$ ... but doesn't work yet
-    # report <- gsub("(\\${1,2}[^$\\]*)\\\\\\\\\\s*\n[^$\\]*.\\${1,2})", 
+    # report <- gsub("(\\${1,2}[^$\\]*)\\\\\\\\\\s*\n[^$\\]*.\\${1,2})",
     #                "\\1\\\\\\\\\\\\\\\\\n\\2", report)
 
     ## possibly useful
@@ -321,7 +320,7 @@ knit_it <- function(report, type = "rmd") {
 
   if (!grepl("```{r r_setup, include = FALSE}\n", report, fixed = TRUE)) {
     report <- paste0("```{r knit_it_setup, include = FALSE}\noptions(width = 250, scipen = 100, max.print = 5000, stringsAsFactors = FALSE)\n```\n\n", report)
-  } 
+  }
 
   ## convert to md
   md <- knitr::knit(
@@ -338,7 +337,7 @@ knit_it <- function(report, type = "rmd") {
   ) %>%
   gsub("<table>", "<table class='table table-condensed table-hover'>", .) %>%
   ## makes plots full height of screen (i.e., WAY too big)
-  # gsub("style=\"width:100%; height:400px; \" class=\"plotly html-widget", 
+  # gsub("style=\"width:100%; height:400px; \" class=\"plotly html-widget",
        # "style=\"width:100%; height:100%; \" class=\"plotly html-widget", ., fixed = TRUE) %>%
   scrub() %>%
   HTML()
@@ -484,9 +483,9 @@ read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
 # flist <- list.files("./tests/testthat/data", include.dirs = FALSE, full.names = TRUE)
 
 ## as in radiant
-# rmd <- sapply(flist, read_files, radiant = TRUE) %>% 
+# rmd <- sapply(flist, read_files, radiant = TRUE) %>%
   # paste0("```{r}\nhead(r_data[[tail(names(r_data), 1)]])\n```", .) %>%
-# rmd <- sapply(flist, read_files, radiant = FALSE) %>% 
+# rmd <- sapply(flist, read_files, radiant = FALSE) %>%
 #   paste0(collapse = "\n") %>%
 #   paste0("```{r}\nlibrary(radiant.data)\n```\n", .) %T>%
 #   cat() %>%
@@ -503,7 +502,7 @@ report_name <- function(type = "rmd", out = "report", full.name = FALSE) {
 
   ldir <- getOption("radiant.launch_dir", default = "~")
   pdir <- getOption("radiant.project_dir", default = ldir)
-  
+
   ## generate report name based on state or project name
   # if (input$rmd_generate %in% rmd_set_rstudio) {
   if (input[[paste0(type, "_generate")]] %in% c("To Rmd", "To R")) {
@@ -526,7 +525,7 @@ report_name <- function(type = "rmd", out = "report", full.name = FALSE) {
 
     fn <- sans_ext(fn) %>%
       sub("-state", paste0("-", out), .)
-      
+
     r_state[[paste0("radiant_", type, "_name")]] <<-
       paste(fn, sep = ".", switch(
         type,
@@ -534,7 +533,7 @@ report_name <- function(type = "rmd", out = "report", full.name = FALSE) {
         r = "R"
       ))
   } else {
-    fn <- basename(fn) %>% 
+    fn <- basename(fn) %>%
       sans_ext()
       # tools::file_path_sans_ext()
     # fn <- tools::file_path_sans_ext(fn)
@@ -581,14 +580,14 @@ report_save_filename <- function(type = "rmd", full.name = TRUE) {
   fn <- sans_ext(fn)
 
   paste(fn, sep = ".", switch(
-    input[[paste0(type, "_save_type")]], 
-    Notebook = "nb.html", 
-    HTML = "html", 
-    PDF = "pdf", 
-    Word = "docx", 
-    Rmd = "Rmd", 
+    input[[paste0(type, "_save_type")]],
+    Notebook = "nb.html",
+    HTML = "html",
+    PDF = "pdf",
+    Word = "docx",
+    Rmd = "Rmd",
     `Rmd + Data (zip)` = "zip",
-    R = "R", 
+    R = "R",
     `R + Data (zip)` = "zip"
   ))
 }
@@ -684,7 +683,7 @@ report_save_content <- function(file, type = "rmd") {
           #   }
           # }
           # zip(file, c("report.Rmd", "r_data.rds"), flags = flags, zip = zip_util)
-          zip(file, c("report.Rmd", "r_data.rds"), 
+          zip(file, c("report.Rmd", "r_data.rds"),
             flags = zip_info[1], zip = zip_info[2]
           )
           setwd(currdir)
@@ -712,7 +711,7 @@ report_save_content <- function(file, type = "rmd") {
           #   }
           # }
           # zip(file, c("report.R", "r_data.rds"), flags = flags, zip = zip_util)
-          zip(file, c("report.R", "r_data.rds"), 
+          zip(file, c("report.R", "r_data.rds"),
             flags = zip_info[1], zip = zip_info[2]
           )
           setwd(currdir)
@@ -752,9 +751,9 @@ report_save_content <- function(file, type = "rmd") {
             file.rename(out, file)
             file.remove(tmp_fn)
           } else {
-            ## still needed because rmarkdown requires pandoc 
+            ## still needed because rmarkdown requires pandoc
             setup_report(report, add_yml = FALSE, type = save_type, lib = lib) %>%
-              knit_it_save() %>% 
+              knit_it_save() %>%
               cat(file = file, sep = "\n")
           }
         })
@@ -785,8 +784,8 @@ update_report <- function(inp_main = "",
   if (missing(wrap)) {
     lng <- nchar(pre_cmd) + nchar(fun_name) + nchar(post_cmd) + 2
     if (!is_empty(inp_main)) {
-      lng <- lng + sum(nchar(inp_main)) + 
-        sum(nchar(names(inp_main))) + 
+      lng <- lng + sum(nchar(inp_main)) +
+        sum(nchar(names(inp_main))) +
         length(inp_main) * 5 - 1
     }
     wrap <- ifelse(lng > 75, TRUE, FALSE)
@@ -799,7 +798,7 @@ update_report <- function(inp_main = "",
         tmp <- x[[i]]
         wco <- ifelse(max(nchar(tmp)) > 20, 20L, 55L)
         tmp <- deparse(tmp, control = "keepNA", width.cutoff = wco)
-        if ((nchar(i) + sum(nchar(tmp)) < 70) | (length(tmp) == 2 & tmp[2] == ")")) { 
+        if ((nchar(i) + sum(nchar(tmp)) < 70) | (length(tmp) == 2 & tmp[2] == ")")) {
           tmp <- paste0(tmp, collapse = "")
         }
         if (length(tmp) > 1) {
@@ -822,25 +821,25 @@ update_report <- function(inp_main = "",
 
   ## testing depr
   # library(radiant)
-  # x <- list(const = c("q 535", "cost 2", "salvage .5", "price 5"), 
-  #           norm = "E 0 144.571;", 
-  #           form = c("D = 928.313 - 78.607 * price + E", "prof = -cost*q + price * pmin(q, D) + salvage * pmax(0, q - D)"), 
-  #           seed = 1234, 
+  # x <- list(const = c("q 535", "cost 2", "salvage .5", "price 5"),
+  #           norm = "E 0 144.571;",
+  #           form = c("D = 928.313 - 78.607 * price + E", "prof = -cost*q + price * pmin(q, D) + salvage * pmax(0, q - D)"),
+  #           seed = 1234,
   #           name = "simdat")
   # x <- list(
-  #   nr = 5, 
-  #   vars = c("incidental", "A3403", "A3402", "B757"), 
-  #   sum_vars = c("total", "RCNC1", "RCNC1_prof", "RCNC2", "CTC", "HIC", "HIC_prof"), 
+  #   nr = 5,
+  #   vars = c("incidental", "A3403", "A3402", "B757"),
+  #   sum_vars = c("total", "RCNC1", "RCNC1_prof", "RCNC2", "CTC", "HIC", "HIC_prof"),
   #   form = c(
-  #     "## RCNC1_net = RCNC1 - .2 * pmax(RCNC1 - .1*total - .9*total, 0)", 
-  #     "RCNC1_net = RCNC1 - 0.2 * pmax(RCNC1_prof, 0)", 
-  #     "## HIC_net = HIC - .035 * pmax(HIC - total, 0)", 
-  #     "HIC_net = HIC - .035 * pmax(HIC_prof, 0)", 
-  #     "HIC_MIN_CTC = HIC_net - CTC", 
+  #     "## RCNC1_net = RCNC1 - .2 * pmax(RCNC1 - .1*total - .9*total, 0)",
+  #     "RCNC1_net = RCNC1 - 0.2 * pmax(RCNC1_prof, 0)",
+  #     "## HIC_net = HIC - .035 * pmax(HIC - total, 0)",
+  #     "HIC_net = HIC - .035 * pmax(HIC_prof, 0)",
+  #     "HIC_MIN_CTC = HIC_net - CTC",
   #     "HIC_LT_CTC = HIC_net < CTC"
-  #   ), 
-  #   seed = 1234, 
-  #   name = "repdat", 
+  #   ),
+  #   seed = 1234,
+  #   name = "repdat",
   #   sim = "simdat"
   # )
 

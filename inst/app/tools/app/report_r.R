@@ -536,17 +536,6 @@ observeEvent(input$r_load, {
   }
 })
 
-# observeEvent(input$r_read_files, {
-#   cmd <- read_files("r")
-#   if (!is_empty(cmd)) {
-#     shinyAce::updateAceEditor(
-#       session,
-#       "r_edit",
-#       value = paste0(input$r_edit, "\n", cmd)
-#     )
-#   }
-# })
-
 observeEvent(input$r_read_files, {
   cmd <- read_files(type = "r")
   if (!is_empty(cmd)) {
@@ -555,7 +544,6 @@ observeEvent(input$r_read_files, {
 })
 
 observeEvent(input$r_edit, {
-  # if (input$rmd_edit != rmd_example) {
   if (!identical(input$r_edit, r_example)) {
     r_state$r_edit <<- esc_slash(input$r_edit)
   }
