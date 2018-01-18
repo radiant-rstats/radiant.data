@@ -484,9 +484,10 @@ onStop(function() {
       "init_data", "navbar_proj", "knit_print.data.frame", "withMathJax"
     )
     suppressWarnings(
-      suppressMessages(
-        res <- sapply(clean_up_list, function(x) if (exists(x, envir = .GlobalEnv)) rm(list = x, envir = .GlobalEnv))
-      )
+      suppressMessages({
+        res <- try(sapply(clean_up_list, function(x) if (exists(x, envir = .GlobalEnv)) rm(list = x, envir = .GlobalEnv)), silent = TRUE)
+        rm(res)
+      })
     )
     message("Stopped Radiant\n")
     stopApp()
