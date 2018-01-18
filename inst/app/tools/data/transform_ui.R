@@ -108,13 +108,13 @@ output$ui_tr_log <- renderUI({
   tagList(
     HTML("<label>Transform command log:</label><br>"),
     tags$textarea(
-      state_init("tr_log", ""), 
-      id = "tr_log", 
-      type = "text", 
-      rows = 5, 
+      state_init("tr_log", ""),
+      id = "tr_log",
+      type = "text",
+      rows = 5,
       autocomplete = "off",
-      autocorrect = "off", 
-      autocapitalize = "off", 
+      autocorrect = "off",
+      autocapitalize = "off",
       spellcheck = "false",
       class = "form-control"
     )
@@ -450,7 +450,7 @@ observeEvent(input$tr_change_type, {
                     byvar = "",
                     store_dat = "",
                     store = TRUE) {
-  
+
   if (!store || !is.character(dataset)) {
     cmd <- gsub("\\s+", "", cmd)
 
@@ -497,7 +497,7 @@ observeEvent(input$tr_change_type, {
     if (is_empty(byvar)) {
       paste0("## create new variable(s)\nr_data[[\"", store_dat, "\"]] <- mutate(r_data[[\"", dataset, "\"]], ", cmd, ")\n")
     } else {
-      paste0("## create new variable(s)\nr_data[[\"", store_dat, "\"]] <- group_by(r_data[[\"", dataset, "\"]], ", paste0(byvar, collapse = ", "), ") %>% mutate(", cmd, ") %>% ungroup\n")
+      paste0("## create new variable(s)\nr_data[[\"", store_dat, "\"]] <- group_by(r_data[[\"", dataset, "\"]], ", paste0(byvar, collapse = ", "), ") %>%\n  mutate(", cmd, ") %>%\n  ungroup\n")
     }
   }
 }
@@ -1233,19 +1233,11 @@ observeEvent(input$tr_change_type, {
 
 observeEvent(input$transform_report, {
   if (!is_empty(input$tr_log)) {
-    # cmd <- paste0("```{r}\n", input$tr_log, "\n```\n") %>%
-    #   gsub("\n{2,}", "\n", .) %>%
-    #   gsub("[^{r}]\n{1}## ", "\n\n## ", .)
-
-    # updateTextInput(session, "tr_log", value = "")
-    # update_report_fun(cmd)
-
     cmd <- gsub("\n{2,}", "\n", input$tr_log) %>%
       sub("^\n", "", .) %>%
       sub("\n$", "", .)
-      # gsub("[^{r}]\n{1}## ", "\n\n## ", .)
 
     updateTextInput(session, "tr_log", value = "")
-    update_report(cmd = cmd, outputs = NULL)
+    update_report(cmd = cmd, outputs = NULL, figs = FALSE)
   }
 })
