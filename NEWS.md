@@ -1,8 +1,11 @@
-# CHANGES IN radiant.data 0.9.0.3
+# CHANGES IN radiant.data 0.9.0.4
 
+* Focus on editor when switching to _Report > Rmd_ or _Report > R_ so generated code is shown immediately and the user can navigate and type in the editor without having to click first
 * Cleanup now also occurs when the stop button is used in Rstudio to close the app
 * Fix in `read_files` for SQLite data names
+* De-activate spellcheck autocorrection in `selectizeInput` in Rstudio Viewer [shiny #1916](https://github.com/rstudio/shiny/issues/1916)
 * Known issue: The Rstudio viewer may not always close the viewer window when trying to stop the application with the `Stop` link in the navbar. As a work-around, use Rstudio's stop buttons instead. 
+
 
 # CHANGES IN radiant.data 0.9.0
 

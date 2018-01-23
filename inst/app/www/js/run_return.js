@@ -66,10 +66,51 @@ $(document).keydown(function(event) {
       $("#tr_paste").focus();
     } else if ($('#tr_change_type').selectize()[0].selectize.getValue() === "create") {
       $("#tr_create").focus();
-
     }
-  }
+  } else if($("#rmd_knit").is(":visible") &&
+            // $("#rmd_knitted").is(":focus") === false,
+            $(".ace_text-input").is(":focus") === false &&
+            $(".ace_search_form").is(":visible") === false) { 
+    $(".ace_text-input").focus();
+  } else if($("#r_knit").is(":visible") &&
+            // $("#r_knitted").is(":focus") === false,
+            $(".ace_text-input").is(":focus") === false &&
+            $(".ace_search_form").is(":visible") === false) {
+    $(".ace_text-input").focus();
+  } 
+
+  // needed to address https://github.com/rstudio/shiny/issues/1916
+  $("input:text").attr("spellcheck", "false")
 });
+
+// https://stackoverflow.com/questions/20247945/bootstrap-3-navbar-dynamic-collapse
+// https://stackoverflow.com/questions/18192082/bootstrap-3-navbar-collapse
+// https://stackoverflow.com/questions/19827605/change-bootstrap-navbar-collapse-breakpoint-without-using-less
+
+// function autocolllapse() {
+//   var width_full = $('.navbar-collapse').innerWidth();
+//   var width_left = $('.navbar-nav').outerWidth(true);
+//   var width_right = $('.navbar-right').outerWidth(true);
+//   if (width_full - (width_left + width_right) < 0) {
+//       // trigger collapse, you have to figure out what css changes
+//       // exactly are needed, for example:
+//       $('.navbar-toggle').css('display', 'inline');
+//   }
+// };
+
+// $(document).on('ready', autocolllapse);
+// $(window).on('resize', autocolllapse);
+
+// function autocollapse() {
+//     var navbar = $('.navbar');
+//     navbar.removeClass('collapsed');  // set standart view
+//     if(navbar.innerHeight() > 75) {   // check if we've got 2 lines
+//       navbar.addClass('collapsed');   // force collapse mode
+//     }
+// }
+
+// $(document).on('ready', autocollapse);
+// $(window).on('resize', autocollapse);
 
 // } else if ($("#show_filter").is(":focus") &&
 // document.getElementById('show_filter').checked === true) {
