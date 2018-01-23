@@ -486,7 +486,8 @@ observeEvent(input$tr_change_type, {
     if (is(nvar, "try-error")) {
       paste0(" **\nThe create command was not valid. The command entered was:\n\n", cmd, "\n\nThe error message was:\n\n", attr(nvar, "condition")$message, "\n\nPlease try again. Examples are shown in the help file\n**")
     } else {
-      select_at(nvar, .vars = vars) %>% ungroup()
+      select_at(nvar, .vars = vars) %>% 
+        ungroup()
     }
   } else {
     if (store_dat == "") store_dat <- dataset
@@ -497,7 +498,7 @@ observeEvent(input$tr_change_type, {
     if (is_empty(byvar)) {
       paste0("## create new variable(s)\nr_data[[\"", store_dat, "\"]] <- mutate(r_data[[\"", dataset, "\"]], ", cmd, ")\n")
     } else {
-      paste0("## create new variable(s)\nr_data[[\"", store_dat, "\"]] <- group_by(r_data[[\"", dataset, "\"]], ", paste0(byvar, collapse = ", "), ") %>%\n  mutate(", cmd, ") %>%\n  ungroup\n")
+      paste0("## create new variable(s)\nr_data[[\"", store_dat, "\"]] <- group_by(r_data[[\"", dataset, "\"]], ", paste0(byvar, collapse = ", "), ") %>%\n  mutate(", cmd, ") %>%\n  ungroup()\n")
     }
   }
 }

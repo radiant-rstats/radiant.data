@@ -78,7 +78,10 @@ output$ui_pvt_cvars <- renderUI({
     "pvt_cvars", label = "Categorical variables:", choices = vars,
     selected = state_multiple("pvt_cvars", vars),
     multiple = TRUE,
-    options = list(placeholder = "Select categorical variables", plugins = list("remove_button", "drag_drop"))
+    options = list(
+      placeholder = "Select categorical variables", 
+      plugins = list("remove_button", "drag_drop")
+    )
   )
 })
 

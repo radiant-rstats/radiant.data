@@ -329,19 +329,12 @@ if (getOption("radiant.local", FALSE)) {
 }
 
 navbar_proj <- function(navbar) {
-  # if (rstudioapi::isAvailable()) {
-    ## getting project information
-    # pdir <- radiant.data::find_project()
-    pdir <- getOption("radiant.project_dir", default = "")
-    proj <- if (radiant.data::is_empty(pdir)) {
-      "Project: (None)"
-    } else {
-      paste0("Project: ", basename(pdir))
-    }
-  # } else {
-  #   proj <- paste0("R ", R.version$major, ".", R.version$minor)
-  # }
-
+  pdir <- getOption("radiant.project_dir", default = "")
+  proj <- if (radiant.data::is_empty(pdir)) {
+    "Project: (None)"
+  } else {
+    paste0("Project: ", basename(pdir))
+  }
   proj <- tags$span(class = "nav navbar-brand navbar-right", proj)
   ## based on: https://stackoverflow.com/a/40755608/1974918
   navbar[[3]][[1]]$children[[1]]$children[[2]] <- htmltools::tagAppendChild(
