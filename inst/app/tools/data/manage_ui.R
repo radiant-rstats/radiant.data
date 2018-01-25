@@ -537,7 +537,7 @@ saveState <- function(filename) {
 
   #   showModal(
   #     modalDialog(
-  #       title = "R > Report",
+  #       title = "Report > Rmd",
   #       span(
   #         paste0("Do you want to sync the Rmd file content with the report in Radiant before you save the state file?
   #       ),

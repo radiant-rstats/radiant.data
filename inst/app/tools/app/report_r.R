@@ -377,17 +377,13 @@ output$r_knitted <- renderUI({
   isolate({
     if (!isTRUE(getOption("radiant.report"))) {
       HTML("<h2>Report was not evaluated. If you have sudo access to the server set options(radiant.report = TRUE) in .Rprofile for the shiny user </h2>")
-    # } else if (!is_empty(input$r_report)) {
-    # } else if (!is_empty(input$r_edit)) {
     } else {
       withProgress(message = "Knitting report", value = 1, {
         if (isTRUE(input$r_generate == "To R")) {
 
           cnt <- rstudio_context(type = "r")
-          # print(str(cnt))
           if (is_empty(cnt$path) || is_empty(cnt$ext, "rmd")) {
 
-            # report <- "#### _R > Report_ is set to use an rmarkdown document in Rstudio ('To Rmd (Rstudio)').\n#### Please check that you have an Rmd file open in Rstudio and that the file has been saved to disk.\n#### If you want to use the editor in Radiant instead, change 'To Rmd (Rstudio)' to 'Auto paste' or 'Manual paste'."
             ## popup to suggest user create an .Rmd file
             showModal(
               modalDialog(

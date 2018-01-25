@@ -417,9 +417,9 @@ observeEvent(input$pvt_store, {
       title = "Data Stored",
       span(
         paste0("Dataset '", name, "' was successfully added to the
-                datasets dropdown. Add code to R > Report to (re)create
-                the results by clicking the report icon on the bottom
-                left of your screen.")
+                datasets dropdown. Add code to Report > Rmd or 
+                Report > R to (re)create the results by clicking the 
+                report icon on the bottom left of your screen.")
       ),
       footer = modalButton("OK"),
       size = "s",
@@ -467,7 +467,7 @@ observeEvent(input$pivotr_report, {
   }
   inp_main <- c(inp_main, nr = ts$nr - 1)
 
-  ## update R > Report
+  ## update Report > Rmd or Report > R
   update_report(
     inp_main = inp_main,
     fun_name = "pivotr",

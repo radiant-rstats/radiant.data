@@ -135,12 +135,12 @@ explore <- function(dataset,
 
   nrow_tab <- nrow(tab)
 
-  ## filtering the table if desired from R > Report
+  ## filtering the table if desired from Report > Rmd
   if (tabfilt != "") {
     tab <- filterdata(tab, tabfilt)
   }
 
-  ## sorting the table if desired from R > Report
+  ## sorting the table if desired from Report > Rmd
   if (!identical(tabsort, "")) {
     tabsort <- gsub(",", ";", tabsort)
     tab <- tab %>% arrange(!!! rlang::parse_exprs(tabsort))
