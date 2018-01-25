@@ -726,7 +726,7 @@ report_save_content <- function(file, type = "rmd") {
       } else {
 
         ## hack for rmarkdown from Report > Rmd and Report > R
-        # options(radiant.radiant_render = TRUE)
+        # options(radiant.rmarkdown = TRUE)
         options(radiant.rmarkdown = TRUE)
 
         if (type == "r") {
@@ -760,7 +760,7 @@ report_save_content <- function(file, type = "rmd") {
         })
 
         ## hack for rmarkdown from Report > Rmd and Report > R
-        # options(radiant.radiant_render = FALSE)
+        # options(radiant.rmarkdown = FALSE)
         options(radiant.rmarkdown = FALSE)
       }
     })

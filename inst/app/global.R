@@ -1,5 +1,3 @@
-# print(getwd())
-
 ## based on https://github.com/rstudio/shiny/issues/1237
 suppressWarnings(
   try(
@@ -9,8 +7,6 @@ suppressWarnings(
 )
 
 ## determining how radiant was launched
-# rpl <- getOption("radiant.launch")
-# if (is.null(rpl)) {
 ## should this be set in global?
 if (is.null(getOption("radiant.launch"))) {
   ## also use Rstudio's file dialog if opening in Window
@@ -26,10 +22,7 @@ if (is.null(getOption("radiant.launch"))) {
   } else {
     options(radiant.launch = "browser")
   }
-} # else {
-  # options(radiant.launch = rpl)
-# }
-# rm(rpl)
+}
 
 ## function to load/import required packages and functions
 import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
@@ -101,7 +94,7 @@ if (Sys.getenv("SHINY_PORT") == "") {
 options(radiant.encoding = "UTF-8")
 
 ## hack for rmarkdown from Report > Rmd and Report > R
-options(radiant.radiant_render = FALSE)
+options(radiant.rmarkdown = FALSE)
 
 ## path to use for local or server use
 options(radiant.path.data =
@@ -122,7 +115,9 @@ if (!"package:radiant.data" %in% search()) {
 import_fs("radiant.data", libs = "plotly", incl = c("ggplotly", "subplot"))
 
 ## basic options when run on server
-if (!getOption("radiant.local", default = FALSE)) {
+# options(radiant.launch = "viewer")
+# if (!getOption("radiant.local", default = FALSE)) {
+if (getOption("width") != 250) {
   options(
     width = max(getOption("width"), 250),
     scipen = max(getOption("scipen"), 100),

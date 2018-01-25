@@ -639,6 +639,7 @@ viewdata <- function(dataset,
         ## works with client-side processing
         extensions = "KeyTable",
         options = list(
+          # stateSave = TRUE,
           keys = TRUE,
           search = list(regex = TRUE),
           columnDefs = list(
@@ -650,6 +651,7 @@ viewdata <- function(dataset,
           pageLength = 10,
           lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
         )
+        # , callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
       )
       output$tbl <- DT::renderDataTable(widget)
       observeEvent(input$stop, {
@@ -1372,8 +1374,8 @@ render.datatables <- function(object, ...) {
 #'
 #' @export
 render.plotly <- function(object, ...) {
-  ## hack for rmarkdown from R > Report and R > Code
-  if (exists("r_environment") && !getOption("radiant.radiant_render", FALSE)) {
+  ## hack for rmarkdown from Report > Rmd and Report > R
+  if (exists("r_environment") && !getOption("radiant.rmarkdown", FALSE)) {
     ## avoid the ID-not-used-by-Shiny message
     object$elementId <- NULL
 
