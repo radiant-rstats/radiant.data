@@ -38,13 +38,27 @@ output$ui_View <- renderUI({
 })
 
 observeEvent(input$dataviewer_search_columns, {
+  # req(input$view_vars)
   r_state$dataviewer_search_columns <<- input$dataviewer_search_columns
+  # names(r_state$dataviewer_search_columns) <<- input$view_vars
 })
 
 observeEvent(input$dataviewer_state, {
   r_state$dataviewer_state <<-
     if (is.null(input$dataviewer_state)) list() else input$dataviewer_state
 })
+
+## this helps save state, however, columns may get messed up
+# observeEvent(input$view_vars, {
+#   # print(r_state$dataviewer_search_columns) 
+#   # r_state$dataviewer_search_columns <<- r_state$dataviewer_search_columns[input$view_vars %in% r_state$view_vars]
+#   # print(r_state$view_vars)
+#   # print(input$view_vars)
+#   # print(r_state$view_vars %in% input$view_vars)
+#   # r_state$dataviewer_search_columns <<- r_state$dataviewer_search_columns[r_state$view_vars %in% input$view_vars]
+#   # print(r_state$dataviewer_search_columns) 
+#   r_state$view_vars <<- input$view_vars
+# })
 
 output$dataviewer <- DT::renderDataTable({
   ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
@@ -55,10 +69,20 @@ output$dataviewer <- DT::renderDataTable({
   dat <- select_at(.getdata(), .vars = input$view_vars)
 
   ## update state when view_vars changes
+  # print(identical(r_state$view_vars, input$view_vars))
+  # print("---- r_state ----")
+  # print(r_state$view_vars)
+  # print("---- input ----")
+  # print(input$view_vars)
+  # if (length(r_state$view_vars) > 0 && !identical(r_state$view_vars, input$view_vars)) {
   if (!identical(r_state$view_vars, input$view_vars)) {
-    r_state$view_vars <<- input$view_vars
     r_state$dataviewer_state <<- list()
     r_state$dataviewer_search_columns <<- rep("", ncol(dat))
+    # print(r_state$dataviewer_search_columns) 
+    # r_state$dataviewer_search_columns <<- r_state$dataviewer_search_columns[r_state$view_vars %in% input$view_vars]
+    # print(r_state$dataviewer_search_columns) 
+    # r_state$dataviewer_search_columns <<- r_state$dataviewer_search_columns[input$view_vars %in% r_state$view_vars]
+    r_state$view_vars <<- input$view_vars
   }
 
   search <- r_state$dataviewer_state$search$search
@@ -69,6 +93,12 @@ output$dataviewer <- DT::renderDataTable({
   if (sum(isBigFct) > 0) {
     dat[, isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
   }
+
+  # print(r_state$dataviewer_state)
+  # isolate({
+  #   print(input$dataviewer_search_columns)
+  # })
+  # print(r_state$dataviewer_search_columns)
 
   withProgress(
     message = "Generating view table", value = 1,
@@ -87,6 +117,7 @@ output$dataviewer <- DT::renderDataTable({
       style = "bootstrap",
       options = list(
         stateSave = TRUE, ## maintains state
+        # searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = as.vector(x))),
         searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
         search = list(search = search, regex = TRUE),
         order = {
@@ -128,9 +159,9 @@ observeEvent(input$view_store, {
       title = "Data Stored",
       span(
         paste0("Dataset '", input$view_dat, "' was successfully added to
-               the datasets dropdown. Add code to R > Report to (re)create
-               the dataset by clicking the report icon on the bottom left
-               of your screen.")
+               the datasets dropdown. Add code to Report > Rmd or 
+               Report > R to (re)create the dataset by clicking the report i
+               con on the bottom left of your screen.")
       ),
       footer = modalButton("OK"),
       size = "s",
@@ -195,6 +226,7 @@ output$dl_view_tab <- downloadHandler(
     cmd <- paste0(cmd, " %>%\n  arrange(", ts$tabsort, ")")
   }
 
+  # print(cmd)
   paste0(cmd, " %>%\n  store(\"", dataset, "\", \"", input$dataset, "\")")
 }
 
