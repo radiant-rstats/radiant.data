@@ -1,19 +1,21 @@
-# CHANGES IN radiant.data 0.9.0.4
+# CHANGES IN radiant.data 0.9.0.5
 
+* Support logicals in code generation from _Data > View_
+* Track window size using `input$get_screen_width`
+* Fix to include `DiagrammeR` based plots in Rmarkdown reports
 * Focus on editor when switching to _Report > Rmd_ or _Report > R_ so generated code is shown immediately and the user can navigate and type in the editor without having to click first
 * Cleanup now also occurs when the stop button is used in Rstudio to close the app
 * Fix in `read_files` for SQLite data names
 * De-activate spellcheck autocorrection in `selectizeInput` in Rstudio Viewer [shiny #1916](https://github.com/rstudio/shiny/issues/1916)
 * Known issue: The Rstudio viewer may not always close the viewer window when trying to stop the application with the `Stop` link in the navbar. As a work-around, use Rstudio's stop buttons instead. 
 
-
 # CHANGES IN radiant.data 0.9.0
 
 * Show Rstudio project information in navbar if available
-* If Rstudio project is used _R > Report_ and _R > Code_ will use the project directory as base. This allows users to use relative paths and making it easier to share (reproducible) code
-* Specify options in .Rprofile for upload memory limit and running R > Report on server
+* If Rstudio project is used _Report > Rmd_ and _Report > R_ will use the project directory as base. This allows users to use relative paths and making it easier to share (reproducible) code
+* Specify options in .Rprofile for upload memory limit and running _Report > Rmd_ on server
 * `find_project` function based on `rstudioapi`
-* Overflow `pre` and `code` blocks in HTML reports generated in _R > Report_
+* Overflow `pre` and `code` blocks in HTML reports generated in _Report > Rmd_
 * Read rdata files through _Data > Manage_
 * _Report > Rmd_ option to view Editor, Preview, or Both
 * _Report > Rmd_ Read button to generate code to load various types of data (e.g., rda, rds, xls, yaml, feather)
@@ -45,8 +47,8 @@
 
 ## NEW FEATURES
 
-* Export `ggplotly` from `plotly` for interactive plots in _R > Report_
-* Export `subplot` from `plotly` for grids of interactive plots in _R > Report_
+* Export `ggplotly` from `plotly` for interactive plots in _Report > Rmd_
+* Export `subplot` from `plotly` for grids of interactive plots in _Report > Rmd_
 * Set default `res = 96` for `renderPlot` and `dpi = 96` for `knitr::opts_chunk`
 * Add `fillcol`, `linecol`, and `pointcol` to `visualize` to set plot colors when no `fill` or `color` variable has been selected
 * Reverse legend ordering in _Data > Visualize_ when axes are flipped using `coor_flip()`
@@ -67,19 +69,19 @@
 - Support for loading and saving feather files, including specifying the maximum number of rows to load through _Data > Manage_
 - Added author and year arguments to help modals in inst/app/radiant.R (thanks @kmezhoud)
 - Added size argument for scatter plots to create bubble charts (thanks @andrewsali)
-- Example and CSS formatting for tables in _R > Report_
+- Example and CSS formatting for tables in _Report > Rmd_
 - Added `seed` argument to `make_train`
 - Added `prop`, `sdprop`, etc. for working with proportions
 - Set `ylim` in `visualize` for multiple plots
-- Show progress indicator when saving reports from _R > Report_
+- Show progress indicator when saving reports from _Report > Rmd_
 - `copy_attr` convenience function
 - `refactor` function to keep only a subset of levels in a factor and recode the remaining (and first) level to, for example, other
 - `register` function to add a (transformed) dataset to the dataset dropdown
 - Remember name of state files loaded and suggest that name when re-saving the state
 - Show dataset name in output if dataframe passed directly to analysis function
-- R-notebooks are now the default option for output saved from _R > Report_ and _R > Code_
-- Improved documentation on how to customize plots in _R > Report_
-- Keyboard short-cut to put code into _R > Report_ (ALT-enter)
+- R-notebooks are now the default option for output saved from _Report > Rmd_ and _Report > R_
+- Improved documentation on how to customize plots in _Report > Rmd_
+- Keyboard short-cut to put code into _Report > Rmd_ (ALT-enter)
 
 ## BUG FIXES
 
@@ -89,8 +91,8 @@
 - Fix for as_integer when factor levels are characters
 - Fix for integer conversion in explore
 - Remove \\r and special characters from strings in r_data and r_state 
-- Fix sorting in _R > Report_ for tables created using _Data > Pivot_ and _Data > Explore_ when column headers contain symbols or spaces (thanks @4kammer)
-- Set `error = TRUE` for rmarkdown for consistency with knitr as used in R > Report
+- Fix sorting in _Report > Rmd_ for tables created using _Data > Pivot_ and _Data > Explore_ when column headers contain symbols or spaces (thanks @4kammer)
+- Set `error = TRUE` for rmarkdown for consistency with knitr as used in _Report > Rmd_
 - Correctly handle decimal indicators when loading csv files in _Data > Manage_
 - Don't overwrite a dataset to combine if combine generates an error when user sets the the name of the combined data to that of an already selected dataset
 - When multiple variables were selected, data were not correctly summarized in Data > Transform
