@@ -83,6 +83,40 @@ $(document).keydown(function(event) {
   $("input:text").attr("spellcheck", "false")
 });
 
+// from https://stackoverflow.com/a/33251536/1974918 by Dean Attali
+// $(document).on("shiny:connected", function(e) {
+// (document).on("shiny:connected", function(e) {
+// $(document).on("shiny:value", function(e) {
+  // var jsWidth = screen.width;
+  // var jsWidth = $(window).width();
+  // Shiny.onInputChange("get_screen_width", jsWidth);
+// });
+
+// based on https://stackoverflow.com/a/3150139/1974918
+var addEvent = function(object, type, callback) {
+    if (object == null || typeof(object) == 'undefined') return;
+    if (object.addEventListener) {
+        object.addEventListener(type, callback, false);
+    } else if (object.attachEvent) {
+        object.attachEvent("on" + type, callback);
+    } else {
+        object["on"+type] = callback;
+    }
+};
+
+addEvent(window, "resize", function(event) {
+  // console.log('resized');
+  var jsWidth = $(window).width();
+  Shiny.onInputChange("get_screen_width", jsWidth);
+});
+
+// function get_screenwidth() {
+  // var jsWidth = screen.width;
+  // var jsWidth = $(window).width();
+  // Shiny.onInputChange("get_screen_width", jsWidth);
+// };
+
+
 // https://stackoverflow.com/questions/20247945/bootstrap-3-navbar-dynamic-collapse
 // https://stackoverflow.com/questions/18192082/bootstrap-3-navbar-collapse
 // https://stackoverflow.com/questions/19827605/change-bootstrap-navbar-collapse-breakpoint-without-using-less
@@ -156,12 +190,6 @@ $(document).keydown(function(event) {
 
 // currline = editor__rmdreport.getSelectionRange().start.row;
 // wholelinetxt = editor__rmdreport.session.getLine(currline);
-
-// from https://stackoverflow.com/a/33251536/1974918 by Dean Attali
-// $(document).on("shiny:connected", function(e) {
-//   var jsWidth = screen.width;
-//   Shiny.onInputChange("get_screen_width", jsWidth);
-// });
 
 // currline = editor__rmdreport.getSelectionRange().start.row;
 // wholelinetxt = editor__rmdreport.session.getLine(currline);
