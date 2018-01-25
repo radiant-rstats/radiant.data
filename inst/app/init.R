@@ -254,6 +254,13 @@ if (getOption("radiant.from.package", default = TRUE)) {
 #   )
 # }
 
+## this should work but doesn't seem to fix ...
+## https://github.com/rstudio/rstudio/issues/1870
+## https://community.rstudio.com/t/rstudio-resets-width-option-when-running-shiny-app-in-viewer/3661
+observeEvent(input$get_screen_width, {
+  if (getOption("width", default = 250) != 250) options(width = 250)
+})
+
 ## check every 5 seconds if width has been reset
 ## https://github.com/rstudio/rstudio/issues/1870
 ## https://community.rstudio.com/t/rstudio-resets-width-option-when-running-shiny-app-in-viewer/3661
