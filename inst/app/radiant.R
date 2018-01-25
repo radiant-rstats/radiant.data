@@ -636,8 +636,10 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
             cname <- paste0(cname, " >= '", bnd[1], "' & ", cname, " <= '", bnd[2], "'") %>% gsub("  ", " ", .)
           } else if (type == "character") {
             cname <- paste0("grepl('", i[[2]], "', ", cname, ", fixed = TRUE)")
+          } else if (type == "logical") {
+            cname <- paste0(cname, " == ", toupper(sub("\\['(true|false)'\\]", "\\1", i[[2]])))
           } else {
-            message("Variable ", cname, " has type ", type, ". This type is not currently supported to generate code for R > Report")
+            message("Variable ", cname, " has type ", type, ". This type is not currently supported to generate code for Report > Rmd or Report > R")
             next
           }
           tabfilt <- c(tabfilt, cname)
