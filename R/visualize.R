@@ -182,7 +182,9 @@ visualize <- function(dataset, xvar,
   if (type == "bar") {
     isFctY <- "factor" == dc & names(dc) %in% yvar
     if (sum(isFctY)) {
-      dat[, isFctY] <- select(dat, which(isFctY)) %>% mutate_all(funs(as.integer(. == levels(.)[1])))
+      levs <- sapply(dat[, isFctY], function(x) levels(x)[1])
+      dat[, isFctY] <- select(dat, which(isFctY)) %>% 
+        mutate_all(funs(as.integer(. == levels(.)[1])))
       dc[isFctY] <- "integer"
     }
   }
@@ -494,7 +496,14 @@ visualize <- function(dataset, xvar,
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
 
         if (dc[i] %in% c("factor", "integer", "date") && nrow(tmp) < nrow(dat)) {
-          plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
+          if (exists("levs")) {
+            if (j %in% names(levs)) {
+              # plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, " of ", ., " == ", levs[j], ")")
+              plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, " {", levs[j], "})")
+            }
+          } else {
+            plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
+          }
         }
 
         itt <- itt + 1
@@ -563,21 +572,27 @@ visualize <- function(dataset, xvar,
   }
 
   if ("line" %in% check) {
-    for (i in 1:length(plot_list))
+    for (i in 1:length(plot_list)) {
       plot_list[[i]] <- plot_list[[i]] +
-        sshhr(geom_smooth(
-          method = "lm", fill = fillcol, alpha = .1, size = .75,
-          linetype = "dashed", color = linecol
-        ))
+        sshhr(
+          geom_smooth(
+            method = "lm", fill = fillcol, alpha = .1, size = .75,
+            linetype = "dashed", color = linecol
+        )
+      )
+    }
   }
 
   if ("loess" %in% check) {
-    for (i in 1:length(plot_list))
+    for (i in 1:length(plot_list)) {
       plot_list[[i]] <- plot_list[[i]] +
-        sshhr(geom_smooth(
-          span = smooth, method = "loess", size = .75,
-          linetype = "dotdash", aes(group = 1)
-        ))
+        sshhr(
+          geom_smooth(
+            span = smooth, method = "loess", size = .75,
+            linetype = "dotdash", aes(group = 1)
+          )
+        )
+    }
   }
 
   if ("flip" %in% axes) {
@@ -591,13 +606,13 @@ visualize <- function(dataset, xvar,
 
   if (custom) {
     if (length(plot_list) == 1) {
-      return(plot_list[[1]]) 
+      return(plot_list[[1]])
     } else {
       return(plot_list)
     }
   }
 
-  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = min(length(plot_list), 2))) %>% {
-    if (shiny) . else print(.)
-  }
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = min(length(plot_list), 2))) %>% 
+    {if (shiny) . else print(.)}
 }
+
