@@ -194,7 +194,7 @@ filterdata <- function(dat, filt = "") {
   } else {
     seldat <- try(
       ## %>% need here so . will be available
-      dat %>% filter(!! rlang::parse_expr(filt)),
+      dat %>% filter(!! rlang::parse_expr(fixMS(filt))),
       silent = TRUE
     )
     if (is(seldat, "try-error")) {
