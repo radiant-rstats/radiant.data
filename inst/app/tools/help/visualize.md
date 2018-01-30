@@ -82,6 +82,8 @@ visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter"
 * Change size range: `+ scale_size(range=c(1,6))`
 * Draw a horizontal line: `+ geom_hline(yintercept = 0.1)`
 * Draw a vertical line: `+ geom_vline(xintercept = 8)`
+* Scale the y-axis as a percentage: `+ scale_y_continuous(labels = scales::percent)`
+* Display y-axis in \$'s: `+ scale_y_continuous(labels = scales::dollar_format())`
 
 For more on how to customize plots for communication see <a href="http://r4ds.had.co.nz/graphics-for-communication.html" target="_blank">http://r4ds.had.co.nz/graphics-for-communication.html</a>.
 

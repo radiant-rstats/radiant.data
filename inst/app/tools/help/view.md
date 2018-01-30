@@ -69,14 +69,15 @@ It is important to note that these filters are _persistent_ and will be applied 
    <td style="text-align:left;"> x is one of y </td>
    <td style="text-align:left;"> `cut %in% c('Fair', 'Good')` </td>
   </tr>
+  <tr>
+   <td style="text-align:left;"> is.na </td>
+   <td style="text-align:left;"> is missing </td>
+   <td style="text-align:left;"> `is.na(price)` </td>
+  </tr>
 </tbody>
 </table>
 
 Filters can also be used with R-code to quickly view a sample from the selected dataset. For example, `runif(nrow(.)) > .9` could be used to sample approximately 10% of the rows in the data and `1:nrow(.) < 101` would select only the first 100 rows in the data. Note: `.` references the currently selected dataset.
-
-### Pause view
-
-For very large datasets it can useful to click `Pause view` before selecting variables, entering filters, etc. When you are ready to generate the table make sure that `Pause view` is no longer checked. When `Pause view` is un-checked, any input change will generate a new table.
 
 ### Select variables to show
 

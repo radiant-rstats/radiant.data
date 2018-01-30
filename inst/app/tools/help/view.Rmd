@@ -18,18 +18,14 @@ It is important to note that these filters are _persistent_ and will be applied 
 ```{r results = 'asis', echo = FALSE}
 tab_large <- "class='table table-condensed table-hover' style='width:60%;'"
 data.frame(
-  "Operator" = c("`<`","`<=`","`>`","`>=`","`==`","`!=`","`|`","`&`", "`%in%`"),
-  "Description" = c("less than", "less than or equal to", "greater than", "greater than or equal to", "exactly equal to", "not equal to", "x OR y", "x AND y", "x is one of y"),
-  "Example" = c("`price < 5000`", "`carat <= 2`", "`price > 1000`", "`carat >= 2`", "`cut == 'Fair'`", "`cut != 'Fair'`", "`price > 10000 | cut == 'Premium'`", "`carat < 2 & cut == 'Fair'`", "`cut %in% c('Fair', 'Good')`")
+  "Operator" = c("`<`","`<=`","`>`","`>=`","`==`","`!=`","`|`","`&`", "`%in%`", "is.na"),
+  "Description" = c("less than", "less than or equal to", "greater than", "greater than or equal to", "exactly equal to", "not equal to", "x OR y", "x AND y", "x is one of y", "is missing"),
+  "Example" = c("`price < 5000`", "`carat <= 2`", "`price > 1000`", "`carat >= 2`", "`cut == 'Fair'`", "`cut != 'Fair'`", "`price > 10000 | cut == 'Premium'`", "`carat < 2 & cut == 'Fair'`", "`cut %in% c('Fair', 'Good')`", "`is.na(price)`")
   ) %>%
 knitr::kable(align = 'l', format = 'html', escape = FALSE, table.attr = tab_large)
 ```
 
 Filters can also be used with R-code to quickly view a sample from the selected dataset. For example, `runif(nrow(.)) > .9` could be used to sample approximately 10% of the rows in the data and `1:nrow(.) < 101` would select only the first 100 rows in the data. Note: `.` references the currently selected dataset.
-
-### Pause view
-
-For very large datasets it can useful to click `Pause view` before selecting variables, entering filters, etc. When you are ready to generate the table make sure that `Pause view` is no longer checked. When `Pause view` is un-checked, any input change will generate a new table.
 
 ### Select variables to show
 
