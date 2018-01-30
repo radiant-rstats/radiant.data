@@ -125,10 +125,18 @@ groupable_vars_nonum <- reactive({
     varnames()[.]
 })
 
-## used in compare proportions
+## used in compare proportions, logistic, etc.
 two_level_vars <- reactive({
+  two_levs <- function(x) {
+    if (is.factor(x)) {
+      length(levels(x))
+    } else {
+      length(unique(na.omit(x)))
+    }
+  }
   .getdata() %>%
-    summarise_all(funs(length(unique(.)))) %>%
+    # summarise_all(funs(length(unique(.)))) %>%
+    summarise_all(funs(two_levs)) %>%
     {. == 2} %>%
     which(.) %>%
     varnames()[.]
