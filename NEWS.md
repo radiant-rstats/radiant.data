@@ -1,5 +1,8 @@
-# CHANGES IN radiant.data 0.9.0.5
+# CHANGES IN radiant.data 0.9.0.7
 
+* Remove "fancy" quotes from filters
+* Add information about the first level when plotting a bar chart with a categorical variable on the Y-axis (e.g., mean(buyer {yes}))
+* Allow response variables with NA values in _Model > Logistic regression_ and other classification models
 * Support logicals in code generation from _Data > View_
 * Track window size using `input$get_screen_width`
 * Fix to include `DiagrammeR` based plots in Rmarkdown reports
