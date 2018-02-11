@@ -120,16 +120,22 @@ observeEvent(input$pvt_nvar == "None", {
 })
 
 output$ui_pvt_normalize <- renderUI({
-  if (!is.null(input$pvt_cvars) && length(input$pvt_cvars) == 1) {
-    pvt_normalize <- pvt_normalize[-(2:3)]
-  }
-
   selectizeInput(
     "pvt_normalize", label = "Normalize by:",
     choices = pvt_normalize,
     selected = state_single("pvt_normalize", pvt_normalize, "None"),
     multiple = FALSE
   )
+})
+
+observeEvent(input$pvt_cvars, {
+ if (length(input$pvt_cvars) == 1) {
+    sel <- ifelse(input$pvt_normalize %in% pvt_normalize[2:3], "None", input$pvt_normalize)
+    pvt_normalize <- pvt_normalize[-(2:3)]
+  } else {
+    sel <- input$pvt_normalize
+  }
+  updateSelectInput(session, "pvt_normalize", choices = pvt_normalize, selected = sel)
 })
 
 output$ui_pvt_format <- renderUI({
@@ -144,7 +150,11 @@ output$ui_pvt_format <- renderUI({
 output$ui_pvt_run <- renderUI({
   ## updates when dataset changes
   req(input$dataset)
-  actionButton("pvt_run", "Create pivot table", width = "100%", icon = icon("play"), class = "btn-success")
+  actionButton(
+    "pvt_run", "Create pivot table", 
+    width = "100%", icon = icon("play"), 
+    class = "btn-success"
+  )
 })
 
 observe({
