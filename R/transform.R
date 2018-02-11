@@ -368,13 +368,19 @@ mutate_ext <- function(.tbl, .funs, ..., .ext = "", .vars = c()) {
 #' xtile(1:10,5, rev = TRUE)
 #'
 #' @export
-xtile <- function(x, n, rev = FALSE) {
-  stopifnot(is.numeric(n), is.numeric(x), n > 1, length(x) > n)
-  breaks <- quantile(x, prob = seq(0, 1, length = n + 1), type = 2)
-  if (length(breaks) < 2) stop(paste("Insufficient variation in x to construct", n, "breaks"))
-  .bincode(x, breaks, include.lowest = TRUE) %>% {
-    if (rev) as.integer((n + 1) - .) else .
+xtile <- function(x, n = 5, rev = FALSE) {
+  if (!is.numeric(x)) {
+    stop(paste0("The variable to bin must be of type {numeric} but is of type {", class(x)[1], "}"), call. = FALSE)
+  } else if (n < 1) {
+    stop(paste0("The number of bins must be > 1 but is ", n), call. = FALSE)
+  } else if (length(x) < n) {
+    stop(paste("The number of bins to create is larger than\nthe number of data points. Perhaps you grouped the data before\ncalling the xtile function and the number of observations per\ngroup are too small"), call. = FALSE)
   }
+
+  breaks <- quantile(x, prob = seq(0, 1, length = n + 1), type = 2)
+  if (length(breaks) < 2) stop(paste("Insufficient variation in x to construct", n, "breaks"), call. = FALSE)
+  .bincode(x, breaks, include.lowest = TRUE) %>% 
+    {if (rev) as.integer((n + 1) - .) else .}
 }
 
 #' Show all rows with duplicated values (not just the first or last)
