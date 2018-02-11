@@ -141,6 +141,18 @@ if (!is.null(r_state$rmd_report) && is.null(r_state$rmd_edit)) {
   r_state$rmd_report <- NULL
 }
 
+if (length(r_state$rmd_edit) > 0) {
+  if (!grepl("'", r_state$rmd_edit)) {
+    ## weird escaping issue in Ace Editor related to single quotes (') on macOS
+    r_state$rmd_edit <- gsub("\\\\", "\\\\\\\\", r_state$rmd_edit) %>%
+      radiant.data::fixMS()
+  } else if (Sys.info()["sysname"] == "Windows") {
+    ## Windows needs more \\\\
+    r_state$rmd_edit <- gsub("\\\\", "\\\\\\\\", r_state$rmd_edit) %>%
+      radiant.data::fixMS()
+  }
+}
+
 ## legacy, to deal with state files created before
 ## name change to rmd_edit
 if (!is.null(r_state$rcode_edit) && is.null(r_state$r_edit)) {
@@ -239,12 +251,12 @@ if (getOption("radiant.from.package", default = TRUE)) {
 #     modalDialog(
 #       title = "Directory Conflict",
 #       span(
-#         "Radiant is set to use an R document in Rstudio 
-#         ('To R (Rstudio)'). However, the active document in 
-#         Rstudio does not seem to be of type .R. Please open an 
-#         existing .R file or create a new one in Rstudio. The 
-#         file must be saved to disk before it can be accessed. If 
-#         you want to use the editor in Radiant instead, change 
+#         "Radiant is set to use an R document in Rstudio
+#         ('To R (Rstudio)'). However, the active document in
+#         Rstudio does not seem to be of type .R. Please open an
+#         existing .R file or create a new one in Rstudio. The
+#         file must be saved to disk before it can be accessed. If
+#         you want to use the editor in Radiant instead, change
 #         'To R (Rstudio)' to 'Auto paste' or 'Manual paste'."
 #       ),
 #       footer = modalButton("OK"),
