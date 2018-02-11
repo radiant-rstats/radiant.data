@@ -176,7 +176,7 @@ if (!exists(\"r_environment\")) library(", lib, ")
 # r_data <- readr::read_rds(\"r_data.rds\")
 ```
 
-```{css, echo = FALSE}
+<style>
 .table {
   width: auto;
 }
@@ -189,10 +189,9 @@ pre, code, pre code {
   word-wrap: normal;
   background-color: #ffffff;
 }
+</style>
 ```\n\n", report)
 }}
-
-# <style save_type='text/css'>
 
 ## Based on http://stackoverflow.com/a/31797947/1974918
 ## as of 12/30/2017 doesn't seem to work anymore
