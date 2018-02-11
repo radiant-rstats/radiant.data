@@ -1,7 +1,11 @@
+# CHANGES IN radiant.data 0.9.0.8
+
+* Better error messages for `xtile` and when binning data with too many groups
+* _Data > Transform_ will leave variables selected, unless switching to `Create` or `Spread`
+
 # CHANGES IN radiant.data 0.9.0.7
 
-* Remove "fancy" quotes from filters
-* Add information about the first level when plotting a bar chart with a categorical variable on the Y-axis (e.g., mean(buyer {yes}))
+* Fix for \ in equations in _Report > Rmd_
 * Allow response variables with NA values in _Model > Logistic regression_ and other classification models
 * Support logicals in code generation from _Data > View_
 * Track window size using `input$get_screen_width`
@@ -10,6 +14,9 @@
 * Cleanup now also occurs when the stop button is used in Rstudio to close the app
 * Fix in `read_files` for SQLite data names
 * De-activate spellcheck autocorrection in `selectizeInput` in Rstudio Viewer [shiny #1916](https://github.com/rstudio/shiny/issues/1916)
+* Fix to allow selecting and copying text output from _Report > Rmd_ and _Report > R_
+* Remove "fancy" quotes from filters
+* Add information about the first level when plotting a bar chart with a categorical variable on the Y-axis (e.g., mean(buyer {yes}))
 * Known issue: The Rstudio viewer may not always close the viewer window when trying to stop the application with the `Stop` link in the navbar. As a work-around, use Rstudio's stop buttons instead. 
 
 # CHANGES IN radiant.data 0.9.0
