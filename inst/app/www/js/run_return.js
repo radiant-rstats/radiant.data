@@ -68,19 +68,31 @@ $(document).keydown(function(event) {
       $("#tr_create").focus();
     }
   } else if($("#rmd_knit").is(":visible") &&
+            // focus on rmd_knitted doesn't seem to work
             // $("#rmd_knitted").is(":focus") === false,
             $(".ace_text-input").is(":focus") === false &&
-            $(".ace_search_form").is(":visible") === false) { 
+            $(".ace_search_form").is(":visible") === false &&
+            event.metaKey === false &&
+            event.ctrlKey === false &&
+            event.shiftKey === false) {
+    // don't change focus if meta, ctrl, of shift are pressed
+    // allows selecting and copying output from #rmd_knitted
     $(".ace_text-input").focus();
   } else if($("#r_knit").is(":visible") &&
+            // focus on r_knitted doesn't seem to work
             // $("#r_knitted").is(":focus") === false,
             $(".ace_text-input").is(":focus") === false &&
-            $(".ace_search_form").is(":visible") === false) {
+            $(".ace_search_form").is(":visible") === false &&
+            event.metaKey === false &&
+            event.ctrlKey === false &&
+            event.shiftKey === false) {
+    // don't change focus if meta, ctrl, of shift are pressed
+    // allows selecting and copying output from #r_knitted
     $(".ace_text-input").focus();
-  } 
+ }
 
   // needed to address https://github.com/rstudio/shiny/issues/1916
-  $("input:text").attr("spellcheck", "false")
+  $("input:text").attr("spellcheck", "false");
 });
 
 // from https://stackoverflow.com/a/33251536/1974918 by Dean Attali
@@ -94,29 +106,22 @@ $(document).keydown(function(event) {
 
 // based on https://stackoverflow.com/a/3150139/1974918
 var addEvent = function(object, type, callback) {
-    if (object == null || typeof(object) == 'undefined') return;
-    if (object.addEventListener) {
-        object.addEventListener(type, callback, false);
-    } else if (object.attachEvent) {
-        object.attachEvent("on" + type, callback);
-    } else {
-        object["on"+type] = callback;
-    }
+  if (object === null || typeof(object) == "undefined") return;
+  if (object.addEventListener) {
+    object.addEventListener(type, callback, false);
+  } else if (object.attachEvent) {
+    object.attachEvent("on" + type, callback);
+  } else {
+    object["on" + type] = callback;
+  }
 };
 
 addEvent(window, "resize", function(event) {
-  // console.log('resized');
   var jsWidth = $(window).width();
   Shiny.onInputChange("get_screen_width", jsWidth);
 });
 
-// function get_screenwidth() {
-  // var jsWidth = screen.width;
-  // var jsWidth = $(window).width();
-  // Shiny.onInputChange("get_screen_width", jsWidth);
-// };
-
-
+//// Things to still try
 // https://stackoverflow.com/questions/20247945/bootstrap-3-navbar-dynamic-collapse
 // https://stackoverflow.com/questions/18192082/bootstrap-3-navbar-collapse
 // https://stackoverflow.com/questions/19827605/change-bootstrap-navbar-collapse-breakpoint-without-using-less
@@ -132,9 +137,6 @@ addEvent(window, "resize", function(event) {
 //   }
 // };
 
-// $(document).on('ready', autocolllapse);
-// $(window).on('resize', autocolllapse);
-
 // function autocollapse() {
 //     var navbar = $('.navbar');
 //     navbar.removeClass('collapsed');  // set standart view
@@ -143,65 +145,8 @@ addEvent(window, "resize", function(event) {
 //     }
 // }
 
-// $(document).on('ready', autocollapse);
-// $(window).on('resize', autocollapse);
-
-// } else if ($("#show_filter").is(":focus") &&
-// document.getElementById('show_filter').checked === true) {
-// not sure if either option is 'better'
-
-// needs 1 or more tr_vars selected first
-// } else if ($('#tr_change_type').selectize()[0].selectize.getValue() === "rename") {
-// $("#tr_rename").focus();
-// needs 1 or more tr_vars selected first
-// } else if ($('#tr_change_type').selectize()[0].selectize.getValue() === "replace") {
-// $("#tr_replace").focus();
-
-// first character type is not shown as input grabs full focus
-// $("#tr_create").val("");
-// $("#tr_create").trigger({type: 'keypress', which: 13, keyCode: 13});
-// var press = jQuery.Event("keypress");
-// press.ctrlKey = false;
-// press.which = 40;
-// $("tr_create").trigger(press);
-
-// } else if ($("#rmd_knit").is(":visible")) {
-// // still may not show newly generated code
-//   editor__rmdedit.focus()
-// } else if ($("#r_knit").is(":visible")) {
-//   editor__redit.focus()
-// }
-
-// change class not working yet
+// change class not working ... yet
 // $('#pvt_run').removeClass('btn-sucsses').addClass('btn-warning');
 // $('#viz_run').removeClass('btn-sucsses').addClass('btn-warning');
 // $('#viz_run').text()
 // $('#view_store').text()
-
-// $(document).on("shiny:connected", function(e) {
-// $(document).ready(function() {
-  // if ($("#rmd_edit").is(":visible")) {
-    // var line_nr = editor__rmdreport.getSelectionRange().start.row;
-    // var line_content = editor__rmdreport.session.getLine(line_nr);
-    // Shiny.onInputChange("rmd_current_line", line_nr);
-    // Shiny.onInputChange("rmd_current_line_content", line_content);
-  // }
-// });
-
-// currline = editor__rmdreport.getSelectionRange().start.row;
-// wholelinetxt = editor__rmdreport.session.getLine(currline);
-
-// currline = editor__rmdreport.getSelectionRange().start.row;
-// wholelinetxt = editor__rmdreport.session.getLine(currline);
-
-// $(document).keydown(function(event) {
-  // if ((event.metaKey || event.ctrlKey) && event.keyCode == 83) {
-  // if ((event.metaKey || event.ctrlKey) && event.keyCode == 13) {
-    // $("#saveStateNav").click();
-    // document.getElementById('saveStateNav').click();
-    // $("#saveStateNav").trigger("click");
-  // }
-// });
-
-// } else if ($(".fa-upload:visible" || ".shiny-bound-input:visible").is(":visible") &&
-// } else if ($(".input-group-btn" || ".shiny-bound-input:visible").is(":visible") &&
