@@ -11,12 +11,13 @@ The examples below are adapted from the [Cheatsheet for dplyr join functions](ht
 ```{r results = 'asis', echo = FALSE}
 tab_small <- "class='table table-condensed table-hover' style='width:30%;'"
 tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
-suppressPackageStartupMessages(suppressWarnings(library(radiant.data)))
+data(superheroes, package = "radiant.data")
 knitr::kable(superheroes, align = 'l', format = 'html', caption = "Superheroes",
              table.attr = tab_big)
 ```
 
 ```{r results = 'asis', echo = FALSE}
+data(publishers, package = "radiant.data")
 knitr::kable(publishers, align = 'l', format = 'html', caption = "Publishers",
              table.attr = tab_small)
 ```
@@ -34,7 +35,7 @@ If x = superheroes and y = publishers:
 > An inner join returns all rows from x with matching values in y, and all columns from both x and y. If there are multiple matches between x and y, all match combinations are returned.
 
 ```{r results = 'asis', echo = FALSE}
-inner_join(superheroes, publishers, by = "publisher") %>%
+dplyr::inner_join(superheroes, publishers, by = "publisher") %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 
@@ -59,7 +60,7 @@ inner_join(superheroes, publishers, by = "publisher")
 > A left join returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned.
 
 ```{r results = 'asis', echo = FALSE}
-left_join(superheroes, publishers, by = "publisher") %>%
+dplyr::left_join(superheroes, publishers, by = "publisher") %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 
@@ -84,7 +85,7 @@ left_join(superheroes, publishers, by = "publisher")
 > A right join returns all rows from y, and all columns from y and x. If there are multiple matches between y and x, all match combinations are returned.
 
 ```{r results = 'asis', echo = FALSE}
-right_join(superheroes, publishers, by = "publisher") %>%
+dplyr::right_join(superheroes, publishers, by = "publisher") %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 
@@ -109,7 +110,7 @@ right_join(superheroes, publishers, by = "publisher")
 > A full join combines two datasets, keeping rows and columns that appear in either.
 
 ```{r results = 'asis', echo = FALSE}
-full_join(superheroes, publishers, by = "publisher") %>%
+dplyr::full_join(superheroes, publishers, by = "publisher") %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 
@@ -132,7 +133,7 @@ full_join(superheroes, publishers, by = "publisher")
 > A semi join keeps only columns from x. Whereas an inner join will return one row of x for each matching row of y, a semi join will never duplicate rows of x.
 
 ```{r results = 'asis', echo = FALSE}
-semi_join(superheroes, publishers, by = "publisher") %>%
+dplyr::semi_join(superheroes, publishers, by = "publisher") %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 
@@ -153,7 +154,7 @@ semi_join(superheroes, publishers, by = "publisher")
 > An anti join returns all rows from x without matching values in y, keeping only columns from x
 
 ```{r results = 'asis', echo = FALSE}
-anti_join(superheroes, publishers, by = "publisher") %>%
+dplyr::anti_join(superheroes, publishers, by = "publisher") %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 
@@ -174,7 +175,7 @@ Note that the order of the datasets selected may matter for a join. If we setup 
 ### Inner join (publishers, superheroes)
 
 ```{r results = 'asis', echo = FALSE}
-inner_join(publishers, superheroes, by = "publisher") %>%
+dplyr::inner_join(publishers, superheroes, by = "publisher") %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 
@@ -197,7 +198,7 @@ As you might expect, apart from row and variable order, a full join of `publishe
 ### Semi join (publishers, superheroes)
 
 ```{r results = 'asis', echo = FALSE}
-semi_join(publishers, superheroes, by = "publisher") %>%
+dplyr::semi_join(publishers, superheroes, by = "publisher") %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_small)
 ```
 
@@ -208,7 +209,7 @@ With semi join the effect of switching the dataset order is more clear. Even tho
 ### Anti join (publishers, superheroes)
 
 ```{r results = 'asis', echo = FALSE}
-anti_join(publishers, superheroes, by = "publisher") %>%
+dplyr::anti_join(publishers, superheroes, by = "publisher") %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_small)
 ```
 
@@ -229,7 +230,8 @@ In the screen-shot of the _Data > Combine_ tab below we see the two datasets. Th
 ### Bind rows
 
 ```{r results = 'asis', echo = FALSE}
-bind_rows(avengers, superheroes) %>%
+data(avengers, package = "radiant.data")
+dplyr::bind_rows(avengers, superheroes) %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 
@@ -250,7 +252,7 @@ bind_rows(avengers, superheroes)
 ### Bind columns
 
 ```{r results = 'asis', echo = FALSE}
-bind_cols(avengers, superheroes) %>%
+dplyr::bind_cols(avengers, superheroes) %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 

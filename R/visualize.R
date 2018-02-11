@@ -182,7 +182,7 @@ visualize <- function(dataset, xvar,
   if (type == "bar") {
     isFctY <- "factor" == dc & names(dc) %in% yvar
     if (sum(isFctY)) {
-      levs <- sapply(dat[, isFctY], function(x) levels(x)[1])
+      levs <- sapply(dat[, isFctY, drop = FALSE], function(x) levels(x)[1])
       dat[, isFctY] <- select(dat, which(isFctY)) %>% 
         mutate_all(funs(as.integer(. == levels(.)[1])))
       dc[isFctY] <- "integer"
@@ -500,6 +500,8 @@ visualize <- function(dataset, xvar,
             if (j %in% names(levs)) {
               # plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, " of ", ., " == ", levs[j], ")")
               plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, " {", levs[j], "})")
+            } else {
+              plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
             }
           } else {
             plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")

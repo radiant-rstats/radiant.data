@@ -451,6 +451,12 @@ observeEvent(input$visualize_report, {
   if (!input$viz_type %in% "scatter") {
     vi$size <- "none"
   }
+  if (!input$viz_type %in% c("scatter", "line", "box")) {
+    vi$color <- NULL
+  }
+  if (!input$viz_type %in% c("bar", "dist", "density", "surface")) {
+    vi$fill <- NULL
+  }
 
   inp_main <- clean_args(vi, viz_args)
   inp_main$custom <- FALSE

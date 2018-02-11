@@ -50,13 +50,13 @@ observeEvent(input$dataviewer_state, {
 
 ## this helps save state, however, columns may get messed up
 # observeEvent(input$view_vars, {
-#   # print(r_state$dataviewer_search_columns) 
+#   # print(r_state$dataviewer_search_columns)
 #   # r_state$dataviewer_search_columns <<- r_state$dataviewer_search_columns[input$view_vars %in% r_state$view_vars]
 #   # print(r_state$view_vars)
 #   # print(input$view_vars)
 #   # print(r_state$view_vars %in% input$view_vars)
 #   # r_state$dataviewer_search_columns <<- r_state$dataviewer_search_columns[r_state$view_vars %in% input$view_vars]
-#   # print(r_state$dataviewer_search_columns) 
+#   # print(r_state$dataviewer_search_columns)
 #   r_state$view_vars <<- input$view_vars
 # })
 
@@ -78,9 +78,9 @@ output$dataviewer <- DT::renderDataTable({
   if (!identical(r_state$view_vars, input$view_vars)) {
     r_state$dataviewer_state <<- list()
     r_state$dataviewer_search_columns <<- rep("", ncol(dat))
-    # print(r_state$dataviewer_search_columns) 
+    # print(r_state$dataviewer_search_columns)
     # r_state$dataviewer_search_columns <<- r_state$dataviewer_search_columns[r_state$view_vars %in% input$view_vars]
-    # print(r_state$dataviewer_search_columns) 
+    # print(r_state$dataviewer_search_columns)
     # r_state$dataviewer_search_columns <<- r_state$dataviewer_search_columns[input$view_vars %in% r_state$view_vars]
     r_state$view_vars <<- input$view_vars
   }
@@ -159,7 +159,7 @@ observeEvent(input$view_store, {
       title = "Data Stored",
       span(
         paste0("Dataset '", input$view_dat, "' was successfully added to
-               the datasets dropdown. Add code to Report > Rmd or 
+               the datasets dropdown. Add code to Report > Rmd or
                Report > R to (re)create the dataset by clicking the report i
                con on the bottom left of your screen.")
       ),

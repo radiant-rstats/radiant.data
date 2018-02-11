@@ -4,7 +4,7 @@
 \alias{xtile}
 \title{Create quantiles}
 \usage{
-xtile(x, n, rev = FALSE)
+xtile(x, n = 5, rev = FALSE)
 }
 \arguments{
 \item{x}{Numeric variable}

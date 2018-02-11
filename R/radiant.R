@@ -563,6 +563,7 @@ choose_dir <- function(...) {
 changedata <- function(dataset,
                        vars = c(),
                        var_names = names(vars)) {
+  
   if (!is.character(dataset)) {
     dataset[, var_names] <- vars
     return(dataset)
