@@ -283,7 +283,9 @@ output$report_r <- renderUI({
       value = state_init("r_edit", r_example) %>% esc_slash(),
       vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
       hotkeys = list(r_hotkey = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
-      autoComplete = "live"
+      autoComplete = "live",
+      tabSize = getOption("radiant.ace_tabSize", 2),
+      showInvisibles = getOption("radiant.ace_showInvisibles", FALSE)
     ),
     htmlOutput("r_knitted"),
     getdeps()

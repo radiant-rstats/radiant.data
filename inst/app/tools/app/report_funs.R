@@ -28,17 +28,11 @@ file_upload_button <- function(inputId, label = "",
   )
 }
 
-if (Sys.info()["sysname"] == "Windows") {
-  esc_slash <- function(x) {
-    ## gsub("([^\\])\\\\([^\\\\$])", "\\1\\\\\\\\\\2", x) %>%
-    # gsub("\\", "\\\\", x) %>%
-    gsub("\\\\", "\\\\\\\\", x) %>%
-    # encodeString(x) %>%
-      fixMS()
-  }
-} else {
-  esc_slash <- function(x) fixMS(x)
+## replace esc_slash by fixMS if not more formula issues popup
+esc_slash <- function(x) {
+  radiant.data::fixMS(x)
 }
+
 ## Thanks to @timelyportfolio for this comment/fix
 ## https://github.com/timelyportfolio/functionplotR/issues/1#issuecomment-224369431
 ## needed to include deps in saved reports rendered using rmarkdown
@@ -127,38 +121,22 @@ setup_report <- function(report, ech,
                          save_type = "Notebook",
                          lib = "radiant") {
 
-  # report <- gsub("\\\\\\\\", "\\\\", report) %>%
-  ## does esc_slash do the same things as previous line?
   report <- esc_slash(report) %>%
     sub("^---\n(.*?)\n---", "", .) %>%
     sub("<!--(.*?)-->", "", .)
-    # cleanout() %>%
-    # fixMS()
-
-  # if (type == "r") {
-  #   report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
-  # }
 
   ## screenshot option
-  sopts <- if (save_type == "PDF") {
-    ", screenshot.opts = list(vheight = 1200)"
-  } else {
-    ""
-  }
+  sopts <- ifelse(save_type == "PDF", ", screenshot.opts = list(vheight = 1200)", "")
 
   if (add_yml) {
     if (save_type %in% c("PDF", "Word")) {
       yml <- ""
-      # ech <- "FALSE"
     } else if (save_type == "HTML") {
       yml <- "---\ntitle: \"\"\noutput:\n  html_document:\n    highlight: textmate\n    theme: spacelab\n    df_print: paged\n    toc: yes\n---\n\n"
-      # ech <- "FALSE"
     } else if (save_type %in% c("Rmd", "Rmd + Data (zip)")) {
       yml <- "---\ntitle: \"\"\noutput:\n  html_document:\n    highlight: textmate\n    theme: spacelab\n    df_print: paged\n    toc: yes\n    code_folding: hide\n    code_download: true\n---\n\n"
-      # ech <- "TRUE"
     } else {
       yml <- "---\ntitle: \"\"\noutput:\n  html_notebook:\n    highlight: textmate\n    theme: spacelab\n    toc: yes\n    code_folding: hide\n---\n\n"
-      # ech <- "TRUE"
     }
   } else {
     yml = ""
@@ -167,9 +145,6 @@ setup_report <- function(report, ech,
   if (missing(ech)) {
     ech <- if (save_type %in% c("PDF", "Word", "HTML")) "FALSE" else "TRUE"
   }
-
-  # yml <- "```{r r_setup, include = xxx FALSE}\n x <- 1\n```"
-  # grepl("```{r r_setup, include = FALSE}", yml, fixed = TRUE)
 
   if (grepl("```{r r_setup, include = FALSE}\n", report, fixed = TRUE)) {
     report
@@ -274,27 +249,8 @@ knit_it_save <- function(report) {
 ## Knit for report in Radiant
 knit_it <- function(report, type = "rmd") {
   if (type == "rmd") {
-    # print(report)
-    ## replacing \\ at the end of a line by \\\\ so multi-line equations work
     report <- gsub("\\\\\\\\\\s*\n", "\\\\\\\\\\\\\\\\\n", report)
-    ## goal: only replace \\ when between $...$ ... but doesn't work yet
-    # report <- gsub("(\\${1,2}[^$\\]*)\\\\\\\\\\s*\n[^$\\]*.\\${1,2})",
-    #                "\\1\\\\\\\\\\\\\\\\\n\\2", report)
-
-    ## possibly useful
-    # https://unix.stackexchange.com/questions/162725/replace-new-line-character-between-two-strings
-    # https://unix.stackexchange.com/questions/152621/replace-specified-character-between-two-strings
-    # https://stackoverflow.com/questions/11132627/characters-between-two-delimiters
-    # https://stackoverflow.com/questions/1454913/regular-expression-to-find-a-string-included-between-two-characters-while-exclud
-    # https://www.mathworks.com/matlabcentral/answers/164931-how-to-parse-information-between-two-strings-using-regular-expressions?
-  } else {
-    # knitr::opts_knit$set(out.format = "html")
-    # knitr::opts_chunk$set(highlight = TRUE)
-    # knitr::knit_theme$set("olive")
-    # knit_theme$set(knit_theme$get("olive"))
   }
-
-  # print(report)
 
   ## fragment also available with rmarkdown
   ## http://rmarkdown.rstudio.com/html_fragment_format.html
@@ -303,9 +259,6 @@ knit_it <- function(report, type = "rmd") {
     owd <- setwd(pdir)
     on.exit(setwd(owd))
   }
-
-  # to remove ...
-  # if (is_empty(report)) return((HTML("Nothing to see here")))
 
   ## sizing issue with ggplotly and knitr
   ## see https://github.com/ropensci/plotly/issues/1171
