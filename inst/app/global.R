@@ -481,3 +481,11 @@ onStop(function() {
     stopApp()
   }
 })
+
+
+## https://github.com/rstudio/DT/issues/496
+## options(htmlwidgets.TOJSON_ARGS = list(na = 'string'))
+#
+# iris[1,1] <- NA
+# iris[2,1] <- Inf
+# DT::datatable(head(iris))
