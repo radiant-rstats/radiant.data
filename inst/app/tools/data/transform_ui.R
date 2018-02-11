@@ -3,11 +3,15 @@ output$ui_tr_vars <- renderUI({
   vars <- varnames()
   req(available(vars))
   ## updates set of selected variables each time `tr_type` is changed
-  req(input$tr_change_type)
-  lab <- if (input$tr_change_type == "create") "Group by:" else "Select variable(s)"
+  ## can be a bit annoying though :)
+  # req(input$tr_change_type)
+  # lab <- if (input$tr_change_type == "create") "Group by:" else "Select variable(s)"
   selectInput(
-    "tr_vars", lab, choices = vars,
-    multiple = TRUE, size = min(8, length(vars)), selectize = FALSE
+    "tr_vars", "Select variable(s):", 
+    choices = vars,
+    multiple = TRUE, 
+    size = min(8, length(vars)), 
+    selectize = FALSE
   )
 })
 
@@ -396,8 +400,12 @@ output$ui_Transform <- renderUI({
 
 ## ensure no variables are selected 'by accident' when creating a new variable
 observeEvent(input$tr_change_type, {
-  if (input$tr_change_type == "create" || input$tr_change_type == "spread") {
+  if (input$tr_change_type == "create") {
+    updateSelectInput(session = session, inputId = "tr_vars", label = "Group by:", selected = character(0))
+  } else if (input$tr_change_type == "spread") {
     updateSelectInput(session = session, inputId = "tr_vars", selected = character(0))
+  } else {
+    updateSelectInput(session = session, inputId = "tr_vars", label = "Select variables:")
   }
 })
 
@@ -484,7 +492,7 @@ observeEvent(input$tr_change_type, {
       vars <- c(byvar, vars) ## to avoid the 'added group_by variable' message
     }
     if (is(nvar, "try-error")) {
-      paste0(" **\nThe create command was not valid. The command entered was:\n\n", cmd, "\n\nThe error message was:\n\n", attr(nvar, "condition")$message, "\n\nPlease try again. Examples are shown in the help file\n**")
+      paste0("\nThe create command was not valid. The command entered was:\n\n", cmd, "\n\nThe error message was:\n\n", attr(nvar, "condition")$message, "\n\nPlease try again. Examples are shown in the help file")
     } else {
       select_at(nvar, .vars = vars) %>% 
         ungroup()
@@ -1086,7 +1094,7 @@ output$transform_summary <- renderPrint({
   ## with isolate on the summary wouldn't update when the dataset was changed
   if (is.null(dat)) return(invisible())
   if (is.character(dat)) {
-    cat("**", dat, "**\n\n")
+    cat("**", dat, "\n**\n\n")
   } else {
     if (min(dim(dat)) == 0) {
       cat("** The selected operation resulted in an empty data frame and cannot be executed **\n\n")
