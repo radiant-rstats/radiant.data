@@ -1,7 +1,8 @@
-# CHANGES IN radiant.data 0.9.0.9
+# CHANGES IN radiant.data 0.9.0.11
 
 * Better error messages for `xtile` and when binning data with too many groups
 * _Data > Transform_ will leave variables selected, unless switching to `Create` or `Spread`
+* Addressed warnings in _Data > Pivot_ when filtering the table
 
 # CHANGES IN radiant.data 0.9.0.7
 
