@@ -23,3 +23,23 @@ If you started Radiant from Rstudio, you can also click the `Read files` button 
 The best way to save your analyses and settings is to save the `state` of the application to a file by clicking on the <i title='Save' class='fa fa-save'></i> icon in the navbar and then clicking on `Save radiant state file`. The state file (extension rda) will contain (1) the data loaded in Radiant, (2) settings for the analyses you were working on, (3) and any reports or code from the R-menu. Save the state file to your hard-disk and, when you are ready to continue, simply load it by selecting `state` from the `Load data of type` dropdown in the <a href="https://radiant-rstats.github.io/docs/data/manage.html" target="_blank">_Data > Manage_</a> tab and clicking the `Browse...` button.
 
 If you are using Radiant for a class I suggest you use the _Report > Rmd_ feature to complete assignments and cases. When you are done, generate an (HTML) Notebook (or Word or PDF) report by clicking the `Save report` button. Submit both the report and your state file.
+
+## Options
+
+The editor used in _Report > Rmd_ and _Report > R_ has several options that can be set in `.Rprofile`.
+
+<pre>
+options(radiant.vim.keys = FALSE)
+options(radiant.ace_theme = "cobalt")
+options(radiant.ace_tabSize = 2)
+options(radiant.ace_showInvisibles = TRUE)
+options(radiant.ace_autocomplete = "live")
+</pre>
+
+Notes:
+
+* `vim.key` enables a variety of keyboard short-cuts. If you have never used VIM you probably don't want this 
+* For an overview of available themes see: `shinyAce::getAceThemes()`
+* Autocomplete has options "live", "enabled", and "disabled" 
+* `showInvisibles` shows tabs and spaces in the editor
+* Tabs are converted to 2 spaces by default. Change the number of spaces by changing this to, for example, 4

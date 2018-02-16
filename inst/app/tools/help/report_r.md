@@ -37,3 +37,23 @@ help(package = 'radiant.data')
 ## this can very useful for debugging
 # transform_main() %>% head
 ```
+
+## Options
+
+The editor used in _Report > Rmd_ and _Report > R_ has several options that can be set in `.Rprofile`.
+
+<pre>
+options(radiant.vim.keys = FALSE)
+options(radiant.ace_theme = "cobalt")
+options(radiant.ace_tabSize = 2)
+options(radiant.ace_showInvisibles = TRUE)
+options(radiant.ace_autocomplete = "live")
+</pre>
+
+Notes:
+
+* `vim.key` enables a variety of keyboard short-cuts. If you have never used VIM you probably don't want this 
+* For an overview of available themes see: `shinyAce::getAceThemes()`
+* Autocomplete has options "live", "enabled", and "disabled" 
+* `showInvisibles` shows tabs and spaces in the editor
+* Tabs are converted to 2 spaces by default. Change the number of spaces by changing this to, for example, 4
