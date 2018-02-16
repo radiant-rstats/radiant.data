@@ -227,7 +227,7 @@ output$ui_Manage <- renderUI({
   )
 })
 
-## need to set suspendWhenHidden to FALSE so that the href for the 
+## need to set suspendWhenHidden to FALSE so that the href for the
 ## download handler is set and keyboard shortcuts will work
 ## see https://shiny.rstudio.com/reference/shiny/0.11/outputOptions.html
 ## see https://stackoverflow.com/questions/48117501/click-link-in-navbar-menu
@@ -257,10 +257,10 @@ output$dataDescriptionMD <- renderUI({
     "<label>Add data description:</label><br>" %>% HTML(),
     tags$textarea(
       id = "man_data_descr",
-      rows = 15, 
+      rows = 15,
       style = "width: 650px;",
-      class = "form-control", 
-      autocorrect = "off", 
+      class = "form-control",
+      autocorrect = "off",
       autocapitalize="off",
       descr_out(r_data[[paste0(input$dataset, "_descr")]], "md")
     )
@@ -532,7 +532,7 @@ output$refreshOnUpload <- renderUI({
 saveState <- function(filename) {
 
   ## not clear how to pause the download handler
-  ## until Rmd and report are synced  
+  ## until Rmd and report are synced
   # if (isTRUE(input$rmd_manual == "To Rmd")) {
 
   #   showModal(
