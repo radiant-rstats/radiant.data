@@ -96,30 +96,53 @@ $(document).keydown(function(event) {
 });
 
 // from https://stackoverflow.com/a/33251536/1974918 by Dean Attali
-// $(document).on("shiny:connected", function(e) {
-// (document).on("shiny:connected", function(e) {
+$(document).on("shiny:connected", function() {
 // $(document).on("shiny:value", function(e) {
   // var jsWidth = screen.width;
   // var jsWidth = $(window).width();
   // Shiny.onInputChange("get_screen_width", jsWidth);
-// });
+  Shiny.onInputChange("get_screen_width", $(window).width());
+});
 
 // based on https://stackoverflow.com/a/3150139/1974918
-var addEvent = function(object, type, callback) {
-  if (object === null || typeof(object) == "undefined") return;
-  if (object.addEventListener) {
-    object.addEventListener(type, callback, false);
-  } else if (object.attachEvent) {
-    object.attachEvent("on" + type, callback);
-  } else {
-    object["on" + type] = callback;
-  }
-};
+// $(document).ready(function () {
+//   var addEvent = function(object, type, callback) {
+//     if (object === null || typeof(object) == "undefined") return;
+//     if (object.addEventListener) {
+//       object.addEventListener(type, callback, false);
+//     } else if (object.attachEvent) {
+//       object.attachEvent("on" + type, callback);
+//     } else {
+//       object["on" + type] = callback;
+//     }
+//   };
 
-addEvent(window, "resize", function(event) {
-  var jsWidth = $(window).width();
-  Shiny.onInputChange("get_screen_width", jsWidth);
-});
+//   var org_width = $(window).width();
+
+//   addEvent(window, "resize", function(event) {
+//     var jsWidth = $(window).width();
+//     // if ($(window).width() != jsWidth) {
+//     console.log(jsWidth);
+//     console.log(org_width);
+//     if (org_width != jsWidth) {
+//       Shiny.onInputChange("get_screen_width", jsWidth);
+//     }
+//   });
+// });
+
+// $(document).ready(function () {
+// $(document).on("shiny:connected", function() {
+//   var width = $(window).width();
+//   Shiny.onInputChange("get_screen_width", width);
+//   function resizeIt() {
+//     $(window).resize(function () {
+//       if ($(window).width() != width) {
+//         Shiny.onInputChange("get_screen_width", width);
+//       }            
+//     });
+//   }
+//   resizeIt();
+// });
 
 //// Things to still try
 // https://stackoverflow.com/questions/20247945/bootstrap-3-navbar-dynamic-collapse
