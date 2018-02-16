@@ -2,7 +2,7 @@
 # Run R-code within Radiant using the shinyAce editor
 ################################################################
 r_switch <- c(
-  "Switch tab" = "switch", 
+  "Switch tab" = "switch",
   "Don't switch tab" = "no_switch"
 )
 r_generate <- c(
@@ -43,12 +43,12 @@ r_view_options <- c(
 )
 
 r_example <- "## get the active dataset and show the first few observations
-.getdata() %>% 
+.getdata() %>%
   head
 
 ## access a specific dataset by name
-r_data$diamonds %>% 
-  select(price, clarity) %>% 
+r_data$diamonds %>%
+  select(price, clarity) %>%
   head
 
 ## add a variable to the diamonds data
@@ -56,17 +56,17 @@ dat <- r_data$diamonds
 dat$log_price <- log(dat$price)
 
 ## show the first observations
-dat %>% 
-  select(price, log_price) %>% 
+dat %>%
+  select(price, log_price) %>%
   head
 
 ## create a histogram of prices
-dat %>% 
-  ggplot(aes(x = price)) + 
+dat %>%
+  ggplot(aes(x = price)) +
     geom_histogram()
 
 ## and a histogram of log-prices using radiant.data::visualize
-dat %>% 
+dat %>%
   visualize(xvar = \"log_price\", custom = TRUE)
 
 ## open help in the R-studio viewer from Radiant
@@ -86,12 +86,12 @@ output$ui_r_generate <- renderUI({
     init <- ifelse (state_init("rmd_generate", "Use R") != "Use R", "Use Rmd", "auto")
   })
   selectInput(
-    inputId = "r_generate", 
+    inputId = "r_generate",
     label = NULL,
     choices = r_generate,
     # selected = state_init("r_generate", "Use Rmd"),
     selected = state_init("r_generate", init),
-    multiple = FALSE, 
+    multiple = FALSE,
     selectize = FALSE,
     width = "160px"
   )
@@ -140,8 +140,8 @@ observeEvent(input$r_generate, {
           ## useful if you are not using an Rstudio project
           rstudioapi::navigateToFile(rcode)
         } else {
-          pdir <- getOption("radiant.project_dir", default = "") 
-          path <- file.path(pdir, rcode) 
+          pdir <- getOption("radiant.project_dir", default = "")
+          path <- file.path(pdir, rcode)
           if (file.exists(path)) {
             rstudioapi::navigateToFile(path)
           }
@@ -153,12 +153,12 @@ observeEvent(input$r_generate, {
           modalDialog(
             title = "Radiant to R (Rstudio)",
             span(
-              "Radiant is set to use an R document in Rstudio 
-              ('To Rstudio (R)'). However, the active document in 
-              Rstudio does not seem to be of type .R. Please open an 
-              existing .R file or create a new one in Rstudio. The 
-              file must be saved to disk before it can be accessed. If 
-              you want to use the editor in Radiant instead, change 
+              "Radiant is set to use an R document in Rstudio
+              ('To Rstudio (R)'). However, the active document in
+              Rstudio does not seem to be of type .R. Please open an
+              existing .R file or create a new one in Rstudio. The
+              file must be saved to disk before it can be accessed. If
+              you want to use the editor in Radiant instead, change
               'To Rstudio (R)' to 'Auto paste' or 'Manual paste'."
             ),
             footer = modalButton("OK"),
@@ -167,7 +167,7 @@ observeEvent(input$r_generate, {
           )
         )
       }
-    } 
+    }
   # } else if (input$r_generate == "Use Rmd") {
   } else if (state_init("r_generate", "auto") == "Use Rmd") {
     # if (isTRUE(input$rmd_generate == "Use R")) {
@@ -229,9 +229,9 @@ output$ui_r_load <- renderUI({
   if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
     # fileInput("r_load", "", multiple = FALSE, accept = c(".Rmd", ".rmd", ".md", ".html"))
     file_upload_button(
-      "r_load", 
+      "r_load",
       accept = c(".R", ".r", ".html"),
-      buttonLabel = "Load report" 
+      buttonLabel = "Load report"
       # class = "btn-primary"
     )
   } else {
@@ -249,7 +249,7 @@ output$ui_r_read_files <- renderUI({
 
 output$report_r <- renderUI({
   # init <- isolate({
-  #   init <- state_init(input$r_edit, r_example) 
+  #   init <- state_init(input$r_edit, r_example)
   #   if (is_empty(input$r_edit)) {
   #     r_example
   #   } else {
@@ -274,16 +274,16 @@ output$report_r <- renderUI({
       )
     ),
     shinyAce::aceEditor(
-      "r_edit", 
+      "r_edit",
       selectionId = "r_edit_selection",
       mode = "r",
       theme = getOption("radiant.ace_theme", default = "tomorrow"),
-      wordWrap = TRUE, 
-      height = "auto", 
+      wordWrap = TRUE,
+      height = "auto",
       value = state_init("r_edit", r_example) %>% esc_slash(),
       vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
       hotkeys = list(r_hotkey = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
-      autoComplete = "live",
+      autoComplete = getOption("radiant.autocomplete", "live"),
       tabSize = getOption("radiant.ace_tabSize", 2),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE)
     ),
@@ -391,10 +391,10 @@ output$r_knitted <- renderUI({
               modalDialog(
                 title = "Report Rstudio (R)",
                 span(
-                  "Report > R is set to use an R code file in Rstudio 
-                  ('To Rstudio (R)'). Please check that you have an .R file 
+                  "Report > R is set to use an R code file in Rstudio
+                  ('To Rstudio (R)'). Please check that you have an .R file
                   open in Rstudio and that the file has been saved to disk.
-                  If you want to use the editor in Radiant instead, change 
+                  If you want to use the editor in Radiant instead, change
                   'To Rstudio (R)' to 'Auto paste' or 'Manual paste'."
                 ),
                 footer = modalButton("OK"),
@@ -421,7 +421,7 @@ output$r_knitted <- renderUI({
             ## hack to allow processing current line
             report_r$knit_button <- 0
           }
-          
+
           # report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
           # knit_it(report)
         }
@@ -457,7 +457,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
       report_save_filename(type = "r", full.name = FALSE)
     },
     content = function(file) {
-      report_save_content(file, type = "r") 
+      report_save_content(file, type = "r")
     }
   )
 } else {
@@ -471,7 +471,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
       existing = FALSE
     )
     if (!is(path, "try-error") && !is_empty(path)) {
-      r_state$radiant_r_name <<- path 
+      r_state$radiant_r_name <<- path
       report_save_content(path, type = "r")
     }
   })
@@ -528,7 +528,7 @@ observeEvent(input$r_load, {
     }
 
     ## update editor and remove yaml header if present
-    shinyAce::updateAceEditor(session, "r_edit", 
+    shinyAce::updateAceEditor(session, "r_edit",
       value = sub("^---\n(.*?)\n---\n*", "", rmd)
     )
   }

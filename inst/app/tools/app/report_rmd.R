@@ -383,7 +383,7 @@ output$report_rmd <- renderUI({
       value = state_init("rmd_edit", rmd_example) %>% esc_slash(),
       vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
       hotkeys = list(rmd_hotkey = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
-      autoComplete = "live",
+      autoComplete = getOption("radiant.autocomplete", "live"),
       tabSize = getOption("radiant.ace_tabSize", 2),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE)
     ),
