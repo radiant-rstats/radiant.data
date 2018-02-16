@@ -184,11 +184,12 @@ sshhr <- function(...) suppressWarnings(suppressMessages(...))
 #'
 #' @param dat Data frame to filter
 #' @param filt Filter expression to apply to the specified dataset (e.g., "price > 10000" if dataset is "diamonds")
+#' @param drop Drop unused factor levels after filtering (default is TRUE)
 #'
 #' @return Filtered data frame
 #'
 #' @export
-filterdata <- function(dat, filt = "") {
+filterdata <- function(dat, filt = "", drop = TRUE) {
   if (grepl("([^=!<>])=([^=])", filt)) {
     message("Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
   } else {
@@ -200,7 +201,11 @@ filterdata <- function(dat, filt = "") {
     if (is(seldat, "try-error")) {
       message(paste0("Invalid filter: \"", attr(seldat, "condition")$message, "\". Update or remove the expression"))
     } else {
-      return(droplevels(seldat))
+      if (drop) {
+        return(droplevels(seldat))
+      } else {
+        return(seldat)
+      }
     }
   }
   dat

@@ -4,12 +4,14 @@
 \alias{filterdata}
 \title{Filter data with user-specified expression}
 \usage{
-filterdata(dat, filt = "")
+filterdata(dat, filt = "", drop = TRUE)
 }
 \arguments{
 \item{dat}{Data frame to filter}
 
 \item{filt}{Filter expression to apply to the specified dataset (e.g., "price > 10000" if dataset is "diamonds")}
+
+\item{drop}{Drop unused factor levels after filtering (default is TRUE)}
 }
 \value{
 Filtered data frame

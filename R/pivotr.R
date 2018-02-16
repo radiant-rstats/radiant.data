@@ -144,14 +144,10 @@ pivotr <- function(dataset,
 
   isNum <- if (length(cvars) == 1) -1 else -c(1:(length(cvars) - 1))
   if (normalize == "total") {
-    tab[, isNum] %<>% {
-      . / total[[1]]
-    }
+    tab[, isNum] %<>% {. / total[[1]]}
   } else if (normalize == "row") {
     if (!is.null(tab[["Total"]])) {
-      tab[, isNum] %<>% {
-        . / .[["Total"]]
-      }
+      tab[, isNum] %<>% {. / .[["Total"]]}
     }
   } else if (length(cvars) > 1 && normalize == "column") {
     tab[, isNum] %<>% apply(2, function(.) . / .[which(tab[, 1] == "Total")])
@@ -165,8 +161,9 @@ pivotr <- function(dataset,
   ## filtering the table if desired
   if (!is_empty(tabfilt)) {
     tab <- tab[-nrow(tab), ] %>%
-      filterdata(tabfilt) %>%
-      bind_rows(tab[nrow(tab), ])
+      filterdata(tabfilt, drop = FALSE) %>%
+      bind_rows(tab[nrow(tab), ]) %>%
+      droplevels()
   }
 
   ## sorting the table if desired
@@ -181,7 +178,6 @@ pivotr <- function(dataset,
     }
   }
 
-  # tab <- as.data.frame(tab, as.is = TRUE)
   tab <- as.data.frame(tab, stringsAsFactors = FALSE)
   attr(tab, "nrow") <- nrow_tab
   if (!is.null(nr)) {
