@@ -189,8 +189,7 @@ pre, code, pre code {
   word-wrap: normal;
   background-color: #ffffff;
 }
-</style>
-```\n\n", report)
+</style>\n\n", report)
 }}
 
 ## Based on http://stackoverflow.com/a/31797947/1974918
