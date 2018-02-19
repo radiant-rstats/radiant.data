@@ -4,7 +4,8 @@
 \alias{viewdata}
 \title{View data in a shiny-app}
 \usage{
-viewdata(dataset, vars = "", filt = "", rows = NULL, na.rm = FALSE)
+viewdata(dataset, vars = "", filt = "", rows = NULL, na.rm = FALSE,
+  dec = 3)
 }
 \arguments{
 \item{dataset}{Data.frame or name of the dataframe to view}
@@ -16,6 +17,8 @@ viewdata(dataset, vars = "", filt = "", rows = NULL, na.rm = FALSE)
 \item{rows}{Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)}
 
 \item{na.rm}{Remove rows with missing values (default is FALSE)}
+
+\item{dec}{Number of decimals to show}
 }
 \description{
 View data in a shiny-app

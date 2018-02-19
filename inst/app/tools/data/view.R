@@ -28,6 +28,11 @@ output$ui_View <- renderUI({
   tagList(
     wellPanel(
       uiOutput("ui_view_vars"),
+      numericInput(
+        "view_dec", "Decimals:",
+        value = state_init("view_dec", 2),
+        min = 0
+      ),
       tags$table(
         tags$td(textInput("view_dat", "Store filtered data as:", paste0(input$dataset, "_view"))),
         tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success"), style = "padding-top:30px;")
@@ -94,6 +99,14 @@ output$dataviewer <- DT::renderDataTable({
     dat[, isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
   }
 
+  ## for rounding
+  isInt <- sapply(dat, is.integer)
+  isNum <- sapply(dat, function(x) is.double(x) && !is.Date(x))
+  dec <- ifelse(
+    is_empty(input$view_dec) || !is.integer(input$view_dec) || input$view_dec < 0,
+    3, input$view_dec
+  )
+
   # print(r_state$dataviewer_state)
   # isolate({
   #   print(input$dataviewer_search_columns)
@@ -139,7 +152,9 @@ output$dataviewer <- DT::renderDataTable({
         lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
       ),
       callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
-    )
+    ) %>%
+      {if (sum(isNum) > 0) DT::formatRound(., names(isNum)[isNum], dec) else .} %>%
+      {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0) else .}
   )
 })
 
@@ -211,8 +226,18 @@ output$dl_view_tab <- downloadHandler(
     vars <- paste0(vars, collapse = ", ")
   }
 
+  xcmd <- paste0("# dtab(r_data[[\"", dataset, "\"]]")
+  if (!is_empty(input$view_dec, 3)) {
+    xcmd <- paste0(xcmd, ", dec = ", input$view_dec)
+  }
+  if (!is_empty(r_state$dataviewer_state$length, 10)) {
+    xcmd <- paste0(xcmd, ", pageLength = ", r_state$dataviewer_state$length)
+  }
+  xcmd <- paste0(xcmd, ", nr = 100) %>% render()")
+
   ## create the command to filter and sort the data
-  cmd <- paste0(cmd, "### filter and sort the dataset\nr_data[[\"", input$dataset, "\"]] %>%\n  select(", vars, ")")
+  # cmd <- paste0(cmd, "### filter and sort the dataset\nr_data[[\"", input$dataset, "\"]] %>%\n  select(", vars, ")")
+  cmd <- paste0(cmd, "### filter and sort the dataset\nr_data[[\"", input$dataset, "\"]]")
   if (input$show_filter && input$data_filter != "") {
     cmd <- paste0(cmd, " %>%\n  filter(", input$data_filter, ")")
   }
@@ -225,9 +250,11 @@ output$dl_view_tab <- downloadHandler(
   if (ts$tabsort != "") {
     cmd <- paste0(cmd, " %>%\n  arrange(", ts$tabsort, ")")
   }
+  ## moved `select` to the end so filters can use variables
+  ## not selected for the final dataset
+  cmd <- paste0(cmd, " %>%\n  select(", vars, ")")
 
-  # print(cmd)
-  paste0(cmd, " %>%\n  store(\"", dataset, "\", \"", input$dataset, "\")")
+  paste0(cmd, " %>%\n  store(\"", dataset, "\", \"", input$dataset, "\")\n", xcmd)
 }
 
 observeEvent(input$view_report, {

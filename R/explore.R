@@ -68,9 +68,8 @@ explore <- function(dataset,
   pfun <- make_funs(fun)
 
   if (is_empty(byvar)) {
-    isNum <- dc %>% {
-      which("numeric" == . | "integer" == .)
-    }
+    isNum <- dc %>%
+      {which("numeric" == . | "integer" == .)}
     tab <- dat %>%
       select_at(.vars = names(isNum)) %>%
       gather("variable", "value", factor_key = TRUE) %>%
@@ -170,6 +169,7 @@ explore <- function(dataset,
     ind <- if (nr > nrow(tab)) 1:nrow(tab) else 1:nr
     tab <- tab[ind, , drop = FALSE]
   }
+
 
   ## objects no longer needed
   rm(dat, check_int)
@@ -315,13 +315,16 @@ dtab.explore <- function(object,
                          order = NULL,
                          pageLength = NULL,
                          ...) {
+
   tab <- object$tab
   cn_all <- colnames(tab)
   cn_num <- cn_all[sapply(tab, is.numeric)]
   cn_cat <- cn_all[-which(cn_all %in% cn_num)]
+  isInt <- sapply(tab, is.integer)
+  isNum <- sapply(tab, function(x) is.double(x) && !is.Date(x))
+  dec <- ifelse(is_empty(dec) || !is.integer(dec) || dec < 0, 3, dec)
 
   top <- c("fun" = "Function", "var" = "Variables", "byvar" = paste0("Group by: ", object$byvar[1]))[object$top]
-
   sketch <- shiny::withTags(
     table(
       thead(
@@ -337,37 +340,44 @@ dtab.explore <- function(object,
   ## for display options see https://datatables.net/reference/option/dom
   dom <- if (nrow(tab) < 11) "t" else "ltip"
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
-  dt_tab <- rounddf(tab, dec) %>%
-    DT::datatable(
-      container = sketch, 
-      selection = "none",
-      rownames = FALSE,
-      filter = fbox,
-      ## must use fillContainer = FALSE to address
-      ## see https://github.com/rstudio/DT/issues/367
-      ## https://github.com/rstudio/DT/issues/379
-      fillContainer = FALSE,
-      ## only works with client-side processing
-      # extension = "KeyTable",
-      style = "bootstrap",
-      options = list(
-        dom = dom,
-        stateSave = TRUE,
-        searchCols = searchCols,
-        order = order,
-        columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all")),
-        autoWidth = TRUE,
-        # scrollX = FALSE, ## column filter location gets messed up
-        # scrollY = FALSE, ## column filter location gets messed up
-        processing = FALSE,
-        pageLength = {
-          if (is.null(pageLength)) 10 else pageLength
-        },
-        lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
-      ),
-      callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
-    ) %>%
+  # dt_tab <- rounddf(tab, dec) %>%
+  dt_tab <- DT::datatable(
+    tab,
+    container = sketch,
+    selection = "none",
+    rownames = FALSE,
+    filter = fbox,
+    ## must use fillContainer = FALSE to address
+    ## see https://github.com/rstudio/DT/issues/367
+    ## https://github.com/rstudio/DT/issues/379
+    fillContainer = FALSE,
+    ## only works with client-side processing
+    # extension = "KeyTable",
+    style = "bootstrap",
+    options = list(
+      dom = dom,
+      stateSave = TRUE,
+      searchCols = searchCols,
+      order = order,
+      columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all")),
+      autoWidth = TRUE,
+      # scrollX = FALSE, ## column filter location gets messed up
+      # scrollY = FALSE, ## column filter location gets messed up
+      processing = FALSE,
+      pageLength = {
+        if (is.null(pageLength)) 10 else pageLength
+      },
+      lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
+    ),
+    callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+  ) %>%
     DT::formatStyle(., cn_cat, color = "white", backgroundColor = "grey")
+
+  ## rounding as needed
+  if (sum(isNum) > 0)
+    dt_tab <- DT::formatRound(dt_tab, names(isNum)[isNum], dec)
+  if (sum(isInt) > 0)
+    dt_tab <- DT::formatRound(dt_tab, names(isInt)[isInt], 0)
 
   ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(

@@ -252,9 +252,7 @@ summary.pivotr <- function(object,
         filter(.[[1]] != "Total") %>%
         select(-which(names(.) %in% c(object$cvars, "Total"))) %>%
         mutate_all(funs(ifelse(is.na(.), 0, .))) %>%
-        {
-          sshhr(chisq.test(., correct = FALSE))
-        }
+        {sshhr(chisq.test(., correct = FALSE))}
 
       res <- tidy(cst)
       if (dec < 4 && res$p.value < .001) res$p.value <- "< .001"
@@ -288,7 +286,7 @@ summary.pivotr <- function(object,
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' pivotr("diamonds", cvars = "cut") %>% dtab
+#' pivotr("diamonds", cvars = "cut") %>% dtab()
 #' pivotr("diamonds", cvars = c("cut","clarity")) %>% dtab(format = "color_bar")
 #' ret <-  pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") %>%
 #'    dtab(format = "color_bar", perc = TRUE)
@@ -305,20 +303,24 @@ dtab.pivotr <- function(object,
                         order = NULL,
                         pageLength = NULL,
                         ...) {
+
   tab <- object$tab
   cvar <- object$cvars[1]
-  cvars <- object$cvars %>% {
-    if (length(.) > 1) .[-1] else .
-  }
-  cn <- colnames(tab) %>% {
-    .[-which(cvars %in% .)]
-  }
+  cvars <- object$cvars %>%
+    {if (length(.) > 1) .[-1] else .}
+  cn <- colnames(tab) %>%
+    {.[-which(cvars %in% .)]}
+
+  ## for rounding
+  isNum <- sapply(tab, function(x) is.double(x) && !is.Date(x))
+  isInt <- sapply(tab, is.integer)
+  dec <- ifelse(is_empty(dec) || !is.integer(dec) || dec < 0, 3, dec)
 
   ## column names without total
   cn_nt <- if ("Total" %in% cn) cn[-which(cn == "Total")] else cn
 
-  tot <- tail(tab, 1)[-(1:length(cvars))]
-  tot <- if (isTRUE(perc)) sprintf(paste0("%.", dec, "f%%"), tot * 100) else round(tot, dec)
+  tot <- tail(tab, 1)[-(1:length(cvars))] %>%
+    formatdf(perc = perc, dec = dec, mark = ",")
 
   if (length(cvars) == 1 && cvar == cvars) {
     sketch <- shiny::withTags(table(
@@ -344,42 +346,41 @@ dtab.pivotr <- function(object,
   ## for display options see https://datatables.net/reference/option/dom
   dom <- if (nrow(tab) < 11) "t" else "ltip"
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
-  dt_tab <- {
-    if (!perc) rounddf(tab, dec) else tab
-  } %>%
-    DT::datatable(
-      container = sketch,
-      selection = "none",
-      rownames = FALSE,
-      filter = fbox,
-      ## must use fillContainer = FALSE to address
-      ## see https://github.com/rstudio/DT/issues/367
-      ## https://github.com/rstudio/DT/issues/379
-      fillContainer = FALSE,
-      ## only works with client-side processing
-      # extension = "KeyTable",
-      style = "bootstrap",
-      options = list(
-        dom = dom,
-        stateSave = TRUE,
-        searchCols = searchCols,
-        order = order,
-        columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all")),
-        autoWidth = TRUE,
-        processing = FALSE,
-        pageLength = {
-          if (is.null(pageLength)) 10 else pageLength
-        },
-        lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
-      ),
-      callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
-    ) %>%
+  dt_tab <- DT::datatable(
+    tab,
+    container = sketch,
+    selection = "none",
+    rownames = FALSE,
+    filter = fbox,
+    ## must use fillContainer = FALSE to address
+    ## see https://github.com/rstudio/DT/issues/367
+    ## https://github.com/rstudio/DT/issues/379
+    fillContainer = FALSE,
+    ## only works with client-side processing
+    # extension = "KeyTable",
+    style = "bootstrap",
+    options = list(
+      dom = dom,
+      stateSave = TRUE,
+      searchCols = searchCols,
+      order = order,
+      columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all")),
+      autoWidth = TRUE,
+      processing = FALSE,
+      pageLength = {
+        if (is.null(pageLength)) 10 else pageLength
+      },
+      lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
+    ),
+    callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+  ) %>%
     DT::formatStyle(., cvars, color = "white", backgroundColor = "grey") %>%
     {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}
 
   ## heat map with red or color_bar
   if (format == "color_bar") {
-    dt_tab %<>% DT::formatStyle(
+    dt_tab <- DT::formatStyle(
+      dt_tab,
       cn_nt,
       background = DT::styleColorBar(range(tab[, cn_nt], na.rm = TRUE), "lightblue"),
       backgroundSize = "98% 88%",
@@ -391,15 +392,20 @@ dtab.pivotr <- function(object,
     brks <- quantile(tab[, cn_nt], probs = seq(.05, .95, .05), na.rm = TRUE) %>% round(5)
     clrs <- seq(255, 40, length.out = length(brks) + 1) %>%
       round(0) %>%
-      {
-        paste0("rgb(255,", ., ",", ., ")")
-      }
+      {paste0("rgb(255,", ., ",", ., ")")}
 
-    dt_tab %<>% DT::formatStyle(cn_nt, backgroundColor = DT::styleInterval(brks, clrs))
+    dt_tab <- DT::formatStyle(dt_tab, cn_nt, backgroundColor = DT::styleInterval(brks, clrs))
   }
 
-  ## show percentage
-  if (perc) dt_tab %<>% DT::formatPercentage(cn, dec)
+  if (perc) {
+    ## show percentages
+    dt_tab <- DT::formatPercentage(dt_tab, cn, dec)
+  } else {
+    if (sum(isNum) > 0) 
+      dt_tab <- DT::formatRound(dt_tab, names(isNum)[isNum], dec)
+    if (sum(isInt) > 0)
+      dt_tab <- DT::formatRound(dt_tab, names(isInt)[isInt], 0)
+  } 
 
   ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(
