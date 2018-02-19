@@ -599,6 +599,7 @@ changedata <- function(dataset,
 #' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
 #' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
 #' @param na.rm Remove rows with missing values (default is FALSE)
+#' @param dec Number of decimals to show
 #'
 #' @examples
 #' if (interactive()) {
@@ -612,17 +613,22 @@ viewdata <- function(dataset,
                      vars = "",
                      filt = "",
                      rows = NULL,
-                     na.rm = FALSE) {
+                     na.rm = FALSE,
+                     dec = 3) {
 
   ## based on http://rstudio.github.io/DT/server.html
   dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = na.rm)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
 
-  isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
-  if (sum(isBigFct) > 0) {
-    dat[, isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
-  }
+  ## avoid factor with a huge number of levels
+  isBigFct <- function(x) is.factor(x) && length(levels(x)) > 1000
+  dat <- mutate_if(dat, isBigFct, as.character)
+
+  ## for rounding
+  isNum <- sapply(dat, function(x) is.double(x) && !is.Date(x))
+  isInt <- sapply(dat, is.integer)
+  dec <- ifelse(is_empty(dec) || !is.integer(dec) || dec < 0, 3, dec)
 
   shinyApp(
     ui = fluidPage(
@@ -633,7 +639,8 @@ viewdata <- function(dataset,
     ),
     server = function(input, output, session) {
       widget <- DT::datatable(
-        dat, selection = "none",
+        dat, 
+        selection = "none",
         rownames = FALSE,
         style = "bootstrap",
         filter = fbox,
@@ -656,9 +663,11 @@ viewdata <- function(dataset,
           processing = FALSE,
           pageLength = 10,
           lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
-        )
+        ) %>%
+          {if (sum(isNum) > 0) DT::formatRound(., names(isNum)[isNum], dec)} %>%
+          {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0)}
         # , callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
-      )
+      )       
       output$tbl <- DT::renderDataTable(widget)
       observeEvent(input$stop, {
         stopApp(cat("Stopped viewdata"))
@@ -675,6 +684,7 @@ viewdata <- function(dataset,
 #' @param vars Variables to show (default is all)
 #' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
 #' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
+#' @param nr Number of rows of data to include in the table 
 #' @param na.rm Remove rows with missing values (default is FALSE)
 #' @param dec Number of decimal places to show. Default is no rounding (NULL)
 #' @param filter Show filter in DT table. Options are "none", "top", "bottom"
@@ -692,6 +702,7 @@ dtab.data.frame <- function(object,
                             vars = "",
                             filt = "",
                             rows = NULL,
+                            nr = NULL,
                             na.rm = FALSE,
                             dec = 3,
                             filter = "top",
@@ -702,48 +713,62 @@ dtab.data.frame <- function(object,
                             ...) {
 
   dat <- getdata(object, vars, filt = filt, rows = rows, na.rm = na.rm)
-
-  isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
-  if (sum(isBigFct) > 0) {
-    dat[, isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
+  if (!is_empty(nr)) {
+    dat <- dat[seq_len(nr), , drop = FALSE]
   }
+
+  ## for rounding
+  isInt <- sapply(dat, is.integer)
+  isNum <- sapply(dat, function(x) is.double(x) && !is.Date(x))
+  dec <- ifelse(is_empty(dec) || !is.integer(dec) || dec < 0, 3, dec)
+
+  ## avoid factor with a huge number of levels
+  isBigFct <- function(x) is.factor(x) && length(levels(x)) > 1000
+  dat <- mutate_if(dat, isBigFct, as.character)
 
   ## for display options see https://datatables.net/reference/option/dom
   if (is_empty(dom)) {
     dom <- if (pageLength == -1 || nrow(dat) < pageLength) "t" else "lftip"
   }
 
-  dt_tab <- rounddf(dat, dec) %>%
-    DT::datatable(
-      filter = filter,
-      selection = "none",
-      rownames = rownames,
-      ## must use fillContainer = FALSE to address
-      ## see https://github.com/rstudio/DT/issues/367
-      ## https://github.com/rstudio/DT/issues/379
-      fillContainer = FALSE,
-      ## only works with client-side processing
-      # extension = "KeyTable",
-      escape = FALSE,
-      style = style,
-      options = list(
-        dom = dom,
-        # keys = TRUE,
-        search = list(regex = TRUE),
-        columnDefs = list(
-          list(orderSequence = c("desc", "asc"), targets = "_all"),
-          list(className = "dt-center", targets = "_all")
-        ),
-        autoWidth = TRUE,
-        processing = FALSE,
-        pageLength = pageLength,
-        lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
-      )
+  dt_tab <- DT::datatable(
+    dat,
+    filter = filter,
+    selection = "none",
+    rownames = rownames,
+    ## must use fillContainer = FALSE to address
+    ## see https://github.com/rstudio/DT/issues/367
+    ## https://github.com/rstudio/DT/issues/379
+    fillContainer = FALSE,
+    ## only works with client-side processing
+    # extension = "KeyTable",
+    escape = FALSE,
+    style = style,
+    options = list(
+      dom = dom,
+      # keys = TRUE,
+      search = list(regex = TRUE),
+      columnDefs = list(
+        list(orderSequence = c("desc", "asc"), targets = "_all"),
+        list(className = "dt-center", targets = "_all")
+      ),
+      autoWidth = TRUE,
+      processing = FALSE,
+      pageLength = pageLength,
+      lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
     )
+  )
+
+  ## rounding as needed
+  if (sum(isNum) > 0)
+    dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isNum], dec)
+  if (sum(isInt) > 0)
+    dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isInt], 0)
 
   ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(
-    list(rmarkdown::html_dependency_bootstrap("bootstrap")), dt_tab$dependencies
+    list(rmarkdown::html_dependency_bootstrap("bootstrap")), 
+    dt_tab$dependencies
   )
 
   dt_tab
@@ -1008,7 +1033,7 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #' @export
 formatdf <- function(tbl, dec = 3, perc = FALSE, mark = "") {
   frm <- function(x) {
-    if (is.double(x)) {
+    if (is.double(x) && !is.Date(x)) {
       formatnr(x, dec = dec, perc = perc, mark = mark)
     } else if (is.integer(x)) {
       formatnr(x, dec = 0, mark = mark)
@@ -1060,8 +1085,10 @@ formatnr <- function(x, sym = "", dec = 2, perc = FALSE, mark = ",") {
 #'   rounddf(dec = 3)
 #'
 #' @export
-rounddf <- function(tbl, dec = 3)
-  mutate_if(tbl, is.double, .funs = funs(round(., dec)))
+rounddf <- function(tbl, dec = 3) {
+  is_double <- function(x) is.double(x) && is.Date(x)
+  mutate_if(tbl, is_double, .funs = funs(round(., dec)))
+}
 
 #' Find a user's Dropbox folder
 #'
@@ -1263,8 +1290,7 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
   ## customizing data if a command was used
   if (!is_empty(cmd)) {
     pred_cmd <- gsub("\"", "\'", cmd) %>% gsub("\\s+", "", .)
-    cmd_vars <-
-      strsplit(pred_cmd, ";")[[1]] %>%
+    cmd_vars <- strsplit(pred_cmd, ";")[[1]] %>%
       strsplit(., "=") %>%
       sapply("[", 1) %>%
       gsub("\\s+", "", .)
@@ -1272,15 +1298,11 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
     dots <- rlang::parse_exprs(pred_cmd) %>%
       set_names(cmd_vars)
 
-    # dat <- try(mutate(dat, !!! dots), silent = TRUE)
     dat <- try(dat %>% mutate(!!! dots), silent = TRUE)
   }
 
-  ind <-
-    mutate(dat, imf___ = 1:nrows) %>%
-    {
-      if (filt == "") . else filterdata(., filt)
-    } %>%
+  ind <- mutate(dat, imf___ = 1:nrows) %>%
+    {if (filt == "") . else filterdata(., filt)} %>%
     select_at(.vars = unique(c("imf___", vars))) %>%
     na.omit() %>%
     .[["imf___"]]

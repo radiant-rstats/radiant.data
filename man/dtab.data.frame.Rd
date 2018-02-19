@@ -5,8 +5,8 @@
 \title{Create a DT table with bootstrap theme}
 \usage{
 \method{dtab}{data.frame}(object, vars = "", filt = "", rows = NULL,
-  na.rm = FALSE, dec = 3, filter = "top", pageLength = 10, dom = "",
-  style = "bootstrap", rownames = FALSE, ...)
+  nr = NULL, na.rm = FALSE, dec = 3, filter = "top", pageLength = 10,
+  dom = "", style = "bootstrap", rownames = FALSE, ...)
 }
 \arguments{
 \item{object}{Data.frame to display}
@@ -16,6 +16,8 @@
 \item{filt}{Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")}
 
 \item{rows}{Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)}
+
+\item{nr}{Number of rows of data to include in the table}
 
 \item{na.rm}{Remove rows with missing values (default is FALSE)}
 

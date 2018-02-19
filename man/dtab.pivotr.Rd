@@ -31,7 +31,7 @@ Make a pivot tabel in DT
 See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 }
 \examples{
-pivotr("diamonds", cvars = "cut") \%>\% dtab
+pivotr("diamonds", cvars = "cut") \%>\% dtab()
 pivotr("diamonds", cvars = c("cut","clarity")) \%>\% dtab(format = "color_bar")
 ret <-  pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") \%>\%
    dtab(format = "color_bar", perc = TRUE)
