@@ -7,6 +7,7 @@
 // https://stackoverflow.com/questions/47569992/home-button-in-header-in-r-shiny-dashboard
 $(document).keydown(function(event) {
 
+  // console.log(document.activeElement)
   if ($(".btn-success:visible" || ".shiny-bound-input:visible").is(":visible") &&
        (event.metaKey || event.ctrlKey) && event.keyCode == 13) {
      $(".btn-success:visible" || ".shiny-bound-input:visible").click();
@@ -67,27 +68,9 @@ $(document).keydown(function(event) {
     } else if ($('#tr_change_type').selectize()[0].selectize.getValue() === "create") {
       $("#tr_create").focus();
     }
-  } else if($("#rmd_knit").is(":visible") &&
-            // focus on rmd_knitted doesn't seem to work
-            // $("#rmd_knitted").is(":focus") === false,
-            $(".ace_text-input").is(":focus") === false &&
-            $(".ace_search_form").is(":visible") === false &&
-            event.metaKey === false &&
-            event.ctrlKey === false &&
-            event.shiftKey === false) {
-    // don't change focus if meta, ctrl, of shift are pressed
-    // allows selecting and copying output from #rmd_knitted
+  } else if($("#rmd_knit").is(":visible") && document.activeElement === document.body) {
     $(".ace_text-input").focus();
-  } else if($("#r_knit").is(":visible") &&
-            // focus on r_knitted doesn't seem to work
-            // $("#r_knitted").is(":focus") === false,
-            $(".ace_text-input").is(":focus") === false &&
-            $(".ace_search_form").is(":visible") === false &&
-            event.metaKey === false &&
-            event.ctrlKey === false &&
-            event.shiftKey === false) {
-    // don't change focus if meta, ctrl, of shift are pressed
-    // allows selecting and copying output from #r_knitted
+  } else if($("#r_knit").is(":visible") && document.activeElement === document.body) {
     $(".ace_text-input").focus();
  }
 
@@ -97,10 +80,6 @@ $(document).keydown(function(event) {
 
 // from https://stackoverflow.com/a/33251536/1974918 by Dean Attali
 $(document).on("shiny:connected", function() {
-// $(document).on("shiny:value", function(e) {
-  // var jsWidth = screen.width;
-  // var jsWidth = $(window).width();
-  // Shiny.onInputChange("get_screen_width", jsWidth);
   Shiny.onInputChange("get_screen_width", $(window).width());
 });
 
