@@ -5,7 +5,7 @@
 * Option to include an interactive view of a dataset in _Report > Rmd_. By default, the number of rows is set to 100 as, most likely, the user will not want to embed a large dataset in save HTML report
 * Better error messages for `xtile` and when binning data with too many groups
 * _Data > Transform_ will leave variables selected, unless switching to `Create` or `Spread`
-* Addressed warnings in _Data > Pivot_ when filtering the table
+* Fix for variable type warnings in _Data > Pivot_ when filtering the table
 * Switch focus to editor in _Report > Rmd_ and _Report > R_ when no other input has focus
 * Fix for \ in equations in _Report > Rmd_
 
