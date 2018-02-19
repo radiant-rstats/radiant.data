@@ -89,7 +89,6 @@ output$ui_r_generate <- renderUI({
     inputId = "r_generate",
     label = NULL,
     choices = r_generate,
-    # selected = state_init("r_generate", "Use Rmd"),
     selected = state_init("r_generate", init),
     multiple = FALSE,
     selectize = FALSE,
@@ -106,26 +105,8 @@ output$ui_r_view <- renderUI({
   )
 })
 
-# observeEvent(input$r_generate, {
-#   if (input$r_generate == "To R") {
-#     updateSelectInput(session, "r_switch", selected = "no_switch")
-#     updateSelectInput(session, "r_view", selected = "pr_only")
-#     # report_r$r <- 0
-#   } else if (input$r_generate == "Use Report > Rmd") {
-#     if (isTRUE(input$rmd_generate == "Use Report > R")) {
-#       updateSelectInput(session, "rmd_generate", selected = "auto")
-#     }
-#     updateTabsetPanel(session, "nav_radiant", selected = "Rmd")
-#     # updateSelectInput(session, "r_generate", selected = "auto")
-#   } else {
-#     updateSelectInput(session, "r_switch", selected = "switch")
-#     updateSelectInput(session, "r_view", selected = "dual")
-#   }
-# })
-
 observeEvent(input$r_generate, {
 
-  # if (isTRUE(input$r_generate == "To R")) {
   if (state_init("r_generate", "auto") == "To R") {
 
     updateSelectInput(session, "r_switch", selected = "no_switch")
@@ -168,13 +149,10 @@ observeEvent(input$r_generate, {
         )
       }
     }
-  # } else if (input$r_generate == "Use Rmd") {
   } else if (state_init("r_generate", "auto") == "Use Rmd") {
-    # if (isTRUE(input$rmd_generate == "Use R")) {
     if (state_init("rmd_generate", "auto") == "Use R") {
       updateSelectInput(session, "rmd_generate", selected = "auto")
     }
-    # updateTabsetPanel(session, "nav_radiant", selected = "Rmd")
   } else {
     updateSelectInput(session, "r_switch", selected = "switch")
     updateSelectInput(session, "r_view", selected = "dual")
@@ -215,24 +193,12 @@ output$ui_r_save <- renderUI({
   }
 })
 
-# output$ui_r_load <- renderUI({
-#   if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-#     actionButton("r_load", "Load R-code", icon = icon("upload"), class = "btn-primary")
-#   } else {
-#     HTML("<div class='form-group shiny-input-container btn-primary'>
-#             <input id='r_load' name='r_load' type='file' accept='.R,.r'/>
-#           </div>")
-#   }
-# })
-
 output$ui_r_load <- renderUI({
   if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-    # fileInput("r_load", "", multiple = FALSE, accept = c(".Rmd", ".rmd", ".md", ".html"))
     file_upload_button(
       "r_load",
       accept = c(".R", ".r", ".html"),
       buttonLabel = "Load report"
-      # class = "btn-primary"
     )
   } else {
     actionButton("r_load", "Load report", icon = icon("upload"))
@@ -248,14 +214,6 @@ output$ui_r_read_files <- renderUI({
 })
 
 output$report_r <- renderUI({
-  # init <- isolate({
-  #   init <- state_init(input$r_edit, r_example)
-  #   if (is_empty(input$r_edit)) {
-  #     r_example
-  #   } else {
-  #     esc_slash(input$r_edit)
-  #   }
-  # })
   tagList(
     with(
       tags,
@@ -280,7 +238,7 @@ output$report_r <- renderUI({
       theme = getOption("radiant.ace_theme", default = "tomorrow"),
       wordWrap = TRUE,
       height = "auto",
-      value = state_init("r_edit", r_example) %>% esc_slash(),
+      value = state_init("r_edit", r_example) %>% fixMS(),
       vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
       hotkeys = list(r_hotkey = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
       autoComplete = getOption("radiant.autocomplete", "live"),
@@ -293,13 +251,6 @@ output$report_r <- renderUI({
 })
 
 r_edit_auto <- shinyAce::aceAutocomplete("r_edit")
-
-# observe({
-#   input$r_knit
-#   if (!is.null(input$r_hotkey)) ({
-#     isolate(report_r$r <- report_r$r + 1)
-#   })
-# })
 
 observeEvent(input$r_knit, {
   ## hack to allow processing current line
@@ -322,18 +273,6 @@ observe({
   }
 })
 
-# observe({
-  # print(input$r_knit)
-  # print(input$r_hotkey)
-  # print(toList(report_r))
-  # print("\n--- rcode lines ----")
-  # print(input$r_current_line)
-  # print(input$r_current_line_content)
-  # print(input$r_edit_selection)
-  # print(input$r_hotkey)
-  # print("----------------------")
-# })
-
 output$r_view <- renderUI({
   req(input$r_view)
   if (input$r_view == "ed_only") {
@@ -350,28 +289,6 @@ output$r_view <- renderUI({
     ))
   }
 })
-
-# output$r_knitted <- renderUI({
-#   req(report_r$r > 0 && not_pressed(input$r_clear))
-#   isolate({
-#     if (!isTRUE(getOption("radiant.report"))) {
-#       HTML("<h2>R-code was not evaluated. If you have sudo access to the server set options(radiant.report = TRUE) in .Rprofile for the shiny user </h2>")
-#     } else {
-#       r_edit <-
-#         ifelse(is_empty(input$r_edit_selection), input$r_edit, input$r_edit_selection)
-
-#       pdir <- getOption("radiant.project_dir", default = "")
-#       if (!is_empty(pdir)) {
-#         owd <- setwd(pdir)
-#         on.exit(setwd(owd))
-#       }
-
-#       withProgress(message = "Running R-code", value = 1, {
-#         knit_it(paste0("```{r echo = TRUE}\n", r_edit, "\n```"))
-#       })
-#     }
-#   })
-# })
 
 output$r_knitted <- renderUI({
   ## rmd > 0 will re-run on refresh so keep != 1
@@ -421,34 +338,13 @@ output$r_knitted <- renderUI({
             ## hack to allow processing current line
             report_r$knit_button <- 0
           }
-
-          # report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
-          # knit_it(report)
+          report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
+          knit_it(report)
         }
-
-        report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
-        knit_it(report)
       })
-
-      # report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
-      # knit_it(report)
     }
   })
 })
-
-# observeEvent(input$r_save, {
-#   path <- rstudioapi::selectFile(
-#     caption = "Report file name",
-#     path = report_save_filename(),
-#     filter = "Report file name (*)",
-#     existing = FALSE
-#   )
-
-#   if (!is(path, "try-error") && !is_empty(path)) {
-#     r_state$radiant_r_name <<- path
-#     report_save_content(path)
-#   }
-# })
 
 if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
   ## based on http://shiny.rstudio.com/gallery/download-knitr-reports.html
@@ -480,20 +376,12 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
 ## loading r-code from disk
 observeEvent(input$r_load, {
 
-  # if (!is(path, "try-error") && !is_empty(path)) {
-  #   pp <- parse_path(path, chr = "")
-  #   r_state$radiant_r_name <<- pp$path
-  #   paste0(readLines(pp$path), collapse = "\n") %>%
-  #     shinyAce::updateAceEditor(session, "r_edit", value = .)
-  # }
-
-   ## loading report from disk
+  ## loading report from disk
   if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
     path <- rstudioapi::selectFile(
       caption = "Select .R or .html",
       filter = "Select .R or .html (*)"
     )
-    # print(path)
     pp <- parse_path(path, chr = "")
   } else {
     inFile <- input$r_load
@@ -517,7 +405,6 @@ observeEvent(input$r_load, {
         rmd <- "### The selected html file could not be parsed and does not contain R content"
       }
     } else {
-      # r_state$radiant_rmd_name <<- pp$path
       rmd <- paste0(readLines(pp$path), collapse = "\n")
 
       if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
@@ -542,7 +429,5 @@ observeEvent(input$r_read_files, {
 })
 
 observeEvent(input$r_edit, {
-  if (!identical(input$r_edit, r_example)) {
-    r_state$r_edit <<- esc_slash(input$r_edit)
-  }
+  r_state$r_edit <<- fixMS(input$r_edit)
 })

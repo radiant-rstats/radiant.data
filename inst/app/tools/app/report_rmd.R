@@ -162,25 +162,6 @@ output$ui_rmd_view <- renderUI({
   )
 })
 
-# observeEvent(input$rmd_generate, {
-#   if (input$rmd_generate == "To Rmd") {
-#     updateSelectInput(session, "rmd_switch", selected = "no_switch")
-#     updateSelectInput(session, "rmd_view", selected = "pr_only")
-#     # report_rmd$rmd <- 0
-
-#   } else if (input$rmd_generate == "Use Report > R") {
-
-#     if (isTRUE(input$r_generate == "Use Report > Rmd")) {
-#       updateSelectInput(session, "r_generate", selected = "auto")
-#     }
-#     updateTabsetPanel(session, "nav_radiant", selected = "R")
-#     # updateSelectInput(session, "rmd_generate", selected = "auto")
-#   } else {
-#     updateSelectInput(session, "rmd_switch", selected = "switch")
-#     updateSelectInput(session, "rmd_view", selected = "dual")
-#   }
-# })
-
 observeEvent(input$rmd_generate, {
   if (isTRUE(input$rmd_generate == "To Rmd")) {
 
@@ -225,14 +206,10 @@ observeEvent(input$rmd_generate, {
         )
       }
     }
-  # } else if (input$rmd_generate == "Use R") {
   } else if (state_init("rmd_generate", "auto") == "Use R") {
-    # if (isTRUE(input$rmd_generate == "Use R")) {
     if (state_init("r_generate", "auto") == "Use Rmd") {
-    # if (isTRUE(input$r_generate == "Use Rmd")) {
       updateSelectInput(session, "r_generate", selected = "auto")
     }
-    # updateTabsetPanel(session, "nav_radiant", selected = "R")
   } else {
     updateSelectInput(session, "rmd_switch", selected = "switch")
     updateSelectInput(session, "rmd_view", selected = "dual")
@@ -258,14 +235,6 @@ output$ui_rmd_switch <- renderUI({
 # })
 
 output$ui_rmd_save_type <- renderUI({
-  # req(input$rmd_generate)
-
-  # if (input$rmd_generate %in% rmd_set) {
-  #   rmd_save_type <- setdiff(rmd_save_type, c("R", "R + Data (zip)"))
-  # } else {
-  #   rmd_save_type <- setdiff(rmd_save_type, c("Rmd", "Rmd + Data (zip)"))
-  # }
-
   selectInput(
     inputId = "rmd_save_type", label = NULL,
     choices = rmd_save_type,
@@ -277,7 +246,6 @@ output$ui_rmd_save_type <- renderUI({
 
 output$ui_rmd_save <- renderUI({
   if (isTRUE(getOption("radiant.report"))) {
-    # if (exists(".rs.readUiPref") && .rs.readUiPref("shiny_viewer_type") == 2) {
     if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
       ## using a download handler
       downloadButton("rmd_save", "Save report", class = "btn-primary")
@@ -291,12 +259,10 @@ output$ui_rmd_save <- renderUI({
 
 output$ui_rmd_load <- renderUI({
   if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-    # fileInput("rmd_load", "", multiple = FALSE, accept = c(".Rmd", ".rmd", ".md", ".html"))
     file_upload_button(
       "rmd_load",
       accept = c(".Rmd", ".rmd", ".md", ".html"),
       buttonLabel = "Load report"
-      # class = "btn-primary"
     )
   } else {
     actionButton("rmd_load", "Load report", icon = icon("upload"))
@@ -330,13 +296,6 @@ output$ui_rmd_read_files <- renderUI({
 # })
 
 output$report_rmd <- renderUI({
-  # init <- isolate({
-  #   if (is_empty(input$rmd_edit)) {
-  #     rmd_example
-  #   } else {
-  #     esc_slash(input$rmd_edit)
-  #   }
-  # })
   tagList(
     with(
       tags,
@@ -350,9 +309,6 @@ output$report_rmd <- renderUI({
           actionButton(
             "rmd_knit", " Knit report (Rmd)", icon = icon("play"),
             class = "btn-success"
-            # focus doesn't seem to work https://stackoverflow.com/questions/7050931/how-to-set-focus-on-the-ace-editor
-            # class = "btn-success", onclick = "function() {$('#rmd_edit').focus();}"
-            # class = "btn-success", onclick = "function() {$('editor__rmdedit').focus();}"
           ), style = "padding-top:5px;"
         ),
         td(uiOutput("ui_rmd_generate")),
@@ -363,16 +319,8 @@ output$report_rmd <- renderUI({
         td(uiOutput("ui_rmd_load"), style = "padding-top:5px;"),
         td(uiOutput("ui_rmd_read_files"), style = "padding-top:5px;"),
         td(actionButton("rmd_clear", "Clear output", icon = icon("trash"), class = "btn-danger"), style = "padding-top:5px;")
-        # td(shinyFiles::shinyFilesButton("my_shiny_file", "Select data", "Select one or more datasets", TRUE), style = "padding-top:5px;")
       )
     ),
-    # textAreaInput(
-    #   "rmd_edit",
-    #   NULL,
-    #   rows = 60,
-    #   resize = "vertical",
-    #   value = state_init("rmd_edit", rmd_example)
-    # ),
     shinyAce::aceEditor(
       "rmd_edit",
       selectionId = "rmd_edit_selection",
@@ -380,7 +328,7 @@ output$report_rmd <- renderUI({
       theme = getOption("radiant.ace_theme", default = "tomorrow"),
       wordWrap = TRUE,
       height = "auto",
-      value = state_init("rmd_edit", rmd_example) %>% esc_slash(),
+      value = state_init("rmd_edit", rmd_example) %>% fixMS(),
       vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
       hotkeys = list(rmd_hotkey = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
       autoComplete = getOption("radiant.autocomplete", "live"),
@@ -504,9 +452,8 @@ rmd_knitted <- eventReactive(report_rmd$report != 1, {
           ## hack to allow processing current line
           report_rmd$knit_button <- 0
         }
-
+        knit_it(report, type = "rmd")
       }
-      knit_it(report, type = "rmd")
     })
   }
 })
@@ -572,9 +519,6 @@ observeEvent(input$rmd_load, {
       caption = "Select .Rmd, .md, or .html",
       filter = "Select .Rmd, .md, or .html (*)"
     )
-    # } else {
-      # path <- radiant.data::choose_files("Rmd", "rmd", "md", "html")
-    # }
     pp <- parse_path(path, chr = "")
   } else {
     inFile <- input$rmd_load
@@ -597,7 +541,6 @@ observeEvent(input$rmd_load, {
         rmd <- "### The selected html file could not be parsed and does not contain rmarkdown content"
       }
     } else {
-      # r_state$radiant_rmd_name <<- pp$path
       rmd <- paste0(readLines(pp$path), collapse = "\n")
 
       if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
@@ -614,8 +557,6 @@ observeEvent(input$rmd_load, {
     shinyAce::updateAceEditor(session, "rmd_edit",
       value = r_state$rmd_edit
     )
-    ## for testing with textArea
-    # updateTextAreaInput(session, "rmd_edit", value = r_state$rmd_edit)
   }
 })
 
@@ -628,5 +569,7 @@ observeEvent(input$rmd_read_files, {
 
 observeEvent(input$rmd_edit, {
   ## continuously update and escape \
-  r_state$rmd_edit <<- gsub("\\\\", "\\\\\\\\", input$rmd_edit)
+  # r_state$rmd_edit <<- gsub("\\\\", "\\\\\\\\", input$rmd_edit)
+  ## continuously update r_state
+  r_state$rmd_edit <<- fixMS(input$rmd_edit)
 })

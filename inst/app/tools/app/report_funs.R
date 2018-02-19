@@ -4,7 +4,7 @@ file_upload_button <- function(inputId, label = "",
                                buttonLabel = "Browse ...",
                                class = "") {
 
-  ## try creating an upload link https://stackoverflow.com/a/11406690/1974918
+  ## next ... create an upload link https://stackoverflow.com/a/11406690/1974918
   if (length(accept) > 0) {
     accept <- paste(accept, collapse = ",")
   } else {
@@ -29,9 +29,9 @@ file_upload_button <- function(inputId, label = "",
 }
 
 ## replace esc_slash by fixMS if not more formula issues popup
-esc_slash <- function(x) {
-  radiant.data::fixMS(x)
-}
+# esc_slash <- function(x) {
+#   radiant.data::fixMS(x)
+# }
 
 ## Thanks to @timelyportfolio for this comment/fix
 ## https://github.com/timelyportfolio/functionplotR/issues/1#issuecomment-224369431
@@ -49,26 +49,11 @@ getdeps <- function() {
 
 ## get information from rstudio editor
 rstudio_context <- function(type = "rmd") {
-  # if (isTRUE(input$rmd_generate == "To Rmd")) {
-  #   type <- "rmd"
-  # } else if (isTRUE(input$rmd_generate == "To R")) {
-  #   type <- "r"
-  # } else {
-  #   return(
-  #     list(
-  #       path = "", rpath = "", base = "",
-  #       base_name = "", ext = "", report = ""
-  #     )
-  #   )
-  # }
+
   rse <- rstudioapi::getSourceEditorContext()
   path <- rse$path
   ext <- tools::file_ext(path)
 
-  # print("---------")
-  # print(str(rse))
-  # print("---------")
-  # if (is_empty(path) || tolower(ext) != type) {
   if (is_empty(path) || !file.exists(path) || tolower(ext) != type) {
     ## path will be empty of new file hasn't been save yet
     list(path = "", rpath = "", base = "", base_name = "", ext = "", content = "")
@@ -84,7 +69,6 @@ rstudio_context <- function(type = "rmd") {
     }
 
     base <- basename(path)
-    # ext <- tools::file_ext(path)
     base_name <- sub(paste0(".", ext), "", base)
 
     rpath <- if (is_empty(pdir)) {
@@ -121,7 +105,7 @@ setup_report <- function(report, ech,
                          save_type = "Notebook",
                          lib = "radiant") {
 
-  report <- esc_slash(report) %>%
+  report <- fixMS(report) %>%
     sub("^---\n(.*?)\n---", "", .) %>%
     sub("<!--(.*?)-->", "", .)
 
@@ -195,6 +179,7 @@ pre, code, pre code {
 ## Based on http://stackoverflow.com/a/31797947/1974918
 ## as of 12/30/2017 doesn't seem to work anymore
 knit_it_save <- function(report) {
+
   ## Read input and convert to Markdown
   md <- knitr::knit(text = report, envir = r_environment)
 
@@ -246,6 +231,7 @@ knit_it_save <- function(report) {
 
 ## Knit for report in Radiant
 knit_it <- function(report, type = "rmd") {
+
   if (type == "rmd") {
     report <- gsub("\\\\\\\\\\s*\n", "\\\\\\\\\\\\\\\\\n", report)
   }
@@ -337,7 +323,6 @@ read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
 
   ## if no path is provided, an interactive file browser will be opened
   if (missing(path)) {
-    # if (exists(".rs.readUiPref") && .rs.readUiPref("shiny_viewer_type") == 2) {
     if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
       path <- try(choose_files(), silent = TRUE)
     } else {
@@ -405,7 +390,7 @@ read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
         paste0(paste0(readLines(pp$path), collapse = "\n"))
       return(paste0("\n```{", sub("py", "python", pp$fext), "}\n", cmd, "\n```\n"))
     } else if (pp$fext %in% c("md", "rmd") && type == "rmd") {
-      return(paste0("\n```{r, child = ", pp$rpath, "}\n```\n"))
+      return(paste0("\n```{r child = ", pp$rpath, "}\n```\n"))
     } else if (pp$fext %in% c("jpg", "jpeg", "png", "pdf") && type == "rmd") {
       cmd <- paste0("\n![](`r ", pp$rpath, "`)\n")
       if (!grepl("file.path", cmd)) cmd <- sub("`r \"", "", cmd) %>% sub("\"`", "", .)
@@ -428,24 +413,6 @@ read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
   }
 }
 
-## testing
-# library(dplyr)
-# r_data <- list(init = "")
-# is_empty <- radiant.data::is_empty
-# flist <- list.files("./tests/testthat/data", include.dirs = FALSE, full.names = TRUE)
-
-## as in radiant
-# rmd <- sapply(flist, read_files, radiant = TRUE) %>%
-  # paste0("```{r}\nhead(r_data[[tail(names(r_data), 1)]])\n```", .) %>%
-# rmd <- sapply(flist, read_files, radiant = FALSE) %>%
-#   paste0(collapse = "\n") %>%
-#   paste0("```{r}\nlibrary(radiant.data)\n```\n", .) %T>%
-#   cat() %>%
-#   cat(file = "./read_files.Rmd")
-
-# rmarkdown::render("./read_files.Rmd")
-# browseURL("./read_files.html")
-
 sans_ext <- function(path) {
   sub("(\\.rda$|\\.rds$|\\.rmd$|\\.r$|\\.rdata$)", "", path, ignore.case = TRUE)
 }
@@ -456,25 +423,14 @@ report_name <- function(type = "rmd", out = "report", full.name = FALSE) {
   pdir <- getOption("radiant.project_dir", default = ldir)
 
   ## generate report name based on state or project name
-  # if (input$rmd_generate %in% rmd_set_rstudio) {
   if (input[[paste0(type, "_generate")]] %in% c("To Rmd", "To R")) {
     fn <- r_state[[paste0("radiant_", type, "_name")]]
   } else {
     fn <- ""
   }
 
-  # sans_ext <- function(path) {
-  #   sub("(\\.rda$|\\.rmd$|\\.r$|\\.rdata$)", "", path, ignore.case = TRUE)
-  # }
-  # sans_ext("test.Rmd")
-  # sans_ext("test.rmd")
-  # sans_ext("test.RDa")
-  # sans_ext("test.RDaTa")
-
   if (is_empty(fn)) {
     fn <- state_name()
-    # fn <- state_name(full.name = TRUE)
-
     fn <- sans_ext(fn) %>%
       sub("-state", paste0("-", out), .)
 
@@ -487,8 +443,6 @@ report_name <- function(type = "rmd", out = "report", full.name = FALSE) {
   } else {
     fn <- basename(fn) %>%
       sans_ext()
-      # tools::file_path_sans_ext()
-    # fn <- tools::file_path_sans_ext(fn)
   }
 
   if (full.name) {
@@ -498,24 +452,17 @@ report_name <- function(type = "rmd", out = "report", full.name = FALSE) {
   }
 }
 
-# report_save_filename <- function(to = "To Rmd", type = "rmd") {
 report_save_filename <- function(type = "rmd", full.name = TRUE) {
-
-  # ldir <- getOption("radiant.launch_dir", default = "~/")
-  # pdir <- getOption("radiant.project_dir", default = ldir)
 
   if (input[[paste0(type, "_generate")]] %in% c("To Rmd", "To R")) {
     cnt <- rstudio_context(type = type)
     if (!is_empty(cnt$path)) {
       if (cnt$path != cnt$rpath) {
         r_state[[paste0("radiant_", type, "_name")]] <<- cnt$rpath
-        # r_state$radiant_rmd_name <<- cnt$rpath
       } else {
         r_state[[paste0("radiant_", type, "_name")]] <<- cnt$path
-        # r_state$radiant_rmd_name <<- cnt$path
       }
 
-      # fn <- cnt$base_name
       if (full.name) {
         fn <- cnt$path
       } else {
@@ -544,27 +491,16 @@ report_save_filename <- function(type = "rmd", full.name = TRUE) {
   ))
 }
 
-# report_save_content <- function(file, to = "To Rmd", type = "rmd") {
 report_save_content <- function(file, type = "rmd") {
-
-  # print("---")
-  # print(file)
-  # print("---")
 
   if (isTRUE(getOption("radiant.report"))) {
     isolate({
       ldir <- getOption("radiant.launch_dir", default = "~/")
-      # print(ldir)
       pdir <- getOption("radiant.project_dir", default = ldir)
-      # print(pdir)
 
       tdir <- tempdir()
       owd <- ifelse(is_empty(pdir), setwd(tdir), setwd(pdir))
       on.exit(setwd(owd))
-
-      # print(type)
-      # type <- "rmd"
-      # type <- "rmd"
 
       save_type <- input[[paste0(type, "_save_type")]]
       generate <- input[[paste0(type, "_generate")]]
@@ -590,7 +526,6 @@ report_save_content <- function(file, type = "rmd") {
 
       lib <- if ("radiant" %in% installed.packages()) "radiant" else "radiant.data"
 
-      # if (generate == to) {
       if (generate %in% c("To Rmd", "To R")) {
         cnt <- rstudio_context(type)
         if (is_empty(cnt$path) || !cnt$ext == type) {
@@ -606,8 +541,6 @@ report_save_content <- function(file, type = "rmd") {
         report <- input[[paste0(type, "_edit")]]
       }
 
-      # init <- setup_report(report, save_type = save_type, lib = lib)
-
       if (save_type == "Rmd + Data (zip)") {
         withProgress(message = "Preparing Rmd + Data zip file", value = 1, {
           r_data <- toList(r_data)
@@ -616,25 +549,10 @@ report_save_content <- function(file, type = "rmd") {
           currdir <- setwd(tempdir())
           readr::write_rds(r_data, path = "r_data.rds")
 
-          # setup_report(report, save_type = save_type, lib = lib) %>%
           setup_report(report, save_type = "Rmd", lib = lib) %>%
-            esc_slash() %>%
+            fixMS() %>%
             cat(file = "report.Rmd", sep = "\n")
 
-          # zip_util <- Sys.getenv("R_ZIPCMD", "zip")
-          # flags <- "-r9X"
-          # os_type <- Sys.info()["sysname"]
-          # if (os_type == "Windows") {
-          #   wz <- suppressWarnings(system("where zip", intern = TRUE))
-          #   if (!grepl("zip", wz)) {
-          #     wz <- suppressWarnings(system("where 7z", intern = TRUE))
-          #     if (grepl("7z", wz)) {
-          #       zip_util <- "7z"
-          #       flags <- "a"
-          #     }
-          #   }
-          # }
-          # zip(file, c("report.Rmd", "r_data.rds"), flags = flags, zip = zip_util)
           zip(file, c("report.Rmd", "r_data.rds"),
             flags = zip_info[1], zip = zip_info[2]
           )
@@ -649,20 +567,6 @@ report_save_content <- function(file, type = "rmd") {
           readr::write_rds(r_data, path = "r_data.rds")
           cat(report, file = "report.R", sep = "\n")
 
-          # zip_util <- Sys.getenv("R_ZIPCMD", "zip")
-          # flags <- "-r9X"
-          # os_type <- Sys.info()["sysname"]
-          # if (os_type == "Windows") {
-          #   wz <- suppressWarnings(system("where zip", intern = TRUE))
-          #   if (!grepl("zip", wz)) {
-          #     wz <- suppressWarnings(system("where 7z", intern = TRUE))
-          #     if (grepl("7z", wz)) {
-          #       zip_util <- "7z"
-          #       flags <- "a"
-          #     }
-          #   }
-          # }
-          # zip(file, c("report.R", "r_data.rds"), flags = flags, zip = zip_util)
           zip(file, c("report.R", "r_data.rds"),
             flags = zip_info[1], zip = zip_info[2]
           )
@@ -670,7 +574,7 @@ report_save_content <- function(file, type = "rmd") {
         })
       } else if (save_type == "Rmd") {
         setup_report(report, save_type = "Rmd", lib = lib) %>%
-          esc_slash() %>%
+          fixMS() %>%
           cat(file = file, sep = "\n")
       } else if (save_type == "R") {
         cat(report, file = file, sep = "\n")
@@ -684,7 +588,7 @@ report_save_content <- function(file, type = "rmd") {
           report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
         }
 
-        init <- setup_report(esc_slash(report), save_type = save_type, lib = lib)
+        init <- setup_report(fixMS(report), save_type = save_type, lib = lib)
 
         ## on linux ensure you have you have pandoc > 1.14 installed
         ## you may need to use http://pandoc.org/installing.html#installing-from-source
@@ -693,7 +597,7 @@ report_save_content <- function(file, type = "rmd") {
           if (isTRUE(rmarkdown::pandoc_available())) {
             ## have to use current dir so (relative) paths work properly
             tmp_fn <- tempfile(pattern = "report-", tmpdir = ".", fileext = ".Rmd")
-            cat(esc_slash(init), file = tmp_fn, sep = "\n")
+            cat(fixMS(init), file = tmp_fn, sep = "\n")
             out <- rmarkdown::render(tmp_fn, switch(save_type,
               Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "hide"),
               HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
@@ -771,33 +675,6 @@ update_report <- function(inp_main = "",
     x
   }
 
-  ## testing depr
-  # library(radiant)
-  # x <- list(const = c("q 535", "cost 2", "salvage .5", "price 5"),
-  #           norm = "E 0 144.571;",
-  #           form = c("D = 928.313 - 78.607 * price + E", "prof = -cost*q + price * pmin(q, D) + salvage * pmax(0, q - D)"),
-  #           seed = 1234,
-  #           name = "simdat")
-  # x <- list(
-  #   nr = 5,
-  #   vars = c("incidental", "A3403", "A3402", "B757"),
-  #   sum_vars = c("total", "RCNC1", "RCNC1_prof", "RCNC2", "CTC", "HIC", "HIC_prof"),
-  #   form = c(
-  #     "## RCNC1_net = RCNC1 - .2 * pmax(RCNC1 - .1*total - .9*total, 0)",
-  #     "RCNC1_net = RCNC1 - 0.2 * pmax(RCNC1_prof, 0)",
-  #     "## HIC_net = HIC - .035 * pmax(HIC - total, 0)",
-  #     "HIC_net = HIC - .035 * pmax(HIC_prof, 0)",
-  #     "HIC_MIN_CTC = HIC_net - CTC",
-  #     "HIC_LT_CTC = HIC_net < CTC"
-  #   ),
-  #   seed = 1234,
-  #   name = "repdat",
-  #   sim = "simdat"
-  # )
-
-  # cat(depr(x, TRUE))
-
-  # cmd <- ""
   if (inp_main[1] != "") {
     cmd <- depr(inp_main, wrap = wrap) %>%
       sub("list", fun_name, .) %>%
@@ -826,17 +703,9 @@ update_report <- function(inp_main = "",
   if (xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
 
   ## make into chunks if needed
-  # if (input$rmd_generate %in% c("To Rmd", "auto", "manual")) {
   type <- ifelse(state_init("rmd_generate", "auto") == "Use R", "r", "rmd")
 
-  # print(input$rmd_generate)
-  # print(state_init("rmd_generate", "auto"))
-  # print(input$r_generate)
-  # print(state_init("r_generate", "auto"))
-  # print(type)
-
   if (type == "r") {
-    # update_report_fun(paste0("\n", cmd, "\n"), type = "r")
     update_report_fun(cmd, type = "r")
   } else {
     if (figs) {
@@ -846,17 +715,6 @@ update_report <- function(inp_main = "",
     }
     update_report_fun(cmd, type = "rmd")
   }
-
-  # if (state_init("rmd_generate", "auto") %in% c("To Rmd", "auto", "manual")) {
-  #   if (figs) {
-  #     cmd <- paste0("\n```{r fig.width = ", round(7 * fig.width / 650, 2), ", fig.height = ", round(7 * fig.height / 650, 2), ", dpi = 96}\n", cmd, "\n```\n")
-  #   } else {
-  #     cmd <- paste0("\n```{r}\n", cmd, "\n```\n")
-  #   }
-  # }
-
-
-  # update_report_fun(cmd)
 }
 
 update_report_fun <- function(cmd, type = "rmd", read_files = FALSE) {
@@ -865,7 +723,6 @@ update_report_fun <- function(cmd, type = "rmd", read_files = FALSE) {
     sinit <- state_init(generate, "auto")
     editor <- paste0(type, "_edit")
     sel <- ifelse(type == "rmd", "Rmd", "R")
-    # if (state_init(generate, "auto") == "manual") {
     if (sinit == "manual") {
       os_type <- Sys.info()["sysname"]
       if (os_type == "Windows") {
@@ -880,12 +737,10 @@ update_report_fun <- function(cmd, type = "rmd", read_files = FALSE) {
       withProgress(message = "Putting command in clipboard", value = 1, {
         cat("")
       })
-    # } else if (state_init(generate, "auto") == "To Rmd") {
     } else if (sinit == "To Rmd") {
       withProgress(message = "Putting code chunk in Rstudio", value = 1, {
         rstudioapi::insertText(Inf, fixMS(cmd))
       })
-    # } else if (state_init(generate, "auto") == "To R") {
     } else if (sinit == "To R") {
       withProgress(message = "Putting R-code in Rstudio", value = 1, {
         gsub("(```\\{.*\\}\n)|(```\n)", "", fixMS(paste0("\n", cmd, "\n"))) %>%
@@ -895,12 +750,12 @@ update_report_fun <- function(cmd, type = "rmd", read_files = FALSE) {
       if (is_empty(r_state[[editor]])) {
         r_state[[editor]] <<- paste0("## Your report title\n\n", cmd)
       } else {
-        r_state[[editor]] <<- paste0(esc_slash(r_state[[editor]]), "\n", cmd)
+        r_state[[editor]] <<- paste0(fixMS(r_state[[editor]]), "\n", cmd)
       }
       withProgress(message = paste0("Updating Report > ", sel), value = 1, {
         shinyAce::updateAceEditor(
           session, editor,
-          value = esc_slash(r_state[[editor]])
+          value = fixMS(r_state[[editor]])
         )
       })
     }
