@@ -3,12 +3,11 @@
 ## when available
 ################################################################################
 
-## options to set for debugging
+## useful options for debugging
 # options(shiny.trace = TRUE)
 # options(shiny.reactlog = TRUE)
 # options(shiny.error = recover)
 # options(warn = 2)
-# options(warn = 0)
 
 ## turn off warnings globally
 # options(warn=-1)
