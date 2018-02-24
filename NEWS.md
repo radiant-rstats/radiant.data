@@ -1,7 +1,9 @@
-# CHANGES IN radiant.data 0.9.0.12
+# CHANGES IN radiant.data 0.9.0.13
 
+* Apply `fixMS` to replace curly quotes, em dash, etc. when using _Data > Transform > Create_
 * Option to set number of decimals to show in _Data > View_ 
 * Improved number formatting in interactive tables in _Data > View_, _Data > Pivot_, and _Data > Explore_
+* Fix for decimals to show in interactive tables _Report > Rmd_ and saved HTML reports
 * Option to include an interactive view of a dataset in _Report > Rmd_. By default, the number of rows is set to 100 as, most likely, the user will not want to embed a large dataset in save HTML report
 * Better error messages for `xtile` and when binning data with too many groups
 * _Data > Transform_ will leave variables selected, unless switching to `Create` or `Spread`

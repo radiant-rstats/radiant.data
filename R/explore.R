@@ -322,7 +322,7 @@ dtab.explore <- function(object,
   cn_cat <- cn_all[-which(cn_all %in% cn_num)]
   isInt <- sapply(tab, is.integer)
   isNum <- sapply(tab, function(x) is.double(x) && !is.Date(x))
-  dec <- ifelse(is_empty(dec) || !is.integer(dec) || dec < 0, 3, dec)
+  dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
 
   top <- c("fun" = "Function", "var" = "Variables", "byvar" = paste0("Group by: ", object$byvar[1]))[object$top]
   sketch <- shiny::withTags(

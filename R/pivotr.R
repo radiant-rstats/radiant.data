@@ -314,7 +314,7 @@ dtab.pivotr <- function(object,
   ## for rounding
   isNum <- sapply(tab, function(x) is.double(x) && !is.Date(x))
   isInt <- sapply(tab, is.integer)
-  dec <- ifelse(is_empty(dec) || !is.integer(dec) || dec < 0, 3, dec)
+  dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
 
   ## column names without total
   cn_nt <- if ("Total" %in% cn) cn[-which(cn == "Total")] else cn

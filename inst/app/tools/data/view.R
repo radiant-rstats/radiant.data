@@ -102,10 +102,7 @@ output$dataviewer <- DT::renderDataTable({
   ## for rounding
   isInt <- sapply(dat, is.integer)
   isNum <- sapply(dat, function(x) is.double(x) && !is.Date(x))
-  dec <- ifelse(
-    is_empty(input$view_dec) || !is.integer(input$view_dec) || input$view_dec < 0,
-    3, input$view_dec
-  )
+  dec <- input$view_dec %>% {ifelse(is_empty(.) || . < 0, 3, round(., 0))}
 
   # print(r_state$dataviewer_state)
   # isolate({
