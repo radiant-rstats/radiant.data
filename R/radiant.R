@@ -194,7 +194,7 @@ filterdata <- function(dat, filt = "", drop = TRUE) {
     message("Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
   } else {
     seldat <- try(
-      ## %>% need here so . will be available
+      ## use %>% so . will be available to represent the available data in filters
       dat %>% filter(!! rlang::parse_expr(fixMS(filt))),
       silent = TRUE
     )
@@ -663,11 +663,11 @@ viewdata <- function(dataset,
           processing = FALSE,
           pageLength = 10,
           lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
-        ) %>%
-          {if (sum(isNum) > 0) DT::formatRound(., names(isNum)[isNum], dec)} %>%
-          {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0)}
+        )
         # , callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
-      )       
+      ) %>%
+        {if (sum(isNum) > 0) DT::formatRound(., names(isNum)[isNum], dec) else .} %>%
+        {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0) else .}
       output$tbl <- DT::renderDataTable(widget)
       observeEvent(input$stop, {
         stopApp(cat("Stopped viewdata"))
@@ -1157,7 +1157,7 @@ find_gdrive <- function() {
     ## Linux update suggested by Chris Armstrong (https://github.com/chrisarm)
     # fp <- normalizePath("~/google_drive")
     if (file.exists(file.path("~/google_drive/.grive"))) {
-      return(fp)
+      return(normalizePath("~/google_drive"))
     } else {
       stop("Please install grive2 and use '~/google_drive' as your grive directory (http://www.techrepublic.com/article/how-to-sync-your-google-cloud-on-linux-with-grive2/)", call. = FALSE)
     }
@@ -1353,46 +1353,6 @@ render.datatables <- function(object, ...) {
   }
 }
 
-# knit_print <- function (x, ...) {
-#   # if (need_screenshot(x, ...) && !"datatables" %in% class(x)) {
-#   if (isTRUE(attr(x, "shiny"))) {
-#     # shiny::knit_print.shiny.render.function(
-#       x <- render(x)
-#     # )
-#   } else {
-#   #   knitr::knit_print(x)
-#   # }
-#   # } else if (need_screenshot(x, ...)) {
-#   #   html_screenshot(x)
-#   # } else {
-#     UseMethod("knit_print")
-#   }
-# }
-
-# knit_print.datatables <- function(x, ...) {
-# if (isTRUE(attr(x, "shiny"))) {
-# if (exists("r_environment") && isTRUE(r_environment$shiny)) {
-# shiny::knit_print.shiny.render.function(
-# DT::renderDataTable(x)
-# )
-# } else {
-# knitr::knit_print(htmlwidgets::toHTML(x, standalone = FALSE, knitrOptions = NULL),
-#     options = NULL, ...)
-# htmlwidgets::knit_print.htmlwidget(x)
-# knitr::knit_print.htmlwidget(x)
-# x
-# }
-
-# } else {
-# shiny::knit_print.htmlwidget(x)
-# knitr::knit_print(x)
-# }
-# x
-# shin::knit_print.(x)
-# htmlwidgets:::knit_print.htmlwidget(x)
-# attr(x, "shiny")
-# }
-
 #' Method to render plotly plots
 #'
 #' @param object ggplotly object
@@ -1504,25 +1464,29 @@ write_feather <- function(x, path, description = attr(x, "description")) {
 #' Replace Windows smart quotes etc.
 #'
 #' @param text Text to be parsed
+#' @param all Should all non-ascii characters be removed (default = FALSE)
 #'
 #' @export
-fixMS <- function(text) {
+fixMS <- function(text, all = FALSE) {
 
-  ## to remove all non-ascii symbols use ...
-  ## gsub("[\x80-\xFF]", "", .)
-
-  ## based on https://stackoverflow.com/a/1262210/1974918
-  gsub("\xC2\xAB", '"', text) %>%
-    gsub("\xC2\xBB", '"', .) %>%
-    gsub("\xE2\x80\x98", "'", .) %>%
-    gsub("\xE2\x80\x99", "'", .) %>%
-    gsub("\xE2\x80\x9A", "'", .) %>%
-    gsub("\xE2\x80\x9B", "'", .) %>%
-    gsub("\xE2\x80\x9C", '"', .) %>%
-    gsub("\xE2\x80\x9D", '"', .) %>%
-    gsub("\xE2\x80\x9E", '"', .) %>%
-    gsub("\xE2\x80\x9F", '"', .) %>%
-    gsub("\xE2\x80\xB9", "'", .) %>%
-    gsub("\xE2\x80\xBA", "'", .) %>%
-    gsub("\r", "\n", .)
+  if (all) {
+    ## to remove all non-ascii symbols use ...
+    gsub("[\x80-\xFF]", "", text)
+  } else {
+    ## based on https://stackoverflow.com/a/1262210/1974918
+    gsub("\xC2\xAB", '"', text) %>%
+      gsub("\xC2\xBB", '"', .) %>%
+      gsub("\xE2\x80\x98", "'", .) %>%
+      gsub("\xE2\x80\x99", "'", .) %>%
+      gsub("\xE2\x80\x9A", "'", .) %>%
+      gsub("\xE2\x80\x9B", "'", .) %>%
+      gsub("\xE2\x80\x9C", '"', .) %>%
+      gsub("\xE2\x80\x9D", '"', .) %>%
+      gsub("\xE2\x80\x9E", '"', .) %>%
+      gsub("\xE2\x80\x9F", '"', .) %>%
+      gsub("\xE2\x80\xB9", "'", .) %>%
+      gsub("\xE2\x80\xBA", "'", .) %>%
+      gsub("\xE2\x80\x93", "-", .) %>%
+      gsub("\r", "\n", .)
+  }
 }

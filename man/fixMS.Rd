@@ -4,10 +4,12 @@
 \alias{fixMS}
 \title{Replace Windows smart quotes etc.}
 \usage{
-fixMS(text)
+fixMS(text, all = FALSE)
 }
 \arguments{
 \item{text}{Text to be parsed}
+
+\item{all}{Should all non-ascii characters be removed (default = FALSE)}
 }
 \description{
 Replace Windows smart quotes etc.

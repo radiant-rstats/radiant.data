@@ -459,6 +459,9 @@ observeEvent(input$tr_change_type, {
                     store_dat = "",
                     store = TRUE) {
 
+  ## replacing problem symbols (e.g., em dash, and curly quotes)
+  cmd <- fixMS(cmd)
+
   if (!store || !is.character(dataset)) {
     cmd <- gsub("\\s+", "", cmd)
 
