@@ -608,9 +608,7 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
   if (order != "NULL" || sc != "NULL") {
 
     ## get variable class and name
-    gc <- getclass(dat) %>% {
-      if (is_empty(vars[1])) . else .[vars]
-    }
+    gc <- getclass(dat) %>% {if (is_empty(vars[1])) . else .[vars]}
     cn <- names(gc)
 
     if (length(cn) > 0) {

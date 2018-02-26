@@ -217,6 +217,7 @@ summary.pivotr <- function(object,
                            chi2 = FALSE,
                            shiny = FALSE,
                            ...) {
+
   if (!shiny) {
     cat("Pivot table\n")
     cat("Data        :", object$dataset, "\n")
@@ -255,10 +256,14 @@ summary.pivotr <- function(object,
         {sshhr(chisq.test(., correct = FALSE))}
 
       res <- tidy(cst)
-      if (dec < 4 && res$p.value < .001) res$p.value <- "< .001"
+      if (dec < 4 && res$p.value < .001) {
+        p.value <- "< .001"
+      } else {
+        p.value <- formatnr(res$p.value, dec = dec)
+      }
       res <- rounddf(res, dec)
 
-      l1 <- paste0("Chi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value, "\n")
+      l1 <- paste0("Chi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", p.value, "\n")
       l2 <- paste0(sprintf("%.1f", 100 * (sum(cst$expected < 5) / length(cst$expected))), "% of cells have expected values below 5\n")
       if (nrow(object$tab_freq) == nrow(object$tab)) {
         if (shiny) HTML(paste0("</br><hr>", l1, "</br>", l2)) else cat(paste0(l1, l2))
@@ -403,8 +408,9 @@ dtab.pivotr <- function(object,
   } else {
     if (sum(isNum) > 0) 
       dt_tab <- DT::formatRound(dt_tab, names(isNum)[isNum], dec)
-    if (sum(isInt) > 0)
+    if (sum(isInt) > 0) {
       dt_tab <- DT::formatRound(dt_tab, names(isInt)[isInt], 0)
+    }
   } 
 
   ## see https://github.com/yihui/knitr/issues/1198

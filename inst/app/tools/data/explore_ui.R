@@ -238,9 +238,7 @@ output$dl_explore_tab <- downloadHandler(
     } else {
       rows <- input$explore_rows_all
       dat$tab %>%
-        {
-          if (is.null(rows)) . else .[rows, , drop = FALSE]
-        } %>%
+        {if (is.null(rows)) . else .[rows, , drop = FALSE]} %>%
         write.csv(file, row.names = FALSE)
     }
   }
@@ -251,9 +249,8 @@ observeEvent(input$expl_store, {
   if (is.null(dat)) return()
   name <- input$expl_dat
   rows <- input$explore_rows_all
-  dat$tab %<>% {
-    if (is.null(rows)) . else .[rows, , drop = FALSE]
-  }
+  dat$tab %<>% 
+    {if (is.null(rows)) . else .[rows, , drop = FALSE]}
   store(dat, name)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
