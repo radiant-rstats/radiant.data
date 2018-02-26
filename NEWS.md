@@ -1,5 +1,10 @@
 # CHANGES IN radiant.data 0.9.0.13
 
+* Allow all textarea inputs and multi-select inputs to be resized manually by the user
+* Fix for `rounddf` to ignore dates
+
+# CHANGES IN radiant.data 0.9.0.13
+
 * Apply `fixMS` to replace curly quotes, em dash, etc. when using _Data > Transform > Create_
 * Option to set number of decimals to show in _Data > View_ 
 * Improved number formatting in interactive tables in _Data > View_, _Data > Pivot_, and _Data > Explore_

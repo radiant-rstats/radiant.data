@@ -1086,7 +1086,7 @@ formatnr <- function(x, sym = "", dec = 2, perc = FALSE, mark = ",") {
 #'
 #' @export
 rounddf <- function(tbl, dec = 3) {
-  is_double <- function(x) is.double(x) && is.Date(x)
+  is_double <- function(x) is.double(x) && !is.Date(x)
   mutate_if(tbl, is_double, .funs = funs(round(., dec)))
 }
 

@@ -93,9 +93,9 @@ pre, code, pre code {
   color: black;
 }
 
-#data_filter, #tr_transform, #tr_recode, #tr_rename,
-#tr_paste, #tr_create {
-  max-width: 234px;
+/* allow all textarea and multiple-select inputs to resize vertically */
+textarea, select {
+  resize: vertical;
 }
 
 .alignleft {
