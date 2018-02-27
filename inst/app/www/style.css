@@ -89,13 +89,16 @@ pre, code, pre code {
 }
 
 #state_save {
-  font-family: FontAwesome, "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-family: FontAwesome, "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: black;
 }
 
 /* allow all textarea and multiple-select inputs to resize vertically */
+/* have to set overfow to make resize work on Safari */
+/* https://css-tricks.com/almanac/properties/r/resize/ */
 textarea, select {
   resize: vertical;
+  overflow: auto;
 }
 
 .alignleft {

@@ -1,4 +1,4 @@
-# CHANGES IN radiant.data 0.9.0.13
+# CHANGES IN radiant.data 0.9.0.14
 
 * Allow all textarea inputs and multi-select inputs to be resized manually by the user
 * Fix for `rounddf` to ignore dates

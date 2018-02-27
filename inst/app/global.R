@@ -482,13 +482,6 @@ onStop(function() {
   }
 })
 
-
-## https://github.com/rstudio/DT/issues/496
-## nice but doesn't work with server-size processing
-## https://github.com/rstudio/DT/issues/496#issuecomment-368079813
-## https://github.com/rstudio/DT/issues/496#issuecomment-368117299
+## Show NA and Inf in DT tables
+## https://github.com/rstudio/DT/pull/513
 options(htmlwidgets.TOJSON_ARGS = list(na = "string"))
-## does work with client-side processing
-# iris[1,1] <- NA
-# iris[2,1] <- Inf
-# DT::datatable(head(iris))
