@@ -148,7 +148,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,
   error = TRUE,
-  dpi = 96,
+  dpi = 200,
   fig.path = normalizePath(tempdir(), winslash = "/")
   # screenshot.force = FALSE,
 )

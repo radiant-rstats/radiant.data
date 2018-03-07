@@ -1,7 +1,8 @@
-# CHANGES IN radiant.data 0.9.0.14
+# CHANGES IN radiant.data 0.9.0.15
 
 * Allow all textarea inputs and multi-select inputs to be resized manually by the user
 * Fix for `rounddf` to ignore dates
+* Use 200 dpi for plots in _Report > Rmd_ and _Report > R_
 
 # CHANGES IN radiant.data 0.9.0.13
 
