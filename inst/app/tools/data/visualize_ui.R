@@ -37,6 +37,19 @@ output$ui_viz_type <- renderUI({
   )
 })
 
+output$ui_viz_nrobs <- renderUI({
+  req(input$viz_type == "scatter")
+  nrobs <- nrow(.getdata())
+  req(nrobs > 1000)
+  choices <- c("1,000" = 1000, "5,000" = 5000, "10,000" = 10000, "All" = -1) %>%
+    .[. < nrobs]
+  selectInput(
+    "viz_nrobs", "Number of data points plotted:", 
+    choices = choices,
+    selected = state_single("viz_nrobs", choices, 1000)
+  )
+})
+
 ## Y - variable
 output$ui_viz_yvar <- renderUI({
   req(input$viz_type)
@@ -267,8 +280,10 @@ output$ui_Visualize <- renderUI({
       uiOutput("ui_viz_run")
     ),
     wellPanel(
-      # checkboxInput("viz_pause", "Pause plotting", state_init("viz_pause", FALSE)),
       uiOutput("ui_viz_type"),
+      conditionalPanel("input.viz_type == 'scatter'",
+        uiOutput("ui_viz_nrobs")
+      ),
       conditionalPanel(
         condition = "input.viz_type != 'dist' & input.viz_type != 'density'",
         uiOutput("ui_viz_yvar"),
@@ -289,15 +304,15 @@ output$ui_Visualize <- renderUI({
       uiOutput("ui_viz_facet_col"),
       conditionalPanel(
         condition = "input.viz_type == 'bar' |
-                                    input.viz_type == 'dist' |
-                                    input.viz_type == 'density' |
-                                    input.viz_type == 'surface'",
+                     input.viz_type == 'dist' |
+                     input.viz_type == 'density' |
+                     input.viz_type == 'surface'",
         uiOutput("ui_viz_fill")
       ),
       conditionalPanel(
         condition = "input.viz_type == 'scatter' |
-                                    input.viz_type == 'line' |
-                                    input.viz_type == 'box'",
+                     input.viz_type == 'line' |
+                     input.viz_type == 'box'",
         uiOutput("ui_viz_color")
       ),
       conditionalPanel(
@@ -306,9 +321,9 @@ output$ui_Visualize <- renderUI({
       ),
       conditionalPanel(
         condition = "input.viz_type == 'scatter' |
-                                    input.viz_type == 'line' |
-                                    input.viz_type == 'surface' |
-                                    input.viz_type == 'box'",
+                     input.viz_type == 'line' |
+                     input.viz_type == 'surface' |
+                     input.viz_type == 'box'",
         uiOutput("ui_viz_check")
       ),
       uiOutput("ui_viz_axes"),
@@ -322,7 +337,7 @@ output$ui_Visualize <- renderUI({
       ),
       conditionalPanel(
         "input.viz_type == 'density' |
-                       (input.viz_type == 'scatter' & (input.viz_check && input.viz_check.indexOf('loess') >= 0))",
+         (input.viz_type == 'scatter' & (input.viz_check && input.viz_check.indexOf('loess') >= 0))",
         sliderInput(
           "viz_smooth", label = "Smooth:",
           value = state_init("viz_smooth", 1),
@@ -358,12 +373,10 @@ output$ui_Visualize <- renderUI({
   )
 })
 
-# viz_plot_width <- reactive({
 viz_plot_width <- eventReactive(input$viz_run, {
   if (is_empty(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
 })
 
-# viz_plot_height <- reactive({
 viz_plot_height <- eventReactive(input$viz_run, {
   if (is_empty(input$viz_plot_height)) {
     r_data$plot_height
@@ -404,6 +417,7 @@ output$visualize <- renderPlot({
 .visualize <- eventReactive(input$viz_run, {
 
   req(input$viz_type)
+  if (input$viz_type == "scatter") req(input$viz_nrobs)
 
   ## need dependency on ..
   req(input$viz_plot_height && input$viz_plot_width)
@@ -425,6 +439,7 @@ output$visualize <- renderPlot({
 
   req(!is.null(input$viz_color) || !is.null(input$viz_fill))
 
+
   withProgress(message = "Making plot", value = 1, {
     do.call(visualize, c(viz_inputs(), shiny = TRUE))
   })
@@ -443,8 +458,11 @@ observeEvent(input$visualize_report, {
   if (!input$viz_type %in% c("scatter", "box") && "jitter" %in% input$viz_check) {
     vi$check <- setdiff(vi$check, "jitter")
   }
-  if (!input$viz_type %in% "scatter") {
+  if (input$viz_type != "scatter") {
     vi$size <- "none"
+    vi$nrobs <- NULL
+  } else {
+    vi$nrobs <- as_integer(vi$nrobs)
   }
   if (!input$viz_type %in% c("scatter", "line", "box")) {
     vi$color <- NULL
@@ -452,6 +470,7 @@ observeEvent(input$visualize_report, {
   if (!input$viz_type %in% c("bar", "dist", "density", "surface")) {
     vi$fill <- NULL
   }
+
 
   inp_main <- c(clean_args(vi, viz_args), custom = FALSE)
 

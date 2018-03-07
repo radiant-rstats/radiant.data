@@ -8,6 +8,7 @@
 #' @param comby Combine yvars in plot (TRUE or FALSE, FALSE is the default)
 #' @param combx Combine xvars in plot (TRUE or FALSE, FALSE is the default)
 #' @param type Type of plot to create. One of Distribution ('dist'), Density ('density'), Scatter ('scatter'), Surface ('surface'), Line ('line'), Bar ('bar'), or Box-plot ('box')
+#' @param nrobs Number of data points to show in scatter plots (-1 for all)
 #' @param facet_row Create vertically arranged subplots for each level of the selected factor variable
 #' @param facet_col Create horizontally arranged subplots for each level of the selected factor variable
 #' @param color Adds color to a scatter plot to generate a 'heat map'. For a line plot one line is created for each group and each is assigned a different color
@@ -52,6 +53,7 @@ visualize <- function(dataset, xvar,
                       comby = FALSE,
                       combx = FALSE,
                       type = "dist",
+                      nrobs = -1,
                       facet_row = ".",
                       facet_col = ".",
                       color = "none",
@@ -134,6 +136,14 @@ visualize <- function(dataset, xvar,
 
   ## so you can also pass-in a data.frame
   dat <- getdata(dataset, vars, filt = data_filter)
+
+  if (type == "scatter" && !is_empty(nrobs)) {
+    nrobs <- as.integer(nrobs)
+    if (nrobs > 0 && nrobs < nrow(dat)) {
+      dat <- sample_n(dat, nrobs, replace = FALSE)
+    }
+  }
+
   if (!is_string(dataset)) {
     dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
   }
