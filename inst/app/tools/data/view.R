@@ -161,7 +161,7 @@ observeEvent(input$view_store, {
     input$dataset, vars = input$view_vars, filt = data_filter,
     rows = input$dataviewer_rows_all, na.rm = FALSE
   ) %>%
-    save2env(input$dataset, input$view_dat, .viewcmd())
+    save2env(input$dataset, input$view_dat, gsub("\n# dtab\\(.*", "", .viewcmd()))
 
   updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
 
@@ -191,8 +191,8 @@ output$dl_view_tab <- downloadHandler(
     getdata(
       input$dataset,
       vars = input$view_vars,
-      filt = data_filter, rows =
-        input$dataviewer_rows_all,
+      filt = data_filter, 
+      rows = input$dataviewer_rows_all,
       na.rm = FALSE
     ) %>% write.csv(file, row.names = FALSE)
   }

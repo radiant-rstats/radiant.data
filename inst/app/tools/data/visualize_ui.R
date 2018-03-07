@@ -401,10 +401,8 @@ output$visualize <- renderPlot({
   }
 }, width = viz_plot_width, height = viz_plot_height, res = 96)
 
-# .visualize <- reactive({
 .visualize <- eventReactive(input$viz_run, {
 
-   # req(input$viz_pause == FALSE, cancelOutput = TRUE)
   req(input$viz_type)
 
   ## need dependency on ..
@@ -428,10 +426,7 @@ output$visualize <- renderPlot({
   req(!is.null(input$viz_color) || !is.null(input$viz_fill))
 
   withProgress(message = "Making plot", value = 1, {
-    inp <- viz_inputs()
-    inp$shiny <- TRUE
-      # {.$shiny <- TRUE; .} %>%
-    do.call(visualize, inp)
+    do.call(visualize, c(viz_inputs(), shiny = TRUE))
   })
 })
 
@@ -458,8 +453,7 @@ observeEvent(input$visualize_report, {
     vi$fill <- NULL
   }
 
-  inp_main <- clean_args(vi, viz_args)
-  inp_main$custom <- FALSE
+  inp_main <- c(clean_args(vi, viz_args), custom = FALSE)
 
   update_report(
     inp_main = inp_main,
