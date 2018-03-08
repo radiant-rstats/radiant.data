@@ -54,18 +54,17 @@ most_recent_session_file <- function() {
 }
 
 ## set the session id
-r_ssuid <-
-  if (getOption("radiant.local")) {
-    if (is.null(prevSSUID)) {
-      mrsf <- most_recent_session_file()
-      paste0("local-", shiny:::createUniqueId(3))
-    } else {
-      mrsf <- "0000"
-      prevSSUID
-    }
+r_ssuid <- if (getOption("radiant.local")) {
+  if (is.null(prevSSUID)) {
+    mrsf <- most_recent_session_file()
+    paste0("local-", shiny:::createUniqueId(3))
   } else {
-    ifelse(is.null(prevSSUID), shiny:::createUniqueId(5), prevSSUID)
+    mrsf <- "0000"
+    prevSSUID
   }
+} else {
+  ifelse(is.null(prevSSUID), shiny:::createUniqueId(5), prevSSUID)
+}
 
 ## (re)start the session and push the id into the url
 session$sendCustomMessage("session_start", r_ssuid)
