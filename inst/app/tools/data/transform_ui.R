@@ -393,7 +393,8 @@ output$ui_Transform <- renderUI({
     help_and_report(
       modal_title = "Transform",
       fun_name = "transform",
-      help_file = inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/transform.md"))
+      help_file = inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/transform.md")),
+      lic = "by-sa"
     )
   )
 })

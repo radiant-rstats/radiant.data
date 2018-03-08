@@ -223,7 +223,11 @@ output$ui_Manage <- renderUI({
         actionButton("removeDataButton", "Remove data", icon = icon("trash"), class = "btn-danger")
       )
     ),
-    help_modal("Manage", "manage_help", inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/manage.md")))
+    help_modal(
+      "Manage", "manage_help", 
+      inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/manage.md")),
+      lic = "by-sa"
+    )
   )
 })
 

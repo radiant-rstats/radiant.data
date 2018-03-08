@@ -1,9 +1,13 @@
+# CHANGES IN radiant.data 0.9.0.16
+
+* Changed license for help files and images for radiant.data to [CC-BY-SA](https://creativecommons.org/licenses/by-sa/4.0/legalcode)
+
 # CHANGES IN radiant.data 0.9.0.15
 
 * Allow all textarea inputs and multi-select inputs to be resized manually by the user
 * Fix for `rounddf` to ignore dates
 * Use 200 dpi for plots in _Report > Rmd_ and _Report > R_
-* _Data > Vizualize_ now has an option to selected a sample of data for scatter plots (e.g., 1K, 5K, 10K, or All)
+* _Data > Vizualize_ now has an option to select a sample of data for scatter plots (e.g., 1K, 5K, 10K, or All)
 
 # CHANGES IN radiant.data 0.9.0.13
 

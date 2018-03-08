@@ -356,7 +356,6 @@ output$ui_Visualize <- renderUI({
           value = state_init("viz_plot_height", r_data$plot_height),
           width = "117px"
         )),
-
         tags$td(numericInput(
           "viz_plot_width", label = "Plot width:", min = 100,
           max = 2000, step = 50,
@@ -368,7 +367,8 @@ output$ui_Visualize <- renderUI({
     help_and_report(
       modal_title = "Visualize",
       fun_name = "visualize",
-      help_file = inclRmd(file.path(getOption("radiant.path.data"), "app/tools/help/visualize.md"))
+      help_file = inclRmd(file.path(getOption("radiant.path.data"), "app/tools/help/visualize.md")),
+      lic = "by-sa"
     )
   )
 })

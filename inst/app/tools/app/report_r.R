@@ -218,7 +218,7 @@ output$report_r <- renderUI({
     with(
       tags,
       table(
-        td(help_modal("Report > R", "r_help", inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/report_r.md")))),
+        td(help_modal("Report > R", "r_help", inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/report_r.md")), lic = "by-sa")),
         td(HTML("&nbsp;&nbsp;")),
         td(actionButton("r_knit", " Knit report (R)", icon = icon("play"), class = "btn-success"), style = "padding-top:5px;"),
         td(uiOutput("ui_r_generate")),

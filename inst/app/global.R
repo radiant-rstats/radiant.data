@@ -240,7 +240,8 @@ help_menu <- function(hlp) {
 }
 
 ## copy-right text
-options(radiant.help.cc = "&copy; Vincent Nijs (2017) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/80x15.png' /></a></br>")
+options(radiant.help.cc = "&copy; Vincent Nijs (2018) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/by-nc-sa.png' /></a></br>")
+options(radiant.help.cc.sa = "&copy; Vincent Nijs (2018) <a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/by-sa.png' /></a></br>")
 
 #####################################
 ## url processing to share results

@@ -229,7 +229,8 @@ output$ui_Pivotr <- renderUI({
     help_and_report(
       modal_title = "Pivotr",
       fun_name = "pivotr",
-      help_file = inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/pivotr.md"))
+      help_file = inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/pivotr.md")),
+      lic = "by-sa"
     )
   )
 })

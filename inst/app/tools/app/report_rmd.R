@@ -300,10 +300,13 @@ output$report_rmd <- renderUI({
     with(
       tags,
       table(
-        td(help_modal(
-          "Report > Rmd", "rmd_help",
-          inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/report_rmd.md"))
-        )),
+        td(
+          help_modal(
+            "Report > Rmd", "rmd_help",
+            inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/report_rmd.md")), 
+            lic = "by-sa"
+          )
+        ),
         td(HTML("&nbsp;&nbsp;")),
         td(
           actionButton(

@@ -5,11 +5,11 @@
 \title{Visualize data using ggplot2 \url{http://ggplot2.tidyverse.org}}
 \usage{
 visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
-  type = "dist", facet_row = ".", facet_col = ".", color = "none",
-  fill = "none", size = "none", fillcol = "blue", linecol = "black",
-  pointcol = "black", bins = 10, smooth = 1, fun = "mean", check = "",
-  axes = "", alpha = 0.5, ylim = "none", data_filter = "",
-  shiny = FALSE, custom = FALSE)
+  type = "dist", nrobs = -1, facet_row = ".", facet_col = ".",
+  color = "none", fill = "none", size = "none", fillcol = "blue",
+  linecol = "black", pointcol = "black", bins = 10, smooth = 1,
+  fun = "mean", check = "", axes = "", alpha = 0.5, ylim = "none",
+  data_filter = "", shiny = FALSE, custom = FALSE)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -23,6 +23,8 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 \item{combx}{Combine xvars in plot (TRUE or FALSE, FALSE is the default)}
 
 \item{type}{Type of plot to create. One of Distribution ('dist'), Density ('density'), Scatter ('scatter'), Surface ('surface'), Line ('line'), Bar ('bar'), or Box-plot ('box')}
+
+\item{nrobs}{Number of data points to show in scatter plots (-1 for all)}
 
 \item{facet_row}{Create vertically arranged subplots for each level of the selected factor variable}
 

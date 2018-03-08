@@ -10,7 +10,11 @@ output$state_view <- renderUI({
         checkboxInput("show_state", "Show state", FALSE),
         checkboxInput("show_session", "Show session", FALSE)
       ),
-      help_modal("View state", "state_help", inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/state.md")))
+      help_modal(
+        "View state", "state_help", 
+        inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/state.md")), 
+        lic = "by-sa"
+      )
     ),
     mainPanel(
       conditionalPanel(

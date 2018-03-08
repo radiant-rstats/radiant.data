@@ -503,51 +503,58 @@ stat_tab_panel <- function(menu, tool, tool_ui, output_panels,
 ################################################################
 ## functions used for app help
 ################################################################
-help_modal <- function(modal_title, link, help_file,
-                       author = "Vincent Nijs",
-                       year = lubridate::year(lubridate::now())) {
+help_modal <- function(
+  modal_title, link, help_file,
+  author = "Vincent Nijs",
+  year = lubridate::year(lubridate::now()),
+  lic = "by-nc-sa"
+) {
+
   sprintf(
     "<div class='modal fade' id='%s' tabindex='-1' role='dialog' aria-labelledby='%s_label' aria-hidden='true'>
-            <div class='modal-dialog modal-dialog-lg'>
-              <div class='modal-content'>
-                <div class='modal-header'>
-                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-                  <h4 class='modal-title' id='%s_label'>%s</h4>
-                  </div>
-                <div class='modal-body'>%s<br>
-                  &copy; %s (%s) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/80x15.png' /></a>
-                </div>
-              </div>
-            </div>
+       <div class='modal-dialog modal-dialog-lg'>
+         <div class='modal-content'>
+           <div class='modal-header'>
+             <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+             <h4 class='modal-title' id='%s_label'>%s</h4>
+             </div>
+           <div class='modal-body'>%s<br>
+             &copy; %s (%s) <a rel='license' href='http://creativecommons.org/licenses/%s/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/%s.png' /></a>
            </div>
-           <i title='Help' class='fa fa-question' data-toggle='modal' data-target='#%s'></i>",
-    link, link, link, modal_title, help_file, author, year, link
+         </div>
+       </div>
+     </div>
+     <i title='Help' class='fa fa-question' data-toggle='modal' data-target='#%s'></i>",
+    link, link, link, modal_title, help_file, author, year, lic, lic, link
   ) %>%
     enc2utf8() %>%
     HTML()
 }
 
-help_and_report <- function(modal_title, fun_name, help_file,
-                            author = "Vincent Nijs",
-                            year = lubridate::year(lubridate::now())) {
+help_and_report <- function(
+  modal_title, fun_name, help_file,
+  author = "Vincent Nijs",
+  year = lubridate::year(lubridate::now()),
+  lic = "by-nc-sa"
+) {
   sprintf(
     "<div class='modal fade' id='%s_help' tabindex='-1' role='dialog' aria-labelledby='%s_help_label' aria-hidden='true'>
-            <div class='modal-dialog'>
-              <div class='modal-content'>
-                <div class='modal-header'>
-                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-                  <h4 class='modal-title' id='%s_help_label'>%s</h4>
-                  </div>
-                <div class='modal-body'>%s<br>
-                  &copy; %s (%s) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/80x15.png' /></a>
-                </div>
-              </div>
-            </div>
+       <div class='modal-dialog'>
+         <div class='modal-content'>
+           <div class='modal-header'>
+             <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+             <h4 class='modal-title' id='%s_help_label'>%s</h4>
+             </div>
+           <div class='modal-body'>%s<br>
+             &copy; %s (%s) <a rel='license' href='http://creativecommons.org/licenses/%s/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/%s.png' /></a>
            </div>
-           <i title='Help' class='fa fa-question alignleft' data-toggle='modal' data-target='#%s_help'></i>
-           <i title='Report results' class='fa fa-edit action-button shiny-bound-input alignright' href='#%s_report' id='%s_report'></i>
-           <div style='clear: both;'></div>",
-    fun_name, fun_name, fun_name, modal_title, help_file, author, year, fun_name, fun_name, fun_name
+         </div>
+       </div>
+     </div>
+     <i title='Help' class='fa fa-question alignleft' data-toggle='modal' data-target='#%s_help'></i>
+     <i title='Report results' class='fa fa-edit action-button shiny-bound-input alignright' href='#%s_report' id='%s_report'></i>
+     <div style='clear: both;'></div>",
+    fun_name, fun_name, fun_name, modal_title, help_file, author, year, lic, lic, fun_name, fun_name, fun_name
   ) %>%
     enc2utf8() %>%
     HTML() %>%

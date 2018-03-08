@@ -161,7 +161,8 @@ output$ui_Explore <- renderUI({
     ),
     help_and_report(
       modal_title = "Explore", fun_name = "explore",
-      help_file = inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/explore.md"))
+      help_file = inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/explore.md")),
+      lic = "by-sa"
     )
   )
 })

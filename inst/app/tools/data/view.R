@@ -38,7 +38,11 @@ output$ui_View <- renderUI({
         tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success"), style = "padding-top:30px;")
       )
     ),
-    help_and_report("View", "view", inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/view.md")) %>% gsub("`", "", .))
+    help_and_report(
+      "View", "view", 
+      inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/view.md")) %>% gsub("`", "", .),
+      lic = "by-sa"
+    )
   )
 })
 
