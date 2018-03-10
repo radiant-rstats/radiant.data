@@ -1,5 +1,9 @@
 # CHANGES IN radiant.data 0.9.0.16
 
+* Fix in code-generation for `table2data`
+
+# CHANGES IN radiant.data 0.9.0.16
+
 * Changed license for help files and images for radiant.data to [CC-BY-SA](https://creativecommons.org/licenses/by-sa/4.0/legalcode)
 
 # CHANGES IN radiant.data 0.9.0.15

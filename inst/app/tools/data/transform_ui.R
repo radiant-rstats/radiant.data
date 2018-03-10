@@ -592,24 +592,25 @@ observeEvent(input$tr_change_type, {
   }
 }
 
-.tab2dat <- function(dataset, freq,
-                     vars = "",
-                     store_dat = "",
-                     store = TRUE) {
+.tab2dat <- function(
+  dataset, freq, vars = "",
+  store_dat = "", store = TRUE
+) {
   if (!store && !is.character(dataset)) {
     if (is_empty(vars)) vars <- setdiff(colnames(dataset), freq)
     select_at(dataset, .vars = unique(c(vars, freq))) %>%
       table2data(freq)
   } else {
     if (store_dat == "") store_dat <- dataset
-    if (is_empty(vars)) vars <- setdiff(colnames(dataset), freq)
-    paste0("## Create data from a table\nr_data[[\"", store_dat, "\"]] <- select(r_data[[\"", dataset, "\"]], ", paste0(vars, collapse = ", "), ") %>% table2data('", freq, "')\n")
+    if (is_empty(vars)) vars <- setdiff(colnames(r_data[[dataset]]), freq)
+    paste0("## Create data from a table\nr_data[[\"", store_dat, "\"]] <- select(r_data[[\"", dataset, "\"]], ", paste0(vars, collapse = ", "), ") %>%\n  table2data(\"", freq, "\")\n")
   }
 }
 
-.gather <- function(dataset, vars, key, value,
-                    store_dat = "",
-                    store = TRUE) {
+.gather <- function(
+  dataset, vars, key, value, 
+  store_dat = "", store = TRUE
+) {
   if (!store && !is.character(dataset)) {
     gather(dataset, !! key, !! value, !! vars, factor_key = TRUE)
   } else {
@@ -618,11 +619,10 @@ observeEvent(input$tr_change_type, {
   }
 }
 
-.spread <- function(dataset, key, value,
-                    fill = NA,
-                    vars = "",
-                    store_dat = "",
-                    store = TRUE) {
+.spread <- function(
+  dataset, key, value, fill = NA,
+  vars = "", store_dat = "", store = TRUE
+) {
   if (!store && !is.character(dataset)) {
     if (!vars[1] == "") dataset <- select_at(dataset, .vars = vars)
     cn <- colnames(dataset)
@@ -659,6 +659,7 @@ observeEvent(input$tr_change_type, {
                     vars = "",
                     store_dat = "",
                     store = TRUE) {
+
   if (!store || !is.character(dataset)) {
     if (all(vars == "")) {
       paste0("Select variables to expand")
@@ -677,6 +678,7 @@ observeEvent(input$tr_change_type, {
                  .ext = "_dec",
                  store_dat = "",
                  store = TRUE) {
+  
   if (!store && !is.character(dataset)) {
     if (is.na(bins) || !is.integer(bins)) return("Please specify the (integer) number of bins to use")
     xt <- function(x, bins, rev) radiant.data::xtile(x, bins, rev = rev)

@@ -552,14 +552,17 @@ getsummary <- function(dat, dc = getclass(dat)) {
 #' @param freq Column name with frequency information
 #'
 #' @examples
-#' data.frame(price = c("$200","$300"), sale = c(10, 2)) %>% table2data
+#' data.frame(price = c("$200","$300"), sale = c(10, 2)) %>% table2data()
 #'
 #' @export
 table2data <- function(dat, freq = tail(colnames(dat), 1)) {
-  blowup <- function(i)
-    if (!is.na(dat[[freq]][i])) dat[rep(i, each = dat[[freq]][i]), ]
 
-  lapply(1:nrow(dat), blowup) %>%
+  if (!is.numeric(dat[[freq]])) stop("The frequency variable must be numeric", call = FALSE)
+  blowup <- function(i) {
+    if (!is.na(dat[[freq]][i])) dat[rep(i, each = dat[[freq]][i]), ]
+  }
+
+  lapply(seq_len(nrow(dat)), blowup) %>%
     bind_rows() %>%
     select_at(.vars = setdiff(colnames(dat), freq)) %>%
     mutate_all(funs(as.factor))
