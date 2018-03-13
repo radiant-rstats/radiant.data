@@ -11,7 +11,7 @@ ci_label(alt = "two.sided", cl = 0.95, dec = 3)
 
 \item{cl}{Confidence level}
 
-\item{dec}{Number of decimal places}
+\item{dec}{Number of decimals to show}
 }
 \value{
 A character vector with labels for a confidence interval

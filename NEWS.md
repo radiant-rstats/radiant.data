@@ -1,5 +1,6 @@
-# CHANGES IN radiant.data 0.9.0.16
+# CHANGES IN radiant.data 0.9.0.17
 
+* Use thousand separator for `summary.pivotr` and `summary.explore`
 * Fix in code-generation for `table2data`
 
 # CHANGES IN radiant.data 0.9.0.16

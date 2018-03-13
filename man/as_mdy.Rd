@@ -22,7 +22,7 @@ Use as.character if x is a factor
 as_mdy("2-1-2014")
 \dontrun{
 as_mdy("2-1-2014") \%>\% month(label = TRUE)
-as_mdy("2-1-2014") \%>\% week
+as_mdy("2-1-2014") \%>\% week()
 as_mdy("2-1-2014") \%>\% wday(label = TRUE)
 }
 }

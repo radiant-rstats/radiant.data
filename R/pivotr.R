@@ -21,16 +21,11 @@
 #' result <- pivotr("diamonds", cvars = "cut", normalize = "total")$tab
 #'
 #' @export
-pivotr <- function(dataset,
-                   cvars = "",
-                   nvar = "None",
-                   fun = "mean_rm",
-                   normalize = "None",
-                   tabfilt = "",
-                   tabsort = "",
-                   nr = NULL,
-                   data_filter = "",
-                   shiny = FALSE) {
+pivotr <- function(
+  dataset, cvars = "", nvar = "None", fun = "mean_rm",
+  normalize = "None", tabfilt = "", tabsort = "", nr = NULL,
+  data_filter = "", shiny = FALSE
+) {
 
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   fill <- if (nvar == "None") 0L else NA
@@ -211,12 +206,10 @@ pivotr <- function(dataset,
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
 #'
 #' @export
-summary.pivotr <- function(object,
-                           perc = FALSE,
-                           dec = 3,
-                           chi2 = FALSE,
-                           shiny = FALSE,
-                           ...) {
+summary.pivotr <- function(
+  object, perc = FALSE, dec = 3,
+  chi2 = FALSE, shiny = FALSE, ...
+) {
 
   if (!shiny) {
     cat("Pivot table\n")
@@ -243,7 +236,7 @@ summary.pivotr <- function(object,
       cat("Function    :", sub("_rm", "", object$fun), "\n")
     }
     cat("\n")
-    print(formatdf(object$tab, dec, perc), row.names = FALSE)
+    print(formatdf(object$tab, dec, perc, mark = ","), row.names = FALSE)
     cat("\n")
   }
 
@@ -300,14 +293,11 @@ summary.pivotr <- function(object,
 #' @seealso \code{\link{summary.pivotr}} to print a plain text table
 #'
 #' @export
-dtab.pivotr <- function(object,
-                        format = "none",
-                        perc = FALSE,
-                        dec = 3,
-                        searchCols = NULL,
-                        order = NULL,
-                        pageLength = NULL,
-                        ...) {
+dtab.pivotr <- function(
+  object, format = "none", perc = FALSE, dec = 3,
+  searchCols = NULL, order = NULL, pageLength = NULL,
+  ...
+) {
 
   tab <- object$tab
   cvar <- object$cvars[1]
@@ -443,15 +433,12 @@ dtab.pivotr <- function(object,
 #' @seealso \code{\link{summary.pivotr}} to show summaries
 #'
 #' @export
-plot.pivotr <- function(x,
-                        type = "dodge",
-                        perc = FALSE,
-                        flip = FALSE,
-                        fillcol = "blue",
-                        opacity = 0.5,
-                        ...) {
-  object <- x
-  rm(x)
+plot.pivotr <- function(
+  x, type = "dodge", perc = FALSE, flip = FALSE,
+  fillcol = "blue", opacity = 0.5, ...
+) {
+
+  object <- x; rm(x)
   cvars <- object$cvars
   nvar <- object$nvar
   tab <- object$tab %>% {
@@ -522,6 +509,7 @@ plot.pivotr <- function(x,
 #'
 #' @export
 store.pivotr <- function(object, name, ...) {
+  
   tab <- object$tab
 
   ## fix colnames as needed

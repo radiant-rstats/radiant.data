@@ -4,12 +4,12 @@
 \alias{formatdf}
 \title{Format a data.frame with a specified number of decimal places}
 \usage{
-formatdf(tbl, dec = 3, perc = FALSE, mark = "")
+formatdf(tbl, dec = NULL, perc = FALSE, mark = "")
 }
 \arguments{
 \item{tbl}{Data.frame}
 
-\item{dec}{Number of decimal places}
+\item{dec}{Number of decimals to show}
 
 \item{perc}{Display numbers as percentages (TRUE or FALSE)}
 

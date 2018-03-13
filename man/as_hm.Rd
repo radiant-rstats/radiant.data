@@ -18,6 +18,6 @@ Convert input in hour-minute format to time
 \examples{
 as_hm("12:45")
 \dontrun{
-as_hm("12:45") \%>\% minute
+as_hm("12:45") \%>\% minute()
 }
 }

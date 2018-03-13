@@ -9,7 +9,7 @@ rounddf(tbl, dec = 3)
 \arguments{
 \item{tbl}{Data frame}
 
-\item{dec}{Number of decimal places}
+\item{dec}{Number of decimals to show}
 }
 \value{
 Data frame with rounded doubles

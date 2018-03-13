@@ -11,7 +11,7 @@ formatnr(x, sym = "", dec = 2, perc = FALSE, mark = ",")
 
 \item{sym}{Symbol to use}
 
-\item{dec}{Number of decimal places}
+\item{dec}{Number of decimals to show}
 
 \item{perc}{Display number as a percentage}
 

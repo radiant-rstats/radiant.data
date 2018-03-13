@@ -965,7 +965,7 @@ print.gtable <- function(x, ...) {
 #'
 #' @param alt Type of hypothesis ("two.sided","less","greater")
 #' @param cl Confidence level
-#' @param dec Number of decimal places
+#' @param dec Number of decimals to show
 #'
 #' @return A character vector with labels for a confidence interval
 #'
@@ -1018,7 +1018,7 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #' Format a data.frame with a specified number of decimal places
 #'
 #' @param tbl Data.frame
-#' @param dec Number of decimal places
+#' @param dec Number of decimals to show
 #' @param perc Display numbers as percentages (TRUE or FALSE)
 #' @param mark Thousand separator
 #'
@@ -1031,7 +1031,7 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #'   formatdf(dec = 2, perc = TRUE)
 #'
 #' @export
-formatdf <- function(tbl, dec = 3, perc = FALSE, mark = "") {
+formatdf <- function(tbl, dec = NULL, perc = FALSE, mark = "") {
   frm <- function(x) {
     if (is.double(x) && !is.Date(x)) {
       formatnr(x, dec = dec, perc = perc, mark = mark)
@@ -1041,7 +1041,6 @@ formatdf <- function(tbl, dec = 3, perc = FALSE, mark = "") {
       x
     }
   }
-
   mutate_all(tbl, .funs = funs(frm))
 }
 
@@ -1049,7 +1048,7 @@ formatdf <- function(tbl, dec = 3, perc = FALSE, mark = "") {
 #'
 #' @param x Number or vector
 #' @param sym Symbol to use
-#' @param dec Number of decimal places
+#' @param dec Number of decimals to show
 #' @param perc Display number as a percentage
 #' @param mark Thousand separator
 #'
@@ -1076,7 +1075,7 @@ formatnr <- function(x, sym = "", dec = 2, perc = FALSE, mark = ",") {
 #' Round double in a data.frame to a specified number of decimal places
 #'
 #' @param tbl Data frame
-#' @param dec Number of decimal places
+#' @param dec Number of decimals to show
 #'
 #' @return Data frame with rounded doubles
 #'
@@ -1289,7 +1288,8 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
 
   ## customizing data if a command was used
   if (!is_empty(cmd)) {
-    pred_cmd <- gsub("\"", "\'", cmd) %>% gsub("\\s+", "", .)
+    pred_cmd <- gsub("\"", "\'", cmd) %>% 
+      gsub("\\s+", "", .)
     cmd_vars <- strsplit(pred_cmd, ";")[[1]] %>%
       strsplit(., "=") %>%
       sapply("[", 1) %>%

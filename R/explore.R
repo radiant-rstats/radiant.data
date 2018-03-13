@@ -25,16 +25,12 @@
 #' @seealso See \code{\link{summary.explore}} to show summaries
 #'
 #' @export
-explore <- function(dataset,
-                    vars = "",
-                    byvar = "",
-                    fun = c("mean_rm", "sd_rm"),
-                    top = "fun",
-                    tabfilt = "",
-                    tabsort = "",
-                    nr = NULL,
-                    data_filter = "",
-                    shiny = FALSE) {
+explore <- function(
+  dataset, vars = "", byvar = "", fun = c("mean_rm", "sd_rm"),
+  top = "fun", tabfilt = "", tabsort = "", nr = NULL,
+  data_filter = "", shiny = FALSE
+) {
+
   tvars <- vars
   if (!is_empty(byvar)) tvars <- unique(c(tvars, byvar))
 
@@ -197,6 +193,7 @@ explore <- function(dataset,
 #'
 #' @export
 summary.explore <- function(object, dec = 3, ...) {
+
   cat("Explore\n")
   cat("Data        :", object$dataset, "\n")
   if (object$data_filter %>% gsub("\\s", "", .) != "") {
@@ -219,7 +216,8 @@ summary.explore <- function(object, dec = 3, ...) {
   cat("Top         :", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[object$top], "\n")
   cat("\n")
 
-  print(formatdf(object$tab, dec), row.names = FALSE)
+  formatdf(object$tab, dec = dec, mark = ",") %>%
+    print(row.names = FALSE)
   invisible()
 }
 
@@ -309,12 +307,10 @@ flip <- function(expl, top = "fun") {
 #' @seealso \code{\link{summary.pivotr}} to print a plain text table
 #'
 #' @export
-dtab.explore <- function(object,
-                         dec = 3,
-                         searchCols = NULL,
-                         order = NULL,
-                         pageLength = NULL,
-                         ...) {
+dtab.explore <- function(
+  object, dec = 3, searchCols = NULL,
+  order = NULL, pageLength = NULL, ...
+) {
 
   tab <- object$tab
   cn_all <- colnames(tab)

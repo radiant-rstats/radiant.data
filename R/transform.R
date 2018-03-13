@@ -52,15 +52,14 @@ normalize <- function(x, y)
 #' as_mdy("2-1-2014")
 #' \dontrun{
 #' as_mdy("2-1-2014") %>% month(label = TRUE)
-#' as_mdy("2-1-2014") %>% week
+#' as_mdy("2-1-2014") %>% week()
 #' as_mdy("2-1-2014") %>% wday(label = TRUE)
 #' }
 #' @export
 as_mdy <- function(x) {
-    if (is.factor(x)) as.character(x) else x
-  } %>% {
-    sshhr(mdy(.))
-  } %>% as.Date()
+  if (is.factor(x)) x <- as.character(x)
+  sshhr(mdy(x)) %>% as.Date()
+}
 
 #' Convert input in day-month-year format to date
 #' @param x Input variable
@@ -70,10 +69,9 @@ as_mdy <- function(x) {
 #'
 #' @export
 as_dmy <- function(x) {
-    if (is.factor(x)) as.character(x) else x
-  } %>% {
-    sshhr(dmy(.))
-  } %>% as.Date()
+  if (is.factor(x)) x <- as.character(x)
+  sshhr(dmy(x)) %>% as.Date()
+}
 
 #' Convert input in year-month-day format to date
 #' @param x Input variable
@@ -83,10 +81,9 @@ as_dmy <- function(x) {
 #'
 #' @export
 as_ymd <- function(x) {
-    if (is.factor(x)) as.character(x) else x
-  } %>% {
-    sshhr(ymd(.))
-  } %>% as.Date()
+  if (is.factor(x)) x <- as.character(x)
+  sshhr(ymd(x)) %>% as.Date()
+}
 
 # http://www.noamross.net/blog/2014/2/10/using-times-and-dates-in-r---presentation-code.html
 #' Convert input in year-month-day-hour-minute-second format to date-time
@@ -101,10 +98,9 @@ as_ymd <- function(x) {
 #' }
 #' @export
 as_ymd_hms <- function(x) {
-    if (is.factor(x)) as.character(x) else x
-  } %>% {
-    sshhr(ymd_hms(.))
-  }
+  if (is.factor(x)) x <- as.character(x)
+  sshhr(ymd_hms(x))
+}
 
 #' Convert input in year-month-day-hour-minute format to date-time
 #' @param x Input variable
@@ -113,11 +109,8 @@ as_ymd_hms <- function(x) {
 #' as_ymd_hm("2014-1-1 12:15")
 #' @export
 as_ymd_hm <- function(x) {
-  {
-    if (is.factor(x)) as.character(x) else x
-  } %>% {
-    sshhr(parse_date_time(., "%Y%m%d %H%M"))
-  }
+  if (is.factor(x)) x <- as.character(x)
+  sshhr(parse_date_time(x, "%Y%m%d %H%M"))
 }
 
 #' Convert input in month-day-year-hour-minute-second format to date-time
@@ -127,11 +120,8 @@ as_ymd_hm <- function(x) {
 #' as_mdy_hms("1-1-2014 12:15:01")
 #' @export
 as_mdy_hms <- function(x) {
-  {
-    if (is.factor(x)) as.character(x) else x
-  } %>% {
-    sshhr(parse_date_time(., "%m%d%Y %H%M%S"))
-  }
+  if (is.factor(x)) x <- as.character(x)
+  sshhr(parse_date_time(x, "%m%d%Y %H%M%S"))
 }
 
 #' Convert input in month-day-year-hour-minute format to date-time
@@ -141,11 +131,8 @@ as_mdy_hms <- function(x) {
 #' as_mdy_hm("1-1-2014 12:15")
 #' @export
 as_mdy_hm <- function(x) {
-  {
-    if (is.factor(x)) as.character(x) else x
-  } %>% {
-    sshhr(parse_date_time(., "%m%d%Y %H%M"))
-  }
+  if (is.factor(x)) x <- as.character(x)
+  sshhr(parse_date_time(x, "%m%d%Y %H%M"))
 }
 
 #' Convert input in day-month-year-hour-minute-second format to date-time
@@ -155,11 +142,8 @@ as_mdy_hm <- function(x) {
 #' as_mdy_hms("1-1-2014 12:15:01")
 #' @export
 as_dmy_hms <- function(x) {
-  {
-    if (is.factor(x)) as.character(x) else x
-  } %>% {
-    sshhr(parse_date_time(., "%d%m%Y %H%M%S"))
-  }
+  if (is.factor(x)) x <- as.character(x)
+  sshhr(parse_date_time(x, "%d%m%Y %H%M%S"))
 }
 
 #' Convert input in day-month-year-hour-minute format to date-time
@@ -169,11 +153,8 @@ as_dmy_hms <- function(x) {
 #' as_mdy_hm("1-1-2014 12:15")
 #' @export
 as_dmy_hm <- function(x) {
-  {
-    if (is.factor(x)) as.character(x) else x
-  } %>% {
-    sshhr(parse_date_time(x, "%d%m%Y %H%M"))
-  }
+  if (is.factor(x)) x <- as.character(x)
+  sshhr(parse_date_time(x, "%d%m%Y %H%M"))
 }
 
 #' Convert input in hour-minute-second format to time
@@ -187,10 +168,9 @@ as_dmy_hm <- function(x) {
 #' }
 #' @export
 as_hms <- function(x) {
-    if (is.factor(x)) as.character(x) else x
-  } %>% {
-    sshhr(hms(.))
-  }
+  if (is.factor(x)) x <- as.character(x)
+  sshhr(hms(x))
+}
 
 #' Convert input in hour-minute format to time
 #' @param x Input variable
@@ -198,14 +178,13 @@ as_hms <- function(x) {
 #' @examples
 #' as_hm("12:45")
 #' \dontrun{
-#' as_hm("12:45") %>% minute
+#' as_hm("12:45") %>% minute()
 #' }
 #' @export
 as_hm <- function(x) {
-    if (is.factor(x)) as.character(x) else x
-  } %>% {
-    sshhr(hm(.))
-  }
+  if (is.factor(x)) x <- as.character(x)
+  sshhr(hm(x))
+}
 
 #' Convert variable to integer avoiding potential issues with factors
 #' @param x Input variable
@@ -284,9 +263,11 @@ as_duration <- function(x) as.numeric(lubridate::as.duration(x))
 #' as_distance(32.8245525,-117.0951632, 40.7033127,-73.979681, unit = "miles")
 #'
 #' @export
-as_distance <- function(lat1, long1, lat2, long2,
-                        unit = "km",
-                        R = c("km" = 6371, "miles" = 3959)[[unit]]) {
+as_distance <- function(
+  lat1, long1, lat2, long2,
+  unit = "km", R = c("km" = 6371, "miles" = 3959)[[unit]]
+) {
+
   rad <- pi / 180
   d1 <- lat1 * rad
   d2 <- lat2 * rad
@@ -374,7 +355,7 @@ xtile <- function(x, n = 5, rev = FALSE) {
   } else if (n < 1) {
     stop(paste0("The number of bins must be > 1 but is ", n), call. = FALSE)
   } else if (length(x) < n) {
-    stop(paste("The number of bins to create is larger than\nthe number of data points. Perhaps you grouped the data before\ncalling the xtile function and the number of observations per\ngroup are too small"), call. = FALSE)
+    stop(paste("The number of bins to create is larger than\nthe number of data points. Perhaps you grouped the data before\ncalling the xtile function and the number of observations per\ngroup is too small"), call. = FALSE)
   }
 
   breaks <- quantile(x, prob = seq(0, 1, length = n + 1), type = 2)
@@ -607,8 +588,11 @@ level_list <- function(dat, ...) {
 #' @export
 month <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
   x <- lubridate::month(x, label = label, abbr = abbr)
-  if (!ordered && label) x <- factor(x, ordered = FALSE)
-  x
+  if (!ordered && label) {
+    factor(x, ordered = FALSE)
+  } else {
+    x
+  }
 }
 
 #' Add ordered argument to lubridate::wday
@@ -624,8 +608,11 @@ month <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
 #' @export
 wday <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
   x <- lubridate::wday(x, label = label, abbr = abbr)
-  if (!ordered && label) x <- factor(x, ordered = FALSE)
-  x
+  if (!ordered && label) {
+    factor(x, ordered = FALSE)
+  } else {
+    x
+  }
 }
 
 #' Remove/reorder levels
@@ -635,8 +622,8 @@ wday <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
 #' @param repl String (or NA) used to replace missing levels
 #'
 #' @examples
-#' refactor(diamonds$cut, c("Premium","Ideal")) %>% head
-#' refactor(diamonds$cut, c("Premium","Ideal"), "Other") %>% head
+#' refactor(diamonds$cut, c("Premium","Ideal")) %>% head()
+#' refactor(diamonds$cut, c("Premium","Ideal"), "Other") %>% head()
 #'
 #' @export
 refactor <- function(x, levs = levels(x), repl = NA) {

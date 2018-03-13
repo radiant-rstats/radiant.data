@@ -20,7 +20,7 @@ Remove/reorder levels
 Keep only a specific set of levels in a factor. By removing levels the base for comparison in, e.g., regression analysis, becomes the first level. To relable the base use, for example, repl = 'other'
 }
 \examples{
-refactor(diamonds$cut, c("Premium","Ideal")) \%>\% head
-refactor(diamonds$cut, c("Premium","Ideal"), "Other") \%>\% head
+refactor(diamonds$cut, c("Premium","Ideal")) \%>\% head()
+refactor(diamonds$cut, c("Premium","Ideal"), "Other") \%>\% head()
 
 }
