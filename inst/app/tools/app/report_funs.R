@@ -691,9 +691,15 @@ update_report <- function(inp_main = "",
         inp_out[[i]]["result"] <- NULL
       }
       if (inp_out[i] != "" && length(inp_out[[i]]) > 0) {
-        cmd <- deparse(inp_out[[i]], control = c("keepNA"), width.cutoff = 500L) %>%
-          sub("list\\(", paste0(outputs[i], "\\(", inp, ", "), .) %>%
-          paste0(cmd, "\n", .)
+        if (sum(nchar(inp_out[[i]])) > 40L) {
+          cmd <- depr(inp_out[[i]], wrap = wrap) %>%
+            sub("list\\(", paste0(outputs[i], "\\(\n  ", inp, ", "), .) %>%
+            paste0(cmd, "\n", .)
+        } else {
+          cmd <- deparse(inp_out[[i]], control = c("keepNA"), width.cutoff = 500L) %>%
+            sub("list\\(", paste0(outputs[i], "\\(", inp, ", "), .) %>%
+            paste0(cmd, "\n", .)
+        }
       } else {
         cmd <- paste0(cmd, "\n", outputs[i], "(", inp, ")")
       }
