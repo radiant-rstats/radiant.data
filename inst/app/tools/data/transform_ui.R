@@ -603,6 +603,7 @@ observeEvent(input$tr_change_type, {
   } else {
     if (store_dat == "") store_dat <- dataset
     if (is_empty(vars)) vars <- setdiff(colnames(r_data[[dataset]]), freq)
+    vars <- unique(c(vars, freq))
     paste0("## Create data from a table\nr_data[[\"", store_dat, "\"]] <- select(r_data[[\"", dataset, "\"]], ", paste0(vars, collapse = ", "), ") %>%\n  table2data(\"", freq, "\")\n")
   }
 }
