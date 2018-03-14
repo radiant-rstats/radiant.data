@@ -56,8 +56,10 @@ Note: Markdown is used to format the report. Go to [commonmark.org](http://commo
 You can even include math if you want:
 
 $$
-  y_t = \\\\alpha + \\\\beta x_t + \\\\epsilon_{yt}, \\\\\\\\
-  z_t = 3 \\\\times 9 + y_t + \\\\epsilon_{zt}.
+\\\\begin{aligned}
+  y_t &= \\\\alpha + \\\\beta x_t + \\\\epsilon_{yt}, \\\\\\\\
+  z_t &= 3 \\\\times 9 + y_t + \\\\epsilon_{zt}.
+\\\\end{aligned}
 $$
 
 To show the output press the `Knit report (Rmd)` button.
