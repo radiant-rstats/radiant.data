@@ -40,7 +40,7 @@ output$ui_viz_type <- renderUI({
 output$ui_viz_nrobs <- renderUI({
   req(input$viz_type == "scatter")
   nrobs <- nrow(.getdata())
-  req(nrobs > 1000)
+  # req(nrobs > 1000)
   choices <- c("1,000" = 1000, "5,000" = 5000, "10,000" = 10000, "All" = -1) %>%
     .[. < nrobs]
   selectInput(
