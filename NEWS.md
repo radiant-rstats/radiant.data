@@ -1,7 +1,8 @@
-# CHANGES IN radiant.data 0.9.0.21
+# CHANGES IN radiant.data 0.9.0.22
 
 * Fix for [#43](https://github.com/radiant-rstats/radiant/issues/43) where scatter plot was not shown for a dataset with less than 1,000 rows
 * Updated equation example in _Report > Rmd_
+* Fix for _Report > Rmd_ and _Report > R_ when R-code or Rmarkdown is being pulled from the Rstudio editor
 
 # CHANGES IN radiant.data 0.9.0.17
 

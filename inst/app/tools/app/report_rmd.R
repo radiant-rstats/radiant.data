@@ -457,8 +457,8 @@ rmd_knitted <- eventReactive(report_rmd$report != 1, {
           ## hack to allow processing current line
           report_rmd$knit_button <- 0
         }
-        knit_it(report, type = "rmd")
       }
+      knit_it(report, type = "rmd")
     })
   }
 })

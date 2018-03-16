@@ -338,9 +338,10 @@ output$r_knitted <- renderUI({
             ## hack to allow processing current line
             report_r$knit_button <- 0
           }
-          report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
-          knit_it(report)
         }
+        
+        report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
+        knit_it(report)
       })
     }
   })
