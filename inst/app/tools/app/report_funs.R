@@ -1,8 +1,8 @@
-file_upload_button <- function(inputId, label = "",
-                               multiple = FALSE,
-                               accept = NULL,
-                               buttonLabel = "Browse ...",
-                               class = "") {
+file_upload_button <- function(
+  inputId, label = "", multiple = FALSE,
+  accept = NULL, buttonLabel = "Browse ...",
+  class = "", progress = FALSE
+) {
 
   ## next ... create an upload link https://stackoverflow.com/a/11406690/1974918
   if (length(accept) > 0) {
@@ -15,8 +15,7 @@ file_upload_button <- function(inputId, label = "",
     label <-  paste0("</br><label>", label, "</label></br>")
   }
 
-  HTML(
-    paste0(label, "
+  btn <- paste0(label, "
       <label class='input-group-btn'>
         <span class='btn btn-default btn-file-solitary ", class, "'>
           <i class='fa fa-upload'></i>
@@ -25,13 +24,15 @@ file_upload_button <- function(inputId, label = "",
         </span>
       </label>
    ")
-  )
-}
 
-## replace esc_slash by fixMS if not more formula issues popup
-# esc_slash <- function(x) {
-#   radiant.data::fixMS(x)
-# }
+  if (progress) {
+    btn <- paste0(btn, "\n<div id='uploadfile_progress' class='progress progress-striped active shiny-file-input-progress'>
+      <div class='progress-bar'></div>
+    </div>")
+  }
+
+  HTML(btn)
+}
 
 ## Thanks to @timelyportfolio for this comment/fix
 ## https://github.com/timelyportfolio/functionplotR/issues/1#issuecomment-224369431

@@ -4,16 +4,17 @@ descr_out <- function(descr, ret_type = "html") {
 
   ## if there is a data description and we want html output
   if (ret_type == "html") {
-    descr <- markdown::markdownToHTML(text = descr, stylesheet = "")
+    markdown::markdownToHTML(text = descr, stylesheet = "")
+  } else {
+    descr
   }
-
-  descr
 }
 
 ## create an empty data.frame and return error message as description
-upload_error_handler <- function(objname, ret)
+upload_error_handler <- function(objname, ret) {
   r_data[[objname]] <<- data.frame(matrix(rep("", 12), nrow = 2), stringsAsFactors = FALSE) %>% 
     set_attr("description", ret)
+}
 
 loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRUE, sep = "\t") {
   dat <- sshhr(try({
@@ -52,13 +53,12 @@ saveClipboardData <- function() {
   }
 }
 
-loadUserData <- function(fname, uFile, ext,
-                         .csv = FALSE,
-                         header = TRUE,
-                         man_str_as_factor = TRUE,
-                         sep = ",",
-                         dec = ".",
-                         n_max = Inf) {
+loadUserData <- function(
+  fname, uFile, ext, .csv = FALSE, header = TRUE,
+  man_str_as_factor = TRUE, sep = ",", dec = ".", 
+  n_max = Inf
+) {
+
   filename <- basename(fname)
   fext <- tools::file_ext(filename) %>% tolower()
 

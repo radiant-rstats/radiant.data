@@ -40,7 +40,7 @@ append_help <- function(help_str, help_path, lic = "nc", Rmd = TRUE) {
 
   ## remove ` from report.md
   paste(
-    gsub("(\"> )`", "\\1", all_help) %>% 
+    gsub("(\"> )`", "\\1", all_help) %>%
     gsub("`( </td>)", "\\1", .),
     "\n", mathjax_script, "\n", cc
   ) %>% HTML()
@@ -119,7 +119,9 @@ observeEvent(input$help_keyboard, {
           tr(class = "border_bottom padding_bottom",
              td("Blue button save"), td("CMD-s"), td("CTRL-s")),
           tr(class = "border_bottom padding_bottom",
-             td("Blue button load"), td("CMD-o"), td("CTRL-o"))
+             td("Blue button load"), td("CMD-o"), td("CTRL-o")),
+          tr(class = "border_bottom padding_bottom",
+             td("Viewer pane full screen:"), td("Shift-CTRL-9"), td("Shift-CTRL-9"))
         )
       ),
       footer = modalButton("OK"),

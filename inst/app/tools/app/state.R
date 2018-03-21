@@ -71,6 +71,7 @@ state_name <- function(out = paste0("radiant-state-", Sys.Date(), ".rda"), full.
     fn
   }
 }
+
 if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
   output$state_save <- downloadHandler(
     filename = function() {

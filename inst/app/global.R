@@ -83,6 +83,13 @@ if (Sys.getenv("SHINY_PORT") == "") {
   options(radiant.report = getOption("radiant.report", default = TRUE))
   ## no limit to filesize locally
   options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = -1))
+
+  if (!"radiant.update" %in% installed.packages()) {
+    suppressWarnings(try(
+      install.packages("radiant.update", repos = "https://radiant-rstats.github.io/minicran/", quiet = TRUE),
+      silent = TRUE
+    ))
+  }
 } else {
   options(radiant.local = FALSE)
   options(radiant.report = getOption("radiant.report", default = FALSE))
@@ -341,20 +348,10 @@ navbar_proj <- function(navbar) {
   navbar
 }
 
-## Shiny Ace themes
-## No space in R toolbar right now
-## based on: https://stackoverflow.com/a/6364905/1974918
-# themes <- getAceThemes()
-# names(themes) <- strsplit(themes, "_") %>%
-#   sapply(theme, function(x) paste0(toupper(substring(x, 1, 1)), substr(x, 2, 100L), collapse = " "))
-
+## formatting data.frames printed in Report > Rmd and Report > R
 knit_print.data.frame <- function(x, ...) {
-  # res <- paste(c("", "", rmarkdown::paged_table(x)), collapse = "\n")
   paste(c("", "", knitr::kable(x)), collapse = "\n") %>%
     knitr::asis_output()
-  # knitr::kable(x, table.attr = "class = 'table table-condensed table-hover'") %>%
-    # paste(c("", "", .), collapse = "\n") %>%
-    # knitr::asis_output()
 }
 
 ## not sure why this doesn't work
