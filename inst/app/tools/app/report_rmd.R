@@ -78,7 +78,7 @@ Note that the columns are left-aligned, right-aligned, and centered using a `:`.
 
 ```{r}
 tbl <- tibble::tibble(
-  Year = c(2013, 2014, 2015),
+  Year = c(2013L, 2014L, 2015L),
   Outcome = c(\"Win\", \"Loss\", \"Win\"),
   `Prior probability` = c(0.30, 0.25, 0.20)
 )
@@ -248,27 +248,18 @@ output$ui_rmd_save_type <- renderUI({
 
 output$ui_rmd_save <- renderUI({
   if (isTRUE(getOption("radiant.report"))) {
-    if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-      ## using a download handler
-      downloadButton("rmd_save", "Save report", class = "btn-primary")
-    } else {
-      actionButton("rmd_save", "Save report", icon = icon("download"), class = "btn-primary")
-    }
+    download_button("rmd_save", "Save report", class = "btn-primary")
   } else {
     invisible()
   }
 })
 
 output$ui_rmd_load <- renderUI({
-  if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-    file_upload_button(
-      "rmd_load",
-      accept = c(".Rmd", ".rmd", ".md", ".html"),
-      buttonLabel = "Load report"
-    )
-  } else {
-    actionButton("rmd_load", "Load report", icon = icon("upload"))
-  }
+  file_upload_button(
+    "rmd_load",
+    accept = c(".Rmd", ".rmd", ".md", ".html"),
+    buttonLabel = "Load report"
+  )
 })
 
 output$ui_rmd_read_files <- renderUI({
@@ -378,23 +369,6 @@ observe({
   }
 })
 
-# observe({
-  # print(input$rmd_generate)
-  # print(input$rmd_view)
-  # print("\n--- rmd knit ----")
-  # print(input$rmd_knit)
-  # print(input$rmd_hotkey)
-  # print(toList(report_rmd))
-  # print("----------------------")
-
-  # print("\n--- rmd lines ----")
-  # print(input$rmd_current_line)
-  # print(input$rmd_current_line_content)
-  # print(input$rmd_edit_selection)
-  # print(input$rmd_hotkey)
-  # print("----------------------")
-# })
-
 output$rmd_view <- renderUI({
   req(input$rmd_generate, input$rmd_view)
   if (input$rmd_view == "ed_only") {
@@ -470,24 +444,16 @@ output$rmd_knitted <- renderUI({
 
 ## keep track of file and report names
 # observe({
-#   report_rmd
-
-#   # report_rmd$rmd
-#   # report_rmd$rcode
-#   input$r_save
-#   input$rmd_save
-#   # input$rmd_save_dh
-  # print("===================")
+  # report_rmd$rmd
+  # report_rmd$rcode
+  # input$rmd_save_dh
   # print(r_state$radiant_state_name)
   # print(r_state$radiant_rmd_name)
   # print(r_state$radiant_r_name)
-  # print("===================")
-
-#   # print(getOption("radiant.project_dir"))
-#   # print(getOption("radiant.write_dir"))
-#   # print(getOption("radiant.dropbox_dir"))
-#   # print(getOption("radiant.gdrive_dir"))
-#   # print("===================")
+  # print(getOption("radiant.project_dir"))
+  # print(getOption("radiant.write_dir"))
+  # print(getOption("radiant.dropbox_dir"))
+  # print(getOption("radiant.gdrive_dir"))
 # })
 
 if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
@@ -522,7 +488,8 @@ observeEvent(input$rmd_load, {
   if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
     path <- rstudioapi::selectFile(
       caption = "Select .Rmd, .md, or .html",
-      filter = "Select .Rmd, .md, or .html (*)"
+      filter = "Select .Rmd, .md, or .html (*)",
+      path = getOption("radiant.launch_dir")
     )
     pp <- parse_path(path, chr = "")
   } else {
@@ -573,8 +540,5 @@ observeEvent(input$rmd_read_files, {
 })
 
 observeEvent(input$rmd_edit, {
-  ## continuously update and escape \
-  # r_state$rmd_edit <<- gsub("\\\\", "\\\\\\\\", input$rmd_edit)
-  ## continuously update r_state
   r_state$rmd_edit <<- fixMS(input$rmd_edit)
 })

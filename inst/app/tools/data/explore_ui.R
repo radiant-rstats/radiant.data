@@ -35,12 +35,10 @@ expl_sum_inputs <- reactive({
 output$ui_expl_vars <- renderUI({
   isNum <- .getclass() %in% c("integer", "numeric", "factor", "logical")
   vars <- varnames()[isNum]
-  # if (not_available(vars)) return()
   req(available(vars))
-
   selectInput(
     "expl_vars", label = "Numeric variable(s):", choices = vars,
-    selected = state_multiple("expl_vars", vars), multiple = TRUE,
+    selected = state_multiple("expl_vars", vars, isolate(input$expl_vars)), multiple = TRUE,
     size = min(8, length(vars)), selectize = FALSE
   )
 })
@@ -49,7 +47,6 @@ output$ui_expl_byvar <- renderUI({
   withProgress(message = "Acquiring variable information", value = 1, {
     vars <- groupable_vars()
   })
-  # if (not_available(vars)) return()
   req(available(vars))
 
   if (any(vars %in% input$expl_vars)) {
@@ -66,16 +63,16 @@ output$ui_expl_byvar <- renderUI({
     } else {
       if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
         vars <- unique(c(r_state$expl_byvar, vars))
-        names(vars) <- varnames() %>% {
-          .[match(vars, .)]
-        } %>% names()
+        names(vars) <- varnames() %>% 
+          {.[match(vars, .)]} %>% 
+          names()
       }
     }
   })
 
   selectizeInput(
     "expl_byvar", label = "Group by:", choices = vars,
-    selected = state_multiple("expl_byvar", vars),
+    selected = state_multiple("expl_byvar", vars, isolate(input$expl_byvar)),
     multiple = TRUE,
     options = list(
       placeholder = "Select group-by variable",
@@ -228,21 +225,22 @@ output$explore <- DT::renderDataTable({
   })
 })
 
-output$dl_explore_tab <- downloadHandler(
-  filename = function() {
-    paste0(input$dataset, "_expl.csv")
-  },
-  content = function(file) {
-    dat <- try(.explore(), silent = TRUE)
-    if (is(dat, "try-error") || is.null(dat)) {
-      write.csv(tibble("Data" = "[Empty]"), file, row.names = FALSE)
-    } else {
-      rows <- input$explore_rows_all
-      dat$tab %>%
-        {if (is.null(rows)) . else .[rows, , drop = FALSE]} %>%
-        write.csv(file, row.names = FALSE)
-    }
+dl_explore_tab <- function(path) {
+  dat <- try(.explore(), silent = TRUE)
+  if (is(dat, "try-error") || is.null(dat)) {
+    write.csv(tibble("Data" = "[Empty]"), path, row.names = FALSE)
+  } else {
+    rows <- input$explore_rows_all
+    dat$tab %>%
+      {if (is.null(rows)) . else .[rows, , drop = FALSE]} %>%
+      write.csv(path, row.names = FALSE)
   }
+}
+
+download_handler(
+  id = "dl_explore_tab", 
+  fun = dl_explore_tab, 
+  fn = paste0(input$dataset, "_expl.csv")
 )
 
 observeEvent(input$expl_store, {

@@ -45,26 +45,26 @@ output$ui_data <- renderUI({
             conditionalPanel("input.man_add_descr == true", uiOutput("dataDescriptionMD"))
           ),
           tabPanel("View",
-            downloadLink("dl_view_tab", "", class = "fa fa-download alignright"),
+            download_link("dl_view_tab"),
             DT::dataTableOutput("dataviewer")
           ),
           tabPanel("Visualize",
-            plot_downloader(".visualize", width = viz_plot_width, height = viz_plot_height, pre = ""),
+            download_link("dlp_visualize"),
             plotOutput("visualize", width = "100%", height = "100%")
           ),
           tabPanel("Pivot",
             conditionalPanel("input.pvt_tab == true",
-              downloadLink("dl_pivot_tab", "", class = "fa fa-download alignright"),
+              download_link("dl_pivot_tab"),
               DT::dataTableOutput("pivotr")
             ),
             conditionalPanel("input.pvt_chi2 == true", htmlOutput("pivotr_chi2")),
             conditionalPanel("input.pvt_plot == true", br(), br(),
-              plot_downloader("pivot", width = pvt_plot_width, height = pvt_plot_height),
+              download_link("dlp_pivot"),
               plotOutput("plot_pivot", width = "100%", height = "100%")
             )
           ),
           tabPanel("Explore",
-            downloadLink("dl_explore_tab", "", class = "fa fa-download alignright"),
+            download_link("dl_explore_tab"),
             DT::dataTableOutput("explore")
           ),
           tabPanel("Transform",

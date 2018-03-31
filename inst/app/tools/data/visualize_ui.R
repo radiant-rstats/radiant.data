@@ -32,7 +32,7 @@ viz_inputs <- reactive({
 output$ui_viz_type <- renderUI({
   selectInput(
     inputId = "viz_type", label = "Plot-type:", choices = viz_type,
-    selected = state_multiple("viz_type", viz_type),
+    selected = state_single("viz_type", viz_type),
     multiple = FALSE
   )
 })
@@ -40,7 +40,6 @@ output$ui_viz_type <- renderUI({
 output$ui_viz_nrobs <- renderUI({
   req(input$viz_type == "scatter")
   nrobs <- nrow(.getdata())
-  # req(nrobs > 1000)
   choices <- c("1,000" = 1000, "5,000" = 5000, "10,000" = 10000, "All" = -1) %>%
     .[. < nrobs]
   selectInput(
@@ -67,7 +66,7 @@ output$ui_viz_yvar <- renderUI({
   selectInput(
     inputId = "viz_yvar", label = "Y-variable:",
     choices = vars,
-    selected = state_multiple("viz_yvar", vars),
+    selected = state_multiple("viz_yvar", vars, isolate(input$viz_yvar)),
     multiple = TRUE, size = min(3, length(vars)), selectize = FALSE
   )
 })
@@ -83,7 +82,7 @@ output$ui_viz_xvar <- renderUI({
 
   selectInput(
     inputId = "viz_xvar", label = "X-variable:", choices = vars,
-    selected = state_multiple("viz_xvar", vars),
+    selected = state_multiple("viz_xvar", vars, isolate(input$viz_xvar)),
     multiple = TRUE, size = min(3, length(vars)), selectize = FALSE
   )
 })
@@ -373,11 +372,16 @@ output$ui_Visualize <- renderUI({
   )
 })
 
-viz_plot_width <- eventReactive(input$viz_run, {
+viz_plot_width <- reactive({
   if (is_empty(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
 })
 
-viz_plot_height <- eventReactive(input$viz_run, {
+## based on https://stackoverflow.com/a/40182833/1974918
+viz_plot_height <- eventReactive({
+  input$viz_run
+  input$viz_plot_height
+  input$viz_plot_width
+}, {
   if (is_empty(input$viz_plot_height)) {
     r_data$plot_height
   } else {
@@ -471,7 +475,6 @@ observeEvent(input$visualize_report, {
     vi$fill <- NULL
   }
 
-
   inp_main <- c(clean_args(vi, viz_args), custom = FALSE)
 
   update_report(
@@ -484,3 +487,14 @@ observeEvent(input$visualize_report, {
     fig.height = viz_plot_height()
   )
 })
+
+download_handler(
+  id = "dlp_visualize", 
+  fun = download_handler_plot, 
+  # fn = paste0(input$dataset, "_", input$viz_type, "_visualize.png"),
+  fn = paste0(input$dataset, "_visualize.png"),
+  caption = "Download visualize plot",
+  plot = .visualize,
+  width = viz_plot_width,
+  height = viz_plot_height
+)

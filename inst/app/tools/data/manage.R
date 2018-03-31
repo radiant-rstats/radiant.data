@@ -54,7 +54,7 @@ saveClipboardData <- function() {
 }
 
 loadUserData <- function(
-  fname, uFile, ext, .csv = FALSE, header = TRUE,
+  fname, uFile, ext, header = TRUE,
   man_str_as_factor = TRUE, sep = ",", dec = ".", 
   n_max = Inf
 ) {
@@ -127,7 +127,7 @@ loadUserData <- function(
       }
     }
   } else if (ext %in% c("tsv", "csv", "txt")) {
-    r_data[[objname]] <- loadcsv(uFile, .csv = .csv, header = header, n_max = n_max, sep = sep, dec = dec, saf = man_str_as_factor) %>% {
+    r_data[[objname]] <- loadcsv(uFile, header = header, n_max = n_max, sep = sep, dec = dec, saf = man_str_as_factor) %>% {
       if (is.character(.)) upload_error_handler(objname, "### There was an error loading the data") else .
     } %>% {
       set_colnames(., make.names(colnames(.)))

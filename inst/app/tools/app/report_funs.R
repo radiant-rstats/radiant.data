@@ -1,37 +1,42 @@
 file_upload_button <- function(
   inputId, label = "", multiple = FALSE,
   accept = NULL, buttonLabel = "Browse ...",
-  class = "", progress = FALSE
+  class = "", icn = "upload", progress = FALSE
 ) {
 
-  ## next ... create an upload link https://stackoverflow.com/a/11406690/1974918
-  if (length(accept) > 0) {
-    accept <- paste(accept, collapse = ",")
+  if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
+    actionButton(inputId, buttonLabel, icon = icon(icn), class = class)
   } else {
-    accept <- ""
-  }
 
-  if (!is_empty(label)) {
-    label <-  paste0("</br><label>", label, "</label></br>")
-  }
+    ## next ... create an upload link https://stackoverflow.com/a/11406690/1974918
+    if (length(accept) > 0) {
+      accept <- paste(accept, collapse = ",")
+    } else {
+      accept <- ""
+    }
 
-  btn <- paste0(label, "
-      <label class='input-group-btn'>
-        <span class='btn btn-default btn-file-solitary ", class, "'>
-          <i class='fa fa-upload'></i>
-          ", buttonLabel, "
-          <input id='", inputId, "' name='", inputId, "' type='file' style='display: none;' accept='", accept, "'/>
-        </span>
-      </label>
-   ")
+    if (!is_empty(label)) {
+      label <-  paste0("</br><label>", label, "</label></br>")
+    }
 
-  if (progress) {
-    btn <- paste0(btn, "\n<div id='uploadfile_progress' class='progress progress-striped active shiny-file-input-progress'>
-      <div class='progress-bar'></div>
-    </div>")
-  }
+    btn <- paste0(label, "
+        <label class='input-group-btn'>
+          <span class='btn btn-default btn-file-solitary ", class, "'>
+            <i class='fa fa-upload'></i>
+            ", buttonLabel, "
+            <input id='", inputId, "' name='", inputId, "' type='file' style='display: none;' accept='", accept, "'/>
+          </span>
+        </label>
+     ")
 
-  HTML(btn)
+    if (progress) {
+      btn <- paste0(btn, "\n<div id='uploadfile_progress' class='progress progress-striped active shiny-file-input-progress'>
+        <div class='progress-bar'></div>
+      </div>")
+    }
+
+    HTML(btn)
+  } 
 }
 
 ## Thanks to @timelyportfolio for this comment/fix
@@ -330,7 +335,8 @@ read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
       ## Rstudio's file selector if running radiant in viewer
       path <- rstudioapi::selectFile(
         caption = "Generate to load files",
-        filter = "All files (*)"
+        filter = "All files (*)",
+        path = getOption("radiant.launch_dir")
       )
     }
     if (is(path, "try-error") || is_empty(path)) {
@@ -582,7 +588,6 @@ report_save_content <- function(file, type = "rmd") {
       } else {
 
         ## hack for rmarkdown from Report > Rmd and Report > R
-        # options(radiant.rmarkdown = TRUE)
         options(radiant.rmarkdown = TRUE)
 
         if (type == "r") {
@@ -616,7 +621,6 @@ report_save_content <- function(file, type = "rmd") {
         })
 
         ## hack for rmarkdown from Report > Rmd and Report > R
-        # options(radiant.rmarkdown = FALSE)
         options(radiant.rmarkdown = FALSE)
       }
     })

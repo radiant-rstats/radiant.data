@@ -1,3 +1,8 @@
+# CHANGES IN radiant.data 0.9.2
+
+* Addins option to start app in Rstudio window
+* Upload and download data using the Rstudio file browser. Allows using relative paths to files (e.g., data or images inside an Rstudio project)
+
 # CHANGES IN radiant.data 0.9.0.22
 
 * Fix for [#43](https://github.com/radiant-rstats/radiant/issues/43) where scatter plot was not shown for a dataset with less than 1,000 rows

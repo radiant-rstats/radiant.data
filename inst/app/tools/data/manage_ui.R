@@ -14,25 +14,16 @@ output$ui_state_load <- renderUI({
 })
 
 make_uploadfile <- function(accept) {
-  # output$ui_uploadfile <- renderUI({
-    # if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-      fileInput("uploadfile", NULL, multiple = TRUE, accept = accept)
-    # } else {
-      # actionButton("uploadfile", "Browse...", icon = icon("upload"))
-    # }
-  # })
+  if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+    fileInput("uploadfile", NULL, multiple = TRUE, accept = accept)
+  } else {
+    actionButton("uploadfile", "Browse...", icon = icon("upload"))
+  }
 }
 
 output$ui_fileUpload <- renderUI({
   req(input$dataType)
   if (input$dataType == "csv") {
-    # fileInput(
-    #   "uploadfile", NULL, multiple = TRUE,
-    #   accept = c(
-    #     "text/csv", "text/comma-separated-values",
-    #     "text/tab-separated-values", "text/plain", ".csv", ".tsv"
-    #   )
-    # )
     make_uploadfile(
       accept = c(
         "text/csv", "text/comma-separated-values",
@@ -40,10 +31,8 @@ output$ui_fileUpload <- renderUI({
       )
     )
   } else if (input$dataType %in% c("rda", "rds")) {
-    # fileInput("uploadfile", NULL, multiple = TRUE, accept = c(".rda", ".rds", ".rdata"))
     make_uploadfile(accept = c(".rda", ".rds", ".rdata"))
   } else if (input$dataType == "feather") {
-    # fileInput("uploadfile", NULL, multiple = TRUE, accept = ".feather")
     make_uploadfile(accept = ".feather")
   } else if (input$dataType == "url_rda") {
     with(tags, table(
@@ -69,9 +58,7 @@ output$ui_clipboard_load <- renderUI({
     tagList(
       textAreaInput(
         "load_cdata", "Copy-and-paste data below:",
-        rows = 5,
-        resize = "vertical",
-        value = "",
+        rows = 5, resize = "vertical", value = "",
         placeholder = "Copy-and-paste data with a header row from a spreadsheet"
       ),
       br(),
@@ -86,8 +73,7 @@ output$ui_clipboard_save <- renderUI({
   } else {
     textAreaInput(
       "save_cdata", "Copy-and-paste data below:",
-      rows = 5,
-      resize = "vertical",
+      rows = 5, resize = "vertical",
       value = capture.output(
         write.table(.getdata_transform(), file = "", row.names = FALSE, sep = "\t")
       ) %>% paste(collapse = "\n")
@@ -97,9 +83,8 @@ output$ui_clipboard_save <- renderUI({
 
 output$ui_from_global <- renderUI({
   req(input$dataType)
-  df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>% {
-    names(.[.])
-  }
+  df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>% 
+    {names(.[.])}
 
   tagList(
     selectInput(
@@ -156,6 +141,14 @@ observeEvent(input$to_global_save, {
   updateSelectInput(session, "saveAs", selected = "rds")
 })
 
+output$ui_man_state_save <- renderUI({
+  download_button("man_state_save", "Save", ic = "download")
+})
+
+output$ui_man_download_data <- renderUI({
+  download_button("man_download_data", "Save", ic = "download")
+})
+
 output$ui_Manage <- renderUI({
   data_types_in <- c(
     "rds" = "rds", "rda (rdata)" = "rda", "radiant state file" = "state", "csv" = "csv",
@@ -182,7 +175,7 @@ output$ui_Manage <- renderUI({
       selectInput("dataType", label = "Load data of type:", data_types_in, selected = "rds"),
       conditionalPanel(
         condition = "input.dataType != 'clipboard' &&
-                                    input.dataType != 'examples'",
+                     input.dataType != 'examples'",
         conditionalPanel(
           "input.dataType == 'csv' | input.dataType == 'url_csv'",
           with(tags, table(
@@ -190,15 +183,14 @@ output$ui_Manage <- renderUI({
             td(HTML("&nbsp;&nbsp;")),
             td(checkboxInput("man_str_as_factor", "Str. as Factor", TRUE))
           )),
-          checkboxInput("man_read.csv", "use read.csv", FALSE),
-          numericInput("man_n_max", label = "Maximum rows to read:", value = Inf, max = Inf, step = 1000),
-          radioButtons(
-            "man_sep", "Separator:", c(Comma = ",", Semicolon = ";", Tab = "\t"),
-            ",", inline = TRUE
-          ),
-          radioButtons(
-            "man_dec", "Decimal:", c(Period = ".", Comma = ","),
-            ".", inline = TRUE
+          with(tags, table(
+            td(selectInput("man_sep", "Separator:", c(Comma = ",", Semicolon = ";", Tab = "\t"), ",", width = "100%")),
+            td(selectInput("man_dec", "Decimal:", c(Period = ".", Comma = ","), ".", width = "100%")),
+            width = "100%"
+          )),
+          numericInput(
+            "man_n_max", label = "Maximum rows to read:", 
+            value = Inf, max = Inf, step = 1000
           )
         ),
         uiOutput("ui_fileUpload")
@@ -230,7 +222,7 @@ output$ui_Manage <- renderUI({
       conditionalPanel(
         condition = "input.saveAs == 'state'",
         HTML("<label>Save radiant state file (.rda):</label><br/>"),
-        downloadButton("saveState", "Save")
+        uiOutput("ui_man_state_save")
       ),
       conditionalPanel(
         condition = "input.saveAs == 'to_global'",
@@ -240,7 +232,7 @@ output$ui_Manage <- renderUI({
         condition = "input.saveAs != 'clipboard' &&
                      input.saveAs != 'state' &&
                      input.saveAs != 'to_global'",
-        downloadButton("downloadData", "Save")
+        uiOutput("ui_man_download_data")
       )
     ),
     wellPanel(
@@ -299,7 +291,7 @@ output$dataDescriptionMD <- renderUI({
   )
 })
 
-# removing datasets
+## removing datasets
 output$uiRemoveDataset <- renderUI({
   selectInput(
     inputId = "removeDataset", label = NULL,
@@ -309,18 +301,17 @@ output$uiRemoveDataset <- renderUI({
 })
 
 observeEvent(input$removeDataButton, {
-  # removing datasets
-  # only remove datasets if 1 or more were selected - without this line
-  # all files would be removed when the removeDataButton is pressed
+  ## only remove datasets if 1 or more were selected - without this line
+  ## all files would be removed when the removeDataButton is pressed
   if (is.null(input$removeDataset)) return()
   datasets <- r_data[["datasetlist"]]
-  if (length(datasets) > 1) { # have to leave at least one dataset
+  if (length(datasets) > 1) {   ## have to leave at least one dataset
     removeDataset <- input$removeDataset
     if (length(datasets) == length(removeDataset)) {
       removeDataset <- removeDataset[-1]
     }
 
-    # Must use single string to index into reactivevalues so loop is necessary
+    ## Must use single string to index into reactivevalues so loop is necessary
     for (rem in removeDataset) {
       r_data[[rem]] <- NULL
       r_data[[paste0(rem, "_descr")]] <- NULL
@@ -335,63 +326,116 @@ observeEvent(input$saveClipData, {
   updateRadioButtons(session = session, inputId = "saveAs", selected = "rds")
 })
 
-output$downloadData <- downloadHandler(
-  filename = function() {
-    paste0(input$dataset, ".", input$saveAs)
-  },
-  content = function(file) {
-    ext <- input$saveAs
+if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  output$man_state_save <- downloadHandler(
+    filename = function() {
+      state_name()
+    },
+    content = function(file) {
+      saveState(file)
+    }
+  )
+} else {
+  observeEvent(input$man_state_save, {
+    path <- rstudioapi::selectFile(
+      caption = "Radiant state file name",
+      path = state_name(full.name = TRUE),
+      filter = "Radiant state file (*.rda)",
+      existing = FALSE
+    )
+    if (!is(path, "try-error") && !is_empty(path)) {
+      r_state$radiant_state_name <<- path 
+      saveState(path)
+    }
+  })
+}
 
-    if (ext == "csv") {
-      readr::write_csv(.getdata_transform(), file)
+man_download_data <- function(file) {
+  ext <- input$saveAs
+  if (ext == "csv") {
+    readr::write_csv(.getdata_transform(), file)
+  } else {
+    robj <- input$dataset
+    tmp <- new.env(parent = emptyenv())
+    tmp[[robj]] <- .getdata_transform()
+    if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
+      attr(tmp[[robj]], "description") <- r_data[[paste0(robj, "_descr")]]
+    }
+
+    if (ext == "rds") {
+      saveRDS(tmp[[robj]], file = file)
+    } else if (ext == "feather") {
+      ## temporary workaround until PR goes through https://stackoverflow.com/a/47898172/1974918
+      # feather::write_feather(tmp[[robj]], file)
+      # radiant.data::write_feather(tmp[[robj]], file, description = attr(tmp[[robj]], "description"))
+      radiant.data::write_feather(tmp[[robj]], file)
     } else {
-      robj <- input$dataset
-      tmp <- new.env(parent = emptyenv())
-      tmp[[robj]] <- .getdata_transform()
-      if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
-        attr(tmp[[robj]], "description") <- r_data[[paste0(robj, "_descr")]]
-      }
-
-      if (ext == "rds") {
-        saveRDS(tmp[[robj]], file = file)
-      } else if (ext == "feather") {
-        ## temporary workaround until PR goes through https://stackoverflow.com/a/47898172/1974918
-        # feather::write_feather(tmp[[robj]], file)
-        # radiant.data::write_feather(tmp[[robj]], file, description = attr(tmp[[robj]], "description"))
-        radiant.data::write_feather(tmp[[robj]], file)
-      } else {
-        save(list = robj, file = file, envir = tmp)
-      }
+      save(list = robj, file = file, envir = tmp)
     }
   }
-)
+}
 
-  # req(input$state_load)
-  # if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
-  #   path <- rstudioapi::selectFile(
-  #     caption = "Select .rda",
-  #     filter = "Select .rda (*.rda)"
-  #   )
-  #   sname <- basename(path)
-  # } else {
-  #   path <- input$state_load$datapath
-  #   sname <- input$state_load$name
-  # }
-
-  # if (is_empty(path)) return(invisible())
-  # tmpEnv <- new.env(parent = emptyenv())
-  # load(path, envir = tmpEnv)
-
+if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  output$man_download_data <- downloadHandler(
+    filename = function() {
+      paste0(input$dataset, ".", input$saveAs)
+    },
+    content = function(file) {
+      man_download_data(file)
+    }
+  )
+} else {
+  observeEvent(input$man_download_data, {
+    path <- rstudioapi::selectFile(
+      caption = "Save data",
+      path = file.path(
+        getOption("radiant.launch_dir", "~"), 
+        paste0(input$dataset, ".", input$saveAs)
+      ),
+      filter = paste0("Save data (*.", input$saveAs, ")"),
+      existing = FALSE
+    )
+    if (!is(path, "try-error") && !is_empty(path)) {
+      man_download_data(path)
+    }
+  })
+}
 
 observeEvent(input$uploadfile, {
-  inFile <- input$uploadfile
+
+  if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
+    if (input$dataType == "csv") {
+      caption <- "Select .csv"
+      filter <- "Select .csv or similar (*)"
+    } else if (input$dataType %in% c("rda", "rds")) {
+      caption <- "Select .rds or .rda"
+      filter <- "Select .rds or .rds (*)"
+    } else if (input$dataType == "feather") {
+      caption <- "Select .feather"
+      filter <- "Select .feather (*.feather)"
+    }
+
+    path <- rstudioapi::selectFile(
+      caption = caption,
+      filter = filter,
+      path = getOption("radiant.launch_dir")
+    )
+    if (is(path, "try-error") || is_empty(path)) return()
+    inFile <- data.frame(
+      name = basename(path),
+      datapath = path, 
+      stringsAsFactors = FALSE
+    )
+  } else {
+    inFile <- input$uploadfile
+  }
+
   ## iterating through the files to upload
   for (i in 1:(dim(inFile)[1])) {
     loadUserData(
       inFile[i, "name"],
       inFile[i, "datapath"],
       input$dataType,
-      .csv = input$man_read.csv,
       header = input$man_header,
       man_str_as_factor = input$man_str_as_factor,
       sep = input$man_sep,
@@ -455,7 +499,6 @@ observeEvent(input$url_csv_load, {
   } else {
     dat <- loadcsv(
       con,
-      .csv = input$man_read.csv,
       header = input$man_header,
       n_max = input$man_n_max,
       sep = input$man_sep,
@@ -484,8 +527,6 @@ observeEvent(input$url_csv_load, {
 observeEvent(input$loadExampleData, {
   ## data.frame of example datasets
   exdat <- data(package = getOption("radiant.example.data"))$results[, c("Package", "Item")]
-  # exdat <- data(package = r_example_data)$results[, c("Package","Item")]
-
   for (i in 1:nrow(exdat)) {
     item <- exdat[i, "Item"]
     r_data[[item]] <- data(list = item, package = exdat[i, "Package"], envir = environment()) %>% get()
@@ -521,8 +562,10 @@ output$refreshOnUpload <- renderUI({
   if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
     path <- rstudioapi::selectFile(
       caption = "Select .rda",
-      filter = "Select .rda (*.rda)"
+      filter = "Select .rda (*.rda)",
+      path = getOption("radiant.launch_dir")
     )
+    if (is(path, "try-error") || is_empty(path)) return()
     sname <- basename(path)
   } else {
     path <- input$state_load$datapath
@@ -598,20 +641,10 @@ saveState <- function(filename) {
   )
 }
 
-output$saveState <- downloadHandler(
-  filename = function() {
-    state_name()
-  },
-  content = function(file) {
-    saveState(file)
-  }
-)
-
 observeEvent(input$renameButton, {
   .data_rename()
 })
 
-# .data_rename <- reactive({
 .data_rename <- function() {
   isolate({
     if (is_empty(input$data_rename) || input$dataset == input$data_rename) return()

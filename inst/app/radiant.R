@@ -250,12 +250,11 @@ print.capture_plot <- function(x, ...) {
 ################################################################
 
 ## textarea where the return key submits the content
-returnTextAreaInput <- function(inputId,
-                                label = NULL,
-                                rows = 2,
-                                placeholder = NULL,
-                                resize = "vertical",
-                                value = "") {
+returnTextAreaInput <- function(
+  inputId, label = NULL, rows = 2, 
+  placeholder = NULL, resize = "vertical", 
+  value = ""
+) {
 
   ## avoid all sorts of 'helpful' behavior from your browser
   ## see https://stackoverflow.com/a/35514029/1974918
@@ -286,15 +285,12 @@ returnTextAreaInput <- function(inputId,
 }
 
 ## using a custom version of textInput to avoid browser "smartness"
-textInput <- function (inputId, label,
-                       value = "",
-                       width = NULL,
-                       placeholder = NULL,
-                       autocomplete = "off",
-                       autocorrect = "off",
-                       autocapitalize = "off",
-                       spellcheck = "false",
-                       ...) {
+textInput <- function (
+  inputId, label, value = "", width = NULL,
+  placeholder = NULL, autocomplete = "off",
+  autocorrect = "off", autocapitalize = "off",
+  spellcheck = "false", ...
+) {
 
   value <- restoreInput(id = inputId, default = value)
   div(
@@ -317,19 +313,14 @@ textInput <- function (inputId, label,
 }
 
 ## using a custom version of textAreaInput to avoid browser "smartness"
-textAreaInput <- function(inputId, label,
-                          value = "",
-                          width = NULL,
-                          height = NULL,
-                          cols = NULL,
-                          rows = NULL,
-                          placeholder = NULL,
-                          resize = NULL,
-                          autocomplete = "off",
-                          autocorrect = "off",
-                          autocapitalize = "off",
-                          spellcheck = "true",
-                          ...) {
+textAreaInput <- function(
+  inputId, label, value = "", width = NULL,
+  height = NULL, cols = NULL, rows = NULL,
+  placeholder = NULL, resize = NULL,
+  autocomplete = "off", autocorrect = "off",
+  autocapitalize = "off", spellcheck = "true",
+  ...
+) {
 
   value <- restoreInput(id = inputId, default = value)
   if (!is.null(resize)) {
@@ -367,10 +358,10 @@ textAreaInput <- function(inputId, label,
 
 ## avoid all sorts of 'helpful' behavior from your browser
 ## based on https://stackoverflow.com/a/35514029/1974918
-returnTextInput <- function(inputId,
-                            label = NULL,
-                            placeholder = NULL,
-                            value = "") {
+returnTextInput <- function(
+  inputId, label = NULL,
+  placeholder = NULL, value = ""
+) {
 
   tagList(
     tags$label(label, `for` = inputId),
@@ -388,6 +379,41 @@ returnTextInput <- function(inputId,
   )
 }
 
+if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  download_link <- function(id) {
+    downloadLink(id, "", class = "fa fa-download alignright")
+  }
+  download_button <- function(id, label, ic = "download", class = "") {
+    downloadButton(id, label, class = class)
+  }
+  download_handler <- function(id, fun = id, fn, caption = "Download to csv", type = "csv", ...) {
+    output[[id]] <- downloadHandler(
+      filename = function() { fn },
+      content = function(path) { fun(path, ...) }
+    )
+  }
+} else {
+  download_link <- function(id) {
+    actionLink(id, "", class = "fa fa-download alignright")
+  }
+  download_button <- function(id, label, ic = "download", class = "") {
+    actionButton(id, label, icon = icon(ic), class = class)
+  }
+  download_handler <- function(id, fun = id, fn, caption = "Download to csv", type = "csv", ...) {
+    observeEvent(input[[id]], {
+      path <- rstudioapi::selectFile(
+        caption = caption,
+        path = file.path(getOption("radiant.launch_dir", "~"), fn),
+        filter = paste0(caption, " (*.", type, ")"),
+        existing = FALSE
+      )
+      if (!is(path, "try-error") && !is_empty(path)) {
+        fun(path, ...)
+      }
+    })
+  }
+}
+
 plot_width <- function() {
   if (is.null(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
 }
@@ -396,19 +422,32 @@ plot_height <- function() {
   if (is.null(input$viz_plot_height)) r_data$plot_height else input$viz_plot_height
 }
 
+download_handler_plot <- function(path, plot, width = plot_width, height = plot_height) {
+  plot <- try(plot(), silent = TRUE)
+  if (is(plot, "try-error") || is.character(plot) || is.null(plot)) {
+    plot <- ggplot() + labs(title = "Plot not available")
+    inp <- c(500, 100, 96)
+  } else {
+    inp <- 5 * c(width(), height(), 96)
+  }
+
+  png(file = path, width = inp[1], height = inp[2], res = inp[3])
+  print(plot)
+  dev.off()
+}
+
 ## fun_name is a string of the main function name
 ## rfun_name is a string of the reactive wrapper that calls the main function
 ## out_name is the name of the output, set to fun_name by default
-register_print_output <- function(fun_name, rfun_name,
-                                  out_name = fun_name) {
+register_print_output <- function(
+  fun_name, rfun_name, out_name = fun_name
+) {
 
   ## Generate output for the summary tab
   output[[out_name]] <- renderPrint({
     ## when no analysis was conducted (e.g., no variables selected)
     get(rfun_name)() %>%
-      {
-        if (is.character(.)) cat(., "\n") else .
-      } %>%
+      {if (is.character(.)) cat(., "\n") else .} %>%
       rm(.)
   })
   return(invisible())
@@ -417,10 +456,10 @@ register_print_output <- function(fun_name, rfun_name,
 # fun_name is a string of the main function name
 # rfun_name is a string of the reactive wrapper that calls the main function
 # out_name is the name of the output, set to fun_name by default
-register_plot_output <- function(fun_name, rfun_name,
-                                 out_name = fun_name,
-                                 width_fun = "plot_width",
-                                 height_fun = "plot_height") {
+register_plot_output <- function(
+  fun_name, rfun_name, out_name = fun_name,
+  width_fun = "plot_width", height_fun = "plot_height"
+) {
 
   ## Generate output for the plots tab
   output[[out_name]] <- renderPlot({
@@ -441,48 +480,81 @@ register_plot_output <- function(fun_name, rfun_name,
   return(invisible())
 }
 
-plot_downloader <- function(plot_name,
-                            width = plot_width,
-                            height = plot_height,
-                            pre = ".plot_",
-                            po = "dl_",
-                            fname = plot_name) {
+plot_downloader <- function(
+  plot_name, width = plot_width, height = plot_height,
+  pre = ".plot_", po = "dl_", fname = plot_name, inp = "dataset"
+) {
 
-  ## link and output name
+  # ## link and output name
   lnm <- paste0(po, plot_name)
+  fn <- paste0(fname, ".png") %>% 
+    sub("^\\.", "", .)
+  # ## download graphs in higher resolution than shown in GUI (504 dpi)
+  pr <- 5
 
-  ## create an output
-  output[[lnm]] <- downloadHandler(
-    filename = function() {
-      paste0(fname, ".png")
-    },
-    content = function(file) {
+  if (isTRUE(getOption("radiant.launch", "browser") == "browser")) { 
 
-      ## download graphs in higher resolution than shown in GUI (504 dpi)
-      pr <- 5
+    ## create an output
+    output[[lnm]] <- downloadHandler(
+      filename = function() {
+        ifelse(length(inp) > 0, paste0(isolate(input[[inp]]), "_", fn), fn)
+      },
+      content = function(file) {
 
-      ## fix for https://github.com/radiant-rstats/radiant/issues/20
-      w <- if (any(c("reactiveExpr", "function") %in% class(width))) width() * pr else width * pr
-      h <- if (any(c("reactiveExpr", "function") %in% class(height))) height() * pr else height * pr
+        # fix for https://github.com/radiant-rstats/radiant/issues/20
+        w <- if (any(c("reactiveExpr", "function") %in% class(width))) width() * pr else width * pr
+        h <- if (any(c("reactiveExpr", "function") %in% class(height))) height() * pr else height * pr
 
-      plot <- try(get(paste0(pre, plot_name))(), silent = TRUE)
-      if (is(plot, "try-error") || is.character(plot) || is.null(plot)) {
-        plot <- ggplot() + labs(title = "Plot not available")
-        pr <- 1
-        w <- h <- 500
+        plot <- try(get(paste0(pre, plot_name))(), silent = TRUE)
+        if (is(plot, "try-error") || is.character(plot) || is.null(plot)) {
+          plot <- ggplot() + labs(title = "Plot not available")
+          pr <- 1
+          w <- h <- 500
+        }
+
+        png(file = file, width = w, height = h, res = 96 * pr)
+        print(plot)
+        dev.off()
       }
+    )
+  } else {
+    observeEvent(input[[lnm]], {
+      path <- rstudioapi::selectFile(
+        caption = "Download to png",
+        path = file.path(
+          getOption("radiant.launch_dir", "~"), 
+          ifelse(length(inp) > 0, paste0(isolate(input[[inp]]), "_", fn), fn)
+        ),
+        filter = "Download to png (*.png)",
+        existing = FALSE
+      )
+      if (!is(path, "try-error") && !is_empty(path)) {
 
-      png(file = file, width = w, height = h, res = 96 * pr)
-      print(plot)
-      dev.off()
-    }
-  )
+        # fix for https://github.com/radiant-rstats/radiant/issues/20
+        w <- if (any(c("reactiveExpr", "function") %in% class(width))) width() * pr else width * pr
+        h <- if (any(c("reactiveExpr", "function") %in% class(height))) height() * pr else height * pr
 
-  downloadLink(lnm, "", class = "fa fa-download alignright")
+        plot <- try(get(paste0(pre, plot_name))(), silent = TRUE)
+        if (is(plot, "try-error") || is.character(plot) || is.null(plot)) {
+          plot <- ggplot() + labs(title = "Plot not available")
+          pr <- 1
+          w <- h <- 500
+        }
+
+        png(file = path, width = w, height = h, res = 96 * pr)
+        print(plot)
+        dev.off()
+      }
+    })
+  }
+
+  download_link(lnm)
 }
 
-stat_tab_panel <- function(menu, tool, tool_ui, output_panels,
-                           data = input$dataset) {
+stat_tab_panel <- function(
+  menu, tool, tool_ui, output_panels,
+  data = input$dataset
+) {
   sidebarLayout(
     sidebarPanel(
       wellPanel(

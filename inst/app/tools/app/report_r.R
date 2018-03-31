@@ -182,27 +182,18 @@ output$ui_r_save_type <- renderUI({
 
 output$ui_r_save <- renderUI({
   if (isTRUE(getOption("radiant.report"))) {
-    if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-      ## using a download handler
-      downloadButton("r_save", "Save report", class = "btn-primary")
-    } else {
-      actionButton("r_save", "Save report", icon = icon("download"), class = "btn-primary")
-    }
+    download_button("r_save", "Save report", class = "btn-primary")
   } else {
     invisible()
   }
 })
 
 output$ui_r_load <- renderUI({
-  if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-    file_upload_button(
-      "r_load",
-      accept = c(".R", ".r", ".html"),
-      buttonLabel = "Load report"
-    )
-  } else {
-    actionButton("r_load", "Load report", icon = icon("upload"))
-  }
+  file_upload_button(
+    "r_load",
+    accept = c(".R", ".r", ".html"),
+    buttonLabel = "Load report"
+  )
 })
 
 output$ui_r_read_files <- renderUI({
@@ -381,7 +372,8 @@ observeEvent(input$r_load, {
   if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
     path <- rstudioapi::selectFile(
       caption = "Select .R or .html",
-      filter = "Select .R or .html (*)"
+      filter = "Select .R or .html (*)",
+      path = getOption("radiant.launch_dir")
     )
     pp <- parse_path(path, chr = "")
   } else {

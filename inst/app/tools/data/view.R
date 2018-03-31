@@ -39,7 +39,7 @@ output$ui_View <- renderUI({
       )
     ),
     help_and_report(
-      "View", "view", 
+      "View", "view",
       inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/view.md")) %>% gsub("`", "", .),
       lic = "by-sa"
     )
@@ -128,6 +128,7 @@ output$dataviewer <- DT::renderDataTable({
       ## only works with client-side processing
       # extension = "KeyTable",
       escape = FALSE,
+      # editable = TRUE,
       style = "bootstrap",
       options = list(
         stateSave = TRUE, ## maintains state
@@ -160,6 +161,7 @@ output$dataviewer <- DT::renderDataTable({
 })
 
 observeEvent(input$view_store, {
+  req(input$view_dat)
   data_filter <- if (input$show_filter) input$data_filter else ""
   getdata(
     input$dataset, vars = input$view_vars, filt = data_filter,
@@ -169,38 +171,61 @@ observeEvent(input$view_store, {
 
   updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
 
-  ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
-  showModal(
-    modalDialog(
-      title = "Data Stored",
-      span(
-        paste0("Dataset '", input$view_dat, "' was successfully added to
-               the datasets dropdown. Add code to Report > Rmd or
-               Report > R to (re)create the dataset by clicking the report i
-               con on the bottom left of your screen.")
-      ),
-      footer = modalButton("OK"),
-      size = "s",
-      easyClose = TRUE
+  if (input$dataset != input$view_dat) {
+    ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+    showModal(
+      modalDialog(
+        title = "Data Stored",
+        span(
+          paste0("Dataset '", input$view_dat, "' was successfully added to
+                 the datasets dropdown. Add code to Report > Rmd or
+                 Report > R to (re)create the dataset by clicking the report i
+                 con on the bottom left of your screen.")
+        ),
+        footer = modalButton("OK"),
+        size = "s",
+        easyClose = TRUE
+      )
     )
-  )
+  }
 })
 
-output$dl_view_tab <- downloadHandler(
-  filename = function() {
-    paste0(input$dataset, "_view.csv")
-  },
-  content = function(file) {
-    data_filter <- if (input$show_filter) input$data_filter else ""
-    getdata(
-      input$dataset,
-      vars = input$view_vars,
-      filt = data_filter, 
-      rows = input$dataviewer_rows_all,
-      na.rm = FALSE
-    ) %>% write.csv(file, row.names = FALSE)
-  }
-)
+dl_view_tab <- function(file) {
+  data_filter <- if (input$show_filter) input$data_filter else ""
+  getdata(
+    input$dataset,
+    vars = input$view_vars,
+    filt = data_filter,
+    rows = input$dataviewer_rows_all,
+    na.rm = FALSE
+  ) %>% write.csv(file, row.names = FALSE)
+}
+
+if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  output$dl_view_tab <- downloadHandler(
+    filename = function() {
+      paste0(input$dataset, "_view.csv")
+    },
+    content = function(file) {
+      dl_view_tab(file)
+    }
+  )
+} else {
+  observeEvent(input$dl_view_tab, {
+    path <- rstudioapi::selectFile(
+      caption = "Download data",
+      path = file.path(
+        getOption("radiant.launch_dir", "~"),
+        paste0(input$dataset, "_view.csv")
+      ),
+      filter = "Download data (*.csv)",
+      existing = FALSE
+    )
+    if (!is(path, "try-error") && !is_empty(path)) {
+      dl_view_tab(path)
+    }
+  })
+}
 
 .dataviewer <- reactive({
   list(tab = .getdata()[1, ])

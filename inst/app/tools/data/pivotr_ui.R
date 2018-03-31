@@ -56,8 +56,6 @@ output$ui_pvt_cvars <- renderUI({
   withProgress(message = "Acquiring variable information", value = 1, {
     vars <- groupable_vars()
   })
-
-  # if (not_available(vars)) return()
   req(available(vars))
 
   isolate({
@@ -76,7 +74,7 @@ output$ui_pvt_cvars <- renderUI({
 
   selectizeInput(
     "pvt_cvars", label = "Categorical variables:", choices = vars,
-    selected = state_multiple("pvt_cvars", vars),
+    selected = state_multiple("pvt_cvars", vars, isolate(input$pvt_cvars)),
     multiple = TRUE,
     options = list(
       placeholder = "Select categorical variables", 
@@ -316,24 +314,19 @@ output$pivotr_chi2 <- renderPrint({
   }
 })
 
-output$dl_pivot_tab <- downloadHandler(
-  filename = function() {
-    paste0(input$dataset, "_pivot.csv")
-  },
-  content = function(file) {
-    dat <- try(.pivotr(), silent = TRUE)
-    if (is(dat, "try-error") || is.null(dat)) {
-      write.csv(tibble("Data" = "[Empty]"), file, row.names = FALSE)
-    } else {
-      rows <- isolate(r_data$pvt_rows)
-      dat$tab %>%
-        {
-          if (is.null(rows)) . else .[c(rows, nrow(.)), , drop = FALSE]
-        } %>%
-        write.csv(file, row.names = FALSE)
-    }
+dl_pivot_tab <- function(file) {
+  dat <- try(.pivotr(), silent = TRUE)
+  if (is(dat, "try-error") || is.null(dat)) {
+    write.csv(tibble("Data" = "[Empty]"), file, row.names = FALSE)
+  } else {
+    rows <- isolate(r_data$pvt_rows)
+    dat$tab %>%
+      {if (is.null(rows)) . else .[c(rows, nrow(.)), , drop = FALSE]} %>%
+      write.csv(file, row.names = FALSE)
   }
-)
+}
+
+download_handler(id = "dl_pivot_tab", fun = dl_pivot_tab, fn = paste0(input$dataset, "_pivot.csv"))
 
 pvt_plot_width <- function() 750
 pvt_plot_height <- function() {
@@ -345,9 +338,7 @@ pvt_plot_height <- function() {
       .[[input$pvt_cvars[3]]] %>%
       levels() %>%
       length() %>%
-      {
-        . * 200
-      }
+      {. * 200}
   } else if (input$pvt_flip) {
     if (length(input$pvt_cvars) == 2) {
       max(400, ncol(pvt$tab) * 15)
@@ -490,3 +481,13 @@ observeEvent(input$pivotr_report, {
     xcmd = xcmd
   )
 })
+
+download_handler(
+  id = "dlp_pivot", 
+  fun = download_handler_plot, 
+  fn = paste0(input$dataset, "_pivot.png"),
+  caption = "Download pivot plot",
+  plot = .plot_pivot,
+  width = pvt_plot_width,
+  height = pvt_plot_height
+)
