@@ -115,7 +115,7 @@ observeEvent(input$help_keyboard, {
           tr(class = "border_bottom padding_bottom",
              td("Download"), td("CMD-s"), td("CTRL-s")),
           tr(class = "border_bottom padding_bottom",
-             td("Green button"), td("CMD-return"), td("CTRL-return")),
+             td("Green button"), td("CMD-enter"), td("CTRL-enter")),
           tr(class = "border_bottom padding_bottom",
              td("Blue button save"), td("CMD-s"), td("CTRL-s")),
           tr(class = "border_bottom padding_bottom",

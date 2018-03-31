@@ -48,30 +48,14 @@
 #'   facet_row = "cut", fill = "cut")
 #'
 #' @export
-visualize <- function(dataset, xvar,
-                      yvar = "",
-                      comby = FALSE,
-                      combx = FALSE,
-                      type = "dist",
-                      nrobs = -1,
-                      facet_row = ".",
-                      facet_col = ".",
-                      color = "none",
-                      fill = "none",
-                      size = "none",
-                      fillcol = "blue",
-                      linecol = "black",
-                      pointcol = "black",
-                      bins = 10,
-                      smooth = 1,
-                      fun = "mean",
-                      check = "",
-                      axes = "",
-                      alpha = .5,
-                      ylim = "none",
-                      data_filter = "",
-                      shiny = FALSE,
-                      custom = FALSE) {
+visualize <- function(
+  dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
+  type = "dist", nrobs = -1, facet_row = ".", facet_col = ".",
+  color = "none", fill = "none", size = "none", fillcol = "blue",
+  linecol = "black", pointcol = "black", bins = 10, smooth = 1,
+  fun = "mean", check = "", axes = "", alpha = 0.5, ylim = "none",
+  data_filter = "", shiny = FALSE, custom = FALSE
+) {
 
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- xvar
@@ -588,7 +572,7 @@ visualize <- function(dataset, xvar,
       plot_list[[i]] <- plot_list[[i]] +
         sshhr(
           geom_smooth(
-            method = "lm", fill = fillcol, alpha = .1, size = .75,
+            method = "lm", fill = fillcol, alpha = 0.1, size = .75,
             linetype = "dashed", color = linecol
         )
       )

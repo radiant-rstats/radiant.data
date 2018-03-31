@@ -28,10 +28,10 @@ Search <- function(pattern, df, ignore.case = TRUE, fixed = FALSE) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-store.data.frame <- function(object, 
-                             new = "", 
-                             org = "", 
-                             envir = parent.frame(), ...) {
+store.data.frame <- function(
+  object,  new = "",  org = "",
+  envir = parent.frame(), ...
+) {
 
   if (is_empty(new)) {
     return(object)
