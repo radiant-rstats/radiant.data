@@ -9,4 +9,3 @@ dist: trusty
 r_github_packages:
   - vnijs/shinyAce
   - rstudio/rstudioapi
-  - radiant-rstats/radiant.data
