@@ -9,7 +9,7 @@ launch(package = "radiant.data", run = "browser")
 \arguments{
 \item{package}{Radiant package to start. One of "radiant.data", "radiant.design", "radiant.basics", "radiant.model", "radiant.multivariate", "radiant"}
 
-\item{run}{Run radiant app in an external browser ("browser") or in the Rstudio viewer ("viewer")}
+\item{run}{Run radiant app in an external browser ("browser"), an Rstudio window ("window"), or in the Rstudio viewer ("viewer")}
 }
 \description{
 Launch radiant apps in default browser or Rstudio viewer
@@ -20,7 +20,9 @@ See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
 \examples{
 \dontrun{
 launch()
-launch("viewer")
+launch(run = "viewer")
+launch(run = "window")
+launch(run = "browser")
 }
 
 }

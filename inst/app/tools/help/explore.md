@@ -2,7 +2,7 @@
 
 Generate summary statistics for one or more variables in your data. The most powerful feature in _Data > Explore_ is that you can easily describe the data _by_ one or more other variables. Where the <a href="https://radiant-rstats.github.io/docs/data/pivot.html" target="_blank">_Data > Pivot_</a> tab works best for frequency tables and to summarize a single numeric variable, the _Data > Explore_ tab allows you to summarize multiple variables at the same time using various statistics.
 
-For example, if we select `price` from the `diamonds` dataset we can see the number of observations (n), the mean, the median, etc. However, the mean price for each clarity level of the diamond can also be easily provided by choosing `clarity` as the `Group by` variable.
+For example, if we select `price` from the `diamonds` dataset and click the `Create table` button we can see the number of observations (n), the mean, the variance, etc. However, the mean price for each clarity level of the diamond can also be easily provided by choosing `clarity` as the `Group by` variable.
 
 > Note that when a categorical variable (`factor`) is selected in `Numeric variable(s)` it is converted to a 0-1 (binary) variable where the first level is coded as 1 and all other levels as 0.
 
@@ -29,10 +29,6 @@ For a `factor` it captures the occurence of the first level.
 ### Filter data
 
 Use the `Filter data` box to select (or omit) specific sets of rows from the data. See the helpfile for <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank">_Data > View_</a> for details.
-
-### Pause explore
-
-For large datasets it can useful to click `Pause explore` before selecting categorical and numerical variables, entering filters, etc. When you are ready to generate the explore table make sure that `Pause explore` is no longer checked. When `Pause explore` is not checked, any input changes will automatically result in a new table.
 
 ### Report > Rmd
 

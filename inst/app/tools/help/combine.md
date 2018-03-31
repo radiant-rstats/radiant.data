@@ -88,9 +88,9 @@ The examples below are adapted from the [Cheatsheet for dplyr join functions](ht
 </tbody>
 </table>
 
-In the screen-shot of the _Data > Combine_ tab below we see the two datasets. The tables share the variable _publisher_ which is automatically selected for the join. Different join options are available from the `Combine type` dropdown. You can also specify a name for the combined dataset in the `Data name` text input box.
+In the screen-shot of the _Data > Combine_ tab below we see the two datasets. The tables share the variable _publisher_ which is automatically selected for the join. Different join options are available from the `Combine type` dropdown. You can also specify a name for the combined dataset in the `Combined dataset` text input box.
 
-<p align="center"><img src="figures/join_superheroes_publishers.png"></p>
+<p align="center"><img src="figures/combine_superheroes_publishers.png"></p>
 
 <br>
 
@@ -524,7 +524,7 @@ We now get **only** _Hellboy_, the only superhero not in `publishers` and we do 
 
 Note that the order of the datasets selected may matter for a join. If we setup the _Data > Combine_ tab as below the results are as follows:
 
-<p align="center"><img src="figures/join_publishers_superheroes.png"></p>
+<p align="center"><img src="figures/combine_publishers_superheroes.png"></p>
 
 <br>
 
@@ -652,7 +652,7 @@ Only publisher _Image_ is retained because both _Marvel_ and _DC_ are in `superh
 
 When two datasets have the same columns (or rows) there are additional ways in which we can combine them into a new dataset. We have already used the `superheroes` dataset and will now try to combine it with the `avengers` data. These two datasets have the same number of rows and columns and the columns have the same names.
 
-In the screen-shot of the _Data > Combine_ tab below we see the two datasets. There is no need to select variables to combine the datasets here. Any variables in `Select variables` are ignored in the commands below. Again, you can specify a name for the combined dataset in the `Data name` text input box.
+In the screen-shot of the _Data > Combine_ tab below we see the two datasets. There is no need to select variables to combine the datasets here. Any variables in `Select variables` are ignored in the commands below. Again, you can specify a name for the combined dataset in the `Combined dataset` text input box.
 
 <p align="center"><img src="figures/combine_avengers_superheroes.png"></p>
 
