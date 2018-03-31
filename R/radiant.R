@@ -3,14 +3,16 @@
 #' @details See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
 #'
 #' @param package Radiant package to start. One of "radiant.data", "radiant.design", "radiant.basics", "radiant.model", "radiant.multivariate", "radiant"
-#' @param run Run radiant app in an external browser ("browser") or in the Rstudio viewer ("viewer")
+#' @param run Run radiant app in an external browser ("browser"), an Rstudio window ("window"), or in the Rstudio viewer ("viewer")
 #'
 #' @importFrom shiny paneViewer
 #'
 #' @examples
 #' \dontrun{
 #' launch()
-#' launch("viewer")
+#' launch(run = "viewer")
+#' launch(run = "window")
+#' launch(run = "browser")
 #' }
 #'
 #' @export
@@ -31,32 +33,28 @@ launch <- function(package = "radiant.data", run = "browser") {
     radiant.launch_dir = normalizePath(getwd(), winslash = "/")
   )
   on.exit(base::options(oop), add = TRUE)
-
-  run <- if (run == "viewer") {
-    if (is_empty(Sys.getenv("RSTUDIO"))) {
-      message(sprintf("\nStarting %s in default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in Rstudio viewer", package, package, package, package))
-      options(radiant.launch = "browser")
-      TRUE
-    } else {
-      if (rstudioapi::getVersion() < "1.1") {
-        stop(sprintf("Rstudio version 1.1 or later required. Use %s::%s() to open %s in your default browser or download the latest version of Rstudio from https://www.rstudio.com/products/rstudio/download/", package, package, package))
-      }
-      message(sprintf("\nStarting %s in Rstudio viewer ...\n\nUse %s::%s() to open %s in default browser", package, package, package, package))
-      options(radiant.launch = "viewer")
-      ## using eval(parse(text = ...)) to avoid foreign function call warnings
-      # eval(parse(text = "function(url) {invisible(.Call('rs_shinyviewer', url, getwd(), 2))}"))
-      ## see previous issue with paneViewer https://github.com/rstudio/DT/issues/379
-      shiny::paneViewer(minHeight = "maximize")
-
-    }
-  } else {
-    message(sprintf("\nStarting %s in default browser ...\n\nUse %s::%s_viewer() to open %s in Rstudio viewer", package, package, package, package))
+  if (is_empty(Sys.getenv("RSTUDIO"))) {
+    message(sprintf("\nStarting %s in the default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer\nor %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
     options(radiant.launch = "browser")
-    TRUE
+    run <- TRUE
+  } else if (rstudioapi::getVersion() < "1.1") {
+    stop(sprintf("Rstudio version 1.1 or later required. Use %s::%s() to open %s in your default browser or download the latest version of Rstudio from https://www.rstudio.com/products/rstudio/download/", package, package, package))
+  } else if (run == "viewer") {
+    message(sprintf("\nStarting %s in the Rstudio viewer ...\n\nUse %s::%s() to open %s in the default browser\nor %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
+    options(radiant.launch = "viewer")
+    run <- shiny::paneViewer(minHeight = "maximize")
+  } else if (run == "window") {
+    message(sprintf("\nStarting %s in an Rstudio window ...\n\nUse %s::%s() to open %s in the default browser\nor %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer", package, package, package, package, package, package, package))
+    options(radiant.launch = "viewer")
+    ## using eval(parse(text = ...)) to avoid foreign function call warnings
+    run <- eval(parse(text = "function(url) {invisible(.Call('rs_shinyviewer', url, getwd(), 3))}"))
+  } else {
+    message(sprintf("\nStarting %s in the default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer\nor %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
+    options(radiant.launch = "browser")
+    run <- TRUE
   }
 
-  ## supress... to avoid ERROR: [on_request_read] connection reset by peer in viewer
-  # suppressWarnings(suppressMessages(suppressPackageStartupMessages(
+  ## cannot (yet) supress ERROR: [on_request_read] connection reset by peer in viewer
   suppressPackageStartupMessages(
     shiny::runApp(system.file("app", package = package), launch.browser = run)
   )
@@ -73,6 +71,17 @@ launch <- function(package = "radiant.data", run = "browser") {
 #' }
 #' @export
 radiant.data <- function() launch(package = "radiant.data", run = "browser")
+
+#' Launch radiant.data in the Rstudio window
+#'
+#' @details See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
+#'
+#' @examples
+#' \dontrun{
+#' radiant.data_window()
+#' }
+#' @export
+radiant.data_window <- function() launch(package = "radiant.data", run = "window")
 
 #' Launch radiant.data in the Rstudio viewer
 #'
@@ -369,7 +378,6 @@ saver <- function(objname, file) {
 #' Load a csv file with read.csv and read_csv
 #'
 #' @param fn File name string
-#' @param .csv Use read.csv instead of read_csv to load file (default is FALSE)
 #' @param header Header in file (TRUE, FALSE)
 #' @param sep Use , (default) or ; or \\t
 #' @param dec Decimal symbol. Use . (default) or ,
@@ -380,30 +388,24 @@ saver <- function(objname, file) {
 #' @return Data frame with (some) variables converted to factors
 #'
 #' @export
-loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", n_max = Inf, saf = TRUE, safx = 20) {
+loadcsv <- function(fn, header = TRUE, sep = ",", dec = ".", n_max = Inf, saf = TRUE, safx = 20) {
   rprob <- ""
   n_max <- if (is_not(n_max) || n_max == -1) Inf else n_max
 
-  if (.csv == FALSE) {
-    cn <- read.table(fn, header = header, sep = sep, dec = dec, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1)
-    dat <- sshhr(try(readr::read_delim(fn, sep, locale = readr::locale(decimal_mark = dec, grouping_mark = sep), col_names = colnames(cn), skip = header, n_max = n_max), silent = TRUE))
-    if (!is(dat, "try-error")) {
-      prb <- readr::problems(dat)
-      if (nrow(prb) > 0) {
-        tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
-        rprob <- knitr::kable(prb[1:(min(nrow(prb):10)), , drop = FALSE], align = "l", format = "html", table.attr = tab_big, caption = "Read issues (max 10 rows shown): Consider selecting read.csv to read the file (see check-box on the left). To reload the file you may need to refresh the browser first")
-      }
-      rm(prb)
+  cn <- read.table(fn, header = header, sep = sep, dec = dec, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1)
+  dat <- sshhr(try(readr::read_delim(fn, sep, locale = readr::locale(decimal_mark = dec, grouping_mark = sep), col_names = colnames(cn), skip = header, n_max = n_max), silent = TRUE))
+  if (!is(dat, "try-error")) {
+    prb <- readr::problems(dat)
+    if (nrow(prb) > 0) {
+      tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
+      rprob <- knitr::kable(prb[1:(min(nrow(prb):10)), , drop = FALSE], align = "l", format = "html", table.attr = tab_big, caption = "Read issues (max 10 rows shown): Consider selecting read.csv to read the file (see check-box on the left). To reload the file you may need to refresh the browser first")
     }
-  } else {
-    dat <- sshhr(try(read.table(fn, header = header, sep = sep, dec = dec, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = n_max), silent = TRUE))
-    rprob <- "Used read.csv to load file"
+    rm(prb)
   }
 
   if (is(dat, "try-error")) return("### There was an error loading the data. Please make sure the data are in csv format.")
   if (saf) dat <- factorizer(dat, safx)
-  dat %>%
-    as.data.frame(stringsAsFactors = FALSE) %>%
+  as.data.frame(dat, stringsAsFactors = FALSE) %>%
     {set_colnames(., make.names(colnames(.)))} %>%
     set_attr("description", rprob)
 }
@@ -568,7 +570,7 @@ choose_dir <- function(...) {
 changedata <- function(dataset,
                        vars = c(),
                        var_names = names(vars)) {
-  
+
   if (!is.character(dataset)) {
     dataset[, var_names] <- vars
     return(dataset)
@@ -639,7 +641,7 @@ viewdata <- function(dataset,
     ),
     server = function(input, output, session) {
       widget <- DT::datatable(
-        dat, 
+        dat,
         selection = "none",
         rownames = FALSE,
         style = "bootstrap",
@@ -684,7 +686,7 @@ viewdata <- function(dataset,
 #' @param vars Variables to show (default is all)
 #' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
 #' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
-#' @param nr Number of rows of data to include in the table 
+#' @param nr Number of rows of data to include in the table
 #' @param na.rm Remove rows with missing values (default is FALSE)
 #' @param dec Number of decimal places to show. Default is no rounding (NULL)
 #' @param filter Show filter in DT table. Options are "none", "top", "bottom"
@@ -767,7 +769,7 @@ dtab.data.frame <- function(object,
 
   ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(
-    list(rmarkdown::html_dependency_bootstrap("bootstrap")), 
+    list(rmarkdown::html_dependency_bootstrap("bootstrap")),
     dt_tab$dependencies
   )
 
@@ -1259,8 +1261,8 @@ store.character <- function(object, ...) {
     ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
     showModal(
       modalDialog(
-        title = "Data Stored",
-        span(mess),
+        title = "Data not stored",
+        span(HTML(gsub("\n", "</br>", mess))),
         footer = modalButton("OK"),
         size = "s",
         easyClose = TRUE
@@ -1288,7 +1290,7 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
 
   ## customizing data if a command was used
   if (!is_empty(cmd)) {
-    pred_cmd <- gsub("\"", "\'", cmd) %>% 
+    pred_cmd <- gsub("\"", "\'", cmd) %>%
       gsub("\\s+", "", .)
     cmd_vars <- strsplit(pred_cmd, ";")[[1]] %>%
       strsplit(., "=") %>%
