@@ -105,11 +105,10 @@ cleanout <- . %>%
   gsub("DiagrammeR::renderDiagrammeR", "", .) %>% ## leave for legacy reasons
   gsub("DT::renderDataTable", "", .) ## leave for legacy reasons
 
-setup_report <- function(report, ech,
-                         add_yml = TRUE,
-                         type = "rmd",
-                         save_type = "Notebook",
-                         lib = "radiant") {
+setup_report <- function(
+  report, ech, add_yml = TRUE, type = "rmd",
+  save_type = "Notebook", lib = "radiant"
+) {
 
   report <- fixMS(report) %>%
     sub("^---\n(.*?)\n---", "", .) %>%
@@ -328,13 +327,13 @@ parse_path <- function(path, chr = "\"") {
 read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
 
   ## if no path is provided, an interactive file browser will be opened
-  if (missing(path)) {
+  if (missing(path) || is_empty(path)) {
     if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
       path <- try(choose_files(), silent = TRUE)
     } else {
       ## Rstudio's file selector if running radiant in viewer
       path <- rstudioapi::selectFile(
-        caption = "Generate to load files",
+        caption = "Generate code to load files",
         filter = "All files (*)",
         path = getOption("radiant.launch_dir")
       )
@@ -344,79 +343,76 @@ read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
     }
   }
 
-  if (is_empty(path)) {
-    return("")
-  } else {
-    pp <- parse_path(path)
+  pp <- parse_path(path)
 
-    if (to == "") {
-      to <- gsub("\\s+", "_", pp$objname)
-    }
+  if (to == "") {
+    to <- gsub("\\s+", "_", pp$objname)
+  }
+  if (radiant) {
+    ## generate code ## using r_data[["..."]] rather than r_data$... in case
+    ## the dataset name has spaces, -, etc.
+    to <- paste0("r_data[[\"", to, "\"]]")
+  }
+
+  ## see find_gdrive and find_dropbox
+  ## gets parsed by report code can't have \\\\ att
+  ## for windows in mac in parallel's VM
+  path <- gsub("^\\\\", "\\\\\\\\", path)
+  if (pp$fext %in% c("rda", "rdata")) {
     if (radiant) {
-      ## generate code ## using r_data[["..."]] rather than r_data$... in case
-      ## the dataset name has spaces, -, etc.
-      to <- paste0("r_data[[\"", to, "\"]]")
-    }
-
-    ## see find_gdrive and find_dropbox
-    ## gets parsed by report code can't have \\\\ att
-    ## for windows in mac in parallel's VM
-    path <- gsub("^\\\\", "\\\\\\\\", path)
-    if (pp$fext %in% c("rda", "rdata")) {
-      if (radiant) {
-        cmd <- paste0("## `loadr` will put data in an r_data list by default (see ?radiant.data::loadr)\nloadr(", pp$rpath, ", objname = \"", pp$objname, "\")")
-      } else {
-        cmd <- paste0("## loaded object names assigned to `obj`\nobj <- load(", pp$rpath, ")\nprint(obj)")
-      }
-    } else if (pp$fext == "rds") {
-      cmd <- paste0(to, " <- readr::read_rds(", pp$rpath, ")\nregister(\"", pp$objname, "\")")
-    } else if (pp$fext == "csv") {
-      cmd <- paste0(to, " <- readr::read_csv(", pp$rpath, ", n_max = Inf)\nregister(\"", pp$objname, "\")")
-    } else if (pp$fext == "tsv") {
-      cmd <- paste0(to, " <- readr::read_tsv(", pp$rpath, ")\nregister(\"", pp$objname, "\")")
-    } else if (pp$fext %in% c("xls", "xlsx")) {
-      cmd <- paste0(to, " <- readxl::read_excel(", pp$rpath, ", sheet = 1)\nregister(\"", pp$objname, "\")")
-    } else if (pp$fext == "feather") {
-      cmd <- paste0(to, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", pp$objname, "\", desc = feather::feather_metadata(\"", pp$path, "\")$description)")
-    } else if (pp$fext == "yaml") {
-      cmd <- paste0(to, " <- yaml::yaml.load_file(", pp$rpath, ")\nregister(\"", pp$objname, "\")") %>%
-       paste0("\n", pp$objname, " <- ", "\"\n", paste0(readLines(pp$path), collapse = "\n"),"\n\"")
-    } else if (grepl("sqlite", pp$fext)) {
-      obj <- paste0(pp$objname, "_tab1")
-      cmd <- "## see https://db.rstudio.com/dplyr/\n" %>%
-        paste0("library(DBI)\ncon <- dbConnect(RSQLite::SQLite(), dbname = ", pp$rpath, ")\n(tables <- dbListTables(con))\n", obj, " <- tbl(con, from = tables[1])")
-      if (radiant) {
-        cmd <- paste0(cmd, "\n", sub(pp$objname, obj, to), " <- collect(", obj, ")\nregister(\"", obj, "\")")
-      }
-    } else if (pp$fext == "sql") {
-      cmd <- "## see http://rmarkdown.rstudio.com/authoring_knitr_engines.html\n" %>%
-       paste0(paste0(readLines(pp$path), collapse = "\n"))
-      return(paste0("\n```{sql, connection = con, max.print = 20, output.var = \"", make.names(pp$objname), "\"}\n", cmd, "\n```\n"))
-    } else if (pp$fext %in% c("py", "css", "js")) {
-      cmd <- "## see http://rmarkdown.rstudio.com/authoring_knitr_engines.html\n" %>%
-        paste0(paste0(readLines(pp$path), collapse = "\n"))
-      return(paste0("\n```{", sub("py", "python", pp$fext), "}\n", cmd, "\n```\n"))
-    } else if (pp$fext %in% c("md", "rmd") && type == "rmd") {
-      return(paste0("\n```{r child = ", pp$rpath, "}\n```\n"))
-    } else if (pp$fext %in% c("jpg", "jpeg", "png", "pdf") && type == "rmd") {
-      cmd <- paste0("\n![](`r ", pp$rpath, "`)\n")
-      if (!grepl("file.path", cmd)) cmd <- sub("`r \"", "", cmd) %>% sub("\"`", "", .)
-      return(cmd)
-    } else if (pp$fext %in% c("r", "R")) {
-      cmd <- paste0("source(", pp$rpath, ", local = TRUE, echo = TRUE)")
+      cmd <- paste0("## `loadr` puts data in an r_data list by default (see ?radiant.data::loadr for help)\nloadr(", pp$rpath, ", objname = \"", pp$objname, "\")")
     } else {
-      cmd <-pp$rpath
+      cmd <- paste0("## loaded object names assigned to `obj`\nobj <- load(", pp$rpath, ")\nprint(obj)")
     }
+  } else if (pp$fext == "rds") {
+    cmd <- paste0(to, " <- readr::read_rds(", pp$rpath, ")\nregister(\"", pp$objname, "\")")
+  } else if (pp$fext == "csv") {
+    cmd <- paste0(to, " <- readr::read_csv(", pp$rpath, ")\nregister(\"", pp$objname, "\")")
+  } else if (pp$fext == "tsv") {
+    cmd <- paste0(to, " <- readr::read_tsv(", pp$rpath, ")\nregister(\"", pp$objname, "\")")
+  } else if (pp$fext %in% c("xls", "xlsx")) {
+    cmd <- paste0(to, " <- readxl::read_excel(", pp$rpath, ", sheet = 1)\nregister(\"", pp$objname, "\")")
+  } else if (pp$fext == "feather") {
+    cmd <- paste0(to, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", pp$objname, "\", desc = feather::feather_metadata(\"", pp$path, "\")$description)")
+  } else if (pp$fext == "yaml") {
+    cmd <- paste0(to, " <- yaml::yaml.load_file(", pp$rpath, ")\nregister(\"", pp$objname, "\")") %>%
+     paste0("\n", pp$objname, " <- ", "\"\n", paste0(readLines(pp$path), collapse = "\n"),"\n\"")
+  } else if (grepl("sqlite", pp$fext)) {
+    obj <- paste0(pp$objname, "_tab1")
+    cmd <- "## see https://db.rstudio.com/dplyr/\n" %>%
+      paste0("library(DBI)\ncon <- dbConnect(RSQLite::SQLite(), dbname = ", pp$rpath, ")\n(tables <- dbListTables(con))\n", obj, " <- tbl(con, from = tables[1])")
+    if (radiant) {
+      cmd <- paste0(cmd, "\n", sub(pp$objname, obj, to), " <- collect(", obj, ")\nregister(\"", obj, "\")")
+    }
+  } else if (pp$fext == "sql") {
+    cmd <- "## see http://rmarkdown.rstudio.com/authoring_knitr_engines.html\n" %>%
+     paste0(paste0(readLines(pp$path), collapse = "\n"))
+    return(paste0("\n```{sql, connection = con, max.print = 20, output.var = \"", make.names(pp$objname), "\"}\n", cmd, "\n```\n"))
+  } else if (pp$fext %in% c("py", "css", "js")) {
+    cmd <- "## see http://rmarkdown.rstudio.com/authoring_knitr_engines.html\n" %>%
+      paste0(paste0(readLines(pp$path), collapse = "\n"))
+    return(paste0("\n```{", sub("py", "python", pp$fext), "}\n", cmd, "\n```\n"))
+  } else if (pp$fext %in% c("md", "rmd") && type == "rmd") {
+    return(paste0("\n```{r child = ", pp$rpath, "}\n```\n"))
+  } else if (pp$fext %in% c("jpg", "jpeg", "png", "pdf") && type == "rmd") {
+    cmd <- paste0("\n![](`r ", pp$rpath, "`)\n")
+    if (!grepl("file.path", cmd)) cmd <- sub("`r \"", "", cmd) %>% sub("\"`", "", .)
+    return(cmd)
+  } else if (pp$fext %in% c("r", "R")) {
+    cmd <- paste0("source(", pp$rpath, ", local = TRUE, echo = TRUE)")
+  } else {
+    cmd <-pp$rpath
+  }
 
-    if (!radiant) { ## nothing to register
-      cmd <- gsub("\nregister\\(.*\\)","", cmd)
-    }
+  ## if not in Radiant nothing to register
+  if (!radiant) { 
+    cmd <- gsub("\nregister\\(.*\\)","", cmd)
+  }
 
-    if (type == "rmd") {
-      paste0("\n```{r}\n", cmd, "\n```\n")
-    } else {
-      paste0("\n", cmd, "\n")
-    }
+  if (type == "rmd") {
+    paste0("\n```{r}\n", cmd, "\n```\n")
+  } else {
+    paste0("\n", cmd, "\n")
   }
 }
 

@@ -197,10 +197,10 @@ output$ui_r_load <- renderUI({
 })
 
 output$ui_r_read_files <- renderUI({
-  if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-    invisible()
-  } else {
+  if (isTRUE(getOption("radiant.local", FALSE))) {
     actionButton("r_read_files", "Read files", icon = icon("book"), class = "btn-primary")
+  } else {
+    invisible()
   }
 })
 
