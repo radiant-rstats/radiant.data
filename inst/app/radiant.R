@@ -466,7 +466,7 @@ register_plot_output <- function(
 
     ## when no analysis was conducted (e.g., no variables selected)
     p <- get(rfun_name)()
-    if (is.null(p)) p <- "Nothing to plot ...\nPlease re-run the calculations and try again"
+    if (is.null(p)) p <- "Nothing to plot ...\nSelect plots to show or re-run the calculations"
     if (is.character(p)) {
       plot(
         x = 1, type = "n", main = paste0("\n\n\n\n\n\n\n\n", p),
