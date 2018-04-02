@@ -404,7 +404,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
       path <- rstudioapi::selectFile(
         caption = caption,
         path = file.path(getOption("radiant.launch_dir", "~"), fn),
-        filter = paste0(caption, " (*.", type, ")"),
+        filter = paste0(caption, " (*.", type[1], ")"),
         existing = FALSE
       )
       if (!is(path, "try-error") && !is_empty(path)) {

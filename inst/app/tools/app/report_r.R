@@ -415,9 +415,9 @@ observeEvent(input$r_load, {
 })
 
 observeEvent(input$r_read_files, {
-  cmd <- read_files(type = "r")
+  cmd <- r_read_files(type = "r")
   if (!is_empty(cmd)) {
-    update_report_fun(cmd, type = "r", read_files = TRUE)
+    update_report_fun(cmd, type = "r", rfiles = TRUE)
   }
 })
 

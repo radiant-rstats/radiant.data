@@ -285,46 +285,8 @@ knit_it <- function(report, type = "rmd") {
   HTML()
 }
 
-parse_path <- function(path, chr = "\"") {
-
-  ## could probably reduce the number checks for 'try-error' and is_empty
-  if (is(path, "try-error") || is_empty(path)) {
-    return(
-      list(path = "", rpath = "", base = "", base_name = "", ext = "", content = "")
-    )
-  }
-
-  path <- normalizePath(path[1], winslash = "/")
-  filename <- basename(path)
-  fext <- tools::file_ext(filename)
-
-  ## objname is used as the name of the data.frame, make case insensitive
-  objname <- sub(paste0("\\.", fext, "$"), "", filename, ignore.case = TRUE)
-  fext <- tolower(fext)
-
-  pdir <- getOption("radiant.project_dir", default = rstudioapi::getActiveProject())
-  dbdir <- getOption("radiant.dropbox_dir", default = radiant.data::find_dropbox())
-  gddir <- getOption("radiant.gdrive_dir", default = radiant.data::find_gdrive())
-
-  ## for testing
-  # pdir <- ""
-  # dbdir <- radiant.data::find_dropbox()
-  # gddir <- radiant.data::find_gdrive()
-
-  if (!is_empty(pdir) && grepl(paste0("^", pdir), path)) {
-    rpath <- paste0(chr, sub(paste0("^", pdir, "/"), "", path), chr)
-  } else if (!is_empty(dbdir) && grepl(paste0("^", dbdir), path)) {
-    rpath <- paste0("file.path(find_dropbox(), ", chr, sub(paste0("^", dbdir), "", path), chr, ")")
-  } else if (!is_empty(gddir) && grepl(paste("^", gddir), path)) {
-    rpath <- paste0("file.path(find_gdrive(), ", chr, sub(paste0("^", gddir), "", path), chr, ")")
-  } else {
-    rpath <- paste0(chr, path, chr)
-  }
-
-  list(path = path, rpath = rpath, filename = filename, fext = fext, objname = objname)
-}
-
-read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
+## read_files function used inside browser interface
+r_read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
 
   ## if no path is provided, an interactive file browser will be opened
   if (missing(path) || is_empty(path)) {
@@ -343,7 +305,7 @@ read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
     }
   }
 
-  pp <- parse_path(path)
+  pp <- radiant.data::parse_path(path)
 
   if (to == "") {
     to <- gsub("\\s+", "_", pp$objname)
@@ -724,7 +686,7 @@ update_report <- function(inp_main = "",
   }
 }
 
-update_report_fun <- function(cmd, type = "rmd", read_files = FALSE) {
+update_report_fun <- function(cmd, type = "rmd", rfiles = FALSE) {
   isolate({
     generate <- paste0(type, "_generate")
     sinit <- state_init(generate, "auto")
@@ -767,7 +729,7 @@ update_report_fun <- function(cmd, type = "rmd", read_files = FALSE) {
       })
     }
 
-    if (!read_files) {
+    if (!rfiles) {
       if (state_init(paste0(type, "_switch"), "switch") == "switch") {
         updateTabsetPanel(session, "nav_radiant", selected = sel)
       }

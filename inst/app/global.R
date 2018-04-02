@@ -18,6 +18,7 @@ if (is.null(getOption("radiant.launch"))) {
       options(radiant.launch = "viewer")
     } else {
       options(radiant.launch = "browser")
+      # options(radiant.launch = "viewer")
     }
   } else {
     options(radiant.launch = "browser")

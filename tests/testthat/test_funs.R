@@ -83,3 +83,14 @@ test_that("filterdata factor", {
   expect_equal(nrow(dat), 14)
   expect_equal(sum(dat$price), 256587)
 })
+
+## manual testing of read_files to avoid adding numerous dataset to package
+# files <- list.files("tests/testthat/data", full.names = TRUE)
+# for (f in files) {
+#   radiant.data::read_files(f, clipboard = FALSE)
+#   radiant.data::read_files(f, type = "r", clipboard = FALSE)
+# }
+
+## load code into clipboard
+# radiant.data::read_files(type = "r")
+# radiant.data::read_files(type = "rmd")

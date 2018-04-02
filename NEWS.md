@@ -1,3 +1,7 @@
+# CHANGES IN radiant.data 0.9.2.1
+
+* Export `read_files` function to interactively generate R-code or Rmarkdown code-chunks to read files in various format (e.g., SQLite, rds, csv, xlsx, css, jpg, etc.). Supports relative paths and uses `find_dropbox()` and `find_gdrive()` when applicable
+
 # CHANGES IN radiant.data 0.9.2
 
 * Addins option to start app in Rstudio window
