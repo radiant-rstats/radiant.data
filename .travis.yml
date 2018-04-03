@@ -6,6 +6,9 @@ warnings_are_errors: true
 sudo: required
 dist: trusty
 
+r_packages:
+  - devtools
+
 r_github_packages:
   - trestletech/shinyAce
   - rstudio/rstudioapi
