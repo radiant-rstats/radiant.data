@@ -7,5 +7,5 @@ sudo: required
 dist: trusty
 
 r_github_packages:
-  - vnijs/shinyAce
+  - trestletech/shinyAce
   - rstudio/rstudioapi

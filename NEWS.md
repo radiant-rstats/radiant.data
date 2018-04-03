@@ -1,5 +1,6 @@
-# CHANGES IN radiant.data 0.9.2.1
+# CHANGES IN radiant.data 0.9.2.2
 
+* Require `shinyAce` 0.3.0
 * Export `read_files` function to interactively generate R-code or Rmarkdown code-chunks to read files in various format (e.g., SQLite, rds, csv, xlsx, css, jpg, etc.). Supports relative paths and uses `find_dropbox()` and `find_gdrive()` when applicable
 
 # CHANGES IN radiant.data 0.9.2

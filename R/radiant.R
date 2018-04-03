@@ -1490,7 +1490,8 @@ fixMS <- function(text, all = FALSE) {
       gsub("\xE2\x80\xB9", "'", .) %>%
       gsub("\xE2\x80\xBA", "'", .) %>%
       gsub("\xE2\x80\x93", "-", .) %>%
-      gsub("\r", "\n", .)
+      gsub("\r", "\n", .) %>%
+      gsub("\f", "\n", .)
   }
 }
 
