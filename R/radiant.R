@@ -304,8 +304,8 @@ factorizer <- function(dat, safx = 30) {
 loadr <- function(file, objname = "", rlist = TRUE) {
   filename <- basename(file)
   ext <- tolower(tools::file_ext(filename))
-  if (!ext %in% c("rds", "rda", "csv")) {
-    stop("File must have extension rds, rda, or csv")
+  if (!ext %in% c("rds", "rda", "csv", "rdata")) {
+    stop("File must have extension rds, rda, rdata, csv, or tsv")
   }
 
   ## objname is used as the name of the data.frame
@@ -315,10 +315,14 @@ loadr <- function(file, objname = "", rlist = TRUE) {
 
   if (ext == "rds") {
     loadfun <- readRDS
-  } else if (ext == "rda") {
+  } else if (ext %in% c("rda", "rdata")) {
     loadfun <- function(f) load(f) %>% get()
+  } else if (ext == "tsv") {
+    loadfun <- readr::read_tsv
+  } else if (ext == "csv") {
+    loadfun <- readr::read_tsv
   } else {
-    loadfun <- readr::read_csv
+    stop("File must have extension rds, rda, rdata, csv, or tsv")
   }
 
   shiny <- exists("r_environment")
