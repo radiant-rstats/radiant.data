@@ -89,7 +89,8 @@ init_data <- function() {
   ## Therefore, the data need to be a reactive value so the other reactive
   ## functions and outputs that depend on these datasets will know when they
   ## are changed."
-  r_data <- reactiveValues()
+  # r_data <- reactiveValues()
+  # r_data <- parent.env()
 
   df_names <- getOption("radiant.init.data", default = c("diamonds", "titanic"))
   for (dn in df_names) {
@@ -102,10 +103,11 @@ init_data <- function() {
     }
     r_data[[dn]] <- df
     r_data[[paste0(dn, "_descr")]] <- attr(df, "description")
+    makeReactiveBinding(dn, env = r_data)
   }
   r_data$datasetlist <- basename(df_names)
   r_data$url <- NULL
-  r_data
+  # r_data
 }
 
 ## running local or on a server

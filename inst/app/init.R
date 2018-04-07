@@ -70,59 +70,83 @@ r_ssuid <- if (getOption("radiant.local")) {
 session$sendCustomMessage("session_start", r_ssuid)
 
 ## load for previous state if available but look in global memory first
-if (exists("r_data")) {
-  r_data <- do.call(reactiveValues, r_data)
-  r_state <- if (exists("r_state")) r_state else list()
-  suppressWarnings(rm(r_data, r_state, envir = .GlobalEnv))
-} else if (!is.null(r_sessions[[r_ssuid]]$r_data)) {
-  r_data <- do.call(reactiveValues, r_sessions[[r_ssuid]]$r_data)
-  r_state <- r_sessions[[r_ssuid]]$r_state
-} else if (file.exists(paste0("~/radiant.sessions/r_", r_ssuid, ".rds"))) {
-  ## read from file if not in global
-  fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", r_ssuid, ".rds")
+# if (exists("r_data")) {
+#   r_data <- do.call(reactiveValues, r_data)
+#   r_state <- if (exists("r_state")) r_state else list()
+#   suppressWarnings(rm(r_data, r_state, envir = .GlobalEnv))
+# } else if (!is.null(r_sessions[[r_ssuid]]$r_data)) {
+#   r_data <- do.call(reactiveValues, r_sessions[[r_ssuid]]$r_data)
+#   r_state <- r_sessions[[r_ssuid]]$r_state
+# } else if (file.exists(paste0("~/radiant.sessions/r_", r_ssuid, ".rds"))) {
+#   ## read from file if not in global
+#   fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", r_ssuid, ".rds")
 
-  rs <- try(readRDS(fn), silent = TRUE)
-  if (is(rs, "try-error")) {
-    r_data <- init_data()
-    r_state <- list()
-  } else {
-    if (length(rs$r_data) == 0) {
-      r_data <- init_data()
+#   rs <- try(readRDS(fn), silent = TRUE)
+#   if (is(rs, "try-error")) {
+#     r_data <- init_data()
+#     r_state <- list()
+#   } else {
+#     if (length(rs$r_data) == 0) {
+#       r_data <- init_data()
+#     } else {
+#       r_data <- do.call(reactiveValues, rs$r_data)
+#     }
+
+#     if (length(rs$r_state) == 0) {
+#       r_state <- list()
+#     } else {
+#       r_state <- rs$r_state
+#     }
+#   }
+
+#   unlink(fn, force = TRUE)
+#   rm(rs)
+# } else if (isTRUE(getOption("radiant.local")) && file.exists(paste0("~/radiant.sessions/r_", mrsf, ".rds"))) {
+
+#   ## restore from local folder but assign new ssuid
+#   fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", mrsf, ".rds")
+#   rs <- try(readRDS(fn), silent = TRUE)
+#   if (is(rs, "try-error")) {
+#     r_data <- init_data()
+#     r_state <- list()
+#   } else {
+#     r_data <- if (length(rs$r_data) == 0) init_data() else do.call(reactiveValues, rs$r_data)
+#     r_state <- if (length(rs$r_state) == 0) list() else rs$r_state
+#   }
+
+#   ## don't navigate to same tab in case the app locks again
+#   r_state$nav_radiant <- NULL
+
+#   unlink(fn, force = TRUE)
+#   rm(rs)
+# } else {
+#   r_data <- init_data()
+#   r_state <- list()
+# }
+
+knitr_environment <- new.env()
+r_data <- knitr_environment
+
+  df_names <- getOption("radiant.init.data", default = c("diamonds", "titanic"))
+  for (dn in df_names) {
+    if (file.exists(dn)) {
+      df <- load(dn) %>% get()
+      dn <- basename(dn) %>%
+        {gsub(paste0(".", tools::file_ext(.)), "", ., fixed = TRUE)}
     } else {
-      r_data <- do.call(reactiveValues, rs$r_data)
+      df <- data(list = dn, package = "radiant.data", envir = environment()) %>% get()
     }
-
-    if (length(rs$r_state) == 0) {
-      r_state <- list()
-    } else {
-      r_state <- rs$r_state
-    }
+    r_data[[dn]] <- df
+    r_data[[paste0(dn, "_descr")]] <- attr(df, "description")
+    makeReactiveBinding(dn, env = r_data)
   }
+  r_data$datasetlist <- basename(df_names)
+  r_data$url <- NULL
 
-  unlink(fn, force = TRUE)
-  rm(rs)
-} else if (isTRUE(getOption("radiant.local")) && file.exists(paste0("~/radiant.sessions/r_", mrsf, ".rds"))) {
-
-  ## restore from local folder but assign new ssuid
-  fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", mrsf, ".rds")
-  rs <- try(readRDS(fn), silent = TRUE)
-  if (is(rs, "try-error")) {
-    r_data <- init_data()
-    r_state <- list()
-  } else {
-    r_data <- if (length(rs$r_data) == 0) init_data() else do.call(reactiveValues, rs$r_data)
-    r_state <- if (length(rs$r_state) == 0) list() else rs$r_state
-  }
-
-  ## don't navigate to same tab in case the app locks again
-  r_state$nav_radiant <- NULL
-
-  unlink(fn, force = TRUE)
-  rm(rs)
-} else {
-  r_data <- init_data()
-  r_state <- list()
-}
+# print(r_data)
+# init_data()
+print(r_data)
+r_state <- list()
 
 ## legacy, to deal with state files created before
 ## Report > Rmd and Report > R name change
@@ -161,7 +185,7 @@ if (!is.null(r_state$rcode_edit) && is.null(r_state$r_edit)) {
 ## identify the shiny environment
 r_environment <- environment()
 ## create a child environment to use for Report > Rmd and Report > R
-knitr_environment <- new.env()
+# knitr_environment <- environment()
 # print(r_environment)
 # print(parent.env(knitr_environment))
 
