@@ -53,6 +53,37 @@ import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
   invisible()
 }
 
+## list of function to suggest during autocomplete in Report > Rmd and Report > R
+# options(radiant.auto_complete =
+#   grep("^[^\\.]",
+#     sapply(
+#       c(
+#         grep("radiant", installed.packages()[,"Package"], value = TRUE),
+#         dplyr = "dplyr", ggplot2 = "ggplot2", tidyr = "tidyr",
+#         lubridate = "lubridate", tibble = "tibble", readr = "readr",
+#         readxl = "readxl"
+#       ),
+#       getNamespaceExports
+#     ),
+#     value = TRUE
+#   )
+# )
+
+# options(radiant.auto_complete =
+#   sapply(
+#     c(
+#       grep("radiant", installed.packages()[,"Package"], value = TRUE),
+#       dplyr = "dplyr", ggplot2 = "ggplot2", tidyr = "tidyr",
+#       tibble = "tibble", readr = "readr", readxl = "readxl"
+#     ),
+#     getNamespaceExports
+#   )
+# )
+
+options(radiant.auto_complete =
+  sapply(grep("radiant", installed.packages()[,"Package"], value = TRUE), getNamespaceExports)
+)
+
 init_data <- function() {
   ## Joe Cheng: "Datasets can change over time (i.e., the changedata function).
   ## Therefore, the data need to be a reactive value so the other reactive
@@ -64,7 +95,7 @@ init_data <- function() {
   for (dn in df_names) {
     if (file.exists(dn)) {
       df <- load(dn) %>% get()
-      dn <- basename(dn) %>% 
+      dn <- basename(dn) %>%
         {gsub(paste0(".", tools::file_ext(.)), "", ., fixed = TRUE)}
     } else {
       df <- data(list = dn, package = "radiant.data", envir = environment()) %>% get()
