@@ -50,11 +50,12 @@
 #' @export
 visualize <- function(
   dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
-  type = "dist", nrobs = -1, facet_row = ".", facet_col = ".",
-  color = "none", fill = "none", size = "none", fillcol = "blue",
-  linecol = "black", pointcol = "black", bins = 10, smooth = 1,
-  fun = "mean", check = "", axes = "", alpha = 0.5, ylim = "none",
-  data_filter = "", shiny = FALSE, custom = FALSE
+  type = ifelse(is_empty(yvar), "dist", "scatter"), nrobs = -1,
+  facet_row = ".", facet_col = ".", color = "none", fill = "none",
+  size = "none", fillcol = "blue", linecol = "black", pointcol = "black",
+  bins = 10, smooth = 1, fun = "mean", check = "", axes = "",
+  alpha = 0.5, ylim = "none", data_filter = "", shiny = FALSE,
+  custom = FALSE
 ) {
 
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
@@ -177,7 +178,7 @@ visualize <- function(
     isFctY <- "factor" == dc & names(dc) %in% yvar
     if (sum(isFctY)) {
       levs <- sapply(dat[, isFctY, drop = FALSE], function(x) levels(x)[1])
-      dat[, isFctY] <- select(dat, which(isFctY)) %>% 
+      dat[, isFctY] <- select(dat, which(isFctY)) %>%
         mutate_all(funs(as.integer(. == levels(.)[1])))
       dc[isFctY] <- "integer"
     }
@@ -608,7 +609,7 @@ visualize <- function(
     }
   }
 
-  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = min(length(plot_list), 2))) %>% 
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = min(length(plot_list), 2))) %>%
     {if (shiny) . else print(.)}
 }
 
