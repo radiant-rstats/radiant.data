@@ -232,15 +232,17 @@ output$report_r <- renderUI({
       value = state_init("r_edit", r_example) %>% fixMS(),
       vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
       hotkeys = list(r_hotkey = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
-      autoComplete = getOption("radiant.autocomplete", "live"),
       tabSize = getOption("radiant.ace_tabSize", 2),
-      showInvisibles = getOption("radiant.ace_showInvisibles", FALSE)
+      showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
+      autoComplete = getOption("radiant.autocomplete", "live"),
+      autoCompleteList = getOption("radiant.auto_complete", list())
     ),
     htmlOutput("r_knitted"),
     getdeps()
   )
 })
 
+## for auto completion of available R functions
 r_edit_auto <- shinyAce::aceAutocomplete("r_edit")
 
 observeEvent(input$r_knit, {
@@ -288,6 +290,7 @@ output$r_knitted <- renderUI({
     if (!isTRUE(getOption("radiant.report"))) {
       HTML("<h2>Report was not evaluated. If you have sudo access to the server set options(radiant.report = TRUE) in .Rprofile for the shiny user </h2>")
     } else {
+      report <- ""
       withProgress(message = "Knitting report", value = 1, {
         if (isTRUE(input$r_generate == "To R")) {
 
@@ -330,7 +333,6 @@ output$r_knitted <- renderUI({
             report_r$knit_button <- 0
           }
         }
-        
         report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
         knit_it(report)
       })

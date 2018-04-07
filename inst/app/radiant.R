@@ -153,9 +153,10 @@ varying_vars <- reactive({
 
 ## getting variable names in active dataset and their class
 varnames <- reactive({
-  .getclass() %>%
-    names() %>%
-    set_names(., paste0(., " {", .getclass(), "}"))
+  var_class <- .getclass()
+  req(var_class)
+  names(var_class) %>% 
+    set_names(., paste0(., " {", var_class, "}"))
 })
 
 ## cleaning up the arguments for data_filter and defaults passed to report
@@ -251,8 +252,8 @@ print.capture_plot <- function(x, ...) {
 
 ## textarea where the return key submits the content
 returnTextAreaInput <- function(
-  inputId, label = NULL, rows = 2, 
-  placeholder = NULL, resize = "vertical", 
+  inputId, label = NULL, rows = 2,
+  placeholder = NULL, resize = "vertical",
   value = ""
 ) {
 
@@ -487,12 +488,12 @@ plot_downloader <- function(
 
   # ## link and output name
   lnm <- paste0(po, plot_name)
-  fn <- paste0(fname, ".png") %>% 
+  fn <- paste0(fname, ".png") %>%
     sub("^\\.", "", .)
   # ## download graphs in higher resolution than shown in GUI (504 dpi)
   pr <- 5
 
-  if (isTRUE(getOption("radiant.launch", "browser") == "browser")) { 
+  if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
 
     ## create an output
     output[[lnm]] <- downloadHandler(
@@ -522,7 +523,7 @@ plot_downloader <- function(
       path <- rstudioapi::selectFile(
         caption = "Download to png",
         path = file.path(
-          getOption("radiant.launch_dir", "~"), 
+          getOption("radiant.launch_dir", "~"),
           ifelse(length(inp) > 0, paste0(isolate(input[[inp]]), "_", fn), fn)
         ),
         filter = "Download to png (*.png)",
@@ -646,7 +647,8 @@ inclRmd <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = "\n") %>%
     knitr::knit2html(
       text = ., fragment.only = TRUE, quiet = TRUE,
-      envir = r_environment, options = "", stylesheet = ""
+      envir = knitr_environment, options = "", stylesheet = ""
+      # envir = r_environment, options = "", stylesheet = ""
     ) %>%
     HTML() %>%
     withMathJax()

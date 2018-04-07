@@ -160,6 +160,10 @@ if (!is.null(r_state$rcode_edit) && is.null(r_state$r_edit)) {
 
 ## identify the shiny environment
 r_environment <- environment()
+## create a child environment to use for Report > Rmd and Report > R
+knitr_environment <- new.env()
+# print(r_environment)
+# print(parent.env(knitr_environment))
 
 ## parse the url and use updateTabsetPanel to navigate to the desired tab
 ## currently only works with a new or refreshed session

@@ -36,7 +36,7 @@ file_upload_button <- function(
     }
 
     HTML(btn)
-  } 
+  }
 }
 
 ## Thanks to @timelyportfolio for this comment/fix
@@ -186,7 +186,8 @@ pre, code, pre code {
 knit_it_save <- function(report) {
 
   ## Read input and convert to Markdown
-  md <- knitr::knit(text = report, envir = r_environment)
+  # md <- knitr::knit(text = report, envir = r_environment)
+  md <- knitr::knit(text = report, envir = knitr_environment)
 
   ## Get dependencies from knitr
   deps <- knitr::knit_meta()
@@ -267,7 +268,8 @@ knit_it <- function(report, type = "rmd") {
   ## convert to md
   md <- knitr::knit(
     text = report,
-    envir = r_environment,
+    # envir = r_environment,
+    envir = knitr_environment,
     quiet = TRUE
   )
 
@@ -367,7 +369,7 @@ r_read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
   }
 
   ## if not in Radiant nothing to register
-  if (!radiant) { 
+  if (!radiant) {
     cmd <- gsub("\nregister\\(.*\\)","", cmd)
   }
 
@@ -567,7 +569,8 @@ report_save_content <- function(file, type = "rmd") {
               HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
               PDF = rmarkdown::pdf_document(),
               Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"), "app/www/style.docx"))
-            ), envir = r_environment, quiet = TRUE)
+            ), envir = knitr_environment, quiet = TRUE)
+            # ), envir = r_environment, quiet = TRUE)
             file.rename(out, file)
             file.remove(tmp_fn)
           } else {

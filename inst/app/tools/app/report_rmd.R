@@ -229,13 +229,6 @@ output$ui_rmd_switch <- renderUI({
   )
 })
 
-## would like to put result straight to Rstudio if possible
-# observeEvent(input$rmd_load, {
-#   if (input$rmd_generate %in% rmd_set_rstudio) {
-#     updateSelectInput(session, "rmd_generate", selected = "auto")
-#   }
-# })
-
 output$ui_rmd_save_type <- renderUI({
   selectInput(
     inputId = "rmd_save_type", label = NULL,
@@ -263,12 +256,6 @@ output$ui_rmd_load <- renderUI({
 })
 
 output$ui_rmd_read_files <- renderUI({
-  # if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-  #   invisible()
-  # } else {
-  #   actionButton("rmd_read_files", "Read files", icon = icon("book"), class = "btn-primary")
-  # }
-
   if (isTRUE(getOption("radiant.local", FALSE))) {
     actionButton("rmd_read_files", "Read files", icon = icon("book"), class = "btn-primary")
   } else {
@@ -302,7 +289,7 @@ output$report_rmd <- renderUI({
         td(
           help_modal(
             "Report > Rmd", "rmd_help",
-            inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/report_rmd.md")), 
+            inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/report_rmd.md")),
             lic = "by-sa"
           )
         ),
@@ -333,16 +320,39 @@ output$report_rmd <- renderUI({
       value = state_init("rmd_edit", rmd_example) %>% fixMS(),
       vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
       hotkeys = list(rmd_hotkey = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
-      autoComplete = getOption("radiant.autocomplete", "live"),
       tabSize = getOption("radiant.ace_tabSize", 2),
-      showInvisibles = getOption("radiant.ace_showInvisibles", FALSE)
+      showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
+      autoComplete = getOption("radiant.autocomplete", "live"),
+      autoCompleteList = getOption("radiant.auto_complete", list())
     ),
     htmlOutput("rmd_knitted"),
     getdeps()
   )
 })
 
+## for auto completion of available R functions
 rmd_edit_auto <- shinyAce::aceAutocomplete("rmd_edit")
+
+observe({
+  req(input$dataset)
+  # comps <- getOption("radiant.auto_complete", list())
+  comps <- list(
+    r_data = r_data$datasetlist,
+    vars = as.vector(varnames())
+  )
+  # print(comps)
+  # comps$r_data
+  # comps[["r_data"]] <- r_data$datasetlist
+  # comps[["vars"]] <- as.vector(varnames())
+  # shinyAce::updateAceEditor(
+  #   session, "rmd_edit",
+  #   autoCompleters = c("static", "rlang", "text", "keyword")
+  # )
+  shinyAce::updateAceEditor(
+    session, "rmd_edit",
+    autoCompleteList = comps
+  )
+})
 
 ## doesn't seem necessary
 # observe({
@@ -396,6 +406,7 @@ rmd_knitted <- eventReactive(report_rmd$report != 1, {
   if (!isTRUE(getOption("radiant.report"))) {
     HTML("<h2>Report was not evaluated. If you have sudo access to the server set options(radiant.report = TRUE) in .Rprofile for the shiny user </h2>")
   } else {
+    report <- ""
     withProgress(message = "Knitting report", value = 1, {
       if (isTRUE(input$rmd_generate == "To Rmd")) {
 

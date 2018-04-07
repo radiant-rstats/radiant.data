@@ -1,7 +1,7 @@
 Package: radiant.data
 Title: Data Menu for Radiant: Business Analytics using R and Shiny
-Version: 0.9.2.2
-Date: 2018-4-2
+Version: 0.9.2.3
+Date: 2018-4-6
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description: The Radiant Data menu includes interfaces for loading, saving,
     viewing, visualizing, summarizing, transforming, and combining data. It also
@@ -51,4 +51,5 @@ URL: https://github.com/radiant-rstats/radiant.data,
 BugReports: https://github.com/radiant-rstats/radiant.data/issues
 License: AGPL-3 | file LICENSE
 LazyData: true
+Encoding: UTF-8
 RoxygenNote: 6.0.1

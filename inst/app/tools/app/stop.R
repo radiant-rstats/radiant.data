@@ -16,7 +16,7 @@ stop_radiant <- function() {
       assign("r_state", r_state, envir = .GlobalEnv)
       assign("r_data", toList(r_data), envir = .GlobalEnv)
 
-      ## removing r_environment and r_sessions
+      ## removing r_sessions and functions defined in global.R
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
       unlink("~/r_figures/", recursive = TRUE)
       sshhr(try(rm(help_menu, make_url_patterns, import_fs, init_data, navbar_proj, knit_print.data.frame, withMathJax, envir = .GlobalEnv), silent = TRUE))
