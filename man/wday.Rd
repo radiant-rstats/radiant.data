@@ -19,5 +19,5 @@ wday(x, label = FALSE, abbr = TRUE, ordered = FALSE)
 Add ordered argument to lubridate::wday
 }
 \seealso{
-See the \code{\link[lubridate]{wday}} function in the lubridate package for additional details
+See the \code{\link[lubridate:day]{lubridate::wday()}} function in the lubridate package for additional details
 }
