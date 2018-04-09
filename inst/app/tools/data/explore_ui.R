@@ -112,6 +112,11 @@ output$ui_expl_top <- renderUI({
   )
 })
 
+output$ui_expl_name <- renderUI({
+  req(input$dataset)
+  textInput("expl_name", "Store as:", "", placeholder = "Provide a table name")
+})
+
 output$ui_expl_run <- renderUI({
   ## updates when dataset changes
   req(input$dataset)
@@ -152,7 +157,7 @@ output$ui_Explore <- renderUI({
     ),
     wellPanel(
       tags$table(
-        tags$td(textInput("expl_dat", "Store as:", paste0(input$dataset, "_expl"))),
+        tags$td(uiOutput("ui_expl_name")),
         tags$td(actionButton("expl_store", "Store", icon = icon("plus")), style = "padding-top:30px;")
       )
     ),
@@ -244,12 +249,12 @@ download_handler(
 )
 
 observeEvent(input$expl_store, {
+  req(input$expl_name)
   dat <- .explore()
   if (is.null(dat)) return()
-  name <- input$expl_dat
+  name <- input$expl_name
   rows <- input$explore_rows_all
-  dat$tab %<>% 
-    {if (is.null(rows)) . else .[rows, , drop = FALSE]}
+  dat$tab %<>% {if (is.null(rows)) . else .[rows, , drop = FALSE]}
   store(dat, name)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
@@ -281,7 +286,11 @@ observeEvent(input$explore_report, {
   if (!is_empty(r_state$explore_state$length, 10)) {
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$explore_state$length)
   }
-  xcmd <- paste0(xcmd, ") %>% render()\n# store(result, name = \"", input$expl_dat, "\")")
+  # xcmd <- paste0(xcmd, ") %>% render()\n# store(result, name = \"", input$expl_name, "\")")
+  xcmd <- paste0(xcmd, ") %>% render()")
+  if (!is_empty(input$expl_name)) {
+    xcmd <- paste0(xcmd, "\n", input$expl_name, " <- result$tab\nregister(\"", input$expl_name, "\")")
+  }
 
   inp_main <- clean_args(expl_inputs(), expl_args)
   if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)

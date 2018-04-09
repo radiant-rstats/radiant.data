@@ -4,14 +4,16 @@
 \alias{register}
 \title{Register a data.frame in the datasetlist in Radiant}
 \usage{
-register(new, org = "", descr = "")
+register(new, org = "", descr = "", env = r_data)
 }
 \arguments{
-\item{new}{Name of the new dataset}
+\item{new}{String containing the name of the data.frame or tibble to register}
 
-\item{org}{Name of the original data if a (working) copy is being made}
+\item{org}{Name of the original data.frame or tibble if a (working) copy is being made}
 
-\item{descr}{Dataset description}
+\item{descr}{Data description in markdown format}
+
+\item{env}{Environment containing the data}
 }
 \description{
 Register a data.frame in the datasetlist in Radiant

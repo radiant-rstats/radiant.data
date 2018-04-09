@@ -145,6 +145,11 @@ output$ui_pvt_format <- renderUI({
   )
 })
 
+output$ui_pvt_name <- renderUI({
+  req(input$dataset)
+  textInput("pvt_name", "Store as:", "", placeholder = "Provide a table name")
+})
+
 output$ui_pvt_run <- renderUI({
   ## updates when dataset changes
   req(input$dataset)
@@ -220,7 +225,7 @@ output$ui_Pivotr <- renderUI({
     ),
     wellPanel(
       tags$table(
-        tags$td(textInput("pvt_dat", "Store as:", paste0(input$dataset, "_pvt"))),
+        tags$td(uiOutput("ui_pvt_name")),
         tags$td(actionButton("pvt_store", "Store", icon = icon("plus")), style = "padding-top:30px;")
       )
     ),
@@ -403,13 +408,12 @@ output$plot_pivot <- renderPlot({
 }, width = pvt_plot_width, height = pvt_plot_height, res = 96)
 
 observeEvent(input$pvt_store, {
+  req(input$pvt_name)
   dat <- try(.pivotr(), silent = TRUE)
   if (is(dat, "try-error") || is.null(dat)) return()
-  name <- input$pvt_dat
+  name <- input$pvt_name
   rows <- input$pivotr_rows_all
-  dat$tab %<>% {
-    if (is.null(rows)) . else .[rows, , drop = FALSE]
-  }
+  dat$tab %<>% {if (is.null(rows)) . else .[rows, , drop = FALSE]}
   store(dat, name)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
@@ -458,7 +462,11 @@ observeEvent(input$pivotr_report, {
   if (!is_empty(r_state$pivotr_state$length, 10)) {
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$pivotr_state$length)
   }
-  xcmd <- paste0(xcmd, ") %>% render()\n# store(result, name = \"", input$pvt_dat, "\")")
+  # xcmd <- paste0(xcmd, ") %>% render()\n# store(result, name = \"", input$pvt_name, "\")")
+  xcmd <- paste0(xcmd, ") %>% render()")
+  if (!is_empty(input$pvt_name)) {
+    xcmd <- paste0(xcmd, "\n", input$pvt_name, " <- result$tab\nregister(\"", input$pvt_name, "\")")
+  }
 
   inp_main <- clean_args(pvt_inputs(), pvt_args)
   if (ts$tabsort != "") {

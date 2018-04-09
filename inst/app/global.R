@@ -84,13 +84,14 @@ options(radiant.auto_complete =
   sapply(grep("radiant", installed.packages()[,"Package"], value = TRUE), getNamespaceExports)
 )
 
-init_data <- function() {
-  ## Joe Cheng: "Datasets can change over time (i.e., the changedata function).
-  ## Therefore, the data need to be a reactive value so the other reactive
-  ## functions and outputs that depend on these datasets will know when they
-  ## are changed."
-  # r_data <- reactiveValues()
-  # r_data <- parent.env()
+init_data <- function(env = r_data) {
+  ## Based on discussion with Joe Cheng: Datasets can change over time 
+  ## so the data needs to be reactive value so the other reactive
+  ## functions and outputs that depend on these datasets will know when 
+  ## they are changed
+
+  ## Using an environment to assign data
+  ## http://adv-r.had.co.nz/Environments.html#explicit-envs
 
   df_names <- getOption("radiant.init.data", default = c("diamonds", "titanic"))
   for (dn in df_names) {
@@ -101,13 +102,13 @@ init_data <- function() {
     } else {
       df <- data(list = dn, package = "radiant.data", envir = environment()) %>% get()
     }
-    r_data[[dn]] <- df
-    r_data[[paste0(dn, "_descr")]] <- attr(df, "description")
-    makeReactiveBinding(dn, env = r_data)
+    env[[dn]] <- df
+    env[[paste0(dn, "_descr")]] <- attr(df, "description")
+    makeReactiveBinding(dn, env = env)
   }
-  r_data$datasetlist <- basename(df_names)
-  r_data$url <- NULL
-  # r_data
+  env$datasetlist <- basename(df_names)
+  env$url <- NULL
+  invisible()
 }
 
 ## running local or on a server

@@ -131,9 +131,10 @@ output$show_data <- renderPrint({
   input$show_data ## only update when you toggle the checkbox
   isolate({
     cat("r_data list:\n")
-    toList(r_data) %>% {
-      str(.[sort(names(.))])
-    }
+    # toList(r_data) %>% {
+    # env2list(r_data) %>% 
+    r_data %>% 
+      {str(.[sort(names(.))])}
   })
 })
 

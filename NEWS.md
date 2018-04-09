@@ -3,7 +3,7 @@
 * Add option to load files with extension .rdata or .tsv using `loadr` which add that data to the Datasets dropdown
 * `visualize` will default to a scatter plot if `xvar` and `yvar` are specified but no plot `type` is provided in the function call
 * Add exported functions to the auto complete list used in _Report > Rmd_ and _Report > R_
-* _Report > Rmd_ and _Report > R_ will now be evaluated in the _knitr_environment_. This means that the return value from `ls()` will be much cleaner
+* _Report > Rmd_ and _Report > R_ will now be evaluated in the _r_data_. This means that the return value from `ls()` will be much cleaner
 
 # CHANGES IN radiant.data 0.9.2.2
 

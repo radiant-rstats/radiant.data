@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/data/visualize.html} for an example in Radiant
 #'
-#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param dataset Data set to use for plot (data.frame or tibble) 
 #' @param xvar One or more variables to display along the X-axis of the plot
 #' @param yvar Variable to display along the Y-axis of the plot (default = "none")
 #' @param comby Combine yvars in plot (TRUE or FALSE, FALSE is the default)
@@ -23,7 +23,8 @@
 #' @param check Add a regression line ("line"), a loess line ("loess"), or jitter ("jitter") to a scatter plot
 #' @param axes Flip the axes in a plot ("flip") or apply a log transformation (base e) to the y-axis ("log_y") or the x-axis ("log_x")
 #' @param alpha Opacity for plot elements (0 to 1)
-#' @param ylim Set limit for y-axis
+#' @param xlim Set limit for y-axis (e.g., c(0, 1))
+#' @param ylim Set limit for y-axis (e.g., c(0, 1))
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
@@ -31,20 +32,20 @@
 #' @return Generated plots
 #'
 #' @examples
-#' visualize("diamonds", "price:cut", type = "dist", fillcol = "red")
-#' visualize("diamonds", "carat:cut", yvar = "price", type = "scatter",
+#' visualize(diamonds, "price:cut", type = "dist", fillcol = "red")
+#' visualize(diamonds, "carat:cut", yvar = "price", type = "scatter",
 #'   pointcol = "blue", fun = c("mean", "median"), linecol = c("red","green"))
-#' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
+#' visualize(diamonds, yvar = "price", xvar = c("cut","clarity"),
 #'   type = "bar", fun = "median")
-#' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
+#' visualize(diamonds, yvar = "price", xvar = c("cut","clarity"),
 #'   type = "line", fun = "max")
-#' visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter",
+#' visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter",
 #'           size = "table", custom = TRUE) + scale_size(range=c(1,10), guide = "none")
-#' visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
+#' visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
 #'   labs(title = "A scatterplot", x = "price in $")
-#' visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) %>%
+#' visualize(diamonds, xvar = "price:carat", custom = TRUE) %>%
 #'   gridExtra::grid.arrange(grobs = ., top = "Histograms", ncol = 2)
-#' visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "bar",
+#' visualize(diamonds, xvar = "cut", yvar = "price", type = "bar",
 #'   facet_row = "cut", fill = "cut")
 #'
 #' @export
@@ -54,7 +55,7 @@ visualize <- function(
   facet_row = ".", facet_col = ".", color = "none", fill = "none",
   size = "none", fillcol = "blue", linecol = "black", pointcol = "black",
   bins = 10, smooth = 1, fun = "mean", check = "", axes = "",
-  alpha = 0.5, ylim = "none", data_filter = "", shiny = FALSE,
+  alpha = 0.5, xlim = NULL, ylim = NULL, data_filter = "", shiny = FALSE,
   custom = FALSE
 ) {
 
@@ -312,12 +313,10 @@ visualize <- function(
         if (dc[i] == "factor") {
 
           ## make range comparable to bar plot
-          ymax <- max(dat[[j]]) %>% {
-            if (. < 0) 0 else .
-          }
-          ymin <- min(dat[[j]]) %>% {
-            if (. > 0) 0 else .
-          }
+          # ymax <- max(dat[[j]]) %>% {if (. < 0) 0 else .}
+          # ymin <- min(dat[[j]]) %>% {if (. > 0) 0 else .}
+          ymax <- max(0, max(dat[[j]]))
+          ymin <- min(0, min(dat[[j]]))
           plot_list[[itt]] <- plot_list[[itt]] + ylim(ymin, ymax)
 
           fun1 <- function(y) {
@@ -557,9 +556,16 @@ visualize <- function(
       plot_list[[i]] <- plot_list[[i]] + aes_string(fill = fill)
   }
 
-  if (ylim != "none" && is.numeric(ylim) && length(ylim) == 2) {
+  # if (ylim != "none" && is.numeric(ylim) && length(ylim) == 2) {
+  if (!is_empty(ylim, "none") && is.numeric(ylim) && length(ylim) == 2) {
     for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + ylim(ylim[1], ylim[2])
+      # plot_list[[i]] <- plot_list[[i]] + ylim(ylim[1], ylim[2])
+      plot_list[[i]] <- plot_list[[i]] + coord_cartesian(ylim = ylim)
+  }
+
+  if (!is_empty(xlim, "none") && is.numeric(xlim) && length(xlim) == 2) {
+    for (i in 1:length(plot_list))
+      plot_list[[i]] <- plot_list[[i]] + coord_cartesian(xlim = xlim)
   }
 
   if ("jitter" %in% check) {

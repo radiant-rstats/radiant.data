@@ -47,36 +47,34 @@ r_example <- "## get the active dataset and show the first few observations
   head
 
 ## access a specific dataset by name
-r_data$diamonds %>%
+diamonds %>%
   select(price, clarity) %>%
   head
 
 ## add a variable to the diamonds data
-dat <- r_data$diamonds
-dat$log_price <- log(dat$price)
+diamonds <- mutate(diamonds, log_price = log(price))
 
-## show the first observations
-dat %>%
+## show the first observations in the price and log_price columns
+diamonds %>%
   select(price, log_price) %>%
-  head
+  head()
 
 ## create a histogram of prices
-dat %>%
+diamonds %>%
   ggplot(aes(x = price)) +
     geom_histogram()
 
 ## and a histogram of log-prices using radiant.data::visualize
-dat %>%
-  visualize(xvar = \"log_price\", custom = TRUE)
+visualize(diamonds, xvar = \"log_price\", custom = TRUE)
 
 ## open help in the R-studio viewer from Radiant
-# help(package = 'radiant.data')
+# help(package = \"radiant.data\")
 
 ## If you are familiar with Shiny you can call reactives when the code
 ## is evaluated inside a Shiny app. For example, if you transformed
 ## some variables in Data > Transform you can call the transform_main
 ## reacive to see the latest result. Very useful for debugging
-# transform_main() %>% head"
+# transform_main() %>% head()"
 
 ## allow running code through button or keyboard shortcut
 report_r <- reactiveValues(report = 0, knit_button = 0, clear = 0)

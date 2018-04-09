@@ -34,7 +34,7 @@ output$ui_View <- renderUI({
         min = 0
       ),
       tags$table(
-        tags$td(textInput("view_dat", "Store filtered data as:", paste0(input$dataset, "_view"))),
+        tags$td(textInput("view_name", "Store filtered data as:", paste0(input$dataset, "_wrk"))),
         tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success"), style = "padding-top:30px;")
       )
     ),
@@ -161,23 +161,23 @@ output$dataviewer <- DT::renderDataTable({
 })
 
 observeEvent(input$view_store, {
-  req(input$view_dat)
+  req(input$view_name)
   data_filter <- if (input$show_filter) input$data_filter else ""
   getdata(
     input$dataset, vars = input$view_vars, filt = data_filter,
     rows = input$dataviewer_rows_all, na.rm = FALSE
   ) %>%
-    save2env(input$dataset, input$view_dat, gsub("\n# dtab\\(.*", "", .viewcmd()))
+    save2env(input$dataset, input$view_name, gsub("\n# dtab\\(.*", "", .viewcmd()))
 
   updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
 
-  if (input$dataset != input$view_dat) {
+  if (input$dataset != input$view_name) {
     ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
     showModal(
       modalDialog(
         title = "Data Stored",
         span(
-          paste0("Dataset '", input$view_dat, "' was successfully added to
+          paste0("Dataset '", input$view_name, "' was successfully added to
                  the datasets dropdown. Add code to Report > Rmd or
                  Report > R to (re)create the dataset by clicking the report i
                  con on the bottom left of your screen.")
@@ -234,7 +234,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
 .viewcmd <- function(mess = "") {
   ## get the state of the dt table
   ts <- dt_state("dataviewer", vars = input$view_vars)
-  dataset <- input$view_dat
+  dataset <- input$view_name
   cmd <- ""
 
   ## shorten list of variales if possible
@@ -252,7 +252,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
     vars <- paste0(vars, collapse = ", ")
   }
 
-  xcmd <- paste0("# dtab(r_data[[\"", dataset, "\"]]")
+  xcmd <- paste0("# dtab(", dataset)
   if (!is_empty(input$view_dec, 3)) {
     xcmd <- paste0(xcmd, ", dec = ", input$view_dec)
   }
@@ -263,7 +263,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
 
   ## create the command to filter and sort the data
   # cmd <- paste0(cmd, "### filter and sort the dataset\nr_data[[\"", input$dataset, "\"]] %>%\n  select(", vars, ")")
-  cmd <- paste0(cmd, "### filter and sort the dataset\nr_data[[\"", input$dataset, "\"]]")
+  cmd <- paste0(cmd, "### filter and sort the dataset\n", input$view_name, " <- ", input$dataset)
   if (input$show_filter && input$data_filter != "") {
     cmd <- paste0(cmd, " %>%\n  filter(", input$data_filter, ")")
   }
@@ -280,7 +280,8 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
   ## not selected for the final dataset
   cmd <- paste0(cmd, " %>%\n  select(", vars, ")")
 
-  paste0(cmd, " %>%\n  store(\"", dataset, "\", \"", input$dataset, "\")\n", xcmd)
+  # paste0(cmd, " %>%\n  store(\"", dataset, "\", \"", input$dataset, "\")\n", xcmd)
+  paste0(cmd, "\nregister(\"", dataset, "\", \"", input$dataset, "\")\n", xcmd)
 }
 
 observeEvent(input$view_report, {

@@ -1,0 +1,20 @@
+
+Convert environment to list:
+
+https://gist.github.com/hadley/5434786
+
+Convert a list to an environment:
+
+http://stat.ethz.ch/R-manual/R-devel/library/base/html/list2env.html
+
+Links:
+* https://stackoverflow.com/questions/44045714/making-a-reactive-global-variable-in-shiny?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+* https://github.com/rstudio/shiny/issues/1905
+* https://groups.google.com/forum/#!topic/shiny-discuss/3HVsdJvZ8-Q
+
+
+Error message:
+
+Error in sendWSMessage(.handle, FALSE, as.character(message)): Expecting an external pointer: [type=character].
+
+

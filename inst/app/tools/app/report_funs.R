@@ -187,7 +187,7 @@ knit_it_save <- function(report) {
 
   ## Read input and convert to Markdown
   # md <- knitr::knit(text = report, envir = r_environment)
-  md <- knitr::knit(text = report, envir = knitr_environment)
+  md <- knitr::knit(text = report, envir = r_data)
 
   ## Get dependencies from knitr
   deps <- knitr::knit_meta()
@@ -235,11 +235,47 @@ knit_it_save <- function(report) {
     gsub("<table>", "<table class='table table-condensed table-hover'>", .)
 }
 
+
+observeEvent(input$rmd_clean, {
+  report <- gsub("r_data\\[\\[\"([^\"]+)\"\\]\\]", "\\1", input$rmd_edit) %>%
+    gsub("dataset\\s*=\\s*\"([^\"]+)\",", "\\1,", .) %>%
+    gsub("(combinedata\\(\\s*x\\s*=\\s*)\"([^\"]+)\",(\\s*y\\s*=\\s*)\"([^\"]+)\",", "\\1\\2,\\3\\4,", .) %>%
+    gsub("(combinedata\\(.*),\\s*name\\s*=\\s*\"([^\"]+)\"", "\\2 <- \\1", .)
+  shinyAce::updateAceEditor(
+    session, "rmd_edit",
+    value = fixMS(report)
+  )
+  removeModal()
+})
+
 ## Knit for report in Radiant
 knit_it <- function(report, type = "rmd") {
 
   if (type == "rmd") {
     report <- gsub("\\\\\\\\\\s*\n", "\\\\\\\\\\\\\\\\\n", report)
+  }
+
+  if (
+    grepl("\\s*r_data\\[\\[\".*\"\\]\\]", report) || 
+    grepl("\\s+dataset\\s*=\\s*\".*\",", report)  ||
+    grepl("combinedata\\(\\s*x\\s*=\\s*\"[^\"]+\"", report)
+  ) {
+    showModal(
+      modalDialog(
+        title = "The use of r_data[[...]] is deprecated",
+        span(
+          "The use of r_data[[...]]] and dataset = \"...\" in your report is deprecated. Click 
+           the 'Clean report' button to remove references that are no longer needed."
+        ),
+        footer = tagList(
+          modalButton("Cancel"),
+          actionButton("rmd_clean", "Clean report", title = "Clean report", class = "btn-success")
+        ),
+        size = "s",
+        easyClose = TRUE
+      )
+    )
+    return(invisible())
   }
 
   ## fragment also available with rmarkdown
@@ -269,7 +305,7 @@ knit_it <- function(report, type = "rmd") {
   md <- knitr::knit(
     text = report,
     # envir = r_environment,
-    envir = knitr_environment,
+    envir = r_data,
     quiet = TRUE
   )
 
@@ -510,11 +546,12 @@ report_save_content <- function(file, type = "rmd") {
 
       if (save_type == "Rmd + Data (zip)") {
         withProgress(message = "Preparing Rmd + Data zip file", value = 1, {
-          r_data <- toList(r_data)
+          # r_data <- toList(r_data)
 
           ## don't want to write to current dir
           currdir <- setwd(tempdir())
-          readr::write_rds(r_data, path = "r_data.rds")
+          # readr::write_rds(env2list(r_data), path = "r_data.rds")
+          save(list = ls(envir = r_data), file = "r_data.rda")
 
           setup_report(report, save_type = "Rmd", lib = lib) %>%
             fixMS() %>%
@@ -527,14 +564,16 @@ report_save_content <- function(file, type = "rmd") {
         })
       } else if (save_type == "R + Data (zip)") {
         withProgress(message = "Preparing R + Data zip file", value = 1, {
-          r_data <- toList(r_data)
+          # r_data <- toList(r_data)
 
           ## don't want to write to current dir
           currdir <- setwd(tempdir())
-          readr::write_rds(r_data, path = "r_data.rds")
+          # readr::write_rds(env2list(r_data), path = "r_data.rds")
+          save(list = ls(envir = r_data), file = "r_data.rda")
+
           cat(report, file = "report.R", sep = "\n")
 
-          zip(file, c("report.R", "r_data.rds"),
+          zip(file, c("report.R", "r_data.rda"),
             flags = zip_info[1], zip = zip_info[2]
           )
           setwd(currdir)
@@ -569,7 +608,7 @@ report_save_content <- function(file, type = "rmd") {
               HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
               PDF = rmarkdown::pdf_document(),
               Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"), "app/www/style.docx"))
-            ), envir = knitr_environment, quiet = TRUE)
+            ), envir = r_data, quiet = TRUE)
             # ), envir = r_environment, quiet = TRUE)
             file.rename(out, file)
             file.remove(tmp_fn)
@@ -589,18 +628,12 @@ report_save_content <- function(file, type = "rmd") {
 }
 
 ## updating the report when called
-update_report <- function(inp_main = "",
-                          fun_name = "",
-                          inp_out = list("", ""),
-                          cmd = "",
-                          pre_cmd = "result <- ",
-                          post_cmd = "",
-                          xcmd = "",
-                          outputs = c("summary", "plot"),
-                          wrap,
-                          figs = TRUE,
-                          fig.width = 7,
-                          fig.height = 7) {
+update_report <- function(
+  inp_main = "", fun_name = "", inp_out = list("", ""),
+  cmd = "", pre_cmd = "result <- ", post_cmd = "",
+  xcmd = "", outputs = c("summary", "plot"), wrap,
+  figs = TRUE, fig.width = 7, fig.height = 7
+) {
 
   ## determine number of characters for main command for wrapping
   if (missing(wrap)) {
@@ -610,7 +643,8 @@ update_report <- function(inp_main = "",
         sum(nchar(names(inp_main))) +
         length(inp_main) * 5 - 1
     }
-    wrap <- ifelse(lng > 75, TRUE, FALSE)
+    print(lng)
+    wrap <- ifelse(lng > 70, TRUE, FALSE)
   }
 
   ## wrapping similar to styler
@@ -645,7 +679,8 @@ update_report <- function(inp_main = "",
     cmd <- depr(inp_main, wrap = wrap) %>%
       sub("list", fun_name, .) %>%
       paste0(pre_cmd, .) %>%
-      paste0(., post_cmd)
+      paste0(., post_cmd) %>%
+      sub("dataset = \"([^\"]+)\"", "\\1", .)
   }
 
   lout <- length(outputs)

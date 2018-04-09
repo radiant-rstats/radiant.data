@@ -7,8 +7,8 @@ cmb_args <- as.list(formals(combinedata))
 ## list of function inputs selected by user
 cmb_inputs <- reactive({
   cmb_args$data_filter <- ifelse(input$show_filter, input$data_filter, "")
-  cmb_args$x <- input$dataset
-  cmb_args$y <- input$cmb_y
+  cmb_args$x <- as.name(input$dataset)
+  cmb_args$y <- as.name(input$cmb_y)
 
   ## loop needed because reactive values don't allow single bracket indexing
   for (i in r_drop(names(cmb_args), drop = c("x", "y", "data_filter"))) {
@@ -127,22 +127,38 @@ output$ui_Combine <- renderUI({
 
 observeEvent(input$cmb_store, {
   ## combining datasets
-  result <- try(do.call(combinedata, cmb_inputs()), silent = TRUE)
+  # inp <- clean_args(cmb_inputs(), cmb_args)
+  # inp$x <- as.name(inp$x)
+  # inp$y <- as.name(inp$y)
+  result <- try(do.call(combinedata, cmb_inputs(), envir = r_data), silent = TRUE)
   if (is(result, "try-error")) {
     r_data[["cmb_error"]] <- attr(result, "condition")$message
   } else {
     r_data[["cmb_error"]] <- ""
+    r_data[[input$cmb_name]] <- result
+    register(input$cmb_name, descr = attr(result, "description"))
     updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
     updateSelectInput(session = session, inputId = "cmb_y", selected = input$cmd_y)
   }
 })
 
 observeEvent(input$combine_report, {
+  req(input$cmb_y)
+  inp <- clean_args(cmb_inputs(), cmb_args)
+
+  # print(inp$add)
+  # print(colnames(r_data[[input$cmb_y]]))
+  if (identical(inp$add, colnames(r_data[[input$cmb_y]]))) {
+    inp$add <- NULL
+  }
+  xcmd <- paste0("register(\"", input$cmb_name, "\")")
   update_report(
-    inp_main = clean_args(cmb_inputs(), cmb_args),
+    # inp_main = clean_args(cmb_inputs(), cmb_args),
+    inp_main = inp,
     fun_name = "combinedata",
     outputs = character(0),
-    pre_cmd = "",
+    pre_cmd = paste0(input$cmb_name, " <- "),
+    xcmd = xcmd,
     figs = FALSE
   )
 })

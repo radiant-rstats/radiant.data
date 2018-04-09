@@ -456,6 +456,9 @@ observeEvent(input$visualize_report, {
   if (input$viz_type != "dist") {
     vi$bins <- viz_args$bins
   }
+  if (input$viz_type %in% c("dist", "density")) {
+    vi$yvar <- viz_args$yvar
+  }
   if (!input$viz_type %in% c("density", "scatter") || !"loess" %in% input$viz_check) {
     vi$smooth <- viz_args$smooth
   }

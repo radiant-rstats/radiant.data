@@ -57,15 +57,19 @@ store.data.frame <- function(
 
 #' Register a data.frame in the datasetlist in Radiant
 #'
-#' @param new Name of the new dataset
-#' @param org Name of the original data if a (working) copy is being made
-#' @param descr Dataset description
+#' @param new String containing the name of the data.frame or tibble to register
+#' @param org Name of the original data.frame or tibble if a (working) copy is being made
+#' @param descr Data description in markdown format
+#' @param env Environment containing the data
 #'
+#' @importFrom shiny makeReactiveBinding
+#' 
 #' @export
-register <- function(new, org = "", descr = "") {
-  if (exists("r_environment")) {
-    env <- r_environment
-    if (!is_string(new) || is.null(env$r_data[[new]])) {
+register <- function(new, org = "", descr = "", env = r_data) {
+  # if (exists("r_environment")) {
+  if (is.environment(env)) {
+    # env <- r_environment
+    if (!is_string(new) || is.null(env[[new]])) {
       message("No dataset with that name has been loaded in Radiant")
       return(invisible())
     }
@@ -74,18 +78,33 @@ register <- function(new, org = "", descr = "") {
     return(invisible())
   }
 
-  if (!is.data.frame(env$r_data[[new]]) & is.list(env$r_data[[new]])) {
-    env$r_data[["dtree_list"]] <- c(new, env$r_data[["dtree_list"]]) %>% unique()
+  if (!is.data.frame(env[[new]]) & is.list(env[[new]])) {
+    env$dtree_list <- c(new, env$dtree_list) %>% unique()
+    # print("dtree?")
+    # print(new)
+    # print(env$dtree_list)
+    # toReactive("dtree_list")
   } else {
+
+    # print("data.frame?")
+    # print(new)
+    # print(env[[new]])
+    # print(env$datasetlist)
+
     ## use data description from the original if available
     if (!is_empty(descr)) {
-      env$r_data[[paste0(new, "_descr")]] <- descr
-    } else if (is_empty(env$r_data[[paste0(new, "_descr")]]) && !is_empty(org)) {
-      env$r_data[[paste0(new, "_descr")]] <- env$r_data[[paste0(org, "_descr")]]
+      env[[paste0(new, "_descr")]] <- descr
+    } else if (is_empty(env[[paste0(new, "_descr")]]) && !is_empty(org)) {
+      env[[paste0(new, "_descr")]] <- env[[paste0(org, "_descr")]]
     } else {
-      env$r_data[[paste0(new, "_descr")]] <- attr(env$r_data[[new]], "description")
+      env[[paste0(new, "_descr")]] <- attr(env[[new]], "description")
     }
 
-    env$r_data[["datasetlist"]] <- c(new, env$r_data[["datasetlist"]]) %>% unique()
+    env[["datasetlist"]] <- c(new, env[["datasetlist"]]) %>% unique()
+    # toReactive("datasetlist")
+    # toReactive(new)
+    shiny::makeReactiveBinding(new, env = env)
+    # toReactive(paste0(new, "_descr"))
   }
+  invisible()
 }

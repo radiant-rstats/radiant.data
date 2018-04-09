@@ -5,14 +5,24 @@
 ## drop NULLs in list
 toList <- function(x) reactiveValuesToList(x) %>% .[!sapply(., is.null)]
 
+## from https://gist.github.com/hadley/5434786
+env2list <- function(x) mget(ls(x), x)
+
+## make a reactive object in the specified environment
+toReactive <- function(x, env = r_data) makeReactiveBinding(x, env = env)
+
 saveSession <- function(session = session) {
   if (!exists("r_sessions")) return()
 
   LiveInputs <- toList(input)
   r_state[names(LiveInputs)] <- LiveInputs
 
+  # print(class(r_data))
+
   r_sessions[[r_ssuid]] <- list(
-    r_data = toList(r_data),
+    # r_data = toList(r_data),
+    r_data = r_data,
+    # r_data = env2list(r_data),
     r_state = r_state,
     timestamp = Sys.time()
   )
@@ -647,7 +657,7 @@ inclRmd <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = "\n") %>%
     knitr::knit2html(
       text = ., fragment.only = TRUE, quiet = TRUE,
-      envir = knitr_environment, options = "", stylesheet = ""
+      envir = r_data, options = "", stylesheet = ""
       # envir = r_environment, options = "", stylesheet = ""
     ) %>%
     HTML() %>%

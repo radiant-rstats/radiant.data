@@ -14,7 +14,9 @@ stop_radiant <- function() {
       r_state[names(LiveInputs)] <- LiveInputs
       r_state$nav_radiant <- r_data$nav_radiant
       assign("r_state", r_state, envir = .GlobalEnv)
-      assign("r_data", toList(r_data), envir = .GlobalEnv)
+      # assign("r_data", toList(r_data), envir = .GlobalEnv)
+      # assign("r_data", env2list(r_data), envir = .GlobalEnv)
+      assign("r_data", r_data, envir = .GlobalEnv)
 
       ## removing r_sessions and functions defined in global.R
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
