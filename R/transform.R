@@ -360,7 +360,7 @@ xtile <- function(x, n = 5, rev = FALSE) {
 
   breaks <- quantile(x, prob = seq(0, 1, length = n + 1), type = 2)
   if (length(breaks) < 2) stop(paste("Insufficient variation in x to construct", n, "breaks"), call. = FALSE)
-  .bincode(x, breaks, include.lowest = TRUE) %>% 
+  .bincode(x, breaks, include.lowest = TRUE) %>%
     {if (rev) as.integer((n + 1) - .) else .}
 }
 
@@ -464,14 +464,14 @@ getsummary <- function(dat, dc = getclass(dat)) {
 
   if (sum(isDate) > 0) {
     cat("Earliest dates:\n")
-    select(dat, which(isDate)) %>% 
-      summarise_all(funs(min)) %>% 
-      as.data.frame(stringsAsFactors = FALSE) %>% 
+    select(dat, which(isDate)) %>%
+      summarise_all(funs(min)) %>%
+      as.data.frame(stringsAsFactors = FALSE) %>%
       print(row.names = FALSE)
     cat("\nFinal dates:\n")
-    select(dat, which(isDate)) %>% 
-      summarise_all(funs(max)) %>% 
-      as.data.frame(stringsAsFactors = FALSE) %>% 
+    select(dat, which(isDate)) %>%
+      summarise_all(funs(max)) %>%
+      as.data.frame(stringsAsFactors = FALSE) %>%
       print(row.names = FALSE)
 
     cat("\n")
@@ -482,14 +482,14 @@ getsummary <- function(dat, dc = getclass(dat)) {
     min_time <- function(x) sort(x) %>% head(1)
 
     cat("Earliest time:\n")
-    select(dat, which(isPeriod)) %>% 
-      summarise_all(funs(min_time)) %>% 
-      as.data.frame(stringsAsFactors = FALSE) %>% 
+    select(dat, which(isPeriod)) %>%
+      summarise_all(funs(min_time)) %>%
+      as.data.frame(stringsAsFactors = FALSE) %>%
       print(row.names = FALSE)
     cat("\nFinal time:\n")
-    select(dat, which(isPeriod)) %>% 
-      summarise_all(funs(max_time)) %>% 
-      as.data.frame(stringsAsFactors = FALSE) %>% 
+    select(dat, which(isPeriod)) %>%
+      summarise_all(funs(max_time)) %>%
+      as.data.frame(stringsAsFactors = FALSE) %>%
       print(row.names = FALSE)
     cat("\n")
   }
@@ -603,7 +603,7 @@ month <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
 #'
 #' @importFrom lubridate wday
 #'
-#' @seealso See the \code{\link[lubridate]{wday}} function in the lubridate package for additional details
+#' @seealso See the \code{\link[lubridate:day]{lubridate::wday()}} function in the lubridate package for additional details
 #'
 #' @export
 wday <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
