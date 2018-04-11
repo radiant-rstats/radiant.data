@@ -4,8 +4,7 @@
 \alias{parse_path}
 \title{Parse path into useful components (used by read_files function)}
 \usage{
-parse_path(path, chr = "\\"", pdir = getOption("radiant.project_dir",
-  default = rstudioapi::getActiveProject()))
+parse_path(path, chr = "\\"", pdir = getOption("radiant.project_dir", ""))
 }
 \arguments{
 \item{path}{Path to be parsed}

@@ -1510,13 +1510,20 @@ fixMS <- function(text, all = FALSE) {
 #' @export
 parse_path <- function(
   path, chr = "\"",
-  pdir = getOption("radiant.project_dir", default = rstudioapi::getActiveProject())
+  pdir = getOption("radiant.project_dir", "")
 ) {
 
   if (is(path, "try-error") || is_empty(path)) {
     return(
       list(path = "", rpath = "", base = "", base_name = "", ext = "", content = "")
     )
+  }
+
+  if (is_empty(pdir)) {
+    pdir <- try(rstudioapi::getActiveProject(), silent = TRUE)
+    if (is(pdir, "try-error") || is_empty(pdir)) {
+      pdir <- getwd()
+    }
   }
 
   path <- normalizePath(path[1], winslash = "/")
@@ -1527,18 +1534,36 @@ parse_path <- function(
   objname <- sub(paste0("\\.", fext, "$"), "", filename, ignore.case = TRUE)
   fext <- tolower(fext)
 
-  dbdir <- getOption("radiant.dropbox_dir", default = radiant.data::find_dropbox())
-  gddir <- getOption("radiant.gdrive_dir", default = radiant.data::find_gdrive())
-
   if (!is_empty(pdir) && grepl(paste0("^", pdir), path)) {
     rpath <- paste0(chr, sub(paste0("^", pdir, "/"), "", path), chr)
-  } else if (!is_empty(dbdir) && grepl(paste0("^", dbdir), path)) {
-    rpath <- paste0("file.path(find_dropbox(), ", chr, sub(paste0("^", dbdir), "", path), chr, ")")
-  } else if (!is_empty(gddir) && grepl(paste("^", gddir), path)) {
-    rpath <- paste0("file.path(find_gdrive(), ", chr, sub(paste0("^", gddir), "", path), chr, ")")
   } else {
-    rpath <- paste0(chr, path, chr)
-  }
+    dbdir <- getOption("radiant.dropbox_dir", "")
+    if (is_empty(dbdir)) {
+      dbdir <- try(radiant.data::find_dropbox(), silent = TRUE) 
+      if (is(dbdir, "try-error")) {
+        message("Not able to determine the location of a local the Dropbox folder")
+        dbdir <- ""
+      }
+    }
+
+    if (!is_empty(dbdir) && grepl(paste0("^", dbdir), path)) {
+      rpath <- paste0("file.path(radiant.data::find_dropbox(), ", chr, sub(paste0("^", dbdir), "", path), chr, ")")
+    } else {
+      gddir <- getOption("radiant.gdrive_dir", "")
+      if (is_empty(gddir)) {
+        gddir <- try(radiant.data::find_gdrive(), silent = TRUE) 
+        if (is(gddir, "try-error")) {
+          message("Not able to determine the location of a local Google Drive folder")
+          gddir <- ""
+        }
+      }
+      if (!is_empty(gddir) && grepl(paste0("^", gddir), path)) {
+        rpath <- paste0("file.path(radiant.data::find_gdrive(), ", chr, sub(paste0("^", gddir), "", path), chr, ")")
+      } else {
+        rpath <- paste0(chr, path, chr)
+      }
+    }
+  }   
 
   list(path = path, rpath = rpath, filename = filename, fext = fext, objname = objname)
 }
@@ -1554,7 +1579,7 @@ parse_path <- function(
 #' @importFrom rstudioapi selectFile isAvailable
 #'
 #' @export
-read_files <- function(path, type = "rmd", to = "", clipboard = TRUE, radiant = FALSE) {
+read_files <- function(path, type = "r", to = "", clipboard = TRUE, radiant = FALSE) {
 
   ## if no path is provided, an interactive file browser will be opened
   if (missing(path) || is_empty(path)) {

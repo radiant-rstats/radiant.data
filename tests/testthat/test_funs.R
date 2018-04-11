@@ -87,8 +87,8 @@ test_that("filterdata factor", {
 ## manual testing of read_files to avoid adding numerous dataset to package
 # files <- list.files("tests/testthat/data", full.names = TRUE)
 # for (f in files) {
+#   radiant.data::read_files(f, type = "rmd", clipboard = FALSE)
 #   radiant.data::read_files(f, clipboard = FALSE)
-#   radiant.data::read_files(f, type = "r", clipboard = FALSE)
 # }
 
 ## load code into clipboard
