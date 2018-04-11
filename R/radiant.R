@@ -1579,7 +1579,7 @@ parse_path <- function(
 #' @importFrom rstudioapi selectFile isAvailable
 #'
 #' @export
-read_files <- function(path, type = "r", to = "", clipboard = TRUE, radiant = FALSE) {
+read_files <- function(path, type = "rmd", to = "", clipboard = TRUE, radiant = FALSE) {
 
   ## if no path is provided, an interactive file browser will be opened
   if (missing(path) || is_empty(path)) {
