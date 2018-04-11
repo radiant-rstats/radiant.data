@@ -18,3 +18,14 @@ Error message:
 Error in sendWSMessage(.handle, FALSE, as.character(message)): Expecting an external pointer: [type=character].
 
 
+bindingIsActive(as.symbol("diamonds"), env = r_data)
+diamonds
+
+## `loadr` puts data in an r_data list by default (see ?radiant.data::loadr for help)
+load("data/superheroes.rda")
+bindingIsActive(as.symbol("superheroes"), env = r_data)
+makeReactiveBinding("superheroes", env = r_data)
+bindingIsActive(as.symbol("superheroes"), env = r_data)
+
+Check out `modelr` for things like adding residuals. Does it cover things like `indexr` in radiant.model?
+
