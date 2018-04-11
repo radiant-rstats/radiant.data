@@ -705,19 +705,12 @@ viewdata <- function(dataset,
 #' dtab(mtcars)
 #'
 #' @export
-dtab.data.frame <- function(object,
-                            vars = "",
-                            filt = "",
-                            rows = NULL,
-                            nr = NULL,
-                            na.rm = FALSE,
-                            dec = 3,
-                            filter = "top",
-                            pageLength = 10,
-                            dom = "",
-                            style = "bootstrap",
-                            rownames = FALSE,
-                            ...) {
+dtab.data.frame <- function(
+  object, vars = "", filt = "", rows = NULL,
+  nr = NULL, na.rm = FALSE, dec = 3, filter = "top",
+  pageLength = 10, dom = "", style = "bootstrap",
+  rownames = FALSE, ...
+) {
 
   dat <- getdata(object, vars, filt = filt, rows = rows, na.rm = na.rm)
   if (!is_empty(nr)) {
