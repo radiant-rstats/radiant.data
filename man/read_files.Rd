@@ -4,7 +4,8 @@
 \alias{read_files}
 \title{Return code to read file at specified path. Will open a file browser of no path is provided}
 \usage{
-read_files(path, type = "r", to = "", clipboard = TRUE, radiant = FALSE)
+read_files(path, type = "rmd", to = "", clipboard = TRUE,
+  radiant = FALSE)
 }
 \arguments{
 \item{path}{Path to file. If empty, a file browser will be opened}
