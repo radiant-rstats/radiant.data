@@ -7,7 +7,7 @@
 indexr(dataset, vars = "", filt = "", cmd = "")
 }
 \arguments{
-\item{dataset}{Dataset name}
+\item{dataset}{Dataset}
 
 \item{vars}{Variables to select}
 

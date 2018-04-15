@@ -2,11 +2,13 @@
 % Please edit documentation in R/pivotr.R
 \name{store.pivotr}
 \alias{store.pivotr}
-\title{Store method for the pivort function}
+\title{Deprecated: Store method for the pivotr function}
 \usage{
-\method{store}{pivotr}(object, name, ...)
+\method{store}{pivotr}(dataset, object, name, ...)
 }
 \arguments{
+\item{dataset}{Dataset}
+
 \item{object}{Return value from \code{\link{pivotr}}}
 
 \item{name}{Name to assign to the dataset}
@@ -14,10 +16,10 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Store method for the pivort function
+Deprecated: Store method for the pivotr function
 }
 \details{
-Add the summarized data to the r_data list in Radiant or return it. See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
+Return the summarized data. See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 }
 \seealso{
 \code{\link{pivotr}} to generate summaries

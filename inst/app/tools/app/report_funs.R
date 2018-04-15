@@ -240,7 +240,7 @@ observeEvent(input$rmd_clean, {
   report <- gsub("r_data\\[\\[\"([^\"]+)\"\\]\\]", "\\1", input$rmd_edit) %>%
     gsub("dataset\\s*=\\s*\"([^\"]+)\",", "\\1,", .) %>%
     gsub("(combinedata\\(\\s*x\\s*=\\s*)\"([^\"]+)\",(\\s*y\\s*=\\s*)\"([^\"]+)\",", "\\1\\2,\\3\\4,", .) %>%
-    gsub("(combinedata\\(.*),\\s*name\\s*=\\s*\"([^\"]+)\"", "\\2 <- \\1", .)
+    gsub("(combinedata\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .)
   shinyAce::updateAceEditor(
     session, "rmd_edit",
     value = fixMS(report)
@@ -256,7 +256,7 @@ knit_it <- function(report, type = "rmd") {
   }
 
   if (
-    grepl("\\s*r_data\\[\\[\".*\"\\]\\]", report) || 
+    grepl("\\s*r_data\\[\\[\".*\"\\]\\]", report) ||
     grepl("\\s+dataset\\s*=\\s*\".*\",", report)  ||
     grepl("combinedata\\(\\s*x\\s*=\\s*\"[^\"]+\"", report)
   ) {
@@ -264,7 +264,7 @@ knit_it <- function(report, type = "rmd") {
       modalDialog(
         title = "The use of r_data[[...]] is deprecated",
         span(
-          "The use of r_data[[...]]] and dataset = \"...\" in your report is deprecated. Click 
+          "The use of r_data[[...]]] and dataset = \"...\" in your report is deprecated. Click
            the 'Clean report' button to remove references that are no longer needed."
         ),
         footer = tagList(
@@ -631,8 +631,8 @@ report_save_content <- function(file, type = "rmd") {
 update_report <- function(
   inp_main = "", fun_name = "", inp_out = list("", ""),
   cmd = "", pre_cmd = "result <- ", post_cmd = "",
-  xcmd = "", outputs = c("summary", "plot"), wrap,
-  figs = TRUE, fig.width = 7, fig.height = 7
+  xcmd = "", outputs = c("summary", "plot"), inp = "result", 
+  wrap, figs = TRUE, fig.width = 7, fig.height = 7
 ) {
 
   ## determine number of characters for main command for wrapping
@@ -643,7 +643,6 @@ update_report <- function(
         sum(nchar(names(inp_main))) +
         length(inp_main) * 5 - 1
     }
-    print(lng)
     wrap <- ifelse(lng > 70, TRUE, FALSE)
   }
 
@@ -686,10 +685,13 @@ update_report <- function(
   lout <- length(outputs)
   if (lout > 0) {
     for (i in 1:lout) {
-      inp <- "result"
-      if ("result" %in% names(inp_out[[i]])) {
-        inp <- inp_out[[i]]["result"]
-        inp_out[[i]]["result"] <- NULL
+      # inp <- "result"
+      # if ("result" %in% names(inp_out[[i]])) {
+      if (inp %in% names(inp_out[[i]])) {
+        # inp <- inp_out[[i]]["result"]
+        inp <- inp_out[[i]][inp]
+        # inp_out[[i]]["result"] <- NULL
+        inp_out[[i]][inp] <- NULL
       }
       if (inp_out[i] != "" && length(inp_out[[i]]) > 0) {
         if (sum(nchar(inp_out[[i]])) > 40L) {

@@ -4,9 +4,11 @@
 \alias{store.character}
 \title{Method for error messages that a user tries to store}
 \usage{
-\method{store}{character}(object, ...)
+\method{store}{character}(dataset = NULL, object, ...)
 }
 \arguments{
+\item{dataset}{Dataset}
+
 \item{object}{Object of type character}
 
 \item{...}{Additional arguments}

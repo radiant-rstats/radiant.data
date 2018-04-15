@@ -20,7 +20,8 @@
 #'
 #' @export
 combinedata <- function(
-  x, y, by = "", add = "", type = "inner_join",
+  x, y, by = "", add = "", 
+  type = "inner_join", 
   data_filter = "", ...
 ) {
 

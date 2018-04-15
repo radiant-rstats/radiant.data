@@ -27,11 +27,11 @@ Summary method for pivotr
 See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 }
 \examples{
-pivotr("diamonds", cvars = "cut") \%>\% summary(chi2 = TRUE)
-pivotr("diamonds", cvars = "cut", tabsort = "-n") \%>\% summary
-pivotr("diamonds", cvars = "cut", tabsort = "desc(n)") \%>\% summary
-pivotr("diamonds", cvars = "cut", tabfilt = "n > 700") \%>\% summary
-pivotr("diamonds", cvars = "cut:clarity", nvar = "price") \%>\% summary
+pivotr(diamonds, cvars = "cut") \%>\% summary(chi2 = TRUE)
+pivotr(diamonds, cvars = "cut", tabsort = "-n") \%>\% summary
+pivotr(diamonds, cvars = "cut", tabsort = "desc(n)") \%>\% summary
+pivotr(diamonds, cvars = "cut", tabfilt = "n > 700") \%>\% summary
+pivotr(diamonds, cvars = "cut:clarity", nvar = "price") \%>\% summary
 
 }
 \seealso{

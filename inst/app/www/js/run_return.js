@@ -40,13 +40,13 @@ $(document).keydown(function(event) {
   // focusing in text (area) inputs
   if ($("#data_rename").is(":focus") && event.keyCode == 13) {
     $("#renameButton").click();
-  } else if ($("#view_dat").is(":focus") && event.keyCode == 13) {
+  } else if ($("#view_name").is(":focus") && event.keyCode == 13) {
     $("#view_store").click();
-  } else if ($("#pvt_dat").is(":focus") && event.keyCode == 13) {
+  } else if ($("#pvt_name").is(":focus") && event.keyCode == 13) {
     $("#pvt_store").click();
-  } else if ($("#expl_dat").is(":focus") && event.keyCode == 13) {
+  } else if ($("#expl_name").is(":focus") && event.keyCode == 13) {
     $("#expl_store").click();
-  } else if ($("#tr_dataset").is(":focus") && event.keyCode == 13) {
+  } else if ($("#tr_name").is(":focus") && event.keyCode == 13) {
     $("#tr_store").click();
   } else if ($("#cmb_name").is(":focus") && event.keyCode == 13) {
     $("#cmb_store").click();

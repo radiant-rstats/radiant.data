@@ -16,6 +16,6 @@ Hide warnings and messages and return invisible
 Adapted from \url{http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
 }
 \examples{
-sshh( library(dplyr) )
+sshh(library(dplyr))
 
 }

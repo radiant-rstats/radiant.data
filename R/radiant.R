@@ -170,7 +170,7 @@ sig_stars <- function(pval) {
 #' @param ... Inputs to keep quite
 #'
 #' @examples
-#' sshh( library(dplyr) )
+#' sshh(library(dplyr))
 #'
 #' @export
 sshh <- function(...) {
@@ -185,7 +185,7 @@ sshh <- function(...) {
 #' @param ... Inputs to keep quite
 #'
 #' @examples
-#' sshhr( library(dplyr) )
+#' sshhr(library(dplyr))
 #'
 #' @export
 sshhr <- function(...) suppressWarnings(suppressMessages(...))
@@ -223,8 +223,8 @@ filterdata <- function(dat, filt = "", drop = TRUE) {
 
 #' Get data for analysis functions
 #'
-#' @param dataset Name of the dataframe
-#' @param vars Variables to extract from the dataframe
+#' @param dataset Dataset or name of the data.frame
+#' @param vars Variables to extract from the data.frame
 #' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
 #' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
 #' @param na.rm Remove rows with missing values (default is TRUE)
@@ -232,11 +232,10 @@ filterdata <- function(dat, filt = "", drop = TRUE) {
 #' @return Data.frame with specified columns and rows
 #'
 #' @export
-getdata <- function(dataset,
-                    vars = "",
-                    filt = "",
-                    rows = NULL,
-                    na.rm = TRUE) {
+getdata <- function(
+  dataset, vars = "", filt = "",
+  rows = NULL, na.rm = TRUE
+) {
 
   filt <- gsub("\\n", "", filt) %>%
     gsub("\"", "\'", .)
@@ -244,16 +243,17 @@ getdata <- function(dataset,
   ## extra {} around if (...) required to pass tests
   {if (!is_string(dataset)) {
     dataset
-  } else if (exists("r_environment") && !is.null(r_environment$r_data[[dataset]])) {
-    r_environment$r_data[[dataset]]
-  } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
-    if (isTRUE(getOption("radiant.local"))) message("Dataset ", dataset, " loaded from r_data list\n")
+  # } else if (exists("r_environment") && !is.null(r_environment$r_data[[dataset]])) {
+    # r_environment$r_data[[dataset]]
+  # } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
+  } else if (exists("r_environment") && exists("r_data") && !is.null(r_data[[dataset]])) {
+    # if (isTRUE(getOption("radiant.local"))) message("Dataset ", dataset, " loaded from r_data list\n")
     r_data[[dataset]]
-  } else if (exists(dataset)) {
-    d_env <- pryr::where(dataset)
-    d_env[[dataset]]
+  # } else if (exists(dataset)) {
+  #   d_env <- pryr::where(dataset)
+  #   d_env[[dataset]]
   } else {
-    paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
+    paste0("Dataset ", dataset, " is not available. Please load the dataset") %>%
       stop(call. = FALSE)
   }} %>%
     {if ("grouped_df" %in% class(.)) ungroup(.) else .} %>% ## ungroup data if needed
@@ -261,8 +261,6 @@ getdata <- function(dataset,
     {if (is.null(rows)) . else .[rows, , drop = FALSE]} %>%
     {if (is_empty(vars[1])) . else select(., !!! if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)} %>%
     {if (na.rm) na.omit(.) else .}
-  ## line below may cause an error https://github.com/hadley/dplyr/issues/219
-  # { if (na.rm) { if (anyNA(.)) na.omit(.) else . } else . }
 }
 
 #' Convert character to factors as needed
@@ -297,11 +295,12 @@ factorizer <- function(dat, safx = 30) {
 #' @param file File name and path as a string. Extension must be either rds, rda, or csv
 #' @param objname Name to use for the data frame. Defaults to the file name
 #' @param rlist If TRUE, uses "r_data" list to store the data.frame. If FALSE, loads data.frame into calling environment
+#' @param env Environment where object(s) should be assigned 
 #'
 #' @return Data frame in r_data or in the calling enviroment
 #'
 #' @export
-loadr <- function(file, objname = "", rlist = TRUE) {
+loadr <- function(file, objname = "", rlist = TRUE, env = parent.frame()) {
   filename <- basename(file)
   ext <- tolower(tools::file_ext(filename))
   if (!ext %in% c("rds", "rda", "csv", "rdata")) {
@@ -325,31 +324,39 @@ loadr <- function(file, objname = "", rlist = TRUE) {
     stop("File must have extension rds, rda, rdata, csv, or tsv")
   }
 
-  shiny <- exists("r_environment")
+  # shiny <- exists("r_environment")
 
-  if (!shiny) {
-    if (rlist) {
-      if (!exists("r_data")) {
-        assign("r_data", list(), envir = parent.frame())
-      }
+  # if (!shiny) {
+  #   if (rlist) {
+  #     if (!exists("r_data")) {
+  #       assign("r_data", list(), envir = parent.frame())
+  #     }
 
-      env <- pryr::where("r_data")
-    } else {
-      assign(objname, loadfun(file), envir = parent.frame())
-      return(invisible())
-    }
-  } else {
-    env <- r_environment
+  #     env <- pryr::where("r_data")
+  #   } else {
+  #     assign(objname, loadfun(file), envir = parent.frame())
+  #     return(invisible())
+  #   }
+  # } else {
+  #   env <- r_environment
+  # }
+
+  assign(objname, loadfun(file), envir = env)
+
+  # env$r_data[[objname]] <- loadfun(file)
+
+  # if (shiny) {
+  #   env$r_data[[paste0(objname, "_descr")]] <- attr(env$r_data[[objname]], "description")
+  #   env$r_data[["datasetlist"]] <- c(objname, env$r_data[["datasetlist"]]) %>% unique()
+  # }
+
+  if (exists("r_environment")) {
+    shiny::makeReactiveBinding(objname, env = r_data)
+    env[[paste0(objname, "_descr")]] <- attr(env[[objname]], "description")
+    env[["datasetlist"]] <- c(objname, env[["datasetlist"]]) %>% unique()
   }
 
-  env$r_data[[objname]] <- loadfun(file)
-
-  if (shiny) {
-    env$r_data[[paste0(objname, "_descr")]] <- attr(env$r_data[[objname]], "description")
-    env$r_data[["datasetlist"]] <- c(objname, env$r_data[["datasetlist"]]) %>% unique()
-  }
-
-  return(invisible())
+  return(invisible(objname))
 }
 
 #' Save data.frame as an rda or rds file from Radiant
@@ -369,7 +376,8 @@ saver <- function(objname, file) {
     dat <- objname
     objname <- deparse(substitute(objname))
   } else {
-    dat <- getdata(objname)
+    # dat <- getdata(objname)
+    dat <- get(objname)
   }
 
   if (ext == "rds") {
@@ -453,9 +461,7 @@ loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", n_max = In
 
     if (saf) dat <- factorizer(dat, safx)
 
-    dat %>% {
-      set_colnames(., make.names(colnames(.)))
-    }
+    dat %>% {set_colnames(., make.names(colnames(.)))}
   }
 }
 
@@ -563,39 +569,28 @@ choose_dir <- function(...) {
   }
 }
 
-#' Change data
-#'
-#' @param dataset Name of the dataframe to change
-#' @param vars New variables to add to the data.frame
-#' @param var_names Names for the new variables to add to the data.frame
-#'
-#' @return None
-#'
-#' @export
-changedata <- function(dataset,
-                       vars = c(),
-                       var_names = names(vars)) {
+# changedata <- function(dataset, vars = c(), var_names = names(vars)) {
 
-  if (!is.character(dataset)) {
-    dataset[, var_names] <- vars
-    return(dataset)
-  } else if (exists("r_environment")) {
-    message("Dataset ", dataset, " changed in r_environment\n")
-    r_environment$r_data[[dataset]][, var_names] <- vars
-  } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
-    if (isTRUE(getOption("radiant.local"))) message("Dataset ", dataset, " loaded from r_data list\n")
-    d_env <- pryr::where("r_data")
-    d_env$r_data[[dataset]][, var_names] <- vars
-  } else if (exists(dataset)) {
-    d_env <- pryr::where(dataset)
-    message("Dataset ", dataset, " changed in ", environmentName(d_env), " environment\n")
-    d_env[[dataset]][, var_names] <- vars
-  } else {
-    paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
-      stop() %>%
-      return()
-  }
-}
+#   if (!is.character(dataset)) {
+#     dataset[, var_names] <- vars
+#     return(dataset)
+#   } else if (exists("r_environment")) {
+#     message("Dataset ", dataset, " changed in r_environment\n")
+#     r_environment$r_data[[dataset]][, var_names] <- vars
+#   } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
+#     if (isTRUE(getOption("radiant.local"))) message("Dataset ", dataset, " loaded from r_data list\n")
+#     d_env <- pryr::where("r_data")
+#     d_env$r_data[[dataset]][, var_names] <- vars
+#   } else if (exists(dataset)) {
+#     d_env <- pryr::where(dataset)
+#     message("Dataset ", dataset, " changed in ", environmentName(d_env), " environment\n")
+#     d_env[[dataset]][, var_names] <- vars
+#   } else {
+#     paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
+#       stop() %>%
+#       return()
+#   }
+# }
 
 #' View data in a shiny-app
 #'
@@ -611,17 +606,14 @@ changedata <- function(dataset,
 #' @examples
 #' if (interactive()) {
 #' viewdata(mtcars)
-#' viewdata("mtcars")
-#' mtcars %>% viewdata
+#' mtcars %>% viewdata()
 #' }
 #'
 #' @export
-viewdata <- function(dataset,
-                     vars = "",
-                     filt = "",
-                     rows = NULL,
-                     na.rm = FALSE,
-                     dec = 3) {
+viewdata <- function(
+  dataset, vars = "", filt = "",
+  rows = NULL, na.rm = FALSE, dec = 3
+) {
 
   ## based on http://rstudio.github.io/DT/server.html
   dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = na.rm)
@@ -781,7 +773,7 @@ dtab.data.frame <- function(
 #' @param ... Arguments to pass on to dtab.data.frame
 #'
 #' @examples
-#' dtab("mtcars")
+#' dtab(mtcars)
 #'
 #' @export
 dtab.character <- function(...) dtab.data.frame(...)
@@ -1222,9 +1214,11 @@ find_project <- function(mess = TRUE) {
 #' @examples
 #' which.pmax(1:10, 10:1)
 #' which.pmax(2, 10:1)
+#' which.pmax(mtcars)
 #'
 #' @export
-which.pmax <- function(...) as.integer(unname(unlist(apply(cbind(...), 1, which.max))))
+which.pmax <- function(...) unname(apply(cbind(...), 1, which.max))
+# which.pmax <- function(...) as.integer(unname(unlist(apply(cbind(...), 1, which.max)))
 
 #' Returns the index of the (parallel) minima of the input values
 #'
@@ -1235,61 +1229,83 @@ which.pmax <- function(...) as.integer(unname(unlist(apply(cbind(...), 1, which.
 #' @examples
 #' which.pmin(1:10, 10:1)
 #' which.pmin(2, 10:1)
+#' which.pmin(mtcars)
 #'
 #' @export
 which.pmin <- function(...) unname(apply(cbind(...), 1, which.min))
 
 #' Method to store variables in a dataset in Radiant
 #'
-#' @param object Object of relevant class that has required information to store
+#' @param dataset Dataset
+#' @param object Object of relevant class that has information to be stored
 #' @param ... Additional arguments
 #'
 #' @export
-store <- function(object, ...) UseMethod("store", object)
+store <- function(dataset, object = "deprecated", ...) {
+  UseMethod("store", object)
+}
 
 #' Method for error messages that a user tries to store
 #'
+#' @param dataset Dataset
 #' @param object Object of type character
 #' @param ... Additional arguments
 #'
 #' @export
-store.character <- function(object, ...) {
-  mess <- paste0("Unable to store output. The returned message was:\n\n", object)
-  if (exists("r_environment")) {
-    ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
-    showModal(
-      modalDialog(
-        title = "Data not stored",
-        span(HTML(gsub("\n", "</br>", mess))),
-        footer = modalButton("OK"),
-        size = "s",
-        easyClose = TRUE
-      )
+store.character <- function(dataset = NULL, object, ...) {
+  if ("pivotr" %in% class(dataset)) {
+    store.pivotr(dataset = NULL, object = dataset, ...)
+  } else if ("explore" %in% class(dataset)) {
+    store.pivotr(dataset = NULL, object = dataset, ...)
+  } else if ("crs" %in% class(dataset)) {
+    ## using get("...") to avoid 'undefined' global function warnings
+    get("store.crs")(dataset = NULL, object = dataset, ...)
+  } else if ("model" %in% class(dataset)) {
+    stop(
+      paste0(
+        "This usage of the store function is now deprecated.\nUse the code below instead:\n\n", 
+        dataset$df_name, " <- store(", dataset$df_name, ", ", deparse(substitute(dataset)), ", name = \"", list(...)[["name"]], "\")" 
+      ),
+      call. = FALSE
     )
   } else {
-    message(mess)
+    mess <- paste0("Unable to store output. The returned message was:\n\n", object)
+    if (exists("r_environment")) {
+      ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+      showModal(
+        modalDialog(
+          title = "Data not stored",
+          span(HTML(gsub("\n", "</br>", mess))),
+          footer = modalButton("OK"),
+          size = "s",
+          easyClose = TRUE
+        )
+      )
+    } else {
+      message(mess)
+    }
   }
 }
 
 #' Find index corrected for missing values and filters
 #'
-#' @param dataset Dataset name
+#' @param dataset Dataset
 #' @param vars Variables to select
 #' @param filt Data filter
 #' @param cmd A command used to customize the data
 #'
 #' @export
 indexr <- function(dataset, vars = "", filt = "", cmd = "") {
-  dat <- getdata(dataset, na.rm = FALSE)
-  if (is_empty(vars) || sum(vars %in% colnames(dat)) != length(vars)) {
-    vars <- colnames(dat)
+  if (is_empty(vars) || sum(vars %in% colnames(dataset)) != length(vars)) {
+    vars <- colnames(dataset)
   }
-  nrows <- nrow(dat)
+  nrows <- nrow(dataset)
 
   ## customizing data if a command was used
   if (!is_empty(cmd)) {
     pred_cmd <- gsub("\"", "\'", cmd) %>%
       gsub("\\s+", "", .)
+    # cmd_vars <- strsplit(pred_cmd, c(",", ";", "\\s+")[[1]] %>%
     cmd_vars <- strsplit(pred_cmd, ";")[[1]] %>%
       strsplit(., "=") %>%
       sapply("[", 1) %>%
@@ -1298,10 +1314,10 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
     dots <- rlang::parse_exprs(pred_cmd) %>%
       set_names(cmd_vars)
 
-    dat <- try(dat %>% mutate(!!! dots), silent = TRUE)
+    dataset <- try(dataset %>% mutate(!!! dots), silent = TRUE)
   }
 
-  ind <- mutate(dat, imf___ = 1:nrows) %>%
+  ind <- mutate(dataset, imf___ = 1:nrows) %>%
     {if (filt == "") . else filterdata(., filt)} %>%
     select_at(.vars = unique(c("imf___", vars))) %>%
     na.omit() %>%
@@ -1416,18 +1432,24 @@ dtab <- function(object, ...) UseMethod("dtab", object)
 
 #' Show dataset desription, if available, in html form in Rstudio viewer or default browser
 #'
-#' @param name Dataset name or a dataframe
+#' @param dataset Dataset 
 #'
 #' @importFrom utils browseURL str
 #' @importFrom knitr knit2html
 #'
 #' @export
-describe <- function(name) {
-  dat <- if (is.character(name)) getdata(name) else name
+describe <- function(dataset) {
 
-  description <- attr(dat, "description")
+  dataset <- if (is.character(dataset)) {
+    message(paste0("Using describe(\"", dataset, "\") is deprecated.\nUse desribe(", dataset, ") instead"))
+    getdata(dataset) 
+  } else {
+    dataset
+  }
+
+  description <- attr(dataset, "description")
   if (is_empty(description)) {
-    return(str(dat))
+    return(str(dataset))
   }
 
   owd <- setwd(tempdir())

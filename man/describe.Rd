@@ -4,10 +4,10 @@
 \alias{describe}
 \title{Show dataset desription, if available, in html form in Rstudio viewer or default browser}
 \usage{
-describe(name)
+describe(dataset)
 }
 \arguments{
-\item{name}{Dataset name or a dataframe}
+\item{dataset}{Dataset}
 }
 \description{
 Show dataset desription, if available, in html form in Rstudio viewer or default browser

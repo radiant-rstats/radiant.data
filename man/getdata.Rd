@@ -7,9 +7,9 @@
 getdata(dataset, vars = "", filt = "", rows = NULL, na.rm = TRUE)
 }
 \arguments{
-\item{dataset}{Name of the dataframe}
+\item{dataset}{Dataset or name of the data.frame}
 
-\item{vars}{Variables to extract from the dataframe}
+\item{vars}{Variables to extract from the data.frame}
 
 \item{filt}{Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")}
 

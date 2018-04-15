@@ -288,9 +288,8 @@ as_distance <- function(
 #'
 #' @export
 make_train <- function(n = .7, nr = 100, seed = 1234) {
-  seed %>% gsub("[^0-9]", "", .) %>% {
-    if (!is_empty(.)) set.seed(seed)
-  }
+  seed %>% gsub("[^0-9]", "", .) %>% 
+    {if (!is_empty(.)) set.seed(seed)}
   if (n < 1) n <- round(n * nr) %>% max(1)
   ind <- seq_len(nr)
   training <- rep_len(0L, nr)
@@ -329,8 +328,7 @@ mutate_ext <- function(.tbl, .funs, ..., .ext = "", .vars = c()) {
       set_rownames(rownames(.tbl))
   } else {
     new <- gsub("^~", "", .vars) %>% paste0(., .ext)
-    .tbl[, new] <-
-      transmute_at(.tbl, .vars = .vars, .funs = .funs) %>%
+    .tbl[, new] <- transmute_at(.tbl, .vars = .vars, .funs = .funs) %>%
       set_colnames(new)
     .tbl
   }

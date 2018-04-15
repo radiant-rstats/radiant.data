@@ -214,7 +214,7 @@ output$ui_tr_dataset <- renderUI({
     tr_dataset <- paste0(tr_dataset, "_expand")
   }
   tags$table(
-    tags$td(textInput("tr_dataset", "Store changes in:", tr_dataset)),
+    tags$td(textInput("tr_name", "Store changes in:", tr_dataset)),
     tags$td(actionButton("tr_store", "Store", icon = icon("plus"), class = "btn-success"), style = "padding-top:30px;")
   )
 })
@@ -1135,7 +1135,8 @@ observeEvent(input$tr_store, {
   if (min(dim(dat)) == 0) return()
 
   ## saving to a new dataset if specified
-  dataset <- input$tr_dataset
+  # dataset <- input$tr_name
+  dataset <- input$tr_name
   ncmd <- ""
   if (is.null(r_data[[dataset]])) {
     r_data[[dataset]] <- .getdata_transform()
@@ -1160,61 +1161,61 @@ observeEvent(input$tr_store, {
   }
 
   if (input$tr_change_type == "remove_na") {
-    cmd <- .remove_na(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
+    cmd <- .remove_na(input$dataset, vars = input$tr_vars, input$tr_name, nr_col = ncol(dat))
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == "remove_dup") {
-    cmd <- .remove_dup(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
+    cmd <- .remove_dup(input$dataset, vars = input$tr_vars, input$tr_name, nr_col = ncol(dat))
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == "show_dup") {
-    cmd <- .show_dup(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
+    cmd <- .show_dup(input$dataset, vars = input$tr_vars, input$tr_name, nr_col = ncol(dat))
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == "holdout") {
-    cmd <- .holdout(input$dataset, vars = input$tr_vars, filt = input$data_filter, rev = input$tr_holdout_rev, input$tr_dataset)
+    cmd <- .holdout(input$dataset, vars = input$tr_vars, filt = input$data_filter, rev = input$tr_holdout_rev, input$tr_name)
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == "tab2dat") {
-    cmd <- .tab2dat(input$dataset, input$tr_tab2dat, vars = input$tr_vars, input$tr_dataset)
+    cmd <- .tab2dat(input$dataset, input$tr_tab2dat, vars = input$tr_vars, input$tr_name)
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == "gather") {
-    cmd <- .gather(input$dataset, vars = input$tr_vars, key = input$tr_gather_key, value = input$tr_gather_value, input$tr_dataset)
+    cmd <- .gather(input$dataset, vars = input$tr_vars, key = input$tr_gather_key, value = input$tr_gather_value, input$tr_name)
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == "spread") {
-    cmd <- .spread(input$dataset, key = input$tr_spread_key, value = input$tr_spread_value, fill = input$tr_spread_fill, vars = input$tr_vars, input$tr_dataset)
+    cmd <- .spread(input$dataset, key = input$tr_spread_key, value = input$tr_spread_value, fill = input$tr_spread_fill, vars = input$tr_vars, input$tr_name)
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == "expand") {
-    cmd <- .expand(input$dataset, vars = input$tr_vars, input$tr_dataset)
+    cmd <- .expand(input$dataset, vars = input$tr_vars, input$tr_name)
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == "reorg_vars") {
-    cmd <- .reorg_vars(input$dataset, vars = input$tr_reorg_vars, input$tr_dataset)
+    cmd <- .reorg_vars(input$dataset, vars = input$tr_reorg_vars, input$tr_name)
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == "type") {
-    cmd <- .change_type(input$dataset, fun = input$tr_typefunction, vars = input$tr_vars, .ext = input$tr_typename, input$tr_dataset)
+    cmd <- .change_type(input$dataset, fun = input$tr_typefunction, vars = input$tr_vars, .ext = input$tr_typename, input$tr_name)
     r_data[[dataset]][, colnames(dat)] <- dat
   } else if (input$tr_change_type == "transform") {
-    cmd <- .transform(input$dataset, fun = input$tr_transfunction, vars = input$tr_vars, .ext = input$tr_ext, input$tr_dataset)
+    cmd <- .transform(input$dataset, fun = input$tr_transfunction, vars = input$tr_vars, .ext = input$tr_ext, input$tr_name)
     r_data[[dataset]][, colnames(dat)] <- dat
   } else if (input$tr_change_type == "training") {
-    cmd <- .training(input$dataset, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, seed = input$tr_training_seed, input$tr_dataset)
+    cmd <- .training(input$dataset, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, seed = input$tr_training_seed, input$tr_name)
     r_data[[dataset]][, colnames(dat)] <- dat
   } else if (input$tr_change_type == "normalize") {
-    cmd <- .normalize(input$dataset, vars = input$tr_vars, nzvar = input$tr_normalizer, .ext = input$tr_ext_nz, input$tr_dataset)
+    cmd <- .normalize(input$dataset, vars = input$tr_vars, nzvar = input$tr_normalizer, .ext = input$tr_ext_nz, input$tr_name)
     r_data[[dataset]][, colnames(dat)] <- dat
   } else if (input$tr_change_type == "bin") {
-    cmd <- .bin(input$dataset, vars = input$tr_vars, bins = input$tr_bin_n, rev = input$tr_bin_rev, .ext = input$tr_ext_bin, input$tr_dataset)
+    cmd <- .bin(input$dataset, vars = input$tr_vars, bins = input$tr_bin_n, rev = input$tr_bin_rev, .ext = input$tr_ext_bin, input$tr_name)
     r_data[[dataset]][, colnames(dat)] <- dat
   } else if (input$tr_change_type == "reorg_levs") {
-    cmd <- .reorg_levs(input$dataset, input$tr_vars[1], input$tr_reorg_levs, input$tr_rorepl, input$tr_roname, input$tr_dataset)
+    cmd <- .reorg_levs(input$dataset, input$tr_vars[1], input$tr_reorg_levs, input$tr_rorepl, input$tr_roname, input$tr_name)
     r_data[[dataset]][, colnames(dat)] <- dat
   } else if (input$tr_change_type == "recode") {
-    cmd <- .recode(input$dataset, input$tr_vars[1], input$tr_recode, input$tr_rcname, input$tr_dataset)
+    cmd <- .recode(input$dataset, input$tr_vars[1], input$tr_recode, input$tr_rcname, input$tr_name)
     r_data[[dataset]][, colnames(dat)] <- dat
   } else if (input$tr_change_type == "rename") {
-    cmd <- .rename(input$dataset, input$tr_vars, input$tr_rename, input$tr_dataset)
+    cmd <- .rename(input$dataset, input$tr_vars, input$tr_rename, input$tr_name)
     r_data[[dataset]] %<>% rename(!!! setNames(input$tr_vars, colnames(dat)))
   } else if (input$tr_change_type == "create") {
-    cmd <- .create(input$dataset, cmd = input$tr_create, byvar = input$tr_vars, input$tr_dataset)
+    cmd <- .create(input$dataset, cmd = input$tr_create, byvar = input$tr_vars, input$tr_name)
     r_data[[dataset]][, colnames(dat)] <- dat
   } else if (input$tr_change_type == "replace") {
-    cmd <- .replace(input$dataset, input$tr_vars, input$tr_replace, input$tr_dataset)
+    cmd <- .replace(input$dataset, input$tr_vars, input$tr_replace, input$tr_name)
     r_data[[dataset]][, colnames(dat)] <- dat
     r_data[[dataset]][, input$tr_replace] <- list(NULL)
   } else if (input$tr_change_type == "clip") {

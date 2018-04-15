@@ -18,5 +18,6 @@ Returns the index of the (parallel) minima of the input values
 \examples{
 which.pmin(1:10, 10:1)
 which.pmin(2, 10:1)
+which.pmin(mtcars)
 
 }

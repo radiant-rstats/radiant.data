@@ -255,7 +255,9 @@ observeEvent(input$expl_store, {
   name <- input$expl_name
   rows <- input$explore_rows_all
   dat$tab %<>% {if (is.null(rows)) . else .[rows, , drop = FALSE]}
-  store(dat, name)
+  # store(dat, name)
+  r_data[[name]] <- dat$tab
+  register(name)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
   ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
@@ -286,7 +288,6 @@ observeEvent(input$explore_report, {
   if (!is_empty(r_state$explore_state$length, 10)) {
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$explore_state$length)
   }
-  # xcmd <- paste0(xcmd, ") %>% render()\n# store(result, name = \"", input$expl_name, "\")")
   xcmd <- paste0(xcmd, ") %>% render()")
   if (!is_empty(input$expl_name)) {
     xcmd <- paste0(xcmd, "\n", input$expl_name, " <- result$tab\nregister(\"", input$expl_name, "\")")

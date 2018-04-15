@@ -17,45 +17,7 @@ Search <- function(pattern, df, ignore.case = TRUE, fixed = FALSE) {
     .[["sel"]]
 }
 
-#' Store method for the Data > View tab
-#'
-#' @details Store data frame in Radiant r_data list if available
-#'
-#' @param object Filtered data frame from the Data > View tab
-#' @param new Name of the new dataset
-#' @param org Name of the original data
-#' @param envir Environment to assign 'new' dataset (optional). Used if 'new' is specified but an r_data list is not available
-#' @param ... further arguments passed to or from other methods
-#'
-#' @export
-store.data.frame <- function(
-  object,  new = "",  org = "",
-  envir = parent.frame(), ...
-) {
-
-  if (is_empty(new)) {
-    return(object)
-  } else if (exists("r_environment")) {
-    env <- r_environment
-  } else if (exists("r_data")) {
-    env <- pryr::where("r_data")
-  } else {
-    assign(new, object, envir = envir)
-    message("Dataset ", new, " created in ", environmentName(envir), " environment")
-    return(invisible())
-  }
-
-  ## use data description from the original if available
-  if (is_empty(attr(object, "description")) && !is_empty(org)) {
-    attr(object, "description") <- env$r_data[[paste0(org, "_descr")]]
-  }
-
-  env$r_data[[new]] <- object
-  env$r_data[[paste0(new, "_descr")]] <- attr(object, "description")
-  env$r_data[["datasetlist"]] <- c(new, env$r_data[["datasetlist"]]) %>% unique()
-}
-
-#' Register a data.frame in the datasetlist in Radiant
+#' Register a data.frame or list Radiant
 #'
 #' @param new String containing the name of the data.frame or tibble to register
 #' @param org Name of the original data.frame or tibble if a (working) copy is being made

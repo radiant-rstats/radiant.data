@@ -16,6 +16,6 @@ number of missing values
 Number of missing values
 }
 \examples{
-n_missing(c("a","b",NA))
+n_missing(c("a", "b", NA))
 
 }

@@ -18,7 +18,7 @@
 #' }
 #'
 mutate_each <- function(...) {
-  nm <- pryr::named_dots(...)
+  nm <- list(...)
   if (".ext" %in% names(nm)) {
     .Deprecated("mutate_ext", package = "radiant.data")
     radiant.data::mutate_ext(...)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/view.R
 \name{register}
 \alias{register}
-\title{Register a data.frame in the datasetlist in Radiant}
+\title{Register a data.frame or list Radiant}
 \usage{
 register(new, org = "", descr = "", env = r_data)
 }
@@ -16,5 +16,5 @@ register(new, org = "", descr = "", env = r_data)
 \item{env}{Environment containing the data}
 }
 \description{
-Register a data.frame in the datasetlist in Radiant
+Register a data.frame or list Radiant
 }

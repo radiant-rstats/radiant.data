@@ -9,7 +9,7 @@ pivotr(dataset, cvars = "", nvar = "None", fun = "mean_rm",
   data_filter = "", shiny = FALSE)
 }
 \arguments{
-\item{dataset}{Name of the dataframe to change}
+\item{dataset}{Dataset to tabulate}
 
 \item{cvars}{Categorical variables}
 
@@ -36,10 +36,10 @@ Create a pivot table using dplyr
 Create a pivot-table. See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 }
 \examples{
-result <- pivotr("diamonds", cvars = "cut")$tab
-result <- pivotr("diamonds", cvars = c("cut","clarity","color"))$tab
-result <- pivotr("diamonds", cvars = "cut:clarity", nvar = "price")$tab
-result <- pivotr("diamonds", cvars = "cut", nvar = "price")$tab
-result <- pivotr("diamonds", cvars = "cut", normalize = "total")$tab
+result <- pivotr(diamonds, cvars = "cut")$tab
+result <- pivotr(diamonds, cvars = c("cut","clarity","color"))$tab
+result <- pivotr(diamonds, cvars = "cut:clarity", nvar = "price")$tab
+result <- pivotr(diamonds, cvars = "cut", nvar = "price")$tab
+result <- pivotr(diamonds, cvars = "cut", normalize = "total")$tab
 
 }

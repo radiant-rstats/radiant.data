@@ -16,6 +16,8 @@ stop_radiant <- function() {
       assign("r_state", r_state, envir = .GlobalEnv)
       # assign("r_data", toList(r_data), envir = .GlobalEnv)
       # assign("r_data", env2list(r_data), envir = .GlobalEnv)
+      ## keep as environment so you can "attach" in global 
+      ## environment easily after stop
       assign("r_data", r_data, envir = .GlobalEnv)
 
       ## removing r_sessions and functions defined in global.R

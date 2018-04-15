@@ -1,13 +1,14 @@
 radiant.data::visualize(
-  dataset = "diamonds", 
+  diamonds, 
   xvar = "carat", 
   yvar = "price", 
   type = "scatter", 
   color = "clarity", 
   custom = TRUE
 ) +
-labs(
-  title = "Diamond prices", 
-  x = "Carats", 
-  y = "Price ($)"
-)
+  labs(
+    title = "Diamond prices", 
+    x = "Carats", 
+    y = "Price ($)"
+  )
+  

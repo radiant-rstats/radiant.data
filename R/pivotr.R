@@ -2,7 +2,7 @@
 #'
 #' @details Create a pivot-table. See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
-#' @param dataset Name of the dataframe to change
+#' @param dataset Dataset to tabulate
 #' @param cvars Categorical variables
 #' @param nvar Numerical variable
 #' @param fun Function to apply to numerical variable
@@ -14,11 +14,11 @@
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #'
 #' @examples
-#' result <- pivotr("diamonds", cvars = "cut")$tab
-#' result <- pivotr("diamonds", cvars = c("cut","clarity","color"))$tab
-#' result <- pivotr("diamonds", cvars = "cut:clarity", nvar = "price")$tab
-#' result <- pivotr("diamonds", cvars = "cut", nvar = "price")$tab
-#' result <- pivotr("diamonds", cvars = "cut", normalize = "total")$tab
+#' result <- pivotr(diamonds, cvars = "cut")$tab
+#' result <- pivotr(diamonds, cvars = c("cut","clarity","color"))$tab
+#' result <- pivotr(diamonds, cvars = "cut:clarity", nvar = "price")$tab
+#' result <- pivotr(diamonds, cvars = "cut", nvar = "price")$tab
+#' result <- pivotr(diamonds, cvars = "cut", normalize = "total")$tab
 #'
 #' @export
 pivotr <- function(
@@ -197,11 +197,11 @@ pivotr <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' pivotr("diamonds", cvars = "cut") %>% summary(chi2 = TRUE)
-#' pivotr("diamonds", cvars = "cut", tabsort = "-n") %>% summary
-#' pivotr("diamonds", cvars = "cut", tabsort = "desc(n)") %>% summary
-#' pivotr("diamonds", cvars = "cut", tabfilt = "n > 700") %>% summary
-#' pivotr("diamonds", cvars = "cut:clarity", nvar = "price") %>% summary
+#' pivotr(diamonds, cvars = "cut") %>% summary(chi2 = TRUE)
+#' pivotr(diamonds, cvars = "cut", tabsort = "-n") %>% summary
+#' pivotr(diamonds, cvars = "cut", tabsort = "desc(n)") %>% summary
+#' pivotr(diamonds, cvars = "cut", tabfilt = "n > 700") %>% summary
+#' pivotr(diamonds, cvars = "cut:clarity", nvar = "price") %>% summary
 #'
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
 #'
@@ -284,9 +284,9 @@ summary.pivotr <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' pivotr("diamonds", cvars = "cut") %>% dtab()
-#' pivotr("diamonds", cvars = c("cut","clarity")) %>% dtab(format = "color_bar")
-#' ret <-  pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") %>%
+#' pivotr(diamonds, cvars = "cut") %>% dtab()
+#' pivotr(diamonds, cvars = c("cut","clarity")) %>% dtab(format = "color_bar")
+#' ret <-  pivotr(diamonds, cvars = c("cut","clarity"), normalize = "total") %>%
 #'    dtab(format = "color_bar", perc = TRUE)
 #'
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
@@ -424,10 +424,9 @@ dtab.pivotr <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' pivotr("diamonds", cvars = "cut") %>% plot
-#' pivotr("diamonds", cvars = c("cut","clarity")) %>% plot
-#' pivotr("diamonds", cvars = c("cut","clarity","color")) %>% plot
-# object <- pivotr("diamonds", cvars = c("cut","clarity","color"))
+#' pivotr(diamonds, cvars = "cut") %>% plot
+#' pivotr(diamonds, cvars = c("cut","clarity")) %>% plot
+#' pivotr(diamonds, cvars = c("cut","clarity","color")) %>% plot
 #'
 #' @seealso \code{\link{pivotr}} to generate summaries
 #' @seealso \code{\link{summary.pivotr}} to show summaries
@@ -438,10 +437,9 @@ plot.pivotr <- function(
   fillcol = "blue", opacity = 0.5, ...
 ) {
 
-  object <- x; rm(x)
-  cvars <- object$cvars
-  nvar <- object$nvar
-  tab <- object$tab %>% {
+  cvars <- x$cvars
+  nvar <- x$nvar
+  tab <- x$tab %>% {
     filter(., .[[1]] != "Total")
   }
 
@@ -486,21 +484,22 @@ plot.pivotr <- function(
   if (perc) p <- p + scale_y_continuous(labels = scales::percent)
 
   if (nvar == "n") {
-    if (!is_empty(object$normalize, "None")) {
+    if (!is_empty(x$normalize, "None")) {
       p <- p + labs(y = ifelse(perc, "Percentage", "Proportion"))
     }
   } else {
-    p <- p + labs(y = paste0(nvar, " (", names(make_funs(object$fun)), ")"))
+    p <- p + labs(y = paste0(nvar, " (", names(make_funs(x$fun)), ")"))
   }
 
   sshhr(p)
 }
 
 
-#' Store method for the pivort function
+#' Deprecated: Store method for the pivotr function
 #'
-#' @details Add the summarized data to the r_data list in Radiant or return it. See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
+#' @details Return the summarized data. See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
+#' @param dataset Dataset
 #' @param object Return value from \code{\link{pivotr}}
 #' @param name Name to assign to the dataset
 #' @param ... further arguments passed to or from other methods
@@ -508,23 +507,33 @@ plot.pivotr <- function(
 #' @seealso \code{\link{pivotr}} to generate summaries
 #'
 #' @export
-store.pivotr <- function(object, name, ...) {
-  
-  tab <- object$tab
-
-  ## fix colnames as needed
-  colnames(tab) <- sub("^\\s+", "", colnames(tab)) %>% sub("\\s+$", "", .) %>% gsub("\\s+", "_", .)
-
-  if (exists("r_environment")) {
-    env <- r_environment
-  } else if (exists("r_data")) {
-    env <- pryr::where("r_data")
+store.pivotr <- function(dataset, object, name, ...) {
+  if (missing(name)) {
+    object$tab
   } else {
-    return(tab)
+    stop(
+      paste0(
+        "This function is deprecated. Use the code below instead:\n\n", 
+        name, " <- ", deparse(substitute(object)), "$tab\nregister(\"", 
+        name, ")"
+      ),
+      call. = FALSE
+    )
   }
 
-  message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
+  # ## fix colnames as needed
+  # colnames(tab) <- sub("^\\s+", "", colnames(tab)) %>% sub("\\s+$", "", .) %>% gsub("\\s+", "_", .)
 
-  env$r_data[[name]] <- tab
-  env$r_data[["datasetlist"]] <- c(name, env$r_data[["datasetlist"]]) %>% unique()
+  # if (exists("r_environment")) {
+  #   env <- r_environment
+  # } else if (exists("r_data")) {
+  #   env <- pryr::where("r_data")
+  # } else {
+  #   return(tab)
+  # }
+
+  # message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
+
+  # env$r_data[[name]] <- tab
+  # env$r_data[["datasetlist"]] <- c(name, env$r_data[["datasetlist"]]) %>% unique()
 }

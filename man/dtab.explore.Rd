@@ -27,9 +27,9 @@ Make a tabel of summary statistics in DT
 See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 }
 \examples{
-tab <- explore("diamonds", "price:x") \%>\% dtab
-tab <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"), top = "byvar") \%>\%
-  dtab
+tab <- explore(diamonds, "price:x") \%>\% dtab
+tab <- explore(diamonds, "price", byvar = "cut", fun = c("length", "skew"), top = "byvar") \%>\%
+  dtab()
 
 }
 \seealso{

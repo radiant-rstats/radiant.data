@@ -18,5 +18,6 @@ Returns the index of the (parallel) maxima of the input values
 \examples{
 which.pmax(1:10, 10:1)
 which.pmax(2, 10:1)
+which.pmax(mtcars)
 
 }

@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
-#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param dataset Dataset to explore
 #' @param vars (Numerical) variables to summaries
 #' @param byvar Variable(s) to group data by before summarizing
 #' @param fun Functions to use for summarizing
@@ -16,9 +16,9 @@
 #' @return A list of all variables defined in the function as an object of class explore
 #'
 #' @examples
-#' result <- explore("diamonds", "price:x")
+#' result <- explore(diamonds, "price:x")
 #' summary(result)
-#' result <- explore("diamonds", c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))
+#' result <- explore(diamonds, c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))
 #' summary(result)
 #' diamonds %>% explore("price", byvar = "cut", fun = c("length", "n_distinct"))
 #'
@@ -182,9 +182,9 @@ explore <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- explore("diamonds", "price:x")
+#' result <- explore(diamonds, "price:x")
 #' summary(result)
-#' result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
+#' result <- explore(diamonds, "price", byvar = "cut", fun = c("length", "skew"))
 #' summary(result)
 #' diamonds %>% explore("price:x") %>% summary
 #' diamonds %>% explore("price", byvar = "cut", fun = c("length", "skew")) %>% summary
@@ -221,10 +221,11 @@ summary.explore <- function(object, dec = 3, ...) {
   invisible()
 }
 
-#' Store method for the explore function
+#' Deprecated: Store method for the explore function
 #'
-#' @details Add the summarized data to the r_data list in Radiant or return it. See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
+#' @details Return the summarized data. See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
+#' @param dataset Dataset
 #' @param object Return value from \code{\link{explore}}
 #' @param name Name to assign to the dataset
 #' @param ... further arguments passed to or from other methods
@@ -232,24 +233,35 @@ summary.explore <- function(object, dec = 3, ...) {
 #' @seealso \code{\link{explore}} to generate summaries
 #'
 #' @export
-store.explore <- function(object, name, ...) {
-  tab <- object$tab
-
-  ## fix colnames as needed
-  colnames(tab) <- sub("^\\s+", "", colnames(tab)) %>% sub("\\s+$", "", .) %>% gsub("\\s+", "_", .)
-
-  if (exists("r_environment")) {
-    env <- r_environment
-  } else if (exists("r_data")) {
-    env <- pryr::where("r_data")
+store.explore <- function(dataset, object, name, ...) {
+  if (missing(name)) {
+    object$tab
   } else {
-    return(tab)
+    stop(
+      paste0(
+        "This function is deprecated. Use the code below instead:\n\n", 
+        name, " <- ", deparse(substitute(object)), "$tab\nregister(\"", 
+        name, ")"
+      ),
+      call. = FALSE
+    )
   }
 
-  message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
+  ## fix colnames as needed
+  # colnames(tab) <- sub("^\\s+", "", colnames(tab)) %>% sub("\\s+$", "", .) %>% gsub("\\s+", "_", .)
 
-  env$r_data[[name]] <- tab
-  env$r_data[["datasetlist"]] <- c(name, env$r_data[["datasetlist"]]) %>% unique()
+  # if (exists("r_environment")) {
+  #   env <- r_environment
+  # } else if (exists("r_data")) {
+  #   env <- pryr::where("r_data")
+  # } else {
+  #   return(tab)
+  # }
+
+  # message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
+
+  # env$r_data[[name]] <- tab
+  # env$r_data[["datasetlist"]] <- c(name, env$r_data[["datasetlist"]]) %>% unique()
 }
 
 #' Flip the DT table to put Function, Variable, or Group by on top
@@ -260,17 +272,15 @@ store.explore <- function(object, name, ...) {
 #' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by. "fun" is the default
 #'
 #' @examples
-#' result <- explore("diamonds", "price:x", top = "var")
-#' result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"), top = "byvar")
+#' result <- explore(diamonds, "price:x", top = "var")
+#' result <- explore(diamonds, "price", byvar = "cut", fun = c("length", "skew"), top = "byvar")
 #'
 #' @seealso \code{\link{explore}} to generate summaries
 #' @seealso \code{\link{dtab.explore}} to create the DT table
 #'
 #' @export
 flip <- function(expl, top = "fun") {
-  cvars <- expl$byvar %>% {
-    if (is_empty(.[1])) character(0) else .
-  }
+  cvars <- expl$byvar %>% {if (is_empty(.[1])) character(0) else .}
   if (top[1] == "var") {
     expl$tab %<>% gather(".function", "value", !! -(1:(length(cvars) + 1))) %>%
       spread("variable", "value")
@@ -299,9 +309,9 @@ flip <- function(expl, top = "fun") {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' tab <- explore("diamonds", "price:x") %>% dtab
-#' tab <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"), top = "byvar") %>%
-#'   dtab
+#' tab <- explore(diamonds, "price:x") %>% dtab
+#' tab <- explore(diamonds, "price", byvar = "cut", fun = c("length", "skew"), top = "byvar") %>%
+#'   dtab()
 #'
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
 #' @seealso \code{\link{summary.pivotr}} to print a plain text table
@@ -392,7 +402,7 @@ dtab.explore <- function(
 #' @param x Input variable
 #' @return number of missing values
 #' @examples
-#' n_missing(c("a","b",NA))
+#' n_missing(c("a", "b", NA))
 #'
 #' @export
 n_missing <- function(x) sum(is.na(x))

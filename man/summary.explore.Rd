@@ -20,9 +20,9 @@ Summary method for the explore function
 See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 }
 \examples{
-result <- explore("diamonds", "price:x")
+result <- explore(diamonds, "price:x")
 summary(result)
-result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
+result <- explore(diamonds, "price", byvar = "cut", fun = c("length", "skew"))
 summary(result)
 diamonds \%>\% explore("price:x") \%>\% summary
 diamonds \%>\% explore("price", byvar = "cut", fun = c("length", "skew")) \%>\% summary

@@ -4,7 +4,7 @@
 \alias{loadr}
 \title{Load an rds, rda, or csv file and add it to the radiant data list (r_data) if available}
 \usage{
-loadr(file, objname = "", rlist = TRUE)
+loadr(file, objname = "", rlist = TRUE, env = parent.frame())
 }
 \arguments{
 \item{file}{File name and path as a string. Extension must be either rds, rda, or csv}
@@ -12,6 +12,8 @@ loadr(file, objname = "", rlist = TRUE)
 \item{objname}{Name to use for the data frame. Defaults to the file name}
 
 \item{rlist}{If TRUE, uses "r_data" list to store the data.frame. If FALSE, loads data.frame into calling environment}
+
+\item{env}{Environment where object(s) should be assigned}
 }
 \value{
 Data frame in r_data or in the calling enviroment

@@ -384,7 +384,6 @@ observeEvent(input$pivotr_rows_all, {
 })
 
 .plot_pivot <- reactive({
-# .plot_pivot <- eventReactive(input$pvt_run, {
   pvt <- .pivotr()
   if (is.null(pvt)) return(invisible())
   if (!is_empty(input$pvt_tab, FALSE)) {
@@ -399,6 +398,7 @@ observeEvent(input$pivotr_rows_all, {
 })
 
 output$plot_pivot <- renderPlot({
+  input$pvt_rows
   if (is_empty(input$pvt_plot, FALSE)) return(invisible())
   validate(
     need(length(input$pvt_cvars) < 4, "Plots created for at most 3 categorical variables")
@@ -408,13 +408,15 @@ output$plot_pivot <- renderPlot({
 }, width = pvt_plot_width, height = pvt_plot_height, res = 96)
 
 observeEvent(input$pvt_store, {
+  # c(input$pvt_store, input$pvt_rows) {
   req(input$pvt_name)
   dat <- try(.pivotr(), silent = TRUE)
   if (is(dat, "try-error") || is.null(dat)) return()
   name <- input$pvt_name
   rows <- input$pivotr_rows_all
   dat$tab %<>% {if (is.null(rows)) . else .[rows, , drop = FALSE]}
-  store(dat, name)
+  r_data[[name]] <- dat$tab
+  register(name)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
   ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
@@ -462,7 +464,6 @@ observeEvent(input$pivotr_report, {
   if (!is_empty(r_state$pivotr_state$length, 10)) {
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$pivotr_state$length)
   }
-  # xcmd <- paste0(xcmd, ") %>% render()\n# store(result, name = \"", input$pvt_name, "\")")
   xcmd <- paste0(xcmd, ") %>% render()")
   if (!is_empty(input$pvt_name)) {
     xcmd <- paste0(xcmd, "\n", input$pvt_name, " <- result$tab\nregister(\"", input$pvt_name, "\")")
