@@ -1013,22 +1013,23 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #' @param dec Number of decimals to show
 #' @param perc Display numbers as percentages (TRUE or FALSE)
 #' @param mark Thousand separator
+#' @param ... Additional arguments for formatnr
 #'
 #' @return Data.frame for printing
 #'
 #' @examples
-#' data.frame(x = c("a","b"), y = c(1L, 2L), z = c(-0.0005, 3)) %>%
-#'   formatdf(dec = 3)
+#' data.frame(x = c("a", "b"), y = c(1L, 2L), z = c(-0.0005, 3)) %>%
+#'   formatdf(dec = 4)
 #' data.frame(x = c(1L, 2L), y = c(0.05, 0.8)) %>%
 #'   formatdf(dec = 2, perc = TRUE)
 #'
 #' @export
-formatdf <- function(tbl, dec = NULL, perc = FALSE, mark = "") {
-  frm <- function(x) {
+formatdf <- function(tbl, dec = NULL, perc = FALSE, mark = "", ...) {
+  frm <- function(x, ...) {
     if (is.double(x) && !is.Date(x)) {
-      formatnr(x, dec = dec, perc = perc, mark = mark)
+      formatnr(x, dec = dec, perc = perc, mark = mark, ...)
     } else if (is.integer(x)) {
-      formatnr(x, dec = 0, mark = mark)
+      formatnr(x, dec = 0, mark = mark, ...)
     } else {
       x
     }
@@ -1043,6 +1044,7 @@ formatdf <- function(tbl, dec = NULL, perc = FALSE, mark = "") {
 #' @param dec Number of decimals to show
 #' @param perc Display number as a percentage
 #' @param mark Thousand separator
+#' @param ... Additional arguments
 #'
 #' @return Character (vector) in the desired format
 #'
@@ -1055,12 +1057,15 @@ formatdf <- function(tbl, dec = NULL, perc = FALSE, mark = "") {
 #' formatnr(data.frame(a = 1000), sym = "$", dec = 0)
 #'
 #' @export
-formatnr <- function(x, sym = "", dec = 2, perc = FALSE, mark = ",") {
+formatnr <- function(
+  x, sym = "", dec = 2, perc = FALSE, 
+  mark = ",", ... 
+) {
   if ("data.frame" %in% class(x)) x <- x[[1]]
   if (perc) {
-    paste0(sym, formatC(100 * x, digits = dec, big.mark = mark, format = "f"), "%")
+    paste0(sym, formatC(100 * x, digits = dec, big.mark = mark, format = "f", ...), "%")
   } else {
-    paste0(sym, formatC(x, digits = dec, big.mark = mark, format = "f"))
+    paste0(sym, formatC(x, digits = dec, big.mark = mark, format = "f", ...))
   }
 }
 
@@ -1072,8 +1077,8 @@ formatnr <- function(x, sym = "", dec = 2, perc = FALSE, mark = ",") {
 #' @return Data frame with rounded doubles
 #'
 #' @examples
-#' data.frame(x = as.factor(c("a","b")), y = c(1L, 2L), z = c(-0.0005, 3.1)) %>%
-#'   rounddf(dec = 3)
+#' data.frame(x = as.factor(c("a", "b")), y = c(1L, 2L), z = c(-0.0005, 3.1)) %>%
+#'   rounddf(dec = 2)
 #'
 #' @export
 rounddf <- function(tbl, dec = 3) {
@@ -1256,15 +1261,26 @@ store.character <- function(dataset = NULL, object, ...) {
   if ("pivotr" %in% class(dataset)) {
     store.pivotr(dataset = NULL, object = dataset, ...)
   } else if ("explore" %in% class(dataset)) {
-    store.pivotr(dataset = NULL, object = dataset, ...)
+    store.explore(dataset = NULL, object = dataset, ...)
   } else if ("crs" %in% class(dataset)) {
     ## using get("...") to avoid 'undefined' global function warnings
     get("store.crs")(dataset = NULL, object = dataset, ...)
+  } else if ("conjoint" %in% class(dataset)) {
+    ## using get("...") to avoid 'undefined' global function warnings
+    get("store.conjoint")(dataset = NULL, object = dataset, ...)
   } else if ("model" %in% class(dataset)) {
     stop(
       paste0(
         "This usage of the store function is now deprecated.\nUse the code below instead:\n\n", 
         dataset$df_name, " <- store(", dataset$df_name, ", ", deparse(substitute(dataset)), ", name = \"", list(...)[["name"]], "\")" 
+      ),
+      call. = FALSE
+    )
+  } else if ("data.frame" %in% class(dataset)) {
+    stop(
+      paste0(
+        "This usage of the store function is now deprecated.\nUse the code below instead:\n\n", 
+        object, " <- ..."
       ),
       call. = FALSE
     )
@@ -1305,7 +1321,6 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
   if (!is_empty(cmd)) {
     pred_cmd <- gsub("\"", "\'", cmd) %>%
       gsub("\\s+", "", .)
-    # cmd_vars <- strsplit(pred_cmd, c(",", ";", "\\s+")[[1]] %>%
     cmd_vars <- strsplit(pred_cmd, ";")[[1]] %>%
       strsplit(., "=") %>%
       sapply("[", 1) %>%
@@ -1317,7 +1332,7 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
     dataset <- try(dataset %>% mutate(!!! dots), silent = TRUE)
   }
 
-  ind <- mutate(dataset, imf___ = 1:nrows) %>%
+  ind <- mutate(dataset, imf___ = seq_len(nrows)) %>%
     {if (filt == "") . else filterdata(., filt)} %>%
     select_at(.vars = unique(c("imf___", vars))) %>%
     na.omit() %>%
@@ -1536,7 +1551,7 @@ parse_path <- function(
 
   path <- normalizePath(path[1], winslash = "/")
   filename <- basename(path)
-  fext <- file_ext(filename)
+  fext <- tools::file_ext(filename)
 
   ## objname is used as the name of the data.frame, make case insensitive
   objname <- sub(paste0("\\.", fext, "$"), "", filename, ignore.case = TRUE)

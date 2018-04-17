@@ -162,7 +162,9 @@ options(
 if (!exists(\"r_environment\")) library(", lib, ")
 
 ## load data (add path)
-# r_data <- readr::read_rds(\"r_data.rds\")
+# load(\"r_data.rda\")
+## or attach the r_data environment 
+# attach(r_data)
 ```
 
 <style>
@@ -236,15 +238,41 @@ knit_it_save <- function(report) {
 }
 
 
-observeEvent(input$rmd_clean, {
-  report <- gsub("r_data\\[\\[\"([^\"]+)\"\\]\\]", "\\1", input$rmd_edit) %>%
-    gsub("dataset\\s*=\\s*\"([^\"]+)\",", "\\1,", .) %>%
-    gsub("(combinedata\\(\\s*x\\s*=\\s*)\"([^\"]+)\",(\\s*y\\s*=\\s*)\"([^\"]+)\",", "\\1\\2,\\3\\4,", .) %>%
-    gsub("(combinedata\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .)
+observeEvent(input$report_clean, {
+  withProgress(message = "Cleaning report", value = 1, {
+    report <- gsub("\nr_data\\[\\[\"(.*?)\"\\]\\] %>%(.*?)%>%\\s*store\\(\"(.*?)\", (\".*?\")\\)", "\n\\3 <- \\1 %>%\\2\nregister(\"\\3\", \\4)", input$rmd_edit) %>% 
+      gsub("r_data\\[\\[\"([^\"]+)\"\\]\\]", "\\1", .) %>%
+      gsub("dataset\\s*=\\s*\"([^\"]+)\",", "\\1,", .) %>%
+      gsub("store\\(pred, data\\s*=\\s*\"([^\"]+)\"", "\\1 <- store(\\1, pred", .) %>%
+      gsub("pred_data\\s*=\\s*\"([^\"]+)\"", "pred_data = \\1", .) %>%
+      gsub("(combinedata\\(\\s*x\\s*=\\s*)\"([^\"]+)\",(\\s*y\\s*=\\s*)\"([^\"]+)\",", "\\1\\2,\\3\\4,", .) %>%
+      gsub("(combinedata\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
+      gsub("result\\s*<-\\s*(simulater\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
+      gsub("result\\s*<-\\s*(repeater\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
+      gsub("repeater\\(((.|\n)*?),\\s*sim+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "repeater(\n  \\3,\\1\\4)", .) %>%
+      gsub("(```\\{r.*?\\})(\nresult <- pivotr(\n|.)*?)(\\s*)store\\(result, name = \"(.*?)\"\\)", "\\1\\2\\4\\5 <- result$tab; register(\"\\5\")\\6", .) %>% 
+      gsub("(```\\{r.*?\\})(\nresult <- explore(\n|.)*?)(\\s*)store\\(result, name = \"(.*?)\"\\)", "\\1\\2\\4\\5 <- result$tab; register(\"\\5\")\\6", .) 
+  })
+
+  if ("styler" %in% installed.packages()) {
+    withProgress(message = "Styling report code", value = 1, {
+      tmp_dir <- tempdir()
+      tmp_fn <- tempfile(pattern = "report-to-style", tmpdir = tmp_dir, fileext = ".Rmd")
+      cat(paste(report, "\n"), file = tmp_fn)
+      ret <- styler::style_file(tmp_fn)
+      report <- paste0(readLines(tmp_fn), collapse = "\n")
+    })
+  }
+
   shinyAce::updateAceEditor(
     session, "rmd_edit",
     value = fixMS(report)
   )
+  removeModal()
+})
+
+observeEvent(input$report_ignore, {
+  r_data$report_ignore <- TRUE
   removeModal()
 })
 
@@ -256,20 +284,35 @@ knit_it <- function(report, type = "rmd") {
   }
 
   if (
-    grepl("\\s*r_data\\[\\[\".*\"\\]\\]", report) ||
-    grepl("\\s+dataset\\s*=\\s*\".*\",", report)  ||
-    grepl("combinedata\\(\\s*x\\s*=\\s*\"[^\"]+\"", report)
+    !isTRUE(r_data$report_ignore) &&
+    (grepl("\\s*r_data\\[\\[\".*\"\\]\\]", report) ||
+     grepl("\n(\\#|\\s)*store\\(result,\\s*name", report) ||
+     grepl("store\\(pred,\\s*data\\s*=\\s*\"", report) ||
+     grepl("\\s+dataset\\s*=\\s*\".*\",", report)  ||
+     grepl("\\s+pred_data\\s*=\\s*\".*\",", report)  ||
+     grepl("result\\s*<-\\*simulater\\(", report)  ||
+     grepl("combinedata\\(\\s*x\\s*=\\s*\"[^\"]+\"", report))
   ) {
     showModal(
       modalDialog(
-        title = "The use of r_data[[...]] is deprecated",
-        span(
-          "The use of r_data[[...]]] and dataset = \"...\" in your report is deprecated. Click
-           the 'Clean report' button to remove references that are no longer needed."
+        title = "The report contains deprecated code",
+        span("The use of, e.g., r_data[[...]]], dataset = \"...\", etc. in your report is 
+           deprecated. Click the 'Clean report' button to remove references that are no 
+           longer needed.", br(), br(), "Warning: It may not be possible to update all code 
+           to the latest standard automatically. For example, the use of 'store(...)' 
+           functions has changed and not all forms can be automatically updated. If this 
+           applies to your report a message should be shown when you Knit the report 
+           demonstrating how the code should be changed. You can, of course, also use the 
+           browser interface to recreate the code you need or use the help function in R or 
+           Rstudio for more information (e.g., ?radiant.model::store.model, 
+           ?radiant.model::store.model.predict, or ?radiant.model::simulater)", br(), br(), 
+           "To avoid the code-cleaning step click 'Cancel' or, if you believe the code is 
+           correct as-is, click the 'Ignore' button and continue to Knit your report"
         ),
         footer = tagList(
           modalButton("Cancel"),
-          actionButton("rmd_clean", "Clean report", title = "Clean report", class = "btn-success")
+          actionButton("report_ignore", "Ignore", title = "Ignore cleaning popup", class = "btn-primary"),
+          actionButton("report_clean", "Clean report", title = "Clean report", class = "btn-success")
         ),
         size = "s",
         easyClose = TRUE
@@ -348,22 +391,23 @@ r_read_files <- function(path, type = "rmd", to = "", radiant = TRUE) {
   if (to == "") {
     to <- gsub("\\s+", "_", pp$objname)
   }
-  if (radiant) {
-    ## generate code ## using r_data[["..."]] rather than r_data$... in case
-    ## the dataset name has spaces, -, etc.
-    to <- paste0("r_data[[\"", to, "\"]]")
-  }
+  
+  # if (radiant) {
+  #   ## generate code ## using r_data[["..."]] rather than r_data$... in case
+  #   ## the dataset name has spaces, -, etc.
+  #   to <- paste0("r_data[[\"", to, "\"]]")
+  # }
 
   ## see find_gdrive and find_dropbox
   ## gets parsed by report code can't have \\\\ att
   ## for windows in mac in parallel's VM
   path <- gsub("^\\\\", "\\\\\\\\", path)
   if (pp$fext %in% c("rda", "rdata")) {
-    if (radiant) {
-      cmd <- paste0("## `loadr` puts data in an r_data list by default (see ?radiant.data::loadr for help)\nloadr(", pp$rpath, ", objname = \"", pp$objname, "\")")
-    } else {
+    # if (radiant) {
+      # cmd <- paste0("## `loadr` puts data in an r_data list by default (see ?radiant.data::loadr for help)\nloadr(", pp$rpath, ", objname = \"", pp$objname, "\")")
+    # } else {
       cmd <- paste0("## loaded object names assigned to `obj`\nobj <- load(", pp$rpath, ")\nprint(obj)")
-    }
+    # }
   } else if (pp$fext == "rds") {
     cmd <- paste0(to, " <- readr::read_rds(", pp$rpath, ")\nregister(\"", pp$objname, "\")")
   } else if (pp$fext == "csv") {

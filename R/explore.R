@@ -246,22 +246,6 @@ store.explore <- function(dataset, object, name, ...) {
       call. = FALSE
     )
   }
-
-  ## fix colnames as needed
-  # colnames(tab) <- sub("^\\s+", "", colnames(tab)) %>% sub("\\s+$", "", .) %>% gsub("\\s+", "_", .)
-
-  # if (exists("r_environment")) {
-  #   env <- r_environment
-  # } else if (exists("r_data")) {
-  #   env <- pryr::where("r_data")
-  # } else {
-  #   return(tab)
-  # }
-
-  # message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
-
-  # env$r_data[[name]] <- tab
-  # env$r_data[["datasetlist"]] <- c(name, env$r_data[["datasetlist"]]) %>% unique()
 }
 
 #' Flip the DT table to put Function, Variable, or Group by on top

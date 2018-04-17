@@ -4,7 +4,7 @@
 \alias{register}
 \title{Register a data.frame or list Radiant}
 \usage{
-register(new, org = "", descr = "", env = r_data)
+register(new, org = "", descr = "", env)
 }
 \arguments{
 \item{new}{String containing the name of the data.frame or tibble to register}
@@ -13,7 +13,7 @@ register(new, org = "", descr = "", env = r_data)
 
 \item{descr}{Data description in markdown format}
 
-\item{env}{Environment containing the data}
+\item{env}{Environment to assign data to}
 }
 \description{
 Register a data.frame or list Radiant

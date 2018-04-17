@@ -4,7 +4,7 @@
 \alias{formatnr}
 \title{Format a number with a specified number of decimal places, thousand sep, and a symbol}
 \usage{
-formatnr(x, sym = "", dec = 2, perc = FALSE, mark = ",")
+formatnr(x, sym = "", dec = 2, perc = FALSE, mark = ",", ...)
 }
 \arguments{
 \item{x}{Number or vector}
@@ -16,6 +16,8 @@ formatnr(x, sym = "", dec = 2, perc = FALSE, mark = ",")
 \item{perc}{Display number as a percentage}
 
 \item{mark}{Thousand separator}
+
+\item{...}{Additional arguments}
 }
 \value{
 Character (vector) in the desired format
