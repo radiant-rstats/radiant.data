@@ -8,7 +8,7 @@ Description: The Radiant Data menu includes interfaces for loading, saving,
     contains functionality to generate reproducible reports of the analyses
     conducted in the application.
 Depends:
-    R (>= 3.3.0),
+    R (>= 3.4.0),
     magrittr (>= 1.5),
     ggplot2 (>= 2.2.1),
     lubridate (>= 1.7.2),
@@ -28,7 +28,7 @@ Imports:
     shiny (>= 1.0.5),
     jsonlite (>= 1.0),
     shinyAce (>= 0.3.0.1),
-    psych (>= 1.7.3.21),
+    psych (>= 1.8.3.3),
     DT (>= 0.4),
     readr (>= 1.1.1),
     readxl (>= 1.0.0),
