@@ -353,6 +353,7 @@ loadr <- function(file, objname = "", rlist = TRUE, env = parent.frame()) {
   if (exists("r_environment")) {
     shiny::makeReactiveBinding(objname, env = r_data)
     env[[paste0(objname, "_descr")]] <- attr(env[[objname]], "description")
+    shiny::makeReactiveBinding(paste0(objname, "_descr"), env = r_data)
     env[["datasetlist"]] <- c(objname, env[["datasetlist"]]) %>% unique()
   }
 
@@ -1301,6 +1302,9 @@ store.character <- function(dataset = NULL, object, ...) {
       message(mess)
     }
   }
+
+  ## ensure the original data is not over-written of what is to be store is a character object
+  dataset
 }
 
 #' Find index corrected for missing values and filters

@@ -105,6 +105,7 @@ init_data <- function(env = r_data) {
     env[[dn]] <- df
     env[[paste0(dn, "_descr")]] <- attr(df, "description")
     makeReactiveBinding(dn, env = env)
+    makeReactiveBinding(paste0(dn, "_descr"), env = env)
   }
   env$datasetlist <- basename(df_names)
   env$url <- NULL

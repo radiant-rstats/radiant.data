@@ -39,6 +39,7 @@ loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRU
   }
   shiny::makeReactiveBinding(objname, env = r_data)
   r_data[[paste0(objname, "_descr")]] <- ret
+  shiny::makeReactiveBinding(paste0(objname, "_descr"), env = r_data)
   r_data[["datasetlist"]] <- c(objname, r_data[["datasetlist"]]) %>% unique()
 }
 
@@ -139,5 +140,6 @@ loadUserData <- function(
 
   shiny::makeReactiveBinding(objname, env = r_data)
   r_data[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
+  shiny::makeReactiveBinding(paste0(objname, "_descr"), env = r_data)
   r_data[["datasetlist"]] <<- c(objname, r_data[["datasetlist"]]) %>% unique()
 }

@@ -159,35 +159,19 @@ if (exists("r_data", envir = .GlobalEnv)) {
   r_state <- list()
 }
 
-# if (!exists("datasetlist", envir = r_data)) {
-  # print("making datasetlist")
-  # toReactive("datasetlist")
 isolate({
   makeReactiveBinding("datasetlist", env = r_data)
   for (ds in r_data$datasetlist) {
     makeReactiveBinding(ds, env = r_data)
+    makeReactiveBinding(paste0(ds, "_descr"), env = r_data)
   }
   makeReactiveBinding("dtree_list", env = r_data)
   for (dt in r_data$dtree_list) {
     makeReactiveBinding(dt, env = r_data)
   }
+  makeReactiveBinding("pvt_rows", env = r_data)
+  makeReactiveBinding("nav_radiant", env = r_data)
 })
-
-  # df_names <- getOption("radiant.init.data", default = c("diamonds", "titanic"))
-  # for (dn in df_names) {
-  #   if (file.exists(dn)) {
-  #     df <- load(dn) %>% get()
-  #     dn <- basename(dn) %>%
-  #       {gsub(paste0(".", tools::file_ext(.)), "", ., fixed = TRUE)}
-  #   } else {
-  #     df <- data(list = dn, package = "radiant.data", envir = environment()) %>% get()
-  #   }
-  #   r_data[[dn]] <- df
-  #   r_data[[paste0(dn, "_descr")]] <- attr(df, "description")
-  #   makeReactiveBinding(dn, env = r_data)
-  # }
-  # r_data$datasetlist <- basename(df_names)
-  # r_data$url <- NULL
 
 ## legacy, to deal with state files created before
 ## Report > Rmd and Report > R name change

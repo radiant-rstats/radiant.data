@@ -161,9 +161,8 @@ options(
 ## make all required libraries available by loading radiant package if needed
 if (!exists(\"r_environment\")) library(", lib, ")
 
-## load data (add path)
-# load(\"r_data.rda\")
-## or attach the r_data environment 
+## include code to load the data you require
+## for interactive use attach the r_data environment
 # attach(r_data)
 ```
 
@@ -240,15 +239,21 @@ knit_it_save <- function(report) {
 
 observeEvent(input$report_clean, {
   withProgress(message = "Cleaning report", value = 1, {
-    report <- gsub("\nr_data\\[\\[\"(.*?)\"\\]\\] %>%(.*?)%>%\\s*store\\(\"(.*?)\", (\".*?\")\\)", "\n\\3 <- \\1 %>%\\2\nregister(\"\\3\", \\4)", input$rmd_edit) %>% 
-      gsub("r_data\\[\\[\"([^\"]+)\"\\]\\]", "\\1", .) %>%
+    # gsub("\nr_data\\[\\[\"(.*?)\"\\]\\] %>%(.*?)%>%\\s*store\\(\"(.*?)\", (\".*?\")\\)", "\n\\3 <- \\1 %>%\\2\nregister(\"\\3\", \\4)", input$rmd_edit) %>% 
+    report <- gsub("\nr_data\\[\\[\"([^\n]+?)\"\\]\\] \\%>\\%(.*?)\\%>\\%\\s*?store\\(\"(.*?)\", (\".*?\")\\)", "\n\\3 <- \\1 %>%\\2\nregister(\"\\3\", \\4)", input$rmd_edit) %>% 
+      gsub("r_data\\[\\[\"([^\"]+?)\"\\]\\]", "\\1", .) %>%
+      gsub("r_data\\$", "", .) %>%
       gsub("dataset\\s*=\\s*\"([^\"]+)\",", "\\1,", .) %>%
       gsub("store\\(pred, data\\s*=\\s*\"([^\"]+)\"", "\\1 <- store(\\1, pred", .) %>%
       gsub("pred_data\\s*=\\s*\"([^\"]+)\"", "pred_data = \\1", .) %>%
       gsub("(combinedata\\(\\s*x\\s*=\\s*)\"([^\"]+)\",(\\s*y\\s*=\\s*)\"([^\"]+)\",", "\\1\\2,\\3\\4,", .) %>%
       gsub("(combinedata\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
-      gsub("result\\s*<-\\s*(simulater\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
+      gsub("result\\s*<-\\s*(simulater\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>% 
+      gsub("(simulater\\((\n|.)*?)(register\\(\"(.*)\"\\))\nsummary\\(result", "\\1\\3\nsummary(\\4", .) %>% 
+      gsub("(simulater\\((\n|.)*?)(register\\(\"(.*)\"\\))\n(summary.*?)\nplot\\(result", "\\1\\3\n\\5\nplot(\\4", .) %>% 
       gsub("result\\s*<-\\s*(repeater\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
+      gsub("(repeater\\((\n|.)*?)(register\\(\"(.*)\"\\))\nsummary\\(result", "\\1\\3\nsummary(\\4", .) %>% 
+      gsub("(repeater\\((\n|.)*?)(register\\(\"(.*)\"\\))\n(summary.*?)\nplot\\(result", "\\1\\3\n\\5\nplot(\\4", .) %>% 
       gsub("repeater\\(((.|\n)*?),\\s*sim+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "repeater(\n  \\3,\\1\\4)", .) %>%
       gsub("(```\\{r.*?\\})(\nresult <- pivotr(\n|.)*?)(\\s*)store\\(result, name = \"(.*?)\"\\)", "\\1\\2\\4\\5 <- result$tab; register(\"\\5\")\\6", .) %>% 
       gsub("(```\\{r.*?\\})(\nresult <- explore(\n|.)*?)(\\s*)store\\(result, name = \"(.*?)\"\\)", "\\1\\2\\4\\5 <- result$tab; register(\"\\5\")\\6", .) 
@@ -286,6 +291,7 @@ knit_it <- function(report, type = "rmd") {
   if (
     !isTRUE(r_data$report_ignore) &&
     (grepl("\\s*r_data\\[\\[\".*\"\\]\\]", report) ||
+     grepl("\\s*r_data\\$", report) ||
      grepl("\n(\\#|\\s)*store\\(result,\\s*name", report) ||
      grepl("store\\(pred,\\s*data\\s*=\\s*\"", report) ||
      grepl("\\s+dataset\\s*=\\s*\".*\",", report)  ||
@@ -595,13 +601,13 @@ report_save_content <- function(file, type = "rmd") {
           ## don't want to write to current dir
           currdir <- setwd(tempdir())
           # readr::write_rds(env2list(r_data), path = "r_data.rds")
-          save(list = ls(envir = r_data), file = "r_data.rda")
+          save(list = ls(envir = r_data), envir = r_data, file = "r_data.rda")
 
           setup_report(report, save_type = "Rmd", lib = lib) %>%
             fixMS() %>%
             cat(file = "report.Rmd", sep = "\n")
 
-          zip(file, c("report.Rmd", "r_data.rds"),
+          zip(file, c("report.Rmd", "r_data.rda"),
             flags = zip_info[1], zip = zip_info[2]
           )
           setwd(currdir)
@@ -613,7 +619,7 @@ report_save_content <- function(file, type = "rmd") {
           ## don't want to write to current dir
           currdir <- setwd(tempdir())
           # readr::write_rds(env2list(r_data), path = "r_data.rds")
-          save(list = ls(envir = r_data), file = "r_data.rda")
+          save(list = ls(envir = r_data), envir = r_data, file = "r_data.rda")
 
           cat(report, file = "report.R", sep = "\n")
 

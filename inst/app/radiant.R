@@ -8,8 +8,11 @@ toList <- function(x) reactiveValuesToList(x) %>% .[!sapply(., is.null)]
 ## from https://gist.github.com/hadley/5434786
 env2list <- function(x) mget(ls(x), x)
 
-## make a reactive object in the specified environment
-toReactive <- function(x, env = r_data) makeReactiveBinding(x, env = env)
+## remove non-active bindings
+rem_non_active <- function(env = r_data) {
+  isactive <- sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env))
+  rm(list = names(isactive)[!isactive], envir = env)
+}
 
 saveSession <- function(session = session) {
   if (!exists("r_sessions")) return()
@@ -17,11 +20,10 @@ saveSession <- function(session = session) {
   LiveInputs <- toList(input)
   r_state[names(LiveInputs)] <- LiveInputs
 
-  # print(class(r_data))
+  ## removing the non-active bindings
+  rem_non_active()
 
   r_sessions[[r_ssuid]] <- list(
-    # r_data = toList(r_data),
-    # r_data = r_data,
     r_data = env2list(r_data),
     r_state = r_state,
     timestamp = Sys.time()

@@ -42,7 +42,6 @@ register <- function(new, org = "", descr = "", env) {
 
     if (!is.data.frame(env[[new]]) & is.list(env[[new]])) {
       env$dtree_list <- c(new, env$dtree_list) %>% unique()
-      # toReactive("dtree_list")
     } else {
       ## use data description from the original if available
       if (!is_empty(descr)) {
@@ -54,9 +53,8 @@ register <- function(new, org = "", descr = "", env) {
       }
 
       env[["datasetlist"]] <- c(new, env[["datasetlist"]]) %>% unique()
-      # toReactive("datasetlist")
-      # toReactive(paste0(new, "_descr"))
       shiny::makeReactiveBinding(new, env = env)
+      shiny::makeReactiveBinding(paste0(new, "_descr"), env = r_data)
     }
   }
   invisible()
