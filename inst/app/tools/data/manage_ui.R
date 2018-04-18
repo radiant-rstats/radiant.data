@@ -83,7 +83,7 @@ output$ui_clipboard_save <- renderUI({
 
 output$ui_from_global <- renderUI({
   req(input$dataType)
-  df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>% 
+  df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>%
     {names(.[.])}
 
   tagList(
@@ -114,7 +114,7 @@ observeEvent(input$from_global_load, {
     r_data[[df]] <- get(df, envir = .GlobalEnv)
     shiny::makeReactiveBinding(df, env = r_data)
     if (input$from_global_move == "move") rm(list = df, envir = .GlobalEnv)
-    r_data[[paste0(df, "_descr")]] <- attr(r_data[[df]], "description") %>% 
+    r_data[[paste0(df, "_descr")]] <- attr(r_data[[df]], "description") %>%
       {if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else .}
     shiny::makeReactiveBinding(paste0(df, "_descr"), env = r_data)
   }
@@ -190,7 +190,7 @@ output$ui_Manage <- renderUI({
             width = "100%"
           )),
           numericInput(
-            "man_n_max", label = "Maximum rows to read:", 
+            "man_n_max", label = "Maximum rows to read:",
             value = Inf, max = Inf, step = 1000
           )
         ),
@@ -245,7 +245,7 @@ output$ui_Manage <- renderUI({
       )
     ),
     help_modal(
-      "Manage", "manage_help", 
+      "Manage", "manage_help",
       inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/manage.md")),
       lic = "by-sa"
     )
@@ -345,7 +345,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
       existing = FALSE
     )
     if (!is(path, "try-error") && !is_empty(path)) {
-      r_state$radiant_state_name <<- path 
+      r_state$radiant_state_name <<- path
       saveState(path)
     }
   })
@@ -390,7 +390,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
     path <- rstudioapi::selectFile(
       caption = "Save data",
       path = file.path(
-        getOption("radiant.launch_dir", "~"), 
+        getOption("radiant.launch_dir", "~"),
         paste0(input$dataset, ".", input$saveAs)
       ),
       filter = paste0("Save data (*.", input$saveAs, ")"),
@@ -424,7 +424,7 @@ observeEvent(input$uploadfile, {
     if (is(path, "try-error") || is_empty(path)) return()
     inFile <- data.frame(
       name = basename(path),
-      datapath = path, 
+      datapath = path,
       stringsAsFactors = FALSE
     )
   } else {
@@ -533,13 +533,12 @@ observeEvent(input$url_csv_load, {
 observeEvent(input$loadExampleData, {
   ## data.frame of example datasets
   exdat <- data(package = getOption("radiant.example.data"))$results[, c("Package", "Item")]
-  # for (i in 1:nrow(exdat)) {
   for (i in seq_len(nrow(exdat))) {
     item <- exdat[i, "Item"]
-    r_data[[item]] <- data(list = item, package = exdat[i, "Package"]) %>% get()
+    data(list = item, package = exdat[i, "Package"], envir = r_data)
     makeReactiveBinding(item, env = r_data)
     r_data[[paste0(item, "_descr")]] <- attr(r_data[[item]], "description")
-    shiny::makeReactiveBinding(paste0(objname, "_descr"), env = r_data)
+    shiny::makeReactiveBinding(paste0(item, "_descr"), env = r_data)
     r_data[["datasetlist"]] <- c(item, r_data[["datasetlist"]]) %>% unique()
   }
 
