@@ -358,9 +358,7 @@ pvt_plot_height <- function() {
 pvt_sorter <- function(pvt, rows = NULL) {
   if (is.null(rows)) return(pvt)
   cvars <- pvt$cvars
-  tab <- pvt$tab %>% {
-    filter(., .[[1]] != "Total")
-  }
+  tab <- pvt$tab %>% {filter(., .[[1]] != "Total")}
 
   if (length(cvars) > 1) {
     tab %<>% select(-which(colnames(.) == "Total"))
@@ -378,33 +376,29 @@ pvt_sorter <- function(pvt, rows = NULL) {
 }
 
 observeEvent(input$pivotr_rows_all, {
-  dt_rows <- input$pivotr_rows_all
-  if (identical(r_data$pvt_rows, dt_rows)) return()
-  r_data$pvt_rows <- dt_rows
+  req(!identical(r_data$pvt_rows, input$pivotr_rows_all))
+  r_data$pvt_rows <- input$pivotr_rows_all
 })
 
 .plot_pivot <- reactive({
   pvt <- .pivotr()
-  if (is.null(pvt)) return(invisible())
+  req(pvt)
   if (!is_empty(input$pvt_tab, FALSE)) {
     pvt <- pvt_sorter(pvt, rows = r_data$pvt_rows)
   }
 
   withProgress(message = "Making plot", value = 1, {
-    pvt_plot_inputs() %>% {
-      do.call(plot, c(list(x = pvt), .))
-    }
+    pvt_plot_inputs() %>% {do.call(plot, c(list(x = pvt), .))}
   })
 })
 
 output$plot_pivot <- renderPlot({
-  input$pvt_rows
   if (is_empty(input$pvt_plot, FALSE)) return(invisible())
   validate(
     need(length(input$pvt_cvars) < 4, "Plots created for at most 3 categorical variables")
   )
-  sshhr(.plot_pivot()) %>% print()
-  return(invisible())
+  .plot_pivot() #%>% print()
+  # return(invisible())
 }, width = pvt_plot_width, height = pvt_plot_height, res = 96)
 
 observeEvent(input$pvt_store, {

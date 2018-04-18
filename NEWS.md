@@ -1,3 +1,7 @@
+# CHANGES IN radiant.data 0.9.3.0
+
+* Various changes to the code to accomodate the use of `makeReactiveBind`. The advantage is that the generate code for _Report > Rmd_ and _Report > R_ will no longer have to use `r_data` explicity to store data. This means that code used and generated in the Radiant browser interface will be directly usable without the browser interface as well.
+
 # CHANGES IN radiant.data 0.9.2.3
 
 * Add option to load files with extension .rdata or .tsv using `loadr` which add that data to the Datasets dropdown

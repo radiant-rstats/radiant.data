@@ -114,9 +114,9 @@ observeEvent(input$from_global_load, {
     r_data[[df]] <- get(df, envir = .GlobalEnv)
     shiny::makeReactiveBinding(df, env = r_data)
     if (input$from_global_move == "move") rm(list = df, envir = .GlobalEnv)
-    r_data[[paste0(df, "_descr")]] <- attr(r_data[[df]], "description") %>% {
-      if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else .
-    }
+    r_data[[paste0(df, "_descr")]] <- attr(r_data[[df]], "description") %>% 
+      {if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else .}
+    shiny::makeReactiveBinding(paste0(df, "_descr"), env = r_data)
   }
   updateSelectInput(
     session, "dataset", label = "Datasets:",
@@ -480,6 +480,7 @@ observeEvent(input$url_rda_load, {
   shiny::makeReactiveBinding(objname, env = r_data)
   r_data[["datasetlist"]] <<- c(objname, r_data[["datasetlist"]]) %>% unique()
   r_data[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
+  shiny::makeReactiveBinding(paste0(objname, "_descr"), env = r_data)
   updateSelectInput(
     session, "dataset",
     label = "Datasets:",
@@ -516,10 +517,10 @@ observeEvent(input$url_csv_load, {
   }
 
   shiny::makeReactiveBinding(objname, env = r_data)
-
-  # r_data[["datasetlist"]] <<- c(objname, r_data[["datasetlist"]]) %>% unique()
   r_data[["datasetlist"]] <- c(objname, r_data[["datasetlist"]]) %>% unique()
   r_data[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
+  shiny::makeReactiveBinding(paste0(objname, "_descr"), env = r_data)
+
   updateSelectInput(
     session, "dataset",
     label = "Datasets:",
@@ -535,13 +536,10 @@ observeEvent(input$loadExampleData, {
   # for (i in 1:nrow(exdat)) {
   for (i in seq_len(nrow(exdat))) {
     item <- exdat[i, "Item"]
-    # r_data[[item]] <- data(list = item, package = exdat[i, "Package"], envir = environment()) %>% get()
     r_data[[item]] <- data(list = item, package = exdat[i, "Package"]) %>% get()
-    # data(list = item, package = exdat[i, "Package"], envir = r_data)
-    # toReactive(item)
     makeReactiveBinding(item, env = r_data)
     r_data[[paste0(item, "_descr")]] <- attr(r_data[[item]], "description")
-    # r_data[["datasetlist"]] <<- c(item, r_data[["datasetlist"]]) %>% unique()
+    shiny::makeReactiveBinding(paste0(objname, "_descr"), env = r_data)
     r_data[["datasetlist"]] <- c(item, r_data[["datasetlist"]]) %>% unique()
   }
 
@@ -646,9 +644,8 @@ saveState <- function(filename) {
     isolate({
       LiveInputs <- toList(input)
       r_state[names(LiveInputs)] <- LiveInputs
-      # r_data <- toList(r_data)
+      rem_non_active()
       r_data <- env2list(r_data)
-      # r_data <- r_data
       save(r_state, r_data, file = filename)
     })
   )
@@ -668,6 +665,7 @@ observeEvent(input$renameButton, {
     shiny::makeReactiveBinding(input$data_rename, env = r_data)
     r_data[[input$dataset]] <- NULL
     r_data[[paste0(input$data_rename, "_descr")]] <- r_data[[paste0(input$dataset, "_descr")]]
+    shiny::makeReactiveBinding(paste0(input$data_rename, "_descr"), env = r_data)
     r_data[[paste0(input$dataset, "_descr")]] <- NULL
 
     ind <- which(input$dataset == r_data[["datasetlist"]])
