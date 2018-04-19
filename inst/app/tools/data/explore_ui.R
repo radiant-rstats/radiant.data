@@ -290,7 +290,7 @@ observeEvent(input$explore_report, {
   }
   xcmd <- paste0(xcmd, ") %>% render()")
   if (!is_empty(input$expl_name)) {
-    xcmd <- paste0(xcmd, "\n", input$expl_name, " <- result$tab\nregister(\"", input$expl_name, "\")")
+    xcmd <- paste0(xcmd, "\n", input$expl_name, " <- result$tab; register(\"", input$expl_name, "\")")
   }
 
   inp_main <- clean_args(expl_inputs(), expl_args)

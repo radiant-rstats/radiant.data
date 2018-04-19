@@ -397,12 +397,10 @@ output$plot_pivot <- renderPlot({
   validate(
     need(length(input$pvt_cvars) < 4, "Plots created for at most 3 categorical variables")
   )
-  .plot_pivot() #%>% print()
-  # return(invisible())
+  .plot_pivot() 
 }, width = pvt_plot_width, height = pvt_plot_height, res = 96)
 
 observeEvent(input$pvt_store, {
-  # c(input$pvt_store, input$pvt_rows) {
   req(input$pvt_name)
   dat <- try(.pivotr(), silent = TRUE)
   if (is(dat, "try-error") || is.null(dat)) return()
@@ -460,7 +458,7 @@ observeEvent(input$pivotr_report, {
   }
   xcmd <- paste0(xcmd, ") %>% render()")
   if (!is_empty(input$pvt_name)) {
-    xcmd <- paste0(xcmd, "\n", input$pvt_name, " <- result$tab\nregister(\"", input$pvt_name, "\")")
+    xcmd <- paste0(xcmd, "\n", input$pvt_name, " <- result$tab; register(\"", input$pvt_name, "\")")
   }
 
   inp_main <- clean_args(pvt_inputs(), pvt_args)
