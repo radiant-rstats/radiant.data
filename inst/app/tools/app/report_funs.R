@@ -239,7 +239,6 @@ knit_it_save <- function(report) {
 
 observeEvent(input$report_clean, {
   withProgress(message = "Cleaning report", value = 1, {
-    # gsub("\nr_data\\[\\[\"(.*?)\"\\]\\] %>%(.*?)%>%\\s*store\\(\"(.*?)\", (\".*?\")\\)", "\n\\3 <- \\1 %>%\\2\nregister(\"\\3\", \\4)", input$rmd_edit) %>% 
     report <- gsub("\nr_data\\[\\[\"([^\n]+?)\"\\]\\] \\%>\\%(.*?)\\%>\\%\\s*?store\\(\"(.*?)\", (\".*?\")\\)", "\n\\3 <- \\1 %>%\\2\nregister(\"\\3\", \\4)", input$rmd_edit) %>% 
       gsub("r_data\\[\\[\"([^\"]+?)\"\\]\\]", "\\1", .) %>%
       gsub("r_data\\$", "", .) %>%
@@ -256,7 +255,8 @@ observeEvent(input$report_clean, {
       gsub("(repeater\\((\n|.)*?)(register\\(\"(.*?)\"\\))\n(summary.*?)\nplot\\(result", "\\1\\3\n\\5\nplot(\\4", .) %>% 
       gsub("repeater\\(((.|\n)*?),\\s*sim+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "repeater(\n  \\3,\\1\\4)", .) %>%
       gsub("(```\\{r.*?\\})(\nresult <- pivotr(\n|.)*?)(\\s*)store\\(result, name = \"(.*?)\"\\)", "\\1\\2\\4\\5 <- result$tab; register(\"\\5\")\\6", .) %>% 
-      gsub("(```\\{r.*?\\})(\nresult <- explore(\n|.)*?)(\\s*)store\\(result, name = \"(.*?)\"\\)", "\\1\\2\\4\\5 <- result$tab; register(\"\\5\")\\6", .) 
+      gsub("(```\\{r.*?\\})(\nresult <- explore(\n|.)*?)(\\s*)store\\(result, name = \"(.*?)\"\\)", "\\1\\2\\4\\5 <- result$tab; register(\"\\5\")\\6", .) %>%
+      gsub("store\\(result,\\s*name\\s*=\\s*\"(.*?)\",\\s*type\\s*=\\s*\"((P|I)W)\"\\)", "\\1 <- result$\\2; register(\"\\1\")", .)
   })
 
   if ("styler" %in% installed.packages()) {

@@ -83,22 +83,15 @@ listToEnv <- function(x, envir = new.env()) {
 
 ## load for previous state if available but look in global memory first
 if (exists("r_data", envir = .GlobalEnv)) {
-  # print("here global")
-  # probably need to check that all DF in datasetlist are reactive
-  # r_data <- do.call(reactiveValues, r_data)
-  # r_data <- list2env(r_data, envir = new.env())
   r_data <- if (is.list(r_data)) list2env(r_data, envir = new.env()) else r_data
   r_state <- if (exists("r_state")) r_state else list()
   suppressWarnings(rm(r_data, r_state, envir = .GlobalEnv))
 } else if (!is.null(r_sessions[[r_ssuid]]$r_data)) {
-  # print("here r_session")
-  # r_data <- do.call(reactiveValues, r_sessions[[r_ssuid]]$r_data)
   r_data <- r_sessions[[r_ssuid]]$r_data %>%
     {if (is.list(.)) list2env(., envir = new.env()) else .}
   r_state <- r_sessions[[r_ssuid]]$r_state
 } else if (file.exists(paste0("~/radiant.sessions/r_", r_ssuid, ".rds"))) {
   ## read from file if not in global
-  # print("here radiant.sessions1")
   fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", r_ssuid, ".rds")
   rs <- try(readRDS(fn), silent = TRUE)
   if (is(rs, "try-error")) {
@@ -110,8 +103,6 @@ if (exists("r_data", envir = .GlobalEnv)) {
       r_data <- new.env()
       init_data(env = r_data)
     } else {
-      # r_data <- do.call(reactiveValues, rs$r_data)
-      # r_data <- list2env(rs$r_data, envir = new.env())
       r_data <- rs$r_data  %>%
         {if (is.list(.)) list2env(., envir = new.env()) else .}
     }
@@ -126,22 +117,18 @@ if (exists("r_data", envir = .GlobalEnv)) {
   unlink(fn, force = TRUE)
   rm(rs)
 } else if (isTRUE(getOption("radiant.local")) && file.exists(paste0("~/radiant.sessions/r_", mrsf, ".rds"))) {
-  # print("here radiant.sessions2")
   ## restore from local folder but assign new ssuid
   fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", mrsf, ".rds")
   rs <- try(readRDS(fn), silent = TRUE)
   if (is(rs, "try-error")) {
     r_data <- new.env()
     init_data(env = r_data)
-    # r_data <- init_data()
     r_state <- list()
   } else {
-    # r_data <- if (length(rs$r_data) == 0) init_data() else do.call(reactiveValues, rs$r_data)
     if (length(rs$r_data) == 0) {
       r_data <- new.env()
       init_data(env = r_data)
     } else {
-      # r_data <- list2env(rs$r_data, envir = new.env())
       r_data <- rs$r_data %>%
         {if (is.list(.)) list2env(., envir = new.env()) else .}
     }
@@ -171,6 +158,7 @@ isolate({
   }
   makeReactiveBinding("pvt_rows", env = r_data)
   makeReactiveBinding("nav_radiant", env = r_data)
+  
 })
 
 ## legacy, to deal with state files created before
