@@ -500,7 +500,7 @@ observeEvent(input$url_csv_load, {
   if (is(ret, "try-error")) {
     upload_error_handler(objname, "### There was an error loading the csv file from the provided url.")
   } else {
-    dat <- loadcsv(
+    dataset <- loadcsv(
       con,
       header = input$man_header,
       n_max = input$man_n_max,
@@ -509,10 +509,10 @@ observeEvent(input$url_csv_load, {
       saf = input$man_str_as_factor
     )
 
-    if (is.character(dat)) {
-      upload_error_handler(objname, dat)
+    if (is.character(dataset)) {
+      upload_error_handler(objname, dataset)
     } else {
-      r_data[[objname]] <- dat
+      r_data[[objname]] <- dataset
     }
   }
 
@@ -643,8 +643,9 @@ saveState <- function(filename) {
     isolate({
       LiveInputs <- toList(input)
       r_state[names(LiveInputs)] <- LiveInputs
-      rem_non_active()
-      r_data <- env2list(r_data)
+      # rem_non_active()
+      # r_data <- env2list(r_data)
+      r_data <- active2list(r_data)
       save(r_state, r_data, file = filename)
     })
   )

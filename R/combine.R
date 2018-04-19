@@ -69,17 +69,4 @@ combinedata <- function(
   )
 
   set_attr(x, "description", mess)
-
-  # if (exists("r_environment")) {
-  #   env <- r_environment
-  # } else if (exists("r_data")) {
-  #   env <- pryr::where("r_data")
-  # } else {
-  #   return(x)
-  # }
-
-  # env$r_data[[name]] <- x
-  # env$r_data[["datasetlist"]] <- c(name, env$r_data[["datasetlist"]]) %>% unique()
-  # env$r_data[[paste0(name, "_descr")]] <- mess
-  # message("\nCombined data added as r_data[[\"", name, "\"]]\n")
 }

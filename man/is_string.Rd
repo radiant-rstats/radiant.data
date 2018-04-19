@@ -23,5 +23,6 @@ is_string("   ")
 is_string("data")
 is_string(c("data","data"))
 is_string(NULL)
+is_string(NA)
 
 }

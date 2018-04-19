@@ -13,7 +13,7 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   shiny = FALSE, custom = FALSE)
 }
 \arguments{
-\item{dataset}{Data set to use for plot (data.frame or tibble)}
+\item{dataset}{Data to plot (data.frame or tibble)}
 
 \item{xvar}{One or more variables to display along the X-axis of the plot}
 

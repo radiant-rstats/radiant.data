@@ -29,18 +29,17 @@ pivotr <- function(
 
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   fill <- if (nvar == "None") 0L else NA
-  dat <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
-  if (!is_string(dataset)) {
-    dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
-  }
+
+  df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
+  dataset <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
 
   ## in case : was used for cvars
-  cvars <- setdiff(colnames(dat), nvar)
+  cvars <- setdiff(colnames(dataset), nvar)
 
   ## in the unlikely event that n is a variable in the dataset
-  if ("n" %in% colnames(dat)) {
+  if ("n" %in% colnames(dataset)) {
     if (nvar == "n") nvar <- ".n"
-    colnames(dat) <- colnames(dat) %>% sub("^n$", ".n", .)
+    colnames(dataset) <- colnames(dataset) %>% sub("^n$", ".n", .)
     cvars <- sub("^n$", ".n", cvars)
   }
 
@@ -49,39 +48,39 @@ pivotr <- function(
   } else {
     ## converting factors for integer (1st level)
     ## see also R/visualize.R
-    if ("factor" %in% class(dat[[nvar]]) && fun[1] != "n_distinct") {
-      dat[[nvar]] %<>% {
+    if ("factor" %in% class(dataset[[nvar]]) && fun[1] != "n_distinct") {
+      dataset[[nvar]] %<>% {
         as.integer(. == levels(.)[1])
       }
     }
-    if ("logical" %in% class(dat[[nvar]])) {
-      dat[[nvar]] %<>% as.integer
+    if ("logical" %in% class(dataset[[nvar]])) {
+      dataset[[nvar]] %<>% as.integer
     }
   }
 
   ## convert categorical variables to factors and deal with empty/missing values
-  dat <- mutate_at(dat, .vars = cvars, .funs = funs(empty_level(.)))
+  dataset <- mutate_at(dataset, .vars = cvars, .funs = funs(empty_level(.)))
 
   sel <- function(x, nvar, cvar = c()) if (nvar == "n") x else select_at(x, .vars = c(nvar, cvar))
   sfun <- function(x, nvar, cvars = "", fun = fun) {
     if (nvar == "n") {
       if (identical(cvars, "")) count(x) else count(select_at(x, .vars = cvars))
     } else {
-      dat <-
+      dataset <-
         mutate_at(x, .vars = nvar, .funs = funs(as.numeric)) %>%
         summarise_at(.vars = nvar, .funs = make_funs(fun))
-      colnames(dat)[ncol(dat)] <- nvar
-      dat
+      colnames(dataset)[ncol(dataset)] <- nvar
+      dataset
     }
   }
 
   ## main tab
-  tab <- dat %>%
+  tab <- dataset %>%
     group_by_at(.vars = cvars) %>%
     sfun(nvar, cvars, fun)
 
   ## total
-  total <- dat %>% sel(nvar) %>% sfun(nvar, fun = fun)
+  total <- dataset %>% sel(nvar) %>% sfun(nvar, fun = fun)
 
   ## row and colum totals
   if (length(cvars) == 1) {
@@ -92,14 +91,14 @@ pivotr <- function(
       )
   } else {
     col_total <-
-      group_by_at(dat, .vars = cvars[1]) %>%
+      group_by_at(dataset, .vars = cvars[1]) %>%
       sel(nvar, cvars[1]) %>%
       sfun(nvar, cvars[1], fun) %>%
       ungroup() %>%
       mutate_at(.vars = cvars[1], .funs = funs(as.character))
 
     row_total <-
-      group_by_at(dat, .vars = cvars[-1]) %>%
+      group_by_at(dataset, .vars = cvars[-1]) %>%
       sfun(nvar, cvars[-1], fun) %>%
       ungroup() %>%
       select(ncol(.)) %>%
@@ -129,7 +128,7 @@ pivotr <- function(
 
   ## resetting factor levels
   ind <- ifelse(length(cvars) > 1, -1, 1)
-  levs <- lapply(select_at(dat, .vars = cvars[ind]), levels)
+  levs <- lapply(select_at(dataset, .vars = cvars[ind]), levels)
 
   for (i in cvars[ind])
     tab[[i]] %<>% factor(., levels = unique(c(levs[[i]], "Total")))
@@ -180,7 +179,7 @@ pivotr <- function(
     tab <- tab[ind, , drop = FALSE]
   }
 
-  rm(isNum, dat, sfun, sel, i, levs, total, ind, nrow_tab)
+  rm(isNum, dataset, sfun, sel, i, levs, total, ind, nrow_tab)
 
   as.list(environment()) %>% add_class("pivotr")
 }
@@ -213,7 +212,7 @@ summary.pivotr <- function(
 
   if (!shiny) {
     cat("Pivot table\n")
-    cat("Data        :", object$dataset, "\n")
+    cat("Data        :", object$df_name, "\n")
     if (object$data_filter %>% gsub("\\s", "", .) != "") {
       cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
     }
@@ -520,20 +519,4 @@ store.pivotr <- function(dataset, object, name, ...) {
       call. = FALSE
     )
   }
-
-  # ## fix colnames as needed
-  # colnames(tab) <- sub("^\\s+", "", colnames(tab)) %>% sub("\\s+$", "", .) %>% gsub("\\s+", "_", .)
-
-  # if (exists("r_environment")) {
-  #   env <- r_environment
-  # } else if (exists("r_data")) {
-  #   env <- pryr::where("r_data")
-  # } else {
-  #   return(tab)
-  # }
-
-  # message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
-
-  # env$r_data[[name]] <- tab
-  # env$r_data[["datasetlist"]] <- c(name, env$r_data[["datasetlist"]]) %>% unique()
 }

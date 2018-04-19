@@ -4,10 +4,10 @@
 \alias{level_list}
 \title{Generate list of levels and unique values}
 \usage{
-level_list(dat, ...)
+level_list(dataset, ...)
 }
 \arguments{
-\item{dat}{A data.frame}
+\item{dataset}{A data.frame}
 
 \item{...}{Unquoted variable names to evaluate}
 }

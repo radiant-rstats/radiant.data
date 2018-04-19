@@ -192,20 +192,20 @@ sshhr <- function(...) suppressWarnings(suppressMessages(...))
 
 #' Filter data with user-specified expression
 #'
-#' @param dat Data frame to filter
+#' @param dataset Data frame to filter
 #' @param filt Filter expression to apply to the specified dataset (e.g., "price > 10000" if dataset is "diamonds")
 #' @param drop Drop unused factor levels after filtering (default is TRUE)
 #'
 #' @return Filtered data frame
 #'
 #' @export
-filterdata <- function(dat, filt = "", drop = TRUE) {
+filterdata <- function(dataset, filt = "", drop = TRUE) {
   if (grepl("([^=!<>])=([^=])", filt)) {
     message("Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
   } else {
     seldat <- try(
       ## use %>% so . will be available to represent the available data in filters
-      dat %>% filter(!! rlang::parse_expr(fixMS(filt))),
+      dataset %>% filter(!! rlang::parse_expr(fixMS(filt))),
       silent = TRUE
     )
     if (is(seldat, "try-error")) {
@@ -218,7 +218,7 @@ filterdata <- function(dat, filt = "", drop = TRUE) {
       }
     }
   }
-  dat
+  dataset
 }
 
 #' Get data for analysis functions
@@ -241,17 +241,10 @@ getdata <- function(
     gsub("\"", "\'", .)
 
   ## extra {} around if (...) required to pass tests
-  {if (!is_string(dataset)) {
+  {if (is.data.frame(dataset)) {
     dataset
-  # } else if (exists("r_environment") && !is.null(r_environment$r_data[[dataset]])) {
-    # r_environment$r_data[[dataset]]
-  # } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
   } else if (exists("r_environment") && exists("r_data") && !is.null(r_data[[dataset]])) {
-    # if (isTRUE(getOption("radiant.local"))) message("Dataset ", dataset, " loaded from r_data list\n")
     r_data[[dataset]]
-  # } else if (exists(dataset)) {
-  #   d_env <- pryr::where(dataset)
-  #   d_env[[dataset]]
   } else {
     paste0("Dataset ", dataset, " is not available. Please load the dataset") %>%
       stop(call. = FALSE)
@@ -265,15 +258,15 @@ getdata <- function(
 
 #' Convert character to factors as needed
 #'
-#' @param dat Data frame
+#' @param dataset Data frame
 #' @param safx Values to levels ratio
 #'
 #' @return Data frame with factors
 #'
 #' @export
-factorizer <- function(dat, safx = 30) {
-  isChar <- sapply(dat, is.character)
-  if (sum(isChar) == 0) return(dat)
+factorizer <- function(dataset, safx = 30) {
+  isChar <- sapply(dataset, is.character)
+  if (sum(isChar) == 0) return(dataset)
   fab <- function(x) {
     n <- length(x)
     if (n < 101) return(TRUE)
@@ -281,13 +274,13 @@ factorizer <- function(dat, safx = 30) {
     nd < 100 && (nd / n < (1 / safx))
   }
   toFct <-
-    select(dat, which(isChar)) %>%
+    select(dataset, which(isChar)) %>%
     summarise_all(funs(fab)) %>%
     select(which(. == TRUE)) %>%
     names()
-  if (length(toFct) == 0) return(dat)
+  if (length(toFct) == 0) return(dataset)
 
-  mutate_at(dat, .vars = toFct, .funs = funs(as.factor))
+  mutate_at(dataset, .vars = toFct, .funs = funs(as.factor))
 }
 
 #' Load an rds, rda, or csv file and add it to the radiant data list (r_data) if available
@@ -324,31 +317,7 @@ loadr <- function(file, objname = "", rlist = TRUE, env = parent.frame()) {
     stop("File must have extension rds, rda, rdata, csv, or tsv")
   }
 
-  # shiny <- exists("r_environment")
-
-  # if (!shiny) {
-  #   if (rlist) {
-  #     if (!exists("r_data")) {
-  #       assign("r_data", list(), envir = parent.frame())
-  #     }
-
-  #     env <- pryr::where("r_data")
-  #   } else {
-  #     assign(objname, loadfun(file), envir = parent.frame())
-  #     return(invisible())
-  #   }
-  # } else {
-  #   env <- r_environment
-  # }
-
   assign(objname, loadfun(file), envir = env)
-
-  # env$r_data[[objname]] <- loadfun(file)
-
-  # if (shiny) {
-  #   env$r_data[[paste0(objname, "_descr")]] <- attr(env$r_data[[objname]], "description")
-  #   env$r_data[["datasetlist"]] <- c(objname, env$r_data[["datasetlist"]]) %>% unique()
-  # }
 
   if (exists("r_environment")) {
     shiny::makeReactiveBinding(objname, env = r_data)
@@ -374,17 +343,17 @@ saver <- function(objname, file) {
   }
 
   if (!is.character(objname)) {
-    dat <- objname
+    dataset <- objname
     objname <- deparse(substitute(objname))
   } else {
-    # dat <- getdata(objname)
-    dat <- get(objname)
+    # dataset <- getdata(objname)
+    dataset <- get(objname)
   }
 
   if (ext == "rds") {
-    saveRDS(dat, file = file)
+    saveRDS(dataset, file = file)
   } else {
-    assign(objname, dat)
+    assign(objname, dataset)
     save(list = objname, file = file)
   }
 }
@@ -407,9 +376,9 @@ loadcsv <- function(fn, header = TRUE, sep = ",", dec = ".", n_max = Inf, saf = 
   n_max <- if (is_not(n_max) || n_max == -1) Inf else n_max
 
   cn <- read.table(fn, header = header, sep = sep, dec = dec, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1)
-  dat <- sshhr(try(readr::read_delim(fn, sep, locale = readr::locale(decimal_mark = dec, grouping_mark = sep), col_names = colnames(cn), skip = header, n_max = n_max), silent = TRUE))
-  if (!is(dat, "try-error")) {
-    prb <- readr::problems(dat)
+  dataset <- sshhr(try(readr::read_delim(fn, sep, locale = readr::locale(decimal_mark = dec, grouping_mark = sep), col_names = colnames(cn), skip = header, n_max = n_max), silent = TRUE))
+  if (!is(dataset, "try-error")) {
+    prb <- readr::problems(dataset)
     if (nrow(prb) > 0) {
       tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
       rprob <- knitr::kable(prb[1:(min(nrow(prb):10)), , drop = FALSE], align = "l", format = "html", table.attr = tab_big, caption = "Read issues (max 10 rows shown): Consider selecting read.csv to read the file (see check-box on the left). To reload the file you may need to refresh the browser first")
@@ -417,9 +386,9 @@ loadcsv <- function(fn, header = TRUE, sep = ",", dec = ".", n_max = Inf, saf = 
     rm(prb)
   }
 
-  if (is(dat, "try-error")) return("### There was an error loading the data. Please make sure the data are in csv format.")
-  if (saf) dat <- factorizer(dat, safx)
-  as.data.frame(dat, stringsAsFactors = FALSE) %>%
+  if (is(dataset, "try-error")) return("### There was an error loading the data. Please make sure the data are in csv format.")
+  if (saf) dataset <- factorizer(dataset, safx)
+  as.data.frame(dataset, stringsAsFactors = FALSE) %>%
     {set_colnames(., make.names(colnames(.)))} %>%
     set_attr("description", rprob)
 }
@@ -569,29 +538,6 @@ choose_dir <- function(...) {
     dirname(file.choose())
   }
 }
-
-# changedata <- function(dataset, vars = c(), var_names = names(vars)) {
-
-#   if (!is.character(dataset)) {
-#     dataset[, var_names] <- vars
-#     return(dataset)
-#   } else if (exists("r_environment")) {
-#     message("Dataset ", dataset, " changed in r_environment\n")
-#     r_environment$r_data[[dataset]][, var_names] <- vars
-#   } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
-#     if (isTRUE(getOption("radiant.local"))) message("Dataset ", dataset, " loaded from r_data list\n")
-#     d_env <- pryr::where("r_data")
-#     d_env$r_data[[dataset]][, var_names] <- vars
-#   } else if (exists(dataset)) {
-#     d_env <- pryr::where(dataset)
-#     message("Dataset ", dataset, " changed in ", environmentName(d_env), " environment\n")
-#     d_env[[dataset]][, var_names] <- vars
-#   } else {
-#     paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
-#       stop() %>%
-#       return()
-#   }
-# }
 
 #' View data in a shiny-app
 #'
@@ -818,9 +764,14 @@ getclass <- function(dat) {
 #' is_empty("")
 #' is_empty("   ")
 #' is_empty(" something  ")
+#' is_empty(c("", "something"))
+#' is_empty(c(NA, 1:100))
+#' is_empty(mtcars)
 #'
 #' @export
-is_empty <- function(x, empty = "\\s*") if (is_not(x) || grepl(paste0("^", empty, "$"), x)) TRUE else FALSE
+is_empty <- function(x, empty = "\\s*") {
+  is_not(x) || (length(x) == 1 && grepl(paste0("^", empty, "$"), x))
+}
 
 #' Is input a string?
 #'
@@ -835,9 +786,12 @@ is_empty <- function(x, empty = "\\s*") if (is_not(x) || grepl(paste0("^", empty
 #' is_string("data")
 #' is_string(c("data","data"))
 #' is_string(NULL)
+#' is_string(NA)
 #'
 #' @export
-is_string <- function(x) if (length(x) == 1 && is.character(x) && !is_empty(x)) TRUE else FALSE
+is_string <- function(x) {
+  length(x) == 1 && is.character(x) && !is_empty(x)
+}
 
 #' Create a vector of interaction terms
 #'
@@ -1353,9 +1307,13 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
 #' is_not(NA)
 #' is_not(NULL)
 #' is_not(c())
+#' is_not(list())
+#' is_not(data.frame())
 #'
 #' @export
-is_not <- function(x) length(x) == 0 || is.na(x)
+is_not <- function(x) {
+  length(x) == 0 || (length(x) == 1 && is.na(x))
+} 
 
 #' Don't try to plot strings
 #'

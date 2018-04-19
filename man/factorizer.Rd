@@ -4,10 +4,10 @@
 \alias{factorizer}
 \title{Convert character to factors as needed}
 \usage{
-factorizer(dat, safx = 30)
+factorizer(dataset, safx = 30)
 }
 \arguments{
-\item{dat}{Data frame}
+\item{dataset}{Data frame}
 
 \item{safx}{Values to levels ratio}
 }

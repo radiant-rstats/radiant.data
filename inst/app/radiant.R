@@ -14,6 +14,16 @@ rem_non_active <- function(env = r_data) {
   rm(list = names(isactive)[!isactive], envir = env)
 }
 
+active2list <- function(env = r_data) {
+  isactive <- sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env)) %>%
+    {names(.)[.]}
+  if (length(isactive) > 0) {
+    mget(isactive, env)
+  } else {
+    list()
+  }
+}
+
 saveSession <- function(session = session) {
   if (!exists("r_sessions")) return()
 
@@ -25,6 +35,7 @@ saveSession <- function(session = session) {
 
   r_sessions[[r_ssuid]] <- list(
     r_data = env2list(r_data),
+    # r_data = active2list(r_data),
     r_state = r_state,
     timestamp = Sys.time()
   )
@@ -199,21 +210,24 @@ clean_args <- function(rep_args, rep_default = list()) {
 }
 
 ## check if a variable is null or not in the selected data.frame
-not_available <- function(x)
-  if (any(is.null(x)) || (sum(x %in% varnames()) < length(x))) TRUE else FALSE
+not_available <- function(x) any(is.null(x)) || (sum(x %in% varnames()) < length(x))
+  # if (any(is.null(x)) || (sum(x %in% varnames()) < length(x))) TRUE else FALSE
 
 ## check if a variable is null or not in the selected data.frame
-available <- function(x) not_available(x) == FALSE
+# available <- function(x) not_available(x) == FALSE
+available <- function(x) !not_available(x)
 
 ## check if a button was NOT pressed
-not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
+# not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
+not_pressed <- function(x) is.null(x) || x == 0
 
 ## check if a button was pressed
-pressed <- function(x) ifelse(!is.null(x) && x > 0, TRUE, FALSE)
+# pressed <- function(x) ifelse(!is.null(x) && x > 0, TRUE, FALSE)
+pressed <- function(x) !is.null(x) && x > 0
 
 ## check for duplicate entries
-has_duplicates <- function(x)
-  if (length(unique(x)) < length(x)) TRUE else FALSE
+# has_duplicates <- function(x) if (length(unique(x)) < length(x)) TRUE else FALSE
+has_duplicates <- function(x) length(unique(x)) < length(x)
 
 ## is x some type of date variable
 is_date <- function(x) inherits(x, c("Date", "POSIXlt", "POSIXct"))
@@ -222,13 +236,13 @@ is_date <- function(x) inherits(x, c("Date", "POSIXlt", "POSIXct"))
 r_drop <- function(x, drop = c("dataset", "data_filter")) x[-which(x %in% drop)]
 
 ## show a few rows of a dataframe
-show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt = "") {
-  if (is.character(dat) && length(dat) == 1) dat <- getdata(dat, filt = filt, na.rm = FALSE)
-  nr <- nrow(dat)
+show_data_snippet <- function(dataset = input$dataset, nshow = 7, title = "", filt = "") {
+  if (is.character(dataset) && length(dataset) == 1) dataset <- getdata(dataset, filt = filt, na.rm = FALSE)
+  nr <- nrow(dataset)
   ## avoid slice with variables outside of the df in case a column with the same
   ## name exists
-  dat <- dat[1:min(nshow, nr), , drop = FALSE]
-  dat %>%
+  dataset <- dataset[1:min(nshow, nr), , drop = FALSE]
+  dataset %>%
     mutate_if(is_date, as.character) %>%
     mutate_if(is.character, funs(strtrim(., 40))) %>%
     xtable::xtable(.) %>%
@@ -242,8 +256,8 @@ show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt =
     enc2utf8()
 }
 
-suggest_data <- function(text = "", dat = "diamonds")
-  paste0(text, "For an example dataset go to Data > Manage, select 'examples' from the\n'Load data of type' dropdown, and press the 'Load examples' button. Then\nselect the \'", dat, "\' dataset.")
+suggest_data <- function(text = "", df_name = "diamonds")
+  paste0(text, "For an example dataset go to Data > Manage, select 'examples' from the\n'Load data of type' dropdown, and press the 'Load examples' button. Then\nselect the \'", df_name, "\' dataset.")
 
 ## function written by @wch https://github.com/rstudio/shiny/issues/781#issuecomment-87135411
 capture_plot <- function(expr, env = parent.frame()) {
@@ -691,10 +705,7 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
     sc <- "NULL"
   }
 
-  dat <- get(paste0(".", fun))()$tab %>% {
-    nr <<- nrow(.)
-    .[1, , drop = FALSE]
-  }
+  dat <- get(paste0(".", fun))()$tab %>% {nr <<- nrow(.); .[1, , drop = FALSE]}
 
   if (order != "NULL" || sc != "NULL") {
 

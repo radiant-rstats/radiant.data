@@ -4,10 +4,10 @@
 \alias{getsummary}
 \title{Create data.frame summary}
 \usage{
-getsummary(dat, dc = getclass(dat))
+getsummary(dataset, dc = getclass(dataset))
 }
 \arguments{
-\item{dat}{Data.frame}
+\item{dataset}{Data.frame}
 
 \item{dc}{Class for each variable}
 }

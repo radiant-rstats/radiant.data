@@ -34,28 +34,25 @@ explore <- function(
   tvars <- vars
   if (!is_empty(byvar)) tvars <- unique(c(tvars, byvar))
 
-  dat <- getdata(dataset, tvars, filt = data_filter, na.rm = FALSE)
-  if (!is_string(dataset)) {
-    dataset <- deparse(substitute(dataset)) %>%
-      set_attr("df", TRUE)
-  }
+  df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
+  dataset <- getdata(dataset, tvars, filt = data_filter, na.rm = FALSE)
 
   ## in case : was used
-  vars <- setdiff(colnames(dat), byvar)
+  vars <- setdiff(colnames(dataset), byvar)
 
   ## converting factors for integer (1st level)
   ## see also R/visualize.R
-  dc <- getclass(dat)
+  dc <- getclass(dataset)
   isFctNum <- "factor" == dc & names(dc) %in% setdiff(vars, byvar)
   if (sum(isFctNum)) {
-    dat[, isFctNum] <- select(dat, which(isFctNum)) %>%
+    dataset[, isFctNum] <- select(dataset, which(isFctNum)) %>%
       mutate_all(funs(as.integer(. == levels(.)[1])))
     dc[isFctNum] <- "integer"
   }
 
   isLogNum <- "logical" == dc & names(dc) %in% setdiff(vars, byvar)
   if (sum(isLogNum)) {
-    dat[, isLogNum] <- select(dat, which(isLogNum)) %>%
+    dataset[, isLogNum] <- select(dataset, which(isLogNum)) %>%
       mutate_all(funs(as.integer))
     dc[isLogNum] <- "integer"
   }
@@ -66,7 +63,7 @@ explore <- function(
   if (is_empty(byvar)) {
     isNum <- dc %>%
       {which("numeric" == . | "integer" == .)}
-    tab <- dat %>%
+    tab <- dataset %>%
       select_at(.vars = names(isNum)) %>%
       gather("variable", "value", factor_key = TRUE) %>%
       group_by_at("variable") %>%
@@ -82,7 +79,7 @@ explore <- function(
 
     ## convert categorical variables to factors if needed
     ## needed to deal with empty/missing values
-    dat[, byvar] <- select_at(dat, .vars = byvar) %>%
+    dataset[, byvar] <- select_at(dataset, .vars = byvar) %>%
       mutate_all(funs(empty_level(.)))
 
     ## avoiding issues with n_missing and n_distinct in dplyr
@@ -99,7 +96,7 @@ explore <- function(
 
     names(pfun) %<>% fix_uscore
 
-    tab <- dat %>%
+    tab <- dataset %>%
       group_by_at(.vars = byvar) %>%
       summarise_all(pfun)
 
@@ -168,7 +165,7 @@ explore <- function(
 
 
   ## objects no longer needed
-  rm(dat, check_int)
+  rm(dataset, check_int)
 
   as.list(environment()) %>% add_class("explore")
 }
@@ -195,7 +192,7 @@ explore <- function(
 summary.explore <- function(object, dec = 3, ...) {
 
   cat("Explore\n")
-  cat("Data        :", object$dataset, "\n")
+  cat("Data        :", object$df_name, "\n")
   if (object$data_filter %>% gsub("\\s", "", .) != "") {
     cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
   }

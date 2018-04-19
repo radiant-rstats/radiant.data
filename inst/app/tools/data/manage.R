@@ -17,7 +17,7 @@ upload_error_handler <- function(objname, ret) {
 }
 
 loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRUE, sep = "\t") {
-  dat <- sshhr(try({
+  dataset <- sshhr(try({
     if (Sys.info()["sysname"] == "Windows") {
       read.table("clipboard", header = header, sep = sep, comment.char = "", fill = TRUE, as.is = TRUE)
     } else if (Sys.info()["sysname"] == "Darwin") {
@@ -29,13 +29,13 @@ loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRU
     }
   } %>% as.data.frame(check.names = TRUE, stringsAsFactors = FALSE), silent = TRUE))
 
-  if (is(dat, "try-error") || nrow(dat) == 0) {
+  if (is(dataset, "try-error") || nrow(dataset) == 0) {
     if (ret == "") ret <- c("### Data in clipboard was not well formatted. Try exporting the data to csv format.")
     upload_error_handler(objname, ret)
   } else {
     ret <- paste0("### Clipboard data\nData copied from clipboard on ", lubridate::now())
-    colnames(dat) <- make.names(colnames(dat))
-    r_data[[objname]] <- factorizer(dat)
+    colnames(dataset) <- make.names(colnames(dataset))
+    r_data[[objname]] <- factorizer(dataset)
   }
   shiny::makeReactiveBinding(objname, env = r_data)
   r_data[[paste0(objname, "_descr")]] <- ret

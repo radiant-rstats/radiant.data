@@ -413,11 +413,11 @@ weighted.sd <- function(x, wt, na.rm = TRUE) {
 #'
 #' @details Used in Radiant's Data > Transform tab
 #'
-#' @param dat Data.frame
+#' @param dataset Data.frame
 #' @param dc Class for each variable
 #'
 #' @export
-getsummary <- function(dat, dc = getclass(dat)) {
+getsummary <- function(dataset, dc = getclass(dataset)) {
   isFct <- "factor" == dc
   isNum <- dc %in% c("numeric", "integer", "Duration")
   isDate <- "date" == dc
@@ -429,7 +429,7 @@ getsummary <- function(dat, dc = getclass(dat)) {
     cn <- names(dc)[isNum]
 
     cat("Summarize numeric variables:\n")
-    select(dat, which(isNum)) %>%
+    select(dataset, which(isNum)) %>%
       gather("variable", "values", !! cn, factor_key = TRUE) %>%
       group_by_at(.vars = "variable") %>%
       summarise_all(
@@ -456,18 +456,18 @@ getsummary <- function(dat, dc = getclass(dat)) {
 
   if (sum(isFct) > 0) {
     cat("Summarize factors:\n")
-    select(dat, which(isFct)) %>% summary(maxsum = 20) %>% print()
+    select(dataset, which(isFct)) %>% summary(maxsum = 20) %>% print()
     cat("\n")
   }
 
   if (sum(isDate) > 0) {
     cat("Earliest dates:\n")
-    select(dat, which(isDate)) %>%
+    select(dataset, which(isDate)) %>%
       summarise_all(funs(min)) %>%
       as.data.frame(stringsAsFactors = FALSE) %>%
       print(row.names = FALSE)
     cat("\nFinal dates:\n")
-    select(dat, which(isDate)) %>%
+    select(dataset, which(isDate)) %>%
       summarise_all(funs(max)) %>%
       as.data.frame(stringsAsFactors = FALSE) %>%
       print(row.names = FALSE)
@@ -480,12 +480,12 @@ getsummary <- function(dat, dc = getclass(dat)) {
     min_time <- function(x) sort(x) %>% head(1)
 
     cat("Earliest time:\n")
-    select(dat, which(isPeriod)) %>%
+    select(dataset, which(isPeriod)) %>%
       summarise_all(funs(min_time)) %>%
       as.data.frame(stringsAsFactors = FALSE) %>%
       print(row.names = FALSE)
     cat("\nFinal time:\n")
-    select(dat, which(isPeriod)) %>%
+    select(dataset, which(isPeriod)) %>%
       summarise_all(funs(max_time)) %>%
       as.data.frame(stringsAsFactors = FALSE) %>%
       print(row.names = FALSE)
@@ -494,16 +494,16 @@ getsummary <- function(dat, dc = getclass(dat)) {
 
   if (sum(isChar) > 0) {
     ## finding unique elements can be slow for large files
-    if (nrow(dat) < 10 ^ 5) {
+    if (nrow(dataset) < 10 ^ 5) {
       cat("Summarize character variables (< 20 unique values shown):\n")
-      select(dat, which(isChar)) %>% lapply(unique) %>% {
+      select(dataset, which(isChar)) %>% lapply(unique) %>% {
         for (i in names(.)) {
           cat(i, paste0("(n_distinct ", length(.[[i]]), "): "), .[[i]][1:min(20, length(.[[i]]))], "\n")
         }
       }
     } else {
       cat("Summarize character variables (< 20 values shown):\n")
-      select(dat, which(isChar)) %>% {
+      select(dataset, which(isChar)) %>% {
         for (i in names(.)) {
           cat(i, ":", .[[i]][1:min(20, length(.[[i]]))], "\n")
         }
@@ -513,13 +513,13 @@ getsummary <- function(dat, dc = getclass(dat)) {
   }
   if (sum(isLogic) > 0) {
     cat("Summarize logical variables:\n")
-    select(dat, which(isLogic)) %>%
+    select(dataset, which(isLogic)) %>%
       summarise_all(funs(sum_rm, mean_rm, n_missing)) %>%
       mutate_if(is.numeric, funs(round(., 4))) %>%
       matrix(ncol = 3) %>%
       data.frame(stringsAsFactors = FALSE) %>%
       set_colnames(c("# TRUE", "% TRUE", "n_missing")) %>%
-      set_rownames(names(dat)[isLogic]) %>%
+      set_rownames(names(dataset)[isLogic]) %>%
       print()
     cat("\n")
   }
@@ -527,29 +527,29 @@ getsummary <- function(dat, dc = getclass(dat)) {
 
 #' Create data.frame from a table
 #'
-#' @param dat Data.frame
+#' @param dataset Data.frame
 #' @param freq Column name with frequency information
 #'
 #' @examples
 #' data.frame(price = c("$200","$300"), sale = c(10, 2)) %>% table2data()
 #'
 #' @export
-table2data <- function(dat, freq = tail(colnames(dat), 1)) {
+table2data <- function(dataset, freq = tail(colnames(dataset), 1)) {
 
-  if (!is.numeric(dat[[freq]])) stop("The frequency variable must be numeric", call = FALSE)
+  if (!is.numeric(dataset[[freq]])) stop("The frequency variable must be numeric", call = FALSE)
   blowup <- function(i) {
-    if (!is.na(dat[[freq]][i])) dat[rep(i, each = dat[[freq]][i]), ]
+    if (!is.na(dataset[[freq]][i])) dataset[rep(i, each = dataset[[freq]][i]), ]
   }
 
-  lapply(seq_len(nrow(dat)), blowup) %>%
+  lapply(seq_len(nrow(dataset)), blowup) %>%
     bind_rows() %>%
-    select_at(.vars = setdiff(colnames(dat), freq)) %>%
+    select_at(.vars = setdiff(colnames(dataset), freq)) %>%
     mutate_all(funs(as.factor))
 }
 
 #' Generate list of levels and unique values
 #'
-#' @param dat A data.frame
+#' @param dataset A data.frame
 #' @param ... Unquoted variable names to evaluate
 #'
 #' @examples
@@ -557,7 +557,7 @@ table2data <- function(dat, freq = tail(colnames(dat), 1)) {
 #' level_list(mtcars, mpg, cyl)
 #'
 #' @export
-level_list <- function(dat, ...) {
+level_list <- function(dataset, ...) {
   fl <- function(x) {
     if ("factor" %in% class(x)) {
       levels(x)
@@ -567,9 +567,9 @@ level_list <- function(dat, ...) {
   }
   .vars <- sapply(substitute(list(...))[-1], deparse)
   if (length(.vars) > 0) {
-    lapply(select_at(dat, .vars = .vars), fl)
+    lapply(select_at(dataset, .vars = .vars), fl)
   } else {
-    lapply(dat, fl)
+    lapply(dataset, fl)
   }
 }
 
