@@ -241,7 +241,7 @@ output$report_r <- renderUI({
 })
 
 ## for auto completion of available R functions
-r_edit_auto <- shinyAce::aceAutocomplete("r_edit")
+# r_edit_auto <- shinyAce::aceAutocomplete("r_edit")
 
 observeEvent(input$r_knit, {
   ## hack to allow processing current line

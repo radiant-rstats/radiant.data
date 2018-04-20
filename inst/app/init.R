@@ -277,6 +277,15 @@ if (getOption("radiant.from.package", default = TRUE)) {
   # cat("\nGetting radiant.data from source ...\n")
 }
 
+options(radiant.auto_complete =
+  grep("package:*", search(), value = TRUE) %>%
+    gsub("package:", "", .)  %>% 
+    {c(grep("radiant", installed.packages()[,"Package"], value = TRUE), .)} %>%
+    unique() %>%
+    sapply(function(x) grep("^[A-Za-z]", getNamespaceExports(x), value = TRUE)) %>%
+    set_names(., paste0("{", names(.), "}"))
+)
+
 ## popup to suggest changing the working directory
 # if (getOption("radiant.project_dirx", "none") == "none") {
 #   showModal(

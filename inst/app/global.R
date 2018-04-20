@@ -54,35 +54,7 @@ import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
 }
 
 ## list of function to suggest during autocomplete in Report > Rmd and Report > R
-# options(radiant.auto_complete =
-#   grep("^[^\\.]",
-#     sapply(
-#       c(
-#         grep("radiant", installed.packages()[,"Package"], value = TRUE),
-#         dplyr = "dplyr", ggplot2 = "ggplot2", tidyr = "tidyr",
-#         lubridate = "lubridate", tibble = "tibble", readr = "readr",
-#         readxl = "readxl"
-#       ),
-#       getNamespaceExports
-#     ),
-#     value = TRUE
-#   )
-# )
-
-# options(radiant.auto_complete =
-#   sapply(
-#     c(
-#       grep("radiant", installed.packages()[,"Package"], value = TRUE),
-#       dplyr = "dplyr", ggplot2 = "ggplot2", tidyr = "tidyr",
-#       tibble = "tibble", readr = "readr", readxl = "readxl"
-#     ),
-#     getNamespaceExports
-#   )
-# )
-
-options(radiant.auto_complete =
-  sapply(grep("radiant", installed.packages()[,"Package"], value = TRUE), getNamespaceExports)
-)
+## moved to init.R
 
 init_data <- function(env = r_data) {
   ## Based on discussion with Joe Cheng: Datasets can change over time 

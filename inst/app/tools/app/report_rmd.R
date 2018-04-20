@@ -255,24 +255,6 @@ output$ui_rmd_read_files <- renderUI({
   }
 })
 
-# observe({
-#   ## see viz ui
-#   input$rmd_edit
-#   isolate({
-#     print(attr(rmd_knitted, "observable")$.invalidated)
-#   })
-
-#   ## notify user when the report needs to be updated
-#   ## based on https://stackoverflow.com/questions/45478521/listen-to-reactive-invalidation-in-shiny
-#   if (report_rmd$report != 1) {
-#     if (isTRUE(attr(rmd_knitted, "observable")$.invalidated)) {
-#       updateActionButton(session, "rmd_knit", "Update report", icon = icon("refresh", class = "fa-spin"))
-#     } else {
-#       updateActionButton(session, "rmd_knit", "Knit report", icon = icon("play"))
-#     }
-#   }
-# })
-
 output$report_rmd <- renderUI({
   tagList(
     with(
@@ -323,38 +305,32 @@ output$report_rmd <- renderUI({
 })
 
 ## for auto completion of available R functions
-rmd_edit_auto <- shinyAce::aceAutocomplete("rmd_edit")
+# rmd_edit_auto <- shinyAce::aceAutocomplete("rmd_edit")
 
-observe({
-  req(input$dataset)
-  # comps <- getOption("radiant.auto_complete", list())
-  comps <- list(
-    r_data = r_data$datasetlist,
-    vars = as.vector(varnames())
-  )
-  # print(comps)
-  # comps$r_data
-  # comps[["r_data"]] <- r_data$datasetlist
-  # comps[["vars"]] <- as.vector(varnames())
-  # shinyAce::updateAceEditor(
-  #   session, "rmd_edit",
-  #   autoCompleters = c("static", "rlang", "text", "keyword")
-  # )
-  shinyAce::updateAceEditor(
-    session, "rmd_edit",
-    autoCompleteList = comps
-  )
-})
-
-## doesn't seem necessary
+## combine 'static' autocomplete lists
 # observe({
-#   rmd_edit_auto$resume()
+#   # req(input$dataset)
+#   # print("got here 2")
+#   comps <- list(
+#     `{datasets}` = r_data$datasetlist,
+#     `{vars}` = as.vector(varnames())
+#   )
+#   # comps <- c(comps, getOption("radiant.auto_complete", list()))
+#   # print(comps)
+#   # comps$r_data
+#   # comps[["r_data"]] <- r_data$datasetlist
+#   # comps[["vars"]] <- as.vector(varnames())
+#   # shinyAce::updateAceEditor(
+#   #   session, "rmd_edit",
+#   #   autoCompleters = c("static", "rlang", "text", "keyword")
+#   # )
+#   shinyAce::updateAceEditor(
+#     session, "rmd_edit",
+#     autoCompleteList = comps
+#   )
 # })
 
-## see ?shinyAce::aceAutocomplete
-# observe({
-#   print(input$shinyAce_rmd_edit_hint)
-# })
+
 
 observeEvent(input$rmd_knit, {
   ## hack to allow processing current line
