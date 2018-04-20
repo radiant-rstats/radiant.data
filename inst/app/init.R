@@ -71,15 +71,6 @@ session$sendCustomMessage("session_start", r_ssuid)
 
 ## identify the shiny environment
 r_environment <- environment()
-## create a child environment to use for Report > Rmd and Report > R
-# r_data <- environment()
-
-listToEnv <- function(x, envir = new.env()) {
-  if (is.list(x)) {
-
-  }
-
-}
 
 ## load for previous state if available but look in global memory first
 if (exists("r_data", envir = .GlobalEnv)) {
@@ -158,7 +149,7 @@ isolate({
   }
   makeReactiveBinding("pvt_rows", env = r_data)
   makeReactiveBinding("nav_radiant", env = r_data)
-  
+
 })
 
 ## legacy, to deal with state files created before
@@ -277,14 +268,18 @@ if (getOption("radiant.from.package", default = TRUE)) {
   # cat("\nGetting radiant.data from source ...\n")
 }
 
+# start_time <- Sys.time()
 options(radiant.auto_complete =
   grep("package:*", search(), value = TRUE) %>%
-    gsub("package:", "", .)  %>% 
+    gsub("package:", "", .)  %>%
     {c(grep("radiant", installed.packages()[,"Package"], value = TRUE), .)} %>%
     unique() %>%
     sapply(function(x) grep("^[A-Za-z]", getNamespaceExports(x), value = TRUE)) %>%
     set_names(., paste0("{", names(.), "}"))
 )
+# end_time <- Sys.time()
+# print(end_time - start_time)
+# length(getOption("radiant.auto_complete") %>% unlist)
 
 ## popup to suggest changing the working directory
 # if (getOption("radiant.project_dirx", "none") == "none") {
