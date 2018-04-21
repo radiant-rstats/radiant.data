@@ -330,8 +330,6 @@ output$report_rmd <- renderUI({
 #   )
 # })
 
-
-
 observeEvent(input$rmd_knit, {
   ## hack to allow processing current line
   report_rmd$knit_button <- 1
