@@ -758,38 +758,6 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
   list(search = search, order = order, sc = sc, tabsort = tabsort, tabfilt = tabfilt, nr = nr)
 }
 
-## used by View - remove or use more broadly
-# find_env <- function(dataset) {
-#   if (exists("r_environment")) {
-#     r_environment
-#   } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
-#     pryr::where("r_data")
-#   } else if (exists(dataset)) {
-#     pryr::where(dataset)
-#   }
-# }
-
-## used by View - remove or use more broadly
-# save2env <- function(dat, dataset,
-#                      dat_name = dataset,
-#                      mess = "") {
-#   env <- find_env(dataset)
-#   env$r_data[[dat_name]] <- dat
-#   if (dataset != dat_name) {
-#     message(paste0("Dataset r_data$", dat_name, " created in ", environmentName(env), " environment\n"))
-#     env$r_data[["datasetlist"]] <- c(dat_name, env$r_data[["datasetlist"]]) %>% unique()
-#   } else {
-#     message(paste0("Dataset r_data$", dataset, " changed in ", environmentName(env), " environment\n"))
-#   }
-
-#   ## set to previous description
-#   env$r_data[[paste0(dat_name, "_descr")]] <- env$r_data[[paste0(dataset, "_descr")]]
-
-#   if (mess != "") {
-#     env$r_data[[paste0(dat_name, "_descr")]] %<>% paste0("\n\n", mess)
-#   }
-# }
-
 ## use the value in the input list if available and update r_state
 state_init <- function(var, init = "", na.rm = TRUE) {
   isolate({

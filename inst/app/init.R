@@ -149,7 +149,6 @@ isolate({
   }
   makeReactiveBinding("pvt_rows", env = r_data)
   makeReactiveBinding("nav_radiant", env = r_data)
-
 })
 
 ## legacy, to deal with state files created before
