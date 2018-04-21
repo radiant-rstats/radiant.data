@@ -10,32 +10,38 @@ As an example you can copy-and-paste the code below into the editor and press `K
 
 ```r
 ## get the active dataset and show the first few observations
-.getdata() %>% head
+.getdata() %>%
+  head
 
-## access a specific dataset by name
-r_data[['diamonds']] %>% select(price, clarity) %>% head
+## access a dataset
+diamonds %>%
+  select(price, clarity) %>%
+  head()
 
 ## add a variable to the diamonds data
-dat <- r_data[['diamonds']]
-dat$log_price <- log(dat$price)
+diamonds <- mutate(diamonds, log_price = log(price))
 
-## show the first observations
-dat %>% select(price, log_price) %>% head
+## show the first observations in the price and log_price columns
+diamonds %>%
+  select(price, log_price) %>%
+  head()
 
 ## create a histogram of prices
-dat %>% ggplot(aes(x = price)) + geom_histogram()
+diamonds %>%
+  ggplot(aes(x = price)) +
+    geom_histogram()
 
-## and a histogram of log-prices
-dat %>% ggplot(aes(x = log_price)) + geom_histogram()
+## and a histogram of log-prices using radiant.data::visualize
+visualize(diamonds, xvar = \"log_price\", custom = TRUE)
 
 ## open help in the R-studio viewer from Radiant
-help(package = 'radiant.data')
+# help(package = \"radiant.data\")
 
-## if you are familiar with Shiny you can call reactives here
-## for example, if you just transformed some variables in Data > Transform
-## you can call the transform_main reacive to see the latest result
-## this can very useful for debugging
-# transform_main() %>% head
+## If you are familiar with Shiny you can call reactives when the code
+## is evaluated inside a Shiny app. For example, if you transformed
+## some variables in Data > Transform you can call the transform_main
+## reacive to see the latest result. Very useful for debugging
+# transform_main() %>% head()
 ```
 
 ## Options

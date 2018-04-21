@@ -46,10 +46,10 @@ r_example <- "## get the active dataset and show the first few observations
 .getdata() %>%
   head
 
-## access a specific dataset by name
+## access a dataset
 diamonds %>%
   select(price, clarity) %>%
-  head
+  head()
 
 ## add a variable to the diamonds data
 diamonds <- mutate(diamonds, log_price = log(price))

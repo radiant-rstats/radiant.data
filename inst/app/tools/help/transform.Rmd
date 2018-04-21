@@ -6,8 +6,8 @@ All transformations applied in the _Data > Transform_ tab can be logged. If, for
 
 ```r
 ## transform variable
-r_data[["diamonds"]] <- mutate_ext(
-  r_data[["diamonds"]], 
+diamonds <- mutate_ext(
+  diamonds, 
   .vars = vars(price, carat), 
   .funs = funs(log), 
   .ext = "_ln"
