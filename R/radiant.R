@@ -1240,6 +1240,9 @@ store.character <- function(dataset = NULL, object, ...) {
       call. = FALSE
     )
   } else {
+    if (missing(object)) {
+      object <- "Incorrect call to the 'store' function. The function should be\ncalled as follows:\n\ndata <- store(data, model, name = \"new_column_name\")"
+    }
     mess <- paste0("Unable to store output. The returned message was:\n\n", object)
     if (exists("r_environment")) {
       ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
