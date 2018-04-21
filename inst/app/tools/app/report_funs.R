@@ -260,15 +260,15 @@ observeEvent(input$report_clean, {
       gsub("store\\(result,\\s*name\\s*=\\s*\"(.*?)\",\\s*type\\s*=\\s*\"((P|I)W)\"\\)", "\\1 <- result$\\2; register(\"\\1\")", .)
   })
 
-  if ("styler" %in% installed.packages()) {
-    withProgress(message = "Styling report code", value = 1, {
-      tmp_dir <- tempdir()
-      tmp_fn <- tempfile(pattern = "report-to-style", tmpdir = tmp_dir, fileext = ".Rmd")
-      cat(paste(report, "\n"), file = tmp_fn)
-      ret <- styler::style_file(tmp_fn)
-      report <- paste0(readLines(tmp_fn), collapse = "\n")
-    })
-  }
+  # if ("styler" %in% installed.packages()) {
+  #   withProgress(message = "Styling report code", value = 1, {
+  #     tmp_dir <- tempdir()
+  #     tmp_fn <- tempfile(pattern = "report-to-style", tmpdir = tmp_dir, fileext = ".Rmd")
+  #     cat(paste(report, "\n"), file = tmp_fn)
+  #     ret <- styler::style_file(tmp_fn)
+  #     report <- paste0(readLines(tmp_fn), collapse = "\n")
+  #   })
+  # }
 
   shinyAce::updateAceEditor(
     session, "rmd_edit",
