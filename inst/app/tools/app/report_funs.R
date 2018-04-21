@@ -248,6 +248,7 @@ observeEvent(input$report_clean, {
       gsub("(combinedata\\(\\s*x\\s*=\\s*)\"([^\"]+)\",(\\s*y\\s*=\\s*)\"([^\"]+)\",", "\\1\\2,\\3\\4,", .) %>%
       gsub("(combinedata\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
       gsub("result\\s*<-\\s*(simulater\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>% 
+      gsub("data\\s*=\\s*\"([^\"]+)\",", "data = \\1,", .) %>%
       gsub("(simulater\\((\n|.)*?)(register\\(\"(.*?)\"\\))\nsummary\\(result", "\\1\\3\nsummary(\\4", .) %>% 
       gsub("(simulater\\((\n|.)*?)(register\\(\"(.*?)\"\\))\n(summary.*?)\nplot\\(result", "\\1\\3\n\\5\nplot(\\4", .) %>% 
       gsub("result\\s*<-\\s*(repeater\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
@@ -290,15 +291,16 @@ knit_it <- function(report, type = "rmd") {
 
   if (
     !isTRUE(r_data$report_ignore) &&
-    (grepl("\\s*r_data\\[\\[\".*\"\\]\\]", report) ||
+    (grepl("\\s*r_data\\[\\[\".*?\"\\]\\]", report) ||
      grepl("\\s*r_data\\$", report) ||
      grepl("\n(\\#|\\s)*store\\(result,\\s*name", report) ||
      grepl("store\\(pred,\\s*data\\s*=\\s*\"", report) ||
-     grepl("\\s+dataset\\s*=\\s*\".*\",", report)  ||
-     grepl("\\s+pred_data\\s*=\\s*\".*\",", report)  ||
+     grepl("\\s+data\\s*=\\s*\".*?\",", report)  ||
+     grepl("\\s+dataset\\s*=\\s*\".*?\",", report)  ||
+     grepl("\\s+pred_data\\s*=\\s*\".*?\",", report)  ||
      grepl("result\\s*<-\\s*simulater\\(", report)  ||
      grepl("result\\s*<-\\s*repeater\\(", report)  ||
-     grepl("combinedata\\(\\s*x\\s*=\\s*\"[^\"]+\"", report))
+     grepl("combinedata\\(\\s*x\\s*=\\s*\"[^\"]+?\"", report))
   ) {
     showModal(
       modalDialog(
