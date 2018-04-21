@@ -1126,6 +1126,8 @@ observeEvent(input$tr_store, {
   if (is.null(r_data[[df_name]])) {
     r_data[[df_name]] <- .getdata_transform()
     r_data[[paste0(df_name, "_descr")]] <- r_data[[paste0(input$df_name, "_descr")]]
+    shiny::makeReactiveBinding(df_name, env = r_data)
+    shiny::makeReactiveBinding(paste0(df_name, "_descr"), env = r_data)
     r_data[["datasetlist"]] %<>% c(df_name, .) %>% unique()
 
     ## adding command to ensure new data is in the datasetlist
