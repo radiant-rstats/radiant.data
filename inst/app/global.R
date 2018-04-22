@@ -344,7 +344,8 @@ navbar_proj <- function(navbar) {
     "Project: (None)"
   } else {
     paste0("Project: ", basename(pdir)) %>%
-      {if(nchar(.) > 25) paste0(strtrim(., 21), " ...") else .}
+      {if(nchar(.) > 40) paste0(strtrim(., 36), " ...") else .}
+    # paste0("Project testing with a super duper long label: ", basename(pdir)) 
   }
   proj <- tags$span(class = "nav navbar-brand navbar-right", proj)
   ## based on: https://stackoverflow.com/a/40755608/1974918

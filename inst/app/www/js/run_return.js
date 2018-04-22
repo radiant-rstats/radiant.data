@@ -83,6 +83,17 @@ $(document).on("shiny:connected", function() {
   Shiny.onInputChange("get_screen_width", $(window).width());
 });
 
+// https://stackoverflow.com/questions/20247945/bootstrap-3-navbar-dynamic-collapse?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+//function autocollapse() {
+//    var navbar = $('#nav_radiant');
+//    navbar.removeClass('collapsed'); // set standart view
+//    if(navbar.innerHeight() > 50) // check if we've got 2 lines
+//        navbar.addClass('collapsed'); // force collapse mode
+//}
+
+//$(document).on('ready', autocollapse);
+//$(window).on('resize', autocollapse);
+
 // based on https://stackoverflow.com/a/3150139/1974918
 // $(document).ready(function () {
 //   var addEvent = function(object, type, callback) {
@@ -117,7 +128,7 @@ $(document).on("shiny:connected", function() {
 //     $(window).resize(function () {
 //       if ($(window).width() != width) {
 //         Shiny.onInputChange("get_screen_width", width);
-//       }            
+//       }
 //     });
 //   }
 //   resizeIt();

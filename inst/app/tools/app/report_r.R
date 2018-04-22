@@ -233,15 +233,21 @@ output$report_r <- renderUI({
       tabSize = getOption("radiant.ace_tabSize", 2),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
       autoComplete = getOption("radiant.autocomplete", "live"),
-      autoCompleteList = getOption("radiant.auto_complete", list())
+      autoCompleteList = radiant_auto_complete()
     ),
     htmlOutput("r_knitted"),
     getdeps()
   )
 })
 
-## for auto completion of available R functions
-# r_edit_auto <- shinyAce::aceAutocomplete("r_edit")
+## auto completion of available R functions, datasets, and variables
+observe({
+  shinyAce::updateAceEditor(
+    session, "r_edit",
+    autoCompleters = c("static", "text"),
+    autoCompleteList = radiant_auto_complete()
+  )
+})
 
 observeEvent(input$r_knit, {
   ## hack to allow processing current line

@@ -493,7 +493,7 @@ register_plot_output <- function(
 
     ## when no analysis was conducted (e.g., no variables selected)
     p <- get(rfun_name)()
-    if (is.null(p)) p <- "Nothing to plot ...\nSelect plots to show or re-run the calculations"
+    if (is_empty(p)) p <- "Nothing to plot ...\nSelect plots to show or re-run the calculations"
     if (is.character(p)) {
       plot(
         x = 1, type = "n", main = paste0("\n\n\n\n\n\n\n\n", p),
@@ -505,77 +505,6 @@ register_plot_output <- function(
   }, width = get(width_fun), height = get(height_fun), res = 96)
 
   return(invisible())
-}
-
-plot_downloader <- function(
-  plot_name, width = plot_width, height = plot_height,
-  pre = ".plot_", po = "dl_", fname = plot_name, inp = "dataset"
-) {
-
-  # ## link and output name
-  lnm <- paste0(po, plot_name)
-  fn <- paste0(fname, ".png") %>%
-    sub("^\\.", "", .)
-  # ## download graphs in higher resolution than shown in GUI (504 dpi)
-  pr <- 5
-
-  if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-
-    ## create an output
-    output[[lnm]] <- downloadHandler(
-      filename = function() {
-        ifelse(length(inp) > 0, paste0(isolate(input[[inp]]), "_", fn), fn)
-      },
-      content = function(file) {
-
-        # fix for https://github.com/radiant-rstats/radiant/issues/20
-        w <- if (any(c("reactiveExpr", "function") %in% class(width))) width() * pr else width * pr
-        h <- if (any(c("reactiveExpr", "function") %in% class(height))) height() * pr else height * pr
-
-        plot <- try(get(paste0(pre, plot_name))(), silent = TRUE)
-        if (is(plot, "try-error") || is.character(plot) || is.null(plot)) {
-          plot <- ggplot() + labs(title = "Plot not available")
-          pr <- 1
-          w <- h <- 500
-        }
-
-        png(file = file, width = w, height = h, res = 96 * pr)
-        print(plot)
-        dev.off()
-      }
-    )
-  } else {
-    observeEvent(input[[lnm]], {
-      path <- rstudioapi::selectFile(
-        caption = "Download to png",
-        path = file.path(
-          getOption("radiant.launch_dir", "~"),
-          ifelse(length(inp) > 0, paste0(isolate(input[[inp]]), "_", fn), fn)
-        ),
-        filter = "Download to png (*.png)",
-        existing = FALSE
-      )
-      if (!is(path, "try-error") && !is_empty(path)) {
-
-        # fix for https://github.com/radiant-rstats/radiant/issues/20
-        w <- if (any(c("reactiveExpr", "function") %in% class(width))) width() * pr else width * pr
-        h <- if (any(c("reactiveExpr", "function") %in% class(height))) height() * pr else height * pr
-
-        plot <- try(get(paste0(pre, plot_name))(), silent = TRUE)
-        if (is(plot, "try-error") || is.character(plot) || is.null(plot)) {
-          plot <- ggplot() + labs(title = "Plot not available")
-          pr <- 1
-          w <- h <- 500
-        }
-
-        png(file = path, width = w, height = h, res = 96 * pr)
-        print(plot)
-        dev.off()
-      }
-    })
-  }
-
-  download_link(lnm)
 }
 
 stat_tab_panel <- function(

@@ -255,6 +255,30 @@ output$ui_rmd_read_files <- renderUI({
   }
 })
 
+radiant_auto <- reactive({
+  grep("radiant", installed.packages()[,"Package"], value = TRUE) %>%
+  sapply(function(x) grep("^[A-Za-z]", getNamespaceExports(x), value = TRUE)) %>%
+  set_names(., paste0("{", names(.), "}"))
+})
+
+radiant_auto_search <- reactive({
+  input$rmd_knit
+  input$r_knit
+  report_rmd$report
+  report_r$report
+  grep("package:*", search(), value = TRUE) %>%
+    gsub("package:", "", .)  %>%
+    unique() %>%
+    sapply(function(x) grep("^[A-Za-z]", getNamespaceExports(x), value = TRUE)) %>%
+    set_names(., paste0("{", names(.), "}"))
+})
+
+radiant_auto_complete <- reactive({
+  comps <- list(r_data$datasetlist, as.vector(varnames()))
+  names(comps) <- c("{datasets}", paste0("{", input$dataset, "}"))
+  c(comps, radiant_auto(), radiant_auto_search())
+})
+
 output$report_rmd <- renderUI({
   tagList(
     with(
@@ -297,38 +321,21 @@ output$report_rmd <- renderUI({
       tabSize = getOption("radiant.ace_tabSize", 2),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
       autoComplete = getOption("radiant.autocomplete", "live"),
-      autoCompleteList = getOption("radiant.auto_complete", list())
+      autoCompleteList = radiant_auto_complete()
     ),
     htmlOutput("rmd_knitted"),
     getdeps()
   )
 })
 
-## for auto completion of available R functions
-# rmd_edit_auto <- shinyAce::aceAutocomplete("rmd_edit")
-
-## combine 'static' autocomplete lists
-# observe({
-#   # req(input$dataset)
-#   # print("got here 2")
-#   comps <- list(
-#     `{datasets}` = r_data$datasetlist,
-#     `{vars}` = as.vector(varnames())
-#   )
-#   # comps <- c(comps, getOption("radiant.auto_complete", list()))
-#   # print(comps)
-#   # comps$r_data
-#   # comps[["r_data"]] <- r_data$datasetlist
-#   # comps[["vars"]] <- as.vector(varnames())
-#   # shinyAce::updateAceEditor(
-#   #   session, "rmd_edit",
-#   #   autoCompleters = c("static", "rlang", "text", "keyword")
-#   # )
-#   shinyAce::updateAceEditor(
-#     session, "rmd_edit",
-#     autoCompleteList = comps
-#   )
-# })
+## auto completion of available R functions, datasets, and variables
+observe({
+  shinyAce::updateAceEditor(
+    session, "rmd_edit",
+    autoCompleters = c("static", "text"),
+    autoCompleteList = radiant_auto_complete()
+  )
+})
 
 observeEvent(input$rmd_knit, {
   ## hack to allow processing current line

@@ -140,7 +140,6 @@ body {
   padding-top: 55px;
 }
 
-
 /*
 .navbar .navbar-default .navbar-fixed-top .navbar-inverse,
 .navbar .navbar-fixed-top .navbar-collapse,
@@ -171,40 +170,76 @@ body {
   margin-bottom: 10px;
 }
 
-@media (max-width: 900px) {
+/* https://stackoverflow.com/questions/20247945/bootstrap-3-navbar-dynamic-collapse?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+#nav_radiant.collapsed .navbar-header {
+  float: none;
+}
+#nav_radiant.collapsed .navbar-toggle {
+  display: block;
+}
+#nav_radiant.collapsed .navbar-collapse {
+  border-top: 1px solid transparent;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+}
+#nav_radiant.collapsed .navbar-collapse.collapse {
+  display: none!important;
+}
+#nav_radiant.collapsed .navbar-nav {
+  float: none!important;
+  margin: 7.5px -15px;
+}
+#nav_radiant.collapsed .navbar-nav>li {
+  float: none;
+}
+#nav_radiant.collapsed .navbar-nav>li>a {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+*/
+
+@media (max-width: 950px) {
   .navbar-header {
-      float: none;
+    float: none;
+    /*max-height: 50px !important;*/
   }
   .navbar-left,.navbar-right {
-      float: none !important;
+    float: none !important;
+    /*max-height: 50px !important;*/
   }
   .navbar-toggle {
-      display: block;
+    display: block;
+    /*max-height: 50px !important;*/
   }
   .navbar-collapse {
-      border-top: 1px solid transparent;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    border-top: 1px solid transparent;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    /*max-height: 50px !important;*/
   }
   .navbar-fixed-top {
-      top: 0;
-      border-width: 0 0 1px;
+    top: 0;
+    border-width: 0 0 1px;
+    /*max-height: 50px !important;*/
   }
   .navbar-collapse.collapse {
-      display: none!important;
+    display: none!important;
+    /*max-height: 50px !important;*/
   }
   .navbar-nav {
-      float: none!important;
-      margin-top: 7.5px;
+    float: none!important;
+    margin-top: 7.5px;
+    /*max-height: 50px !important;*/
   }
   .navbar-nav>li {
-      float: none;
+    float: none;
+    /*max-height: 50px !important;*/
   }
   .navbar-nav>li>a {
-      padding-top: 10px;
-      padding-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
   .collapse.in{
-      display:block !important;
+    display:block !important;
+    /*max-height: 50px !important;*/
   }
 }
 
