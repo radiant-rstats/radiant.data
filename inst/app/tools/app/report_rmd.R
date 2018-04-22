@@ -262,10 +262,11 @@ radiant_auto <- reactive({
 })
 
 radiant_auto_search <- reactive({
-  input$rmd_knit
-  input$r_knit
-  report_rmd$report
-  report_r$report
+  ## can't set dependency as report will be knitted twice
+  # input$rmd_knit
+  # input$r_knit
+  # report_rmd$report
+  # report_r$report
   grep("package:*", search(), value = TRUE) %>%
     gsub("package:", "", .)  %>%
     unique() %>%
@@ -274,6 +275,7 @@ radiant_auto_search <- reactive({
 })
 
 radiant_auto_complete <- reactive({
+  req(input$dataset)
   comps <- list(r_data$datasetlist, as.vector(varnames()))
   names(comps) <- c("{datasets}", paste0("{", input$dataset, "}"))
   c(comps, radiant_auto(), radiant_auto_search())
