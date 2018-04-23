@@ -14,20 +14,16 @@ stop_radiant <- function() {
       r_state[names(LiveInputs)] <- LiveInputs
       r_state$nav_radiant <- r_data$nav_radiant
       assign("r_state", r_state, envir = .GlobalEnv)
-      ## keep as environment so you can "attach" in global 
-      ## environment easily after stop
-      # assign("r_data", r_data, envir = .GlobalEnv)
-      ## convert environment to a list and then back to an environment again
-      ## see https://github.com/rstudio/shiny/issues/1905
-      rem_non_active()
+      ## convert environment to a list and then back to an environment 
+      ## again to remove active bindings https://github.com/rstudio/shiny/issues/1905
+      ## using an environment so you can "attach" and access data easily
+      rem_non_active() ## keep only the active bindings (i.e., data, datalist, etc.)
       assign("r_data", list2env(mget(ls(r_data), r_data)), envir = .GlobalEnv)
-
       ## removing r_sessions and functions defined in global.R
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
       unlink("~/r_figures/", recursive = TRUE)
       sshhr(try(rm(help_menu, make_url_patterns, import_fs, init_data, navbar_proj, knit_print.data.frame, withMathJax, envir = .GlobalEnv), silent = TRUE))
-      message("\nStopped Radiant. State available as r_state and r_data.\n")
-
+      message("\nStopped Radiant. State information is available in the r_state list\nand the r_data environment. Use attach(r_data) to access data loaded\ninto Radiant.\n")
       stopApp()
     })
   } else {
