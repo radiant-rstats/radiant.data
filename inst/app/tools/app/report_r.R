@@ -233,7 +233,7 @@ output$report_r <- renderUI({
       tabSize = getOption("radiant.ace_tabSize", 2),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
       autoComplete = getOption("radiant.autocomplete", "live"),
-      autoCompleteList = radiant_auto_complete()
+      autoCompleteList = isolate(radiant_auto_complete())
     ),
     htmlOutput("r_knitted"),
     getdeps()
@@ -242,6 +242,7 @@ output$report_r <- renderUI({
 
 ## auto completion of available R functions, datasets, and variables
 observe({
+  req(report_r$report > 1)
   shinyAce::updateAceEditor(
     session, "r_edit",
     autoCompleters = c("static", "text"),

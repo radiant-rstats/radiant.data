@@ -256,17 +256,18 @@ output$ui_rmd_read_files <- renderUI({
 })
 
 radiant_auto <- reactive({
-  grep("radiant", installed.packages()[,"Package"], value = TRUE) %>%
-  sapply(function(x) grep("^[A-Za-z]", getNamespaceExports(x), value = TRUE)) %>%
-  set_names(., paste0("{", names(.), "}"))
+  if (any(grepl("package:radiant", search()))) {
+    list()
+  } else {
+    grep("radiant", installed.packages()[,"Package"], value = TRUE) %>%
+      sapply(function(x) grep("^[A-Za-z]", getNamespaceExports(x), value = TRUE)) %>%
+      set_names(., paste0("{", names(.), "}"))
+  }
 })
 
 radiant_auto_search <- reactive({
-  ## can't set dependency as report will be knitted twice
-  # input$rmd_knit
-  # input$r_knit
-  # report_rmd$report
-  # report_r$report
+  report_rmd$report
+  report_r$report
   grep("package:*", search(), value = TRUE) %>%
     gsub("package:", "", .)  %>%
     unique() %>%
@@ -323,7 +324,7 @@ output$report_rmd <- renderUI({
       tabSize = getOption("radiant.ace_tabSize", 2),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
       autoComplete = getOption("radiant.autocomplete", "live"),
-      autoCompleteList = radiant_auto_complete()
+      autoCompleteList = isolate(radiant_auto_complete())
     ),
     htmlOutput("rmd_knitted"),
     getdeps()
@@ -332,6 +333,8 @@ output$report_rmd <- renderUI({
 
 ## auto completion of available R functions, datasets, and variables
 observe({
+  ## don't need to run until report generated
+  req(report_rmd$report > 1)
   shinyAce::updateAceEditor(
     session, "rmd_edit",
     autoCompleters = c("static", "text"),
