@@ -356,7 +356,6 @@ knit_it <- function(report, type = "rmd") {
   ## convert to md
   md <- knitr::knit(
     text = report,
-    # envir = r_environment,
     envir = r_data,
     quiet = TRUE
   )
