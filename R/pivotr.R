@@ -117,7 +117,7 @@ pivotr <- function(
     ) %>%
       bind_cols(row_total)
 
-    rm(col_total, row_total)
+    rm(col_total, row_total, vars)
   }
 
   ## resetting factor levels
@@ -204,6 +204,7 @@ summary.pivotr <- function(
   chi2 = FALSE, shiny = FALSE, ...
 ) {
 
+  print(str(object))
   if (!shiny) {
     cat("Pivot table\n")
     cat("Data        :", object$df_name, "\n")

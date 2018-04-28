@@ -36,6 +36,7 @@ explore <- function(
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   dataset <- getdata(dataset, tvars, filt = data_filter, na.rm = FALSE)
+  rm(tvars)
 
   ## in case : was used
   vars <- setdiff(colnames(dataset), byvar)
@@ -72,6 +73,7 @@ explore <- function(
     if (ncol(tab) == 2) {
       colnames(tab) <- c("variable", fun)
     }
+    rm(isNum)
   } else {
 
     ## convert categorical variables to factors if needed
@@ -118,6 +120,7 @@ explore <- function(
   ## ensure factors ordered as in the (sorted) table
   if (!is_empty(byvar) && top != "byvar") {
     for (i in byvar) tab[[i]] %<>% factor(., levels = unique(.))
+    rm(i)
   }
 
   ## frequencies converted to doubles during gather/spread above
@@ -138,11 +141,12 @@ explore <- function(
   if (!is.null(nr)) {
     ind <- if (nr > nrow(tab)) 1:nrow(tab) else 1:nr
     tab <- tab[ind, , drop = FALSE]
+    rm(ind)
   }
 
 
   ## objects no longer needed
-  rm(dataset, check_int)
+  rm(dataset, check_int, isLogNum, isFctNum, dc, nrow_tab)
 
   as.list(environment()) %>% add_class("explore")
 }
@@ -186,7 +190,7 @@ summary.explore <- function(object, dec = 3, ...) {
   if (object$byvar[1] != "") {
     cat("Grouped by  :", object$byvar, "\n")
   }
-  cat("Functions   :", names(object$fun), "\n")
+  cat("Functions   :", paste0(object$fun, collapse = ", "), "\n")
   cat("Top         :", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[object$top], "\n")
   cat("\n")
 
