@@ -10,32 +10,38 @@ As an example you can copy-and-paste the code below into the editor and press `K
 
 ```r
 ## get the active dataset and show the first few observations
-.getdata() %>% head
+.getdata() %>%
+  head()
 
-## access a specific dataset by name
-r_data[['diamonds']] %>% select(price, clarity) %>% head
+## access a dataset
+diamonds %>%
+  select(price, clarity) %>%
+  head()
 
 ## add a variable to the diamonds data
-dat <- r_data[['diamonds']]
-dat$log_price <- log(dat$price)
+diamonds <- mutate(diamonds, log_price = log(price))
 
-## show the first observations
-dat %>% select(price, log_price) %>% head
+## show the first observations in the price and log_price columns
+diamonds %>%
+  select(price, log_price) %>%
+  head()
 
 ## create a histogram of prices
-dat %>% ggplot(aes(x = price)) + geom_histogram()
+diamonds %>%
+  ggplot(aes(x = price)) +
+    geom_histogram()
 
-## and a histogram of log-prices
-dat %>% ggplot(aes(x = log_price)) + geom_histogram()
+## and a histogram of log-prices using radiant.data::visualize
+visualize(diamonds, xvar = \"log_price\", custom = TRUE)
 
 ## open help in the R-studio viewer from Radiant
-help(package = 'radiant.data')
+help(package = \"radiant.data\")
 
-## if you are familiar with Shiny you can call reactives here
-## for example, if you just transformed some variables in Data > Transform
-## you can call the transform_main reacive to see the latest result
-## this can very useful for debugging
-# transform_main() %>% head
+## If you are familiar with Shiny you can call reactives when the code
+## is evaluated inside a Shiny app. For example, if you transformed
+## some variables in Data > Transform you can call the transform_main
+## reacive to see the latest result. Very useful for debugging
+# transform_main() %>% head()
 ```
 
 ## Options
@@ -43,17 +49,18 @@ help(package = 'radiant.data')
 The editor used in _Report > Rmd_ and _Report > R_ has several options that can be set in `.Rprofile`.
 
 <pre>
-options(radiant.vim.keys = FALSE)
+options(radiant.ace_vim.keys = FALSE)
 options(radiant.ace_theme = "cobalt")
 options(radiant.ace_tabSize = 2)
+options(radiant.ace_useSoftTabs = TRUE)
 options(radiant.ace_showInvisibles = TRUE)
-options(radiant.ace_autocomplete = "live")
+options(radiant.ace_autoComplete = "live")
 </pre>
 
 Notes:
 
-* `vim.key` enables a variety of keyboard short-cuts. If you have never used VIM you probably don't want this 
-* For an overview of available themes see: `shinyAce::getAceThemes()`
+* `vim.keys` enables a set of special eyboard short-cuts. If you have never used VIM you probably don't want this 
+* For an overview of available editor themes see: `shinyAce::getAceThemes()`
 * Autocomplete has options "live", "enabled", and "disabled" 
 * `showInvisibles` shows tabs and spaces in the editor
-* Tabs are converted to 2 spaces by default. Change the number of spaces by changing this to, for example, 4
+* Tabs are converted to 2 spaces by default (i.e., 'soft' tabs). You can change the number of spaces used from 2 to, for example, 4

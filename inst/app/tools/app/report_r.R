@@ -44,39 +44,37 @@ r_view_options <- c(
 
 r_example <- "## get the active dataset and show the first few observations
 .getdata() %>%
-  head
+  head()
 
-## access a specific dataset by name
-r_data$diamonds %>%
+## access a dataset
+diamonds %>%
   select(price, clarity) %>%
-  head
+  head()
 
 ## add a variable to the diamonds data
-dat <- r_data$diamonds
-dat$log_price <- log(dat$price)
+diamonds <- mutate(diamonds, log_price = log(price))
 
-## show the first observations
-dat %>%
+## show the first observations in the price and log_price columns
+diamonds %>%
   select(price, log_price) %>%
-  head
+  head()
 
 ## create a histogram of prices
-dat %>%
+diamonds %>%
   ggplot(aes(x = price)) +
     geom_histogram()
 
 ## and a histogram of log-prices using radiant.data::visualize
-dat %>%
-  visualize(xvar = \"log_price\", custom = TRUE)
+visualize(diamonds, xvar = \"log_price\", custom = TRUE)
 
 ## open help in the R-studio viewer from Radiant
-# help(package = 'radiant.data')
+# help(package = \"radiant.data\")
 
 ## If you are familiar with Shiny you can call reactives when the code
 ## is evaluated inside a Shiny app. For example, if you transformed
 ## some variables in Data > Transform you can call the transform_main
 ## reacive to see the latest result. Very useful for debugging
-# transform_main() %>% head"
+# transform_main() %>% head()"
 
 ## allow running code through button or keyboard shortcut
 report_r <- reactiveValues(report = 0, knit_button = 0, clear = 0)
@@ -230,20 +228,28 @@ output$report_r <- renderUI({
       wordWrap = TRUE,
       height = "auto",
       value = state_init("r_edit", r_example) %>% fixMS(),
-      vimKeyBinding = getOption("radiant.vim.keys", default = FALSE),
+      vimKeyBinding = getOption("radiant.ace_vim.keys", default = FALSE),
       hotkeys = list(r_hotkey = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
       tabSize = getOption("radiant.ace_tabSize", 2),
+      useSoftTabs = getOption("radiant.ace_useSoftTabs", TRUE),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
-      autoComplete = getOption("radiant.autocomplete", "live"),
-      autoCompleteList = getOption("radiant.auto_complete", list())
+      autoComplete = getOption("radiant.ace_autoComplete", "live"),
+      autoCompleteList = isolate(radiant_auto_complete())
     ),
     htmlOutput("r_knitted"),
     getdeps()
   )
 })
 
-## for auto completion of available R functions
-r_edit_auto <- shinyAce::aceAutocomplete("r_edit")
+## auto completion of available R functions, datasets, and variables
+observe({
+  req(report_r$report > 1)
+  shinyAce::updateAceEditor(
+    session, "r_edit",
+    autoCompleters = c("static", "text"),
+    autoCompleteList = radiant_auto_complete()
+  )
+})
 
 observeEvent(input$r_knit, {
   ## hack to allow processing current line
@@ -417,7 +423,7 @@ observeEvent(input$r_load, {
 })
 
 observeEvent(input$r_read_files, {
-  cmd <- r_read_files(type = "r")
+  cmd <- read_files(type = "r", clipboard = FALSE, radiant = TRUE)
   if (!is_empty(cmd)) {
     update_report_fun(cmd, type = "r", rfiles = TRUE)
   }
