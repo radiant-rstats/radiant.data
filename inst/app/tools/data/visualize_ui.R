@@ -233,35 +233,11 @@ output$ui_viz_run <- renderUI({
   ## https://stackoverflow.com/questions/43641103/change-color-actionbutton-shiny-r
 })
 
-## class is not passed on
-# updateActionButton <- function(session, inputId,
-#                                label = NULL,
-#                                icon = NULL,
-#                                class = NULL) {
-#     if (!is.null(icon))
-#         icon <- as.character(shiny:::validateIcon(icon))
-#     message <- shiny:::dropNulls(list(label = label, icon = icon, class = class))
-#     session$sendInputMessage(inputId, message)
-# }
-
 observe({
   ## dep on most inputs
   input$data_filter
   input$show_filter
-  # viz_args()$data_filter
-  # for (i in r_drop(names(viz_args))) {
-  #   cat(paste0("viz_", i, " = ", input[[paste0("viz_", i)]]), "\n")
-  # }; cat("\n")
-  # dep on most inputs
-  # sapply(r_drop(names(viz_args)), function(x) input[[paste0("viz_", x)]])
   sapply(r_drop(names(viz_args)), function(x) input[[paste0("viz_", x)]])
-
-  ## tried with .visualize but didn't quite work
-  # isolate({
-  #   print(paste0(attr(.visualize, "observable")$.invalidated, " ",
-  #                attr(viz_inputs, "observable")$.invalidated))
-  # })
-
   ## notify user when the plot needed to be updated
   ## based on https://stackoverflow.com/questions/45478521/listen-to-reactive-invalidation-in-shiny
   if (pressed(input$viz_run) && !is.null(input$viz_xvar)) {
@@ -352,13 +328,13 @@ output$ui_Visualize <- renderUI({
         tags$td(numericInput(
           "viz_plot_height", label = "Plot height:", min = 100,
           max = 2000, step = 50,
-          value = state_init("viz_plot_height", r_data$plot_height),
+          value = state_init("viz_plot_height", r_info[["plot_height"]]),
           width = "117px"
         )),
         tags$td(numericInput(
           "viz_plot_width", label = "Plot width:", min = 100,
           max = 2000, step = 50,
-          value = state_init("viz_plot_width", r_data$plot_width),
+          value = state_init("viz_plot_width", r_info[["plot_width"]]),
           width = "117px"
         ))
       )
@@ -373,7 +349,7 @@ output$ui_Visualize <- renderUI({
 })
 
 viz_plot_width <- reactive({
-  if (is_empty(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
+  if (is_empty(input$viz_plot_width)) r_info[["plot_width"]] else input$viz_plot_width
 })
 
 ## based on https://stackoverflow.com/a/40182833/1974918
@@ -383,7 +359,7 @@ viz_plot_height <- eventReactive({
   input$viz_plot_width
 }, {
   if (is_empty(input$viz_plot_height)) {
-    r_data$plot_height
+    r_info[["plot_height"]]
   } else {
     lx <- ifelse(not_available(input$viz_xvar) || isTRUE(input$viz_combx), 1, length(input$viz_xvar))
     ly <- ifelse(not_available(input$viz_yvar) || input$viz_type %in% c("dist", "density") ||
@@ -449,12 +425,14 @@ output$visualize <- renderPlot({
   })
 })
 
-# observeEvent(input$visualize_report && pressed(input$viz_run), {
 observeEvent(input$visualize_report, {
   ## resetting hidden elements to default values
   vi <- viz_inputs()
   if (input$viz_type != "dist") {
     vi$bins <- viz_args$bins
+  }
+  if (input$viz_type %in% c("dist", "density")) {
+    vi$yvar <- viz_args$yvar
   }
   if (!input$viz_type %in% c("density", "scatter") || !"loess" %in% input$viz_check) {
     vi$smooth <- viz_args$smooth
@@ -491,7 +469,6 @@ observeEvent(input$visualize_report, {
 download_handler(
   id = "dlp_visualize", 
   fun = download_handler_plot, 
-  # fn = paste0(input$dataset, "_", input$viz_type, "_visualize.png"),
   fn = paste0(input$dataset, "_visualize.png"),
   caption = "Download visualize plot",
   plot = .visualize,
