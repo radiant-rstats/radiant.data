@@ -59,8 +59,8 @@ options(radiant.ace_autoComplete = "live")
 
 Notes:
 
-* `vim.keys` enables a set of special eyboard short-cuts. If you have never used VIM you probably don't want this 
+* `vim.keys` enables a set of special keyboard short-cuts. If you have never used VIM you probably don't want this 
 * For an overview of available editor themes see: `shinyAce::getAceThemes()`
-* Autocomplete has options "live", "enabled", and "disabled" 
-* `showInvisibles` shows tabs and spaces in the editor
 * Tabs are converted to 2 spaces by default (i.e., 'soft' tabs). You can change the number of spaces used from 2 to, for example, 4
+* `showInvisibles` shows tabs and spaces in the editor
+* Autocomplete has options "live", "enabled", and "disabled" 
