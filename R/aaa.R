@@ -1,9 +1,10 @@
 # to avoid 'no visible binding for global variable' NOTE
-globalVariables(c(
-  "r_environment", "session", "r_data", "r_state", ".",
-  ".rs.restartR", "..density..", "Total", "tfoot", "thead",
-  "tr", "th", "variable", "y"
-))
+globalVariables(
+  c(
+    ".", "..density..", "r_data", "tfoot", 
+    "th", "thead", "tr", "variable"
+  )
+)
 
 #' radiant.data
 #'
@@ -13,15 +14,12 @@ globalVariables(c(
 #' @importFrom rlang parse_exprs
 #' @importFrom car Recode
 #' @importFrom rstudioapi insertText isAvailable
-#' @importFrom knitr knit2html knit knit_print
+#' @importFrom knitr knit2html knit
 #' @importFrom markdown markdownToHTML
 #' @importFrom rmarkdown render html_dependency_bootstrap pdf_document html_document word_document
-#' @importFrom pryr where object_size
 #' @importFrom magrittr %<>% %T>% %$% set_rownames set_colnames set_names divide_by add extract2
 #' @importFrom lubridate is.Date is.POSIXt now year month wday week hour minute second ymd mdy dmy ymd_hms hms hm as.duration parse_date_time
-#' @importFrom tibble rownames_to_column
 #' @importFrom tidyr gather spread separate
-#' @importFrom grid textGrob gpar
 #' @importFrom gridExtra grid.arrange
 #' @importFrom shinyAce aceEditor updateAceEditor
 #' @importFrom readr read_delim read_csv write_csv read_rds write_rds locale problems
@@ -29,9 +27,8 @@ globalVariables(c(
 #' @importFrom base64enc dataURI
 #' @importFrom methods is
 #' @importFrom stats as.formula chisq.test dbinom median na.omit quantile sd setNames var weighted.mean
-#' @importFrom utils combn head install.packages read.table tail
+#' @importFrom utils combn head tail install.packages read.table
 #' @importFrom import from
-#' @importFrom plotly ggplotly subplot
 NULL
 
 #' Exporting knit_print from knitr
@@ -87,20 +84,6 @@ NULL
 #' @importFrom psych skew
 #' @name skew
 #' @rdname skew.re
-#' @export
-NULL
-
-#' Exporting the ggplotly function from the plotly package
-#' @importFrom plotly ggplotly
-#' @name ggplotly
-#' @rdname ggplotly
-#' @export
-NULL
-
-#' Exporting the subplot function from the plotly package
-#' @importFrom plotly subplot
-#' @name subplot
-#' @rdname subplot
 #' @export
 NULL
 

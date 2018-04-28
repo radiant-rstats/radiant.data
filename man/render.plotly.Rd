@@ -7,7 +7,7 @@
 \method{render}{plotly}(object, ...)
 }
 \arguments{
-\item{object}{ggplotly object}
+\item{object}{plotly object}
 
 \item{...}{Additional arguments}
 }
