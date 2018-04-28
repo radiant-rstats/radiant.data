@@ -1,15 +1,10 @@
 ul, ol {
-  /* make bullet left-flush */
   padding-left: 18px;
 }
 
 .table {
   width: auto;
 }
-
-/*.pagedtable, .pagetable table {*/
-  /*width: auto;*/
-/*}*/
 
 .snippet th, .snippet td {
   text-align: center;
@@ -46,19 +41,6 @@ table.dataTable tfoot td, table.dataTable thead td {
   margin-right: 10px;
 }
 
-
-/* trying out https://stackoverflow.com/questions/45062397/make-bootstrap-modal-draggable-and-keep-background-usable/45062993
-#manage_help {
-  position: relative;
-}
-
-.modal-dialog {
-  position: fixed;
-  width: 100%;
-  margin: 0;
-  padding: 10px;
-}*/
-
 .modal-dialog {
   padding-top: 80px;
   padding-left: 80px;
@@ -80,22 +62,23 @@ img {
   height: auto;
 }
 
+/* based on https://stackoverflow.com/a/30338814/1974918*/
 pre, code, pre code {
   overflow: auto;
   white-space: pre;
-  /* based on https://stackoverflow.com/a/30338814/1974918*/
   word-wrap: normal;
   background-color: #ffffff;
 }
 
 #state_save {
   font-family: FontAwesome, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
   color: black;
 }
 
-/* allow all textarea and multiple-select inputs to resize vertically */
-/* have to set overfow to make resize work on Safari */
-/* https://css-tricks.com/almanac/properties/r/resize/ */
+/* allow all textareas and multiple-select inputs to resize vertically */
+/* have to set overfow to make resize work on Safari                   */
+/* base on https://css-tricks.com/almanac/properties/r/resize/         */
 textarea, select {
   resize: vertical;
   overflow: auto;
@@ -143,10 +126,6 @@ body {
 .navbar {
   margin-bottom: 5px;
   background-color: black;
-  /* ace bg */
-  /*background-color: #002240;*/
-  /* sublime bg */
-  /*background-color: #0f364b;*/
 }
 
 .navbar .nav > li > a {
@@ -158,14 +137,51 @@ body {
   margin-bottom: 10px;
 }
 
+@media (max-width: 1000px) {
+  .navbar-header {
+    float: none;
+  }
+  .navbar-left,.navbar-right {
+    float: none !important;
+  }
+  .navbar-toggle {
+    display: block;
+  }
+  .navbar-collapse {
+    border-top: 1px solid transparent;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .navbar-fixed-top {
+    top: 0;
+    border-width: 0 0 1px;
+  }
+  .navbar-collapse.collapse {
+    display: none!important;
+  }
+  .navbar-nav {
+    float: none!important;
+    margin-top: 7.5px;
+  }
+  .navbar-nav>li {
+    float: none;
+  }
+  .navbar-nav>li>a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .collapse.in{
+    display:block !important;
+  }
+}
+
+/* border radius same as other buttons in shiny */
 .btn-file-solitary {
-  /* border radius same as other buttons in shiny */
   border-radius: 4px !important;
 }
 
-/* likely due to bootstrap css, font set to white
-with dark themes against a white background
-see https://github.com/ajaxorg/ace/issues/3071 */
+/* likely due to bootstrap css, font set to white */
+/* with dark themes against a white background    */
+/* see https://github.com/ajaxorg/ace/issues/3071 */
 .ace_replace_form, .ace_search_field, .ace_replacebtn, .ace_searchbtn {
   color: black;
 }

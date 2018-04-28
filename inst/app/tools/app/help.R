@@ -110,18 +110,18 @@ observeEvent(input$help_keyboard, {
              td(b("Function")), td(b("Mac")), td(b("Windows & Linux"))),
           tr(class = "padding_top",
              td("Save state"), td("Shift-CMD-s"), td("Shift-CTRL-s")),
+          tr(class = "padding_top",
+             td("Open state"), td("Shift-CMD-o"), td("Shift-CTRL-o")),
           tr(class = "border_bottom padding_bottom",
-             td("Report"), td("ALT-return"), td("ALT-return")),
+             td("Generate code"), td("ALT-return"), td("ALT-return")),
           tr(class = "border_bottom padding_bottom",
-             td("Download"), td("CMD-s"), td("CTRL-s")),
+             td("Estimate/Run (green)"), td("CMD-enter"), td("CTRL-enter")),
           tr(class = "border_bottom padding_bottom",
-             td("Green button"), td("CMD-enter"), td("CTRL-enter")),
+             td("Download/save (blue)"), td("CMD-s"), td("CTRL-s")),
           tr(class = "border_bottom padding_bottom",
-             td("Blue button save"), td("CMD-s"), td("CTRL-s")),
-          tr(class = "border_bottom padding_bottom",
-             td("Blue button load"), td("CMD-o"), td("CTRL-o")),
-          tr(class = "border_bottom padding_bottom",
-             td("Viewer pane full screen:"), td("Shift-CTRL-9"), td("Shift-CTRL-9"))
+             td("Upload (blue)"), td("CMD-o"), td("CTRL-o"))
+          # tr(class = "border_bottom padding_bottom",
+             # td("Viewer pane full screen"), td("Shift-CTRL-9"), td("Shift-CTRL-9"))
         )
       ),
       footer = modalButton("OK"),

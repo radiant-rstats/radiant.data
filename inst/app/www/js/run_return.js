@@ -32,7 +32,6 @@ $(document).keydown(function(event) {
     document.getElementById("state_save").click();
     event.preventDefault();
   } else if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.keyCode == 79) {
-    // not working yet
     document.getElementById("state_load").click();
     event.preventDefault();
   }
@@ -40,13 +39,13 @@ $(document).keydown(function(event) {
   // focusing in text (area) inputs
   if ($("#data_rename").is(":focus") && event.keyCode == 13) {
     $("#renameButton").click();
-  } else if ($("#view_dat").is(":focus") && event.keyCode == 13) {
+  } else if ($("#view_name").is(":focus") && event.keyCode == 13) {
     $("#view_store").click();
-  } else if ($("#pvt_dat").is(":focus") && event.keyCode == 13) {
+  } else if ($("#pvt_name").is(":focus") && event.keyCode == 13) {
     $("#pvt_store").click();
-  } else if ($("#expl_dat").is(":focus") && event.keyCode == 13) {
+  } else if ($("#expl_name").is(":focus") && event.keyCode == 13) {
     $("#expl_store").click();
-  } else if ($("#tr_dataset").is(":focus") && event.keyCode == 13) {
+  } else if ($("#tr_name").is(":focus") && event.keyCode == 13) {
     $("#tr_store").click();
   } else if ($("#cmb_name").is(":focus") && event.keyCode == 13) {
     $("#cmb_store").click();
@@ -83,72 +82,9 @@ $(document).on("shiny:connected", function() {
   Shiny.onInputChange("get_screen_width", $(window).width());
 });
 
-// based on https://stackoverflow.com/a/3150139/1974918
-// $(document).ready(function () {
-//   var addEvent = function(object, type, callback) {
-//     if (object === null || typeof(object) == "undefined") return;
-//     if (object.addEventListener) {
-//       object.addEventListener(type, callback, false);
-//     } else if (object.attachEvent) {
-//       object.attachEvent("on" + type, callback);
-//     } else {
-//       object["on" + type] = callback;
-//     }
-//   };
-
-//   var org_width = $(window).width();
-
-//   addEvent(window, "resize", function(event) {
-//     var jsWidth = $(window).width();
-//     // if ($(window).width() != jsWidth) {
-//     console.log(jsWidth);
-//     console.log(org_width);
-//     if (org_width != jsWidth) {
-//       Shiny.onInputChange("get_screen_width", jsWidth);
-//     }
-//   });
-// });
-
-// $(document).ready(function () {
-// $(document).on("shiny:connected", function() {
-//   var width = $(window).width();
-//   Shiny.onInputChange("get_screen_width", width);
-//   function resizeIt() {
-//     $(window).resize(function () {
-//       if ($(window).width() != width) {
-//         Shiny.onInputChange("get_screen_width", width);
-//       }            
-//     });
-//   }
-//   resizeIt();
-// });
-
-//// Things to still try
-// https://stackoverflow.com/questions/20247945/bootstrap-3-navbar-dynamic-collapse
-// https://stackoverflow.com/questions/18192082/bootstrap-3-navbar-collapse
-// https://stackoverflow.com/questions/19827605/change-bootstrap-navbar-collapse-breakpoint-without-using-less
-
-// function autocolllapse() {
-//   var width_full = $('.navbar-collapse').innerWidth();
-//   var width_left = $('.navbar-nav').outerWidth(true);
-//   var width_right = $('.navbar-right').outerWidth(true);
-//   if (width_full - (width_left + width_right) < 0) {
-//       // trigger collapse, you have to figure out what css changes
-//       // exactly are needed, for example:
-//       $('.navbar-toggle').css('display', 'inline');
-//   }
-// };
-
-// function autocollapse() {
-//     var navbar = $('.navbar');
-//     navbar.removeClass('collapsed');  // set standart view
-//     if(navbar.innerHeight() > 75) {   // check if we've got 2 lines
-//       navbar.addClass('collapsed');   // force collapse mode
-//     }
-// }
-
-// change class not working ... yet
-// $('#pvt_run').removeClass('btn-sucsses').addClass('btn-warning');
-// $('#viz_run').removeClass('btn-sucsses').addClass('btn-warning');
-// $('#viz_run').text()
-// $('#view_store').text()
+$(function(){
+  $("#state_load_link").on('click', function(e){
+    e.preventDefault();
+    $("#state_load").trigger('click');
+  });
+});
