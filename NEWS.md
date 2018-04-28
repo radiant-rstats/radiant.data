@@ -1,10 +1,17 @@
-# CHANGES IN radiant.data 0.9.2.4
+# CHANGES IN radiant.data 0.9.3.1
+
+* Various changes to the code to accomodate the use of `shiny::makeReactiveBinding`. The advantage is that the code generated for _Report > Rmd_ and _Report > R_ will no longer have to use a list (`r_data`) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well.
+* Removed `loadr`, `saver`, `loadcsv_url`, `loadrds_url`, and `make_funs` functions as they are no longer needed
+* Deprecated `mean_rm`, `median_rm`, `min_rm`, `max_rm, `sd_rm`, `var_rm, and `sum_rm` functions as they are no longer needed 
+* Improved auto completion in _Report > Rmd_ and _Report > R_
+* Maintain, store, and clean the settings of the interactive table in _Data > View_
+
+# CHANGES IN radiant.data 0.9.2.3
 
 * Add option to load files with extension .rdata or .tsv using `loadr` which add that data to the Datasets dropdown
 * `visualize` will default to a scatter plot if `xvar` and `yvar` are specified but no plot `type` is provided in the function call
-* Add exported functions to the auto complete list used in _Report > Rmd_ and _Report > R_
-* _Report > Rmd_ and _Report > R_ will now be evaluated in the _knitr_environment_. This means that the return value from `ls()` will be much cleaner
 * Improvements to `read_files` function to interactively generate R-code (or Rmarkdown code-chunks) to read files in various format (e.g., SQLite, rds, csv, xlsx, css, jpg, etc.). Supports relative paths and uses `find_dropbox()` and `find_gdrive()` when applicable
+* _Report > Rmd_ and _Report > R_ will now be evaluated the `r_data` environment. This means that the return value from `ls()` will be much cleaner
 
 # CHANGES IN radiant.data 0.9.2.2
 
