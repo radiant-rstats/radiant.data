@@ -18,7 +18,6 @@ if (is.null(getOption("radiant.launch"))) {
       options(radiant.launch = "viewer")
     } else {
       options(radiant.launch = "browser")
-      # options(radiant.launch = "viewer")
     }
   } else {
     options(radiant.launch = "browser")
@@ -54,42 +53,19 @@ import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
 }
 
 ## list of function to suggest during autocomplete in Report > Rmd and Report > R
-# options(radiant.auto_complete =
-#   grep("^[^\\.]",
-#     sapply(
-#       c(
-#         grep("radiant", installed.packages()[,"Package"], value = TRUE),
-#         dplyr = "dplyr", ggplot2 = "ggplot2", tidyr = "tidyr",
-#         lubridate = "lubridate", tibble = "tibble", readr = "readr",
-#         readxl = "readxl"
-#       ),
-#       getNamespaceExports
-#     ),
-#     value = TRUE
-#   )
-# )
+## moved to init.R
+init_data <- function(env = r_data) {
+  ## Based on discussion with Joe Cheng: Datasets can change over time 
+  ## so the data needs to be reactive value so the other reactive
+  ## functions and outputs that depend on these datasets will know when 
+  ## they are changed
 
-# options(radiant.auto_complete =
-#   sapply(
-#     c(
-#       grep("radiant", installed.packages()[,"Package"], value = TRUE),
-#       dplyr = "dplyr", ggplot2 = "ggplot2", tidyr = "tidyr",
-#       tibble = "tibble", readr = "readr", readxl = "readxl"
-#     ),
-#     getNamespaceExports
-#   )
-# )
+  ## Using an environment to assign data
+  ## http://adv-r.had.co.nz/Environments.html#explicit-envs
 
-options(radiant.auto_complete =
-  sapply(grep("radiant", installed.packages()[,"Package"], value = TRUE), getNamespaceExports)
-)
-
-init_data <- function() {
-  ## Joe Cheng: "Datasets can change over time (i.e., the changedata function).
-  ## Therefore, the data need to be a reactive value so the other reactive
-  ## functions and outputs that depend on these datasets will know when they
-  ## are changed."
-  r_data <- reactiveValues()
+  ## using a reactiveValues list to keep track of relevant app info
+  ## that needs to be reactive
+  r_info <- reactiveValues()
 
   df_names <- getOption("radiant.init.data", default = c("diamonds", "titanic"))
   for (dn in df_names) {
@@ -100,12 +76,13 @@ init_data <- function() {
     } else {
       df <- data(list = dn, package = "radiant.data", envir = environment()) %>% get()
     }
-    r_data[[dn]] <- df
-    r_data[[paste0(dn, "_descr")]] <- attr(df, "description")
+    env[[dn]] <- df
+    makeReactiveBinding(dn, env = env)
+    r_info[[paste0(dn, "_descr")]] <- attr(df, "description")
   }
-  r_data$datasetlist <- basename(df_names)
-  r_data$url <- NULL
-  r_data
+  r_info[["datasetlist"]] <- basename(df_names)
+  r_info[["url"]] <- NULL
+  r_info
 }
 
 ## running local or on a server
@@ -114,13 +91,6 @@ if (Sys.getenv("SHINY_PORT") == "") {
   options(radiant.report = getOption("radiant.report", default = TRUE))
   ## no limit to filesize locally
   options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = -1))
-
-  if (!"radiant.update" %in% installed.packages()) {
-    suppressWarnings(try(
-      install.packages("radiant.update", repos = "https://radiant-rstats.github.io/minicran/", quiet = TRUE),
-      silent = TRUE
-    ))
-  }
 } else {
   options(radiant.local = FALSE)
   options(radiant.report = getOption("radiant.report", default = FALSE))
@@ -153,8 +123,6 @@ if (!"package:radiant.data" %in% search()) {
 import_fs("radiant.data", libs = "plotly", incl = c("ggplotly", "subplot"))
 
 ## basic options when run on server
-# options(radiant.launch = "viewer")
-# if (!getOption("radiant.local", default = FALSE)) {
 if (getOption("width") != 250) {
   options(
     width = max(getOption("width"), 250),
@@ -164,18 +132,18 @@ if (getOption("width") != 250) {
   )
 }
 
-## list of function arguments
-list(
-  "n" = "length", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
-  "mean" = "mean_rm", "median" = "median_rm", "min" = "min_rm",
-  "max" = "max_rm", "sum" = "sum_rm",
-  "var" = "var_rm", "sd" = "sd_rm", "se" = "se", "cv" = "cv",
-  "prop" = "prop", "varprop" = "varprop", "sdprop" = "sdprop", "seprop" = "seprop",
-  "varpop" = "varpop", "sdpop" = "sdpop",
-  "2.5%" = "p025", "5%" = "p05", "10%" = "p10", "25%" = "p25", "75%" = "p75",
-  "90%" = "p90", "95%" = "p95", "97.5%" = "p975", "skew" = "skew", "kurtosis" = "kurtosi"
-) %>%
-  options(radiant.functions = .)
+options(
+  radiant.functions = list(
+    "n_obs" = "n_obs", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
+    "mean" = "mean", "median" = "median", "min" = "min",
+    "max" = "max", "sum" = "sum",
+    "var" = "var", "sd" = "sd", "se" = "se", "cv" = "cv",
+    "prop" = "prop", "varprop" = "varprop", "sdprop" = "sdprop", "seprop" = "seprop",
+    "varpop" = "varpop", "sdpop" = "sdpop",
+    "2.5%" = "p025", "5%" = "p05", "10%" = "p10", "25%" = "p25", "75%" = "p75",
+    "90%" = "p90", "95%" = "p95", "97.5%" = "p975", "skew" = "skew", "kurtosis" = "kurtosi"
+  )
+)
 
 ## for report and code in menu R
 knitr::opts_knit$set(progress = TRUE)
@@ -186,7 +154,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,
   error = TRUE,
-  dpi = 200,
+  dpi = 144,
   fig.path = normalizePath(tempdir(), winslash = "/")
   # screenshot.force = FALSE,
 )
@@ -306,8 +274,10 @@ options(
     )))
 )
 
-make_url_patterns <- function(url_list = getOption("radiant.url.list"),
-                              url_patterns = list()) {
+make_url_patterns <- function(
+  url_list = getOption("radiant.url.list"),
+  url_patterns = list()
+) {
   for (i in names(url_list)) {
     res <- url_list[[i]]
     if (!is.list(res)) {
@@ -367,7 +337,8 @@ navbar_proj <- function(navbar) {
   proj <- if (radiant.data::is_empty(pdir)) {
     "Project: (None)"
   } else {
-    paste0("Project: ", basename(pdir))
+    paste0("Project: ", basename(pdir)) %>%
+      {if(nchar(.) > 35) paste0(strtrim(., 31), " ...") else .}
   }
   proj <- tags$span(class = "nav navbar-brand navbar-right", proj)
   ## based on: https://stackoverflow.com/a/40755608/1974918
@@ -385,7 +356,7 @@ knit_print.data.frame <- function(x, ...) {
     knitr::asis_output()
 }
 
-## not sure why this doesn't work
+## not clear why this doesn't work
 # knit_print.data.frame = function(x, ...) {
 #   res <- rmarkdown:::print.paged_df(x)
 #   knitr::asis_output(res)
@@ -395,7 +366,7 @@ knit_print.data.frame <- function(x, ...) {
 # )
 # }
 
-## not sure why this doesn't work
+## not clear why this doesn't work
 ## https://github.com/yihui/knitr/issues/1399
 # knit_print.datatables <- function(x, ...) {
 #   res <- shiny::knit_print.shiny.render.function(
@@ -416,27 +387,6 @@ options(
     )
 )
 
-## looking to add state upload option to navbar
-# state_files <- tabPanel(
-#   if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-#     # using a download handler
-#     downloadLink("state_save", "  Save radiant state file", class = "fa fa-save")
-#   } else {
-#     actionLink("state_save", "  Save radiant state file", icon = icon("save"))
-#   }
-# )
-
-# state_files <-
-#   if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-#     # using a download handler
-#     tabPanel(downloadLink("state_save", "  Save radiant state file", class = "fa fa-save"))
-#   } else {
-#     tabPanel(actionLink("state_save", "  Save radiant state file", icon = icon("save"))),
-#     tabPanel(actionLink("state_load", "  Load radiant state file", icon = icon("open")))
-#   }
-
-## try creating an upload link https://stackoverflow.com/a/11406690/1974918
-
 options(
   radiant.shared_ui =
     tagList(
@@ -456,19 +406,16 @@ options(
         icon = icon("save"),
         tabPanel(
           if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-            # using a download handler
-            downloadLink("state_save", "  Save radiant state file", class = "fa fa-save")
+            downloadLink("state_save", "   Save radiant state file", class = "fa fa-save")
           } else {
-            actionLink("state_save", "  Save radiant state file", icon = icon("save"))
+            actionLink("state_save", "   Save radiant state file", icon = icon("save"))
           }
         ),
-        # state_files,
-        # waiting for this feature in Shiny
-        # tabPanel(tags$a(id = "loadStateNav", href = "", class = "shiny-input-container",
-                        # type='file', accept='.rmd,.Rmd,.md', list(icon("refresh"), "Refresh"))),
-        # tabPanel(uploadLink("loadState", "Load state"), icon = icon("folder-open")),
-        tabPanel(actionLink("state_share", "Share state", icon = icon("share"))),
-        tabPanel("View state", uiOutput("state_view"), icon = icon("user"))
+        ## inspiration for uploading state https://stackoverflow.com/a/11406690/1974918
+        ## see also function in www/js/run_return.js
+        tabPanel(actionLink("state_load_link", "Upload radiant state file", icon = icon("folder-open"))),
+        tabPanel(actionLink("state_share", "Share radiant state", icon = icon("share"))),
+        tabPanel("View radiant state", uiOutput("state_view"), icon = icon("user"))
       ),
 
       ## stop app *and* close browser window
@@ -476,7 +423,6 @@ options(
         tabPanel(actionLink("stop_radiant", "Stop", icon = icon("stop"),
           onclick = "setTimeout(function(){window.close();}, 100); "
         )),
-        # tabPanel(actionLink("stop_radiant", "Stop", icon = icon("stop"))),
         tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
           list(icon("refresh"), "Refresh"), onclick = "window.location.reload();"
         )),
@@ -513,4 +459,6 @@ onStop(function() {
 
 ## Show NA and Inf in DT tables
 ## https://github.com/rstudio/DT/pull/513
-options(htmlwidgets.TOJSON_ARGS = list(na = "string"))
+## See also https://github.com/rstudio/DT/issues/533
+## Waiting for DT.OPTION for TOJSON_ARGS
+# options(htmlwidgets.TOJSON_ARGS = list(na = "string"))

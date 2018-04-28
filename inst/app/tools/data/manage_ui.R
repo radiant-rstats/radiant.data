@@ -83,7 +83,7 @@ output$ui_clipboard_save <- renderUI({
 
 output$ui_from_global <- renderUI({
   req(input$dataType)
-  df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>% 
+  df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>%
     {names(.[.])}
 
   tagList(
@@ -109,18 +109,18 @@ output$ui_to_global <- renderUI({
 observeEvent(input$from_global_load, {
   dfs <- input$from_global
   req(dfs)
-  r_data$datasetlist %<>% c(dfs, .) %>% unique()
+  r_info[["datasetlist"]] %<>% c(dfs, .) %>% unique()
   for (df in dfs) {
     r_data[[df]] <- get(df, envir = .GlobalEnv)
+    shiny::makeReactiveBinding(df, env = r_data)
     if (input$from_global_move == "move") rm(list = df, envir = .GlobalEnv)
-    r_data[[paste0(df, "_descr")]] <- attr(r_data[[df]], "description") %>% {
-      if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else .
-    }
+    r_info[[paste0(df, "_descr")]] <- attr(r_data[[df]], "description") %>%
+      {if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else .}
   }
   updateSelectInput(
     session, "dataset", label = "Datasets:",
-    choices = r_data$datasetlist,
-    selected = r_data$datasetlist[1]
+    choices = r_info[["datasetlist"]],
+    selected = r_info[["datasetlist"]][1]
   )
   updateSelectInput(session, "dataType", selected = "rds")
 })
@@ -129,14 +129,14 @@ observeEvent(input$to_global_save, {
   df <- input$dataset
   req(df)
   assign(df, r_data[[df]], envir = .GlobalEnv)
-  if (input$to_global_move == "move" && length(r_data$datasetlist) > 1) {
-    r_data$datasetlist %<>% setdiff(df)
-    r_data[[paste0(df, "_descr")]] <- NULL
+  if (input$to_global_move == "move" && length(r_info[["datasetlist"]]) > 1) {
+    r_info[["datasetlist"]] %<>% setdiff(df)
+    r_info[[paste0(df, "_descr")]] <- NULL
   }
   updateSelectInput(
     session, "dataset", label = "Datasets:",
-    choices = r_data$datasetlist,
-    selected = r_data$datasetlist[1]
+    choices = r_info[["datasetlist"]],
+    selected = r_info[["datasetlist"]][1]
   )
   updateSelectInput(session, "saveAs", selected = "rds")
 })
@@ -189,7 +189,7 @@ output$ui_Manage <- renderUI({
             width = "100%"
           )),
           numericInput(
-            "man_n_max", label = "Maximum rows to read:", 
+            "man_n_max", label = "Maximum rows to read:",
             value = Inf, max = Inf, step = 1000
           )
         ),
@@ -244,7 +244,7 @@ output$ui_Manage <- renderUI({
       )
     ),
     help_modal(
-      "Manage", "manage_help", 
+      "Manage", "manage_help",
       inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/manage.md")),
       lic = "by-sa"
     )
@@ -260,7 +260,7 @@ output$ui_Manage <- renderUI({
 
 ## updating the dataset description
 observeEvent(input$updateDescr, {
-  r_data[[paste0(input$dataset, "_descr")]] <- input$man_data_descr
+  r_info[[paste0(input$dataset, "_descr")]] <- input$man_data_descr
   attr(r_data[[input$dataset]], "description") <- input$man_data_descr
   updateCheckboxInput(
     session = session, "man_add_descr",
@@ -269,7 +269,7 @@ observeEvent(input$updateDescr, {
 })
 
 output$dataDescriptionHTML <- renderUI({
-  r_data[[paste0(input$dataset, "_descr")]] %>%
+  r_info[[paste0(input$dataset, "_descr")]] %>%
     descr_out("html") %>%
     HTML()
 })
@@ -286,7 +286,7 @@ output$dataDescriptionMD <- renderUI({
       class = "form-control",
       autocorrect = "off",
       autocapitalize="off",
-      descr_out(r_data[[paste0(input$dataset, "_descr")]], "md")
+      descr_out(r_info[[paste0(input$dataset, "_descr")]], "md")
     )
   )
 })
@@ -294,9 +294,13 @@ output$dataDescriptionMD <- renderUI({
 ## removing datasets
 output$uiRemoveDataset <- renderUI({
   selectInput(
-    inputId = "removeDataset", label = NULL,
-    choices = r_data$datasetlist, selected = NULL, multiple = TRUE,
-    size = length(r_data$datasetlist), selectize = FALSE
+    inputId = "removeDataset", 
+    label = NULL,
+    choices = r_info[["datasetlist"]], 
+    selected = NULL, 
+    multiple = TRUE,
+    size = length(r_info[["datasetlist"]]), 
+    selectize = FALSE
   )
 })
 
@@ -304,7 +308,7 @@ observeEvent(input$removeDataButton, {
   ## only remove datasets if 1 or more were selected - without this line
   ## all files would be removed when the removeDataButton is pressed
   if (is.null(input$removeDataset)) return()
-  datasets <- r_data[["datasetlist"]]
+  datasets <- r_info[["datasetlist"]]
   if (length(datasets) > 1) {   ## have to leave at least one dataset
     removeDataset <- input$removeDataset
     if (length(datasets) == length(removeDataset)) {
@@ -313,14 +317,14 @@ observeEvent(input$removeDataButton, {
 
     ## Must use single string to index into reactivevalues so loop is necessary
     for (rem in removeDataset) {
-      r_data[[rem]] <- NULL
-      r_data[[paste0(rem, "_descr")]] <- NULL
+      r_info[[paste0(rem, "_descr")]] <- NULL
     }
-    r_data[["datasetlist"]] <- datasets[-which(datasets %in% removeDataset)]
+    suppressWarnings(rm(list = removeDataset, envir = r_data))
+    r_info[["datasetlist"]] <- datasets[-which(datasets %in% removeDataset)]
   }
 })
 
-# 'saving' data to clipboard
+## 'saving' data to clipboard
 observeEvent(input$saveClipData, {
   saveClipboardData()
   updateRadioButtons(session = session, inputId = "saveAs", selected = "rds")
@@ -344,7 +348,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
       existing = FALSE
     )
     if (!is(path, "try-error") && !is_empty(path)) {
-      r_state$radiant_state_name <<- path 
+      r_state$radiant_state_name <<- path
       saveState(path)
     }
   })
@@ -359,7 +363,7 @@ man_download_data <- function(file) {
     tmp <- new.env(parent = emptyenv())
     tmp[[robj]] <- .getdata_transform()
     if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
-      attr(tmp[[robj]], "description") <- r_data[[paste0(robj, "_descr")]]
+      attr(tmp[[robj]], "description") <- r_info[[paste0(robj, "_descr")]]
     }
 
     if (ext == "rds") {
@@ -389,7 +393,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
     path <- rstudioapi::selectFile(
       caption = "Save data",
       path = file.path(
-        getOption("radiant.launch_dir", "~"), 
+        getOption("radiant.launch_dir", "~"),
         paste0(input$dataset, ".", input$saveAs)
       ),
       filter = paste0("Save data (*.", input$saveAs, ")"),
@@ -423,7 +427,7 @@ observeEvent(input$uploadfile, {
     if (is(path, "try-error") || is_empty(path)) return()
     inFile <- data.frame(
       name = basename(path),
-      datapath = path, 
+      datapath = path,
       stringsAsFactors = FALSE
     )
   } else {
@@ -447,8 +451,8 @@ observeEvent(input$uploadfile, {
   updateSelectInput(
     session, "dataset",
     label = "Datasets:",
-    choices = r_data$datasetlist,
-    selected = r_data$datasetlist[1]
+    choices = r_info[["datasetlist"]],
+    selected = r_info[["datasetlist"]][1]
   )
 })
 
@@ -466,7 +470,7 @@ observeEvent(input$url_rda_load, {
       upload_error_handler(objname, "### There was an error loading the r-data file from the provided url.")
     } else {
       if (length(robjname) > 1) {
-        if (sum(robjname %in% c("r_state", "r_data")) == 2) {
+        if (sum(robjname %in% c("r_state", "r_data", "r_info")) > 1) {
           upload_error_handler(objname, "### To restore app state from a radiant state file please choose the 'radiant state file' option from the dropdown.")
         } else {
           upload_error_handler(objname, "### More than one R object is contained in the specified data file.")
@@ -476,13 +480,14 @@ observeEvent(input$url_rda_load, {
       }
     }
   }
-  r_data[["datasetlist"]] <<- c(objname, r_data[["datasetlist"]]) %>% unique()
-  r_data[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
+  shiny::makeReactiveBinding(objname, env = r_data)
+  r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
+  r_info[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
   updateSelectInput(
     session, "dataset",
     label = "Datasets:",
-    choices = r_data$datasetlist,
-    selected = r_data$datasetlist[1]
+    choices = r_info[["datasetlist"]],
+    selected = r_info[["datasetlist"]][1]
   )
 })
 
@@ -497,7 +502,7 @@ observeEvent(input$url_csv_load, {
   if (is(ret, "try-error")) {
     upload_error_handler(objname, "### There was an error loading the csv file from the provided url.")
   } else {
-    dat <- loadcsv(
+    dataset <- load_csv(
       con,
       header = input$man_header,
       n_max = input$man_n_max,
@@ -506,20 +511,22 @@ observeEvent(input$url_csv_load, {
       saf = input$man_str_as_factor
     )
 
-    if (is.character(dat)) {
-      upload_error_handler(objname, dat)
+    if (is.character(dataset)) {
+      upload_error_handler(objname, dataset)
     } else {
-      r_data[[objname]] <- dat
+      r_data[[objname]] <- dataset
     }
   }
 
-  r_data[["datasetlist"]] <<- c(objname, r_data[["datasetlist"]]) %>% unique()
-  r_data[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
+  shiny::makeReactiveBinding(objname, env = r_data)
+  r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
+  r_info[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
+
   updateSelectInput(
     session, "dataset",
     label = "Datasets:",
-    choices = r_data$datasetlist,
-    selected = r_data$datasetlist[1]
+    choices = r_info[["datasetlist"]],
+    selected = r_info[["datasetlist"]][1]
   )
 })
 
@@ -527,20 +534,21 @@ observeEvent(input$url_csv_load, {
 observeEvent(input$loadExampleData, {
   ## data.frame of example datasets
   exdat <- data(package = getOption("radiant.example.data"))$results[, c("Package", "Item")]
-  for (i in 1:nrow(exdat)) {
+  for (i in seq_len(nrow(exdat))) {
     item <- exdat[i, "Item"]
-    r_data[[item]] <- data(list = item, package = exdat[i, "Package"], envir = environment()) %>% get()
-    r_data[[paste0(item, "_descr")]] <- attr(r_data[[item]], "description")
-    r_data[["datasetlist"]] <<- c(item, r_data[["datasetlist"]]) %>% unique()
+    data(list = item, package = exdat[i, "Package"], envir = r_data)
+    makeReactiveBinding(item, env = r_data)
+    r_info[[paste0(item, "_descr")]] <- attr(r_data[[item]], "description")
+    r_info[["datasetlist"]] <- c(item, r_info[["datasetlist"]]) %>% unique()
   }
 
   ## sorting files alphabetically
-  r_data[["datasetlist"]] <- sort(r_data[["datasetlist"]])
+  r_info[["datasetlist"]] <- sort(r_info[["datasetlist"]])
 
   updateSelectInput(
     session, "dataset", label = "Datasets:",
-    choices = r_data$datasetlist,
-    selected = r_data$datasetlist[1]
+    choices = r_info[["datasetlist"]],
+    selected = r_info[["datasetlist"]][1]
   )
 })
 
@@ -550,7 +558,8 @@ observeEvent(input$loadClipData, {
   updateSelectInput(session = session, inputId = "dataType", selected = "rds")
   updateSelectInput(
     session, "dataset", label = "Datasets:",
-    choices = r_data$datasetlist, selected = "copy_and_paste"
+    choices = r_info[["datasetlist"]], 
+    selected = "copy_and_paste"
   )
 })
 
@@ -611,11 +620,21 @@ output$refreshOnUpload <- renderUI({
     }
   }
 
+  ## remove characters that may cause problems in shinyAce from r_info
+  if (!is.null(tmpEnv$r_info)) {
+    for (i in names(tmpEnv$r_info)) {
+      if (is.character(tmpEnv$r_info[[i]])) {
+        tmpEnv$r_info[[i]] %<>% fixMS()
+      }
+    }
+  }
+
   ## storing statename for later use if needed
   tmpEnv$r_state$radiant_state_name <- sname
 
   r_sessions[[r_ssuid]] <- list(
     r_data = tmpEnv$r_data,
+    r_info = tmpEnv$r_info,
     r_state = tmpEnv$r_state,
     timestamp = Sys.time()
   )
@@ -626,6 +645,9 @@ output$refreshOnUpload <- renderUI({
   tags$script("window.location.reload();")
 })
 
+outputOptions(output, "refreshOnUpload", suspendWhenHidden = FALSE)
+outputOptions(output, "ui_state_load", suspendWhenHidden = FALSE)
+
 #######################################
 # Save state
 #######################################
@@ -635,8 +657,9 @@ saveState <- function(filename) {
     isolate({
       LiveInputs <- toList(input)
       r_state[names(LiveInputs)] <- LiveInputs
-      r_data <- toList(r_data)
-      save(r_state, r_data, file = filename)
+      r_data <- active2list(r_data)
+      r_info <- toList(r_info)
+      save(r_state, r_data, r_info, file = filename)
     })
   )
 }
@@ -649,19 +672,21 @@ observeEvent(input$renameButton, {
   isolate({
     if (is_empty(input$data_rename) || input$dataset == input$data_rename) return()
 
-    ## use pryr::object_size to see that the size of the list doesn't change
+    ## use lobstr::object_size to see that the size of the list doesn't change
     ## when you assign a list element another name
     r_data[[input$data_rename]] <- r_data[[input$dataset]]
+    shiny::makeReactiveBinding(input$data_rename, env = r_data)
     r_data[[input$dataset]] <- NULL
-    r_data[[paste0(input$data_rename, "_descr")]] <- r_data[[paste0(input$dataset, "_descr")]]
-    r_data[[paste0(input$dataset, "_descr")]] <- NULL
-
-    ind <- which(input$dataset == r_data[["datasetlist"]])
-    r_data[["datasetlist"]][ind] <- input$data_rename
-    r_data[["datasetlist"]] %<>% unique
+    r_info[[paste0(input$data_rename, "_descr")]] <- r_info[[paste0(input$dataset, "_descr")]]
+    r_info[[paste0(input$dataset, "_descr")]] <- NULL
+    ind <- which(input$dataset == r_info[["datasetlist"]])
+    r_info[["datasetlist"]][ind] <- input$data_rename
+    r_info[["datasetlist"]] %<>% unique()
 
     updateSelectInput(
-      session, "dataset", label = "Datasets:", choices = r_data$datasetlist,
+      session, "dataset", 
+      label = "Datasets:", 
+      choices = r_info[["datasetlist"]],
       selected = input$data_rename
     )
   })
@@ -671,8 +696,11 @@ output$ui_datasets <- renderUI({
   ## Drop-down selection of active dataset
   tagList(
     selectInput(
-      inputId = "dataset", label = "Datasets:", choices = r_data$datasetlist,
-      selected = state_init("dataset"), multiple = FALSE
+      inputId = "dataset", 
+      label = "Datasets:", 
+      choices = r_info[["datasetlist"]],
+      selected = state_init("dataset"), 
+      multiple = FALSE
     ),
     conditionalPanel(
       condition = "input.tabs_data == 'Manage'",

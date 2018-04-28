@@ -4,8 +4,8 @@
 
 ## show error message from filter dialog
 output$ui_filter_error <- renderUI({
-  if (is_empty(r_data$filter_error)) return()
-  helpText(r_data$filter_error)
+  if (is_empty(r_info[["filter_error"]])) return()
+  helpText(r_info[["filter_error"]])
 })
 
 ## data ui and tabs

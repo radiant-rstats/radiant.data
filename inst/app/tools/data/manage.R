@@ -12,12 +12,12 @@ descr_out <- function(descr, ret_type = "html") {
 
 ## create an empty data.frame and return error message as description
 upload_error_handler <- function(objname, ret) {
-  r_data[[objname]] <<- data.frame(matrix(rep("", 12), nrow = 2), stringsAsFactors = FALSE) %>% 
+  r_data[[objname]] <- data.frame(matrix(rep("", 12), nrow = 2), stringsAsFactors = FALSE) %>% 
     set_attr("description", ret)
 }
 
 loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRUE, sep = "\t") {
-  dat <- sshhr(try({
+  dataset <- sshhr(try({
     if (Sys.info()["sysname"] == "Windows") {
       read.table("clipboard", header = header, sep = sep, comment.char = "", fill = TRUE, as.is = TRUE)
     } else if (Sys.info()["sysname"] == "Darwin") {
@@ -29,17 +29,17 @@ loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRU
     }
   } %>% as.data.frame(check.names = TRUE, stringsAsFactors = FALSE), silent = TRUE))
 
-  if (is(dat, "try-error") || nrow(dat) == 0) {
+  if (is(dataset, "try-error") || nrow(dataset) == 0) {
     if (ret == "") ret <- c("### Data in clipboard was not well formatted. Try exporting the data to csv format.")
     upload_error_handler(objname, ret)
   } else {
     ret <- paste0("### Clipboard data\nData copied from clipboard on ", lubridate::now())
-    colnames(dat) <- make.names(colnames(dat))
-    r_data[[objname]] <- factorizer(dat)
+    colnames(dataset) <- make.names(colnames(dataset))
+    r_data[[objname]] <- factorizer(dataset)
   }
-
-  r_data[[paste0(objname, "_descr")]] <- ret
-  r_data[["datasetlist"]] <- c(objname, r_data[["datasetlist"]]) %>% unique()
+  shiny::makeReactiveBinding(objname, env = r_data)
+  r_info[[paste0(objname, "_descr")]] <- ret
+  r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
 }
 
 saveClipboardData <- function() {
@@ -78,7 +78,7 @@ loadUserData <- function(
     if (fext %in% c("xls", "xlsx")) {
       ret <- "### Radiant does not load xls files directly. Please save the data as a csv file and try again."
     } else {
-      ret <- paste0("### The filename extension (", fext, ") does not match the specified file-type (", ext, "). Please specify the file type you are trying to upload (i.e., csv or rda).")
+      ret <- paste0("### The filename extension (", fext, ") does not match the specified file-type (", ext, "). Please specify the file type you are trying to upload")
     }
 
     upload_error_handler(objname, ret)
@@ -91,16 +91,16 @@ loadUserData <- function(
     if (is(robjname, "try-error")) {
       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in rda format.")
     } else if (length(robjname) > 1) {
-      if (sum(robjname %in% c("r_state", "r_data")) == 2) {
+      if (sum(robjname %in% c("r_state", "r_data", "r_info")) > 1) {
         upload_error_handler(objname, "### To restore state from a state-file select 'state' from the 'Load data of type' drowdown before uploading the file")
-        rm(r_state, r_data) ## need to remove the local copies of r_state and r_data
+        ## need to remove the local copies of r_state, r_data, and r_info
+        suppressWarnings(rm(r_state, r_data, r_info)) 
       } else {
         upload_error_handler(objname, "### More than one R object contained in the data.")
       }
     } else {
-      r_data[[objname]] <- as.data.frame(get(robjname), stringsAsFactors = FALSE) %>% {
-        set_colnames(., make.names(colnames(.)))
-      }
+      r_data[[objname]] <- as.data.frame(get(robjname), stringsAsFactors = FALSE) %>% 
+        {set_colnames(., make.names(colnames(.)))}
     }
   } else if (ext == "rds") {
     ## objname will hold the name of the object(s) inside the R datafile
@@ -108,9 +108,8 @@ loadUserData <- function(
     if (is(robj, "try-error")) {
       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in rds format.")
     } else {
-      r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE) %>% {
-        set_colnames(., make.names(colnames(.)))
-      }
+      r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE) %>% 
+        {set_colnames(., make.names(colnames(.)))}
     }
   } else if (ext == "feather") {
     if (!"feather" %in% rownames(utils::installed.packages())) {
@@ -121,22 +120,19 @@ loadUserData <- function(
       if (is(robj, "try-error")) {
         upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in feather format.")
       } else {
-        r_data[[objname]] <- robj %>% {
-          set_colnames(., make.names(colnames(.)))
-        }
+        r_data[[objname]] <- robj %>% {set_colnames(., make.names(colnames(.)))}
       }
     }
   } else if (ext %in% c("tsv", "csv", "txt")) {
-    r_data[[objname]] <- loadcsv(uFile, header = header, n_max = n_max, sep = sep, dec = dec, saf = man_str_as_factor) %>% {
+    r_data[[objname]] <- load_csv(uFile, header = header, n_max = n_max, sep = sep, dec = dec, saf = man_str_as_factor) %>% {
       if (is.character(.)) upload_error_handler(objname, "### There was an error loading the data") else .
-    } %>% {
-      set_colnames(., make.names(colnames(.)))
-    }
+    } %>% {set_colnames(., make.names(colnames(.)))}
   } else if (ext != "---") {
     ret <- paste0("### The selected filetype is not currently supported (", fext, ").")
     upload_error_handler(objname, ret)
   }
 
-  r_data[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
-  r_data[["datasetlist"]] <<- c(objname, r_data[["datasetlist"]]) %>% unique()
+  shiny::makeReactiveBinding(objname, env = r_data)
+  r_info[[paste0(objname, "_descr")]] <- attr(r_info[[objname]], "description")
+  r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
 }

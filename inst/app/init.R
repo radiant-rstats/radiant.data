@@ -5,12 +5,8 @@
 
 ## useful options for debugging
 # options(shiny.trace = TRUE)
-# options(shiny.reactlog = TRUE)
 # options(shiny.error = recover)
 # options(warn = 2)
-
-## turn off warnings globally
-# options(warn=-1)
 
 remove_session_files <- function(st = Sys.time()) {
   fl <- list.files(
@@ -69,29 +65,63 @@ r_ssuid <- if (getOption("radiant.local")) {
 ## (re)start the session and push the id into the url
 session$sendCustomMessage("session_start", r_ssuid)
 
+## identify the shiny environment
+r_environment <- environment()
+
+r_info_legacy <- function() {
+  r_info_elements <- c(
+    "datasetlist", "dtree_list", "pvt_rows", "nav_radiant",
+    "plot_height", "plot_width", "filter_error", "cmb_error"
+  ) %>%
+    c(paste0(r_data[["datasetlist"]], "_descr"))
+  r_info <- reactiveValues()
+  for (i in r_info_elements) {
+    r_info[[i]] <- r_data[[i]]
+  }
+  suppressWarnings(rm(list = r_info_elements, envir = r_data))
+  r_info
+}
+
 ## load for previous state if available but look in global memory first
-if (exists("r_data")) {
-  r_data <- do.call(reactiveValues, r_data)
+if (exists("r_data", envir = .GlobalEnv)) {
+  r_data <- if (is.list(r_data)) list2env(r_data, envir = new.env()) else r_data
+  if (exists("r_info")) {
+    r_info <- do.call(reactiveValues, r_info)
+  } else {
+    r_info <- r_info_legacy()
+  }
   r_state <- if (exists("r_state")) r_state else list()
-  suppressWarnings(rm(r_data, r_state, envir = .GlobalEnv))
+  suppressWarnings(rm(r_data, r_state, r_info, envir = .GlobalEnv))
 } else if (!is.null(r_sessions[[r_ssuid]]$r_data)) {
-  r_data <- do.call(reactiveValues, r_sessions[[r_ssuid]]$r_data)
+  r_data <- r_sessions[[r_ssuid]]$r_data %>%
+    {if (is.list(.)) list2env(., envir = new.env()) else .}
+  if (is.null(r_sessions[[r_ssuid]]$r_info)) {
+    r_info <- r_info_legacy()
+  } else {
+    r_info <- do.call(reactiveValues, r_sessions[[r_ssuid]]$r_info)
+  }
   r_state <- r_sessions[[r_ssuid]]$r_state
 } else if (file.exists(paste0("~/radiant.sessions/r_", r_ssuid, ".rds"))) {
   ## read from file if not in global
   fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", r_ssuid, ".rds")
-
   rs <- try(readRDS(fn), silent = TRUE)
   if (is(rs, "try-error")) {
-    r_data <- init_data()
+    r_data <- new.env()
+    r_info <- init_data(env = r_data)
     r_state <- list()
   } else {
     if (length(rs$r_data) == 0) {
-      r_data <- init_data()
+      r_data <- new.env()
+      r_info <- init_data(env = r_data)
     } else {
-      r_data <- do.call(reactiveValues, rs$r_data)
+      r_data <- rs$r_data  %>%
+        {if (is.list(.)) list2env(., envir = new.env()) else .}
+      if (is.null(rs$r_info)) {
+        r_info <- r_info_legacy()
+      } else {
+        r_info <- do.call(reactiveValues, rs$r_info)
+      }
     }
-
     if (length(rs$r_state) == 0) {
       r_state <- list()
     } else {
@@ -102,27 +132,47 @@ if (exists("r_data")) {
   unlink(fn, force = TRUE)
   rm(rs)
 } else if (isTRUE(getOption("radiant.local")) && file.exists(paste0("~/radiant.sessions/r_", mrsf, ".rds"))) {
-
   ## restore from local folder but assign new ssuid
   fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", mrsf, ".rds")
   rs <- try(readRDS(fn), silent = TRUE)
   if (is(rs, "try-error")) {
-    r_data <- init_data()
+    r_data <- new.env()
+    r_info <- init_data(env = r_data)
     r_state <- list()
   } else {
-    r_data <- if (length(rs$r_data) == 0) init_data() else do.call(reactiveValues, rs$r_data)
+    if (length(rs$r_data) == 0) {
+      r_data <- new.env()
+      r_info <- init_data(env = r_data)
+    } else {
+      r_data <- rs$r_data %>%
+        {if (is.list(.)) list2env(., envir = new.env()) else .}
+      r_info <- if (length(rs$r_info) == 0) {
+        r_info <- r_info_legacy()
+      } else {
+        do.call(reactiveValues, rs$r_info)
+      }
+    }
     r_state <- if (length(rs$r_state) == 0) list() else rs$r_state
   }
 
   ## don't navigate to same tab in case the app locks again
   r_state$nav_radiant <- NULL
-
   unlink(fn, force = TRUE)
   rm(rs)
 } else {
-  r_data <- init_data()
+  r_data <- new.env()
+  r_info <- init_data(env = r_data)
   r_state <- list()
 }
+
+isolate({
+  for (ds in r_info[["datasetlist"]]) {
+    makeReactiveBinding(ds, env = r_data)
+  }
+  for (dt in r_info[["dtree_list"]]) {
+    makeReactiveBinding(dt, env = r_data)
+  }
+})
 
 ## legacy, to deal with state files created before
 ## Report > Rmd and Report > R name change
@@ -158,27 +208,20 @@ if (!is.null(r_state$rcode_edit) && is.null(r_state$r_edit)) {
   r_state$rcode_edit <- NULL
 }
 
-## identify the shiny environment
-r_environment <- environment()
-## create a child environment to use for Report > Rmd and Report > R
-knitr_environment <- new.env()
-# print(r_environment)
-# print(parent.env(knitr_environment))
-
 ## parse the url and use updateTabsetPanel to navigate to the desired tab
 ## currently only works with a new or refreshed session
 observeEvent(session$clientData$url_search, {
   url_query <- parseQueryString(session$clientData$url_search)
   if ("url" %in% names(url_query)) {
-    r_data$url <- url_query$url
-  } else if (is_empty(r_data$url)) {
+    r_info[["url"]] <- url_query$url
+  } else if (is_empty(r_infol[["url"]])) {
     return()
   }
 
   ## create an observer and suspend when done
   url_observe <- observe({
     if (is.null(input$dataset)) return()
-    url <- getOption("radiant.url.patterns")[[r_data$url]]
+    url <- getOption("radiant.url.patterns")[[r_infol[["url"]]]]
     if (is.null(url)) {
       ## if pattern not found suspend observer
       url_observe$suspend()
@@ -198,7 +241,7 @@ observeEvent(session$clientData$url_search, {
 ## keeping track of the main tab we are on
 observeEvent(input$nav_radiant, {
   if (!input$nav_radiant %in% c("Refresh", "Stop")) {
-    r_data$nav_radiant <- input$nav_radiant
+    r_info[["nav_radiant"]] <- input$nav_radiant
   }
 })
 
@@ -231,8 +274,8 @@ if (!is.null(r_state$nav_radiant)) {
 }
 
 isolate({
-  if (is.null(r_data$plot_height)) r_data$plot_height <- 650
-  if (is.null(r_data$plot_width)) r_data$plot_width <- 650
+  if (is.null(r_info[["plot_height"]])) r_info[["plot_height"]] <- 650
+  if (is.null(r_info[["plot_width"]])) r_info[["plot_width"]] <- 650
 })
 
 if (getOption("radiant.from.package", default = TRUE)) {
@@ -247,27 +290,6 @@ if (getOption("radiant.from.package", default = TRUE)) {
   # cat("\nGetting radiant.data from source ...\n")
 }
 
-## popup to suggest changing the working directory
-# if (getOption("radiant.project_dirx", "none") == "none") {
-#   showModal(
-#     modalDialog(
-#       title = "Directory Conflict",
-#       span(
-#         "Radiant is set to use an R document in Rstudio
-#         ('To R (Rstudio)'). However, the active document in
-#         Rstudio does not seem to be of type .R. Please open an
-#         existing .R file or create a new one in Rstudio. The
-#         file must be saved to disk before it can be accessed. If
-#         you want to use the editor in Radiant instead, change
-#         'To R (Rstudio)' to 'Auto paste' or 'Manual paste'."
-#       ),
-#       footer = modalButton("OK"),
-#       size = "s",
-#       easyClose = TRUE
-#     )
-#   )
-# }
-
 ## this should work but doesn't seem to fix ...
 ## https://github.com/rstudio/rstudio/issues/1870
 ## https://community.rstudio.com/t/rstudio-resets-width-option-when-running-shiny-app-in-viewer/3661
@@ -278,13 +300,13 @@ observeEvent(input$get_screen_width, {
 ## check every 5 seconds if width has been reset
 ## https://github.com/rstudio/rstudio/issues/1870
 ## https://community.rstudio.com/t/rstudio-resets-width-option-when-running-shiny-app-in-viewer/3661
-reactivePoll(
-  5000,
-  session,
-  checkFunc = function() {
-    if (getOption("width", default = 250) != 250) options(width = 250)
-  },
-  valueFunc = function() {
-    return()
-  }
-)
+# reactivePoll(
+#   5000,
+#   session,
+#   checkFunc = function() {
+#     if (getOption("width", default = 250) != 250) options(width = 250)
+#   },
+#   valueFunc = function() {
+#     return()
+#   }
+# )

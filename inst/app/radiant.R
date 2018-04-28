@@ -5,14 +5,37 @@
 ## drop NULLs in list
 toList <- function(x) reactiveValuesToList(x) %>% .[!sapply(., is.null)]
 
+## from https://gist.github.com/hadley/5434786
+env2list <- function(x) mget(ls(x), x)
+
+## remove non-active bindings
+rem_non_active <- function(env = r_data) {
+  isactive <- sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env))
+  rm(list = names(isactive)[!isactive], envir = env)
+}
+
+active2list <- function(env = r_data) {
+  isactive <- sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env)) %>%
+    {names(.)[.]}
+  if (length(isactive) > 0) {
+    mget(isactive, env)
+  } else {
+    list()
+  }
+}
+
 saveSession <- function(session = session) {
   if (!exists("r_sessions")) return()
 
   LiveInputs <- toList(input)
   r_state[names(LiveInputs)] <- LiveInputs
 
+  ## removing the non-active bindings
+  rem_non_active()
+
   r_sessions[[r_ssuid]] <- list(
-    r_data = toList(r_data),
+    r_data = env2list(r_data),
+    r_info = toList(r_info),
     r_state = r_state,
     timestamp = Sys.time()
   )
@@ -67,9 +90,9 @@ saveStateOnRefresh <- function(session = session) {
     gsub("\"", "\'", .) %>%
     fixMS()
   if (is_empty(selcom) || input$show_filter == FALSE) {
-    isolate(r_data$filter_error <- "")
+    isolate(r_info[["filter_error"]] <- "")
   } else if (grepl("([^=!<>])=([^=])", selcom)) {
-    isolate(r_data$filter_error <- "Invalid filter: Never use = in a filter! Use == instead (e.g., city == 'San Diego'). Update or remove the expression")
+    isolate(r_info[["filter_error"]] <- "Invalid filter: Never use = in a filter! Use == instead (e.g., city == 'San Diego'). Update or remove the expression")
   } else {
     ## %>% needed here so . will be available
     seldat <- try(
@@ -77,9 +100,9 @@ saveStateOnRefresh <- function(session = session) {
       silent = TRUE
     )
     if (is(seldat, "try-error")) {
-      isolate(r_data$filter_error <- paste0("Invalid filter: \"", attr(seldat, "condition")$message, "\". Update or remove the expression"))
+      isolate(r_info[["filter_error"]] <- paste0("Invalid filter: \"", attr(seldat, "condition")$message, "\". Update or remove the expression"))
     } else {
-      isolate(r_data$filter_error <- "")
+      isolate(r_info[["filter_error"]] <- "")
       if ("grouped_df" %in% class(seldat)) {
         return(droplevels(ungroup(seldat)))
       } else {
@@ -87,7 +110,6 @@ saveStateOnRefresh <- function(session = session) {
       }
     }
   }
-
   if ("grouped_df" %in% class(r_data[[input$dataset]])) {
     ungroup(r_data[[input$dataset]])
   } else {
@@ -111,16 +133,26 @@ saveStateOnRefresh <- function(session = session) {
 
 groupable_vars <- reactive({
   .getdata() %>%
-    summarise_all(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
-      is.character(.) || ((length(unique(.)) / n()) < .30))) %>%
+    summarise_all(
+      funs(
+        is.factor(.) || is.logical(.) || lubridate::is.Date(.) || 
+        is.integer(.) || is.character(.) || 
+        ((length(unique(.)) / n()) < .30)
+      )
+    ) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
 })
 
 groupable_vars_nonum <- reactive({
   .getdata() %>%
-    summarise_all(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
-      is.character(.))) %>%
+    summarise_all(
+      funs(
+        is.factor(.) || is.logical(.) || 
+        lubridate::is.Date(.) || is.integer(.) || 
+        is.character(.)
+      )
+    ) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
 })
@@ -135,7 +167,6 @@ two_level_vars <- reactive({
     }
   }
   .getdata() %>%
-    # summarise_all(funs(length(unique(.)))) %>%
     summarise_all(funs(two_levs)) %>%
     {. == 2} %>%
     which(.) %>%
@@ -187,21 +218,19 @@ clean_args <- function(rep_args, rep_default = list()) {
 }
 
 ## check if a variable is null or not in the selected data.frame
-not_available <- function(x)
-  if (any(is.null(x)) || (sum(x %in% varnames()) < length(x))) TRUE else FALSE
+not_available <- function(x) any(is.null(x)) || (sum(x %in% varnames()) < length(x))
 
 ## check if a variable is null or not in the selected data.frame
-available <- function(x) not_available(x) == FALSE
+available <- function(x) !not_available(x)
 
 ## check if a button was NOT pressed
-not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
+not_pressed <- function(x) is.null(x) || x == 0
 
 ## check if a button was pressed
-pressed <- function(x) ifelse(!is.null(x) && x > 0, TRUE, FALSE)
+pressed <- function(x) !is.null(x) && x > 0
 
 ## check for duplicate entries
-has_duplicates <- function(x)
-  if (length(unique(x)) < length(x)) TRUE else FALSE
+has_duplicates <- function(x) length(unique(x)) < length(x)
 
 ## is x some type of date variable
 is_date <- function(x) inherits(x, c("Date", "POSIXlt", "POSIXct"))
@@ -210,13 +239,13 @@ is_date <- function(x) inherits(x, c("Date", "POSIXlt", "POSIXct"))
 r_drop <- function(x, drop = c("dataset", "data_filter")) x[-which(x %in% drop)]
 
 ## show a few rows of a dataframe
-show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt = "") {
-  if (is.character(dat) && length(dat) == 1) dat <- getdata(dat, filt = filt, na.rm = FALSE)
-  nr <- nrow(dat)
+show_data_snippet <- function(dataset = input$dataset, nshow = 7, title = "", filt = "") {
+  if (is.character(dataset) && length(dataset) == 1) dataset <- getdata(dataset, filt = filt, na.rm = FALSE)
+  nr <- nrow(dataset)
   ## avoid slice with variables outside of the df in case a column with the same
   ## name exists
-  dat <- dat[1:min(nshow, nr), , drop = FALSE]
-  dat %>%
+  dataset <- dataset[1:min(nshow, nr), , drop = FALSE]
+  dataset %>%
     mutate_if(is_date, as.character) %>%
     mutate_if(is.character, funs(strtrim(., 40))) %>%
     xtable::xtable(.) %>%
@@ -230,8 +259,8 @@ show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "", filt =
     enc2utf8()
 }
 
-suggest_data <- function(text = "", dat = "diamonds")
-  paste0(text, "For an example dataset go to Data > Manage, select 'examples' from the\n'Load data of type' dropdown, and press the 'Load examples' button. Then\nselect the \'", dat, "\' dataset.")
+suggest_data <- function(text = "", df_name = "diamonds")
+  paste0(text, "For an example dataset go to Data > Manage, select 'examples' from the\n'Load data of type' dropdown, and press the 'Load examples' button. Then\nselect the \'", df_name, "\' dataset.")
 
 ## function written by @wch https://github.com/rstudio/shiny/issues/781#issuecomment-87135411
 capture_plot <- function(expr, env = parent.frame()) {
@@ -416,11 +445,11 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
 }
 
 plot_width <- function() {
-  if (is.null(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
+  if (is.null(input$viz_plot_width)) r_info[["plot_width"]] else input$viz_plot_width
 }
 
 plot_height <- function() {
-  if (is.null(input$viz_plot_height)) r_data$plot_height else input$viz_plot_height
+  if (is.null(input$viz_plot_height)) r_info[["plot_height"]] else input$viz_plot_height
 }
 
 download_handler_plot <- function(path, plot, width = plot_width, height = plot_height) {
@@ -454,9 +483,9 @@ register_print_output <- function(
   return(invisible())
 }
 
-# fun_name is a string of the main function name
-# rfun_name is a string of the reactive wrapper that calls the main function
-# out_name is the name of the output, set to fun_name by default
+## fun_name is a string of the main function name
+## rfun_name is a string of the reactive wrapper that calls the main function
+## out_name is the name of the output, set to fun_name by default
 register_plot_output <- function(
   fun_name, rfun_name, out_name = fun_name,
   width_fun = "plot_width", height_fun = "plot_height"
@@ -467,7 +496,7 @@ register_plot_output <- function(
 
     ## when no analysis was conducted (e.g., no variables selected)
     p <- get(rfun_name)()
-    if (is.null(p)) p <- "Nothing to plot ...\nSelect plots to show or re-run the calculations"
+    if (is_empty(p)) p <- "Nothing to plot ...\nSelect plots to show or re-run the calculations"
     if (is.character(p)) {
       plot(
         x = 1, type = "n", main = paste0("\n\n\n\n\n\n\n\n", p),
@@ -479,77 +508,6 @@ register_plot_output <- function(
   }, width = get(width_fun), height = get(height_fun), res = 96)
 
   return(invisible())
-}
-
-plot_downloader <- function(
-  plot_name, width = plot_width, height = plot_height,
-  pre = ".plot_", po = "dl_", fname = plot_name, inp = "dataset"
-) {
-
-  # ## link and output name
-  lnm <- paste0(po, plot_name)
-  fn <- paste0(fname, ".png") %>%
-    sub("^\\.", "", .)
-  # ## download graphs in higher resolution than shown in GUI (504 dpi)
-  pr <- 5
-
-  if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-
-    ## create an output
-    output[[lnm]] <- downloadHandler(
-      filename = function() {
-        ifelse(length(inp) > 0, paste0(isolate(input[[inp]]), "_", fn), fn)
-      },
-      content = function(file) {
-
-        # fix for https://github.com/radiant-rstats/radiant/issues/20
-        w <- if (any(c("reactiveExpr", "function") %in% class(width))) width() * pr else width * pr
-        h <- if (any(c("reactiveExpr", "function") %in% class(height))) height() * pr else height * pr
-
-        plot <- try(get(paste0(pre, plot_name))(), silent = TRUE)
-        if (is(plot, "try-error") || is.character(plot) || is.null(plot)) {
-          plot <- ggplot() + labs(title = "Plot not available")
-          pr <- 1
-          w <- h <- 500
-        }
-
-        png(file = file, width = w, height = h, res = 96 * pr)
-        print(plot)
-        dev.off()
-      }
-    )
-  } else {
-    observeEvent(input[[lnm]], {
-      path <- rstudioapi::selectFile(
-        caption = "Download to png",
-        path = file.path(
-          getOption("radiant.launch_dir", "~"),
-          ifelse(length(inp) > 0, paste0(isolate(input[[inp]]), "_", fn), fn)
-        ),
-        filter = "Download to png (*.png)",
-        existing = FALSE
-      )
-      if (!is(path, "try-error") && !is_empty(path)) {
-
-        # fix for https://github.com/radiant-rstats/radiant/issues/20
-        w <- if (any(c("reactiveExpr", "function") %in% class(width))) width() * pr else width * pr
-        h <- if (any(c("reactiveExpr", "function") %in% class(height))) height() * pr else height * pr
-
-        plot <- try(get(paste0(pre, plot_name))(), silent = TRUE)
-        if (is(plot, "try-error") || is.character(plot) || is.null(plot)) {
-          plot <- ggplot() + labs(title = "Plot not available")
-          pr <- 1
-          w <- h <- 500
-        }
-
-        png(file = path, width = w, height = h, res = 96 * pr)
-        print(plot)
-        dev.off()
-      }
-    })
-  }
-
-  download_link(lnm)
 }
 
 stat_tab_panel <- function(
@@ -647,8 +605,7 @@ inclRmd <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = "\n") %>%
     knitr::knit2html(
       text = ., fragment.only = TRUE, quiet = TRUE,
-      envir = knitr_environment, options = "", stylesheet = ""
-      # envir = r_environment, options = "", stylesheet = ""
+      envir = r_data, options = "", stylesheet = ""
     ) %>%
     HTML() %>%
     withMathJax()
@@ -679,10 +636,7 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
     sc <- "NULL"
   }
 
-  dat <- get(paste0(".", fun))()$tab %>% {
-    nr <<- nrow(.)
-    .[1, , drop = FALSE]
-  }
+  dat <- get(paste0(".", fun))()$tab %>% {nr <<- nrow(.); .[1, , drop = FALSE]}
 
   if (order != "NULL" || sc != "NULL") {
 
@@ -733,38 +687,6 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
   }
 
   list(search = search, order = order, sc = sc, tabsort = tabsort, tabfilt = tabfilt, nr = nr)
-}
-
-## used by View - remove or use more broadly
-find_env <- function(dataset) {
-  if (exists("r_environment")) {
-    r_environment
-  } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
-    pryr::where("r_data")
-  } else if (exists(dataset)) {
-    pryr::where(dataset)
-  }
-}
-
-## used by View - remove or use more broadly
-save2env <- function(dat, dataset,
-                     dat_name = dataset,
-                     mess = "") {
-  env <- find_env(dataset)
-  env$r_data[[dat_name]] <- dat
-  if (dataset != dat_name) {
-    message(paste0("Dataset r_data$", dat_name, " created in ", environmentName(env), " environment\n"))
-    env$r_data[["datasetlist"]] <- c(dat_name, env$r_data[["datasetlist"]]) %>% unique()
-  } else {
-    message(paste0("Dataset r_data$", dataset, " changed in ", environmentName(env), " environment\n"))
-  }
-
-  ## set to previous description
-  env$r_data[[paste0(dat_name, "_descr")]] <- env$r_data[[paste0(dataset, "_descr")]]
-
-  if (mess != "") {
-    env$r_data[[paste0(dat_name, "_descr")]] %<>% paste0("\n\n", mess)
-  }
 }
 
 ## use the value in the input list if available and update r_state
@@ -858,8 +780,8 @@ state_multiple <- function(var, vals, init = character(0)) {
 
 ## cat to file
 ## use with tail -f ~/r_cat.txt in a terminal
-cf <- function(...) {
-  cat(paste0("\n--- called from: ", environmentName(parent.frame()), " (", lubridate::now(), ")\n"), file = "~/r_cat.txt", append = TRUE)
-  out <- paste0(capture.output(...), collapse = "\n")
-  cat("--\n", out, "\n--", sep = "\n", file = "~/r_cat.txt", append = TRUE)
-}
+# cf <- function(...) {
+#   cat(paste0("\n--- called from: ", environmentName(parent.frame()), " (", lubridate::now(), ")\n"), file = "~/r_cat.txt", append = TRUE)
+#   out <- paste0(capture.output(...), collapse = "\n")
+#   cat("--\n", out, "\n--", sep = "\n", file = "~/r_cat.txt", append = TRUE)
+# }
