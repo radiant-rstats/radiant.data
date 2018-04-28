@@ -2,8 +2,8 @@
 ## Explore datasets
 #######################################
 
-# default_funs <- c("length", "n_missing", "n_distinct", "mean_rm", "sd_rm", "min_rm", "max_rm")
-default_funs <- c("length", "mean_rm", "sd_rm", "min_rm", "max_rm")
+# default_funs <- c("length", "mean_rm", "sd_rm", "min_rm", "max_rm")
+default_funs <- c("n_obs", "mean", "sd", "min", "max")
 expl_args <- as.list(formals(explore))
 
 ## list of function inputs selected by user
@@ -112,6 +112,11 @@ output$ui_expl_top <- renderUI({
   )
 })
 
+output$ui_expl_name <- renderUI({
+  req(input$dataset)
+  textInput("expl_name", "Store as:", "", placeholder = "Provide a table name")
+})
+
 output$ui_expl_run <- renderUI({
   ## updates when dataset changes
   req(input$dataset)
@@ -143,7 +148,6 @@ output$ui_Explore <- renderUI({
       uiOutput("ui_expl_run")
     ),
     wellPanel(
-      # checkboxInput("expl_pause", "Pause explore", state_init("expl_pause", FALSE)),
       uiOutput("ui_expl_vars"),
       uiOutput("ui_expl_byvar"),
       uiOutput("ui_expl_fun"),
@@ -152,7 +156,7 @@ output$ui_Explore <- renderUI({
     ),
     wellPanel(
       tags$table(
-        tags$td(textInput("expl_dat", "Store as:", paste0(input$dataset, "_expl"))),
+        tags$td(uiOutput("ui_expl_name")),
         tags$td(actionButton("expl_store", "Store", icon = icon("plus")), style = "padding-top:30px;")
       )
     ),
@@ -168,10 +172,7 @@ output$ui_Explore <- renderUI({
   if (not_available(input$expl_vars) || is.null(input$expl_top)) return()
   if (!is_empty(input$expl_byvar) && not_available(input$expl_byvar)) return()
   if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) return()
-  # req(input$expl_pause == FALSE, cancelOutput = TRUE)
-  # withProgress(message = "Calculating", value = 1, {
-    sshhr(do.call(explore, expl_inputs()))
-  # })
+  sshhr(do.call(explore, expl_inputs()))
 })
 
 observeEvent(input$explore_search_columns, {
@@ -195,10 +196,7 @@ output$explore <- DT::renderDataTable({
   withProgress(message = "Generating explore table", value = 1, {
     isolate({
       expl <- .explore()
-      ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
-      # if (is.null(expl)) return()
       req(!is.null(expl))
-
       expl$shiny <- TRUE
 
       ## resetting DT when changes occur
@@ -206,8 +204,9 @@ output$explore <- DT::renderDataTable({
       expl_reset("expl_vars", nc)
       expl_reset("expl_byvar", nc)
       expl_reset("expl_fun", nc)
-      if (!is.null(r_state$expl_top) && !is.null(input$expl_top) &&
-        !identical(r_state$expl_top, input$expl_top)) {
+      if (!is.null(r_state$expl_top) && 
+          !is.null(input$expl_top) &&
+          !identical(r_state$expl_top, input$expl_top)) {
         r_state$expl_top <<- input$expl_top
         r_state$explore_state <<- list()
         r_state$explore_search_columns <<- rep("", nc)
@@ -228,7 +227,7 @@ output$explore <- DT::renderDataTable({
 dl_explore_tab <- function(path) {
   dat <- try(.explore(), silent = TRUE)
   if (is(dat, "try-error") || is.null(dat)) {
-    write.csv(tibble("Data" = "[Empty]"), path, row.names = FALSE)
+    write.csv(tibble::tibble("Data" = "[Empty]"), path, row.names = FALSE)
   } else {
     rows <- input$explore_rows_all
     dat$tab %>%
@@ -244,13 +243,14 @@ download_handler(
 )
 
 observeEvent(input$expl_store, {
+  req(input$expl_name)
   dat <- .explore()
   if (is.null(dat)) return()
-  name <- input$expl_dat
+  name <- input$expl_name
   rows <- input$explore_rows_all
-  dat$tab %<>% 
-    {if (is.null(rows)) . else .[rows, , drop = FALSE]}
-  store(dat, name)
+  dat$tab %<>% {if (is.null(rows)) . else .[rows, , drop = FALSE]}
+  r_data[[name]] <- dat$tab
+  register(name)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
   ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
@@ -281,7 +281,10 @@ observeEvent(input$explore_report, {
   if (!is_empty(r_state$explore_state$length, 10)) {
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$explore_state$length)
   }
-  xcmd <- paste0(xcmd, ") %>% render()\n# store(result, name = \"", input$expl_dat, "\")")
+  xcmd <- paste0(xcmd, ") %>% render()")
+  if (!is_empty(input$expl_name)) {
+    xcmd <- paste0(xcmd, "\n", input$expl_name, " <- result$tab; register(\"", input$expl_name, "\")")
+  }
 
   inp_main <- clean_args(expl_inputs(), expl_args)
   if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)

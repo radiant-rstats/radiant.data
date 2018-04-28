@@ -4,21 +4,19 @@
 \alias{combinedata}
 \title{Combine datasets using dplyr's bind and join functions}
 \usage{
-combinedata(x, y, by = "", add = "", type = "inner_join", name = "",
+combinedata(x, y, by = "", add = "", type = "inner_join",
   data_filter = "", ...)
 }
 \arguments{
-\item{x}{Dataset (name). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
+\item{x}{Dataset}
 
-\item{y}{Dataset (name) (to combine with `dataset`. This can be a dataframe in the global environment or an element in an r_data list from Radiant}
+\item{y}{Dataset to combine with x}
 
-\item{by}{Variables used to combine `dataset` and `cmb_dataset`}
+\item{by}{Variables used to combine `x` and `y`}
 
-\item{add}{Variables to add from `cmb_dataset`}
+\item{add}{Variables to add from `y`}
 
 \item{type}{The main bind and join types from the dplyr package are provided. \bold{inner_join} returns all rows from x with matching values in y, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. \bold{left_join} returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. \bold{right_join} is equivalent to a left join for datasets y and x. \bold{full_join} combines two datasets, keeping rows and columns that appear in either. \bold{semi_join} returns all rows from x with matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. \bold{anti_join} returns all rows from x without matching values in y, keeping only columns from x. \bold{bind_rows} and \bold{bind_cols} are also included, as are \bold{intersect}, \bold{union}, and \bold{setdiff}. See \url{https://radiant-rstats.github.io/docs/data/combine.html} for further details}
-
-\item{name}{Name for the combined dataset}
 
 \item{data_filter}{Expression used to filter the dataset. This should be a string (e.g., "price > 10000")}
 
@@ -35,7 +33,7 @@ See \url{https://radiant-rstats.github.io/docs/data/combine.html} for an example
 }
 \examples{
 avengers \%>\% combinedata(superheroes, type = "bind_cols")
-combinedata("avengers", "superheroes", type = "bind_cols")
+combinedata(avengers, superheroes, type = "bind_cols")
 avengers \%>\% combinedata(superheroes, type = "bind_rows")
 avengers \%>\% combinedata(superheroes, add = "publisher", type = "bind_rows")
 

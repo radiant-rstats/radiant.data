@@ -16,5 +16,7 @@ Convenience function for is.null or is.na
 is_not(NA)
 is_not(NULL)
 is_not(c())
+is_not(list())
+is_not(data.frame())
 
 }

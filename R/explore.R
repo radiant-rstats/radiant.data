@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
-#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param dataset Dataset to explore
 #' @param vars (Numerical) variables to summaries
 #' @param byvar Variable(s) to group data by before summarizing
 #' @param fun Functions to use for summarizing
@@ -16,17 +16,17 @@
 #' @return A list of all variables defined in the function as an object of class explore
 #'
 #' @examples
-#' result <- explore("diamonds", "price:x")
+#' result <- explore(diamonds, "price:x")
 #' summary(result)
-#' result <- explore("diamonds", c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))
+#' result <- explore(diamonds, c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))
 #' summary(result)
-#' diamonds %>% explore("price", byvar = "cut", fun = c("length", "n_distinct"))
+#' diamonds %>% explore("price", byvar = "cut", fun = c("n_obs", "n_distinct"))
 #'
 #' @seealso See \code{\link{summary.explore}} to show summaries
 #'
 #' @export
 explore <- function(
-  dataset, vars = "", byvar = "", fun = c("mean_rm", "sd_rm"),
+  dataset, vars = "", byvar = "", fun = c("mean", "sd"),
   top = "fun", tabfilt = "", tabsort = "", nr = NULL,
   data_filter = "", shiny = FALSE
 ) {
@@ -34,77 +34,54 @@ explore <- function(
   tvars <- vars
   if (!is_empty(byvar)) tvars <- unique(c(tvars, byvar))
 
-  dat <- getdata(dataset, tvars, filt = data_filter, na.rm = FALSE)
-  if (!is_string(dataset)) {
-    dataset <- deparse(substitute(dataset)) %>%
-      set_attr("df", TRUE)
-  }
+  df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
+  dataset <- getdata(dataset, tvars, filt = data_filter, na.rm = FALSE)
 
   ## in case : was used
-  vars <- setdiff(colnames(dat), byvar)
+  vars <- setdiff(colnames(dataset), byvar)
 
   ## converting factors for integer (1st level)
   ## see also R/visualize.R
-  dc <- getclass(dat)
+  dc <- getclass(dataset)
   isFctNum <- "factor" == dc & names(dc) %in% setdiff(vars, byvar)
   if (sum(isFctNum)) {
-    dat[, isFctNum] <- select(dat, which(isFctNum)) %>%
+    dataset[, isFctNum] <- select(dataset, which(isFctNum)) %>%
       mutate_all(funs(as.integer(. == levels(.)[1])))
     dc[isFctNum] <- "integer"
   }
 
   isLogNum <- "logical" == dc & names(dc) %in% setdiff(vars, byvar)
   if (sum(isLogNum)) {
-    dat[, isLogNum] <- select(dat, which(isLogNum)) %>%
+    dataset[, isLogNum] <- select(dataset, which(isLogNum)) %>%
       mutate_all(funs(as.integer))
     dc[isLogNum] <- "integer"
   }
 
-  ## avoid using .._rm as function name
-  pfun <- make_funs(fun)
-
   if (is_empty(byvar)) {
     isNum <- dc %>%
       {which("numeric" == . | "integer" == .)}
-    tab <- dat %>%
+    tab <- dataset %>%
       select_at(.vars = names(isNum)) %>%
       gather("variable", "value", factor_key = TRUE) %>%
       group_by_at("variable") %>%
-      summarise_all(pfun)
+      summarise_all(fun, na.rm = TRUE)
 
     ## order by the variable names selected
     tab <- tab[match(vars, tab[[1]]), ]
 
     if (ncol(tab) == 2) {
-      colnames(tab) <- c("variable", names(pfun))
+      colnames(tab) <- c("variable", fun)
     }
   } else {
 
     ## convert categorical variables to factors if needed
     ## needed to deal with empty/missing values
-    dat[, byvar] <- select_at(dat, .vars = byvar) %>%
+    dataset[, byvar] <- select_at(dataset, .vars = byvar) %>%
       mutate_all(funs(empty_level(.)))
 
-    ## avoiding issues with n_missing and n_distinct in dplyr
-    ## have to reverse this later
-    fix_uscore <- function(x, org = "_", repl = ".") {
-      stats <- c("missing", "distinct")
-      org <- paste0("n", org, stats)
-      repl <- paste0("n", repl, stats)
-      for (i in seq_along(org)) {
-        x <- sub(org[i], repl[i], x)
-      }
-      x
-    }
-
-    names(pfun) %<>% fix_uscore
-
-    tab <- dat %>%
+    tab <- dataset %>%
       group_by_at(.vars = byvar) %>%
-      summarise_all(pfun)
-
-    ## avoiding issues with n_missing and n_distinct
-    names(pfun) %<>% sub("n.", "n_", .)
+      summarise_all(fun, na.rm = TRUE)
 
     ## setting up column names to work with gather code below
     if (length(vars) == 1) {
@@ -113,18 +90,15 @@ explore <- function(
     }
 
     ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
-    tab %<>% gather("variable", "value", !! -(1:length(byvar))) %>%
-      separate(variable, into = c("variable", "fun"), sep = "_(?=[^_]*$)") %>%
-      mutate(fun = fix_uscore(fun, ".", "_")) %>%
-      mutate(fun = factor(fun, levels = names(pfun)), variable = factor(variable, levels = vars)) %>%
+    tab <- gather(tab, "variable", "value", !! -(1:length(byvar))) %>%
+      separate(variable, into = c("variable", "fun"), sep = "_", extra = "merge") %>%
+      mutate(fun = factor(fun, levels = !! fun), variable = factor(variable, levels = vars)) %>%
       spread("fun", "value")
-
-    rm(fix_uscore)
   }
 
   ## flip the table if needed
   if (top != "fun") {
-    tab <- list(tab = tab, byvar = byvar, pfun = pfun) %>%
+    tab <- list(tab = tab, byvar = byvar, fun = fun) %>%
       flip(top)
   }
 
@@ -146,7 +120,7 @@ explore <- function(
     for (i in byvar) tab[[i]] %<>% factor(., levels = unique(.))
   }
 
-  ## frequencies turned into doubles earlier ...
+  ## frequencies converted to doubles during gather/spread above
   check_int <- function(x) {
     if (is.double(x) && length(na.omit(x)) > 0) {
       x_int <- sshhr(as.integer(round(x, .Machine$double.rounding)))
@@ -168,7 +142,7 @@ explore <- function(
 
 
   ## objects no longer needed
-  rm(dat, check_int)
+  rm(dataset, check_int)
 
   as.list(environment()) %>% add_class("explore")
 }
@@ -182,12 +156,12 @@ explore <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- explore("diamonds", "price:x")
+#' result <- explore(diamonds, "price:x")
 #' summary(result)
-#' result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
+#' result <- explore(diamonds, "price", byvar = "cut", fun = c("n_obs", "skew"))
 #' summary(result)
-#' diamonds %>% explore("price:x") %>% summary
-#' diamonds %>% explore("price", byvar = "cut", fun = c("length", "skew")) %>% summary
+#' diamonds %>% explore("price:x") %>% summary()
+#' diamonds %>% explore("price", byvar = "cut", fun = c("n_obs", "skew")) %>% summary()
 #'
 #' @seealso \code{\link{explore}} to generate summaries
 #'
@@ -195,7 +169,7 @@ explore <- function(
 summary.explore <- function(object, dec = 3, ...) {
 
   cat("Explore\n")
-  cat("Data        :", object$dataset, "\n")
+  cat("Data        :", object$df_name, "\n")
   if (object$data_filter %>% gsub("\\s", "", .) != "") {
     cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
   }
@@ -212,7 +186,7 @@ summary.explore <- function(object, dec = 3, ...) {
   if (object$byvar[1] != "") {
     cat("Grouped by  :", object$byvar, "\n")
   }
-  cat("Functions   :", names(object$pfun), "\n")
+  cat("Functions   :", names(object$fun), "\n")
   cat("Top         :", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[object$top], "\n")
   cat("\n")
 
@@ -221,10 +195,11 @@ summary.explore <- function(object, dec = 3, ...) {
   invisible()
 }
 
-#' Store method for the explore function
+#' Deprecated: Store method for the explore function
 #'
-#' @details Add the summarized data to the r_data list in Radiant or return it. See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
+#' @details Return the summarized data. See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
+#' @param dataset Dataset
 #' @param object Return value from \code{\link{explore}}
 #' @param name Name to assign to the dataset
 #' @param ... further arguments passed to or from other methods
@@ -232,24 +207,19 @@ summary.explore <- function(object, dec = 3, ...) {
 #' @seealso \code{\link{explore}} to generate summaries
 #'
 #' @export
-store.explore <- function(object, name, ...) {
-  tab <- object$tab
-
-  ## fix colnames as needed
-  colnames(tab) <- sub("^\\s+", "", colnames(tab)) %>% sub("\\s+$", "", .) %>% gsub("\\s+", "_", .)
-
-  if (exists("r_environment")) {
-    env <- r_environment
-  } else if (exists("r_data")) {
-    env <- pryr::where("r_data")
+store.explore <- function(dataset, object, name, ...) {
+  if (missing(name)) {
+    object$tab
   } else {
-    return(tab)
+    stop(
+      paste0(
+        "This function is deprecated. Use the code below instead:\n\n", 
+        name, " <- ", deparse(substitute(object)), "$tab\nregister(\"", 
+        name, ")"
+      ),
+      call. = FALSE
+    )
   }
-
-  message(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
-
-  env$r_data[[name]] <- tab
-  env$r_data[["datasetlist"]] <- c(name, env$r_data[["datasetlist"]]) %>% unique()
 }
 
 #' Flip the DT table to put Function, Variable, or Group by on top
@@ -260,25 +230,23 @@ store.explore <- function(object, name, ...) {
 #' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by. "fun" is the default
 #'
 #' @examples
-#' result <- explore("diamonds", "price:x", top = "var")
-#' result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"), top = "byvar")
+#' result <- explore(diamonds, "price:x", top = "var")
+#' result <- explore(diamonds, "price", byvar = "cut", fun = c("n_obs", "skew"), top = "byvar")
 #'
 #' @seealso \code{\link{explore}} to generate summaries
 #' @seealso \code{\link{dtab.explore}} to create the DT table
 #'
 #' @export
 flip <- function(expl, top = "fun") {
-  cvars <- expl$byvar %>% {
-    if (is_empty(.[1])) character(0) else .
-  }
+  cvars <- expl$byvar %>% {if (is_empty(.[1])) character(0) else .}
   if (top[1] == "var") {
     expl$tab %<>% gather(".function", "value", !! -(1:(length(cvars) + 1))) %>%
       spread("variable", "value")
-    expl$tab[[".function"]] %<>% factor(., levels = names(expl$pfun))
+    expl$tab[[".function"]] %<>% factor(., levels = expl$fun)
   } else if (top[1] == "byvar" && length(cvars) > 0) {
     expl$tab %<>% gather(".function", "value", !! -(1:(length(cvars) + 1))) %>%
       spread(!! cvars[1], "value")
-    expl$tab[[".function"]] %<>% factor(., levels = names(expl$pfun))
+    expl$tab[[".function"]] %<>% factor(., levels = expl$fun)
 
     ## ensure we don't have invalid column names
     colnames(expl$tab) <- make.names(colnames(expl$tab))
@@ -299,9 +267,9 @@ flip <- function(expl, top = "fun") {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' tab <- explore("diamonds", "price:x") %>% dtab
-#' tab <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"), top = "byvar") %>%
-#'   dtab
+#' tab <- explore(diamonds, "price:x") %>% dtab()
+#' tab <- explore(diamonds, "price", byvar = "cut", fun = c("n_obs", "skew"), top = "byvar") %>%
+#'   dtab()
 #'
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
 #' @seealso \code{\link{summary.pivotr}} to print a plain text table
@@ -317,7 +285,7 @@ dtab.explore <- function(
   cn_num <- cn_all[sapply(tab, is.numeric)]
   cn_cat <- cn_all[-which(cn_all %in% cn_num)]
   isInt <- sapply(tab, is.integer)
-  isNum <- sapply(tab, function(x) is.double(x) && !is.Date(x))
+  isNum <- sapply(tab, is_numeric)
   dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
 
   top <- c("fun" = "Function", "var" = "Variables", "byvar" = paste0("Group by: ", object$byvar[1]))[object$top]
@@ -336,7 +304,6 @@ dtab.explore <- function(
   ## for display options see https://datatables.net/reference/option/dom
   dom <- if (nrow(tab) < 11) "t" else "ltip"
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
-  # dt_tab <- rounddf(tab, dec) %>%
   dt_tab <- DT::datatable(
     tab,
     container = sketch,
@@ -347,25 +314,19 @@ dtab.explore <- function(
     ## see https://github.com/rstudio/DT/issues/367
     ## https://github.com/rstudio/DT/issues/379
     fillContainer = FALSE,
-    ## only works with client-side processing
-    # extension = "KeyTable",
     style = "bootstrap",
     options = list(
       dom = dom,
-      stateSave = TRUE,
       searchCols = searchCols,
       order = order,
       columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all")),
       autoWidth = TRUE,
-      # scrollX = FALSE, ## column filter location gets messed up
-      # scrollY = FALSE, ## column filter location gets messed up
       processing = FALSE,
       pageLength = {
         if (is.null(pageLength)) 10 else pageLength
       },
       lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
-    ),
-    callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+    )
   ) %>%
     DT::formatStyle(., cn_cat, color = "white", backgroundColor = "grey")
 
@@ -388,14 +349,25 @@ dtab.explore <- function(
 ## turn functions below into functional ...
 ###########################################
 
-#' Number of missing values
+#' Number of observations
 #' @param x Input variable
-#' @return number of missing values
+#' @param ... Additional arguments
+#' @return number of observations
 #' @examples
-#' n_missing(c("a","b",NA))
+#' n_obs(c("a", "b", NA))
 #'
 #' @export
-n_missing <- function(x) sum(is.na(x))
+n_obs <- function(x, ...) length(x)
+
+#' Number of missing values
+#' @param x Input variable
+#' @param ... Additional arguments
+#' @return number of missing values
+#' @examples
+#' n_missing(c("a", "b", NA))
+#'
+#' @export
+n_missing <- function(x, ...) sum(is.na(x))
 
 #' 2.5th percentile
 #' @param x Input variable
@@ -495,71 +467,6 @@ cv <- function(x, na.rm = TRUE) {
   }
 }
 
-#' Mean with na.rm = TRUE
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return Mean value
-#' @examples
-#' mean_rm(runif (100))
-#'
-#' @export
-mean_rm <- function(x, na.rm = TRUE) mean(x, na.rm = na.rm)
-
-#' Median with na.rm = TRUE
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return Median value
-#' @examples
-#' median_rm(runif (100))
-#'
-#' @export
-median_rm <- function(x, na.rm = TRUE) median(x, na.rm = na.rm)
-
-#' Mode with na.rm = TRUE
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return Mode value
-#' @examples
-#' mode_rm(diamonds$cut)
-#'
-#' @export
-mode_rm <- function(x, na.rm = TRUE) {
-  ## from http://stackoverflow.com/a/8189441/1974918
-  if (na.rm) x <- na.omit(x)
-  ux <- unique(x)
-  ux[which.max(tabulate(match(x, ux)))]
-}
-
-#' Min with na.rm = TRUE
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return Minimum value
-#' @examples
-#' min_rm(runif (100))
-#'
-#' @export
-min_rm <- function(x, na.rm = TRUE) min(x, na.rm = na.rm)
-
-#' Max with na.rm = TRUE
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return Maximum value
-#' @examples
-#' max_rm(runif (100))
-#'
-#' @export
-max_rm <- function(x, na.rm = TRUE) max(x, na.rm = na.rm)
-
-#' Standard deviation with na.rm = TRUE
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return Standard deviation
-#' @examples
-#' sd_rm(rnorm(100))
-#'
-#' @export
-sd_rm <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm)
-
 #' Standard error
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
@@ -633,16 +540,6 @@ seprop <- function(x, na.rm = TRUE) {
   sqrt(varprop(x, na.rm = FALSE) / length(x))
 }
 
-#' Variance with na.rm = TRUE
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return Variance
-#' @examples
-#' var_rm(rnorm(100))
-#'
-#' @export
-var_rm <- function(x, na.rm = TRUE) var(x, na.rm = na.rm)
-
 #' Variance for the population
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
@@ -666,16 +563,6 @@ varpop <- function(x, na.rm = TRUE) {
 #'
 #' @export
 sdpop <- function(x, na.rm = TRUE) sqrt(varpop(x, na.rm = na.rm))
-
-#' Sum with na.rm = TRUE
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return Sum of input values
-#' @examples
-#' sum_rm(1:200)
-#'
-#' @export
-sum_rm <- function(x, na.rm = TRUE) sum(x, na.rm = na.rm)
 
 #' Natural log
 #' @param x Input variable
@@ -705,23 +592,9 @@ does_vary <- function(x, na.rm = TRUE) {
     if (is.factor(x) || is.character(x)) {
       length(unique(x)) > 1
     } else {
-      abs(max_rm(x, na.rm = na.rm) - min_rm(x, na.rm = na.rm)) > .Machine$double.eps ^ 0.5
+      abs(max(x, na.rm = na.rm) - min(x, na.rm = na.rm)) > .Machine$double.eps ^ 0.5
     }
   }
-}
-
-#' Make a list of functions-as-formulas to pass to dplyr
-#' @param x List of functions as strings
-#' @return List of functions to pass to dplyr in formula form
-#' @examples
-#' make_funs(c("mean", "sum_rm"))
-#'
-#' @export
-make_funs <- function(x) {
-  xclean <- gsub("_rm$", "", x) %>% sub("length", "n", .)
-  env <- if (exists("radiant.data")) environment(radiant.data::radiant.data) else parent.frame()
-  dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula, env = env) %>%
-    setNames(xclean))
 }
 
 #' Convert categorical variables to factors and deal with empty/missing values (used in pivotr and explore)

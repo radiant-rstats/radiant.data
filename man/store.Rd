@@ -4,10 +4,12 @@
 \alias{store}
 \title{Method to store variables in a dataset in Radiant}
 \usage{
-store(object, ...)
+store(dataset, object = "deprecated", ...)
 }
 \arguments{
-\item{object}{Object of relevant class that has required information to store}
+\item{dataset}{Dataset}
+
+\item{object}{Object of relevant class that has information to be stored}
 
 \item{...}{Additional arguments}
 }

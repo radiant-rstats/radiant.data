@@ -4,12 +4,12 @@
 \alias{explore}
 \title{Explore data}
 \usage{
-explore(dataset, vars = "", byvar = "", fun = c("mean_rm", "sd_rm"),
+explore(dataset, vars = "", byvar = "", fun = c("mean", "sd"),
   top = "fun", tabfilt = "", tabsort = "", nr = NULL,
   data_filter = "", shiny = FALSE)
 }
 \arguments{
-\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
+\item{dataset}{Dataset to explore}
 
 \item{vars}{(Numerical) variables to summaries}
 
@@ -39,11 +39,11 @@ Explore data
 See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 }
 \examples{
-result <- explore("diamonds", "price:x")
+result <- explore(diamonds, "price:x")
 summary(result)
-result <- explore("diamonds", c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))
+result <- explore(diamonds, c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))
 summary(result)
-diamonds \%>\% explore("price", byvar = "cut", fun = c("length", "n_distinct"))
+diamonds \%>\% explore("price", byvar = "cut", fun = c("n_obs", "n_distinct"))
 
 }
 \seealso{

@@ -4,12 +4,12 @@
 \alias{Search}
 \title{Search for a string in all columns of a data.frame}
 \usage{
-Search(pattern, df, ignore.case = TRUE, fixed = FALSE)
+Search(pattern, dataset, ignore.case = TRUE, fixed = FALSE)
 }
 \arguments{
 \item{pattern}{String to match}
 
-\item{df}{Data.frame to search}
+\item{dataset}{Data.frame to search}
 
 \item{ignore.case}{Should search be case sensitive or not (default is FALSE)}
 

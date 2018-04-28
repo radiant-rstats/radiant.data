@@ -4,10 +4,10 @@
 \alias{filterdata}
 \title{Filter data with user-specified expression}
 \usage{
-filterdata(dat, filt = "", drop = TRUE)
+filterdata(dataset, filt = "", drop = TRUE)
 }
 \arguments{
-\item{dat}{Data frame to filter}
+\item{dataset}{Data frame to filter}
 
 \item{filt}{Filter expression to apply to the specified dataset (e.g., "price > 10000" if dataset is "diamonds")}
 

@@ -7,8 +7,8 @@ cmb_args <- as.list(formals(combinedata))
 ## list of function inputs selected by user
 cmb_inputs <- reactive({
   cmb_args$data_filter <- ifelse(input$show_filter, input$data_filter, "")
-  cmb_args$x <- input$dataset
-  cmb_args$y <- input$cmb_y
+  cmb_args$x <- as.name(input$dataset)
+  cmb_args$y <- as.name(input$cmb_y)
 
   ## loop needed because reactive values don't allow single bracket indexing
   for (i in r_drop(names(cmb_args), drop = c("x", "y", "data_filter"))) {
@@ -21,9 +21,8 @@ cmb_inputs <- reactive({
 })
 
 output$ui_cmb_y <- renderUI({
-  datasetlist <- r_data$datasetlist
-  if (length(datasetlist) < 2) return()
-  # req(length(datasetlist) > 1)
+  datasetlist <- r_info[["datasetlist"]]
+  req(length(datasetlist) > 1)
   cmb_datasets <- datasetlist[-which(input$dataset == datasetlist)]
   selectInput(
     inputId = "cmb_y", label = "Combine with:",
@@ -127,22 +126,32 @@ output$ui_Combine <- renderUI({
 
 observeEvent(input$cmb_store, {
   ## combining datasets
-  result <- try(do.call(combinedata, cmb_inputs()), silent = TRUE)
+  req(length(r_info[["datasetlist"]]) > 1)
+  result <- try(do.call(combinedata, cmb_inputs(), envir = r_data), silent = TRUE)
   if (is(result, "try-error")) {
-    r_data[["cmb_error"]] <- attr(result, "condition")$message
+    r_info[["cmb_error"]] <- attr(result, "condition")$message
   } else {
-    r_data[["cmb_error"]] <- ""
+    r_info[["cmb_error"]] <- ""
+    r_data[[input$cmb_name]] <- result
+    register(input$cmb_name, descr = attr(result, "description"))
     updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
     updateSelectInput(session = session, inputId = "cmb_y", selected = input$cmd_y)
   }
 })
 
 observeEvent(input$combine_report, {
+  req(input$cmb_y)
+  inp <- clean_args(cmb_inputs(), cmb_args)
+  if (identical(inp$add, colnames(r_data[[input$cmb_y]]))) {
+    inp$add <- NULL
+  }
+  xcmd <- paste0("register(\"", input$cmb_name, "\")")
   update_report(
-    inp_main = clean_args(cmb_inputs(), cmb_args),
+    inp_main = inp,
     fun_name = "combinedata",
     outputs = character(0),
-    pre_cmd = "",
+    pre_cmd = paste0(input$cmb_name, " <- "),
+    xcmd = xcmd,
     figs = FALSE
   )
 })
@@ -159,12 +168,14 @@ output$cmb_data2 <- renderText({
 })
 
 output$cmb_possible <- renderText({
+  req(length(r_info[["datasetlist"]]) > 1)
   if (is_empty(input$cmb_by) && !is_empty(input$cmb_type) && grepl("_join", input$cmb_type)) {
     "<h3>No matching variables selected</h3>"
   }
 })
 
 output$cmb_data <- renderText({
+  req(length(r_info[["datasetlist"]]) > 1)
   req(input$cmb_store) ## dependence is needed to update cmb_type when result doesn't change
   name <- if (is_empty(input$cmb_name)) {
     paste0("cmb_", isolate(input$dataset))
@@ -172,8 +183,8 @@ output$cmb_data <- renderText({
     input$cmb_name
   }
 
-  if (!is_empty(r_data[["cmb_error"]])) {
-    HTML(paste0("</br><h4>Combining data failed. The error message was:</br></br>\"", r_data[["cmb_error"]], "\"</h4>"))
+  if (!is_empty(r_info[["cmb_error"]])) {
+    HTML(paste0("</br><h4>Combining data failed. The error message was:</br></br>\"", r_info[["cmb_error"]], "\"</h4>"))
   } else if (!is.null(r_data[[name]])) {
     show_data_snippet(name, nshow = 15, title = paste0(
       "<h3>Combined dataset: ",

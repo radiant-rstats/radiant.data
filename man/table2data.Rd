@@ -4,10 +4,10 @@
 \alias{table2data}
 \title{Create data.frame from a table}
 \usage{
-table2data(dat, freq = tail(colnames(dat), 1))
+table2data(dataset, freq = tail(colnames(dataset), 1))
 }
 \arguments{
-\item{dat}{Data.frame}
+\item{dataset}{Data.frame}
 
 \item{freq}{Column name with frequency information}
 }

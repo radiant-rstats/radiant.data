@@ -14,11 +14,6 @@ $.extend(returnTextInputBinding, {
     el.value = value;
   },
   subscribe: function(el, callback) {
-    // old setup worked but does not 'fire' when input is emptied
-    // $(el).on('change.textInputBinding', function(event) {
-    //   callback(false);
-    // });
-
     // same setup as returnTextAreaBinding.js
     // callback when if enter key is pressed: http://stackoverflow.com/a/30149302/1974918
     $(el).on('keydown.textInputBinding input.textInputBinding', function(event) {

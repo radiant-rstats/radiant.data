@@ -4,7 +4,7 @@
 \alias{formatdf}
 \title{Format a data.frame with a specified number of decimal places}
 \usage{
-formatdf(tbl, dec = NULL, perc = FALSE, mark = "")
+formatdf(tbl, dec = NULL, perc = FALSE, mark = "", ...)
 }
 \arguments{
 \item{tbl}{Data.frame}
@@ -14,6 +14,8 @@ formatdf(tbl, dec = NULL, perc = FALSE, mark = "")
 \item{perc}{Display numbers as percentages (TRUE or FALSE)}
 
 \item{mark}{Thousand separator}
+
+\item{...}{Additional arguments for formatnr}
 }
 \value{
 Data.frame for printing
@@ -22,8 +24,8 @@ Data.frame for printing
 Format a data.frame with a specified number of decimal places
 }
 \examples{
-data.frame(x = c("a","b"), y = c(1L, 2L), z = c(-0.0005, 3)) \%>\%
-  formatdf(dec = 3)
+data.frame(x = c("a", "b"), y = c(1L, 2L), z = c(-0.0005, 3)) \%>\%
+  formatdf(dec = 4)
 data.frame(x = c(1L, 2L), y = c(0.05, 0.8)) \%>\%
   formatdf(dec = 2, perc = TRUE)
 

@@ -9,11 +9,11 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   facet_row = ".", facet_col = ".", color = "none", fill = "none",
   size = "none", fillcol = "blue", linecol = "black",
   pointcol = "black", bins = 10, smooth = 1, fun = "mean", check = "",
-  axes = "", alpha = 0.5, ylim = "none", data_filter = "",
+  axes = "", alpha = 0.5, xlim = NULL, ylim = NULL, data_filter = "",
   shiny = FALSE, custom = FALSE)
 }
 \arguments{
-\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
+\item{dataset}{Data to plot (data.frame or tibble)}
 
 \item{xvar}{One or more variables to display along the X-axis of the plot}
 
@@ -55,7 +55,9 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 
 \item{alpha}{Opacity for plot elements (0 to 1)}
 
-\item{ylim}{Set limit for y-axis}
+\item{xlim}{Set limit for y-axis (e.g., c(0, 1))}
+
+\item{ylim}{Set limit for y-axis (e.g., c(0, 1))}
 
 \item{data_filter}{Expression used to filter the dataset. This should be a string (e.g., "price > 10000")}
 
@@ -73,20 +75,20 @@ Visualize data using ggplot2 \url{http://ggplot2.tidyverse.org}
 See \url{https://radiant-rstats.github.io/docs/data/visualize.html} for an example in Radiant
 }
 \examples{
-visualize("diamonds", "price:cut", type = "dist", fillcol = "red")
-visualize("diamonds", "carat:cut", yvar = "price", type = "scatter",
+visualize(diamonds, "price:cut", type = "dist", fillcol = "red")
+visualize(diamonds, "carat:cut", yvar = "price", type = "scatter",
   pointcol = "blue", fun = c("mean", "median"), linecol = c("red","green"))
-visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
+visualize(diamonds, yvar = "price", xvar = c("cut","clarity"),
   type = "bar", fun = "median")
-visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"),
+visualize(diamonds, yvar = "price", xvar = c("cut","clarity"),
   type = "line", fun = "max")
-visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter",
+visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter",
           size = "table", custom = TRUE) + scale_size(range=c(1,10), guide = "none")
-visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
+visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
   labs(title = "A scatterplot", x = "price in $")
-visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) \%>\%
+visualize(diamonds, xvar = "price:carat", custom = TRUE) \%>\%
   gridExtra::grid.arrange(grobs = ., top = "Histograms", ncol = 2)
-visualize(dataset = "diamonds", xvar = "cut", yvar = "price", type = "bar",
+visualize(diamonds, xvar = "cut", yvar = "price", type = "bar",
   facet_row = "cut", fill = "cut")
 
 }

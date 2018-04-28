@@ -16,6 +16,6 @@ Create a DT table with bootstrap theme
 View, search, sort, etc. your data. For styling options see \url{http://rstudio.github.io/DT/functions.html}
 }
 \examples{
-dtab("mtcars")
+dtab(mtcars)
 
 }

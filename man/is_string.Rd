@@ -15,13 +15,11 @@ TRUE if string, else FALSE
 \description{
 Is input a string?
 }
-\details{
-Is input a string
-}
 \examples{
 is_string("   ")
 is_string("data")
-is_string(c("data","data"))
+is_string(c("data", ""))
 is_string(NULL)
+is_string(NA)
 
 }

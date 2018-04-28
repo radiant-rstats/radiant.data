@@ -2,11 +2,13 @@
 % Please edit documentation in R/explore.R
 \name{store.explore}
 \alias{store.explore}
-\title{Store method for the explore function}
+\title{Deprecated: Store method for the explore function}
 \usage{
-\method{store}{explore}(object, name, ...)
+\method{store}{explore}(dataset, object, name, ...)
 }
 \arguments{
+\item{dataset}{Dataset}
+
 \item{object}{Return value from \code{\link{explore}}}
 
 \item{name}{Name to assign to the dataset}
@@ -14,10 +16,10 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Store method for the explore function
+Deprecated: Store method for the explore function
 }
 \details{
-Add the summarized data to the r_data list in Radiant or return it. See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
+Return the summarized data. See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 }
 \seealso{
 \code{\link{explore}} to generate summaries
