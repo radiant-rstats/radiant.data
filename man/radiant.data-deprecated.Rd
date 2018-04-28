@@ -3,29 +3,30 @@
 \docType{package}
 \name{radiant.data-deprecated}
 \alias{radiant.data-deprecated}
-\alias{mutate_each}
-\alias{dfprint}
-\alias{nrprint}
+\alias{mean_rm}
+\alias{mean_rmn}
 \alias{radiant.data-deprecated-package}
 \title{Deprecated function(s) in the radiant.data package}
 \usage{
-mutate_each(...)
+mean_rm(...)
 }
 \arguments{
 \item{...}{Parameters to be passed to the updated functions}
 }
 \description{
 These functions are provided for compatibility with previous versions of
-radiant. They will eventually be  removed.
+radiant but will be removed
 }
 \section{Details}{
 
 \tabular{rl}{
-  \code{mutate_each} is now a synonym for \code{\link{mutate_ext}}, \code{\link{mutate_at}}, or \code{\link{mutate_all}}\cr
-  \code{dfprint} is now a synonym for \code{\link{formatdf}}\cr
-  \code{nrprint} is now a synonym for \code{\link{formatnr}}\cr
-  \code{varp_rm} is now a synonym for \code{\link{varpop}}\cr
-  \code{sdp_rm} is now a synonym for \code{\link{sdpop}}\cr
+  Replace \code{mean_rm} by \code{\link{mean}}\cr
+  Replace \code{median_rm} by \code{\link{median}}\cr
+  Replace \code{min_rm} by \code{\link{min}}\cr
+  Replace \code{max_rm} by \code{\link{max}}\cr
+  Replace \code{sd_rm} by \code{\link{sd}}\cr
+  Replace \code{var_rm} by \code{\link{var}}\cr
+  Replace \code{sum_rm} by \code{\link{sum}}\cr
 }
 }
 
