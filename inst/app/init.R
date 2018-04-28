@@ -214,14 +214,14 @@ observeEvent(session$clientData$url_search, {
   url_query <- parseQueryString(session$clientData$url_search)
   if ("url" %in% names(url_query)) {
     r_info[["url"]] <- url_query$url
-  } else if (is_empty(r_infol[["url"]])) {
+  } else if (is_empty(r_info[["url"]])) {
     return()
   }
 
   ## create an observer and suspend when done
   url_observe <- observe({
     if (is.null(input$dataset)) return()
-    url <- getOption("radiant.url.patterns")[[r_infol[["url"]]]]
+    url <- getOption("radiant.url.patterns")[[r_info[["url"]]]]
     if (is.null(url)) {
       ## if pattern not found suspend observer
       url_observe$suspend()
