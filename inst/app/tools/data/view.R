@@ -13,20 +13,18 @@ output$ui_view_vars <- renderUI({
   })
 
   selectInput(
-    "view_vars", "Select variables to show:", choices = vars,
-    selected = state_multiple("view_vars", vars, vars), multiple = TRUE,
+    "view_vars", "Select variables to show:", 
+    choices = vars,
+    selected = state_multiple("view_vars", vars, vars), 
+    multiple = TRUE,
     selectize = FALSE, size = min(15, length(vars))
   )
-})
-
-## not clear why this is needed because state_multiple should handle this
-observeEvent(is.null(input$view_vars), {
-  if ("view_vars" %in% names(input)) r_state$view_vars <<- NULL
 })
 
 output$ui_View <- renderUI({
   tagList(
     wellPanel(
+      actionLink("view_clear", "Clear settings", icon = icon("refresh"), style="color:black"),
       uiOutput("ui_view_vars"),
       numericInput(
         "view_dec", "Decimals:",
@@ -34,7 +32,7 @@ output$ui_View <- renderUI({
         min = 0
       ),
       tags$table(
-        tags$td(textInput("view_dat", "Store filtered data as:", paste0(input$dataset, "_view"))),
+        tags$td(textInput("view_name", "Store filtered data as:", paste0(input$dataset, "_wrk"))),
         tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success"), style = "padding-top:30px;")
       )
     ),
@@ -47,9 +45,7 @@ output$ui_View <- renderUI({
 })
 
 observeEvent(input$dataviewer_search_columns, {
-  # req(input$view_vars)
   r_state$dataviewer_search_columns <<- input$dataviewer_search_columns
-  # names(r_state$dataviewer_search_columns) <<- input$view_vars
 })
 
 observeEvent(input$dataviewer_state, {
@@ -57,42 +53,32 @@ observeEvent(input$dataviewer_state, {
     if (is.null(input$dataviewer_state)) list() else input$dataviewer_state
 })
 
-## this helps save state, however, columns may get messed up
-# observeEvent(input$view_vars, {
-#   # print(r_state$dataviewer_search_columns)
-#   # r_state$dataviewer_search_columns <<- r_state$dataviewer_search_columns[input$view_vars %in% r_state$view_vars]
-#   # print(r_state$view_vars)
-#   # print(input$view_vars)
-#   # print(r_state$view_vars %in% input$view_vars)
-#   # r_state$dataviewer_search_columns <<- r_state$dataviewer_search_columns[r_state$view_vars %in% input$view_vars]
-#   # print(r_state$dataviewer_search_columns)
-#   r_state$view_vars <<- input$view_vars
+## state_multiple should handle this, but doesn't
+## using this observer, however, messes up state settings
+# observeEvent(is.null(input$view_vars), {
+#   if ("view_vars" %in% names(input)) r_state$view_vars <<- NULL
 # })
+
+observeEvent(input$view_vars, {
+  if (length(r_state$view_vars) > 0) {
+    r_state$dataviewer_state <<- list()
+    r_state$dataviewer_search_columns <<- rep("", length(input$view_vars))
+  }
+  r_state$view_vars <<- input$view_vars
+})
+
+observeEvent(input$view_clear, {
+  r_state$dataviewer_state <<- list()
+  r_state$dataviewer_search_columns <<- rep("", length(input$view_vars))
+  r_state$view_vars <<- input$view_vars
+  updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
+})
 
 output$dataviewer <- DT::renderDataTable({
   ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
-  # if (not_available(input$view_vars)) return()
+  input$view_clear
   req(available(input$view_vars))
-  # req(input$view_pause == FALSE, cancelOutput = TRUE)
-
   dat <- select_at(.getdata(), .vars = input$view_vars)
-
-  ## update state when view_vars changes
-  # print(identical(r_state$view_vars, input$view_vars))
-  # print("---- r_state ----")
-  # print(r_state$view_vars)
-  # print("---- input ----")
-  # print(input$view_vars)
-  # if (length(r_state$view_vars) > 0 && !identical(r_state$view_vars, input$view_vars)) {
-  if (!identical(r_state$view_vars, input$view_vars)) {
-    r_state$dataviewer_state <<- list()
-    r_state$dataviewer_search_columns <<- rep("", ncol(dat))
-    # print(r_state$dataviewer_search_columns)
-    # r_state$dataviewer_search_columns <<- r_state$dataviewer_search_columns[r_state$view_vars %in% input$view_vars]
-    # print(r_state$dataviewer_search_columns)
-    # r_state$dataviewer_search_columns <<- r_state$dataviewer_search_columns[input$view_vars %in% r_state$view_vars]
-    r_state$view_vars <<- input$view_vars
-  }
 
   search <- r_state$dataviewer_state$search$search
   if (is.null(search)) search <- ""
@@ -107,12 +93,6 @@ output$dataviewer <- DT::renderDataTable({
   isInt <- sapply(dat, is.integer)
   isNum <- sapply(dat, function(x) is.double(x) && !is.Date(x))
   dec <- input$view_dec %>% {ifelse(is_empty(.) || . < 0, 3, round(., 0))}
-
-  # print(r_state$dataviewer_state)
-  # isolate({
-  #   print(input$dataviewer_search_columns)
-  # })
-  # print(r_state$dataviewer_search_columns)
 
   withProgress(
     message = "Generating view table", value = 1,
@@ -132,7 +112,6 @@ output$dataviewer <- DT::renderDataTable({
       style = "bootstrap",
       options = list(
         stateSave = TRUE, ## maintains state
-        # searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = as.vector(x))),
         searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
         search = list(search = search, regex = TRUE),
         order = {
@@ -161,26 +140,26 @@ output$dataviewer <- DT::renderDataTable({
 })
 
 observeEvent(input$view_store, {
-  req(input$view_dat)
+  req(input$view_name)
   data_filter <- if (input$show_filter) input$data_filter else ""
-  getdata(
+  r_data[[input$view_name]] <- getdata(
     input$dataset, vars = input$view_vars, filt = data_filter,
     rows = input$dataviewer_rows_all, na.rm = FALSE
-  ) %>%
-    save2env(input$dataset, input$view_dat, gsub("\n# dtab\\(.*", "", .viewcmd()))
+  )
+  register(input$view_name)
 
   updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
 
-  if (input$dataset != input$view_dat) {
+  if (input$dataset != input$view_name) {
     ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
     showModal(
       modalDialog(
         title = "Data Stored",
         span(
-          paste0("Dataset '", input$view_dat, "' was successfully added to
-                 the datasets dropdown. Add code to Report > Rmd or
-                 Report > R to (re)create the dataset by clicking the report i
-                 con on the bottom left of your screen.")
+          paste0("Dataset '", input$view_name, "' was successfully added to
+                  the datasets dropdown. Add code to Report > Rmd or
+                  Report > R to (re)create the dataset by clicking the report i
+                  con on the bottom left of your screen.")
         ),
         footer = modalButton("OK"),
         size = "s",
@@ -234,7 +213,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
 .viewcmd <- function(mess = "") {
   ## get the state of the dt table
   ts <- dt_state("dataviewer", vars = input$view_vars)
-  dataset <- input$view_dat
+  dataset <- input$view_name
   cmd <- ""
 
   ## shorten list of variales if possible
@@ -252,7 +231,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
     vars <- paste0(vars, collapse = ", ")
   }
 
-  xcmd <- paste0("# dtab(r_data[[\"", dataset, "\"]]")
+  xcmd <- paste0("# dtab(", dataset)
   if (!is_empty(input$view_dec, 3)) {
     xcmd <- paste0(xcmd, ", dec = ", input$view_dec)
   }
@@ -262,25 +241,23 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
   xcmd <- paste0(xcmd, ", nr = 100) %>% render()")
 
   ## create the command to filter and sort the data
-  # cmd <- paste0(cmd, "### filter and sort the dataset\nr_data[[\"", input$dataset, "\"]] %>%\n  select(", vars, ")")
-  cmd <- paste0(cmd, "### filter and sort the dataset\nr_data[[\"", input$dataset, "\"]]")
-  if (input$show_filter && input$data_filter != "") {
+  cmd <- paste0(cmd, "### filter and sort the dataset\n", input$view_name, " <- ", input$dataset)
+  if (input$show_filter && !is_empty(input$data_filter)) {
     cmd <- paste0(cmd, " %>%\n  filter(", input$data_filter, ")")
   }
-  if (ts$search != "") {
+  if (!is_empty(ts$search)) {
     cmd <- paste0(cmd, " %>%\n  filter(Search(\"", ts$search, "\", .))")
   }
-  if (ts$tabfilt != "") {
+  if (!is_empty(ts$tabfilt)) {
     cmd <- paste0(cmd, " %>%\n  filter(", ts$tabfilt, ")")
   }
-  if (ts$tabsort != "") {
+  if (!is_empty(ts$tabsort)) {
     cmd <- paste0(cmd, " %>%\n  arrange(", ts$tabsort, ")")
   }
   ## moved `select` to the end so filters can use variables
   ## not selected for the final dataset
-  cmd <- paste0(cmd, " %>%\n  select(", vars, ")")
-
-  paste0(cmd, " %>%\n  store(\"", dataset, "\", \"", input$dataset, "\")\n", xcmd)
+  paste0(cmd, " %>%\n  select(", vars, ")") %>%
+    paste0("\nregister(\"", dataset, "\", \"", input$dataset, "\")\n", xcmd)
 }
 
 observeEvent(input$view_report, {
