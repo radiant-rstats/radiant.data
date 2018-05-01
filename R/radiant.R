@@ -45,8 +45,11 @@ launch <- function(package = "radiant.data", run = "browser") {
     run <- shiny::paneViewer(minHeight = "maximize")
   } else if (run == "window") {
     message(sprintf("\nStarting %s in an Rstudio window ...\n\nUse %s::%s() to open %s in the default browser or %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer", package, package, package, package, package, package, package))
-    if (Sys.info()["sysname"] == "Windows" && rstudioapi::getVersion() < "1.2") {
+    os_type <- Sys.info()["sysname"]
+    if (os_type == "Windows" && rstudioapi::getVersion() < "1.2") {
       message(sprintf("\nUsing radiant in an Rstudio Window on Windows works best in a newer version of Rstudio (i.e., version > 1.2). See https://dailies.rstudio.com/ for the latest version. Alternatively, use %s::%s_viewer()", package, package))
+    } else if (os_type == "Linux") {
+      message(sprintf("\nUsing radiant in an Rstudio Window is not recommended on Linux. Use %s::%s_viewer() instead", package, package))
     }
     options(radiant.launch = "window")
     ## using eval(parse(text = ...)) to avoid foreign function call warnings
@@ -56,7 +59,7 @@ launch <- function(package = "radiant.data", run = "browser") {
     options(radiant.launch = "browser")
     run <- TRUE
   }
-
+  
   ## cannot (yet) supress ERROR: [on_request_read] connection reset by peer in viewer
   suppressPackageStartupMessages(
     shiny::runApp(system.file("app", package = package), launch.browser = run)
