@@ -50,7 +50,7 @@ load_user_data <- function(
   }
 
   cmd <- NULL
-  pp <- radiant.data::parse_path(uFile)
+  pp <- suppressMessages(radiant.data::parse_path(uFile))
 
   if (ext %in% c("rda", "rdata")) {
     ## objname will hold the name of the object(s) inside the R datafile
