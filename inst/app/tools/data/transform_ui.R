@@ -924,7 +924,7 @@ transform_main <- reactive({
       } else if (nrow(cpdat) != nrow(dat)) {
         return("The pasted data does not have the correct number of rows. Please make sure **\n** the number of rows in the data in Radiant and in the spreadsheet are the **\n** same and try again.")
       } else {
-        return(as.data.frame(cpdat, check.names = FALSE, stringsAsFactors = FALSE) %>% factorizer())
+        return(as.data.frame(cpdat, check.names = FALSE, stringsAsFactors = FALSE) %>% toFct())
       }
     }
   }
@@ -1203,7 +1203,7 @@ observeEvent(input$tr_store, {
   }
 
   ## update the command log
-  updateTextInput(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd, ncmd)))
+  updateTextAreaInput(session, "tr_log", value = paste0(input$tr_log, paste0(cmd, ncmd), "\n"))
 
   ## reset input values once the changes have been applied
   updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")
