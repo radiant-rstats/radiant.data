@@ -2,7 +2,10 @@
 % Please edit documentation in R/aaa.R
 \name{kurtosi}
 \alias{kurtosi}
-\title{Exporting the kurtosi function from the psych package}
+\title{Exporting kurtosi from psych}
 \description{
-Exporting the kurtosi function from the psych package
+Exporting kurtosi from psych
+}
+\details{
+See \code{\link{kurtosi}} in the \code{psych} package for more details
 }

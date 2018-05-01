@@ -4,7 +4,7 @@
 \alias{launch}
 \title{Launch radiant apps in default browser or Rstudio viewer}
 \usage{
-launch(package = "radiant.data", run = "browser")
+launch(package = "radiant.data", run = "window")
 }
 \arguments{
 \item{package}{Radiant package to start. One of "radiant.data", "radiant.design", "radiant.basics", "radiant.model", "radiant.multivariate", "radiant"}

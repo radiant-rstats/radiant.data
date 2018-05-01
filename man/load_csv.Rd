@@ -4,17 +4,17 @@
 \alias{load_csv}
 \title{Load a csv file}
 \usage{
-load_csv(fn, header = TRUE, sep = ",", dec = ".", n_max = Inf,
+load_csv(file, delim = ",", col_names = TRUE, dec = ".", n_max = Inf,
   saf = TRUE, safx = 20)
 }
 \arguments{
-\item{fn}{File name string}
+\item{file}{Path or connection}
 
-\item{header}{Header in file (TRUE, FALSE)}
+\item{delim}{Use , (default) or ; or \\t}
 
-\item{sep}{Use , (default) or ; or \\t}
+\item{col_names}{Header in file (TRUE, FALSE)}
 
-\item{dec}{Decimal symbol. Use . (default) or ,}
+\item{dec}{Decimal separator}
 
 \item{n_max}{Maximum number of rows to read}
 

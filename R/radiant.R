@@ -40,16 +40,19 @@ launch <- function(package = "radiant.data", run = "browser") {
   } else if (rstudioapi::getVersion() < "1.1") {
     stop(sprintf("Rstudio version 1.1 or later required. Use %s::%s() to open %s in your default browser or download the latest version of Rstudio from https://www.rstudio.com/products/rstudio/download/", package, package, package))
   } else if (run == "viewer") {
-    message(sprintf("\nStarting %s in the Rstudio viewer ...\n\nUse %s::%s() to open %s in the default browser\nor %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
+    message(sprintf("\nStarting %s in the Rstudio viewer ...\n\nUse %s::%s() to open %s in the default browser or %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
     options(radiant.launch = "viewer")
     run <- shiny::paneViewer(minHeight = "maximize")
   } else if (run == "window") {
-    message(sprintf("\nStarting %s in an Rstudio window ...\n\nUse %s::%s() to open %s in the default browser\nor %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer", package, package, package, package, package, package, package))
-    options(radiant.launch = "viewer")
+    message(sprintf("\nStarting %s in an Rstudio window ...\n\nUse %s::%s() to open %s in the default browser or %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer", package, package, package, package, package, package, package))
+    if (Sys.info()["sysname"] == "Windows" && rstudioapi::getVersion() < "1.2") {
+      message(sprintf("\nUsing radiant in an Rstudio Window on Windows works best in a newer version of Rstudio (i.e., version > 1.2). See https://dailies.rstudio.com/ for the latest version. Alternatively, use %s::%s_viewer()", package, package))
+    }
+    options(radiant.launch = "window")
     ## using eval(parse(text = ...)) to avoid foreign function call warnings
     run <- eval(parse(text = "function(url) {invisible(.Call('rs_shinyviewer', url, getwd(), 3))}"))
   } else {
-    message(sprintf("\nStarting %s in the default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer\nor %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
+    message(sprintf("\nStarting %s in the default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer or %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
     options(radiant.launch = "browser")
     run <- TRUE
   }
@@ -98,7 +101,8 @@ radiant.data_viewer <- function() launch(package = "radiant.data", run = "viewer
 #' @export
 install_webshot <- function() {
   if (isNamespaceLoaded("webshot")) unloadNamespace("webshot")
-  install.packages("webshot", repos = "https://cran.rstudio.com", type = "binary")
+  type <- ifelse(Sys.info()["sysname"] == "Linux", "source", "binary")
+  install.packages("webshot", repos = "https://cran.rstudio.com", type = type)
   if (Sys.which("phantomjs") == "") eval(parse(text = "webshot::install_phantomjs()"))
 }
 
@@ -200,7 +204,7 @@ sshhr <- function(...) suppressWarnings(suppressMessages(...))
 #' @export
 filterdata <- function(dataset, filt = "", drop = TRUE) {
   if (grepl("([^=!<>])=([^=])", filt)) {
-    message("Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
+    message("Invalid filter: Never use = in a filter. Use == instead (e.g., year == 2014). Update or remove the expression")
   } else {
     seldat <- try(
       ## use %>% so . will be available to represent the available data in filters
@@ -263,7 +267,7 @@ getdata <- function(
 #' @return Data frame with factors
 #'
 #' @export
-factorizer <- function(dataset, safx = 30) {
+toFct <- function(dataset, safx = 30) {
   isChar <- sapply(dataset, is.character)
   if (sum(isChar) == 0) return(dataset)
   fab <- function(x) {
@@ -285,10 +289,10 @@ factorizer <- function(dataset, safx = 30) {
 
 #' Load a csv file 
 #'
-#' @param fn File name string
-#' @param header Header in file (TRUE, FALSE)
-#' @param sep Use , (default) or ; or \\t
-#' @param dec Decimal symbol. Use . (default) or ,
+#' @param file Path or connection
+#' @param delim Use , (default) or ; or \\t
+#' @param col_names Header in file (TRUE, FALSE)
+#' @param dec Decimal separator
 #' @param n_max Maximum number of rows to read
 #' @param saf Convert character variables to factors if (1) there are less than 100 distinct values and (2) there are X (see safx) more values than levels
 #' @param safx Values-to-levels ratio to use when converting strings to factors
@@ -297,17 +301,21 @@ factorizer <- function(dataset, safx = 30) {
 #'
 #' @export
 load_csv <- function(
-  fn, header = TRUE, sep = ",", dec = ".", 
+  file, delim = ",", col_names = TRUE, dec = ".",
   n_max = Inf, saf = TRUE, safx = 20
 ) {
 
   n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
   dataset <- sshhr(try(
-    readr::read_delim(fn, sep, locale = readr::locale(decimal_mark = dec, grouping_mark = sep), col_names = header, n_max = n_max), 
-    silent = TRUE)
+      readr::read_delim(
+        file, delim = delim, locale = readr::locale(decimal_mark = dec, grouping_mark = delim), 
+        col_names = col_names, n_max = n_max, trim_ws = TRUE
+      ), 
+      silent = TRUE
+    )
   )
   if (is(dataset, "try-error")) {
-    "### There was an error loading the data. Please make sure the data are in csv format"
+    "#### There was an error loading the data. Please make sure the data are in csv format"
   } else { 
     prb <- readr::problems(dataset)
     if (nrow(prb) > 0) {
@@ -323,7 +331,7 @@ load_csv <- function(
       rprob <- ""
     }
 
-    if (saf) dataset <- factorizer(dataset, safx)
+    if (saf) dataset <- toFct(dataset, safx)
     as.data.frame(dataset, stringsAsFactors = FALSE) %>%
       {set_colnames(., make.names(colnames(.)))} %>%
       set_attr("description", rprob)
@@ -1259,10 +1267,10 @@ render.plotly <- function(object, ...) {
     ## avoid the ID-not-used-by-Shiny message
     object$elementId <- NULL
 
-    if (is.null(object$height)) {
+    # if (is.null(object$height)) {
       ## see https://github.com/ropensci/plotly/issues/1171
-      message("\n\nThe height of (gg)plotly objects may not be correct in Preview. Height will be correctly set in saved reports however.\n\n")
-    }
+      # message("\n\nThe height of (gg)plotly objects may not be correct in Preview. Height will be correctly set in saved reports however.\n\n")
+    # }
 
     plotly::renderPlotly(object)
   } else {
@@ -1462,7 +1470,7 @@ parse_path <- function(
     }
   }
 
-  path <- normalizePath(path[1], winslash = "/")
+  path <- normalizePath(path[1], winslash = "/", mustWork = FALSE)
   filename <- basename(path)
   fext <- tools::file_ext(filename)
 
@@ -1543,7 +1551,7 @@ read_files <- function(path, type = "rmd", to = "", clipboard = TRUE, radiant = 
     to <- gsub("\\s+", "_", pp$objname) %>% make.names()
   }
   if (pp$fext %in% c("rda", "rdata")) {
-    cmd <- paste0("## loaded object names assigned to `obj`\nobj <- load(", pp$rpath, ")\nregister(obj)")
+    cmd <- paste0("## loaded object names assigned to ", to, "\n", to, " <- load(", pp$rpath, ")\nregister(", to, ")")
   } else if (pp$fext == "rds") {
     cmd <- paste0(to, " <- readr::read_rds(", pp$rpath, ")\nregister(\"", pp$objname, "\")")
   } else if (pp$fext == "csv") {
@@ -1553,7 +1561,9 @@ read_files <- function(path, type = "rmd", to = "", clipboard = TRUE, radiant = 
   } else if (pp$fext %in% c("xls", "xlsx")) {
     cmd <- paste0(to, " <- readxl::read_excel(", pp$rpath, ", sheet = 1)\nregister(\"", pp$objname, "\")")
   } else if (pp$fext == "feather") {
-    cmd <- paste0(to, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", pp$objname, "\", desc = feather::feather_metadata(\"", pp$path, "\")$description)")
+    ## waiting for https://github.com/wesm/feather/pull/326
+    # cmd <- paste0(to, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", pp$objname, "\", desc = feather::feather_metadata(\"", pp$rpath, "\")$description)")
+    cmd <- paste0(to, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", pp$objname, "\"")
   } else if (pp$fext == "yaml") {
     cmd <- paste0(to, " <- yaml::yaml.load_file(", pp$rpath, ")\nregister(\"", pp$objname, "\")")
   } else if (grepl("sqlite", pp$fext)) {

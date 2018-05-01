@@ -12,11 +12,14 @@ if (is.null(getOption("radiant.launch"))) {
   ## also use Rstudio's file dialog if opening in Window
   if (exists(".rs.readUiPref")) {
     if (is.null(.rs.readUiPref("shiny_viewer_type"))) {
-      .rs.writeUiPref("shiny_viewer_typ", 2)
+      .rs.writeUiPref("shiny_viewer_type", 3)
       options(radiant.launch = "viewer")
-    } else if (.rs.readUiPref("shiny_viewer_type") %in% c(2, 3)) {
+    } else if (.rs.readUiPref("shiny_viewer_type") == 2) {
       options(radiant.launch = "viewer")
+    } else if (.rs.readUiPref("shiny_viewer_type") == 3) {
+      options(radiant.launch = "window")
     } else {
+      # options(radiant.launch = "external")
       options(radiant.launch = "browser")
     }
   } else {
@@ -75,6 +78,7 @@ init_data <- function(env = r_data) {
         {gsub(paste0(".", tools::file_ext(.)), "", ., fixed = TRUE)}
     } else {
       df <- data(list = dn, package = "radiant.data", envir = environment()) %>% get()
+      r_info[[paste0(dn, "_lcmd")]] <- paste0(dn, " <- data(", dn, ", package = \"radiant.data\") %>% get()\nregister(\"", dn, "\")")
     }
     env[[dn]] <- df
     makeReactiveBinding(dn, env = env)
@@ -113,7 +117,7 @@ options(radiant.path.data =
 options(radiant.from.package = TRUE)
 ## if radiant.data is not in search main function from dplyr etc. won't be available
 if (!"package:radiant.data" %in% search()) {
-  import_fs("radiant.data", libs = c("magrittr", "ggplot2", "lubridate", "tidyr", "dplyr", "broom", "tibble"))
+  import_fs("radiant.data", libs = c("magrittr", "ggplot2", "lubridate", "tidyr", "dplyr", "broom", "tibble", "glue"))
   if (getOption("radiant.path.data") == "..") {
     options(radiant.from.package = FALSE)
   }
@@ -175,10 +179,10 @@ addResourcePath("www", file.path(getOption("radiant.path.data"), "app/www/"))
 
 ## cdn.mathjax.org has been retired
 ## use local MathJax if available
+## doesn't current work on Linux
 local_mathjax <- Sys.getenv("RMARKDOWN_MATHJAX_PATH")
-withMathJax <- shiny::withMathJax
 ## from https://github.com/rstudio/rmarkdown/blob/master/R/shiny.R
-if (nzchar(local_mathjax)) {
+if (Sys.info()["sysname"] != "Linux" && nzchar(local_mathjax)) {
   addResourcePath("latest", local_mathjax)
   options(radiant.mathjax.path = "latest")
   ## override shiny::withMathJax to use local MathJax
@@ -405,10 +409,10 @@ options(
       navbarMenu("",
         icon = icon("save"),
         tabPanel(
-          if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-            downloadLink("state_save", "   Save radiant state file", class = "fa fa-save")
-          } else {
+          if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
             actionLink("state_save", "   Save radiant state file", icon = icon("save"))
+          } else {
+            downloadLink("state_save", "   Save radiant state file", class = "fa fa-save")
           }
         ),
         ## inspiration for uploading state https://stackoverflow.com/a/11406690/1974918
@@ -420,9 +424,12 @@ options(
 
       ## stop app *and* close browser window
       navbarMenu("", icon = icon("power-off"),
-        tabPanel(actionLink("stop_radiant", "Stop", icon = icon("stop"),
-          onclick = "setTimeout(function(){window.close();}, 100); "
-        )),
+        tabPanel(
+          actionLink(
+            "stop_radiant", "Stop", icon = icon("stop"), 
+            onclick = "setTimeout(function(){window.close();}, 100); "
+          )
+        ),
         tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
           list(icon("refresh"), "Refresh"), onclick = "window.location.reload();"
         )),
@@ -462,3 +469,6 @@ onStop(function() {
 ## See also https://github.com/rstudio/DT/issues/533
 ## Waiting for DT.OPTION for TOJSON_ARGS
 # options(htmlwidgets.TOJSON_ARGS = list(na = "string"))
+# options("DT.TOJSON_ARGS" = list(na = "string"))
+## Sorting on client-side would be as a string, not a numeric
+## https://github.com/rstudio/DT/pull/536#issuecomment-385223433

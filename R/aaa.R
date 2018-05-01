@@ -1,7 +1,7 @@
 # to avoid 'no visible binding for global variable' NOTE
 globalVariables(
   c(
-    ".", "..density..", "r_data", "tfoot", 
+    ".", "..density..", "r_data", "tfoot",
     "th", "thead", "tr", "variable"
   )
 )
@@ -27,11 +27,20 @@ globalVariables(
 #' @importFrom base64enc dataURI
 #' @importFrom methods is
 #' @importFrom stats as.formula chisq.test dbinom median na.omit quantile sd setNames var weighted.mean
-#' @importFrom utils combn head tail install.packages read.table
+#' @importFrom utils combn head tail install.packages read.table write.table
 #' @importFrom import from
 NULL
 
+#' Exporting glue from glue
+#' @details See \code{\link[glue]{glue}} in the \code{glue]} package for more details
+#' @importFrom glue glue
+#' @name glue
+#' @rdname glue
+#' @export
+NULL
+
 #' Exporting knit_print from knitr
+#' @details See \code{\link[knitr]{knit_print}} in the \code{knitr} package for more details
 #' @importFrom knitr knit_print
 #' @name knit_print
 #' @rdname knit_print
@@ -39,20 +48,23 @@ NULL
 NULL
 
 #' Exporting rownames_to_column from tibble
+#' @details See \code{\link[tibble]{rownames}} in the \code{tibble} package for more details
 #' @importFrom tibble rownames_to_column
 #' @name rownames_to_column
 #' @rdname rownames_to_column
 #' @export
 NULL
 
-#' Exporting tibble
+#' Exporting tibble from tibble
+#' @details See \code{\link[tibble]{tibble}} in the \code{tibble} package for more details
 #' @importFrom tibble tibble
 #' @name tibble
 #' @rdname tibble
 #' @export
 NULL
 
-#' Exporting as_tibble
+#' Exporting as_tibble from tibble
+#' @details See \code{\link[tibble]{as_tibble}} in the \code{tibble} package for more details
 #' @importFrom tibble as_tibble
 #' @name as_tibble
 #' @rdname as_tibble
@@ -60,6 +72,7 @@ NULL
 NULL
 
 #' Exporting tidy from broom
+#' @details See \code{\link[broom]{tidy}} in the \code{broom} package for more details
 #' @importFrom broom tidy
 #' @name tidy
 #' @rdname tidy
@@ -67,20 +80,25 @@ NULL
 NULL
 
 #' Exporting glance from broom
+#' @details See \code{\link[broom]{glance}} in the \code{broom} package for more details
 #' @importFrom broom glance
 #' @name glance
 #' @rdname glance
 #' @export
 NULL
 
-#' Exporting the kurtosi function from the psych package
+#' Exporting kurtosi from psych
+# @details See \code{\link[psych:mardia]{psych::kurtosi()}} in the \code{psych} package for more details
+#' @details See \code{\link{kurtosi}} in the \code{psych} package for more details
 #' @importFrom psych kurtosi
 #' @name kurtosi
 #' @rdname kurtosi.re
 #' @export
 NULL
 
-#' Exporting the skew function from the psych package
+#' Exporting skew from psych
+#' @details See \code{\link{skew}} in the \code{psych} package for more details
+# @details See \code{\link[psych:mardia]{psych::skew()}} in the \code{psych} package for more details
 #' @importFrom psych skew
 #' @name skew
 #' @rdname skew.re

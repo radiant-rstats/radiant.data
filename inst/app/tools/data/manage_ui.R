@@ -3,21 +3,23 @@
 #######################################
 
 output$ui_state_load <- renderUI({
-  if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-    fileInput("state_load", "Load radiant state file (.rda):", accept = ".rda")
-  } else {
+  if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  # if (isTRUE(getOption("radiant.local", FALSE))) {
     tagList(
       HTML("</br><label>Load radiant state file (.rda):</label></br>"),
-      actionButton("state_load", "Browse...", icon = icon("upload"))
+      actionButton("state_load", "Load", icon = icon("upload"))
     )
+  } else {
+    fileInput("state_load", "Load radiant state file (.rda):", accept = ".rda")
   }
 })
 
 make_uploadfile <- function(accept) {
-  if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-    fileInput("uploadfile", NULL, multiple = TRUE, accept = accept)
+  if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  # if (isTRUE(getOption("radiant.local", FALSE))) {
+    actionButton("uploadfile", "Load", icon = icon("upload"))
   } else {
-    actionButton("uploadfile", "Browse...", icon = icon("upload"))
+    fileInput("uploadfile", NULL, multiple = TRUE, accept = accept)
   }
 }
 
@@ -52,7 +54,8 @@ output$ui_fileUpload <- renderUI({
 })
 
 output$ui_clipboard_load <- renderUI({
-  if (isTRUE(getOption("radiant.local"))) {
+  # if (isTRUE(getOption("radiant.local", FALSE))) {
+  if (Sys.info()["sysname"] != "Linux") {
     actionButton("loadClipData", "Paste", icon = icon("paste"))
   } else {
     tagList(
@@ -68,14 +71,15 @@ output$ui_clipboard_load <- renderUI({
 })
 
 output$ui_clipboard_save <- renderUI({
-  if (isTRUE(getOption("radiant.local"))) {
-    actionButton("saveClipData", "Copy data", icon = icon("copy"))
+  # if (isTRUE(getOption("radiant.local"))) {
+  if (Sys.info()["sysname"] != "Linux") {
+    actionButton("man_save_clip", "Copy data", icon = icon("copy"))
   } else {
     textAreaInput(
-      "save_cdata", "Copy-and-paste data below:",
+      "man_save_clip_text_area", "Copy-and-paste data below:",
       rows = 5, resize = "vertical",
       value = capture.output(
-        write.table(.getdata_transform(), file = "", row.names = FALSE, sep = "\t")
+        write.table(r_data[[input$dataset]], file = "", row.names = FALSE, sep = "\t")
       ) %>% paste(collapse = "\n")
     )
   }
@@ -92,7 +96,7 @@ output$ui_from_global <- renderUI({
       df_list, selected = df_list, multiple = TRUE, selectize = FALSE,
       size = min(5, length(df_list))
     ),
-    radioButtons("from_global_move", NULL, c("copy" = "copy", "move" = "move"), selected = "move", inline = TRUE),
+    radioButtons("from_global_move", NULL, c("copy" = "copy", "move" = "move"), selected = "copy", inline = TRUE),
     br(),
     actionButton("from_global_load", "Load", icon = icon("upload"))
   )
@@ -100,7 +104,7 @@ output$ui_from_global <- renderUI({
 
 output$ui_to_global <- renderUI({
   tagList(
-    radioButtons("to_global_move", NULL, c("copy" = "copy", "move" = "move"), selected = "move", inline = TRUE),
+    radioButtons("to_global_move", NULL, c("copy" = "copy", "move" = "move"), selected = "copy", inline = TRUE),
     br(),
     actionButton("to_global_save", "Save", icon = icon("download"))
   )
@@ -113,16 +117,19 @@ observeEvent(input$from_global_load, {
   for (df in dfs) {
     r_data[[df]] <- get(df, envir = .GlobalEnv)
     shiny::makeReactiveBinding(df, env = r_data)
-    if (input$from_global_move == "move") rm(list = df, envir = .GlobalEnv)
+    r_info[[paste0(df, "_lcmd")]] <- glue('{df} <- get("{df}", envir = .GlobalEnv)\nregister("{df}")')
+    if (input$from_global_move == "move") {
+      rm(list = df, envir = .GlobalEnv)
+      r_info[[paste0(df, "_lcmd")]] <- paste0("# ", r_info[[paste0(df, "_lcmd")]])
+    }
     r_info[[paste0(df, "_descr")]] <- attr(r_data[[df]], "description") %>%
-      {if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else .}
+      {if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\nCheck the 'Add/edit data description' box on the top-left of your screen" else .}
   }
   updateSelectInput(
     session, "dataset", label = "Datasets:",
     choices = r_info[["datasetlist"]],
     selected = r_info[["datasetlist"]][1]
   )
-  updateSelectInput(session, "dataType", selected = "rds")
 })
 
 observeEvent(input$to_global_save, {
@@ -132,34 +139,40 @@ observeEvent(input$to_global_save, {
   if (input$to_global_move == "move" && length(r_info[["datasetlist"]]) > 1) {
     r_info[["datasetlist"]] %<>% setdiff(df)
     r_info[[paste0(df, "_descr")]] <- NULL
+    r_info[[paste0(df, "_lcmd")]] <- NULL
+    r_info[[paste0(df, "_scmd")]] <- NULL
+  } else {
+    ## only useful if dataset is still available in radiant
+    r_info[[paste0(df, "_scmd")]] <- glue('assign({df}, envir = .GlobalEnv)')
   }
+
   updateSelectInput(
     session, "dataset", label = "Datasets:",
     choices = r_info[["datasetlist"]],
     selected = r_info[["datasetlist"]][1]
   )
-  updateSelectInput(session, "saveAs", selected = "rds")
 })
 
 output$ui_man_state_save <- renderUI({
   download_button("man_state_save", "Save", ic = "download")
 })
 
-output$ui_man_download_data <- renderUI({
-  download_button("man_download_data", "Save", ic = "download")
+output$ui_man_save_data <- renderUI({
+  download_button("man_save_data", "Save", ic = "download")
 })
 
 output$ui_Manage <- renderUI({
   data_types_in <- c(
-    "rds" = "rds", "rda (rdata)" = "rda", "radiant state file" = "state", "csv" = "csv",
-    "clipboard" = "clipboard", "from global workspace" = "from_global",
-    "examples" = "examples", "feather" = "feather",
-    "rda (url)" = "url_rda", "csv (url)" = "url_csv"
+    "rds" = "rds", "rda (rdata)" = "rda", "csv" = "csv",
+    "clipboard" = "clipboard", "examples" = "examples",
+    "rda (url)" = "url_rda", "csv (url)" = "url_csv",
+    "feather" = "feather", "from global workspace" = "from_global",
+    "radiant state file" = "state" 
   )
   data_types_out <- c(
-    "rds" = "rds", "rda" = "rda", "radiant state file" = "state", "csv" = "csv",
-    "feather" = "feather", "clipboard" = "clipboard",
-    "to global workspace" = "to_global"
+    "rds" = "rds", "rda" = "rda", "csv" = "csv",
+    "clipboard" = "clipboard", "feather" = "feather",
+    "to global workspace" = "to_global", "radiant state file" = "state"
   )
   if (!isTRUE(getOption("radiant.local"))) {
     data_types_in <- data_types_in[-which(data_types_in == "from_global")]
@@ -232,7 +245,13 @@ output$ui_Manage <- renderUI({
         condition = "input.saveAs != 'clipboard' &&
                      input.saveAs != 'state' &&
                      input.saveAs != 'to_global'",
-        uiOutput("ui_man_download_data")
+        uiOutput("ui_man_save_data")
+      )
+    ),
+    conditionalPanel(
+      "output.is_browser == false",
+      wellPanel(
+        checkboxInput("man_show_log", "Show R-code", FALSE)
       )
     ),
     wellPanel(
@@ -243,20 +262,14 @@ output$ui_Manage <- renderUI({
         actionButton("removeDataButton", "Remove data", icon = icon("trash"), class = "btn-danger")
       )
     ),
-    help_modal(
-      "Manage", "manage_help",
-      inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/manage.md")),
+    help_and_report(
+      modal_title = "Manage",
+      fun_name = "manage",
+      help_file = inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/manage.md")),
       lic = "by-sa"
     )
   )
 })
-
-## need to set suspendWhenHidden to FALSE so that the href for the
-## download handler is set and keyboard shortcuts will work
-## see https://shiny.rstudio.com/reference/shiny/0.11/outputOptions.html
-## see https://stackoverflow.com/questions/48117501/click-link-in-navbar-menu
-## https://stackoverflow.com/questions/3871358/get-all-the-href-attributes-of-a-web-site
-# outputOptions(output, "state_load", suspendWhenHidden = FALSE)
 
 ## updating the dataset description
 observeEvent(input$updateDescr, {
@@ -268,17 +281,17 @@ observeEvent(input$updateDescr, {
   )
 })
 
-output$dataDescriptionHTML <- renderUI({
+output$man_descr_html <- renderUI({
   r_info[[paste0(input$dataset, "_descr")]] %>%
     descr_out("html") %>%
     HTML()
 })
 
-output$dataDescriptionMD <- renderUI({
+output$man_descr_md <- renderUI({
   ## avoid all sorts of 'helpful' behavior from your browser
   ## based on https://stackoverflow.com/a/35514029/1974918
   tagList(
-    "<label>Add data description:</label><br>" %>% HTML(),
+    HTML("<label>Add data description:</label><br>"),
     tags$textarea(
       id = "man_data_descr",
       rows = 15,
@@ -318,6 +331,8 @@ observeEvent(input$removeDataButton, {
     ## Must use single string to index into reactivevalues so loop is necessary
     for (rem in removeDataset) {
       r_info[[paste0(rem, "_descr")]] <- NULL
+      r_info[[paste0(rem, "_lcmd")]] <- NULL
+      r_info[[paste0(rem, "_scmd")]] <- NULL
     }
     suppressWarnings(rm(list = removeDataset, envir = r_data))
     r_info[["datasetlist"]] <- datasets[-which(datasets %in% removeDataset)]
@@ -325,12 +340,27 @@ observeEvent(input$removeDataButton, {
 })
 
 ## 'saving' data to clipboard
-observeEvent(input$saveClipData, {
-  saveClipboardData()
-  updateRadioButtons(session = session, inputId = "saveAs", selected = "rds")
+observeEvent(input$man_save_clip, {
+  radiant.data::save_clip(r_data[[input$dataset]])
+  r_info[[paste0(input$dataset, "_scmd")]] <- glue('save_clip({input$dataset})')
 })
 
-if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+# if (isTRUE(getOption("radiant.local", FALSE))) {
+if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  observeEvent(input$man_state_save, {
+    path <- rstudioapi::selectFile(
+      caption = "Radiant state file name",
+      path = state_name(full.name = TRUE),
+      filter = "Radiant state file (*.rda)",
+      existing = FALSE
+    )
+
+    if (!is(path, "try-error") && !is_empty(path)) {
+      r_state$radiant_state_name <<- path
+      saveState(path)
+    }
+  })
+} else {
   output$man_state_save <- downloadHandler(
     filename = function() {
       state_name()
@@ -339,57 +369,39 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
       saveState(file)
     }
   )
-} else {
-  observeEvent(input$man_state_save, {
-    path <- rstudioapi::selectFile(
-      caption = "Radiant state file name",
-      path = state_name(full.name = TRUE),
-      filter = "Radiant state file (*.rda)",
-      existing = FALSE
-    )
-    if (!is(path, "try-error") && !is_empty(path)) {
-      r_state$radiant_state_name <<- path
-      saveState(path)
-    }
-  })
 }
 
-man_download_data <- function(file) {
+man_save_data <- function(file) {
   ext <- input$saveAs
+  robj <- input$dataset
+  pp <- parse_path(file)
   if (ext == "csv") {
-    readr::write_csv(.getdata_transform(), file)
+    readr::write_csv(r_data[[robj]], file)
+    r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_csv({robj}, path = {pp$rpath})')
   } else {
-    robj <- input$dataset
-    tmp <- new.env(parent = emptyenv())
-    tmp[[robj]] <- .getdata_transform()
-    if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
-      attr(tmp[[robj]], "description") <- r_info[[paste0(robj, "_descr")]]
+    if (!is_empty(input$man_data_descr)) {
+      attr(r_data[[robj]], "description") <- r_info[[paste0(robj, "_descr")]]
     }
 
     if (ext == "rds") {
-      saveRDS(tmp[[robj]], file = file)
+      readr::write_rds(r_data[[robj]], path = file)
+      r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_rds({robj}, path = {pp$rpath})')
     } else if (ext == "feather") {
       ## temporary workaround until PR goes through https://stackoverflow.com/a/47898172/1974918
       # feather::write_feather(tmp[[robj]], file)
       # radiant.data::write_feather(tmp[[robj]], file, description = attr(tmp[[robj]], "description"))
-      radiant.data::write_feather(tmp[[robj]], file)
+      radiant.data::write_feather(r_data[[robj]], file)
+      r_info[[paste0(robj, "_scmd")]] <- glue('feather::write_feather({robj}, path = {pp$rpath})')
     } else {
-      save(list = robj, file = file, envir = tmp)
+      save(list = robj, file = file, envir = r_data)
+      r_info[[paste0(robj, "_scmd")]] <- glue('save({robj}, file = {pp$rpath})')
     }
   }
 }
 
-if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-  output$man_download_data <- downloadHandler(
-    filename = function() {
-      paste0(input$dataset, ".", input$saveAs)
-    },
-    content = function(file) {
-      man_download_data(file)
-    }
-  )
-} else {
-  observeEvent(input$man_download_data, {
+if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+# if (isTRUE(getOption("radiant.local", FALSE))) {
+  observeEvent(input$man_save_data, {
     path <- rstudioapi::selectFile(
       caption = "Save data",
       path = file.path(
@@ -400,14 +412,24 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
       existing = FALSE
     )
     if (!is(path, "try-error") && !is_empty(path)) {
-      man_download_data(path)
+      man_save_data(path)
     }
   })
+} else {
+  output$man_save_data <- downloadHandler(
+    filename = function() {
+      paste0(input$dataset, ".", input$saveAs)
+    },
+    content = function(file) {
+      man_save_data(file)
+    }
+  )
 }
 
 observeEvent(input$uploadfile, {
 
-  if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
+  if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  # if (isTRUE(getOption("radiant.local", FALSE))) {
     if (input$dataType == "csv") {
       caption <- "Select .csv"
       filter <- "Select .csv or similar (*)"
@@ -436,7 +458,7 @@ observeEvent(input$uploadfile, {
 
   ## iterating through the files to upload
   for (i in 1:(dim(inFile)[1])) {
-    loadUserData(
+    load_user_data(
       inFile[i, "name"],
       inFile[i, "datapath"],
       input$dataType,
@@ -459,30 +481,36 @@ observeEvent(input$uploadfile, {
 observeEvent(input$url_rda_load, {
   ## loading rda file from url, example https://radiant-rstats.github.io/docs/examples/houseprices.rda
   if (input$url_rda == "") return()
+  url_rda <- gsub("^\\s+|\\s+$", "", input$url_rda)
   objname <- "rda_url"
-  con <- try(curl::curl_download(gsub("^\\s+|\\s+$", "", input$url_rda), tempfile()), silent = TRUE)
+  con <- try(curl::curl_download(url_rda, tempfile()), silent = TRUE)
 
+  cmd <- NULL
   if (is(con, "try-error")) {
-    upload_error_handler(objname, "### There was an error loading the r-data file from the provided url.")
+    upload_error_handler(objname, "#### There was an error loading the r-data file from the provided url.")
   } else {
     robjname <- try(load(con), silent = TRUE)
     if (is(robjname, "try-error")) {
-      upload_error_handler(objname, "### There was an error loading the r-data file from the provided url.")
+      upload_error_handler(objname, "#### There was an error loading the r-data file from the provided url.")
     } else {
       if (length(robjname) > 1) {
         if (sum(robjname %in% c("r_state", "r_data", "r_info")) > 1) {
-          upload_error_handler(objname, "### To restore app state from a radiant state file please choose the 'radiant state file' option from the dropdown.")
+          upload_error_handler(objname, "#### To restore app state from a radiant state file please choose the 'radiant state file' option from the dropdown.")
         } else {
-          upload_error_handler(objname, "### More than one R object is contained in the specified data file.")
+          upload_error_handler(objname, "#### More than one R object is contained in the specified data file.")
         }
       } else {
         r_data[[objname]] <- as.data.frame(get(robjname), stringsAsFactors = FALSE)
+        cmd <- glue('{objname} <- load(url("{url_rda}")) %>% get()\nregister("{objname}")')
+
       }
     }
   }
   shiny::makeReactiveBinding(objname, env = r_data)
   r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
   r_info[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
+  r_info[[paste0(objname, "_lcmd")]] <- cmd
+
   updateSelectInput(
     session, "dataset",
     label = "Datasets:",
@@ -495,18 +523,20 @@ observeEvent(input$url_csv_load, {
   ## loading csv file from url, example https://radiant-rstats.github.io/docs/examples/houseprices.csv
   objname <- "csv_url"
   if (input$url_csv == "") return()
+  url_csv <- gsub("^\\s+|\\s+$", "", input$url_csv)
 
   con <- tempfile()
-  ret <- try(curl::curl_download(gsub("^\\s+|\\s+$", "", input$url_csv), con), silent = TRUE)
+  ret <- try(curl::curl_download(url_csv, con), silent = TRUE)
 
+  cmd <- NULL
   if (is(ret, "try-error")) {
-    upload_error_handler(objname, "### There was an error loading the csv file from the provided url.")
+    upload_error_handler(objname, "#### There was an error loading the csv file from the provided url")
   } else {
     dataset <- load_csv(
       con,
-      header = input$man_header,
+      delim = input$man_sep,
+      col_names = input$man_header,
       n_max = input$man_n_max,
-      sep = input$man_sep,
       dec = input$man_dec,
       saf = input$man_str_as_factor
     )
@@ -515,12 +545,37 @@ observeEvent(input$url_csv_load, {
       upload_error_handler(objname, dataset)
     } else {
       r_data[[objname]] <- dataset
+      ## generate command
+      delim <- input$man_sep
+      col_names <- input$man_header
+      dec <- input$man_dec
+      saf <- input$man_str_as_factor
+      n_max <- input$man_n_max
+      n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
+      if (delim == "," && dec == "." && col_names) {
+        cmd <- glue('
+          {objname} <- readr::read_csv(
+            "{url_csv}", 
+            n_max = {n_max}
+          )') 
+      } else {
+        cmd <- glue('
+          {objname} <- readr::read_delim(
+            "{url_csv}", 
+            delim = "{delim}",
+            locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{delim}"),
+            col_names = {col_names}, n_max = {n_max}
+          )') 
+      }
+      if (saf) cmd <- glue('{cmd} %>% toFct()')
+      cmd <- glue('{cmd}\nregister("{objname}")')
     }
   }
 
   shiny::makeReactiveBinding(objname, env = r_data)
   r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
   r_info[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
+  r_info[[paste0(objname, "_lcmd")]] <- cmd
 
   updateSelectInput(
     session, "dataset",
@@ -538,8 +593,9 @@ observeEvent(input$loadExampleData, {
     item <- exdat[i, "Item"]
     data(list = item, package = exdat[i, "Package"], envir = r_data)
     makeReactiveBinding(item, env = r_data)
-    r_info[[paste0(item, "_descr")]] <- attr(r_data[[item]], "description")
     r_info[["datasetlist"]] <- c(item, r_info[["datasetlist"]]) %>% unique()
+    r_info[[paste0(item, "_descr")]] <- attr(r_data[[item]], "description")
+    r_info[[paste0(item, "_lcmd")]] <- glue('{item} <- data({item}, package = "{exdat[i, "Package"]}") %>% get()\nregister("{item}")')
   }
 
   ## sorting files alphabetically
@@ -554,12 +610,31 @@ observeEvent(input$loadExampleData, {
 
 observeEvent(input$loadClipData, {
   ## reading data from clipboard
-  loadClipboardData()
-  updateSelectInput(session = session, inputId = "dataType", selected = "rds")
+  objname <- "from_clipboard"
+  dataset <- radiant.data::load_clip("\t", input$load_cdata)
+  if (is(dataset, "try-error") || length(dim(dataset)) < 2 || nrow(dataset) == 0) {
+    ret <- "#### Data in clipboard was not well formatted. Try exporting the data to csv format"
+    upload_error_handler(objname, ret)
+  } else {
+    cmd <- glue('{objname} <- load_clip()')
+    ret <- glue('#### Clipboard data\nData copied from clipboard on {lubridate::now()}')
+    cn <- colnames(dataset)
+    fn <- radiant.data::fix_names(cn)
+    if (!identical(cn, fn)) {
+      colnames(dataset) <- fn
+      cmd <- paste0(cmd, "%>% fix_names()")
+    }
+    r_data[[objname]] <- dataset
+    r_info[[paste0(objname, "_lcmd")]] <- glue('{cmd}\nregister("{objname}")')
+  }
+  shiny::makeReactiveBinding(objname, env = r_data)
+  r_info[[paste0(objname, "_descr")]] <- ret
+  r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
   updateSelectInput(
-    session, "dataset", label = "Datasets:",
+    session, "dataset", 
+    label = "Datasets:",
     choices = r_info[["datasetlist"]], 
-    selected = "copy_and_paste"
+    selected = objname
   )
 })
 
@@ -568,7 +643,8 @@ observeEvent(input$loadClipData, {
 #######################################
 output$refreshOnUpload <- renderUI({
   req(input$state_load)
-  if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
+  if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  # if (isTRUE(getOption("radiant.local", FALSE))) {
     path <- rstudioapi::selectFile(
       caption = "Select .rda",
       filter = "Select .rda (*.rda)",
@@ -587,12 +663,15 @@ output$refreshOnUpload <- renderUI({
 
   if (is.null(tmpEnv$r_state) && is.null(tmpEnv$r_data)) {
     ## don't destroy session when attempting to load a
-    ## file that is not a statefile
-    mess <- paste0("Unable to restore radiant state from the selected file. Choose another state file or select 'rda' from the 'Load data of type' dropdown and try again")
+    ## file that is not a state file
     showModal(
       modalDialog(
         title = "Restore radiant state failed",
-        span(mess),
+        span(
+          "Unable to restore radiant state from the selected file. 
+          Choose another state file or select 'rda' from the 'Load 
+          data of type' dropdown to load an R-data file and try again"
+        ),
         footer = modalButton("OK"),
         size = "s",
         easyClose = TRUE
@@ -645,6 +724,12 @@ output$refreshOnUpload <- renderUI({
   tags$script("window.location.reload();")
 })
 
+
+## need to set suspendWhenHidden to FALSE so that the href for the
+## these outputs is available on startup and keyboard shortcuts will work
+## see https://shiny.rstudio.com/reference/shiny/0.11/outputOptions.html
+## see https://stackoverflow.com/questions/48117501/click-link-in-navbar-menu
+## https://stackoverflow.com/questions/3871358/get-all-the-href-attributes-of-a-web-site
 outputOptions(output, "refreshOnUpload", suspendWhenHidden = FALSE)
 outputOptions(output, "ui_state_load", suspendWhenHidden = FALSE)
 
@@ -665,32 +750,40 @@ saveState <- function(filename) {
 }
 
 observeEvent(input$renameButton, {
-  .data_rename()
-})
-
-.data_rename <- function() {
-  isolate({
-    if (is_empty(input$data_rename) || input$dataset == input$data_rename) return()
-
-    ## use lobstr::object_size to see that the size of the list doesn't change
-    ## when you assign a list element another name
-    r_data[[input$data_rename]] <- r_data[[input$dataset]]
-    shiny::makeReactiveBinding(input$data_rename, env = r_data)
-    r_data[[input$dataset]] <- NULL
-    r_info[[paste0(input$data_rename, "_descr")]] <- r_info[[paste0(input$dataset, "_descr")]]
-    r_info[[paste0(input$dataset, "_descr")]] <- NULL
-    ind <- which(input$dataset == r_info[["datasetlist"]])
-    r_info[["datasetlist"]][ind] <- input$data_rename
-    r_info[["datasetlist"]] %<>% unique()
-
-    updateSelectInput(
-      session, "dataset", 
-      label = "Datasets:", 
-      choices = r_info[["datasetlist"]],
-      selected = input$data_rename
+  req(!is_empty(input$data_rename)) 
+  req(!identical(input$dataset, input$data_rename))
+  ## use lobstr::object_size to see that the size of the list doesn't change
+  ## when you assign a list element another name
+  r_data[[input$data_rename]] <- r_data[[input$dataset]]
+  shiny::makeReactiveBinding(input$data_rename, env = r_data)
+  r_data[[input$dataset]] <- NULL
+  r_info[[paste0(input$data_rename, "_descr")]] <- r_info[[paste0(input$dataset, "_descr")]]
+  r_info[[paste0(input$dataset, "_descr")]] <- NULL
+  lcmd <- r_info[[paste0(input$dataset, "_lcmd")]] %>%
+    sub(paste0("^", input$dataset, " <- "), paste0(input$data_rename, " <- "), .) %>%
+    sub(
+      paste0("register\\(\"", input$dataset, "\"\\)"), 
+      paste0("register\\(\"", input$data_rename, "\"\\)"),
+      .
     )
-  })
-}
+  r_info[[paste0(input$data_rename, "_lcmd")]] <- lcmd
+  r_info[[paste0(input$dataset, "_lcmd")]] <- NULL
+  scmd <- r_info[[paste0(input$dataset, "_scmd")]] %>%
+    sub(paste0("^", input$dataset, " <- "), input$data_rename, .) %>%
+    sub(paste0("^register\\(\"(", input$dataset, ")\"\\)"), input$data_rename, .)
+  r_info[[paste0(input$data_rename, "_scmd")]] <- scmd
+  r_info[[paste0(input$dataset, "_scmd")]] <- NULL
+  ind <- which(input$dataset == r_info[["datasetlist"]])
+  r_info[["datasetlist"]][ind] <- input$data_rename
+  r_info[["datasetlist"]] %<>% unique()
+
+  updateSelectInput(
+    session, "dataset", 
+    label = "Datasets:", 
+    choices = r_info[["datasetlist"]],
+    selected = input$data_rename
+  )
+})
 
 output$ui_datasets <- renderUI({
   ## Drop-down selection of active dataset
@@ -731,18 +824,78 @@ output$uiRename <- renderUI({
   )
 })
 
-output$htmlDataExample <- renderText({
+output$man_example <- renderText({
   if (is.null(.getdata())) return()
   ## Show only the first 10 (or 20) rows
   show_data_snippet(nshow = 10)
 })
 
-output$strData <- renderPrint({
+output$man_str <- renderPrint({
   req(is.data.frame(.getdata()))
   str(r_data[[input$dataset]])
 })
 
-output$summaryData <- renderPrint({
+output$man_summary <- renderPrint({
   req(is.data.frame(.getdata()))
   getsummary(r_data[[input$dataset]])
+})
+
+
+man_show_log <- reactive({
+  if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  # if (isTRUE(getOption("radiant.local", FALSE))) {
+    lcmd <- r_info[[paste0(input$dataset, "_lcmd")]]
+    cmd <- ""
+    if (!is_empty(lcmd)) {
+      cmd <- paste0("## Load commands\n", lcmd)
+    }
+    scmd <- r_info[[paste0(input$dataset, "_scmd")]]
+    if (!is_empty(scmd)) {
+      cmd <- paste0(cmd, "\n\n## Save commands\n", scmd)
+    }
+    cmd
+  } else {
+    "## No R-code available"
+  }
+})
+
+output$ui_man_log <- renderUI({
+  tags$textarea(
+    isolate(man_show_log()), 
+    id = "man_log",
+    type = "text",
+    rows = 5,
+    autocomplete = "off",
+    autocorrect = "off",
+    autocapitalize = "off",
+    spellcheck = "false",
+    class = "form-control"
+  )
+})
+
+observe({
+  input$man_show_log
+  updateTextAreaInput(session, "man_log", value = man_show_log())
+})
+
+observeEvent(input$manage_report, {
+  if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  # if (isTRUE(getOption("radiant.local", FALSE))) {
+    update_report(cmd = man_show_log(), outputs = NULL, figs = FALSE)
+  } else {
+    showModal(
+      modalDialog(
+        title = "Cannot generate R-code to load and save data",
+        span(
+          "R-code to load and save data cannot be reported when using 
+           radiant with an (external) web browser (e.g., chrome). The
+           web browser's file dialog does not provide file path 
+           information for security reasons"
+        ),
+        footer = modalButton("OK"),
+        size = "s",
+        easyClose = TRUE
+      )
+    )
+  }
 })

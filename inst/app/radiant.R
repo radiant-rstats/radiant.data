@@ -63,11 +63,11 @@ saveStateOnRefresh <- function(session = session) {
       url_query <- parseQueryString(session$clientData$url_search)
       if (not_pressed(input$refresh_radiant) &&
           not_pressed(input$stop_radiant) &&
-          is.null(input$state_load) &&
+          not_pressed(input$state_load) &&
           !"fixed" %in% names(url_query)) {
         saveSession(session)
       } else {
-        if (is.null(input$state_load)) {
+        if (not_pressed(input$state_load)) {
           if (exists("r_sessions")) {
             sshhr(try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE))
             sshhr(try(rm(r_ssuid), silent = TRUE))
@@ -409,20 +409,8 @@ returnTextInput <- function(
   )
 }
 
-if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-  download_link <- function(id) {
-    downloadLink(id, "", class = "fa fa-download alignright")
-  }
-  download_button <- function(id, label, ic = "download", class = "") {
-    downloadButton(id, label, class = class)
-  }
-  download_handler <- function(id, fun = id, fn, caption = "Download to csv", type = "csv", ...) {
-    output[[id]] <- downloadHandler(
-      filename = function() { fn },
-      content = function(path) { fun(path, ...) }
-    )
-  }
-} else {
+if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+# if (isTRUE(getOption("radiant.local", FALSE))) {
   download_link <- function(id) {
     actionLink(id, "", class = "fa fa-download alignright")
   }
@@ -441,6 +429,19 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
         fun(path, ...)
       }
     })
+  }
+} else {
+  download_link <- function(id) {
+    downloadLink(id, "", class = "fa fa-download alignright")
+  }
+  download_button <- function(id, label, ic = "download", class = "") {
+    downloadButton(id, label, class = class)
+  }
+  download_handler <- function(id, fun = id, fn, caption = "Download to csv", type = "csv", ...) {
+    output[[id]] <- downloadHandler(
+      filename = function() { fn },
+      content = function(path) { fun(path, ...) }
+    )
   }
 }
 

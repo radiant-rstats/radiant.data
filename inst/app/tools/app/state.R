@@ -75,7 +75,21 @@ state_name <- function(out = paste0("radiant-state-", Sys.Date(), ".rda"), full.
   }
 }
 
-if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+# if (isTRUE(getOption("radiant.local", FALSE))) {
+  observeEvent(input$state_save, {
+    path <- rstudioapi::selectFile(
+      caption = "Radiant state file name",
+      path = state_name(full.name = TRUE),
+      filter = "Radiant state file (*.rda)",
+      existing = FALSE
+    )
+    if (!is(path, "try-error") && !is_empty(path)) {
+      r_state$radiant_state_name <<- path 
+      saveState(path)
+    }
+  })
+} else {
   output$state_save <- downloadHandler(
     filename = function() {
       state_name()
@@ -91,19 +105,6 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
   ## see https://stackoverflow.com/questions/48117501/click-link-in-navbar-menu
   ## https://stackoverflow.com/questions/3871358/get-all-the-href-attributes-of-a-web-site
   outputOptions(output, "state_save", suspendWhenHidden = FALSE)
-} else {
-  observeEvent(input$state_save, {
-    path <- rstudioapi::selectFile(
-      caption = "Radiant state file name",
-      path = state_name(full.name = TRUE),
-      filter = "Radiant state file (*.rda)",
-      existing = FALSE
-    )
-    if (!is(path, "try-error") && !is_empty(path)) {
-      r_state$radiant_state_name <<- path 
-      saveState(path)
-    }
-  })
 }
 
 observeEvent(input$state_share, {

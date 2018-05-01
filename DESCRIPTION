@@ -32,12 +32,14 @@ Imports:
     DT (>= 0.4),
     readr (>= 1.1.1),
     readxl (>= 1.0.0),
+    writexl (>= 0.2),
     scales (>= 0.4.0),
     curl (>= 2.5),
     rstudioapi (>= 0.7),
     import (>= 1.1.0),
     plotly (>= 4.7.1),
     feather (>= 0.3.1),
+    glue,
     base64enc,
     methods
 Suggests:

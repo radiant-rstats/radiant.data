@@ -6,3 +6,6 @@
 \description{
 Exporting knit_print from knitr
 }
+\details{
+See \code{\link[knitr]{knit_print}} in the \code{knitr} package for more details
+}

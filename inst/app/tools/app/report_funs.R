@@ -1,10 +1,11 @@
 file_upload_button <- function(
   inputId, label = "", multiple = FALSE,
-  accept = NULL, buttonLabel = "Browse ...",
+  accept = NULL, buttonLabel = "Load",
   class = "", icn = "upload", progress = FALSE
 ) {
 
-  if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
+  if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  # if (isTRUE(getOption("radiant.local", FALSE))) {
     actionButton(inputId, buttonLabel, icon = icon(icn), class = class)
   } else {
 

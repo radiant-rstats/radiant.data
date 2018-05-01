@@ -6,3 +6,6 @@
 \description{
 Exporting glance from broom
 }
+\details{
+See \code{\link[broom]{glance}} in the \code{broom} package for more details
+}

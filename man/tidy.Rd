@@ -6,3 +6,6 @@
 \description{
 Exporting tidy from broom
 }
+\details{
+See \code{\link[broom]{tidy}} in the \code{broom} package for more details
+}

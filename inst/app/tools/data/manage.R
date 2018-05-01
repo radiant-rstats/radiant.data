@@ -16,44 +16,7 @@ upload_error_handler <- function(objname, ret) {
     set_attr("description", ret)
 }
 
-loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRUE, sep = "\t") {
-  dataset <- sshhr(try({
-    if (Sys.info()["sysname"] == "Windows") {
-      read.table("clipboard", header = header, sep = sep, comment.char = "", fill = TRUE, as.is = TRUE)
-    } else if (Sys.info()["sysname"] == "Darwin") {
-      read.table(pipe("pbpaste"), header = header, sep = sep, comment.char = "", fill = TRUE, as.is = TRUE)
-    } else {
-      if (!is_empty(input$load_cdata)) {
-        read.table(text = input$load_cdata, header = header, sep = sep, comment.char = "", fill = TRUE, as.is = TRUE)
-      }
-    }
-  } %>% as.data.frame(check.names = TRUE, stringsAsFactors = FALSE), silent = TRUE))
-
-  if (is(dataset, "try-error") || nrow(dataset) == 0) {
-    if (ret == "") ret <- c("### Data in clipboard was not well formatted. Try exporting the data to csv format.")
-    upload_error_handler(objname, ret)
-  } else {
-    ret <- paste0("### Clipboard data\nData copied from clipboard on ", lubridate::now())
-    colnames(dataset) <- make.names(colnames(dataset))
-    r_data[[objname]] <- factorizer(dataset)
-  }
-  shiny::makeReactiveBinding(objname, env = r_data)
-  r_info[[paste0(objname, "_descr")]] <- ret
-  r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
-}
-
-saveClipboardData <- function() {
-  os_type <- Sys.info()["sysname"]
-  if (os_type == "Windows") {
-    write.table(.getdata(), "clipboard-10000", sep = "\t", row.names = FALSE)
-  } else if (os_type == "Darwin") {
-    write.table(.getdata(), file = pipe("pbcopy"), row.names = FALSE, sep = "\t")
-  } else if (os_type == "Linux") {
-    print("### Saving data through the clipboard is currently only supported on Windows and Mac. You can save your data to csv format to use it in a spreadsheet.")
-  }
-}
-
-loadUserData <- function(
+load_user_data <- function(
   fname, uFile, ext, header = TRUE,
   man_str_as_factor = TRUE, sep = ",", dec = ".", 
   n_max = Inf
@@ -76,63 +39,95 @@ loadUserData <- function(
   ## if ext isn't in the filename nothing was replaced and so ...
   if (objname == filename) {
     if (fext %in% c("xls", "xlsx")) {
-      ret <- "### Radiant does not load xls files directly. Please save the data as a csv file and try again."
+      ret <- "#### Radiant does not load xls files directly. Please save the data as a csv file and try again."
     } else {
-      ret <- paste0("### The filename extension (", fext, ") does not match the specified file-type (", ext, "). Please specify the file type you are trying to upload")
+      ret <- glue('#### The filename extension "{fext}" does not match the specified \\
+        file-type "{ext}". Please specify the file type you are trying to upload')
     }
 
     upload_error_handler(objname, ret)
     ext <- "---"
   }
 
+  cmd <- NULL
+  pp <- radiant.data::parse_path(uFile)
+
   if (ext %in% c("rda", "rdata")) {
     ## objname will hold the name of the object(s) inside the R datafile
     robjname <- try(load(uFile), silent = TRUE)
     if (is(robjname, "try-error")) {
-      upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in rda format.")
+      upload_error_handler(objname, "#### There was an error loading the data. Please make sure the data are in rda format.")
     } else if (length(robjname) > 1) {
       if (sum(robjname %in% c("r_state", "r_data", "r_info")) > 1) {
-        upload_error_handler(objname, "### To restore state from a state-file select 'state' from the 'Load data of type' drowdown before uploading the file")
+        upload_error_handler(objname, "#### To restore state select 'radiant state file' from the 'Load data of type' drowdown before loading the file")
         ## need to remove the local copies of r_state, r_data, and r_info
         suppressWarnings(rm(r_state, r_data, r_info)) 
       } else {
-        upload_error_handler(objname, "### More than one R object contained in the data.")
+        upload_error_handler(objname, "#### More than one R object contained in the data.")
       }
     } else {
-      r_data[[objname]] <- as.data.frame(get(robjname), stringsAsFactors = FALSE) %>% 
-        {set_colnames(., make.names(colnames(.)))}
+      r_data[[objname]] <- as.data.frame(get(robjname), stringsAsFactors = FALSE) 
+      cmd <- glue('{objname} <- load({pp$rpath}) %>% get()')
     }
   } else if (ext == "rds") {
     ## objname will hold the name of the object(s) inside the R datafile
     robj <- try(readRDS(uFile), silent = TRUE)
     if (is(robj, "try-error")) {
-      upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in rds format.")
+      upload_error_handler(objname, "#### There was an error loading the data. Please make sure the data are in rds format.")
     } else {
-      r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE) %>% 
-        {set_colnames(., make.names(colnames(.)))}
+      r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE) 
+      cmd <- glue('{objname} <- readr::read_rds({pp$rpath})')
     }
   } else if (ext == "feather") {
     if (!"feather" %in% rownames(utils::installed.packages())) {
-      upload_error_handler(objname, "### The feather package is not installed. Please use install.packages('feather')")
+      upload_error_handler(objname, "#### The feather package is not installed. Please use install.packages('feather')")
     } else {
       robj <- feather::read_feather(uFile) %>%
         set_attr("description", feather::feather_metadata(uFile)$description)
       if (is(robj, "try-error")) {
-        upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in feather format.")
+        upload_error_handler(objname, "#### There was an error loading the data. Please make sure the data are in feather format.")
       } else {
-        r_data[[objname]] <- robj %>% {set_colnames(., make.names(colnames(.)))}
+        r_data[[objname]] <- robj
+        ## waiting for https://github.com/wesm/feather/pull/326
+        # cmd <- paste0(objname, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", objname, "\", desc = feather::feather_metadata(\"", pp$rpath, "\")$description)")
+        cmd <- glue('{objname} <- feather::read_feather({pp$rpath} columns = c())')
       }
     }
   } else if (ext %in% c("tsv", "csv", "txt")) {
-    r_data[[objname]] <- load_csv(uFile, header = header, n_max = n_max, sep = sep, dec = dec, saf = man_str_as_factor) %>% {
-      if (is.character(.)) upload_error_handler(objname, "### There was an error loading the data") else .
-    } %>% {set_colnames(., make.names(colnames(.)))}
+    r_data[[objname]] <- load_csv(
+        uFile, delim = sep, col_names = header, n_max = n_max, 
+        dec = dec, saf = man_str_as_factor
+    ) %>% 
+      {if (is.character(.)) upload_error_handler(objname, "#### There was an error loading the data") else .} 
+    n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
+    if (ext == "csv" && sep == "," && dec == "." && header) {
+      cmd <- glue('{objname} <- readr::read_csv({pp$rpath}, n_max = {n_max})') 
+    } else {
+      cmd <- glue('
+        {objname} <- readr::read_delim(
+         {pp$rpath}, delim = "{sep}",
+          locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{sep}"),
+          col_names = {header}, n_max = {n_max}
+        )') 
+    }
+    if (man_str_as_factor) cmd <- paste0(cmd, " %>%\n  toFct()")
   } else if (ext != "---") {
-    ret <- paste0("### The selected filetype is not currently supported (", fext, ").")
+    ret <- glue('#### The selected filetype is not currently supported ({fext})')
     upload_error_handler(objname, ret)
   }
 
   shiny::makeReactiveBinding(objname, env = r_data)
-  r_info[[paste0(objname, "_descr")]] <- attr(r_info[[objname]], "description")
+  r_info[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
+  if (!is_empty(cmd)) {
+    cn <- colnames(r_data[[objname]])
+    fn <- radiant.data::fix_names(cn)
+    if (!identical(cn, fn)) {
+      colnames(r_data[[objname]]) <- fn
+      cmd <- paste0(cmd, " %>%\n  fix_names()")
+    }
+    # cmd <- paste0(cmd, "\nregister(\"", objname, "\")")
+    cmd <- glue('{cmd}\nregister("{objname}")')
+  }
+  r_info[[paste0(objname, "_lcmd")]] <- cmd
   r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
 }

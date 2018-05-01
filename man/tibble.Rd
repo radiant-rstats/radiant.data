@@ -2,7 +2,10 @@
 % Please edit documentation in R/aaa.R
 \name{tibble}
 \alias{tibble}
-\title{Exporting tibble}
+\title{Exporting tibble from tibble}
 \description{
-Exporting tibble
+Exporting tibble from tibble
+}
+\details{
+See \code{\link[tibble]{tibble}} in the \code{tibble} package for more details
 }

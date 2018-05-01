@@ -38,11 +38,15 @@ output$ui_data <- renderUI({
       mainPanel(
         tabsetPanel(id = "tabs_data",
           tabPanel("Manage",
-            conditionalPanel("input.dman_preview == 'preview'", h2("Data preview"), htmlOutput("htmlDataExample")),
-            conditionalPanel("input.dman_preview == 'str'", h2("Data structure"), verbatimTextOutput("strData")),
-            conditionalPanel("input.dman_preview == 'summary'", h2("Data summary"), verbatimTextOutput("summaryData")),
-            conditionalPanel("input.man_add_descr == false", uiOutput("dataDescriptionHTML")),
-            conditionalPanel("input.man_add_descr == true", uiOutput("dataDescriptionMD"))
+            conditionalPanel("input.dman_preview == 'preview'", h2("Data preview"), htmlOutput("man_example")),
+            conditionalPanel("input.dman_preview == 'str'", h2("Data structure"), verbatimTextOutput("man_str")),
+            conditionalPanel("input.dman_preview == 'summary'", h2("Data summary"), verbatimTextOutput("man_summary")),
+            conditionalPanel(condition = "input.man_show_log == true",
+              h2("Data load and save commands"), 
+              uiOutput("ui_man_log")
+            ),
+            conditionalPanel("input.man_add_descr == false", uiOutput("man_descr_html")),
+            conditionalPanel("input.man_add_descr == true", uiOutput("man_descr_md"))
           ),
           tabPanel("View",
             download_link("dl_view_tab"),

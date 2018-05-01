@@ -6,3 +6,6 @@
 \description{
 Exporting rownames_to_column from tibble
 }
+\details{
+See \code{\link[tibble]{rownames}} in the \code{tibble} package for more details
+}

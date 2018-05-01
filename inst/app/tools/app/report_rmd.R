@@ -248,7 +248,8 @@ output$ui_rmd_load <- renderUI({
 })
 
 output$ui_rmd_read_files <- renderUI({
-  if (isTRUE(getOption("radiant.local", FALSE))) {
+  if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  # if (isTRUE(getOption("radiant.local", FALSE))) {
     actionButton("rmd_read_files", "Read files", icon = icon("book"), class = "btn-primary")
   } else {
     invisible()
@@ -440,17 +441,8 @@ output$rmd_knitted <- renderUI({
   rmd_knitted()
 })
 
-if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-  ## based on http://shiny.rstudio.com/gallery/download-knitr-reports.html
-  output$rmd_save <- downloadHandler(
-    filename = function() {
-      report_save_filename(type = "rmd", full.name = FALSE)
-    },
-    content = function(file) {
-      report_save_content(file, type = "rmd")
-    }
-  )
-} else {
+if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+# if (isTRUE(getOption("radiant.local", FALSE))) {
   observeEvent(input$rmd_save, {
     ## saving rmd report to disk
     path <- report_save_filename(type = "rmd", full.name = TRUE)
@@ -465,11 +457,22 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
       report_save_content(path, type = "rmd")
     }
   })
+} else {
+  ## based on http://shiny.rstudio.com/gallery/download-knitr-reports.html
+  output$rmd_save <- downloadHandler(
+    filename = function() {
+      report_save_filename(type = "rmd", full.name = FALSE)
+    },
+    content = function(file) {
+      report_save_content(file, type = "rmd")
+    }
+  )
 }
 
 observeEvent(input$rmd_load, {
   ## loading report from disk
-  if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
+  if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+  # if (isTRUE(getOption("radiant.local", FALSE))) {
     path <- rstudioapi::selectFile(
       caption = "Select .Rmd, .md, or .html",
       filter = "Select .Rmd, .md, or .html (*)",
@@ -494,12 +497,12 @@ observeEvent(input$rmd_load, {
         rmd <- paste0(rmd$rmd, collapse = "\n")
         r_state$radiant_rmd_name <<- sub("(\\.nb\\.html|\\.html)", ".Rmd", pp$path)
       } else {
-        rmd <- "### The selected html file could not be parsed and does not contain rmarkdown content"
+        rmd <- "#### The selected html file could not be parsed and does not contain rmarkdown content"
       }
     } else {
       rmd <- paste0(readLines(pp$path), collapse = "\n")
-
-      if (isTRUE(getOption("radiant.launch", "browser") == "viewer")) {
+      if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+      # if (isTRUE(getOption("radiant.local", FALSE))) {
         r_state$radiant_rmd_name <<- pp$path
       } else {
         r_state$radiant_rmd_name <<- pp$filename

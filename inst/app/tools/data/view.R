@@ -180,16 +180,8 @@ dl_view_tab <- function(file) {
   ) %>% write.csv(file, row.names = FALSE)
 }
 
-if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-  output$dl_view_tab <- downloadHandler(
-    filename = function() {
-      paste0(input$dataset, "_view.csv")
-    },
-    content = function(file) {
-      dl_view_tab(file)
-    }
-  )
-} else {
+# if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+if (isTRUE(getOption("radiant.local", FALSE))) {
   observeEvent(input$dl_view_tab, {
     path <- rstudioapi::selectFile(
       caption = "Download data",
@@ -204,6 +196,15 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
       dl_view_tab(path)
     }
   })
+} else {
+  output$dl_view_tab <- downloadHandler(
+    filename = function() {
+      paste0(input$dataset, "_view.csv")
+    },
+    content = function(file) {
+      dl_view_tab(file)
+    }
+  )
 }
 
 .dataviewer <- reactive({
@@ -241,7 +242,7 @@ if (isTRUE(getOption("radiant.launch", "browser") == "browser")) {
   xcmd <- paste0(xcmd, ", nr = 100) %>% render()")
 
   ## create the command to filter and sort the data
-  cmd <- paste0(cmd, "### filter and sort the dataset\n", input$view_name, " <- ", input$dataset)
+  cmd <- paste0(cmd, "## filter and sort the dataset\n", input$view_name, " <- ", input$dataset)
   if (input$show_filter && !is_empty(input$data_filter)) {
     cmd <- paste0(cmd, " %>%\n  filter(", input$data_filter, ")")
   }
