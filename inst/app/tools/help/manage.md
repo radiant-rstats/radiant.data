@@ -52,4 +52,4 @@ If data are loaded in memory that you no longer need in the current session chec
 
 ### Using commands to load and save data
 
-The `loadr` command can be used in _Report > Rmd_ or _Report > R_ to load data from a file directly into the active Radiant session and add it to the `Datasets` dropdown. The `saver` command can be used to extract  data from Radiant and save it to disk. Data can be loaded or saved as `rds` or `rda` format depending on the file extension chosen. These commands can also be used without the Radiant browser interface. See `?loadr` and `?saver` for details.
+R-code can be used in _Report > Rmd_ or _Report > R_ to load data from a file directly into the active Radiant session. Use `register("insert-dataset-name")` to add a dataset to the `Datasets` dropdown. R-code can also be used to extract data from Radiant and save it to disk. 

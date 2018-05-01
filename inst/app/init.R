@@ -8,10 +8,10 @@
 # options(shiny.error = recover)
 # options(warn = 2)
 
-output$is_browser <- reactive({
-  isTRUE(getOption("radiant.launch", "browser") == "browser")
-})
-outputOptions(output, "is_browser", suspendWhenHidden = FALSE)
+# output$is_browser <- reactive({
+#   isTRUE(getOption("radiant.launch", "browser") == "browser")
+# })
+# outputOptions(output, "is_browser", suspendWhenHidden = FALSE)
 
 remove_session_files <- function(st = Sys.time()) {
   fl <- list.files(

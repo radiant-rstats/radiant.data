@@ -12,7 +12,7 @@ if (is.null(getOption("radiant.launch"))) {
   ## also use Rstudio's file dialog if opening in Window
   if (exists(".rs.readUiPref")) {
     if (is.null(.rs.readUiPref("shiny_viewer_type"))) {
-      .rs.writeUiPref("shiny_viewer_type", 3)
+      .rs.writeUiPref("shiny_viewer_type", 2)
       options(radiant.launch = "viewer")
     } else if (.rs.readUiPref("shiny_viewer_type") == 2) {
       options(radiant.launch = "viewer")

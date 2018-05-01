@@ -248,12 +248,12 @@ output$ui_Manage <- renderUI({
         uiOutput("ui_man_save_data")
       )
     ),
-    conditionalPanel(
-      "output.is_browser == false",
+    # conditionalPanel(
+      # "output.is_browser == false",
       wellPanel(
         checkboxInput("man_show_log", "Show R-code", FALSE)
-      )
-    ),
+      ),
+    # ),
     wellPanel(
       checkboxInput("man_show_remove", "Remove data from memory", FALSE),
       conditionalPanel(
@@ -552,7 +552,7 @@ observeEvent(input$url_csv_load, {
       saf <- input$man_str_as_factor
       n_max <- input$man_n_max
       n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
-      if (delim == "," && dec == "." && col_names) {
+      if (delim == "," && dec == "." && col_names == FALSE) {
         cmd <- glue('
           {objname} <- readr::read_csv(
             "{url_csv}", 
@@ -562,9 +562,8 @@ observeEvent(input$url_csv_load, {
         cmd <- glue('
           {objname} <- readr::read_delim(
             "{url_csv}", 
-            delim = "{delim}",
-            locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{delim}"),
-            col_names = {col_names}, n_max = {n_max}
+            delim = "{delim}", col_names = {col_names}, n_max = {n_max},
+            locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{delim}")
           )') 
       }
       if (saf) cmd <- glue('{cmd} %>% toFct()')
@@ -855,6 +854,7 @@ man_show_log <- reactive({
     }
     cmd
   } else {
+    # man_show_log_modal()
     "## No R-code available"
   }
 })
@@ -875,27 +875,43 @@ output$ui_man_log <- renderUI({
 
 observe({
   input$man_show_log
+  if (isTRUE(input$man_show_log) && isTRUE(getOption("radiant.launch", "browser") == "browser")) {
+    man_show_log_modal()
+  }
   updateTextAreaInput(session, "man_log", value = man_show_log())
 })
+
+man_show_log_modal <- function() {
+  showModal(
+    modalDialog(
+      title = "Cannot generate R-code to load and save data",
+      span(
+        "R-code to load and save data cannot be reported when using 
+         radiant with an (external) web browser (e.g., chrome). This 
+         is due to the fact that the web browser's file dialog does 
+         not provide file path information for security reasons.", 
+         br(), br(), 
+         "To generate R-code to load and save data, macOS users can 
+         start Radiant in an Rstudio Window or in the Rstudio Viewer
+         (see Rstudio Addins drop down). On Windows you should start 
+         Radiant in the Rstudio Viewer. Once Rstudio, Version 1.2 is 
+         available, Windows users will also be able to use Radiant 
+         conveniently in an Rstudio Window. The same applies for 
+         users on Linux or using Rstudio Server (i.e., use Rstudio 
+         Viewer from the Addins drop down)"
+      ),
+      footer = modalButton("OK"),
+      size = "s",
+      easyClose = TRUE
+    )
+  )
+}
 
 observeEvent(input$manage_report, {
   if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
   # if (isTRUE(getOption("radiant.local", FALSE))) {
     update_report(cmd = man_show_log(), outputs = NULL, figs = FALSE)
   } else {
-    showModal(
-      modalDialog(
-        title = "Cannot generate R-code to load and save data",
-        span(
-          "R-code to load and save data cannot be reported when using 
-           radiant with an (external) web browser (e.g., chrome). The
-           web browser's file dialog does not provide file path 
-           information for security reasons"
-        ),
-        footer = modalButton("OK"),
-        size = "s",
-        easyClose = TRUE
-      )
-    )
+    man_show_log_modal()
   }
 })

@@ -105,9 +105,9 @@ load_user_data <- function(
     } else {
       cmd <- glue('
         {objname} <- readr::read_delim(
-         {pp$rpath}, delim = "{sep}",
-          locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{sep}"),
-          col_names = {header}, n_max = {n_max}
+          {pp$rpath}, 
+          delim = "{sep}", col_names = {header}, n_max = {n_max},
+          locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{sep}")
         )') 
     }
     if (man_str_as_factor) cmd <- paste0(cmd, " %>%\n  toFct()")

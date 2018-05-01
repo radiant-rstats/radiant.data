@@ -16,7 +16,7 @@
 #' }
 #'
 #' @export
-launch <- function(package = "radiant.data", run = "browser") {
+launch <- function(package = "radiant.data", run = "viewer") {
   ## check if package attached
   if (!paste0("package:", package) %in% search()) {
     if (!suppressWarnings(suppressMessages(suppressPackageStartupMessages(require(package, character.only = TRUE)))))  {
@@ -46,10 +46,8 @@ launch <- function(package = "radiant.data", run = "browser") {
   } else if (run == "window") {
     message(sprintf("\nStarting %s in an Rstudio window ...\n\nUse %s::%s() to open %s in the default browser or %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer", package, package, package, package, package, package, package))
     os_type <- Sys.info()["sysname"]
-    if (os_type == "Windows" && rstudioapi::getVersion() < "1.2") {
-      message(sprintf("\nUsing radiant in an Rstudio Window on Windows works best in a newer version of Rstudio (i.e., version > 1.2). See https://dailies.rstudio.com/ for the latest version. Alternatively, use %s::%s_viewer()", package, package))
-    } else if (os_type == "Linux") {
-      message(sprintf("\nUsing radiant in an Rstudio Window is not recommended on Linux. Use %s::%s_viewer() instead", package, package))
+    if (os_type != "Darwin" && rstudioapi::getVersion() < "1.2") {
+      message(sprintf("\nUsing Radiant in an Rstudio Window works best in a newer version of Rstudio (i.e., version > 1.2). See https://dailies.rstudio.com/ for the latest version. Alternatively, use %s::%s_viewer()", package, package))
     }
     options(radiant.launch = "window")
     ## using eval(parse(text = ...)) to avoid foreign function call warnings
