@@ -1,118 +1,160 @@
-# CHANGES IN radiant.data 0.9.3.1
+# radiant.data 0.9.3.3
+
+## Major changes
 
 * When using radiant with Rstudio Viewer or in an Rstudio Window, loading and saving data through _Data > Manage_ generates R-code the user can add to _Report > Rmd_ or _Report > R_. Clicking the `Show R-code` checkbox displays the R-code used to load or save the current dataset
-* Added `load_clip` and `save_clip` to load and save data to the clipboard on Windows and macOS
 * Various changes to the code to accomodate the use of `shiny::makeReactiveBinding`. The advantage is that the code generated for _Report > Rmd_ and _Report > R_ will no longer have to use a list (`r_data`) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well
 * Removed `loadr`, `saver`, `loadcsv_url`, `loadrds_url`, and `make_funs` functions as they are no longer needed
 * Deprecated `mean_rm`, `median_rm`, `min_rm`, `max_rm, `sd_rm`, `var_rm, and `sum_rm` functions as they are no longer needed 
+
+## Minor changes
+
+* Added `load_clip` and `save_clip` to load and save data to the clipboard on Windows and macOS
 * Improved auto completion in _Report > Rmd_ and _Report > R_
 * Maintain, store, and clean the settings of the interactive table in _Data > View_
 * Address closing Rstudio Window issue (https://github.com/rstudio/shiny/issues/2033#issuecomment-386438821)
 
-# CHANGES IN radiant.data 0.9.2.3
+# radiant.data 0.9.2.3
+
+## Major changes
+
+* _Report > Rmd_ and _Report > R_ will now be evaluated the `r_data` environment. This means that the return value from `ls()` will be much cleaner
+
+## Minor changes
 
 * Add option to load files with extension .rdata or .tsv using `loadr` which add that data to the Datasets dropdown
 * `visualize` will default to a scatter plot if `xvar` and `yvar` are specified but no plot `type` is provided in the function call
 * Improvements to `read_files` function to interactively generate R-code (or Rmarkdown code-chunks) to read files in various format (e.g., SQLite, rds, csv, xlsx, css, jpg, etc.). Supports relative paths and uses `find_dropbox()` and `find_gdrive()` when applicable
-* _Report > Rmd_ and _Report > R_ will now be evaluated the `r_data` environment. This means that the return value from `ls()` will be much cleaner
 
-# CHANGES IN radiant.data 0.9.2.2
+# radiant.data 0.9.2.2
+
+## Minor changes
 
 * Require `shinyAce` 0.3.0
 * Export `read_files` function to interactively generate R-code or Rmarkdown code-chunks to read files in various format (e.g., SQLite, rds, csv, xlsx, css, jpg, etc.). Supports relative paths and uses `find_dropbox()` and `find_gdrive()` when applicable
 
-# CHANGES IN radiant.data 0.9.2
+# radiant.data 0.9.2
+
+## Minor changes
 
 * Addins option to start app in Rstudio window
 * Upload and download data using the Rstudio file browser. Allows using relative paths to files (e.g., data or images inside an Rstudio project)
 
 # CHANGES IN radiant.data 0.9.0.22
 
+## Bug fixes
+
 * Fix for [#43](https://github.com/radiant-rstats/radiant/issues/43) where scatter plot was not shown for a dataset with less than 1,000 rows
-* Updated equation example in _Report > Rmd_
 * Fix for _Report > Rmd_ and _Report > R_ when R-code or Rmarkdown is being pulled from the Rstudio editor
 
-# CHANGES IN radiant.data 0.9.0.17
+## Minor changes
+
+* Updated equation example in _Report > Rmd_
+
+# radiant.data 0.9.0.17
+
+## Minor changes
 
 * Use thousand separator for `summary.pivotr` and `summary.explore`
 * Fix in code-generation for `table2data`
 
-# CHANGES IN radiant.data 0.9.0.16
+# radiant.data 0.9.0.16
+
+## Minor changes
 
 * Changed license for help files and images for radiant.data to [CC-BY-SA](https://creativecommons.org/licenses/by-sa/4.0/legalcode)
 
-# CHANGES IN radiant.data 0.9.0.15
+# radiant.data 0.9.0.15
+
+## Minor changes
 
 * Allow all textarea inputs and multi-select inputs to be resized manually by the user
-* Fix for `rounddf` to ignore dates
 * Use 200 dpi for plots in _Report > Rmd_ and _Report > R_
 * _Data > Vizualize_ now has an option to select a sample of data for scatter plots (e.g., 1K, 5K, 10K, or All)
 
-# CHANGES IN radiant.data 0.9.0.13
+## Bug fixes
+
+* Fix for `rounddf` to ignore dates
+
+# radiant.data 0.9.0.13
+
+## Minor changes
 
 * Apply `fixMS` to replace curly quotes, em dash, etc. when using _Data > Transform > Create_
 * Option to set number of decimals to show in _Data > View_ 
 * Improved number formatting in interactive tables in _Data > View_, _Data > Pivot_, and _Data > Explore_
-* Fix for decimals to show in interactive tables _Report > Rmd_ and saved HTML reports
 * Option to include an interactive view of a dataset in _Report > Rmd_. By default, the number of rows is set to 100 as, most likely, the user will not want to embed a large dataset in save HTML report
-* Better error messages for `xtile` and when binning data with too many groups
 * _Data > Transform_ will leave variables selected, unless switching to `Create` or `Spread`
-* Fix for variable type warnings in _Data > Pivot_ when filtering the table
 * Switch focus to editor in _Report > Rmd_ and _Report > R_ when no other input has focus
+
+## Bug fixes
+
+* Fix for decimals to show in interactive tables _Report > Rmd_ and saved HTML reports
+* Better error messages for `xtile` and when binning data with too many groups
+* Fix for variable type warnings in _Data > Pivot_ when filtering the table
 * Fix for \ in equations in _Report > Rmd_
 
-# CHANGES IN radiant.data 0.9.0.7
+# radiant.data 0.9.0.7
+
+## Minor changes
 
 * Allow response variables with NA values in _Model > Logistic regression_ and other classification models
 * Support logicals in code generation from _Data > View_
 * Track window size using `input$get_screen_width`
-* Fix to include `DiagrammeR` based plots in Rmarkdown reports
 * Focus on editor when switching to _Report > Rmd_ or _Report > R_ so generated code is shown immediately and the user can navigate and type in the editor without having to click first
+* Add information about the first level when plotting a bar chart with a categorical variable on the Y-axis (e.g., mean(buyer {yes}))
+
+## Bug fixes 
+
 * Cleanup now also occurs when the stop button is used in Rstudio to close the app
+* Fix to include `DiagrammeR` based plots in Rmarkdown reports
 * Fix in `read_files` for SQLite data names
 * De-activate spellcheck autocorrection in `selectizeInput` in Rstudio Viewer [shiny #1916](https://github.com/rstudio/shiny/issues/1916)
 * Fix to allow selecting and copying text output from _Report > Rmd_ and _Report > R_
 * Remove "fancy" quotes from filters
-* Add information about the first level when plotting a bar chart with a categorical variable on the Y-axis (e.g., mean(buyer {yes}))
 * Known issue: The Rstudio viewer may not always close the viewer window when trying to stop the application with the `Stop` link in the navbar. As a work-around, use Rstudio's stop buttons instead. 
 
-# CHANGES IN radiant.data 0.9.0
+# radiant.data 0.9.0
 
-* Show Rstudio project information in navbar if available
+## Major changes
+
 * If Rstudio project is used _Report > Rmd_ and _Report > R_ will use the project directory as base. This allows users to use relative paths and making it easier to share (reproducible) code
 * Specify options in .Rprofile for upload memory limit and running _Report > Rmd_ on server
 * `find_project` function based on `rstudioapi`
-* Overflow `pre` and `code` blocks in HTML reports generated in _Report > Rmd_
-* Read rdata files through _Data > Manage_
-* _Report > Rmd_ option to view Editor, Preview, or Both
 * _Report > Rmd_ Read button to generate code to load various types of data (e.g., rda, rds, xls, yaml, feather)
 * _Report > Rmd_ Read button to generate code to load various types of files in report (e.g., jpg, png, md, Rmd, R). If Radiant was started from an Rstudio project, the file paths used will be relative to the project root. Paths to files synced to local Dropbox or Google Drive folder will use the `find_dropbox` and `find_gdrive` functions to enhances reproducibility.
 * _Report > Rmd_ Load Report button can be used to load Rmarkdown file in the editor. It will also extract the source code from Notebook and HTML files with embedded Rmarkdown
 * _Report > Rmd_ will read Rmd directly from Rstudio when "To Rstudio (Rmd)" is selected. This will make it possible to use Rstudio Server Pro's _Share project_ option for realtime collaboration in Radiant
 * Long lines of code generated for _Report > Rmd_ will be wrapped to enhance readability 
 * _Report > R_ is now equivalent to _Report > Rmd_ but in R-code format
-* Enhance keyboard shortcuts
+* _Report > Rmd_ option to view Editor, Preview, or Both
+* Show Rstudio project information in navbar if available
+
+## Minor changes
+
+* Overflow `pre` and `code` blocks in HTML reports generated in _Report > Rmd_
+* Read rdata files through _Data > Manage_
+* Enhanced keyboard shortcuts
 * Enhanced editing features in _Report > Rmd_ and _Report > R_ based on updates to `shinyAce`
 
-# CHANGES IN radiant.data 0.8.7.8
+# radiant.data 0.8.7.8
+
+## Minor changes
 
 * Added preview options to _Data > Manage_ based on https://github.com/radiant-rstats/radiant/issues/30
 * Add selected dataset name as default table download name in _Data > View_, _Data > Pivot_, and _Data > Explore_
 * Use "stack" as the default for histograms and frequency charts in _Data > Visualize_
-* Fix for large numbers in _Data > Explore_ that could cause an integer overflow
 * Cleanup `Stop & Report` option in navbar
-
-# CHANGES IN radiant.data 0.8.7.4
-
 * Upgraded tidyr dependency to 0.7
-
-# CHANGES IN radiant.data 0.8.7.1
-
 * Upgraded dplyr dependency to 0.7.1
 
-# CHANGES IN radiant.data 0.8.6
+## Bug fixes
 
-## NEW FEATURES
+* Fix for large numbers in _Data > Explore_ that could cause an integer overflow
+
+# radiant.data 0.8.6
+
+## Minor changes
 
 * Export `ggplotly` from `plotly` for interactive plots in _Report > Rmd_
 * Export `subplot` from `plotly` for grids of interactive plots in _Report > Rmd_
@@ -123,14 +165,14 @@
 * Added `find_gdrive` to determine the path to a user's local Google Drive folder if available
 * `fixMs` for encoding in reports on Windows
 
-## BUG FIXES
+## Bug fixes
 
 * Chi-sqaure results were not displayed correctly in _Data > Pivot_
 * Fix for `state_multiple`
 
-# CHANGES IN radiant.data 0.8.1
+# radiant.data 0.8.1
 
-## NEW FEATURES
+## Minor changes
 
 - Specify the maximum number of rows to load for a csv and csv (url) file through _Data > Manage_
 - Support for loading and saving feather files, including specifying the maximum number of rows to load through _Data > Manage_
@@ -150,7 +192,7 @@
 - Improved documentation on how to customize plots in _Report > Rmd_
 - Keyboard short-cut to put code into _Report > Rmd_ (ALT-enter)
 
-## BUG FIXES
+## Bug fixes
 
 - When clicking the `rename` button, without changing the name, the dataset was set to NULL (thanks @kmezhoud, https://github.com/radiant-rstats/radiant/issues/5)
 - Replace ext with .ext in `mutate_each` function call
