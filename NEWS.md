@@ -7,6 +7,7 @@
 * Deprecated `mean_rm`, `median_rm`, `min_rm`, `max_rm, `sd_rm`, `var_rm, and `sum_rm` functions as they are no longer needed 
 * Improved auto completion in _Report > Rmd_ and _Report > R_
 * Maintain, store, and clean the settings of the interactive table in _Data > View_
+* Address closing Rstudio Window issue (https://github.com/rstudio/shiny/issues/2033#issuecomment-386438821)
 
 # CHANGES IN radiant.data 0.9.2.3
 

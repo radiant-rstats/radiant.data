@@ -58,9 +58,9 @@ import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
 ## list of function to suggest during autocomplete in Report > Rmd and Report > R
 ## moved to init.R
 init_data <- function(env = r_data) {
-  ## Based on discussion with Joe Cheng: Datasets can change over time 
+  ## Based on discussion with Joe Cheng: Datasets can change over time
   ## so the data needs to be reactive value so the other reactive
-  ## functions and outputs that depend on these datasets will know when 
+  ## functions and outputs that depend on these datasets will know when
   ## they are changed
 
   ## Using an environment to assign data
@@ -426,7 +426,7 @@ options(
       navbarMenu("", icon = icon("power-off"),
         tabPanel(
           actionLink(
-            "stop_radiant", "Stop", icon = icon("stop"), 
+            "stop_radiant", "Stop", icon = icon("stop"),
             onclick = "setTimeout(function(){window.close();}, 100); "
           )
         ),
