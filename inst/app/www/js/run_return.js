@@ -77,14 +77,19 @@ $(document).keydown(function(event) {
   $("input:text").attr("spellcheck", "false");
 });
 
-// from https://stackoverflow.com/a/33251536/1974918 by Dean Attali
-$(document).on("shiny:connected", function() {
-  Shiny.onInputChange("get_screen_width", $(window).width());
-});
-
 $(function(){
   $("#state_load_link").on('click', function(e){
     e.preventDefault();
     $("#state_load").trigger('click');
   });
+});
+
+// from https://stackoverflow.com/a/33251536/1974918 by Dean Attali
+$(document).on("shiny:connected", function() {
+  Shiny.onInputChange("get_screen_width", $(window).width());
+});
+
+// from https://github.com/rstudio/shiny/issues/2033#issuecomment-386438821
+$(document).on('shiny:disconnected', function() {
+  window.parent.postMessage('disconnected', '*');
 });

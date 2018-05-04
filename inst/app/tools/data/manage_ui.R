@@ -884,21 +884,21 @@ observe({
 man_show_log_modal <- function() {
   showModal(
     modalDialog(
-      title = "Cannot generate R-code to load and save data",
+      title = "Generating R-code to load and save data",
       span(
-        "R-code to load and save data cannot be reported when using 
-         radiant with an (external) web browser (e.g., chrome). This 
-         is due to the fact that the web browser's file dialog does 
+        "R-code to load and save data is not generated and reported 
+         when using radiant with an (external) web browser (e.g., chrome).
+         This is due to the fact that the web browser's file dialog does 
          not provide file path information for security reasons.", 
          br(), br(), 
          "To generate R-code to load and save data, macOS users can 
          start Radiant in an Rstudio Window or in the Rstudio Viewer
-         (see Rstudio Addins drop down). On Windows you should start 
-         Radiant in the Rstudio Viewer. Once Rstudio, Version 1.2 is 
+         (see Rstudio Addins drop down). On Windows, start Radiant in 
+         the Rstudio Viewer. Once Rstudio, Version 1.2 is 
          available, Windows users will also be able to use Radiant 
          conveniently in an Rstudio Window. The same applies for 
-         users on Linux or using Rstudio Server (i.e., use Rstudio 
-         Viewer from the Addins drop down)"
+         users on Linux or using Rstudio Server (i.e., use 'Start 
+         radiant (viewer)' from the Addins drop down)"
       ),
       footer = modalButton("OK"),
       size = "s",
