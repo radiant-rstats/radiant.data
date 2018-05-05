@@ -1,0 +1,7 @@
+---
+title: "Transform variables (Data > Transform)"
+author: "Vincent R. Nijs</br>Rady School of Management (UCSD)"
+---
+
+```{r child = "_transform.Rmd"}
+```

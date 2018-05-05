@@ -278,13 +278,15 @@ summary.pivotr <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
+#' \dontrun{
 #' pivotr(diamonds, cvars = "cut") %>% dtab()
 #' pivotr(diamonds, cvars = c("cut","clarity")) %>% dtab(format = "color_bar")
-#' ret <-  pivotr(diamonds, cvars = c("cut","clarity"), normalize = "total") %>%
-#'    dtab(format = "color_bar", perc = TRUE)
+#' pivotr(diamonds, cvars = c("cut","clarity"), normalize = "total") %>%
+#'   dtab(format = "color_bar", perc = TRUE)
+#' }
 #'
-#' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
-#' @seealso \code{\link{summary.pivotr}} to print a plain text table
+#' @seealso \code{\link{pivotr}} to create the pivot table
+#' @seealso \code{\link{summary.pivotr}} to print the table
 #'
 #' @export
 dtab.pivotr <- function(
@@ -414,9 +416,9 @@ dtab.pivotr <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' pivotr(diamonds, cvars = "cut") %>% plot
-#' pivotr(diamonds, cvars = c("cut","clarity")) %>% plot
-#' pivotr(diamonds, cvars = c("cut","clarity","color")) %>% plot
+#' pivotr(diamonds, cvars = "cut") %>% plot()
+#' pivotr(diamonds, cvars = c("cut","clarity")) %>% plot()
+#' pivotr(diamonds, cvars = c("cut","clarity","color")) %>% plot()
 #'
 #' @seealso \code{\link{pivotr}} to generate summaries
 #' @seealso \code{\link{summary.pivotr}} to show summaries

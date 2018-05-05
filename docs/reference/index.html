@@ -70,6 +70,45 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/pkgdown/combine.html">Combine data sets (Data &gt; Combine)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/explore.html">Summarize and explore your data (Data &gt; Explore)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/manage.html">Loading and Saving data (Data &gt; Manage)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/pivotr.html">Create pivot tables (Data &gt; Pivot)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/report_r.html">Create a reproducible report using R (Report &gt; R)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/report_rmd.html">Create a reproducible report using Rmarkdown (Report &gt; Rmd)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/state.html">Loading and Saving the State of the application</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/transform.html">Transform variables (Data &gt; Transform)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/view.html">View data in an interactive table (Data &gt; View)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/visualize.html">Visualize data (Data &gt; Visualize)</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -107,11 +146,147 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-starting-radiant" class="hasAnchor"><a href="#section-starting-radiant" class="anchor"></a>Starting radiant</h2>
+          <p class="section-desc"><p>Functions used to start radiant shiny apps</p></p>
         </th>
       </tr>
       <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="launch.html">launch()</a></code> </p>
+        </td>
+        <td><p>Launch radiant apps</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="radiant.data.html">radiant.data()</a></code> </p>
+        </td>
+        <td><p>radiant.data</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="radiant.data_viewer.html">radiant.data_viewer()</a></code> </p>
+        </td>
+        <td><p>Launch the radiant.data app in the Rstudio viewer</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="radiant.data_window.html">radiant.data_window()</a></code> </p>
+        </td>
+        <td><p>Launch the radiant.data app in an Rstudio window</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-manage" class="hasAnchor"><a href="#section-data-manage" class="anchor"></a>Data &gt; Manage</h2>
+          <p class="section-desc"><p>Functions used with Data &gt; Manage</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="choose_dir.html">choose_dir()</a></code> </p>
+        </td>
+        <td><p>Select a directory. Uses JavaScript on Mac, utils::choose.dir on Windows, and dirname(file.choose()) on Linux</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="choose_files.html">choose_files()</a></code> </p>
+        </td>
+        <td><p>Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="describe.html">describe()</a></code> </p>
+        </td>
+        <td><p>Show dataset desription, if available, in html form in Rstudio viewer or default browser</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="find_dropbox.html">find_dropbox()</a></code> </p>
+        </td>
+        <td><p>Find a user's Dropbox folder</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="find_gdrive.html">find_gdrive()</a></code> </p>
+        </td>
+        <td><p>Find a user's Google Drive folder</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="find_project.html">find_project()</a></code> </p>
+        </td>
+        <td><p>Find the rstudio project directory</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="fix_names.html">fix_names()</a></code> </p>
+        </td>
+        <td><p>Make column names that are valid in R</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="getdata.html">getdata()</a></code> </p>
+        </td>
+        <td><p>Get data for analysis functions</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="load_clip.html">load_clip()</a></code> </p>
+        </td>
+        <td><p>Load data through clipboard on Windows or macOS</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="parse_path.html">parse_path()</a></code> </p>
+        </td>
+        <td><p>Parse path into useful components (used by read_files function)</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="read_files.html">read_files()</a></code> </p>
+        </td>
+        <td><p>Return code to read a file at the specified path. Will open a file browser if no path is provided</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="save_clip.html">save_clip()</a></code> </p>
+        </td>
+        <td><p>Save data.frame or tibble to clipboard on Windows or macOS</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="write_feather.html">write_feather()</a></code> </p>
+        </td>
+        <td><p>Workaround to add description using feather::write_feather</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-view" class="hasAnchor"><a href="#section-data-view" class="anchor"></a>Data &gt; View</h2>
+          <p class="section-desc"><p>Functions used with Data &gt; View</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="dtab.html">dtab()</a></code> </p>
+        </td>
+        <td><p>Method to create datatables</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="dtab.data.frame.html">dtab(<i>&lt;data.frame&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Create a DT table with bootstrap theme</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="filterdata.html">filterdata()</a></code> </p>
+        </td>
+        <td><p>Filter data with user-specified expression</p></td>
+      </tr><tr>
         <!--  -->
         <td>
           <p><code><a href="Search.html">Search()</a></code> </p>
@@ -120,10 +295,102 @@
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="add_class.html">add_class()</a></code> </p>
+          <p><code><a href="viewdata.html">viewdata()</a></code> </p>
         </td>
-        <td><p>Convenience function to add a class</p></td>
+        <td><p>View data in a shiny-app</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-visualize" class="hasAnchor"><a href="#section-data-visualize" class="anchor"></a>Data &gt; Visualize</h2>
+          <p class="section-desc"><p>Function used with Data &gt; Visualize</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="visualize.html">visualize()</a></code> </p>
+        </td>
+        <td><p>Visualize data using ggplot2 <a href='http://ggplot2.tidyverse.org'>http://ggplot2.tidyverse.org</a></p></td>
       </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="print.gtable.html">print(<i>&lt;gtable&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print/draw method for grobs produced by gridExtra</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-pivot" class="hasAnchor"><a href="#section-data-pivot" class="anchor"></a>Data &gt; Pivot</h2>
+          <p class="section-desc"><p>Functions used with Data &gt; Pivot</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="pivotr.html">pivotr()</a></code> </p>
+        </td>
+        <td><p>Create a pivot table using dplyr</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="dtab.pivotr.html">dtab(<i>&lt;pivotr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Make a pivot tabel in DT</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="plot.pivotr.html">plot(<i>&lt;pivotr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot method for the pivotr function</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="summary.pivotr.html">summary(<i>&lt;pivotr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Summary method for pivotr</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-explore" class="hasAnchor"><a href="#section-data-explore" class="anchor"></a>Data &gt; Explore</h2>
+          <p class="section-desc"><p>Functions used with Data &gt; Pivot</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="explore.html">explore()</a></code> </p>
+        </td>
+        <td><p>Explore data</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="dtab.explore.html">dtab(<i>&lt;explore&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Make a tabel of summary statistics in DT</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="flip.html">flip()</a></code> </p>
+        </td>
+        <td><p>Flip the DT table to put Function, Variable, or Group by on top</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="summary.explore.html">summary(<i>&lt;explore&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Summary method for the explore function</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-transform" class="hasAnchor"><a href="#section-data-transform" class="anchor"></a>Data &gt; Transform</h2>
+          <p class="section-desc"><p>Functions used with Data &gt; Transform</p></p>
+        </th>
+      </tr>
+      <tr>
         <!--  -->
         <td>
           <p><code><a href="as_character.html">as_character()</a></code> </p>
@@ -211,12 +478,6 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="as_tibble.html">as_tibble</a></code> </p>
-        </td>
-        <td><p>Exporting as_tibble from tibble</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="as_ymd.html">as_ymd()</a></code> </p>
         </td>
         <td><p>Convert input in year-month-day format to date</p></td>
@@ -235,231 +496,15 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="avengers.html">avengers</a></code> </p>
-        </td>
-        <td><p>Avengers</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="center.html">center()</a></code> </p>
         </td>
         <td><p>Center</p></td>
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="choose_dir.html">choose_dir()</a></code> </p>
-        </td>
-        <td><p>Select a directory. Uses JavaScript on Mac, utils::choose.dir on Windows, and dirname(file.choose()) on Linux</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="choose_files.html">choose_files()</a></code> </p>
-        </td>
-        <td><p>Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="ci_label.html">ci_label()</a></code> </p>
-        </td>
-        <td><p>Labels for confidence intervals</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="ci_perc.html">ci_perc()</a></code> </p>
-        </td>
-        <td><p>Values at confidence levels</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="combinedata.html">combinedata()</a></code> </p>
-        </td>
-        <td><p>Combine datasets using dplyr's bind and join functions</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="copy_all.html">copy_all()</a></code> </p>
-        </td>
-        <td><p>Source all package functions</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="copy_attr.html">copy_attr()</a></code> </p>
-        </td>
-        <td><p>Copy attributes from on object to another</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="copy_from.html">copy_from()</a></code> </p>
-        </td>
-        <td><p>Source for package functions</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="cv.html">cv()</a></code> </p>
         </td>
         <td><p>Coefficient of variation</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="describe.html">describe()</a></code> </p>
-        </td>
-        <td><p>Show dataset desription, if available, in html form in Rstudio viewer or default browser</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="diamonds.html">diamonds</a></code> </p>
-        </td>
-        <td><p>Diamond prices</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="does_vary.html">does_vary()</a></code> </p>
-        </td>
-        <td><p>Does a vector have non-zero variability?</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="dtab.html">dtab()</a></code> </p>
-        </td>
-        <td><p>Method to create datatables</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="dtab.character.html">dtab(<i>&lt;character&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Create a DT table with bootstrap theme</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="dtab.data.frame.html">dtab(<i>&lt;data.frame&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Create a DT table with bootstrap theme</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="dtab.explore.html">dtab(<i>&lt;explore&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Make a tabel of summary statistics in DT</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="dtab.pivotr.html">dtab(<i>&lt;pivotr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Make a pivot tabel in DT</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="empty_level.html">empty_level()</a></code> </p>
-        </td>
-        <td><p>Convert categorical variables to factors and deal with empty/missing values (used in pivotr and explore)</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="explore.html">explore()</a></code> </p>
-        </td>
-        <td><p>Explore data</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="filterdata.html">filterdata()</a></code> </p>
-        </td>
-        <td><p>Filter data with user-specified expression</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="find_dropbox.html">find_dropbox()</a></code> </p>
-        </td>
-        <td><p>Find a user's Dropbox folder</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="find_gdrive.html">find_gdrive()</a></code> </p>
-        </td>
-        <td><p>Find a user's Google Drive folder</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="find_project.html">find_project()</a></code> </p>
-        </td>
-        <td><p>Find a rstudio project directory</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="fixMS.html">fixMS()</a></code> </p>
-        </td>
-        <td><p>Replace Windows smart quotes etc.</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="fix_names.html">fix_names()</a></code> </p>
-        </td>
-        <td><p>Make column names that are valid in R</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="flip.html">flip()</a></code> </p>
-        </td>
-        <td><p>Flip the DT table to put Function, Variable, or Group by on top</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="formatdf.html">formatdf()</a></code> </p>
-        </td>
-        <td><p>Format a data.frame with a specified number of decimal places</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="formatnr.html">formatnr()</a></code> </p>
-        </td>
-        <td><p>Format a number with a specified number of decimal places, thousand sep, and a symbol</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="getclass.html">getclass()</a></code> </p>
-        </td>
-        <td><p>Get variable class</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="getdata.html">getdata()</a></code> </p>
-        </td>
-        <td><p>Get data for analysis functions</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="getsummary.html">getsummary()</a></code> </p>
-        </td>
-        <td><p>Create data.frame summary</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="ggplotly.html">ggplotly()</a></code> </p>
-        </td>
-        <td><p>Workaround to avoid messages from ggplotly</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="glance.html">glance</a></code> </p>
-        </td>
-        <td><p>Exporting glance from broom</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="glue.html">glue</a></code> </p>
-        </td>
-        <td><p>Exporting glue from glue</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="indexr.html">indexr()</a></code> </p>
-        </td>
-        <td><p>Find index corrected for missing values and filters</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="install_webshot.html">install_webshot()</a></code> </p>
-        </td>
-        <td><p>Install webshot and phantomjs</p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -493,30 +538,6 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="iterms.html">iterms()</a></code> </p>
-        </td>
-        <td><p>Create a vector of interaction terms</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="knit_print.html">knit_print</a></code> </p>
-        </td>
-        <td><p>Exporting knit_print from knitr</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="kurtosi.re.html">kurtosi</a></code> </p>
-        </td>
-        <td><p>Exporting kurtosi from psych</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="launch.html">launch()</a></code> </p>
-        </td>
-        <td><p>Launch radiant apps in default browser or Rstudio viewer</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="level_list.html">level_list()</a></code> </p>
         </td>
         <td><p>Generate list of levels and unique values</p></td>
@@ -526,18 +547,6 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
           <p><code><a href="ln.html">ln()</a></code> </p>
         </td>
         <td><p>Natural log</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="load_clip.html">load_clip()</a></code> </p>
-        </td>
-        <td><p>Load data through clipboard on Windows or macOS</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="load_csv.html">load_csv()</a></code> </p>
-        </td>
-        <td><p>Load a csv file</p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -625,135 +634,15 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="parse_path.html">parse_path()</a></code> </p>
-        </td>
-        <td><p>Parse path into useful components (used by read_files function)</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="pivotr.html">pivotr()</a></code> </p>
-        </td>
-        <td><p>Create a pivot table using dplyr</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="plot.character.html">plot(<i>&lt;character&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Don't try to plot strings</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="plot.pivotr.html">plot(<i>&lt;pivotr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Plot method for the pivotr function</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="print.gtable.html">print(<i>&lt;gtable&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print/draw method for grobs produced by gridExtra</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="prop.html">prop()</a></code> </p>
         </td>
         <td><p>Calculate proportion</p></td>
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="publishers.html">publishers</a></code> </p>
-        </td>
-        <td><p>Comic publishers</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="radiant.data-deprecated.html">mean_rm()</a></code> </p>
-        </td>
-        <td><p>Deprecated function(s) in the radiant.data package</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="radiant.data.html">radiant.data()</a></code> </p>
-        </td>
-        <td><p>radiant.data</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="radiant.data_viewer.html">radiant.data_viewer()</a></code> </p>
-        </td>
-        <td><p>Launch radiant.data in the Rstudio viewer</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="radiant.data_window.html">radiant.data_window()</a></code> </p>
-        </td>
-        <td><p>Launch radiant.data in the Rstudio window</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="read_files.html">read_files()</a></code> </p>
-        </td>
-        <td><p>Return code to read file at specified path. Will open a file browser of no path is provided</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="refactor.html">refactor()</a></code> </p>
         </td>
         <td><p>Remove/reorder levels</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="register.html">register()</a></code> </p>
-        </td>
-        <td><p>Register a data.frame or list in Radiant</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="render.html">render()</a></code> </p>
-        </td>
-        <td><p>Method to render objects (i.e., htmlwidgets and rmarkdown files)</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="render.character.html">render(<i>&lt;character&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Method to render rmarkdown documents</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="render.datatables.html">render(<i>&lt;datatables&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Method to render DT tabels</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="render.plotly.html">render(<i>&lt;plotly&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Method to render plotly plots</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="render.shiny.render.function.html">render(<i>&lt;shiny.render.function&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Method to avoid re-rendering a shiny.render.function</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="rounddf.html">rounddf()</a></code> </p>
-        </td>
-        <td><p>Round double in a data.frame to a specified number of decimal places</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="rownames_to_column.html">rownames_to_column</a></code> </p>
-        </td>
-        <td><p>Exporting rownames_to_column from tibble</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="save_clip.html">save_clip()</a></code> </p>
-        </td>
-        <td><p>Save data.frame or tibble to clipboard on Windows or macOS</p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -781,45 +670,15 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="set_attr.html">set_attr()</a></code> </p>
-        </td>
-        <td><p>Alias used to add an attribute</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="show_duplicated.html">show_duplicated()</a></code> </p>
         </td>
         <td><p>Show all rows with duplicated values (not just the first or last)</p></td>
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="sig_stars.html">sig_stars()</a></code> </p>
-        </td>
-        <td><p>Add stars '***' to a data.frame (from broom's `tidy` function) based on p.values</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="skew.re.html">skew</a></code> </p>
-        </td>
-        <td><p>Exporting skew from psych</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="square.html">square()</a></code> </p>
         </td>
         <td><p>Calculate square of a variable</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="sshh.html">sshh()</a></code> </p>
-        </td>
-        <td><p>Hide warnings and messages and return invisible</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="sshhr.html">sshhr()</a></code> </p>
-        </td>
-        <td><p>Hide warnings and messages and return result</p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -835,69 +694,9 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="store.character.html">store(<i>&lt;character&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Method for error messages that a user tries to store</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="store.explore.html">store(<i>&lt;explore&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Deprecated: Store method for the explore function</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="store.pivotr.html">store(<i>&lt;pivotr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Deprecated: Store method for the pivotr function</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="subplot.html">subplot()</a></code> </p>
-        </td>
-        <td><p>Workaround to avoid messages from subplot</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="summary.explore.html">summary(<i>&lt;explore&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Summary method for the explore function</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="summary.pivotr.html">summary(<i>&lt;pivotr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Summary method for pivotr</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="superheroes.html">superheroes</a></code> </p>
-        </td>
-        <td><p>Super heroes</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="table2data.html">table2data()</a></code> </p>
         </td>
         <td><p>Create data.frame from a table</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="tibble.html">tibble</a></code> </p>
-        </td>
-        <td><p>Exporting tibble from tibble</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="tidy.html">tidy</a></code> </p>
-        </td>
-        <td><p>Exporting tidy from broom</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="titanic.html">titanic</a></code> </p>
-        </td>
-        <td><p>Survival data for the Titanic</p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -916,18 +715,6 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
           <p><code><a href="varprop.html">varprop()</a></code> </p>
         </td>
         <td><p>Variance for proportion</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="viewdata.html">viewdata()</a></code> </p>
-        </td>
-        <td><p>View data in a shiny-app</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="visualize.html">visualize()</a></code> </p>
-        </td>
-        <td><p>Visualize data using ggplot2 <a href='http://ggplot2.tidyverse.org'>http://ggplot2.tidyverse.org</a></p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -955,15 +742,365 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="write_feather.html">write_feather()</a></code> </p>
-        </td>
-        <td><p>Workaround to add description using feather::write_feather</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="xtile.html">xtile()</a></code> </p>
         </td>
         <td><p>Create quantiles</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-combine" class="hasAnchor"><a href="#section-data-combine" class="anchor"></a>Data &gt; Combine</h2>
+          <p class="section-desc"><p>Functions used with Data &gt; Combine</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="combinedata.html">combinedata()</a></code> </p>
+        </td>
+        <td><p>Combine datasets using dplyr's bind and join functions</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-report" class="hasAnchor"><a href="#section-report" class="anchor"></a>Report</h2>
+          <p class="section-desc"><p>Functions used with Report &gt; Rmd and Report &gt; R</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="fixMS.html">fixMS()</a></code> </p>
+        </td>
+        <td><p>Replace Windows smart quotes etc.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="formatdf.html">formatdf()</a></code> </p>
+        </td>
+        <td><p>Format a data.frame with a specified number of decimal places</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="formatnr.html">formatnr()</a></code> </p>
+        </td>
+        <td><p>Format a number with a specified number of decimal places, thousand sep, and a symbol</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="register.html">register()</a></code> </p>
+        </td>
+        <td><p>Register a data.frame or list in Radiant</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="render.html">render()</a></code> </p>
+        </td>
+        <td><p>Method to render objects (i.e., htmlwidgets and rmarkdown files)</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="render.datatables.html">render(<i>&lt;datatables&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Method to render DT tabels</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="render.plotly.html">render(<i>&lt;plotly&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Method to render plotly plots</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-convenience-functions" class="hasAnchor"><a href="#section-convenience-functions" class="anchor"></a>Convenience functions</h2>
+          <p class="section-desc"><p>Convenience functions</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="add_class.html">add_class()</a></code> </p>
+        </td>
+        <td><p>Convenience function to add a class</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="getclass.html">getclass()</a></code> </p>
+        </td>
+        <td><p>Get variable class</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="ci_label.html">ci_label()</a></code> </p>
+        </td>
+        <td><p>Labels for confidence intervals</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="ci_perc.html">ci_perc()</a></code> </p>
+        </td>
+        <td><p>Values at confidence levels</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="copy_all.html">copy_all()</a></code> </p>
+        </td>
+        <td><p>Source all package functions</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="copy_attr.html">copy_attr()</a></code> </p>
+        </td>
+        <td><p>Copy attributes from one object to another</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="copy_from.html">copy_from()</a></code> </p>
+        </td>
+        <td><p>Source for package functions</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="does_vary.html">does_vary()</a></code> </p>
+        </td>
+        <td><p>Does a vector have non-zero variability?</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="empty_level.html">empty_level()</a></code> </p>
+        </td>
+        <td><p>Convert categorical variables to factors and deal with empty/missing values (used in pivotr and explore)</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="getsummary.html">getsummary()</a></code> </p>
+        </td>
+        <td><p>Create data.frame summary</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="indexr.html">indexr()</a></code> </p>
+        </td>
+        <td><p>Find index corrected for missing values and filters</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="install_webshot.html">install_webshot()</a></code> </p>
+        </td>
+        <td><p>Install webshot and phantomjs</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="iterms.html">iterms()</a></code> </p>
+        </td>
+        <td><p>Create a vector of interaction terms</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="rounddf.html">rounddf()</a></code> </p>
+        </td>
+        <td><p>Round double in a data.frame to a specified number of decimal places</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="set_attr.html">set_attr()</a></code> </p>
+        </td>
+        <td><p>Alias used to add an attribute</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="sig_stars.html">sig_stars()</a></code> </p>
+        </td>
+        <td><p>Add stars '***' to a data.frame (from broom's `tidy` function) based on p.values</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="sshh.html">sshh()</a></code> </p>
+        </td>
+        <td><p>Hide warnings and messages and return invisible</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="sshhr.html">sshhr()</a></code> </p>
+        </td>
+        <td><p>Hide warnings and messages and return result</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-miscellaneous" class="hasAnchor"><a href="#section-miscellaneous" class="anchor"></a>Miscellaneous</h2>
+          <p class="section-desc"><p>Miscellaneous</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="dtab.character.html">dtab(<i>&lt;character&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Create a DT table with bootstrap theme</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="ggplotly.html">ggplotly()</a></code> </p>
+        </td>
+        <td><p>Workaround to avoid messages from ggplotly</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="plot.character.html">plot(<i>&lt;character&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Don't try to plot strings</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="render.shiny.render.function.html">render(<i>&lt;shiny.render.function&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Method to avoid re-rendering a shiny.render.function</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="render.character.html">render(<i>&lt;character&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Method to render rmarkdown documents</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="store.character.html">store(<i>&lt;character&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Method for error messages that a user tries to store</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="subplot.html">subplot()</a></code> </p>
+        </td>
+        <td><p>Workaround to avoid messages from subplot</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-re-exported" class="hasAnchor"><a href="#section-re-exported" class="anchor"></a>Re-exported</h2>
+          <p class="section-desc"><p>Functions exported from other packages</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="as_tibble.html">as_tibble</a></code> </p>
+        </td>
+        <td><p>Exporting as_tibble from tibble</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="tibble.html">tibble</a></code> </p>
+        </td>
+        <td><p>Exporting tibble from tibble</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="rownames_to_column.html">rownames_to_column</a></code> </p>
+        </td>
+        <td><p>Exporting rownames_to_column from tibble</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="glance.html">glance</a></code> </p>
+        </td>
+        <td><p>Exporting glance from broom</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="tidy.html">tidy</a></code> </p>
+        </td>
+        <td><p>Exporting tidy from broom</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="glue.html">glue</a></code> </p>
+        </td>
+        <td><p>Exporting glue from glue</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="knit_print.html">knit_print</a></code> </p>
+        </td>
+        <td><p>Exporting knit_print from knitr</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="kurtosi.re.html">kurtosi</a></code> </p>
+        </td>
+        <td><p>Exporting kurtosi from psych</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="skew.re.html">skew</a></code> </p>
+        </td>
+        <td><p>Exporting skew from psych</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-sets" class="hasAnchor"><a href="#section-data-sets" class="anchor"></a>Data sets</h2>
+          <p class="section-desc"><p>Data sets bundled with radiant.data</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="avengers.html">avengers</a></code> </p>
+        </td>
+        <td><p>Avengers</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="diamonds.html">diamonds</a></code> </p>
+        </td>
+        <td><p>Diamond prices</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="publishers.html">publishers</a></code> </p>
+        </td>
+        <td><p>Comic publishers</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="superheroes.html">superheroes</a></code> </p>
+        </td>
+        <td><p>Super heroes</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="titanic.html">titanic</a></code> </p>
+        </td>
+        <td><p>Survival data for the Titanic</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-deprecated" class="hasAnchor"><a href="#section-deprecated" class="anchor"></a>Deprecated</h2>
+          <p class="section-desc"><p>Deprecated</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="radiant.data-deprecated.html">mean_rm()</a></code> </p>
+        </td>
+        <td><p>Deprecated function(s) in the radiant.data package</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="store.pivotr.html">store(<i>&lt;pivotr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Deprecated: Store method for the pivotr function</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="store.explore.html">store(<i>&lt;explore&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Deprecated: Store method for the explore function</p></td>
       </tr>
     </tbody>
     </table>
@@ -972,7 +1109,20 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-starting-radiant">Starting radiant</a></li>
+      <li><a href="#section-data-manage">Data &gt; Manage</a></li>
+      <li><a href="#section-data-view">Data &gt; View</a></li>
+      <li><a href="#section-data-visualize">Data &gt; Visualize</a></li>
+      <li><a href="#section-data-pivot">Data &gt; Pivot</a></li>
+      <li><a href="#section-data-explore">Data &gt; Explore</a></li>
+      <li><a href="#section-data-transform">Data &gt; Transform</a></li>
+      <li><a href="#section-data-combine">Data &gt; Combine</a></li>
+      <li><a href="#section-report">Report</a></li>
+      <li><a href="#section-convenience-functions">Convenience functions</a></li>
+      <li><a href="#section-miscellaneous">Miscellaneous</a></li>
+      <li><a href="#section-re-exported">Re-exported</a></li>
+      <li><a href="#section-data-sets">Data sets</a></li>
+      <li><a href="#section-deprecated">Deprecated</a></li>
     </ul>
   </div>
 </div>

@@ -16,7 +16,7 @@ Vector of paths to files selected by the user
 Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux
 }
 \examples{
-if (interactive()) {
+\dontrun{
 choose_files("pdf", "csv")
 }
 

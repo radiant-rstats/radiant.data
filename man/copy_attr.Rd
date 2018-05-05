@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{copy_attr}
 \alias{copy_attr}
-\title{Copy attributes from on object to another}
+\title{Copy attributes from one object to another}
 \usage{
 copy_attr(to, from, attr)
 }
@@ -14,5 +14,5 @@ copy_attr(to, from, attr)
 \item{attr}{Vector of attributes. If missing all attributes will be copied}
 }
 \description{
-Copy attributes from on object to another
+Copy attributes from one object to another
 }

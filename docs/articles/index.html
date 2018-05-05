@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Load a csv file — load_csv • radiant.data</title>
+<title>Articles • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,10 +28,7 @@
 
 
 
-<meta property="og:title" content="Load a csv file — load_csv" />
-
-<meta property="og:description" content="Load a csv file" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:title" content="Articles" />
 
 
 <!-- mathjax -->
@@ -46,7 +43,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-topic">
+    <div class="container template-article-index">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -73,6 +70,45 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/pkgdown/combine.html">Combine data sets (Data &gt; Combine)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/explore.html">Summarize and explore your data (Data &gt; Explore)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/manage.html">Loading and Saving data (Data &gt; Manage)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/pivotr.html">Create pivot tables (Data &gt; Pivot)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/report_r.html">Create a reproducible report using R (Report &gt; R)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/report_rmd.html">Create a reproducible report using Rmarkdown (Report &gt; Rmd)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/state.html">Loading and Saving the State of the application</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/transform.html">Transform variables (Data &gt; Transform)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/view.html">View data in an interactive table (Data &gt; View)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/visualize.html">Visualize data (Data &gt; Visualize)</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -97,67 +133,26 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Load a csv file</h1>
-    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
-    <div class="hidden name"><code>load_csv.Rd</code></div>
+      <h1>Articles</h1>
     </div>
 
-    <div class="ref-description">
-    
-    <p>Load a csv file</p>
-    
+    <div class="section ">
+      <h3>All vignettes</h3>
+      <p class="section-desc"></p>
+
+      <ul>
+        <li><a href="pkgdown/combine.html">Combine data sets (Data &gt; Combine)</a></li>
+        <li><a href="pkgdown/explore.html">Summarize and explore your data (Data &gt; Explore)</a></li>
+        <li><a href="pkgdown/manage.html">Loading and Saving data (Data &gt; Manage)</a></li>
+        <li><a href="pkgdown/pivotr.html">Create pivot tables (Data &gt; Pivot)</a></li>
+        <li><a href="pkgdown/report_r.html">Create a reproducible report using R (Report &gt; R)</a></li>
+        <li><a href="pkgdown/report_rmd.html">Create a reproducible report using Rmarkdown (Report &gt; Rmd)</a></li>
+        <li><a href="pkgdown/state.html">Loading and Saving the State of the application</a></li>
+        <li><a href="pkgdown/transform.html">Transform variables (Data &gt; Transform)</a></li>
+        <li><a href="pkgdown/view.html">View data in an interactive table (Data &gt; View)</a></li>
+        <li><a href="pkgdown/visualize.html">Visualize data (Data &gt; Visualize)</a></li>
+      </ul>
     </div>
-
-    <pre class="usage"><span class='fu'>load_csv</span>(<span class='no'>file</span>, <span class='kw'>delim</span> <span class='kw'>=</span> <span class='st'>","</span>, <span class='kw'>col_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>dec</span> <span class='kw'>=</span> <span class='st'>"."</span>, <span class='kw'>n_max</span> <span class='kw'>=</span> <span class='fl'>Inf</span>,
-  <span class='kw'>saf</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>safx</span> <span class='kw'>=</span> <span class='fl'>20</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>file</th>
-      <td><p>Path or connection</p></td>
-    </tr>
-    <tr>
-      <th>delim</th>
-      <td><p>Use , (default) or ; or \t</p></td>
-    </tr>
-    <tr>
-      <th>col_names</th>
-      <td><p>Header in file (TRUE, FALSE)</p></td>
-    </tr>
-    <tr>
-      <th>dec</th>
-      <td><p>Decimal separator</p></td>
-    </tr>
-    <tr>
-      <th>n_max</th>
-      <td><p>Maximum number of rows to read</p></td>
-    </tr>
-    <tr>
-      <th>saf</th>
-      <td><p>Convert character variables to factors if (1) there are less than 100 distinct values and (2) there are X (see safx) more values than levels</p></td>
-    </tr>
-    <tr>
-      <th>safx</th>
-      <td><p>Values-to-levels ratio to use when converting strings to factors</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>Data frame with (some) variables converted to factors</p>
-    
-
-  </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
-
   </div>
 </div>
 

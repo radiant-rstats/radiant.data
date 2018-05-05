@@ -16,6 +16,44 @@ upload_error_handler <- function(objname, ret) {
     set_attr("description", ret)
 }
 
+load_csv <- function(
+  file, delim = ",", col_names = TRUE, dec = ".",
+  n_max = Inf, saf = TRUE, safx = 20
+) {
+
+  n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
+  dataset <- sshhr(try(
+      readr::read_delim(
+        file, delim = delim, locale = readr::locale(decimal_mark = dec, grouping_mark = delim), 
+        col_names = col_names, n_max = n_max, trim_ws = TRUE
+      ), 
+      silent = TRUE
+    )
+  )
+  if (is(dataset, "try-error")) {
+    "#### There was an error loading the data. Please make sure the data are in csv format"
+  } else { 
+    prb <- readr::problems(dataset)
+    if (nrow(prb) > 0) {
+      tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
+      rprob <- knitr::kable(
+        prb[1:(min(nrow(prb):10)), , drop = FALSE], 
+        align = "l", 
+        format = "html", 
+        table.attr = tab_big, 
+        caption = "Read issues (max 10 rows shown): To reload the file you may need to refresh the browser first"
+      )
+    } else {
+      rprob <- ""
+    }
+
+    if (saf) dataset <- toFct(dataset, safx)
+    as.data.frame(dataset, stringsAsFactors = FALSE) %>%
+      {set_colnames(., make.names(colnames(.)))} %>%
+      set_attr("description", rprob)
+  }
+}
+
 load_user_data <- function(
   fname, uFile, ext, header = TRUE,
   man_str_as_factor = TRUE, sep = ",", dec = ".", 

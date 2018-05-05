@@ -1,0 +1,11 @@
+---
+title: "Combine data sets (Data > Combine)"
+author: "Vincent R. Nijs</br>Rady School of Management (UCSD)"
+---
+
+```{r include = FALSE}
+library(dplyr)
+```
+
+```{r child = "_combine.Rmd"}
+```

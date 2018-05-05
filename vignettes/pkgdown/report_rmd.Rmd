@@ -1,0 +1,7 @@
+---
+title: "Create a reproducible report using Rmarkdown (Report > Rmd)"
+author: "Vincent R. Nijs</br>Rady School of Management (UCSD)"
+---
+
+```{r child = "_report_rmd.Rmd"}
+```

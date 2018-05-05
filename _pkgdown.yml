@@ -1,0 +1,185 @@
+reference:
+- title: Starting radiant
+  desc: Functions used to start radiant shiny apps
+  contents:
+    - launch
+    - radiant.data
+    - radiant.data_viewer
+    - radiant.data_window
+- title: Data > Manage
+  desc: Functions used with Data > Manage
+  contents:
+    - choose_dir
+    - choose_files
+    - describe 
+    - find_dropbox
+    - find_gdrive
+    - find_project 
+    - fix_names
+    - getdata
+    - load_clip
+    - parse_path
+    - read_files
+    - save_clip
+    - write_feather
+- title: Data > View
+  desc: Functions used with Data > View
+  contents:
+    - dtab
+    - dtab.data.frame
+    - filterdata
+    - Search
+    - viewdata
+- title: Data > Visualize
+  desc: Function used with Data > Visualize
+  contents:
+    - visualize
+    - print.gtable
+- title: Data > Pivot
+  desc: Functions used with Data > Pivot
+  contents:
+    - pivotr
+    - dtab.pivotr
+    - plot.pivotr
+    - summary.pivotr
+- title: Data > Explore
+  desc: Functions used with Data > Pivot
+  contents:
+    - explore
+    - dtab.explore 
+    - flip
+    - summary.explore
+- title: Data > Transform
+  desc: Functions used with Data > Transform
+  contents:
+    - as_character
+    - as_distance
+    - as_distance 
+    - as_dmy
+    - as_dmy_hm
+    - as_dmy_hms
+    - as_duration
+    - as_factor
+    - as_hm
+    - as_hms
+    - as_integer
+    - as_mdy
+    - as_mdy_hm
+    - as_mdy_hms
+    - as_numeric
+    - as_ymd
+    - as_ymd_hm
+    - as_ymd_hms
+    - center 
+    - cv
+    - inverse
+    - is_empty
+    - is_not
+    - is_numeric
+    - is_string
+    - level_list
+    - ln
+    - make_train
+    - month
+    - mutate_ext
+    - n_missing
+    - n_obs
+    - normalize
+    - p025
+    - p05
+    - p10
+    - p25
+    - p75
+    - p90
+    - p95
+    - p975
+    - prop
+    - refactor
+    - sdpop
+    - sdprop
+    - se
+    - seprop
+    - show_duplicated
+    - square
+    - standardize
+    - store
+    - table2data
+    - toFct
+    - varpop
+    - varprop
+    - wday
+    - weighted.sd
+    - which.pmax
+    - which.pmin
+    - xtile
+- title: Data > Combine
+  desc: Functions used with Data > Combine
+  contents:
+    - combinedata 
+- title: Report
+  desc: Functions used with Report > Rmd and Report > R
+  contents: 
+    - fixMS
+    - formatdf
+    - formatnr
+    - register
+    - render
+    - render.datatables
+    - render.plotly
+- title: Convenience functions
+  desc: Convenience functions
+  contents:
+    - add_class
+    - getclass
+    - ci_label
+    - ci_perc
+    - copy_all
+    - copy_attr
+    - copy_from
+    - does_vary
+    - empty_level
+    - getsummary
+    - indexr
+    - install_webshot
+    - iterms
+    - rounddf
+    - set_attr
+    - sig_stars
+    - sshh
+    - sshhr
+- title: Miscellaneous
+  desc: Miscellaneous
+  contents:
+    - dtab.character
+    - ggplotly
+    - plot.character
+    - render.shiny.render.function
+    - render.character
+    - store.character
+    - subplot
+- title: Re-exported
+  desc: Functions exported from other packages
+  contents:
+    - as_tibble
+    - tibble
+    - rownames_to_column
+    - glance
+    - tidy
+    - glue
+    - knit_print
+    - kurtosi
+    - skew
+- title: Data sets
+  desc: Data sets bundled with radiant.data
+  contents:
+    - avengers
+    - diamonds
+    - publishers
+    - superheroes
+    - titanic
+- title: Deprecated
+  desc: Deprecated
+  contents:
+    - radiant.data-deprecated
+    - store.pivotr
+    - store.explore

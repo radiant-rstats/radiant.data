@@ -4,7 +4,9 @@
 coverage.R
 ^\.travis\.yml$
 ^build$
+_pkgdown.yml
 ^docs$
+^vignettes$
 ^tests/testthat/data$
 ^.*\.sublime-project$
 cran-comments.md

@@ -1,0 +1,7 @@
+---
+title: "Loading and Saving data (Data > Manage)"
+author: "Vincent R. Nijs</br>Rady School of Management (UCSD)"
+---
+
+```{r child = "_manage.Rmd"}
+```

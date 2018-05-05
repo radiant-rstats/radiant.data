@@ -1,9 +1,9 @@
-#' Launch radiant apps in default browser or Rstudio viewer
+#' Launch radiant apps
 #'
-#' @details See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
+#' @details See \url{https://radiant-rstats.github.io/docs} for radiant documentation and tutorials
 #'
-#' @param package Radiant package to start. One of "radiant.data", "radiant.design", "radiant.basics", "radiant.model", "radiant.multivariate", "radiant"
-#' @param run Run radiant app in an external browser ("browser"), an Rstudio window ("window"), or in the Rstudio viewer ("viewer")
+#' @param package Radiant package to start. One of "radiant.data", "radiant.design", "radiant.basics", "radiant.model", "radiant.multivariate", or "radiant"
+#' @param run Run a radiant app in an external browser ("browser"), an Rstudio window ("window"), or in the Rstudio viewer ("viewer")
 #'
 #' @importFrom shiny paneViewer
 #'
@@ -64,9 +64,7 @@ launch <- function(package = "radiant.data", run = "viewer") {
   )
 }
 
-#' Launch radiant.data in default browser
-#'
-#' @details See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
+#' Launch the radiant.data app in the default web browser
 #'
 #' @examples
 #' \dontrun{
@@ -76,9 +74,7 @@ launch <- function(package = "radiant.data", run = "viewer") {
 #' @export
 radiant.data <- function() launch(package = "radiant.data", run = "browser")
 
-#' Launch radiant.data in the Rstudio window
-#'
-#' @details See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
+#' Launch the radiant.data app in an Rstudio window
 #'
 #' @examples
 #' \dontrun{
@@ -87,9 +83,7 @@ radiant.data <- function() launch(package = "radiant.data", run = "browser")
 #' @export
 radiant.data_window <- function() launch(package = "radiant.data", run = "window")
 
-#' Launch radiant.data in the Rstudio viewer
-#'
-#' @details See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
+#' Launch the radiant.data app in the Rstudio viewer
 #'
 #' @examples
 #' \dontrun{
@@ -119,7 +113,7 @@ install_webshot <- function() {
 #' @export
 set_attr <- function(x, which, value) `attr<-`(x, which, value)
 
-#' Copy attributes from on object to another
+#' Copy attributes from one object to another
 #'
 #' @param to Object to copy attributes to
 #' @param from Object to copy attributes from
@@ -143,7 +137,7 @@ copy_attr <- function(to, from, attr) {
 #'
 #' @examples
 #' foo <- "some text" %>% add_class("text")
-#' foo <- "some text" %>% add_class(c("text","another class"))
+#' foo <- "some text" %>% add_class(c("text", "another class"))
 #'
 #' @export
 add_class <- function(x, cl) `class<-`(x, c(cl, class(x)))
@@ -288,57 +282,6 @@ toFct <- function(dataset, safx = 30) {
   }
 }
 
-#' Load a csv file 
-#'
-#' @param file Path or connection
-#' @param delim Use , (default) or ; or \\t
-#' @param col_names Header in file (TRUE, FALSE)
-#' @param dec Decimal separator
-#' @param n_max Maximum number of rows to read
-#' @param saf Convert character variables to factors if (1) there are less than 100 distinct values and (2) there are X (see safx) more values than levels
-#' @param safx Values-to-levels ratio to use when converting strings to factors
-#'
-#' @return Data frame with (some) variables converted to factors
-#'
-#' @export
-load_csv <- function(
-  file, delim = ",", col_names = TRUE, dec = ".",
-  n_max = Inf, saf = TRUE, safx = 20
-) {
-
-  n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
-  dataset <- sshhr(try(
-      readr::read_delim(
-        file, delim = delim, locale = readr::locale(decimal_mark = dec, grouping_mark = delim), 
-        col_names = col_names, n_max = n_max, trim_ws = TRUE
-      ), 
-      silent = TRUE
-    )
-  )
-  if (is(dataset, "try-error")) {
-    "#### There was an error loading the data. Please make sure the data are in csv format"
-  } else { 
-    prb <- readr::problems(dataset)
-    if (nrow(prb) > 0) {
-      tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
-      rprob <- knitr::kable(
-        prb[1:(min(nrow(prb):10)), , drop = FALSE], 
-        align = "l", 
-        format = "html", 
-        table.attr = tab_big, 
-        caption = "Read issues (max 10 rows shown): To reload the file you may need to refresh the browser first"
-      )
-    } else {
-      rprob <- ""
-    }
-
-    if (saf) dataset <- toFct(dataset, safx)
-    as.data.frame(dataset, stringsAsFactors = FALSE) %>%
-      {set_colnames(., make.names(colnames(.)))} %>%
-      set_attr("description", rprob)
-  }
-}
-
 #' Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux
 #'
 #' @param ... Strings used to determine which file types are available for selection (e.g., "csv" or "pdf")
@@ -346,7 +289,7 @@ load_csv <- function(
 #' @return Vector of paths to files selected by the user
 #'
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' choose_files("pdf", "csv")
 #' }
 #'
@@ -394,7 +337,7 @@ choose_files <- function(...) {
 #' @return Path to the directory selected by the user
 #'
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' choose_dir()
 #' }
 #'
@@ -430,9 +373,8 @@ choose_dir <- function(...) {
 #' @param dec Number of decimals to show
 #'
 #' @examples
-#' if (interactive()) {
+#' \dontrun{
 #' viewdata(mtcars)
-#' mtcars %>% viewdata()
 #' }
 #'
 #' @export
@@ -1020,7 +962,7 @@ find_gdrive <- function() {
   }
 }
 
-#' Find a rstudio project directory
+#' Find the rstudio project directory
 #'
 #' @return Path to rstudio project directory
 #'
@@ -1513,13 +1455,13 @@ parse_path <- function(
   list(path = path, rpath = rpath, filename = filename, fext = fext, objname = objname)
 }
 
-#' Return code to read file at specified path. Will open a file browser of no path is provided
+#' Return code to read a file at the specified path. Will open a file browser if no path is provided
 #'
 #' @param path Path to file. If empty, a file browser will be opened
-#' @param type Code for "rmd" or "r"
-#' @param to Object name to use for object. If empty, will use file name to derive an appropriate object name
+#' @param type Generate code for _Report > Rmd_ ("rmd) or _Report > R_ ("r")
+#' @param to Name to use for object. If empty, will use file name to derive an object name
 #' @param clipboard Return code to clipboard (not available on Linux)
-#' @param radiant Should returned code be formatted for use with other code generated by Radiant
+#' @param radiant Should returned code be formatted for use with other code generated by Radiant?
 #'
 #' @importFrom rstudioapi selectFile isAvailable
 #'
