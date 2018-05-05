@@ -1,5 +1,25 @@
 pandoc: 1.19.2.1
 pkgdown: 1.0.0
 pkgdown_sha: ~
-articles: {}
+articles:
+  _combine: pkgdown/_combine.html
+  _explore: pkgdown/_explore.html
+  _manage: pkgdown/_manage.html
+  _pivotr: pkgdown/_pivotr.html
+  _report_r: pkgdown/_report_r.html
+  _report_rmd: pkgdown/_report_rmd.html
+  _state: pkgdown/_state.html
+  _transform: pkgdown/_transform.html
+  _view: pkgdown/_view.html
+  _visualize: pkgdown/_visualize.html
+  combine: pkgdown/combine.html
+  explore: pkgdown/explore.html
+  manage: pkgdown/manage.html
+  pivotr: pkgdown/pivotr.html
+  report_r: pkgdown/report_r.html
+  report_rmd: pkgdown/report_rmd.html
+  state: pkgdown/state.html
+  transform: pkgdown/transform.html
+  view: pkgdown/view.html
+  visualize: pkgdown/visualize.html
 

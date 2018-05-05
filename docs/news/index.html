@@ -70,6 +70,45 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/pkgdown/combine.html">Combine data sets (Data &gt; Combine)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/explore.html">Summarize and explore your data (Data &gt; Explore)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/manage.html">Loading and Saving data (Data &gt; Manage)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/pivotr.html">Create pivot tables (Data &gt; Pivot)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/report_r.html">Create a reproducible report using R (Report &gt; R)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/report_rmd.html">Create a reproducible report using Rmarkdown (Report &gt; Rmd)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/state.html">Loading and Saving the State of the application</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/transform.html">Transform variables (Data &gt; Transform)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/view.html">View data in an interactive table (Data &gt; View)</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/visualize.html">Visualize data (Data &gt; Visualize)</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -108,7 +147,7 @@
 <ul>
 <li>When using radiant with Rstudio Viewer or in an Rstudio Window, loading and saving data through <em>Data &gt; Manage</em> generates R-code the user can add to <em>Report &gt; Rmd</em> or <em>Report &gt; R</em>. Clicking the <code>Show R-code</code> checkbox displays the R-code used to load or save the current dataset</li>
 <li>Various changes to the code to accomodate the use of <code><a href="http://www.rdocumentation.org/packages/shiny/topics/makeReactiveBinding">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
-<li>Removed <code>loadr</code>, <code>saver</code>, <code>loadcsv_url</code>, <code>loadrds_url</code>, and <code>make_funs</code> functions as they are no longer needed</li>
+<li>Removed <code>loadr</code>, <code>saver</code>, <code>load_csv</code>, <code>loadcsv_url</code>, <code>loadrds_url</code>, and <code>make_funs</code> functions as they are no longer needed</li>
 <li>Deprecated <code>mean_rm</code>, <code>median_rm</code>, <code>min_rm</code>, <code>max_rm,</code>sd_rm<code>,</code>var_rm, and <code>sum_rm</code> functions as they are no longer needed</li>
 </ul>
 </div>
@@ -121,7 +160,7 @@
 </li>
 <li>Maintain, store, and clean the settings of the interactive table in <em>Data &gt; View</em>
 </li>
-<li>Address closing Rstudio Window issue (<a href="https://github.com/rstudio/shiny/issues/2033#issuecomment-386438821" class="uri">https://github.com/rstudio/shiny/issues/2033#issuecomment-386438821</a>)</li>
+<li>Address closing Rstudio Window issue (<a href="https://github.com/rstudio/shiny/issues/2033" class="uri">https://github.com/rstudio/shiny/issues/2033</a>)</li>
 </ul>
 </div>
 </div>

@@ -150,7 +150,6 @@ reference:
 - title: Miscellaneous
   desc: Miscellaneous
   contents:
-    - dtab.character
     - ggplotly
     - plot.character
     - render.shiny.render.function
@@ -183,3 +182,22 @@ reference:
     - radiant.data-deprecated
     - store.pivotr
     - store.explore
+articles:
+- title: Data Menu
+  contents:
+    - pkgdown/manage
+    - pkgdown/view
+    - pkgdown/visualize
+    - pkgdown/pivotr
+    - pkgdown/explore
+    - pkgdown/transform
+    - pkgdown/combine
+- title: Report
+  contents:
+    - pkgdown/report_rmd
+    - pkgdown/report_r
+- title: State
+  contents:
+    - pkgdown/state
+
+

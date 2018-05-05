@@ -2,7 +2,7 @@
 % Please edit documentation in R/pivotr.R
 \name{dtab.pivotr}
 \alias{dtab.pivotr}
-\title{Make a pivot tabel in DT}
+\title{Make a pivot table in DT}
 \usage{
 \method{dtab}{pivotr}(object, format = "none", perc = FALSE, dec = 3,
   searchCols = NULL, order = NULL, pageLength = NULL, ...)
@@ -25,7 +25,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Make a pivot tabel in DT
+Make a pivot table in DT
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant

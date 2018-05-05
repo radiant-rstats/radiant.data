@@ -264,7 +264,7 @@ summary.pivotr <- function(
   }
 }
 
-#' Make a pivot tabel in DT
+#' Make a pivot table in DT
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
