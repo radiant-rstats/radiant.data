@@ -188,37 +188,6 @@ sshh <- function(...) {
 #' @export
 sshhr <- function(...) suppressWarnings(suppressMessages(...))
 
-#' Filter data with user-specified expression
-#'
-#' @param dataset Data frame to filter
-#' @param filt Filter expression to apply to the specified dataset (e.g., "price > 10000" if dataset is "diamonds")
-#' @param drop Drop unused factor levels after filtering (default is TRUE)
-#'
-#' @return Filtered data frame
-#'
-#' @export
-filterdata <- function(dataset, filt = "", drop = TRUE) {
-  if (grepl("([^=!<>])=([^=])", filt)) {
-    message("Invalid filter: Never use = in a filter. Use == instead (e.g., year == 2014). Update or remove the expression")
-  } else {
-    seldat <- try(
-      ## use %>% so . will be available to represent the available data in filters
-      dataset %>% filter(!! rlang::parse_expr(fixMS(filt))),
-      silent = TRUE
-    )
-    if (is(seldat, "try-error")) {
-      message(paste0("Invalid filter: \"", attr(seldat, "condition")$message, "\". Update or remove the expression"))
-    } else {
-      if (drop) {
-        return(droplevels(seldat))
-      } else {
-        return(seldat)
-      }
-    }
-  }
-  dataset
-}
-
 #' Get data for analysis functions
 #'
 #' @param dataset Dataset or name of the data.frame
@@ -360,186 +329,6 @@ choose_dir <- function(...) {
     dirname(file.choose())
   }
 }
-
-#' View data in a shiny-app
-#'
-#' @details View, search, sort, etc. your data
-#'
-#' @param dataset Data.frame or name of the dataframe to view
-#' @param vars Variables to show (default is all)
-#' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
-#' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
-#' @param na.rm Remove rows with missing values (default is FALSE)
-#' @param dec Number of decimals to show
-#'
-#' @examples
-#' \dontrun{
-#' viewdata(mtcars)
-#' }
-#'
-#' @export
-viewdata <- function(
-  dataset, vars = "", filt = "",
-  rows = NULL, na.rm = FALSE, dec = 3
-) {
-
-  ## based on http://rstudio.github.io/DT/server.html
-  dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = na.rm)
-  title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
-  fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
-
-  ## avoid factor with a huge number of levels
-  isBigFct <- function(x) is.factor(x) && length(levels(x)) > 1000
-  dat <- mutate_if(dat, isBigFct, as.character)
-
-  ## for rounding
-  isNum <- sapply(dat, is_numeric)
-  isInt <- sapply(dat, is.integer)
-  dec <- ifelse(is_empty(dec) || !is.integer(dec) || dec < 0, 3, dec)
-
-  shinyApp(
-    ui = fluidPage(
-      title = title,
-      includeCSS(file.path(system.file(package = "radiant.data"), "app/www/style.css")),
-      fluidRow(DT::dataTableOutput("tbl")),
-      actionButton("stop", "Stop", class = "btn-danger", onclick = "window.close();")
-    ),
-    server = function(input, output, session) {
-      widget <- DT::datatable(
-        dat,
-        selection = "none",
-        rownames = FALSE,
-        style = "bootstrap",
-        filter = fbox,
-        escape = FALSE,
-        ## must use fillContainer = FALSE to address
-        ## see https://github.com/rstudio/DT/issues/367
-        ## https://github.com/rstudio/DT/issues/379
-        # fillContainer = FALSE,
-        ## works with client-side processing
-        extensions = "KeyTable",
-        options = list(
-          keys = TRUE,
-          search = list(regex = TRUE),
-          columnDefs = list(
-            list(orderSequence = c("desc", "asc"), targets = "_all"),
-            list(className = "dt-center", targets = "_all")
-          ),
-          autoWidth = TRUE,
-          processing = FALSE,
-          pageLength = 10,
-          lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
-        )
-      ) %>%
-        {if (sum(isNum) > 0) DT::formatRound(., names(isNum)[isNum], dec) else .} %>%
-        {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0) else .}
-      output$tbl <- DT::renderDataTable(widget)
-      observeEvent(input$stop, {
-        stopApp(cat("Stopped viewdata"))
-      })
-    }
-  )
-}
-
-#' Create a DT table with bootstrap theme
-#'
-#' @details View, search, sort, etc. your data. For styling options see \url{http://rstudio.github.io/DT/functions.html}
-#'
-#' @param object Data.frame to display
-#' @param vars Variables to show (default is all)
-#' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
-#' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
-#' @param nr Number of rows of data to include in the table
-#' @param na.rm Remove rows with missing values (default is FALSE)
-#' @param dec Number of decimal places to show. Default is no rounding (NULL)
-#' @param filter Show filter in DT table. Options are "none", "top", "bottom"
-#' @param pageLength Number of rows to show in table
-#' @param dom Table control elements to show on the page. See \url{https://datatables.net/reference/option/dom}
-#' @param style Table formatting style ("bootstrap" or "default")
-#' @param rownames Show data.frame rownames. Default is FALSE
-#' @param ... Additional arguments
-#'
-#' @examples
-#' dtab(mtcars)
-#'
-#' @export
-dtab.data.frame <- function(
-  object, vars = "", filt = "", rows = NULL,
-  nr = NULL, na.rm = FALSE, dec = 3, filter = "top",
-  pageLength = 10, dom = "", style = "bootstrap",
-  rownames = FALSE, ...
-) {
-
-  dat <- getdata(object, vars, filt = filt, rows = rows, na.rm = na.rm)
-  if (!is_empty(nr)) {
-    dat <- dat[seq_len(nr), , drop = FALSE]
-  }
-
-  ## for rounding
-  isInt <- sapply(dat, is.integer)
-  isNum <- sapply(dat, is_numeric)
-  dec <- ifelse(is_empty(dec) || !is.integer(dec) || dec < 0, 3, dec)
-
-  ## avoid factor with a huge number of levels
-  isBigFct <- function(x) is.factor(x) && length(levels(x)) > 1000
-  dat <- mutate_if(dat, isBigFct, as.character)
-
-  ## for display options see https://datatables.net/reference/option/dom
-  if (is_empty(dom)) {
-    dom <- if (pageLength == -1 || nrow(dat) < pageLength) "t" else "lftip"
-  }
-
-  dt_tab <- DT::datatable(
-    dat,
-    filter = filter,
-    selection = "none",
-    rownames = rownames,
-    ## must use fillContainer = FALSE to address
-    ## see https://github.com/rstudio/DT/issues/367
-    ## https://github.com/rstudio/DT/issues/379
-    fillContainer = FALSE,
-    escape = FALSE,
-    style = style,
-    options = list(
-      dom = dom,
-      search = list(regex = TRUE),
-      columnDefs = list(
-        list(orderSequence = c("desc", "asc"), targets = "_all"),
-        list(className = "dt-center", targets = "_all")
-      ),
-      autoWidth = TRUE,
-      processing = FALSE,
-      pageLength = pageLength,
-      lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
-    )
-  )
-
-  ## rounding as needed
-  if (sum(isNum) > 0)
-    dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isNum], dec)
-  if (sum(isInt) > 0)
-    dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isInt], 0)
-
-  ## see https://github.com/yihui/knitr/issues/1198
-  dt_tab$dependencies <- c(
-    list(rmarkdown::html_dependency_bootstrap("bootstrap")),
-    dt_tab$dependencies
-  )
-
-  dt_tab
-}
-
-#' Create a DT table with bootstrap theme
-#'
-#' @details View, search, sort, etc. your data. For styling options see \url{http://rstudio.github.io/DT/functions.html}
-#'
-#' @param ... Arguments to pass on to dtab.data.frame
-#'
-#' @examples
-#' dtab(mtcars)
-#'
-#' @export
-dtab.character <- function(...) dtab.data.frame(...)
 
 #' Get variable class
 #'
@@ -1155,7 +944,7 @@ plot.character <- function(x, ...) return(invisible())
 #' @export
 render <- function(object, ...) UseMethod("render", object)
 
-#' Method to render DT tabels
+#' Method to render DT tables
 #'
 #' @param object DT table
 #' @param ... Additional arguments
@@ -1244,18 +1033,6 @@ render.character <- function(object, ...) {
 #'
 #' @export
 render.shiny.render.function <- function(object, ...) object
-
-#' Method to create datatables
-#'
-#' @param object Object of relevant class to render
-#' @param ... Additional arguments
-#'
-#' @seealso See \code{\link{dtab.explore}} to create the an interactivce table from an \code{\link{explore}} object
-#' @seealso See \code{\link{dtab.pivotr}} to create the an interactivce table from a \code{\link{pivotr}} object
-#' @seealso See \code{\link{dtab.data.frame}} to create an interactive table from a data.frame
-#'
-#' @export
-dtab <- function(object, ...) UseMethod("dtab", object)
 
 #' Show dataset desription, if available, in html form in Rstudio viewer or default browser
 #'
