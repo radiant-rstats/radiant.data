@@ -1,0 +1,11 @@
+---
+title: "Summarize and explore your data (Data > Explore)"
+author: "Vincent R. Nijs</br>Rady School of Management (UCSD)"
+---
+
+```{r include = FALSE}
+library(dplyr)
+```
+
+```{r child = "_explore.Rmd"}
+```

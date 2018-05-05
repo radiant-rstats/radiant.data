@@ -2,15 +2,12 @@
 % Please edit documentation in R/radiant.R
 \name{radiant.data_window}
 \alias{radiant.data_window}
-\title{Launch radiant.data in the Rstudio window}
+\title{Launch the radiant.data app in an Rstudio window}
 \usage{
 radiant.data_window()
 }
 \description{
-Launch radiant.data in the Rstudio window
-}
-\details{
-See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
+Launch the radiant.data app in an Rstudio window
 }
 \examples{
 \dontrun{

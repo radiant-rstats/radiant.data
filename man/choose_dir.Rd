@@ -16,7 +16,7 @@ Path to the directory selected by the user
 Select a directory. Uses JavaScript on Mac, utils::choose.dir on Windows, and dirname(file.choose()) on Linux
 }
 \examples{
-if (interactive()) {
+\dontrun{
 choose_dir()
 }
 

@@ -1,0 +1,7 @@
+---
+title: "Loading and Saving the State of the application"
+author: "Vincent R. Nijs</br>Rady School of Management (UCSD)"
+---
+
+```{r child = "_state.Rmd"}
+```

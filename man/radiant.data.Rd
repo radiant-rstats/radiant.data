@@ -12,10 +12,7 @@ radiant.data()
 \description{
 radiant.data
 
-Launch radiant.data in default browser
-}
-\details{
-See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
+Launch the radiant.data app in the default web browser
 }
 \examples{
 \dontrun{

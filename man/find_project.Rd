@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{find_project}
 \alias{find_project}
-\title{Find a rstudio project directory}
+\title{Find the rstudio project directory}
 \usage{
 find_project(mess = TRUE)
 }
@@ -13,5 +13,5 @@ find_project(mess = TRUE)
 Path to rstudio project directory
 }
 \description{
-Find a rstudio project directory
+Find the rstudio project directory
 }

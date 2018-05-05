@@ -27,9 +27,8 @@ View data in a shiny-app
 View, search, sort, etc. your data
 }
 \examples{
-if (interactive()) {
+\dontrun{
 viewdata(mtcars)
-mtcars \%>\% viewdata()
 }
 
 }
