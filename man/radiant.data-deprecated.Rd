@@ -4,7 +4,12 @@
 \name{radiant.data-deprecated}
 \alias{radiant.data-deprecated}
 \alias{mean_rm}
-\alias{mean_rmn}
+\alias{median_rm}
+\alias{min_rm}
+\alias{max_rm}
+\alias{sd_rm}
+\alias{var_rm}
+\alias{sum_rm}
 \alias{radiant.data-deprecated-package}
 \title{Deprecated function(s) in the radiant.data package}
 \usage{
@@ -19,14 +24,14 @@ radiant but will be removed
 }
 \section{Details}{
 
-\tabular{rl}{
-  Replace \code{mean_rm} by \code{\link{mean}}\cr
-  Replace \code{median_rm} by \code{\link{median}}\cr
-  Replace \code{min_rm} by \code{\link{min}}\cr
-  Replace \code{max_rm} by \code{\link{max}}\cr
-  Replace \code{sd_rm} by \code{\link{sd}}\cr
-  Replace \code{var_rm} by \code{\link{var}}\cr
-  Replace \code{sum_rm} by \code{\link{sum}}\cr
+\itemize{
+  \item Replace \code{mean_rm} by \code{\link{mean}}
+  \item Replace \code{median_rm} by \code{\link{median}}
+  \item Replace \code{min_rm} by \code{\link{min}}
+  \item Replace \code{max_rm} by \code{\link{max}}
+  \item Replace \code{sd_rm} by \code{\link{sd}}
+  \item Replace \code{var_rm} by \code{\link{var}}
+  \item Replace \code{sum_rm} by \code{\link{sum}}
 }
 }
 
