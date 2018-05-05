@@ -124,7 +124,7 @@
 <p>For example, with the <code>diamonds</code> data loaded, select <code>clarity</code> and <code>cut</code> from the <code>Categorical variables</code> drop-down. The categories for the first variable will be the column headers but you can drag-and-drop the selected variables to change their ordering. After selecting these two variables, and clicking on the <code>Create pivot table</code> buttone, a frequency table of diamonds with different levels of clarity and quality of cut is shown. Choose <code>Row</code>, <code>Column</code>, or <code>Total</code> from the <code>Normalize by</code> drop-down to normalize cell frequencies or create an index from a summary statistic by the row, column, or overall total. If a normalize option is selected it can be convenient to check the <code>Percentage</code> box to express the numbers as percentages. Choose <code>Color bar</code> or <code>Heat map</code> from the <code>Conditional formatting</code> drop-down to emphasize the highest frequency counts.</p>
 <p>It is also possible to summarize numerical variables. Select <code>price</code> from the <code>Numeric variables</code> drop-down. This will create the table shown below. Just as in the <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank"><em>Data &gt; View</em></a> tab you can sort the table by clicking on the column headers. You can also use sliders (e.g., click in the input box below <code>I1</code>) to limit the view to values in a specified range. To view only information for diamonds with a <code>Very good</code>, <code>Premium</code> or <code>Ideal</code> cut click in the input box below the <code>cut</code> header.</p>
 <p align="center">
-<img src="https://radiant-rstats.github.io/docs/data/figures/pivotr.png"></p>
+<img src="https://radiant-rstats.github.io/docs/data/figures//pivotr.png"></p>
 <p>You can also create a bar chart based on the generated table (see image above). To download the table in <em>csv</em> format or the plot in <em>png</em> format click the appropriate download icon on the right.</p>
 <blockquote>
 <p>Note that when a categorical variable (<code>factor</code>) is selected from the <code>Numeric variable</code> dropdown it is converted to a 0-1 (binary) variable where the first level is coded as 1 and all other levels as 0.</p>
@@ -144,6 +144,7 @@
 <a href="#report-rmd" class="anchor"></a>Report &gt; Rmd</h3>
 <p>Add code to <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank"><em>Report &gt; Rmd</em></a> to (re)create the pivot table by clicking the <i title="report results" class="fa fa-edit"></i> icon on the bottom left of your screen or by pressing <code>ALT-enter</code> on your keyboard.</p>
 <p>If a plot was created it can be customized using <code>ggplot2</code> commands (e.g., <code>plot(result) + labs(title = "Pivot graph")</code>). See <a href="https://radiant-rstats.github.io/docs/data/visualize.html" target="_blank"><em>Data &gt; Visualize</em></a> for details.</p>
+<p>© Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="./images/by-sa.png"></a></p>
 </div>
   </div>
 

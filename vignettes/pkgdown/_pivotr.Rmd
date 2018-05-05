@@ -6,7 +6,7 @@ For example, with the `diamonds` data loaded, select `clarity` and `cut` from th
 
 It is also possible to summarize numerical variables. Select `price` from the `Numeric variables` drop-down. This will create the table shown below. Just as in the <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank">_Data > View_</a> tab you can sort the table by clicking on the column headers. You can also use sliders (e.g., click in the input box below `I1`) to limit the view to values in a specified range. To view only information for diamonds with a `Very good`, `Premium` or `Ideal` cut click in the input box below the `cut` header.
 
-<p align="center"><img src="https://radiant-rstats.github.io/docs/data/figures/pivotr.png"></p>
+<p align="center"><img src="https://radiant-rstats.github.io/docs/data/figures//pivotr.png"></p>
 
 You can also create a bar chart based on the generated table (see image above). To download the table in _csv_ format or the plot in _png_ format click the appropriate download icon on the right.
 

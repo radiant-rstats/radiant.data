@@ -24,7 +24,7 @@ In sum:
 
 where Q1 is the 25th percentile and Q3 is the 75th percentile. You may have to read the two bullets above a few times before it sinks in. The plot below should help to explain the structure of the box plot.
 
-<p align="center"><img src="https://radiant-rstats.github.io/docs/data/figures/boxplot.png"></p>
+<p align="center"><img src="https://radiant-rstats.github.io/docs/data/figures//boxplot.png"></p>
 [Source](http://en.wikipedia.org/wiki/File:Boxplot_vs_PDF.svg)
 
 ### Sub-plots and heat-maps
