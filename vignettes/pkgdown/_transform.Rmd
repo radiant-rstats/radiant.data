@@ -279,7 +279,7 @@ If there are duplicates in the data use `Show duplicates` to get a better sense 
 
 Create a dataset with all combinations of values for a selection of variables. This is useful to generate datasets for prediction in, for example, <a href="https://radiant-rstats.github.io/docs/model/regress.html" target="_blank">_Model > Estimate > Linear regression (OLS)_</a> or <a href="https://radiant-rstats.github.io/docs/model/logistic.html" target="_blank">_Model > Estimate > Logistic regression (GLM)_</a>. Suppose you want to create a dataset with all possible combinations of values for `cut` and `color` of a diamond. By selecting `Expand grid` from the `Transformation type` dropdown and `cut` and `color` in the `Select variable(s)` box we can see in the screenshot below that there are 35 possible combinations (i.e., `cut` has 5 unique values and `color` has 7 unique values so 5 x 7 combinations are possible). Choose a name for the new dataset (e.g., diamonds\_expand) and click the `Store` button to add it to the `Datasets` dropdown.
 
-<p align="center"><img src="https://radiant-rstats.github.io/docs/data/figures/expand_grid.png"></p>
+<p align="center"><img src="https://radiant-rstats.github.io/docs/data/figures//expand_grid.png"></p>
 
 #### Table-to-data
 
