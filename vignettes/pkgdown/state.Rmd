@@ -1,10 +1,10 @@
 ---
 title: "Loading and Saving the State of the application"
-author: "Vincent R. Nijs</br>Rady School of Management (UCSD)"
+author: "Vincent R. Nijs, Rady School of Management (UCSD)"
 ---
 
 ```{r child = "_state.Rmd"}
 ```
 
-&copy; Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="./images/by-sa.png"/></a>
-
+```{r child = "_footer.md"}
+```

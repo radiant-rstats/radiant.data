@@ -2,16 +2,16 @@
 % Please edit documentation in R/radiant.R
 \name{ggplotly}
 \alias{ggplotly}
-\title{Workaround to avoid messages from ggplotly}
+\title{Work around to avoid (harmless) messages from ggplotly}
 \usage{
 ggplotly(...)
 }
 \arguments{
-\item{...}{Arguments to pass to plotly::ggplotlyy}
+\item{...}{Arguments to pass to the \code{\link[plotly]{ggplotly}} function in the plotly package}
 }
 \description{
-Workaround to avoid messages from ggplotly
+Work around to avoid (harmless) messages from ggplotly
 }
 \seealso{
-See the \code{\link[plotly]{ggplotly}} in the plotly package for details (?plotly::ggplotly)
+See the \code{\link[plotly]{ggplotly}} function in the plotly package for details (?plotly::ggplotly)
 }

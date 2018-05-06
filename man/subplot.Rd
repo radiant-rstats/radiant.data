@@ -2,17 +2,17 @@
 % Please edit documentation in R/radiant.R
 \name{subplot}
 \alias{subplot}
-\title{Workaround to avoid messages from subplot}
+\title{Work around to avoid (harmless) messages from subplot}
 \usage{
 subplot(..., margin = 0.04)
 }
 \arguments{
-\item{...}{Arguments to pass to plotly::subplot}
+\item{...}{Arguments to pass to the \code{\link[plotly]{subplot}} function in the plotly packages}
 
 \item{margin}{Default margin to use between plots}
 }
 \description{
-Workaround to avoid messages from subplot
+Work around to avoid (harmless) messages from subplot
 }
 \seealso{
 See the \code{\link[plotly]{subplot}} in the plotly package for details (?plotly::subplot)
