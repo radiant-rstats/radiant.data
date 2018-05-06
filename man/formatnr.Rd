@@ -4,7 +4,8 @@
 \alias{formatnr}
 \title{Format a number with a specified number of decimal places, thousand sep, and a symbol}
 \usage{
-formatnr(x, sym = "", dec = 2, perc = FALSE, mark = ",", ...)
+formatnr(x, sym = "", dec = 2, perc = FALSE, mark = ",", na.rm = TRUE,
+  ...)
 }
 \arguments{
 \item{x}{Number or vector}
@@ -17,7 +18,9 @@ formatnr(x, sym = "", dec = 2, perc = FALSE, mark = ",", ...)
 
 \item{mark}{Thousand separator}
 
-\item{...}{Additional arguments}
+\item{na.rm}{Remove missing values}
+
+\item{...}{Additional arguments passed to \code{\link{formatC}}}
 }
 \value{
 Character (vector) in the desired format
@@ -31,6 +34,10 @@ formatnr(2000, dec = 4)
 formatnr(.05, perc = TRUE)
 formatnr(c(.1, .99), perc = TRUE)
 formatnr(data.frame(a = c(.1, .99)), perc = TRUE)
-formatnr(data.frame(a = 1000), sym = "$", dec = 0)
+formatnr(data.frame(a = 1:10), sym = "$", dec = 0)
+formatnr(c(1, 1.9, 1.008, 1.00))
+formatnr(c(1, 1.9, 1.008, 1.00), drop0trailing = TRUE)
+formatnr(NA)
+formatnr(NULL)
 
 }
