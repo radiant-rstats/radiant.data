@@ -57,7 +57,7 @@ launch <- function(package = "radiant.data", run = "viewer") {
     options(radiant.launch = "browser")
     run <- TRUE
   }
-  
+
   ## cannot (yet) supress ERROR: [on_request_read] connection reset by peer in viewer
   suppressPackageStartupMessages(
     shiny::runApp(system.file("app", package = package), launch.browser = run)
@@ -612,7 +612,8 @@ formatdf <- function(tbl, dec = NULL, perc = FALSE, mark = "", ...) {
 #' @param dec Number of decimals to show
 #' @param perc Display number as a percentage
 #' @param mark Thousand separator
-#' @param ... Additional arguments
+#' @param na.rm Remove missing values
+#' @param ... Additional arguments passed to \code{\link{formatC}}
 #'
 #' @return Character (vector) in the desired format
 #'
@@ -622,14 +623,19 @@ formatdf <- function(tbl, dec = NULL, perc = FALSE, mark = "", ...) {
 #' formatnr(.05, perc = TRUE)
 #' formatnr(c(.1, .99), perc = TRUE)
 #' formatnr(data.frame(a = c(.1, .99)), perc = TRUE)
-#' formatnr(data.frame(a = 1000), sym = "$", dec = 0)
+#' formatnr(data.frame(a = 1:10), sym = "$", dec = 0)
+#' formatnr(c(1, 1.9, 1.008, 1.00))
+#' formatnr(c(1, 1.9, 1.008, 1.00), drop0trailing = TRUE)
+#' formatnr(NA)
+#' formatnr(NULL)
 #'
 #' @export
 formatnr <- function(
-  x, sym = "", dec = 2, perc = FALSE, 
-  mark = ",", ... 
+  x, sym = "", dec = 2, perc = FALSE,
+  mark = ",", na.rm = TRUE, ...
 ) {
   if ("data.frame" %in% class(x)) x <- x[[1]]
+  if (na.rm && length(x) > 0) x <- na.omit(x)
   if (perc) {
     paste0(sym, formatC(100 * x, digits = dec, big.mark = mark, format = "f", ...), "%")
   } else {
@@ -836,15 +842,15 @@ store.character <- function(dataset = NULL, object, ...) {
   } else if ("model" %in% class(dataset)) {
     stop(
       paste0(
-        "This usage of the store function is now deprecated.\nUse the code below instead:\n\n", 
-        dataset$df_name, " <- store(", dataset$df_name, ", ", deparse(substitute(dataset)), ", name = \"", list(...)[["name"]], "\")" 
+        "This usage of the store function is now deprecated.\nUse the code below instead:\n\n",
+        dataset$df_name, " <- store(", dataset$df_name, ", ", deparse(substitute(dataset)), ", name = \"", list(...)[["name"]], "\")"
       ),
       call. = FALSE
     )
   } else if ("data.frame" %in% class(dataset)) {
     stop(
       paste0(
-        "This usage of the store function is now deprecated.\nUse the code below instead:\n\n", 
+        "This usage of the store function is now deprecated.\nUse the code below instead:\n\n",
         object, " <- ..."
       ),
       call. = FALSE
@@ -926,7 +932,7 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
 #' @export
 is_not <- function(x) {
   length(x) == 0 || (length(x) == 1 && is.na(x))
-} 
+}
 
 #' Don't try to plot strings
 #'
@@ -959,22 +965,22 @@ render.datatables <- function(object, ...) {
   }
 }
 
-#' Workaround to avoid messages from ggplotly
+#' Work around to avoid (harmless) messages from ggplotly
 #'
-#' @param ... Arguments to pass to plotly::ggplotlyy
+#' @param ... Arguments to pass to the \code{\link[plotly]{ggplotly}} function in the plotly package
 
-#' @seealso See the \code{\link[plotly]{ggplotly}} in the plotly package for details (?plotly::ggplotly)
+#' @seealso See the \code{\link[plotly]{ggplotly}} function in the plotly package for details (?plotly::ggplotly)
 #'
 #' @importFrom plotly ggplotly
 #'
 #' @export
 ggplotly <- function(...) {
-  suppressMessages(plotly::ggplotly(...))
+  suppressMessages(plotly::ggplotly(...)) 
 }
 
-#' Workaround to avoid messages from subplot
+#' Work around to avoid (harmless) messages from subplot
 #'
-#' @param ... Arguments to pass to plotly::subplot
+#' @param ... Arguments to pass to the \code{\link[plotly]{subplot}} function in the plotly packages
 #' @param margin Default margin to use between plots
 #' @seealso See the \code{\link[plotly]{subplot}} in the plotly package for details (?plotly::subplot)
 #'
@@ -999,8 +1005,8 @@ render.plotly <- function(object, ...) {
     ## avoid the ID-not-used-by-Shiny message
     object$elementId <- NULL
 
+    ## see https://github.com/ropensci/plotly/issues/1171
     # if (is.null(object$height)) {
-      ## see https://github.com/ropensci/plotly/issues/1171
       # message("\n\nThe height of (gg)plotly objects may not be correct in Preview. Height will be correctly set in saved reports however.\n\n")
     # }
 
@@ -1036,7 +1042,7 @@ render.shiny.render.function <- function(object, ...) object
 
 #' Show dataset desription, if available, in html form in Rstudio viewer or default browser
 #'
-#' @param dataset Dataset 
+#' @param dataset Dataset
 #'
 #' @importFrom utils browseURL str
 #' @importFrom knitr knit2html
@@ -1046,7 +1052,7 @@ describe <- function(dataset) {
 
   dataset <- if (is.character(dataset)) {
     message(paste0("Using describe(\"", dataset, "\") is deprecated.\nUse desribe(", dataset, ") instead"))
-    getdata(dataset) 
+    getdata(dataset)
   } else {
     dataset
   }
@@ -1060,7 +1066,7 @@ describe <- function(dataset) {
   on.exit(setwd(owd))
 
   ## generate html and open in the Rstudio viewer or in the default browser
-  description %>% knitr::knit2html(text = .) %>% cat(file = "index.html")
+  knitr::knit2html(text = description) %>% cat(file = "index.html")
   ## based on https://support.rstudio.com/hc/en-us/articles/202133558-Extending-RStudio-with-the-Viewer-Pane
   viewer <- getOption("viewer", default = browseURL)
   viewer("index.html")
@@ -1158,7 +1164,7 @@ register <- function(new, org = "", descr = "", env) {
       shiny::makeReactiveBinding(new, env = env)
     } else if (is.list(env[[new]])) {
       r_info[["dtree_list"]] <- c(new, r_info[["dtree_list"]]) %>% unique()
-    } 
+    }
   }
   invisible()
 }
@@ -1203,7 +1209,7 @@ parse_path <- function(
   } else {
     dbdir <- getOption("radiant.dropbox_dir", "")
     if (is_empty(dbdir)) {
-      dbdir <- try(radiant.data::find_dropbox(), silent = TRUE) 
+      dbdir <- try(radiant.data::find_dropbox(), silent = TRUE)
       if (is(dbdir, "try-error")) {
         message("Not able to determine the location of a local the Dropbox folder")
         dbdir <- ""
@@ -1215,7 +1221,7 @@ parse_path <- function(
     } else {
       gddir <- getOption("radiant.gdrive_dir", "")
       if (is_empty(gddir)) {
-        gddir <- try(radiant.data::find_gdrive(), silent = TRUE) 
+        gddir <- try(radiant.data::find_gdrive(), silent = TRUE)
         if (is(gddir, "try-error")) {
           message("Not able to determine the location of a local Google Drive folder")
           gddir <- ""
@@ -1227,7 +1233,7 @@ parse_path <- function(
         rpath <- paste0(chr, path, chr)
       }
     }
-  }   
+  }
 
   list(path = path, rpath = rpath, filename = filename, fext = fext, objname = objname)
 }
