@@ -1,6 +1,6 @@
 ---
 title: "Summarize and explore your data (Data > Explore)"
-author: "Vincent R. Nijs</br>Rady School of Management (UCSD)"
+author: "Vincent R. Nijs, Rady School of Management (UCSD)"
 ---
 
 ```{r include = FALSE}
@@ -10,5 +10,5 @@ library(dplyr)
 ```{r child = "_explore.Rmd"}
 ```
 
-&copy; Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="./images/by-sa.png"/></a>
-
+```{r child = "_footer.md"}
+```
