@@ -21,7 +21,8 @@ dtab <- function(object, ...) UseMethod("dtab", object)
 #' @param nr Number of rows of data to include in the table
 #' @param na.rm Remove rows with missing values (default is FALSE)
 #' @param dec Number of decimal places to show. Default is no rounding (NULL)
-#' @param filter Show filter in DT table. Options are "none", "top", "bottom"
+#' @param perc Vector of column names to be displayed as a percentage
+#' @param filter Show column filters in DT table. Options are "none", "top", "bottom"
 #' @param pageLength Number of rows to show in table
 #' @param dom Table control elements to show on the page. See \url{https://datatables.net/reference/option/dom}
 #' @param style Table formatting style ("bootstrap" or "default")
@@ -36,9 +37,9 @@ dtab <- function(object, ...) UseMethod("dtab", object)
 #' @export
 dtab.data.frame <- function(
   object, vars = "", filt = "", rows = NULL,
-  nr = NULL, na.rm = FALSE, dec = 3, filter = "top",
-  pageLength = 10, dom = "", style = "bootstrap",
-  rownames = FALSE, ...
+  nr = NULL, na.rm = FALSE, dec = 3, perc = "",
+  filter = "top", pageLength = 10, dom = "", 
+  style = "bootstrap", rownames = FALSE, ...
 ) {
 
   dat <- getdata(object, vars, filt = filt, rows = rows, na.rm = na.rm)
@@ -47,9 +48,13 @@ dtab.data.frame <- function(
   }
 
   ## for rounding
-  isInt <- sapply(dat, is.integer)
-  isNum <- sapply(dat, is_numeric)
-  dec <- ifelse(is_empty(dec) || !is.integer(dec) || dec < 0, 3, dec)
+  isInt <- sapply(dat, is.integer) %>% setdiff(perc)
+  isNum <- sapply(dat, is_numeric) %>% setdiff(perc)
+  dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
+
+  ## don't do normal rounding for perc variables
+  isInt[intersect(names(isInt), perc)] <- FALSE
+  isNum[intersect(names(isNum), perc)] <- FALSE
 
   ## avoid factor with a huge number of levels
   isBigFct <- function(x) is.factor(x) && length(levels(x)) > 1000
@@ -87,9 +92,11 @@ dtab.data.frame <- function(
 
   ## rounding as needed
   if (sum(isNum) > 0)
-    dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isNum], dec)
+    dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isNum], digits = dec)
   if (sum(isInt) > 0)
-    dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isInt], 0)
+    dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isInt], digits = 0)
+  if (!is_empty(perc))
+    dt_tab <- DT::formatPercentage(dt_tab, perc, digits = dec)
 
   ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(
@@ -183,7 +190,7 @@ viewdata <- function(
   ## for rounding
   isNum <- sapply(dat, is_numeric)
   isInt <- sapply(dat, is.integer)
-  dec <- ifelse(is_empty(dec) || !is.integer(dec) || dec < 0, 3, dec)
+  dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
 
   shinyApp(
     ui = fluidPage(

@@ -5,8 +5,8 @@
 \title{Create a DT table with bootstrap theme}
 \usage{
 \method{dtab}{data.frame}(object, vars = "", filt = "", rows = NULL,
-  nr = NULL, na.rm = FALSE, dec = 3, filter = "top", pageLength = 10,
-  dom = "", style = "bootstrap", rownames = FALSE, ...)
+  nr = NULL, na.rm = FALSE, dec = 3, perc = "", filter = "top",
+  pageLength = 10, dom = "", style = "bootstrap", rownames = FALSE, ...)
 }
 \arguments{
 \item{object}{Data.frame to display}
@@ -23,7 +23,9 @@
 
 \item{dec}{Number of decimal places to show. Default is no rounding (NULL)}
 
-\item{filter}{Show filter in DT table. Options are "none", "top", "bottom"}
+\item{perc}{Vector of column names to be displayed as a percentage}
+
+\item{filter}{Show column filters in DT table. Options are "none", "top", "bottom"}
 
 \item{pageLength}{Number of rows to show in table}
 
