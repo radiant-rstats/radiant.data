@@ -1,3 +1,13 @@
+# radiant.data 0.9.3.4
+
+## minor changes
+
+* Add argument to `dtab.data.frame` to format specified columns as a percentage
+
+## Bug fixes
+
+* Round to the specified number of decimal places even if input if not of type integer (e.g., 2.0)
+
 # radiant.data 0.9.3.3
 
 ## Major changes
