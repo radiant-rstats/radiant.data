@@ -141,7 +141,7 @@ knitr::opts_chunk$set(
   error = TRUE,
   cache = FALSE,
   message = FALSE,
-  dpi = 144,
+  dev = \"svg\",
   warning = FALSE", sopts, "
 )
 
@@ -669,7 +669,7 @@ update_report <- function(
     update_report_fun(cmd, type = "r")
   } else {
     if (figs) {
-      cmd <- paste0("\n```{r fig.width = ", round(7 * fig.width / 650, 2), ", fig.height = ", round(7 * fig.height / 650, 2), ", dpi = 144}\n", cmd, "\n```\n")
+      cmd <- paste0("\n```{r fig.width = ", round(7 * fig.width / 650, 2), ", fig.height = ", round(7 * fig.height / 650, 2), "}\n", cmd, "\n```\n")
     } else {
       cmd <- paste0("\n```{r}\n", cmd, "\n```\n")
     }
