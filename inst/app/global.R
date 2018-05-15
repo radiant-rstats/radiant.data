@@ -31,7 +31,7 @@ if (is.null(getOption("radiant.launch"))) {
 import_fs <- function(ns, libs = c(), incl = c(), excl = c()) {
   tmp <- sapply(libs, library, character.only = TRUE)
   rm(tmp)
-  if (length(incl) != 0 || length(excl) != 0) {
+  if (length(incl) > 0 || length(excl) > 0) {
     import_list <- getNamespaceImports(ns)
     if (length(incl) == 0) {
       import_list[names(import_list) %in% c("base", "methods", "stats", "utils", libs, excl)] <- NULL
@@ -123,9 +123,6 @@ if (!"package:radiant.data" %in% search()) {
   }
 }
 
-## seem to need this regardless ... check
-import_fs("radiant.data", libs = "plotly", incl = c("ggplotly", "subplot"))
-
 ## basic options when run on server
 if (getOption("width") != 250) {
   options(
@@ -158,7 +155,8 @@ knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,
   error = TRUE,
-  dpi = 144,
+  dpi = 96,
+  dev = "svg",
   fig.path = normalizePath(tempdir(), winslash = "/")
   # screenshot.force = FALSE,
 )
@@ -417,7 +415,7 @@ options(
         ),
         ## inspiration for uploading state https://stackoverflow.com/a/11406690/1974918
         ## see also function in www/js/run_return.js
-        tabPanel(actionLink("state_load_link", "Upload radiant state file", icon = icon("folder-open"))),
+        tabPanel(actionLink("state_load_link", "Load radiant state file", icon = icon("folder-open"))),
         tabPanel(actionLink("state_share", "Share radiant state", icon = icon("share"))),
         tabPanel("View radiant state", uiOutput("state_view"), icon = icon("user"))
       ),

@@ -1,3 +1,9 @@
+# radiant.data 0.9.3.5
+
+## minor changes
+
+* Use `dev = "svg"` for plots in _Report > Rmd_ and _Report > R_
+
 # radiant.data 0.9.3.4
 
 ## minor changes
