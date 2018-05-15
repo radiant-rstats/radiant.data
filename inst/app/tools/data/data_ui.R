@@ -9,6 +9,8 @@ output$ui_filter_error <- renderUI({
 })
 
 ## data ui and tabs
+## state is not available in global environment
+## neither are the state_... functions
 output$ui_data <- renderUI({
   tagList(
     sidebarLayout(
