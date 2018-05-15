@@ -48,8 +48,8 @@ dtab.data.frame <- function(
   }
 
   ## for rounding
-  isInt <- sapply(dat, is.integer) %>% setdiff(perc)
-  isNum <- sapply(dat, is_numeric) %>% setdiff(perc)
+  isInt <- sapply(dat, is.integer)
+  isNum <- sapply(dat, is_numeric)
   dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
 
   ## don't do normal rounding for perc variables

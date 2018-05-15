@@ -1,10 +1,10 @@
 > Create a (reproducible) report using R
 
-The code feature allows you to run R-code with access to all functions and data in Radiant. By clicking the `Knit report (R)` button, the code will be evaluated and the output will be shown on the right of the _Report > R_ page. To evaluate only a part of the code use the cursor to select a section and press `CTRL-enter` (`CMD-enter` on mac).
+The _Report > R_ tab allows you to run R-code with access to all functions and data in Radiant. By clicking the `Knit report (R)` button, the code will be evaluated and the output will be shown on the right of the _Report > R_ page. To evaluate only a part of the code use the cursor to select a section and press `CTRL-enter` (`CMD-enter` on mac).
 
-You can load an R-code file into Radiant by clicking the `Load report` button and selecting an .r or .R file. If you started Radiant from Rstudio you can save a report in HTML, Word, or PDF format by selecting the desired format from the drop-down manu and clicking `Save report`. To save just the code choose `R` from the dropdown and press the `Save reporet` button.
+You can load an R-code file into Radiant by clicking the `Load report` button and selecting an .r or .R file. If you started Radiant from Rstudio you can save a report in HTML, Word, or PDF format by selecting the desired format from the drop-down menu and clicking `Save report`. To save just the code choose `R` from the dropdown and press the `Save report` button.
 
-If you started Radiant from Rstudio, you can also click the `Read files` button to browse for files and generate code to read it into Radiant. For example, read rda, rds, xls, yaml, and feather and add them to the `Datasets` dropdown. If the file type you want to load is not currently supported, the path to the file will be returned. If Radiant was started from an Rstudio project, the file paths used will be relative to the project root. Paths to files synced to local Dropbox or Google Drive folder will use the `find_dropbox` and `find_gdrive` functions to enhances reproducibility.
+If you started Radiant from Rstudio, you can also click the `Read files` button to browse for files and generate code to read it into Radiant. For example, read rda, rds, xls, yaml, and feather and add them to the `Datasets` dropdown. If the file type you want to load is not currently supported, the path to the file will be returned. The file path used will be relative to the Rstudio-project root. Paths to files synced to a local Dropbox or Google Drive folder will use the `find_dropbox` and `find_gdrive` functions to enhances reproducibility.
 
 As an example you can copy-and-paste the code below into the editor and press `Knit report (R)` to generate results.
 
