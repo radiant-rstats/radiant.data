@@ -50,6 +50,8 @@ launch <- function(package = "radiant.data", run = "viewer") {
       message(sprintf("\nUsing Radiant in an Rstudio Window works best in a newer version of Rstudio (i.e., version > 1.2). See https://dailies.rstudio.com/ for the latest version. Alternatively, use %s::%s_viewer()", package, package))
     }
     options(radiant.launch = "window")
+    ## Dialog doesn't seem a good option
+    # run <- shiny::dialogViewer("Radiant", 1200, 800)
     ## using eval(parse(text = ...)) to avoid foreign function call warnings
     run <- eval(parse(text = "function(url) {invisible(.Call('rs_shinyviewer', url, getwd(), 3))}"))
   } else {
@@ -975,7 +977,7 @@ render.datatables <- function(object, ...) {
 #'
 #' @export
 ggplotly <- function(...) {
-  suppressMessages(plotly::ggplotly(...)) 
+  suppressMessages(plotly::ggplotly(...))
 }
 
 #' Work around to avoid (harmless) messages from subplot
@@ -1078,13 +1080,9 @@ describe <- function(dataset) {
 #' @param path Path to feather file
 #' @param description Data description
 #'
-#' @importFrom feather write_feather
-#'
 #' @export
 write_feather <- function(x, path, description = attr(x, "description")) {
-  if (!"feather" %in% rownames(utils::installed.packages())) {
-    stop("The feather package is not installed. Please use install.packages('feather')")
-  }
+  requireNamespace("feather")
   fw_args <- as.list(formals(feather::write_feather))
   if ("description" %in% names(fw_args)) {
     feather::write_feather(x, path, if (is.null(description)) "" else description)
