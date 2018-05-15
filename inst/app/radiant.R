@@ -244,8 +244,7 @@ show_data_snippet <- function(dataset = input$dataset, nshow = 7, title = "", fi
   nr <- nrow(dataset)
   ## avoid slice with variables outside of the df in case a column with the same
   ## name exists
-  dataset <- dataset[1:min(nshow, nr), , drop = FALSE]
-  dataset %>%
+  dataset[1:min(nshow, nr), , drop = FALSE] %>%
     mutate_if(is_date, as.character) %>%
     mutate_if(is.character, funs(strtrim(., 40))) %>%
     xtable::xtable(.) %>%
