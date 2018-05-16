@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.3.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.3.5</span>
       </span>
     </div>
 
@@ -190,29 +190,7 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>(<span class='kw'>chi2</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; List of 14
-#&gt;  $ tab_freq   :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	6 obs. of  2 variables:
-#&gt;   ..$ cut  : Factor w/ 6 levels "Fair","Good",..: 1 2 3 4 5 6
-#&gt;   ..$ n_obs: int [1:6] 101 275 677 771 1176 3000
-#&gt;  $ tab        :'data.frame':	6 obs. of  2 variables:
-#&gt;   ..$ cut  : Factor w/ 6 levels "Fair","Good",..: 1 2 3 4 5 6
-#&gt;   ..$ n_obs: int [1:6] 101 275 677 771 1176 3000
-#&gt;   ..- attr(*, "nrow")= num 5
-#&gt;  $ df_name    : chr "diamonds"
-#&gt;  $ fill       : int 0
-#&gt;  $ vars       : chr "cut"
-#&gt;  $ cvars      : chr "cut"
-#&gt;  $ nvar       : chr "n_obs"
-#&gt;  $ fun        : chr "mean"
-#&gt;  $ normalize  : chr "None"
-#&gt;  $ tabfilt    : chr ""
-#&gt;  $ tabsort    : chr ""
-#&gt;  $ nr         : NULL
-#&gt;  $ data_filter: chr ""
-#&gt;  $ shiny      : logi FALSE
-#&gt;  - attr(*, "class")= chr [1:2] "pivotr" "list"
-#&gt; NULL
-#&gt; Pivot table
+    <pre class="examples"><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>(<span class='kw'>chi2</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Pivot table
 #&gt; Data        : diamonds 
 #&gt; Categorical : cut 
 #&gt; 
@@ -225,30 +203,7 @@
 #&gt;      Total 3,000
 #&gt; 
 #&gt; Chi-squared: 1202.62 df(4), p.value &lt; .001
-#&gt; 0.0% of cells have expected values below 5</div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabsort</span> <span class='kw'>=</span> <span class='st'>"-n_obs"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; List of 15
-#&gt;  $ tc         : chr "cut"
-#&gt;  $ tab_freq   :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	6 obs. of  2 variables:
-#&gt;   ..$ cut  : Factor w/ 6 levels "Fair","Good",..: 1 2 3 4 5 6
-#&gt;   ..$ n_obs: int [1:6] 101 275 677 771 1176 3000
-#&gt;  $ tab        :'data.frame':	6 obs. of  2 variables:
-#&gt;   ..$ cut  : Factor w/ 6 levels "Ideal","Premium",..: 1 2 3 4 5 6
-#&gt;   ..$ n_obs: int [1:6] 1176 771 677 275 101 3000
-#&gt;   ..- attr(*, "nrow")= num 5
-#&gt;  $ df_name    : chr "diamonds"
-#&gt;  $ fill       : int 0
-#&gt;  $ vars       : chr "cut"
-#&gt;  $ cvars      : chr "cut"
-#&gt;  $ nvar       : chr "n_obs"
-#&gt;  $ fun        : chr "mean"
-#&gt;  $ normalize  : chr "None"
-#&gt;  $ tabfilt    : chr ""
-#&gt;  $ tabsort    : chr "-n_obs"
-#&gt;  $ nr         : NULL
-#&gt;  $ data_filter: chr ""
-#&gt;  $ shiny      : logi FALSE
-#&gt;  - attr(*, "class")= chr [1:2] "pivotr" "list"
-#&gt; NULL
-#&gt; Pivot table
+#&gt; 0.0% of cells have expected values below 5</div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabsort</span> <span class='kw'>=</span> <span class='st'>"-n_obs"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Pivot table
 #&gt; Data        : diamonds 
 #&gt; Table sorted: -n_obs 
 #&gt; Categorical : cut 
@@ -260,30 +215,7 @@
 #&gt;       Good   275
 #&gt;       Fair   101
 #&gt;      Total 3,000
-#&gt; </div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabsort</span> <span class='kw'>=</span> <span class='st'>"desc(n_obs)"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; List of 15
-#&gt;  $ tc         : chr "cut"
-#&gt;  $ tab_freq   :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	6 obs. of  2 variables:
-#&gt;   ..$ cut  : Factor w/ 6 levels "Fair","Good",..: 1 2 3 4 5 6
-#&gt;   ..$ n_obs: int [1:6] 101 275 677 771 1176 3000
-#&gt;  $ tab        :'data.frame':	6 obs. of  2 variables:
-#&gt;   ..$ cut  : Factor w/ 6 levels "Ideal","Premium",..: 1 2 3 4 5 6
-#&gt;   ..$ n_obs: int [1:6] 1176 771 677 275 101 3000
-#&gt;   ..- attr(*, "nrow")= num 5
-#&gt;  $ df_name    : chr "diamonds"
-#&gt;  $ fill       : int 0
-#&gt;  $ vars       : chr "cut"
-#&gt;  $ cvars      : chr "cut"
-#&gt;  $ nvar       : chr "n_obs"
-#&gt;  $ fun        : chr "mean"
-#&gt;  $ normalize  : chr "None"
-#&gt;  $ tabfilt    : chr ""
-#&gt;  $ tabsort    : chr "desc(n_obs)"
-#&gt;  $ nr         : NULL
-#&gt;  $ data_filter: chr ""
-#&gt;  $ shiny      : logi FALSE
-#&gt;  - attr(*, "class")= chr [1:2] "pivotr" "list"
-#&gt; NULL
-#&gt; Pivot table
+#&gt; </div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabsort</span> <span class='kw'>=</span> <span class='st'>"desc(n_obs)"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Pivot table
 #&gt; Data        : diamonds 
 #&gt; Table sorted: desc(n_obs) 
 #&gt; Categorical : cut 
@@ -295,29 +227,7 @@
 #&gt;       Good   275
 #&gt;       Fair   101
 #&gt;      Total 3,000
-#&gt; </div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabfilt</span> <span class='kw'>=</span> <span class='st'>"n_obs &gt; 700"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; List of 14
-#&gt;  $ tab_freq   :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	6 obs. of  2 variables:
-#&gt;   ..$ cut  : Factor w/ 6 levels "Fair","Good",..: 1 2 3 4 5 6
-#&gt;   ..$ n_obs: int [1:6] 101 275 677 771 1176 3000
-#&gt;  $ tab        :'data.frame':	3 obs. of  2 variables:
-#&gt;   ..$ cut  : Factor w/ 3 levels "Premium","Ideal",..: 1 2 3
-#&gt;   ..$ n_obs: int [1:3] 771 1176 3000
-#&gt;   ..- attr(*, "nrow")= num 5
-#&gt;  $ df_name    : chr "diamonds"
-#&gt;  $ fill       : int 0
-#&gt;  $ vars       : chr "cut"
-#&gt;  $ cvars      : chr "cut"
-#&gt;  $ nvar       : chr "n_obs"
-#&gt;  $ fun        : chr "mean"
-#&gt;  $ normalize  : chr "None"
-#&gt;  $ tabfilt    : chr "n_obs &gt; 700"
-#&gt;  $ tabsort    : chr ""
-#&gt;  $ nr         : NULL
-#&gt;  $ data_filter: chr ""
-#&gt;  $ shiny      : logi FALSE
-#&gt;  - attr(*, "class")= chr [1:2] "pivotr" "list"
-#&gt; NULL
-#&gt; Pivot table
+#&gt; </div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabfilt</span> <span class='kw'>=</span> <span class='st'>"n_obs &gt; 700"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Pivot table
 #&gt; Data        : diamonds 
 #&gt; Table filter: n_obs &gt; 700 
 #&gt; Categorical : cut 
@@ -326,38 +236,7 @@
 #&gt;  Premium   771
 #&gt;    Ideal 1,176
 #&gt;    Total 3,000
-#&gt; </div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut:clarity"</span>, <span class='kw'>nvar</span> <span class='kw'>=</span> <span class='st'>"price"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; List of 13
-#&gt;  $ tab_freq   :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	9 obs. of  7 variables:
-#&gt;   ..$ clarity  : Factor w/ 9 levels "I1","SI2","SI1",..: 1 2 3 4 5 6 7 8 9
-#&gt;   ..$ Fair     : num [1:9] 2730 5894 4273 3292 5111 ...
-#&gt;   ..$ Good     : num [1:9] 4334 5281 3757 3925 3741 ...
-#&gt;   ..$ Very Good: num [1:9] 3864 5046 4278 3951 3889 ...
-#&gt;   ..$ Premium  : num [1:9] 4932 5568 4114 4523 4461 ...
-#&gt;   ..$ Ideal    : num [1:9] 6078 4436 3758 3306 3189 ...
-#&gt;   ..$ Total    : num [1:9] 4195 5100 3999 3823 3789 ...
-#&gt;  $ tab        :'data.frame':	9 obs. of  7 variables:
-#&gt;   ..$ clarity  : Factor w/ 9 levels "I1","SI2","SI1",..: 1 2 3 4 5 6 7 8 9
-#&gt;   ..$ Fair     : num [1:9] 2730 5894 4273 3292 5111 ...
-#&gt;   ..$ Good     : num [1:9] 4334 5281 3757 3925 3741 ...
-#&gt;   ..$ Very.Good: num [1:9] 3864 5046 4278 3951 3889 ...
-#&gt;   ..$ Premium  : num [1:9] 4932 5568 4114 4523 4461 ...
-#&gt;   ..$ Ideal    : num [1:9] 6078 4436 3758 3306 3189 ...
-#&gt;   ..$ Total    : num [1:9] 4195 5100 3999 3823 3789 ...
-#&gt;   ..- attr(*, "nrow")= num 8
-#&gt;  $ df_name    : chr "diamonds"
-#&gt;  $ fill       : logi NA
-#&gt;  $ cvars      : chr [1:2] "cut" "clarity"
-#&gt;  $ nvar       : chr "price"
-#&gt;  $ fun        : chr "mean"
-#&gt;  $ normalize  : chr "None"
-#&gt;  $ tabfilt    : chr ""
-#&gt;  $ tabsort    : chr ""
-#&gt;  $ nr         : NULL
-#&gt;  $ data_filter: chr ""
-#&gt;  $ shiny      : logi FALSE
-#&gt;  - attr(*, "class")= chr [1:2] "pivotr" "list"
-#&gt; NULL
-#&gt; Pivot table
+#&gt; </div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut:clarity"</span>, <span class='kw'>nvar</span> <span class='kw'>=</span> <span class='st'>"price"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Pivot table
 #&gt; Data        : diamonds 
 #&gt; Categorical : cut clarity 
 #&gt; Numeric     : price 

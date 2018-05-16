@@ -55,7 +55,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.3.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.3.5</span>
       </span>
     </div>
 
@@ -137,13 +137,26 @@
       <small>Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="radiant-data-0-9-3-4" class="section level1">
+    <div id="radiant-data-0-9-3-5" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-3-4" class="anchor"></a>radiant.data 0.9.3.4<small> Unreleased </small>
+<a href="#radiant-data-0-9-3-5" class="anchor"></a>radiant.data 0.9.3.5<small> Unreleased </small>
 </h1>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>minor changes</h2>
+<ul>
+<li>Use <code>dev = "svg"</code> for plots in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
+</li>
+</ul>
+</div>
+</div>
+    <div id="radiant-data-0-9-3-4" class="section level1">
+<h1 class="page-header">
+<a href="#radiant-data-0-9-3-4" class="anchor"></a>radiant.data 0.9.3.4<small> Unreleased </small>
+</h1>
+<div id="minor-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-1" class="anchor"></a>minor changes</h2>
 <ul>
 <li>Add argument to <code>dtab.data.frame</code> to format specified columns as a percentage</li>
 </ul>
@@ -170,9 +183,9 @@
 <li>Deprecated <code>mean_rm</code>, <code>median_rm</code>, <code>min_rm</code>, <code>max_rm,</code>sd_rm<code>,</code>var_rm, and <code>sum_rm</code> functions as they are no longer needed</li>
 </ul>
 </div>
-<div id="minor-changes-1" class="section level2">
+<div id="minor-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-2" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Added <code>load_clip</code> and <code>save_clip</code> to load and save data to the clipboard on Windows and macOS</li>
 <li>Improved auto completion in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
@@ -195,9 +208,9 @@
 <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will now be evaluated the <code>r_data</code> environment. This means that the return value from <code>ls()</code> will be much cleaner</li>
 </ul>
 </div>
-<div id="minor-changes-2" class="section level2">
+<div id="minor-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-2" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-3" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Add option to load files with extension .rdata or .tsv using <code>loadr</code> which add that data to the Datasets dropdown</li>
 <li>
@@ -210,9 +223,9 @@
 <h1 class="page-header">
 <a href="#radiant-data-0-9-2-2" class="anchor"></a>radiant.data 0.9.2.2<small> Unreleased </small>
 </h1>
-<div id="minor-changes-3" class="section level2">
+<div id="minor-changes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-3" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-4" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Require <code>shinyAce</code> 0.3.0</li>
 <li>Export <code>read_files</code> function to interactively generate R-code or Rmarkdown code-chunks to read files in various format (e.g., SQLite, rds, csv, xlsx, css, jpg, etc.). Supports relative paths and uses <code><a href="../reference/find_dropbox.html">find_dropbox()</a></code> and <code><a href="../reference/find_gdrive.html">find_gdrive()</a></code> when applicable</li>
@@ -223,9 +236,9 @@
 <h1 class="page-header">
 <a href="#radiant-data-0-9-2-0" class="anchor"></a>radiant.data 0.9.2.0<small> Unreleased </small>
 </h1>
-<div id="minor-changes-4" class="section level2">
+<div id="minor-changes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-4" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-5" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Addins option to start app in Rstudio window</li>
 <li>Upload and download data using the Rstudio file browser. Allows using relative paths to files (e.g., data or images inside an Rstudio project)</li>
@@ -236,9 +249,9 @@
 <h1 class="page-header">
 <a href="#radiant-data-0-9-0-17" class="anchor"></a>radiant.data 0.9.0.17<small> Unreleased </small>
 </h1>
-<div id="minor-changes-6" class="section level2">
+<div id="minor-changes-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-6" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-7" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Use thousand separator for <code>summary.pivotr</code> and <code>summary.explore</code>
 </li>
@@ -251,9 +264,9 @@
 <h1 class="page-header">
 <a href="#radiant-data-0-9-0-16" class="anchor"></a>radiant.data 0.9.0.16<small> Unreleased </small>
 </h1>
-<div id="minor-changes-7" class="section level2">
+<div id="minor-changes-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-7" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-8" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Changed license for help files and images for radiant.data to <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode">CC-BY-SA</a>
 </li>
@@ -264,9 +277,9 @@
 <h1 class="page-header">
 <a href="#radiant-data-0-9-0-15" class="anchor"></a>radiant.data 0.9.0.15<small> Unreleased </small>
 </h1>
-<div id="minor-changes-8" class="section level2">
+<div id="minor-changes-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-8" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-9" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Allow all textarea inputs and multi-select inputs to be resized manually by the user</li>
 <li>Use 200 dpi for plots in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
@@ -287,9 +300,9 @@
 <h1 class="page-header">
 <a href="#radiant-data-0-9-0-13" class="anchor"></a>radiant.data 0.9.0.13<small> Unreleased </small>
 </h1>
-<div id="minor-changes-9" class="section level2">
+<div id="minor-changes-10" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-9" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-10" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Apply <code>fixMS</code> to replace curly quotes, em dash, etc. when using <em>Data &gt; Transform &gt; Create</em>
 </li>
@@ -320,9 +333,9 @@
 <h1 class="page-header">
 <a href="#radiant-data-0-9-0-7" class="anchor"></a>radiant.data 0.9.0.7<small> Unreleased </small>
 </h1>
-<div id="minor-changes-10" class="section level2">
+<div id="minor-changes-11" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-10" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-11" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Allow response variables with NA values in <em>Model &gt; Logistic regression</em> and other classification models</li>
 <li>Support logicals in code generation from <em>Data &gt; View</em>
@@ -378,9 +391,9 @@
 <li>Show Rstudio project information in navbar if available</li>
 </ul>
 </div>
-<div id="minor-changes-11" class="section level2">
+<div id="minor-changes-12" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-11" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-12" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Overflow <code>pre</code> and <code>code</code> blocks in HTML reports generated in <em>Report &gt; Rmd</em>
 </li>
@@ -396,9 +409,9 @@
 <h1 class="page-header">
 <a href="#radiant-data-0-8-7-8" class="anchor"></a>radiant.data 0.8.7.8<small> Unreleased </small>
 </h1>
-<div id="minor-changes-12" class="section level2">
+<div id="minor-changes-13" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-12" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-13" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Added preview options to <em>Data &gt; Manage</em> based on <a href="https://github.com/radiant-rstats/radiant/issues/30" class="uri">https://github.com/radiant-rstats/radiant/issues/30</a>
 </li>
@@ -423,9 +436,9 @@
 <h1 class="page-header">
 <a href="#radiant-data-0-8-6-0" class="anchor"></a>radiant.data 0.8.6.0<small> Unreleased </small>
 </h1>
-<div id="minor-changes-13" class="section level2">
+<div id="minor-changes-14" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-13" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-14" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Export <code>ggplotly</code> from <code>plotly</code> for interactive plots in <em>Report &gt; Rmd</em>
 </li>
@@ -457,9 +470,9 @@
 <h1 class="page-header">
 <a href="#radiant-data-0-8-1-0" class="anchor"></a>radiant.data 0.8.1.0<small> Unreleased </small>
 </h1>
-<div id="minor-changes-14" class="section level2">
+<div id="minor-changes-15" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-14" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-15" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Specify the maximum number of rows to load for a csv and csv (url) file through <em>Data &gt; Manage</em>
 </li>
@@ -522,8 +535,7 @@
 <ul>
 <li>varp_rm has been deprecated in favor of varpop</li>
 <li>sdp_rm has been deprecated in favor of sdpop</li>
-<li>mutate_each has been deprecated in favor of mutate_at, mutate_all, and radiant.<a href="data::mutate_ext" class="uri">data::mutate_ext</a>
-</li>
+<li>mutate_each has been deprecated in favor of mutate_at, mutate_all, and radiant.data::mutate_ext</li>
 </ul>
 </div>
 </div>
@@ -533,6 +545,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#radiant-data-0-9-3-5">0.9.3.5</a></li>
         <li><a href="#radiant-data-0-9-3-4">0.9.3.4</a></li>
         <li><a href="#radiant-data-0-9-3-3">0.9.3.3</a></li>
         <li><a href="#radiant-data-0-9-2-3">0.9.2.3</a></li>
