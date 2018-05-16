@@ -1,11 +1,4 @@
 reference:
-- title: Starting radiant
-  desc: Functions used to start radiant shiny apps
-  contents:
-    - launch
-    - radiant.data
-    - radiant.data_viewer
-    - radiant.data_window
 - title: Data > Manage
   desc: Functions used with Data > Manage
   contents:
@@ -176,6 +169,13 @@ reference:
     - publishers
     - superheroes
     - titanic
+- title: Starting radiant.data
+  desc: Functions used to start radiant shiny apps
+  contents:
+    - launch
+    - radiant.data
+    - radiant.data_viewer
+    - radiant.data_window
 - title: Deprecated
   desc: Deprecated
   contents:
