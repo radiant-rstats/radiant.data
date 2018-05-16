@@ -373,85 +373,60 @@ n_obs <- function(x, ...) length(x)
 #' @export
 n_missing <- function(x, ...) sum(is.na(x))
 
-#' 2.5th percentile
-#' @param x Input variable
+#' Calculate percentiles
+#' @param x Numeric vector
 #' @param na.rm If TRUE missing values are removed before calculation
-#' @return 2.5th percentile
 #' @examples
-#' p025(rnorm(100))
+#' p01(0:100)
 #'
+#' @rdname percentiles
+#' @export
+p01 <- function(x, na.rm = TRUE) quantile(x, .01, na.rm = na.rm)
+
+#' @rdname percentiles
+#' @inheritParams p01
 #' @export
 p025 <- function(x, na.rm = TRUE) quantile(x, .025, na.rm = na.rm)
 
-#' 5th percentile
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return 5th percentile
-#' @examples
-#' p05(rnorm(100))
-#'
+#' @rdname percentiles
+#' @inheritParams p01
 #' @export
 p05 <- function(x, na.rm = TRUE) quantile(x, .05, na.rm = na.rm)
 
-#' 10th percentile
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return 10th percentile
-#' @examples
-#' p10(rnorm(100))
-#'
+#' @rdname percentiles
+#' @inheritParams p01
 #' @export
 p10 <- function(x, na.rm = TRUE) quantile(x, .1, na.rm = na.rm)
 
-#' 25th percentile
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return 25th percentile
-#' @examples
-#' p25(rnorm(100))
-#'
+#' @rdname percentiles
+#' @inheritParams p01
 #' @export
 p25 <- function(x, na.rm = TRUE) quantile(x, .25, na.rm = na.rm)
 
-#' 75th percentile
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return 75th percentile
-#' @examples
-#' p75(rnorm(100))
-#'
+#' @rdname percentiles
+#' @inheritParams p01
 #' @export
 p75 <- function(x, na.rm = TRUE) quantile(x, .75, na.rm = na.rm)
 
-#' 90th percentile
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return 90th percentile
-#' @examples
-#' p90(rnorm(100))
-#'
+#' @rdname percentiles
+#' @inheritParams p01
 #' @export
 p90 <- function(x, na.rm = TRUE) quantile(x, .90, na.rm = na.rm)
 
-#' 95th percentile
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return 95th percentile
-#' @examples
-#' p95(rnorm(100))
-#'
+#' @rdname percentiles
+#' @inheritParams p01
 #' @export
 p95 <- function(x, na.rm = TRUE) quantile(x, .95, na.rm = na.rm)
 
-#' 97.5th percentile
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return 97.5th percentile
-#' @examples
-#' p975(rnorm(100))
-#'
+#' @rdname percentiles
+#' @inheritParams p01
 #' @export
 p975 <- function(x, na.rm = TRUE) quantile(x, .975, na.rm = na.rm)
+
+#' @rdname percentiles
+#' @inheritParams p01
+#' @export
+p99 <- function(x, na.rm = TRUE) quantile(x, .99, na.rm = na.rm)
 
 #' Coefficient of variation
 #' @param x Input variable
@@ -497,8 +472,8 @@ se <- function(x, na.rm = TRUE) {
 #' @export
 prop <- function(x, na.rm = TRUE) {
   if (na.rm) x <- na.omit(x)
-  if (is.numeric(x)) {
-    mean(x == max(x, 1)) ## gives proportion of max value in x
+  if (is_numeric(x)) {
+    mean(x == max(x, 1))    ## gives proportion of max value in x
   } else if (is.factor(x)) {
     mean(x == levels(x)[1]) ## gives proportion of first level in x
   } else if (is.logical(x)) {

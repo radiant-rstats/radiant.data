@@ -4,10 +4,10 @@ reference:
   contents:
     - choose_dir
     - choose_files
-    - describe 
+    - describe
     - find_dropbox
     - find_gdrive
-    - find_project 
+    - find_project
     - fix_names
     - getdata
     - load_clip
@@ -39,7 +39,7 @@ reference:
   desc: Functions used with Data > Pivot
   contents:
     - explore
-    - dtab.explore 
+    - dtab.explore
     - flip
     - summary.explore
 - title: Data > Transform
@@ -47,7 +47,7 @@ reference:
   contents:
     - as_character
     - as_distance
-    - as_distance 
+    - as_distance
     - as_dmy
     - as_dmy_hm
     - as_dmy_hms
@@ -63,7 +63,7 @@ reference:
     - as_ymd
     - as_ymd_hm
     - as_ymd_hms
-    - center 
+    - center
     - cv
     - inverse
     - is_empty
@@ -108,17 +108,17 @@ reference:
 - title: Data > Combine
   desc: Functions used with Data > Combine
   contents:
-    - combinedata 
+    - combinedata
 - title: Report
   desc: Functions used with Report > Rmd and Report > R
-  contents: 
+  contents:
     - fixMS
     - formatdf
     - formatnr
     - register
-    - render
     - render.datatables
     - render.plotly
+    - render
 - title: Convenience functions
   desc: Convenience functions
   contents:
@@ -140,18 +140,18 @@ reference:
     - sig_stars
     - sshh
     - sshhr
-- title: Miscellaneous
-  desc: Miscellaneous
+- title: Starting radiant.data
+  desc: Functions used to start radiant shiny apps
   contents:
-    - ggplotly
-    - plot.character
-    - render.shiny.render.function
-    - render.character
-    - store.character
-    - subplot
+    - launch
+    - radiant.data
+    - radiant.data_viewer
+    - radiant.data_window
 - title: Re-exported
   desc: Functions exported from other packages
   contents:
+    - ggplotly
+    - subplot
     - as_tibble
     - tibble
     - rownames_to_column
@@ -169,13 +169,6 @@ reference:
     - publishers
     - superheroes
     - titanic
-- title: Starting radiant.data
-  desc: Functions used to start radiant shiny apps
-  contents:
-    - launch
-    - radiant.data
-    - radiant.data_viewer
-    - radiant.data_window
 - title: Deprecated
   desc: Deprecated
   contents:
@@ -199,5 +192,3 @@ articles:
 - title: State
   contents:
     - pkgdown/state
-
-

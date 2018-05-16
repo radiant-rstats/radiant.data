@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{render}
 \alias{render}
-\title{Method to render objects (i.e., htmlwidgets and rmarkdown files)}
+\title{Base method used to render htmlwidgets}
 \usage{
 render(object, ...)
 }
@@ -12,5 +12,5 @@ render(object, ...)
 \item{...}{Additional arguments}
 }
 \description{
-Method to render objects (i.e., htmlwidgets and rmarkdown files)
+Base method used to render htmlwidgets
 }

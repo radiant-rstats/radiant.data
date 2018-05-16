@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Standard deviation for the population — sdpop • radiant.data</title>
+<title>Calculate percentiles — p01 • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,9 +28,9 @@
 
 
 
-<meta property="og:title" content="Standard deviation for the population — sdpop" />
+<meta property="og:title" content="Calculate percentiles — p01" />
 
-<meta property="og:description" content="Standard deviation for the population" />
+<meta property="og:description" content="Calculate percentiles" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -136,25 +136,43 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Standard deviation for the population</h1>
+    <h1>Calculate percentiles</h1>
     <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/explore.R'><code>R/explore.R</code></a></small>
-    <div class="hidden name"><code>sdpop.Rd</code></div>
+    <div class="hidden name"><code>percentiles.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Standard deviation for the population</p>
+    <p>Calculate percentiles</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>sdpop</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>p01</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>p025</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>p05</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>p10</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>p25</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>p75</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>p90</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>p95</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>p975</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>p99</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Input variable</p></td>
+      <td><p>Numeric vector</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
@@ -162,22 +180,17 @@
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>Standard deviation for the population</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>sdpop</span>(<span class='fu'>rnorm</span>(<span class='fl'>100</span>))</div><div class='output co'>#&gt; [1] 0.9924894</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'>p01</span>(<span class='fl'>0</span>:<span class='fl'>100</span>)</div><div class='output co'>#&gt; 1% 
+#&gt;  1 </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
+            
       <li><a href="#examples">Examples</a></li>
     </ul>
 

@@ -554,51 +554,9 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="p025.html">p025()</a></code> </p>
+          <p><code><a href="percentiles.html">p01()</a></code> <code><a href="percentiles.html">p025()</a></code> <code><a href="percentiles.html">p05()</a></code> <code><a href="percentiles.html">p10()</a></code> <code><a href="percentiles.html">p25()</a></code> <code><a href="percentiles.html">p75()</a></code> <code><a href="percentiles.html">p90()</a></code> <code><a href="percentiles.html">p95()</a></code> <code><a href="percentiles.html">p975()</a></code> <code><a href="percentiles.html">p99()</a></code> </p>
         </td>
-        <td><p>2.5th percentile</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="p05.html">p05()</a></code> </p>
-        </td>
-        <td><p>5th percentile</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="p10.html">p10()</a></code> </p>
-        </td>
-        <td><p>10th percentile</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="p25.html">p25()</a></code> </p>
-        </td>
-        <td><p>25th percentile</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="p75.html">p75()</a></code> </p>
-        </td>
-        <td><p>75th percentile</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="p90.html">p90()</a></code> </p>
-        </td>
-        <td><p>90th percentile</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="p95.html">p95()</a></code> </p>
-        </td>
-        <td><p>95th percentile</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="p975.html">p975()</a></code> </p>
-        </td>
-        <td><p>97.5th percentile</p></td>
+        <td><p>Calculate percentiles</p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -762,12 +720,6 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="render.html">render()</a></code> </p>
-        </td>
-        <td><p>Method to render objects (i.e., htmlwidgets and rmarkdown files)</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="render.datatables.html">render(<i>&lt;datatables&gt;</i>)</a></code> </p>
         </td>
         <td><p>Method to render DT tables</p></td>
@@ -777,6 +729,12 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
           <p><code><a href="render.plotly.html">render(<i>&lt;plotly&gt;</i>)</a></code> </p>
         </td>
         <td><p>Method to render plotly plots</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="render.html">render()</a></code> </p>
+        </td>
+        <td><p>Base method used to render htmlwidgets</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -897,8 +855,40 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-miscellaneous" class="hasAnchor"><a href="#section-miscellaneous" class="anchor"></a>Miscellaneous</h2>
-          <p class="section-desc"><p>Miscellaneous</p></p>
+          <h2 id="section-starting-radiant-data" class="hasAnchor"><a href="#section-starting-radiant-data" class="anchor"></a>Starting radiant.data</h2>
+          <p class="section-desc"><p>Functions used to start radiant shiny apps</p></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="launch.html">launch()</a></code> </p>
+        </td>
+        <td><p>Launch radiant apps</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="radiant.data.html">radiant.data()</a></code> </p>
+        </td>
+        <td><p>radiant.data</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="radiant.data_viewer.html">radiant.data_viewer()</a></code> </p>
+        </td>
+        <td><p>Launch the radiant.data app in the Rstudio viewer</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="radiant.data_window.html">radiant.data_window()</a></code> </p>
+        </td>
+        <td><p>Launch the radiant.data app in an Rstudio window</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-re-exported" class="hasAnchor"><a href="#section-re-exported" class="anchor"></a>Re-exported</h2>
+          <p class="section-desc"><p>Functions exported from other packages</p></p>
         </th>
       </tr>
       <tr>
@@ -910,42 +900,10 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="plot.character.html">plot(<i>&lt;character&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Don't try to plot strings</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="render.shiny.render.function.html">render(<i>&lt;shiny.render.function&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Method to avoid re-rendering a shiny.render.function</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="render.character.html">render(<i>&lt;character&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Method to render rmarkdown documents</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="store.character.html">store(<i>&lt;character&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Method for error messages that a user tries to store</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
           <p><code><a href="subplot.html">subplot()</a></code> </p>
         </td>
         <td><p>Work around to avoid (harmless) messages from subplot</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-re-exported" class="hasAnchor"><a href="#section-re-exported" class="anchor"></a>Re-exported</h2>
-          <p class="section-desc"><p>Functions exported from other packages</p></p>
-        </th>
-      </tr>
-      <tr>
+      </tr><tr>
         <!--  -->
         <td>
           <p><code><a href="as_tibble.html">as_tibble</a></code> </p>
@@ -1041,38 +999,6 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-starting-radiant-data" class="hasAnchor"><a href="#section-starting-radiant-data" class="anchor"></a>Starting radiant.data</h2>
-          <p class="section-desc"><p>Functions used to start radiant shiny apps</p></p>
-        </th>
-      </tr>
-      <tr>
-        <!--  -->
-        <td>
-          <p><code><a href="launch.html">launch()</a></code> </p>
-        </td>
-        <td><p>Launch radiant apps</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="radiant.data.html">radiant.data()</a></code> </p>
-        </td>
-        <td><p>radiant.data</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="radiant.data_viewer.html">radiant.data_viewer()</a></code> </p>
-        </td>
-        <td><p>Launch the radiant.data app in the Rstudio viewer</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="radiant.data_window.html">radiant.data_window()</a></code> </p>
-        </td>
-        <td><p>Launch the radiant.data app in an Rstudio window</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
           <h2 id="section-deprecated" class="hasAnchor"><a href="#section-deprecated" class="anchor"></a>Deprecated</h2>
           <p class="section-desc"><p>Deprecated</p></p>
         </th>
@@ -1112,10 +1038,9 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       <li><a href="#section-data-combine">Data &gt; Combine</a></li>
       <li><a href="#section-report">Report</a></li>
       <li><a href="#section-convenience-functions">Convenience functions</a></li>
-      <li><a href="#section-miscellaneous">Miscellaneous</a></li>
+      <li><a href="#section-starting-radiant-data">Starting radiant.data</a></li>
       <li><a href="#section-re-exported">Re-exported</a></li>
       <li><a href="#section-data-sets">Data sets</a></li>
-      <li><a href="#section-starting-radiant-data">Starting radiant.data</a></li>
       <li><a href="#section-deprecated">Deprecated</a></li>
     </ul>
   </div>

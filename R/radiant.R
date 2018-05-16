@@ -823,12 +823,13 @@ store <- function(dataset, object = "deprecated", ...) {
   UseMethod("store", object)
 }
 
-#' Method for error messages that a user tries to store
+#' Catch error messages when a user tries to store results 
 #'
 #' @param dataset Dataset
 #' @param object Object of type character
 #' @param ... Additional arguments
 #'
+#' @noRd
 #' @export
 store.character <- function(dataset = NULL, object, ...) {
   if ("pivotr" %in% class(dataset)) {
@@ -941,10 +942,11 @@ is_not <- function(x) {
 #' @param x A character returned from a function
 #' @param ... Any additional arguments
 #'
+#' @noRd
 #' @export
 plot.character <- function(x, ...) return(invisible())
 
-#' Method to render objects (i.e., htmlwidgets and rmarkdown files)
+#' Base method used to render htmlwidgets
 #'
 #' @param object Object of relevant class to render
 #' @param ... Additional arguments
@@ -970,7 +972,7 @@ render.datatables <- function(object, ...) {
 #' Work around to avoid (harmless) messages from ggplotly
 #'
 #' @param ... Arguments to pass to the \code{\link[plotly]{ggplotly}} function in the plotly package
-
+#'
 #' @seealso See the \code{\link[plotly]{ggplotly}} function in the plotly package for details (?plotly::ggplotly)
 #'
 #' @importFrom plotly ggplotly
@@ -1018,11 +1020,12 @@ render.plotly <- function(object, ...) {
   }
 }
 
-#' Method to render rmarkdown documents
+#' Method to render rmarkdown documents 
 #'
 #' @param object File path to an R-markdown file
 #' @param ... Additional arguments passed on to rmarkdown::render
 #'
+#' @noRd
 #' @export
 render.character <- function(object, ...) {
   if (length(object) > 1) {
@@ -1039,6 +1042,7 @@ render.character <- function(object, ...) {
 #' @param object Shiny render function
 #' @param ... Additional arguments
 #'
+#' @noRd
 #' @export
 render.shiny.render.function <- function(object, ...) object
 
