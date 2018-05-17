@@ -7,7 +7,7 @@
 iterms(vars, nway, sep = ":")
 }
 \arguments{
-\item{vars}{Variables lables to use}
+\item{vars}{Variables labels to use}
 
 \item{nway}{2-way (2) or 3-way (3) interactions labels to create}
 

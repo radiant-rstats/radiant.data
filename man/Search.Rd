@@ -13,7 +13,7 @@ Search(pattern, dataset, ignore.case = TRUE, fixed = FALSE)
 
 \item{ignore.case}{Should search be case sensitive or not (default is FALSE)}
 
-\item{fixed}{Allow regular expersions or not (default is FALSE)}
+\item{fixed}{Allow regular expressions or not (default is FALSE)}
 }
 \description{
 Search for a string in all columns of a data.frame

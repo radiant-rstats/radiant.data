@@ -22,7 +22,7 @@ as_distance(lat1, long1, lat2, long2, unit = "km", R = c(km = 6371, miles =
 \item{R}{Radius of the earth}
 }
 \value{
-Distance bewteen two points
+Distance between two points
 }
 \description{
 Distance in kilometers or miles between two locations based on lat-long

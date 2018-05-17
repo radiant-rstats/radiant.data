@@ -12,7 +12,7 @@ center(x, na.rm = TRUE)
 \item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
-If x is a numberic variable return x - mean(x)
+If x is a numeric variable return x - mean(x)
 }
 \description{
 Center

@@ -1,7 +1,7 @@
 #' Center
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
-#' @return If x is a numberic variable return x - mean(x)
+#' @return If x is a numeric variable return x - mean(x)
 #' @export
 center <- function(x, na.rm = TRUE)
   if (is_numeric(x)) {
@@ -13,7 +13,7 @@ center <- function(x, na.rm = TRUE)
 #' Standardize
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
-#' @return If x is a numberic variable return center(x) / mean(x)
+#' @return If x is a numeric variable return center(x) / mean(x)
 #' @export
 standardize <- function(x, na.rm = TRUE) {
   if (is_numeric(x)) {
@@ -257,7 +257,7 @@ as_duration <- function(x) as.numeric(lubridate::as.duration(x))
 #' @param lat2 Latitude of location 2
 #' @param unit Measure kilometers ("km", default) or miles ("miles")
 #' @param R Radius of the earth
-#' @return Distance bewteen two points
+#' @return Distance between two points
 #' @examples
 #' as_distance(32.8245525,-117.0951632, 40.7033127,-73.979681, unit = "km")
 #' as_distance(32.8245525,-117.0951632, 40.7033127,-73.979681, unit = "miles")
@@ -297,7 +297,7 @@ make_train <- function(n = .7, nr = 100, seed = 1234) {
   training
 }
 
-#' Add tranformed variables to a data frame (NSE)
+#' Add transformed variables to a data frame with the option to include a custom variable name extension
 #'
 #' @details Wrapper for dplyr::mutate_at that allows custom variable name extensions
 #'
@@ -615,7 +615,7 @@ wday <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
 }
 
 #' Remove/reorder levels
-#' @details Keep only a specific set of levels in a factor. By removing levels the base for comparison in, e.g., regression analysis, becomes the first level. To relable the base use, for example, repl = 'other'
+#' @details Keep only a specific set of levels in a factor. By removing levels the base for comparison in, e.g., regression analysis, becomes the first level. To relabel the base use, for example, repl = 'other'
 #' @param x Character or Factor
 #' @param levs Set of levels to use
 #' @param repl String (or NA) used to replace missing levels

@@ -6,4 +6,4 @@
 radiant.data.sublime-project
 radiant.data.Rproj
 .DS_Store
-use-makeReactiveBinding.Rmd
+^revdep$

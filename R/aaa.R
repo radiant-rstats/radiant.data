@@ -103,7 +103,7 @@ NULL
 NULL
 
 #' Diamond prices
-#' @details A sample of 3,000 from the diamonds dataset bundeled with ggplot2. Description provided in attr(diamonds,"description")
+#' @details A sample of 3,000 from the diamonds dataset bundled with ggplot2. Description provided in attr(diamonds,"description")
 #' @docType data
 #' @keywords datasets
 #' @name diamonds
