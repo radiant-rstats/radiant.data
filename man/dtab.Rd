@@ -17,7 +17,7 @@ Method to create datatables
 \seealso{
 See \code{\link{dtab.data.frame}} to create an interactive table from a data.frame
 
-See \code{\link{dtab.explore}} to create the an interactivce table from an \code{\link{explore}} object
+See \code{\link{dtab.explore}} to create an interactive table from an \code{\link{explore}} object
 
-See \code{\link{dtab.pivotr}} to create the an interactivce table from a \code{\link{pivotr}} object
+See \code{\link{dtab.pivotr}} to create an interactive table from a \code{\link{pivotr}} object
 }

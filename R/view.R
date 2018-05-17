@@ -4,8 +4,8 @@
 #' @param ... Additional arguments
 #'
 #' @seealso See \code{\link{dtab.data.frame}} to create an interactive table from a data.frame
-#' @seealso See \code{\link{dtab.explore}} to create the an interactivce table from an \code{\link{explore}} object
-#' @seealso See \code{\link{dtab.pivotr}} to create the an interactivce table from a \code{\link{pivotr}} object
+#' @seealso See \code{\link{dtab.explore}} to create an interactive table from an \code{\link{explore}} object
+#' @seealso See \code{\link{dtab.pivotr}} to create an interactive table from a \code{\link{pivotr}} object
 #'
 #' @export
 dtab <- function(object, ...) UseMethod("dtab", object)
@@ -145,7 +145,7 @@ filterdata <- function(dataset, filt = "", drop = TRUE) {
 #' @param pattern String to match
 #' @param dataset Data.frame to search
 #' @param ignore.case Should search be case sensitive or not (default is FALSE)
-#' @param fixed Allow regular expersions or not (default is FALSE)
+#' @param fixed Allow regular expressions or not (default is FALSE)
 #'
 #' @seealso See \code{\link{grepl}} for a more detailed description of the function arguments
 #'

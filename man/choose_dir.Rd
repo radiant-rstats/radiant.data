@@ -7,7 +7,7 @@
 choose_dir(...)
 }
 \arguments{
-\item{...}{Arguments passed to  utils::choose.dir on Windows}
+\item{...}{Arguments passed to utils::choose.dir on Windows}
 }
 \value{
 Path to the directory selected by the user

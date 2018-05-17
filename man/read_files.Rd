@@ -10,7 +10,7 @@ read_files(path, type = "rmd", to = "", clipboard = TRUE,
 \arguments{
 \item{path}{Path to file. If empty, a file browser will be opened}
 
-\item{type}{Generate code for _Report > Rmd_ ("rmd) or _Report > R_ ("r")}
+\item{type}{Generate code for _Report > Rmd_ ("rmd") or _Report > R_ ("r")}
 
 \item{to}{Name to use for object. If empty, will use file name to derive an object name}
 

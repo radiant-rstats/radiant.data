@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{describe}
 \alias{describe}
-\title{Show dataset desription, if available, in html form in Rstudio viewer or default browser}
+\title{Show dataset description, if available, in html form in Rstudio viewer or default browser}
 \usage{
 describe(dataset)
 }
@@ -10,5 +10,5 @@ describe(dataset)
 \item{dataset}{Dataset}
 }
 \description{
-Show dataset desription, if available, in html form in Rstudio viewer or default browser
+Show dataset description, if available, in html form in Rstudio viewer or default browser
 }
