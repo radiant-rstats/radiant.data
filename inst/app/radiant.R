@@ -8,17 +8,22 @@ toList <- function(x) reactiveValuesToList(x) %>% .[!sapply(., is.null)]
 ## from https://gist.github.com/hadley/5434786
 env2list <- function(x) mget(ls(x), x)
 
+is_active <- function(env = r_data) {
+  sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env))
+}
+ 
 ## remove non-active bindings
 rem_non_active <- function(env = r_data) {
-  isactive <- sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env))
-  rm(list = names(isactive)[!isactive], envir = env)
+  # isactive <- sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env))
+  iact <- is_active(env = r_data)
+  rm(list = names(iact)[!iact], envir = env)
 }
 
 active2list <- function(env = r_data) {
-  isactive <- sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env)) %>%
-    {names(.)[.]}
-  if (length(isactive) > 0) {
-    mget(isactive, env)
+  # isactive <- sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env)) %>%
+  isactive <- is_active(env = r_data) %>% {names(.)[.]}
+  if (length(iact) > 0) {
+    mget(iact, env)
   } else {
     list()
   }
