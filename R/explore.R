@@ -98,6 +98,7 @@ explore <- function(
     if (length(vars) == 1) {
       rng <- (length(byvar) + 1):ncol(tab)
       colnames(tab)[rng] <- paste0(vars, "_", colnames(tab)[rng])
+      rm(rng)
     }
 
     ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
