@@ -23,7 +23,7 @@ output$ui_tr_replace <- renderUI({
 })
 
 output$ui_tr_normalizer <- renderUI({
-  isNum <- .getclass() %in% c("numeric", "integer")
+  isNum <- .get_class() %in% c("numeric", "integer")
   vars <- varnames()[isNum]
   if (length(vars) == 0) return()
   selectInput(
@@ -34,7 +34,7 @@ output$ui_tr_normalizer <- renderUI({
 })
 
 output$ui_tr_tab2dat <- renderUI({
-  isNum <- .getclass() %in% c("numeric", "integer")
+  isNum <- .get_class() %in% c("numeric", "integer")
   vars <- varnames()[isNum]
   selectInput(
     "tr_tab2dat", "Frequency variable:",
@@ -83,11 +83,11 @@ output$ui_tr_reorg_levs <- renderUI({
     need(available(input$tr_vars), "Select a single variable of type factor or character")
   )
   fctCol <- input$tr_vars[1]
-  isFct <- .getclass()[fctCol] %in% c("factor", "character")
+  isFct <- .get_class()[fctCol] %in% c("factor", "character")
   validate(
     need(isFct, "Selected variable is not of type factor or character")
   )
-  fct <- .getdata_transform()[[fctCol]]
+  fct <- .get_data_transform()[[fctCol]]
   levs <- if (is.factor(fct)) levels(fct) else levels(as_factor(fct))
 
   tagList(
@@ -456,7 +456,7 @@ observeEvent(input$tr_change_type, {
 ) {
 
   ## replacing problem symbols (e.g., em dash, and curly quotes)
-  cmd <- fixMS(cmd)
+  cmd <- fix_smart(cmd)
 
   if (!store || !is.character(dataset)) {
     cmd <- gsub("\\s+", "", cmd)
@@ -576,7 +576,7 @@ observeEvent(input$tr_change_type, {
   if (!store && !is.character(dataset)) {
     nz <- select_at(dataset, .vars = nzvar)
     dataset <- select_at(dataset, .vars = vars)
-    dc <- getclass(dataset)
+    dc <- get_class(dataset)
 
     isnum <- "numeric" == dc | "integer" == dc
     if (sum(isnum) == 0) return("Please select only integer or numeric variables to normalize")
@@ -728,7 +728,7 @@ observeEvent(input$tr_change_type, {
 
 .reorg_vars <- function(dataset, vars = "", store_dat = "", store = TRUE) {
  if (!store || !is.character(dataset)) {
-    getdata(dataset, vars, filt = "", na.rm = FALSE)
+    get_data(dataset, vars, filt = "", na.rm = FALSE)
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## reorder/remove variables\n", store_dat, " <- select(", dataset, ", ", paste0(vars, collapse = ", "), ")\n")
@@ -828,7 +828,7 @@ observeEvent(input$tr_change_type, {
       return(paste0("No filter found (n = ", nrow(dataset), ")"))
     }
 
-    getdata(dataset, vars = vars, filt = filt, na.rm = FALSE)
+    get_data(dataset, vars = vars, filt = filt, na.rm = FALSE)
   } else {
     filt <- gsub("\"", "'", filt)
     if (all(vars == "")) {
@@ -878,7 +878,7 @@ transform_main <- reactive({
   }
 
   ## get the active dataset, filter not applied when called from transform tab
-  dat <- .getdata_transform()
+  dat <- .get_data_transform()
 
   ## what data to pass on ...
   if (input$tr_change_type %in% c("", "none")) {
@@ -924,7 +924,7 @@ transform_main <- reactive({
       } else if (nrow(cpdat) != nrow(dat)) {
         return("The pasted data does not have the correct number of rows. Please make sure **\n** the number of rows in the data in Radiant and in the spreadsheet are the **\n** same and try again.")
       } else {
-        return(as.data.frame(cpdat, check.names = FALSE, stringsAsFactors = FALSE) %>% toFct())
+        return(as.data.frame(cpdat, check.names = FALSE, stringsAsFactors = FALSE) %>% to_fct())
       }
     }
   }
@@ -1067,7 +1067,7 @@ output$transform_data <- reactive({
 })
 
 tr_snippet <- reactive({
-  show_data_snippet(.getdata_transform())
+  show_data_snippet(.get_data_transform())
 })
 
 output$transform_summary <- renderPrint({
@@ -1097,7 +1097,7 @@ output$transform_summary <- renderPrint({
       if (input$tr_change_type == "reorg_vars") {
         cat("** Drag-and-drop to change ordering. Click the x to remove a variable **")
       } else {
-        cat(paste0(capture.output(getsummary(dataset)), collapse = "\n"))
+        cat(paste0(capture.output(get_summary(dataset)), collapse = "\n"))
       }
     }
   }
@@ -1117,7 +1117,7 @@ observeEvent(input$tr_store, {
   df_name <- input$tr_name
   ncmd <- ""
   if (is.null(r_data[[df_name]])) {
-    r_data[[df_name]] <- .getdata_transform()
+    r_data[[df_name]] <- .get_data_transform()
     r_info[[paste0(df_name, "_descr")]] <- r_info[[paste0(input$df_name, "_descr")]]
     shiny::makeReactiveBinding(df_name, env = r_data)
     r_info[["datasetlist"]] %<>% c(df_name, .) %>% unique()

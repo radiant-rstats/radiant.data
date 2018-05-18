@@ -195,7 +195,7 @@
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="getdata.html">getdata()</a></code> </p>
+          <p><code><a href="get_data.html">get_data()</a></code> </p>
         </td>
         <td><p>Select variables and filter data</p></td>
       </tr><tr>
@@ -225,7 +225,7 @@
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="toFct.html">toFct()</a></code> </p>
+          <p><code><a href="to_fct.html">to_fct()</a></code> </p>
         </td>
         <td><p>Convert characters to factors</p></td>
       </tr>
@@ -251,19 +251,19 @@
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="filterdata.html">filterdata()</a></code> </p>
+          <p><code><a href="filter_data.html">filter_data()</a></code> </p>
         </td>
         <td><p>Filter data with user-specified expression</p></td>
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="Search.html">Search()</a></code> </p>
+          <p><code><a href="search_data.html">search_data()</a></code> </p>
         </td>
         <td><p>Search for a pattern in all columns of a data.frame</p></td>
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="viewdata.html">viewdata()</a></code> </p>
+          <p><code><a href="view_data.html">view_data()</a></code> </p>
         </td>
         <td><p>View data in a shiny-app</p></td>
       </tr>
@@ -652,13 +652,13 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
         <td>
           <p><code><a href="which.pmax.html">which.pmax()</a></code> </p>
         </td>
-        <td><p>Returns the index of the (parallel) maxima of the input values</p></td>
+        <td><p>Index of the maximum per row</p></td>
       </tr><tr>
         <!--  -->
         <td>
           <p><code><a href="which.pmin.html">which.pmin()</a></code> </p>
         </td>
-        <td><p>Returns the index of the (parallel) minima of the input values</p></td>
+        <td><p>Index of the minimum per row</p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -676,7 +676,7 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       <tr>
         <!--  -->
         <td>
-          <p><code><a href="combinedata.html">combinedata()</a></code> </p>
+          <p><code><a href="combine_data.html">combine_data()</a></code> </p>
         </td>
         <td><p>Combine datasets using dplyr's bind and join functions</p></td>
       </tr>
@@ -690,21 +690,27 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       <tr>
         <!--  -->
         <td>
-          <p><code><a href="fixMS.html">fixMS()</a></code> </p>
+          <p><code><a href="fix_smart.html">fix_smart()</a></code> </p>
         </td>
-        <td><p>Replace Windows smart quotes etc.</p></td>
+        <td><p>Replace smart quotes etc.</p></td>
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="formatdf.html">formatdf()</a></code> </p>
+          <p><code><a href="format_df.html">format_df()</a></code> </p>
         </td>
         <td><p>Format a data.frame with a specified number of decimal places</p></td>
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="formatnr.html">formatnr()</a></code> </p>
+          <p><code><a href="format_nr.html">format_nr()</a></code> </p>
         </td>
         <td><p>Format a number with a specified number of decimal places, thousand sep, and a symbol</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="round_df.html">round_df()</a></code> </p>
+        </td>
+        <td><p>Round double in a data.frame to a specified number of decimal places</p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -746,7 +752,7 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="getclass.html">getclass()</a></code> </p>
+          <p><code><a href="get_class.html">get_class()</a></code> </p>
         </td>
         <td><p>Get variable class</p></td>
       </tr><tr>
@@ -794,7 +800,7 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="getsummary.html">getsummary()</a></code> </p>
+          <p><code><a href="get_summary.html">get_summary()</a></code> </p>
         </td>
         <td><p>Create data.frame summary</p></td>
       </tr><tr>
@@ -815,12 +821,6 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
           <p><code><a href="iterms.html">iterms()</a></code> </p>
         </td>
         <td><p>Create a vector of interaction terms</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="rounddf.html">rounddf()</a></code> </p>
-        </td>
-        <td><p>Round double in a data.frame to a specified number of decimal places</p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -951,12 +951,6 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
           <p><code><a href="skew.re.html">skew</a></code> </p>
         </td>
         <td><p>Exporting skew from psych</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="write_feather.html">write_feather()</a></code> </p>
-        </td>
-        <td><p>Workaround to add description using feather::write_feather</p></td>
       </tr>
     </tbody><tbody>
       <tr>

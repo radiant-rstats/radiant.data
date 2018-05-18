@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Returns the index of the (parallel) minima of the input values — which.pmin • radiant.data</title>
+<title>Index of the minimum per row — which.pmin • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,9 +28,9 @@
 
 
 
-<meta property="og:title" content="Returns the index of the (parallel) minima of the input values — which.pmin" />
+<meta property="og:title" content="Index of the minimum per row — which.pmin" />
 
-<meta property="og:description" content="Returns the index of the (parallel) minima of the input values" />
+<meta property="og:description" content="Index of the minimum per row" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -136,14 +136,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Returns the index of the (parallel) minima of the input values</h1>
+    <h1>Index of the minimum per row</h1>
     <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
     <div class="hidden name"><code>which.pmin.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Returns the index of the (parallel) minima of the input values</p>
+    <p>Index of the minimum per row</p>
     
     </div>
 
@@ -162,10 +162,17 @@
 
     <p>Vector of rankings</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Determine the index of the minimum of the input vectors per row. Extension of <code>which.min</code></p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>See also <code>which.min</code> and <code><a href='which.pmax.html'>which.pmax</a></code></p></div>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>which.pmin</span>(<span class='fl'>1</span>:<span class='fl'>10</span>, <span class='fl'>10</span>:<span class='fl'>1</span>)</div><div class='output co'>#&gt;  [1] 1 1 1 1 1 2 2 2 2 2</div><div class='input'><span class='fu'>which.pmin</span>(<span class='fl'>2</span>, <span class='fl'>10</span>:<span class='fl'>1</span>)</div><div class='output co'>#&gt;  [1] 1 1 1 1 1 1 1 1 1 2</div><div class='input'><span class='fu'>which.pmin</span>(<span class='no'>mtcars</span>)</div><div class='output co'>#&gt;  [1] 8 8 8 9 8 9 8 9 9 9 9 8 8 8 8 8 8 8 8 8 9 8 8 8 8 8 8 8 8 8 8 8</div><div class='input'>
-</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>which.pmin</span>(<span class='fl'>1</span>:<span class='fl'>10</span>, <span class='fl'>10</span>:<span class='fl'>1</span>)</div><div class='output co'>#&gt;  [1] 1 1 1 1 1 2 2 2 2 2</div><div class='input'><span class='fu'>which.pmin</span>(<span class='fl'>2</span>, <span class='fl'>10</span>:<span class='fl'>1</span>)</div><div class='output co'>#&gt;  [1] 1 1 1 1 1 1 1 1 1 2</div><div class='input'><span class='fu'>which.pmin</span>(<span class='no'>mtcars</span>)</div><div class='output co'>#&gt;  [1] 8 8 8 9 8 9 8 9 9 9 9 8 8 8 8 8 8 8 8 8 9 8 8 8 8 8 8 8 8 8 8 8</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -173,6 +180,10 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

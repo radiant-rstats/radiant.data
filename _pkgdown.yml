@@ -9,20 +9,20 @@ reference:
     - find_gdrive
     - find_project
     - fix_names
-    - getdata
+    - get_data
     - load_clip
     - parse_path
     - read_files
     - save_clip
-    - toFct
+    - to_fct
 - title: Data > View
   desc: Functions used with Data > View
   contents:
     - dtab
     - dtab.data.frame
-    - filterdata
-    - Search
-    - viewdata
+    - filter_data
+    - search_data
+    - view_data
 - title: Data > Visualize
   desc: Function used with Data > Visualize
   contents:
@@ -107,13 +107,14 @@ reference:
 - title: Data > Combine
   desc: Functions used with Data > Combine
   contents:
-    - combinedata
+    - combine_data
 - title: Report
   desc: Functions used with Report > Rmd and Report > R
   contents:
-    - fixMS
-    - formatdf
-    - formatnr
+    - fix_smart
+    - format_df
+    - format_nr
+    - round_df
     - register
     - render.datatables
     - render.plotly
@@ -122,7 +123,7 @@ reference:
   desc: Convenience functions
   contents:
     - add_class
-    - getclass
+    - get_class
     - ci_label
     - ci_perc
     - copy_all
@@ -130,11 +131,10 @@ reference:
     - copy_from
     - does_vary
     - empty_level
-    - getsummary
+    - get_summary
     - indexr
     - install_webshot
     - iterms
-    - rounddf
     - set_attr
     - sig_stars
     - sshh
@@ -160,7 +160,6 @@ reference:
     - knit_print
     - kurtosi
     - skew
-    - write_feather
 - title: Data sets
   desc: Data sets bundled with radiant.data
   contents:

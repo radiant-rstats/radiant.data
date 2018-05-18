@@ -43,7 +43,7 @@ r_view_options <- c(
 )
 
 r_example <- "## get the active dataset and show the first few observations
-.getdata() %>%
+.get_data() %>%
   head()
 
 ## access a dataset
@@ -228,7 +228,7 @@ output$report_r <- renderUI({
       theme = getOption("radiant.ace_theme", default = "tomorrow"),
       wordWrap = TRUE,
       height = "auto",
-      value = state_init("r_edit", r_example) %>% fixMS(),
+      value = state_init("r_edit", r_example) %>% fix_smart(),
       vimKeyBinding = getOption("radiant.ace_vim.keys", default = FALSE),
       hotkeys = list(r_hotkey = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
       tabSize = getOption("radiant.ace_tabSize", 2),
@@ -433,5 +433,5 @@ observeEvent(input$r_read_files, {
 })
 
 observeEvent(input$r_edit, {
-  r_state$r_edit <<- fixMS(input$r_edit)
+  r_state$r_edit <<- fix_smart(input$r_edit)
 })

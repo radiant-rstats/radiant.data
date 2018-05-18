@@ -124,39 +124,39 @@
 <p>You can load an R-code file into Radiant by clicking the <code>Load report</code> button and selecting an .r or .R file. If you started Radiant from Rstudio you can save a report in HTML, Word, or PDF format by selecting the desired format from the drop-down menu and clicking <code>Save report</code>. To save just the code choose <code>R</code> from the dropdown and press the <code>Save report</code> button.</p>
 <p>If you started Radiant from Rstudio, you can also click the <code>Read files</code> button to browse for files and generate code to read it into Radiant. For example, read rda, rds, xls, yaml, and feather and add them to the <code>Datasets</code> dropdown. If the file type you want to load is not currently supported, the path to the file will be returned. The file path used will be relative to the Rstudio-project root. Paths to files synced to a local Dropbox or Google Drive folder will use the <code>find_dropbox</code> and <code>find_gdrive</code> functions to enhances reproducibility.</p>
 <p>As an example you can copy-and-paste the code below into the editor and press <code>Knit report (R)</code> to generate results.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">## get the active dataset and show the first few observations</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">.getdata</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="st">  </span><span class="kw">head</span>()</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">## access a dataset</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">diamonds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="st">  </span><span class="kw">select</span>(price, clarity) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="st">  </span><span class="kw">head</span>()</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">## add a variable to the diamonds data</a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">diamonds &lt;-<span class="st"> </span><span class="kw">mutate</span>(diamonds, <span class="dt">log_price =</span> <span class="kw">log</span>(price))</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">## show the first observations in the price and log_price columns</a>
-<a class="sourceLine" id="cb1-14" data-line-number="14">diamonds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="st">  </span><span class="kw">select</span>(price, log_price) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="st">  </span><span class="kw">head</span>()</a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb1-18" data-line-number="18">## create a histogram of prices</a>
-<a class="sourceLine" id="cb1-19" data-line-number="19">diamonds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> price)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="st">    </span><span class="kw">geom_histogram</span>()</a>
-<a class="sourceLine" id="cb1-22" data-line-number="22"></a>
-<a class="sourceLine" id="cb1-23" data-line-number="23">## and a histogram of log-prices using radiant.data::visualize</a>
-<a class="sourceLine" id="cb1-24" data-line-number="24"><span class="kw"><a href="../../reference/visualize.html">visualize</a></span>(diamonds, <span class="dt">xvar =</span> \<span class="st">"log_price</span><span class="ch">\"</span><span class="st">, custom = TRUE)</span></a>
-<a class="sourceLine" id="cb1-25" data-line-number="25"></a>
-<a class="sourceLine" id="cb1-26" data-line-number="26"><span class="st">## open help in the R-studio viewer from Radiant</span></a>
-<a class="sourceLine" id="cb1-27" data-line-number="27"><span class="st">help(package = </span><span class="ch">\"</span><span class="st">radiant.data</span><span class="ch">\"</span><span class="st">)</span></a>
-<a class="sourceLine" id="cb1-28" data-line-number="28"></a>
-<a class="sourceLine" id="cb1-29" data-line-number="29"><span class="st">## If you are familiar with Shiny you can call reactives when the code</span></a>
-<a class="sourceLine" id="cb1-30" data-line-number="30"><span class="st">## is evaluated inside a Shiny app. For example, if you transformed</span></a>
-<a class="sourceLine" id="cb1-31" data-line-number="31"><span class="st">## some variables in Data &gt; Transform you can call the transform_main</span></a>
-<a class="sourceLine" id="cb1-32" data-line-number="32"><span class="st">## reacive to see the latest result. Very useful for debugging</span></a>
-<a class="sourceLine" id="cb1-33" data-line-number="33"><span class="st"># transform_main() %&gt;% head()</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## get the active dataset and show the first few observations
+<span class="kw">.getdata</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">head</span>()
+
+## access a dataset
+diamonds <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(price, clarity) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">head</span>()
+
+## add a variable to the diamonds data
+diamonds &lt;-<span class="st"> </span><span class="kw">mutate</span>(diamonds, <span class="dt">log_price =</span> <span class="kw">log</span>(price))
+
+## show the first observations in the price and log_price columns
+diamonds <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(price, log_price) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">head</span>()
+
+## create a histogram of prices
+diamonds <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> price)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_histogram</span>()
+
+## and a histogram of log-prices using radiant.data::visualize
+<span class="kw"><a href="../../reference/visualize.html">visualize</a></span>(diamonds, <span class="dt">xvar =</span> \<span class="st">"log_price</span><span class="ch">\"</span><span class="st">, custom = TRUE)</span>
+
+<span class="st">## open help in the R-studio viewer from Radiant</span>
+<span class="st">help(package = </span><span class="ch">\"</span><span class="st">radiant.data</span><span class="ch">\"</span><span class="st">)</span>
+
+<span class="st">## If you are familiar with Shiny you can call reactives when the code</span>
+<span class="st">## is evaluated inside a Shiny app. For example, if you transformed</span>
+<span class="st">## some variables in Data &gt; Transform you can call the transform_main</span>
+<span class="st">## reacive to see the latest result. Very useful for debugging</span>
+<span class="st"># transform_main() %&gt;% head()</span></code></pre></div>
 <div id="options" class="section level2">
 <h2 class="hasAnchor">
 <a href="#options" class="anchor"></a>Options</h2>

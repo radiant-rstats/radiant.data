@@ -417,7 +417,7 @@ weighted.sd <- function(x, wt, na.rm = TRUE) {
 #' @param dc Class for each variable
 #'
 #' @export
-getsummary <- function(dataset, dc = getclass(dataset)) {
+get_summary <- function(dataset, dc = get_class(dataset)) {
   isFct <- "factor" == dc
   isNum <- dc %in% c("numeric", "integer", "Duration")
   isDate <- "date" == dc

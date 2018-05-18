@@ -321,7 +321,7 @@ output$report_rmd <- renderUI({
       theme = getOption("radiant.ace_theme", default = "tomorrow"),
       wordWrap = TRUE,
       height = "auto",
-      value = state_init("rmd_edit", rmd_example) %>% fixMS(),
+      value = state_init("rmd_edit", rmd_example) %>% fix_smart(),
       vimKeyBinding = getOption("radiant.ace_vim.keys", default = FALSE),
       hotkeys = list(rmd_hotkey = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
       tabSize = getOption("radiant.ace_tabSize", 2),
@@ -510,7 +510,7 @@ observeEvent(input$rmd_load, {
     }
 
     rmd <- sub("^---\n(.*?)\n---\n*", "", rmd)
-    r_state$rmd_edit <- radiant.data::fixMS(rmd)
+    r_state$rmd_edit <- radiant.data::fix_smart(rmd)
 
     ## update editor and remove yaml header if present
     shinyAce::updateAceEditor(session, "rmd_edit",
@@ -527,5 +527,5 @@ observeEvent(input$rmd_read_files, {
 })
 
 observeEvent(input$rmd_edit, {
-  r_state$rmd_edit <<- fixMS(input$rmd_edit)
+  r_state$rmd_edit <<- fix_smart(input$rmd_edit)
 })

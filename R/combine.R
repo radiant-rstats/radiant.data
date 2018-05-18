@@ -13,13 +13,13 @@
 #' @return If list `r_data` exists the combined dataset is added as `name`. Else the combined dataset will be returned as `name`
 #'
 #' @examples
-#' avengers %>% combinedata(superheroes, type = "bind_cols")
-#' combinedata(avengers, superheroes, type = "bind_cols")
-#' avengers %>% combinedata(superheroes, type = "bind_rows")
-#' avengers %>% combinedata(superheroes, add = "publisher", type = "bind_rows")
+#' avengers %>% combine_data(superheroes, type = "bind_cols")
+#' combine_data(avengers, superheroes, type = "bind_cols")
+#' avengers %>% combine_data(superheroes, type = "bind_rows")
+#' avengers %>% combine_data(superheroes, add = "publisher", type = "bind_rows")
 #'
 #' @export
-combinedata <- function(
+combine_data <- function(
   x, y, by = "", add = "", 
   type = "inner_join", 
   data_filter = "", ...
@@ -39,11 +39,11 @@ combinedata <- function(
   x_name <- ifelse(is_string(x), x, deparse(substitute(x)))
   y_name <- ifelse(is_string(y), y, deparse(substitute(y)))
 
-  x <- getdata(x, filt = data_filter, na.rm = FALSE)
+  x <- get_data(x, filt = data_filter, na.rm = FALSE)
   if (all(add == "")) {
-    y <- getdata(y, na.rm = FALSE)
+    y <- get_data(y, na.rm = FALSE)
   } else {
-    y <- getdata(y, unique(c(by, add)), na.rm = FALSE)
+    y <- get_data(y, unique(c(by, add)), na.rm = FALSE)
   }
 
   ## keeping data descriptions

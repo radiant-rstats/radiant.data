@@ -36,7 +36,7 @@ load_clip <- function(delim = "\t", text, suppress = TRUE) {
         }
       } 
       as.data.frame(dataset, check.names = FALSE, stringsAsFactors = FALSE) %>%
-        radiant.data::toFct()
+        radiant.data::to_fct()
     }, silent = TRUE)
   )
 }

@@ -29,13 +29,13 @@ test_that("sshhr", {
   expect_equal(sshhr(c(warning("should be null"), test = 3)), c("should be null", test))
 })
 
-test_that("getdata", {
-  getdata(mtcars, "mpg:disp", filt = "mpg > 20", rows = 1:5) %>%
+test_that("get_data", {
+  get_data(mtcars, "mpg:disp", filt = "mpg > 20", rows = 1:5) %>%
     expect_equal(., mtcars[mtcars$mpg > 20, c("mpg", "cyl", "disp")][1:5, 1:3] %>% set_rownames(1:5))
 })
 
-test_that("getclass", {
-  expect_equal(getclass(diamonds), sapply(diamonds, class) %>% tolower())
+test_that("get_class", {
+  expect_equal(get_class(diamonds), sapply(diamonds, class) %>% tolower())
 })
 
 test_that("is_empty", {
@@ -48,28 +48,28 @@ test_that("is_empty", {
 })
 
 test_that("select column", {
-  dataset <- getdata(diamonds, vars = "price:clarity")
+  dataset <- get_data(diamonds, vars = "price:clarity")
   expect_equal(colnames(dataset), c("price", "carat", "clarity"))
 })
 
 test_that("select character vector", {
-  dataset <- getdata(diamonds, vars = c("price", "carat", "clarity"))
+  dataset <- get_data(diamonds, vars = c("price", "carat", "clarity"))
   expect_equal(colnames(dataset), c("price", "carat", "clarity"))
 })
 
 test_that("filter", {
-  dataset <- getdata(diamonds, filt = "cut == 'Very Good'")
+  dataset <- get_data(diamonds, filt = "cut == 'Very Good'")
   expect_equal(nrow(dataset), 677)
 })
 
-test_that("filterdata", {
-  dataset <- filterdata(diamonds, filt = "cut == 'Very Good' & price > 5000")
+test_that("filter_data", {
+  dataset <- filter_data(diamonds, filt = "cut == 'Very Good' & price > 5000")
   expect_equal(nrow(dataset), 187)
   expect_equal(sum(dataset$price), 1700078)
 })
 
-test_that("filterdata factor", {
-  dataset <- filterdata(diamonds, filt = "clarity %in% c('SI2','SI1') & price > 18000")
+test_that("filter_data factor", {
+  dataset <- filter_data(diamonds, filt = "clarity %in% c('SI2','SI1') & price > 18000")
   expect_equal(nrow(dataset), 14)
   expect_equal(sum(dataset$price), 256587)
 })

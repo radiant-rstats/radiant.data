@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{which.pmin}
 \alias{which.pmin}
-\title{Returns the index of the (parallel) minima of the input values}
+\title{Index of the minimum per row}
 \usage{
 which.pmin(...)
 }
@@ -13,11 +13,16 @@ which.pmin(...)
 Vector of rankings
 }
 \description{
-Returns the index of the (parallel) minima of the input values
+Index of the minimum per row
+}
+\details{
+Determine the index of the minimum of the input vectors per row. Extension of \code{which.min}
 }
 \examples{
 which.pmin(1:10, 10:1)
 which.pmin(2, 10:1)
 which.pmin(mtcars)
-
+}
+\seealso{
+See also \code{\link{which.min}} and \code{\link{which.pmax}}
 }

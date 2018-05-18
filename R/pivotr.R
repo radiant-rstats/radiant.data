@@ -31,7 +31,7 @@ pivotr <- function(
   fill <- if (nvar == "None") 0L else NA
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
+  dataset <- get_data(dataset, vars, filt = data_filter, na.rm = FALSE)
 
   ## in case : was used for cvars
   cvars <- setdiff(colnames(dataset), nvar)
@@ -149,7 +149,7 @@ pivotr <- function(
   ## filtering the table if desired
   if (!is_empty(tabfilt)) {
     tab <- tab[-nrow(tab), ] %>%
-      filterdata(tabfilt, drop = FALSE) %>%
+      filter_data(tabfilt, drop = FALSE) %>%
       bind_rows(tab[nrow(tab), ]) %>%
       droplevels()
   }
@@ -229,7 +229,7 @@ summary.pivotr <- function(
       cat("Function    :", object$fun, "\n")
     }
     cat("\n")
-    print(formatdf(object$tab, dec, perc, mark = ","), row.names = FALSE)
+    print(format_df(object$tab, dec, perc, mark = ","), row.names = FALSE)
     cat("\n")
   }
 
@@ -245,9 +245,9 @@ summary.pivotr <- function(
       if (dec < 4 && res$p.value < .001) {
         p.value <- "< .001"
       } else {
-        p.value <- formatnr(res$p.value, dec = dec)
+        p.value <- format_nr(res$p.value, dec = dec)
       }
-      res <- rounddf(res, dec)
+      res <- round_df(res, dec)
 
       l1 <- paste0("Chi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", p.value, "\n")
       l2 <- paste0(sprintf("%.1f", 100 * (sum(cst$expected < 5) / length(cst$expected))), "% of cells have expected values below 5\n")
@@ -310,7 +310,7 @@ dtab.pivotr <- function(
   cn_nt <- if ("Total" %in% cn) cn[-which(cn == "Total")] else cn
 
   tot <- tail(tab, 1)[-(1:length(cvars))] %>%
-    formatdf(perc = perc, dec = dec, mark = ",")
+    format_df(perc = perc, dec = dec, mark = ",")
 
   if (length(cvars) == 1 && cvar == cvars) {
     sketch <- shiny::withTags(table(

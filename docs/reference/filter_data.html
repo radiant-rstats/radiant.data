@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deprecated function(s) in the radiant.data package — radiant.data-deprecated • radiant.data</title>
+<title>Filter data with user-specified expression — filter_data • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,10 +28,9 @@
 
 
 
-<meta property="og:title" content="Deprecated function(s) in the radiant.data package — radiant.data-deprecated" />
+<meta property="og:title" content="Filter data with user-specified expression — filter_data" />
 
-<meta property="og:description" content="These functions are provided for compatibility with previous versions of
-radiant but will be removed" />
+<meta property="og:description" content="Filter data with user-specified expression" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -137,61 +136,78 @@ radiant but will be removed" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deprecated function(s) in the radiant.data package</h1>
-    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
-    <div class="hidden name"><code>radiant.data-deprecated.Rd</code></div>
+    <h1>Filter data with user-specified expression</h1>
+    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/view.R'><code>R/view.R</code></a></small>
+    <div class="hidden name"><code>filter_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>These functions are provided for compatibility with previous versions of
-radiant but will be removed</p>
+    <p>Filter data with user-specified expression</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mean_rm</span>(<span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>filter_data</span>(<span class='no'>dataset</span>, <span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>...</th>
-      <td><p>Parameters to be passed to the updated functions</p></td>
+      <th>dataset</th>
+      <td><p>Data frame to filter</p></td>
+    </tr>
+    <tr>
+      <th>filt</th>
+      <td><p>Filter expression to apply to the specified dataset</p></td>
+    </tr>
+    <tr>
+      <th>drop</th>
+      <td><p>Drop unused factor levels after filtering (default is TRUE)</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Filtered data frame</p>
+    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    
-    <ul>
-<li><p>Replace <code>mean_rm</code> by <code>mean</code></p></li>
-<li><p>Replace <code>median_rm</code> by <code>median</code></p></li>
-<li><p>Replace <code>min_rm</code> by <code>min</code></p></li>
-<li><p>Replace <code>max_rm</code> by <code>max</code></p></li>
-<li><p>Replace <code>sd_rm</code> by <code>sd</code></p></li>
-<li><p>Replace <code>var_rm</code> by <code>var</code></p></li>
-<li><p>Replace <code>sum_rm</code> by <code>sum</code></p></li>
-<li><p>Replace <code>getdata</code> by <code><a href='get_data.html'>get_data</a></code></p></li>
-<li><p>Replace <code>filterdata</code> by <code><a href='filter_data.html'>filter_data</a></code></p></li>
-<li><p>Replace <code>combinedata</code> by <code><a href='combine_data.html'>combine_data</a></code></p></li>
-<li><p>Replace <code>viewdata</code> by <code><a href='view_data.html'>view_data</a></code></p></li>
-<li><p>Replace <code>toFct</code> by <code><a href='to_fct.html'>to_fct</a></code></p></li>
-<li><p>Replace <code>fixMS</code> by <code><a href='fix_smart.html'>fix_smart</a></code></p></li>
-<li><p>Replace <code>rounddf</code> by <code><a href='round_df.html'>round_df</a></code></p></li>
-<li><p>Replace <code>formatdf</code> by <code><a href='format_df.html'>format_df</a></code></p></li>
-<li><p>Replace <code>formatnr</code> by <code><a href='format_nr.html'>format_nr</a></code></p></li>
-<li><p>Replace <code>getclass</code> by <code><a href='get_class.html'>get_class</a></code></p></li>
-</ul>
+    <p>Filters can be used to view a sample from a selected dataset. For example, runif(nrow(.)) &gt; .9 could be used to sample approximately 10<!-- % of the rows in the data and 1:nrow(.) &lt; 101 would select only the first 100 rows in the data. Note: "." references the currently selected dataset. --></p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>select</span>(<span class='no'>diamonds</span>, <span class='fl'>1</span>:<span class='fl'>3</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter_data</span>(<span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>"price &gt; max(.$price) - 100"</span>)</div><div class='output co'>#&gt;   price carat clarity
+#&gt; 1 18791  2.15     SI2
+#&gt; 2 18745  2.36     SI2</div><div class='input'><span class='fu'>select</span>(<span class='no'>diamonds</span>, <span class='fl'>1</span>:<span class='fl'>3</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter_data</span>(<span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>"runif(nrow(.)) &gt; .995"</span>)</div><div class='output co'>#&gt;    price carat clarity
+#&gt; 1    650  0.34     SI1
+#&gt; 2    743  0.33     SI1
+#&gt; 3   3774  0.83    VVS1
+#&gt; 4   1214  0.50     SI1
+#&gt; 5    589  0.32     SI1
+#&gt; 6    989  0.41     VS1
+#&gt; 7   2715  0.80     SI2
+#&gt; 8  11826  1.51    VVS2
+#&gt; 9   2407  0.70     SI1
+#&gt; 10   974  0.46    VVS1
+#&gt; 11   969  0.41     SI1
+#&gt; 12 13827  2.24     SI2
+#&gt; 13  2096  0.54      IF
+#&gt; 14  4375  1.04     SI2
+#&gt; 15   911  0.30     VS2
+#&gt; 16  1320  0.55     SI1
+#&gt; 17   687  0.31    VVS1</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
+      <li><a href="#value">Value</a></li>
+
       <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

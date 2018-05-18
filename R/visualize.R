@@ -122,7 +122,7 @@ visualize <- function(
 
   ## so you can also pass-in a data.frame
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- getdata(dataset, vars, filt = data_filter)
+  dataset <- get_data(dataset, vars, filt = data_filter)
 
   if (type == "scatter" && !is_empty(nrobs)) {
     nrobs <- as.integer(nrobs)
@@ -132,7 +132,7 @@ visualize <- function(
   }
 
   ## get class
-  dc <- getclass(dataset)
+  dc <- get_class(dataset)
 
   ## if : is used to specify a range of variables
   if (length(vars) < ncol(dataset)) {
@@ -146,7 +146,7 @@ visualize <- function(
   if (sum(isChar) > 0) {
     if (type == "density") {
       dataset[, isChar] <- select(dataset, which(isChar)) %>% mutate_all(funs(as_numeric))
-      if ("character" %in% getclass(select(dataset, which(isChar)))) {
+      if ("character" %in% get_class(select(dataset, which(isChar)))) {
         return("Character variable(s) were not converted to numeric for plotting.\nTo use these variables in a plot convert them to numeric\nvariables (or factors) in the Data > Transform tab")
       }
     } else {
@@ -157,7 +157,7 @@ visualize <- function(
       }
     }
     ## in case something was changed, if not, this won't run
-    dc <- getclass(dataset)
+    dc <- get_class(dataset)
   }
 
   if (type == "bar") {
@@ -222,21 +222,21 @@ visualize <- function(
     byvar <- if (is.null(byvar)) "yvar" else c("yvar", byvar)
     color <- fill <- "yvar"
 
-    dc <- getclass(dataset)
+    dc <- get_class(dataset)
   }
 
   ## combining X-variables if needed
   if (combx && length(xvar) > 1) {
     if (!is_empty(fill, "none")) return("Cannot use Fill when combining X-variables")
     if (facet_row %in% xvar || facet_col %in% xvar) return("Facet row or column variables cannot be part of\nX-variables when combining Y-variables")
-    if (any(!getclass(select_at(dataset, .vars = xvar)) %in% c("numeric", "integer"))) return("Cannot combine plots for non-numeric variables")
+    if (any(!get_class(select_at(dataset, .vars = xvar)) %in% c("numeric", "integer"))) return("Cannot combine plots for non-numeric variables")
 
     dataset <- gather(dataset, "xvar", "values", !! xvar, factor_key = TRUE)
     xvar <- "values"
     byvar <- if (is.null(byvar)) "xvar" else c("xvar", byvar)
     color <- fill <- "xvar"
 
-    dc <- getclass(dataset)
+    dc <- get_class(dataset)
   }
 
   plot_list <- list()

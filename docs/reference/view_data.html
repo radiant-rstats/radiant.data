@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deprecated function(s) in the radiant.data package — radiant.data-deprecated • radiant.data</title>
+<title>View data in a shiny-app — view_data • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,10 +28,9 @@
 
 
 
-<meta property="og:title" content="Deprecated function(s) in the radiant.data package — radiant.data-deprecated" />
+<meta property="og:title" content="View data in a shiny-app — view_data" />
 
-<meta property="og:description" content="These functions are provided for compatibility with previous versions of
-radiant but will be removed" />
+<meta property="og:description" content="View data in a shiny-app" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -137,53 +136,63 @@ radiant but will be removed" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deprecated function(s) in the radiant.data package</h1>
-    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
-    <div class="hidden name"><code>radiant.data-deprecated.Rd</code></div>
+    <h1>View data in a shiny-app</h1>
+    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/view.R'><code>R/view.R</code></a></small>
+    <div class="hidden name"><code>view_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>These functions are provided for compatibility with previous versions of
-radiant but will be removed</p>
+    <p>View data in a shiny-app</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mean_rm</span>(<span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>view_data</span>(<span class='no'>dataset</span>, <span class='kw'>vars</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>3</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>...</th>
-      <td><p>Parameters to be passed to the updated functions</p></td>
+      <th>dataset</th>
+      <td><p>Data.frame or name of the dataframe to view</p></td>
+    </tr>
+    <tr>
+      <th>vars</th>
+      <td><p>Variables to show (default is all)</p></td>
+    </tr>
+    <tr>
+      <th>filt</th>
+      <td><p>Filter to apply to the specified dataset</p></td>
+    </tr>
+    <tr>
+      <th>rows</th>
+      <td><p>Select rows in the specified dataset</p></td>
+    </tr>
+    <tr>
+      <th>na.rm</th>
+      <td><p>Remove rows with missing values (default is FALSE)</p></td>
+    </tr>
+    <tr>
+      <th>dec</th>
+      <td><p>Number of decimals to show</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>View, search, sort, etc. your data</p>
     
-    <ul>
-<li><p>Replace <code>mean_rm</code> by <code>mean</code></p></li>
-<li><p>Replace <code>median_rm</code> by <code>median</code></p></li>
-<li><p>Replace <code>min_rm</code> by <code>min</code></p></li>
-<li><p>Replace <code>max_rm</code> by <code>max</code></p></li>
-<li><p>Replace <code>sd_rm</code> by <code>sd</code></p></li>
-<li><p>Replace <code>var_rm</code> by <code>var</code></p></li>
-<li><p>Replace <code>sum_rm</code> by <code>sum</code></p></li>
-<li><p>Replace <code>getdata</code> by <code><a href='get_data.html'>get_data</a></code></p></li>
-<li><p>Replace <code>filterdata</code> by <code><a href='filter_data.html'>filter_data</a></code></p></li>
-<li><p>Replace <code>combinedata</code> by <code><a href='combine_data.html'>combine_data</a></code></p></li>
-<li><p>Replace <code>viewdata</code> by <code><a href='view_data.html'>view_data</a></code></p></li>
-<li><p>Replace <code>toFct</code> by <code><a href='to_fct.html'>to_fct</a></code></p></li>
-<li><p>Replace <code>fixMS</code> by <code><a href='fix_smart.html'>fix_smart</a></code></p></li>
-<li><p>Replace <code>rounddf</code> by <code><a href='round_df.html'>round_df</a></code></p></li>
-<li><p>Replace <code>formatdf</code> by <code><a href='format_df.html'>format_df</a></code></p></li>
-<li><p>Replace <code>formatnr</code> by <code><a href='format_nr.html'>format_nr</a></code></p></li>
-<li><p>Replace <code>getclass</code> by <code><a href='get_class.html'>get_class</a></code></p></li>
-</ul>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>See <code><a href='get_data.html'>get_data</a></code> and <code><a href='filter_data.html'>filter_data</a></code></p></div>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>view_data</span>(<span class='no'>mtcars</span>)
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -191,7 +200,11 @@ radiant but will be removed</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
-          </ul>
+
+      <li><a href="#see-also">See also</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

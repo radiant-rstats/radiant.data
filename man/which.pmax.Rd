@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{which.pmax}
 \alias{which.pmax}
-\title{Returns the index of the (parallel) maxima of the input values}
+\title{Index of the maximum per row}
 \usage{
 which.pmax(...)
 }
@@ -13,11 +13,16 @@ which.pmax(...)
 Vector of rankings
 }
 \description{
-Returns the index of the (parallel) maxima of the input values
+Index of the maximum per row
+}
+\details{
+Determine the index of the maximum of the input vectors per row. Extension of \code{which.max}
 }
 \examples{
 which.pmax(1:10, 10:1)
 which.pmax(2, 10:1)
 which.pmax(mtcars)
-
+}
+\seealso{
+See also \code{\link{which.max}} and  \code{\link{which.pmin}}
 }

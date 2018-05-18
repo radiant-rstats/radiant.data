@@ -198,11 +198,11 @@ if (length(r_state$rmd_edit) > 0) {
   if (!grepl("'", r_state$rmd_edit)) {
     ## weird escaping issue in Ace Editor related to single quotes (') on macOS
     r_state$rmd_edit <- gsub("\\\\", "\\\\\\\\", r_state$rmd_edit) %>%
-      radiant.data::fixMS()
+      radiant.data::fix_smart()
   } else if (Sys.info()["sysname"] == "Windows") {
     ## Windows needs more \\\\
     r_state$rmd_edit <- gsub("\\\\", "\\\\\\\\", r_state$rmd_edit) %>%
-      radiant.data::fixMS()
+      radiant.data::fix_smart()
   }
 }
 

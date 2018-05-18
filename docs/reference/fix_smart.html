@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deprecated function(s) in the radiant.data package — radiant.data-deprecated • radiant.data</title>
+<title>Replace smart quotes etc. — fix_smart • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,10 +28,9 @@
 
 
 
-<meta property="og:title" content="Deprecated function(s) in the radiant.data package — radiant.data-deprecated" />
+<meta property="og:title" content="Replace smart quotes etc. — fix_smart" />
 
-<meta property="og:description" content="These functions are provided for compatibility with previous versions of
-radiant but will be removed" />
+<meta property="og:description" content="Replace smart quotes etc." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -137,51 +136,31 @@ radiant but will be removed" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deprecated function(s) in the radiant.data package</h1>
-    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
-    <div class="hidden name"><code>radiant.data-deprecated.Rd</code></div>
+    <h1>Replace smart quotes etc.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
+    <div class="hidden name"><code>fix_smart.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>These functions are provided for compatibility with previous versions of
-radiant but will be removed</p>
+    <p>Replace smart quotes etc.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mean_rm</span>(<span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>fix_smart</span>(<span class='no'>text</span>, <span class='kw'>all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>...</th>
-      <td><p>Parameters to be passed to the updated functions</p></td>
+      <th>text</th>
+      <td><p>Text to be parsed</p></td>
+    </tr>
+    <tr>
+      <th>all</th>
+      <td><p>Should all non-ascii characters be removed? Default is FALSE</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    
-    <ul>
-<li><p>Replace <code>mean_rm</code> by <code>mean</code></p></li>
-<li><p>Replace <code>median_rm</code> by <code>median</code></p></li>
-<li><p>Replace <code>min_rm</code> by <code>min</code></p></li>
-<li><p>Replace <code>max_rm</code> by <code>max</code></p></li>
-<li><p>Replace <code>sd_rm</code> by <code>sd</code></p></li>
-<li><p>Replace <code>var_rm</code> by <code>var</code></p></li>
-<li><p>Replace <code>sum_rm</code> by <code>sum</code></p></li>
-<li><p>Replace <code>getdata</code> by <code><a href='get_data.html'>get_data</a></code></p></li>
-<li><p>Replace <code>filterdata</code> by <code><a href='filter_data.html'>filter_data</a></code></p></li>
-<li><p>Replace <code>combinedata</code> by <code><a href='combine_data.html'>combine_data</a></code></p></li>
-<li><p>Replace <code>viewdata</code> by <code><a href='view_data.html'>view_data</a></code></p></li>
-<li><p>Replace <code>toFct</code> by <code><a href='to_fct.html'>to_fct</a></code></p></li>
-<li><p>Replace <code>fixMS</code> by <code><a href='fix_smart.html'>fix_smart</a></code></p></li>
-<li><p>Replace <code>rounddf</code> by <code><a href='round_df.html'>round_df</a></code></p></li>
-<li><p>Replace <code>formatdf</code> by <code><a href='format_df.html'>format_df</a></code></p></li>
-<li><p>Replace <code>formatnr</code> by <code><a href='format_nr.html'>format_nr</a></code></p></li>
-<li><p>Replace <code>getclass</code> by <code><a href='get_class.html'>get_class</a></code></p></li>
-</ul>
     
 
   </div>
@@ -189,9 +168,7 @@ radiant but will be removed</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#details">Details</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>

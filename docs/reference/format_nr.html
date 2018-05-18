@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deprecated function(s) in the radiant.data package — radiant.data-deprecated • radiant.data</title>
+<title>Format a number with a specified number of decimal places, thousand sep, and a symbol — format_nr • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,10 +28,9 @@
 
 
 
-<meta property="og:title" content="Deprecated function(s) in the radiant.data package — radiant.data-deprecated" />
+<meta property="og:title" content="Format a number with a specified number of decimal places, thousand sep, and a symbol — format_nr" />
 
-<meta property="og:description" content="These functions are provided for compatibility with previous versions of
-radiant but will be removed" />
+<meta property="og:description" content="Format a number with a specified number of decimal places, thousand sep, and a symbol" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -137,61 +136,71 @@ radiant but will be removed" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deprecated function(s) in the radiant.data package</h1>
-    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
-    <div class="hidden name"><code>radiant.data-deprecated.Rd</code></div>
+    <h1>Format a number with a specified number of decimal places, thousand sep, and a symbol</h1>
+    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
+    <div class="hidden name"><code>format_nr.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>These functions are provided for compatibility with previous versions of
-radiant but will be removed</p>
+    <p>Format a number with a specified number of decimal places, thousand sep, and a symbol</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mean_rm</span>(<span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>format_nr</span>(<span class='no'>x</span>, <span class='kw'>sym</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>perc</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>mark</span> <span class='kw'>=</span> <span class='st'>","</span>,
+  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>x</th>
+      <td><p>Number or vector</p></td>
+    </tr>
+    <tr>
+      <th>sym</th>
+      <td><p>Symbol to use</p></td>
+    </tr>
+    <tr>
+      <th>dec</th>
+      <td><p>Number of decimals to show</p></td>
+    </tr>
+    <tr>
+      <th>perc</th>
+      <td><p>Display number as a percentage</p></td>
+    </tr>
+    <tr>
+      <th>mark</th>
+      <td><p>Thousand separator</p></td>
+    </tr>
+    <tr>
+      <th>na.rm</th>
+      <td><p>Remove missing values</p></td>
+    </tr>
+    <tr>
       <th>...</th>
-      <td><p>Parameters to be passed to the updated functions</p></td>
+      <td><p>Additional arguments passed to <code>formatC</code></p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-    <ul>
-<li><p>Replace <code>mean_rm</code> by <code>mean</code></p></li>
-<li><p>Replace <code>median_rm</code> by <code>median</code></p></li>
-<li><p>Replace <code>min_rm</code> by <code>min</code></p></li>
-<li><p>Replace <code>max_rm</code> by <code>max</code></p></li>
-<li><p>Replace <code>sd_rm</code> by <code>sd</code></p></li>
-<li><p>Replace <code>var_rm</code> by <code>var</code></p></li>
-<li><p>Replace <code>sum_rm</code> by <code>sum</code></p></li>
-<li><p>Replace <code>getdata</code> by <code><a href='get_data.html'>get_data</a></code></p></li>
-<li><p>Replace <code>filterdata</code> by <code><a href='filter_data.html'>filter_data</a></code></p></li>
-<li><p>Replace <code>combinedata</code> by <code><a href='combine_data.html'>combine_data</a></code></p></li>
-<li><p>Replace <code>viewdata</code> by <code><a href='view_data.html'>view_data</a></code></p></li>
-<li><p>Replace <code>toFct</code> by <code><a href='to_fct.html'>to_fct</a></code></p></li>
-<li><p>Replace <code>fixMS</code> by <code><a href='fix_smart.html'>fix_smart</a></code></p></li>
-<li><p>Replace <code>rounddf</code> by <code><a href='round_df.html'>round_df</a></code></p></li>
-<li><p>Replace <code>formatdf</code> by <code><a href='format_df.html'>format_df</a></code></p></li>
-<li><p>Replace <code>formatnr</code> by <code><a href='format_nr.html'>format_nr</a></code></p></li>
-<li><p>Replace <code>getclass</code> by <code><a href='get_class.html'>get_class</a></code></p></li>
-</ul>
+    <p>Character (vector) in the desired format</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>format_nr</span>(<span class='fl'>2000</span>, <span class='st'>"$"</span>)</div><div class='output co'>#&gt; [1] "$2,000.00"</div><div class='input'><span class='fu'>format_nr</span>(<span class='fl'>2000</span>, <span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>4</span>)</div><div class='output co'>#&gt; [1] "2,000.0000"</div><div class='input'><span class='fu'>format_nr</span>(<span class='fl'>.05</span>, <span class='kw'>perc</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "5.00%"</div><div class='input'><span class='fu'>format_nr</span>(<span class='fu'>c</span>(<span class='fl'>.1</span>, <span class='fl'>.99</span>), <span class='kw'>perc</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "10.00%" "99.00%"</div><div class='input'><span class='fu'>format_nr</span>(<span class='fu'>data.frame</span>(<span class='kw'>a</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>.1</span>, <span class='fl'>.99</span>)), <span class='kw'>perc</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "10.00%" "99.00%"</div><div class='input'><span class='fu'>format_nr</span>(<span class='fu'>data.frame</span>(<span class='kw'>a</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>), <span class='kw'>sym</span> <span class='kw'>=</span> <span class='st'>"$"</span>, <span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>0</span>)</div><div class='output co'>#&gt;  [1] "$1"  "$2"  "$3"  "$4"  "$5"  "$6"  "$7"  "$8"  "$9"  "$10"</div><div class='input'><span class='fu'>format_nr</span>(<span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>1.9</span>, <span class='fl'>1.008</span>, <span class='fl'>1.00</span>))</div><div class='output co'>#&gt; [1] "1.00" "1.90" "1.01" "1.00"</div><div class='input'><span class='fu'>format_nr</span>(<span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>1.9</span>, <span class='fl'>1.008</span>, <span class='fl'>1.00</span>), <span class='kw'>drop0trailing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "1"    "1.9"  "1.01" "1"   </div><div class='input'><span class='fu'>format_nr</span>(<span class='fl'>NA</span>)</div><div class='output co'>#&gt; [1] ""</div><div class='input'><span class='fu'>format_nr</span>(<span class='kw'>NULL</span>)</div><div class='output co'>#&gt; [1] ""</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#details">Details</a></li>
-          </ul>
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

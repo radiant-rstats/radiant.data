@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deprecated function(s) in the radiant.data package — radiant.data-deprecated • radiant.data</title>
+<title>Get variable class — get_class • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,10 +28,9 @@
 
 
 
-<meta property="og:title" content="Deprecated function(s) in the radiant.data package — radiant.data-deprecated" />
+<meta property="og:title" content="Get variable class — get_class" />
 
-<meta property="og:description" content="These functions are provided for compatibility with previous versions of
-radiant but will be removed" />
+<meta property="og:description" content="Get variable class" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -137,61 +136,55 @@ radiant but will be removed" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deprecated function(s) in the radiant.data package</h1>
-    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
-    <div class="hidden name"><code>radiant.data-deprecated.Rd</code></div>
+    <h1>Get variable class</h1>
+    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
+    <div class="hidden name"><code>get_class.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>These functions are provided for compatibility with previous versions of
-radiant but will be removed</p>
+    <p>Get variable class</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mean_rm</span>(<span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>get_class</span>(<span class='no'>dat</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>...</th>
-      <td><p>Parameters to be passed to the updated functions</p></td>
+      <th>dat</th>
+      <td><p>Dataset to evaluate</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Vector with class information for each variable</p>
+    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    
-    <ul>
-<li><p>Replace <code>mean_rm</code> by <code>mean</code></p></li>
-<li><p>Replace <code>median_rm</code> by <code>median</code></p></li>
-<li><p>Replace <code>min_rm</code> by <code>min</code></p></li>
-<li><p>Replace <code>max_rm</code> by <code>max</code></p></li>
-<li><p>Replace <code>sd_rm</code> by <code>sd</code></p></li>
-<li><p>Replace <code>var_rm</code> by <code>var</code></p></li>
-<li><p>Replace <code>sum_rm</code> by <code>sum</code></p></li>
-<li><p>Replace <code>getdata</code> by <code><a href='get_data.html'>get_data</a></code></p></li>
-<li><p>Replace <code>filterdata</code> by <code><a href='filter_data.html'>filter_data</a></code></p></li>
-<li><p>Replace <code>combinedata</code> by <code><a href='combine_data.html'>combine_data</a></code></p></li>
-<li><p>Replace <code>viewdata</code> by <code><a href='view_data.html'>view_data</a></code></p></li>
-<li><p>Replace <code>toFct</code> by <code><a href='to_fct.html'>to_fct</a></code></p></li>
-<li><p>Replace <code>fixMS</code> by <code><a href='fix_smart.html'>fix_smart</a></code></p></li>
-<li><p>Replace <code>rounddf</code> by <code><a href='round_df.html'>round_df</a></code></p></li>
-<li><p>Replace <code>formatdf</code> by <code><a href='format_df.html'>format_df</a></code></p></li>
-<li><p>Replace <code>formatnr</code> by <code><a href='format_nr.html'>format_nr</a></code></p></li>
-<li><p>Replace <code>getclass</code> by <code><a href='get_class.html'>get_class</a></code></p></li>
-</ul>
+    <p>Get variable class information for each column in a data.frame</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>get_class</span>(<span class='no'>mtcars</span>)</div><div class='output co'>#&gt;       mpg       cyl      disp        hp      drat        wt      qsec        vs 
+#&gt; "numeric" "numeric" "numeric" "numeric" "numeric" "numeric" "numeric" "numeric" 
+#&gt;        am      gear      carb 
+#&gt; "numeric" "numeric" "numeric" </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
+      <li><a href="#value">Value</a></li>
+
       <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

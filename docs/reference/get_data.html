@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deprecated function(s) in the radiant.data package — radiant.data-deprecated • radiant.data</title>
+<title>Select variables and filter data — get_data • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,10 +28,9 @@
 
 
 
-<meta property="og:title" content="Deprecated function(s) in the radiant.data package — radiant.data-deprecated" />
+<meta property="og:title" content="Select variables and filter data — get_data" />
 
-<meta property="og:description" content="These functions are provided for compatibility with previous versions of
-radiant but will be removed" />
+<meta property="og:description" content="Select variables and filter data" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -137,61 +136,84 @@ radiant but will be removed" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deprecated function(s) in the radiant.data package</h1>
-    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
-    <div class="hidden name"><code>radiant.data-deprecated.Rd</code></div>
+    <h1>Select variables and filter data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
+    <div class="hidden name"><code>get_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>These functions are provided for compatibility with previous versions of
-radiant but will be removed</p>
+    <p>Select variables and filter data</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mean_rm</span>(<span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>get_data</span>(<span class='no'>dataset</span>, <span class='kw'>vars</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>...</th>
-      <td><p>Parameters to be passed to the updated functions</p></td>
+      <th>dataset</th>
+      <td><p>Dataset or name of the data.frame</p></td>
+    </tr>
+    <tr>
+      <th>vars</th>
+      <td><p>Variables to extract from the data.frame</p></td>
+    </tr>
+    <tr>
+      <th>filt</th>
+      <td><p>Filter to apply to the specified dataset</p></td>
+    </tr>
+    <tr>
+      <th>rows</th>
+      <td><p>Select rows in the specified dataset</p></td>
+    </tr>
+    <tr>
+      <th>na.rm</th>
+      <td><p>Remove rows with missing values (default is TRUE)</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Data.frame with specified columns and rows</p>
+    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    
-    <ul>
-<li><p>Replace <code>mean_rm</code> by <code>mean</code></p></li>
-<li><p>Replace <code>median_rm</code> by <code>median</code></p></li>
-<li><p>Replace <code>min_rm</code> by <code>min</code></p></li>
-<li><p>Replace <code>max_rm</code> by <code>max</code></p></li>
-<li><p>Replace <code>sd_rm</code> by <code>sd</code></p></li>
-<li><p>Replace <code>var_rm</code> by <code>var</code></p></li>
-<li><p>Replace <code>sum_rm</code> by <code>sum</code></p></li>
-<li><p>Replace <code>getdata</code> by <code><a href='get_data.html'>get_data</a></code></p></li>
-<li><p>Replace <code>filterdata</code> by <code><a href='filter_data.html'>filter_data</a></code></p></li>
-<li><p>Replace <code>combinedata</code> by <code><a href='combine_data.html'>combine_data</a></code></p></li>
-<li><p>Replace <code>viewdata</code> by <code><a href='view_data.html'>view_data</a></code></p></li>
-<li><p>Replace <code>toFct</code> by <code><a href='to_fct.html'>to_fct</a></code></p></li>
-<li><p>Replace <code>fixMS</code> by <code><a href='fix_smart.html'>fix_smart</a></code></p></li>
-<li><p>Replace <code>rounddf</code> by <code><a href='round_df.html'>round_df</a></code></p></li>
-<li><p>Replace <code>formatdf</code> by <code><a href='format_df.html'>format_df</a></code></p></li>
-<li><p>Replace <code>formatnr</code> by <code><a href='format_nr.html'>format_nr</a></code></p></li>
-<li><p>Replace <code>getclass</code> by <code><a href='get_class.html'>get_class</a></code></p></li>
-</ul>
+    <p>Function is used in radiant to select variables and filter data based on user input in string form</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>get_data</span>(<span class='no'>mtcars</span>, <span class='kw'>vars</span> <span class='kw'>=</span> <span class='st'>"cyl:vs"</span>, <span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>"mpg &gt; 25"</span>)</div><div class='output co'>#&gt;   cyl  disp  hp drat    wt  qsec vs
+#&gt; 1   4  78.7  66 4.08 2.200 19.47  1
+#&gt; 2   4  75.7  52 4.93 1.615 18.52  1
+#&gt; 3   4  71.1  65 4.22 1.835 19.90  1
+#&gt; 4   4  79.0  66 4.08 1.935 18.90  1
+#&gt; 5   4 120.3  91 4.43 2.140 16.70  0
+#&gt; 6   4  95.1 113 3.77 1.513 16.90  1</div><div class='input'><span class='fu'>get_data</span>(<span class='no'>mtcars</span> , <span class='kw'>vars</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"mpg"</span>, <span class='st'>"cyl"</span>), <span class='kw'>rows</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>)</div><div class='output co'>#&gt;                    mpg cyl
+#&gt; Mazda RX4         21.0   6
+#&gt; Mazda RX4 Wag     21.0   6
+#&gt; Datsun 710        22.8   4
+#&gt; Hornet 4 Drive    21.4   6
+#&gt; Hornet Sportabout 18.7   8
+#&gt; Valiant           18.1   6
+#&gt; Duster 360        14.3   8
+#&gt; Merc 240D         24.4   4
+#&gt; Merc 230          22.8   4
+#&gt; Merc 280          19.2   6</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
+      <li><a href="#value">Value</a></li>
+
       <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
