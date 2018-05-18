@@ -39,7 +39,7 @@ output$ui_viz_type <- renderUI({
 
 output$ui_viz_nrobs <- renderUI({
   req(input$viz_type == "scatter")
-  nrobs <- nrow(.getdata())
+  nrobs <- nrow(.get_data())
   choices <- c("1,000" = 1000, "5,000" = 5000, "10,000" = 10000, "All" = -1) %>%
     .[. < nrobs]
   selectInput(
@@ -54,13 +54,13 @@ output$ui_viz_yvar <- renderUI({
   req(input$viz_type)
   vars <- varying_vars()
   req(available(vars))
-  vars <- vars["date" != .getclass()[vars]]
+  vars <- vars["date" != .get_class()[vars]]
   if (input$viz_type %in% c("line", "bar", "scatter", "surface", "box")) {
-    vars <- vars["character" != .getclass()[vars]]
+    vars <- vars["character" != .get_class()[vars]]
   }
   if (input$viz_type %in% c("line", "scatter", "box")) {
     ## allow factors in yvars for bar plots
-    vars <- vars["factor" != .getclass()[vars]]
+    vars <- vars["factor" != .get_class()[vars]]
   }
 
   selectInput(
@@ -76,8 +76,8 @@ output$ui_viz_xvar <- renderUI({
   req(input$viz_type)
   vars <- varying_vars()
   req(available(vars))
-  if (input$viz_type == "dist") vars <- vars["date" != .getclass()[vars]]
-  if (input$viz_type == "density") vars <- vars["factor" != .getclass()[vars]]
+  if (input$viz_type == "dist") vars <- vars["date" != .get_class()[vars]]
+  if (input$viz_type == "density") vars <- vars["factor" != .get_class()[vars]]
   if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars_nonum()
 
   selectInput(
@@ -167,7 +167,7 @@ output$ui_viz_fill <- renderUI({
 
 output$ui_viz_size <- renderUI({
   req(input$viz_type)
-  isNum <- .getclass() %in% c("integer", "numeric")
+  isNum <- .get_class() %in% c("integer", "numeric")
   vars <- c("None" = "none", varnames()[isNum])
   if (isTRUE(input$viz_comby) && length(input$viz_yvar) > 1) vars <- c("None" = "none")
   selectizeInput(

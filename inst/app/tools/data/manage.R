@@ -47,7 +47,7 @@ load_csv <- function(
       rprob <- ""
     }
 
-    if (saf) dataset <- toFct(dataset, safx)
+    if (saf) dataset <- to_fctdataset, safx)
     as.data.frame(dataset, stringsAsFactors = FALSE) %>%
       {set_colnames(., make.names(colnames(.)))} %>%
       set_attr("description", rprob)
@@ -154,7 +154,7 @@ load_user_data <- function(
           locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{sep}")
         )') 
     }
-    if (man_str_as_factor) cmd <- paste0(cmd, " %>%\n  toFct()")
+    if (man_str_as_factor) cmd <- paste0(cmd, " %>%\n  to_fct()")
   } else if (ext != "---") {
     ret <- glue('#### The selected filetype is not currently supported ({fext})')
     upload_error_handler(objname, ret)

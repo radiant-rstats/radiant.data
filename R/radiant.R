@@ -200,11 +200,11 @@ sshhr <- function(...) suppressWarnings(suppressMessages(...))
 #' @param na.rm Remove rows with missing values (default is TRUE)
 #' @return Data.frame with specified columns and rows
 #' @examples 
-#' getdata(mtcars, vars = "cyl:vs", filt = "mpg > 25")
-#' getdata(mtcars , vars = c("mpg", "cyl"), rows = 1:10)
+#' get_data(mtcars, vars = "cyl:vs", filt = "mpg > 25")
+#' get_data(mtcars , vars = c("mpg", "cyl"), rows = 1:10)
 #'
 #' @export
-getdata <- function(
+get_data <- function(
   dataset, vars = "", filt = "",
   rows = NULL, na.rm = TRUE
 ) {
@@ -221,7 +221,7 @@ getdata <- function(
       stop(call. = FALSE)
   }} %>%
     {if ("grouped_df" %in% class(.)) ungroup(.) else .} %>% ## ungroup data if needed
-    {if (filt == "") . else filterdata(., filt)} %>%        ## apply data_filter
+    {if (filt == "") . else filter_data(., filt)} %>%        ## apply data_filter
     {if (is.null(rows)) . else .[rows, , drop = FALSE]} %>%
     {if (is_empty(vars[1])) . else select(., !!! if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)} %>%
     {if (na.rm) na.omit(.) else .}
@@ -234,9 +234,9 @@ getdata <- function(
 #' @param nuniq Cutoff for number of unique values
 #' @param n Cutoff for small dataset
 #' @examples
-#' tibble(a = c("a", "b"), b = c("a", "a"), c = 1:2) %>% toFct()
+#' tibble(a = c("a", "b"), b = c("a", "a"), c = 1:2) %>% to_fct()
 #' @export
-toFct <- function(dataset, safx = 30, nuniq = 100, n = 100) {
+to_fct <- function(dataset, safx = 30, nuniq = 100, n = 100) {
   isChar <- sapply(dataset, is.character)
   if (sum(isChar) == 0) return(dataset)
   nobs <- nrow(dataset)
@@ -347,10 +347,10 @@ choose_dir <- function(...) {
 #' @return Vector with class information for each variable
 #'
 #' @examples
-#' getclass(mtcars)
+#' get_class(mtcars)
 #'
 #' @export
-getclass <- function(dat) {
+get_class <- function(dat) {
   sapply(dat, function(x) class(x)[1]) %>%
     sub("ordered", "factor", .) %>%
     sub("POSIXct", "date", .) %>%
@@ -452,7 +452,7 @@ iterms <- function(vars, nway, sep = ":") {
 #'
 #' @examples
 #'
-#' copy_from(radiant.data, getdata)
+#' copy_from(radiant.data, get_data)
 #'
 #' @export
 copy_from <- function(.from, ...) {
@@ -589,23 +589,23 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #' @param dec Number of decimals to show
 #' @param perc Display numbers as percentages (TRUE or FALSE)
 #' @param mark Thousand separator
-#' @param ... Additional arguments for formatnr
+#' @param ... Additional arguments for format_nr
 #'
 #' @return Data.frame for printing
 #'
 #' @examples
 #' data.frame(x = c("a", "b"), y = c(1L, 2L), z = c(-0.0005, 3)) %>%
-#'   formatdf(dec = 4)
+#'   format_df(dec = 4)
 #' data.frame(x = c(1L, 2L), y = c(0.05, 0.8)) %>%
-#'   formatdf(dec = 2, perc = TRUE)
+#'   format_df(dec = 2, perc = TRUE)
 #'
 #' @export
-formatdf <- function(tbl, dec = NULL, perc = FALSE, mark = "", ...) {
+format_df <- function(tbl, dec = NULL, perc = FALSE, mark = "", ...) {
   frm <- function(x, ...) {
     if (is_numeric(x)) {
-      formatnr(x, dec = dec, perc = perc, mark = mark, ...)
+      format_nr(x, dec = dec, perc = perc, mark = mark, ...)
     } else if (is.integer(x)) {
-      formatnr(x, dec = 0, mark = mark, ...)
+      format_nr(x, dec = 0, mark = mark, ...)
     } else {
       x
     }
@@ -626,23 +626,23 @@ formatdf <- function(tbl, dec = NULL, perc = FALSE, mark = "", ...) {
 #' @return Character (vector) in the desired format
 #'
 #' @examples
-#' formatnr(2000, "$")
-#' formatnr(2000, dec = 4)
-#' formatnr(.05, perc = TRUE)
-#' formatnr(c(.1, .99), perc = TRUE)
-#' formatnr(data.frame(a = c(.1, .99)), perc = TRUE)
-#' formatnr(data.frame(a = 1:10), sym = "$", dec = 0)
-#' formatnr(c(1, 1.9, 1.008, 1.00))
-#' formatnr(c(1, 1.9, 1.008, 1.00), drop0trailing = TRUE)
-#' formatnr(NA)
-#' formatnr(NULL)
+#' format_nr(2000, "$")
+#' format_nr(2000, dec = 4)
+#' format_nr(.05, perc = TRUE)
+#' format_nr(c(.1, .99), perc = TRUE)
+#' format_nr(data.frame(a = c(.1, .99)), perc = TRUE)
+#' format_nr(data.frame(a = 1:10), sym = "$", dec = 0)
+#' format_nr(c(1, 1.9, 1.008, 1.00))
+#' format_nr(c(1, 1.9, 1.008, 1.00), drop0trailing = TRUE)
+#' format_nr(NA)
+#' format_nr(NULL)
 #'
 #' @export
-formatnr <- function(
+format_nr <- function(
   x, sym = "", dec = 2, perc = FALSE,
   mark = ",", na.rm = TRUE, ...
 ) {
-  if ("data.frame" %in% class(x)) x <- x[[1]]
+  if (is.data.frame(x)) x <- x[[1]]
   if (na.rm && length(x) > 0) x <- na.omit(x)
   if (perc) {
     paste0(sym, formatC(100 * x, digits = dec, big.mark = mark, format = "f", ...), "%")
@@ -658,10 +658,10 @@ formatnr <- function(
 #' @return Data frame with rounded doubles
 #' @examples
 #' data.frame(x = as.factor(c("a", "b")), y = c(1L, 2L), z = c(-0.0005, 3.1)) %>%
-#'   rounddf(dec = 2)
+#'   round_df(dec = 2)
 #'
 #' @export
-rounddf <- function(tbl, dec = 3) {
+round_df <- function(tbl, dec = 3) {
   mutate_if(tbl, is_numeric, .funs = funs(round(., dec)))
 }
 
@@ -784,31 +784,27 @@ find_project <- function(mess = TRUE) {
   }
 }
 
-#' Returns the index of the (parallel) maxima of the input values
-#'
+#' Index of the maximum per row
+#' @details Determine the index of the maximum of the input vectors per row. Extension of \code{which.max}
 #' @param ... Numeric or character vectors of the same length
-#'
 #' @return Vector of rankings
-#'
+#' @seealso See also \code{\link{which.max}} and  \code{\link{which.pmin}}
 #' @examples
 #' which.pmax(1:10, 10:1)
 #' which.pmax(2, 10:1)
 #' which.pmax(mtcars)
-#'
 #' @export
 which.pmax <- function(...) unname(apply(cbind(...), 1, which.max))
 
-#' Returns the index of the (parallel) minima of the input values
-#'
+#' Index of the minimum per row
+#' @details Determine the index of the minimum of the input vectors per row. Extension of \code{which.min}
 #' @param ... Numeric or character vectors of the same length
-#'
 #' @return Vector of rankings
-#'
+#' @seealso See also \code{\link{which.min}} and \code{\link{which.pmax}}
 #' @examples
 #' which.pmin(1:10, 10:1)
 #' which.pmin(2, 10:1)
 #' which.pmin(mtcars)
-#'
 #' @export
 which.pmin <- function(...) unname(apply(cbind(...), 1, which.min))
 
@@ -913,7 +909,7 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
   }
 
   ind <- mutate(dataset, imf___ = seq_len(nrows)) %>%
-    {if (filt == "") . else filterdata(., filt)} %>%
+    {if (filt == "") . else filter_data(., filt)} %>%
     select_at(.vars = unique(c("imf___", vars))) %>%
     na.omit() %>%
     .[["imf___"]]
@@ -1060,7 +1056,7 @@ describe <- function(dataset) {
 
   dataset <- if (is.character(dataset)) {
     message(paste0("Using describe(\"", dataset, "\") is deprecated.\nUse desribe(", dataset, ") instead"))
-    getdata(dataset)
+    get_data(dataset)
   } else {
     dataset
   }
@@ -1080,30 +1076,30 @@ describe <- function(dataset) {
   viewer("index.html")
 }
 
-#' Workaround to add description using feather::write_feather
-#'
-#' @param x A data frame to write to disk
-#' @param path Path to feather file
-#' @param description Data description
-#'
-#' @export
-write_feather <- function(x, path, description = attr(x, "description")) {
-  requireNamespace("feather")
-  fw_args <- as.list(formals(feather::write_feather))
-  if ("description" %in% names(fw_args)) {
-    feather::write_feather(x, path, if (is.null(description)) "" else description)
-  } else {
-    feather::write_feather(x, path)
-  }
-}
+# #' Workaround to add description using feather::write_feather
+# #'
+# #' @param x A data frame to write to disk
+# #' @param path Path to feather file
+# #' @param description Data description
+# #'
+# #' @export
+# write_feather <- function(x, path, description = attr(x, "description")) {
+#   requireNamespace("feather")
+#   fw_args <- as.list(formals(feather::write_feather))
+#   if ("description" %in% names(fw_args)) {
+#     feather::write_feather(x, path, if (is.null(description)) "" else description)
+#   } else {
+#     feather::write_feather(x, path)
+#   }
+# }
 
-#' Replace Windows smart quotes etc.
+#' Replace smart quotes etc.
 #'
 #' @param text Text to be parsed
-#' @param all Should all non-ascii characters be removed (default = FALSE)
+#' @param all Should all non-ascii characters be removed? Default is FALSE
 #'
 #' @export
-fixMS <- function(text, all = FALSE) {
+fix_smart <- function(text, all = FALSE) {
 
   if (all) {
     ## to remove all non-ascii symbols use ...

@@ -10,6 +10,18 @@
 \alias{sd_rm}
 \alias{var_rm}
 \alias{sum_rm}
+\alias{getdata}
+\alias{filterdata}
+\alias{combinedata}
+\alias{viewdata}
+\alias{toFct}
+\alias{fixMS}
+\alias{getsummary}
+\alias{Search}
+\alias{formatnr}
+\alias{formatdf}
+\alias{rounddf}
+\alias{getclass}
 \alias{radiant.data-deprecated-package}
 \title{Deprecated function(s) in the radiant.data package}
 \usage{
@@ -32,6 +44,16 @@ radiant but will be removed
   \item Replace \code{sd_rm} by \code{\link{sd}}
   \item Replace \code{var_rm} by \code{\link{var}}
   \item Replace \code{sum_rm} by \code{\link{sum}}
+  \item Replace \code{getdata} by \code{\link{get_data}}
+  \item Replace \code{filterdata} by \code{\link{filter_data}}
+  \item Replace \code{combinedata} by \code{\link{combine_data}}
+  \item Replace \code{viewdata} by \code{\link{view_data}}
+  \item Replace \code{toFct} by \code{\link{to_fct}}
+  \item Replace \code{fixMS} by \code{\link{fix_smart}}
+  \item Replace \code{rounddf} by \code{\link{round_df}}
+  \item Replace \code{formatdf} by \code{\link{format_df}}
+  \item Replace \code{formatnr} by \code{\link{format_nr}}
+  \item Replace \code{getclass} by \code{\link{get_class}}
 }
 }
 

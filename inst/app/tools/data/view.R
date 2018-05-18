@@ -78,7 +78,7 @@ output$dataviewer <- DT::renderDataTable({
   ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
   input$view_clear
   req(available(input$view_vars))
-  dat <- select_at(.getdata(), .vars = input$view_vars)
+  dat <- select_at(.get_data(), .vars = input$view_vars)
 
   search <- r_state$dataviewer_state$search$search
   if (is.null(search)) search <- ""
@@ -142,7 +142,7 @@ output$dataviewer <- DT::renderDataTable({
 observeEvent(input$view_store, {
   req(input$view_name)
   data_filter <- if (input$show_filter) input$data_filter else ""
-  r_data[[input$view_name]] <- getdata(
+  r_data[[input$view_name]] <- get_data(
     input$dataset, vars = input$view_vars, filt = data_filter,
     rows = input$dataviewer_rows_all, na.rm = FALSE
   )
@@ -171,7 +171,7 @@ observeEvent(input$view_store, {
 
 dl_view_tab <- function(file) {
   data_filter <- if (input$show_filter) input$data_filter else ""
-  getdata(
+  get_data(
     input$dataset,
     vars = input$view_vars,
     filt = data_filter,
@@ -208,7 +208,7 @@ if (isTRUE(getOption("radiant.local", FALSE))) {
 }
 
 .dataviewer <- reactive({
-  list(tab = .getdata()[1, ])
+  list(tab = .get_data()[1, ])
 })
 
 .viewcmd <- function(mess = "") {
@@ -247,7 +247,7 @@ if (isTRUE(getOption("radiant.local", FALSE))) {
     cmd <- paste0(cmd, " %>%\n  filter(", input$data_filter, ")")
   }
   if (!is_empty(ts$search)) {
-    cmd <- paste0(cmd, " %>%\n  filter(Search(., \"", ts$search, "\"))")
+    cmd <- paste0(cmd, " %>%\n  filter(search_data(., \"", ts$search, "\"))")
   }
   if (!is_empty(ts$tabfilt)) {
     cmd <- paste0(cmd, " %>%\n  filter(", ts$tabfilt, ")")

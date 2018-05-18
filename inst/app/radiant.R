@@ -83,12 +83,12 @@ saveStateOnRefresh <- function(session = session) {
 ################################################################
 
 ## get active dataset and apply data-filter if available
-.getdata <- reactive({
+.get_data <- reactive({
   req(input$dataset)
   selcom <- input$data_filter %>%
     gsub("\\n", "", .) %>%
     gsub("\"", "\'", .) %>%
-    fixMS()
+    fix_smart()
   if (is_empty(selcom) || input$show_filter == FALSE) {
     isolate(r_info[["filter_error"]] <- "")
   } else if (grepl("([^=!<>])=([^=])", selcom)) {
@@ -118,7 +118,7 @@ saveStateOnRefresh <- function(session = session) {
 })
 
 ## using a regular function to avoid a full data copy
-.getdata_transform <- function(dataset = input$dataset) {
+.get_data_transform <- function(dataset = input$dataset) {
   if (is.null(dataset)) return()
   if ("grouped_df" %in% class(r_data[[dataset]])) {
     ungroup(r_data[[dataset]])
@@ -127,12 +127,12 @@ saveStateOnRefresh <- function(session = session) {
   }
 }
 
-.getclass <- reactive({
-  getclass(.getdata())
+.get_class <- reactive({
+  get_class(.get_data())
 })
 
 groupable_vars <- reactive({
-  .getdata() %>%
+  .get_data() %>%
     summarise_all(
       funs(
         is.factor(.) || is.logical(.) || lubridate::is.Date(.) || 
@@ -145,7 +145,7 @@ groupable_vars <- reactive({
 })
 
 groupable_vars_nonum <- reactive({
-  .getdata() %>%
+  .get_data() %>%
     summarise_all(
       funs(
         is.factor(.) || is.logical(.) || 
@@ -166,7 +166,7 @@ two_level_vars <- reactive({
       length(unique(na.omit(x)))
     }
   }
-  .getdata() %>%
+  .get_data() %>%
     summarise_all(funs(two_levs)) %>%
     {. == 2} %>%
     which(.) %>%
@@ -175,7 +175,7 @@ two_level_vars <- reactive({
 
 ## used in visualize - don't plot Y-variables that don't vary
 varying_vars <- reactive({
-  .getdata() %>%
+  .get_data() %>%
     summarise_all(funs(does_vary(.))) %>%
     as.logical() %>%
     which() %>%
@@ -184,7 +184,7 @@ varying_vars <- reactive({
 
 ## getting variable names in active dataset and their class
 varnames <- reactive({
-  var_class <- .getclass()
+  var_class <- .get_class()
   req(var_class)
   names(var_class) %>% 
     set_names(., paste0(., " {", var_class, "}"))
@@ -240,7 +240,7 @@ r_drop <- function(x, drop = c("dataset", "data_filter")) x[-which(x %in% drop)]
 
 ## show a few rows of a dataframe
 show_data_snippet <- function(dataset = input$dataset, nshow = 7, title = "", filt = "") {
-  if (is.character(dataset) && length(dataset) == 1) dataset <- getdata(dataset, filt = filt, na.rm = FALSE)
+  if (is.character(dataset) && length(dataset) == 1) dataset <- get_data(dataset, filt = filt, na.rm = FALSE)
   nr <- nrow(dataset)
   ## avoid slice with variables outside of the df in case a column with the same
   ## name exists
@@ -254,7 +254,7 @@ show_data_snippet <- function(dataset = input$dataset, nshow = 7, title = "", fi
       html.table.attributes = "class='table table-condensed table-hover snippet'"
     ) %>%
     paste0(title, .) %>%
-    {if (nr <= nshow) . else paste0(., "\n<label>", nshow, " of ", formatnr(nr, dec = 0), " rows shown. See View-tab for details.</label>")} %>%
+    {if (nr <= nshow) . else paste0(., "\n<label>", nshow, " of ", format_nr(nr, dec = 0), " rows shown. See View-tab for details.</label>")} %>%
     enc2utf8()
 }
 
@@ -641,7 +641,7 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
   if (order != "NULL" || sc != "NULL") {
 
     ## get variable class and name
-    gc <- getclass(dat) %>% {if (is_empty(vars[1])) . else .[vars]}
+    gc <- get_class(dat) %>% {if (is_empty(vars[1])) . else .[vars]}
     cn <- names(gc)
 
     if (length(cn) > 0) {

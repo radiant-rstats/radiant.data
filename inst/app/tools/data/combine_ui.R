@@ -2,7 +2,7 @@
 # Combine datasets
 #######################################
 ## list of function arguments
-cmb_args <- as.list(formals(combinedata))
+cmb_args <- as.list(formals(combine_data))
 
 ## list of function inputs selected by user
 cmb_inputs <- reactive({
@@ -127,7 +127,7 @@ output$ui_Combine <- renderUI({
 observeEvent(input$cmb_store, {
   ## combining datasets
   req(length(r_info[["datasetlist"]]) > 1)
-  result <- try(do.call(combinedata, cmb_inputs(), envir = r_data), silent = TRUE)
+  result <- try(do.call(combine_data, cmb_inputs(), envir = r_data), silent = TRUE)
   if (is(result, "try-error")) {
     r_info[["cmb_error"]] <- attr(result, "condition")$message
   } else {
@@ -148,7 +148,7 @@ observeEvent(input$combine_report, {
   xcmd <- paste0("register(\"", input$cmb_name, "\")")
   update_report(
     inp_main = inp,
-    fun_name = "combinedata",
+    fun_name = "combine_data",
     outputs = character(0),
     pre_cmd = paste0(input$cmb_name, " <- "),
     xcmd = xcmd,

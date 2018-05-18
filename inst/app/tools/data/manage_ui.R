@@ -573,7 +573,7 @@ observeEvent(input$url_csv_load, {
             locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{delim}")
           )') 
       }
-      if (saf) cmd <- glue('{cmd} %>% toFct()')
+      if (saf) cmd <- glue('{cmd} %>% to_fct()')
       cmd <- glue('{cmd}\nregister("{objname}")')
     }
   }
@@ -691,7 +691,7 @@ output$refreshOnUpload <- renderUI({
   if (!is.null(tmpEnv$r_state)) {
     for (i in names(tmpEnv$r_state)) {
       if (is.character(tmpEnv$r_state[[i]])) {
-        tmpEnv$r_state[[i]] %<>% fixMS()
+        tmpEnv$r_state[[i]] %<>% fix_smart()
       }
     }
   }
@@ -700,7 +700,7 @@ output$refreshOnUpload <- renderUI({
   if (!is.null(tmpEnv$r_data)) {
     for (i in names(tmpEnv$r_data)) {
       if (is.character(tmpEnv$r_data[[i]])) {
-        tmpEnv$r_data[[i]] %<>% fixMS()
+        tmpEnv$r_data[[i]] %<>% fix_smart()
       }
     }
   }
@@ -709,7 +709,7 @@ output$refreshOnUpload <- renderUI({
   if (!is.null(tmpEnv$r_info)) {
     for (i in names(tmpEnv$r_info)) {
       if (is.character(tmpEnv$r_info[[i]])) {
-        tmpEnv$r_info[[i]] %<>% fixMS()
+        tmpEnv$r_info[[i]] %<>% fix_smart()
       }
     }
   }
@@ -831,19 +831,19 @@ output$uiRename <- renderUI({
 })
 
 output$man_example <- renderText({
-  if (is.null(.getdata())) return()
+  if (is.null(.get_data())) return()
   ## Show only the first 10 (or 20) rows
   show_data_snippet(nshow = 10)
 })
 
 output$man_str <- renderPrint({
-  req(is.data.frame(.getdata()))
+  req(is.data.frame(.get_data()))
   str(r_data[[input$dataset]])
 })
 
 output$man_summary <- renderPrint({
-  req(is.data.frame(.getdata()))
-  getsummary(r_data[[input$dataset]])
+  req(is.data.frame(.get_data()))
+  get_summary(r_data[[input$dataset]])
 })
 
 

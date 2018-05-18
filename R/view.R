@@ -42,7 +42,7 @@ dtab.data.frame <- function(
   style = "bootstrap", rownames = FALSE, ...
 ) {
 
-  dat <- getdata(object, vars, filt = filt, rows = rows, na.rm = na.rm)
+  dat <- get_data(object, vars, filt = filt, rows = rows, na.rm = na.rm)
   if (!is_empty(nr)) {
     dat <- dat[seq_len(nr), , drop = FALSE]
   }
@@ -114,16 +114,16 @@ dtab.data.frame <- function(
 #' @param drop Drop unused factor levels after filtering (default is TRUE)
 #' @return Filtered data frame
 #' @examples
-#' select(diamonds, 1:3) %>% filterdata(filt = "price > max(.$price) - 100")
-#' select(diamonds, 1:3) %>% filterdata(filt = "runif(nrow(.)) > .995")
+#' select(diamonds, 1:3) %>% filter_data(filt = "price > max(.$price) - 100")
+#' select(diamonds, 1:3) %>% filter_data(filt = "runif(nrow(.)) > .995")
 #' @export
-filterdata <- function(dataset, filt = "", drop = TRUE) {
+filter_data <- function(dataset, filt = "", drop = TRUE) {
   if (grepl("([^=!<>])=([^=])", filt)) {
     message("Invalid filter: Never use = in a filter. Use == instead (e.g., year == 2014). Update or remove the expression")
   } else {
     seldat <- try(
       ## use %>% so . will be available to represent the available data in filters
-      dataset %>% filter(!! rlang::parse_expr(fixMS(filt))),
+      dataset %>% filter(!! rlang::parse_expr(fix_smart(filt))),
       silent = TRUE
     )
     if (is(seldat, "try-error")) {
@@ -147,10 +147,9 @@ filterdata <- function(dataset, filt = "", drop = TRUE) {
 #' @param fixed Allow regular expressions or not (default is FALSE)
 #' @seealso See \code{\link{grepl}} for a detailed description of the function arguments
 #' @examples
-#' publishers %>% filter(Search(., "^m"))
+#' publishers %>% filter(search_data(., "^m"))
 #' @export
-# Search <- function(pattern, dataset, ignore.case = TRUE, fixed = FALSE) {
-Search <- function(dataset, pattern, ignore.case = TRUE, fixed = FALSE) {
+search_data <- function(dataset, pattern, ignore.case = TRUE, fixed = FALSE) {
   mutate_all(
     dataset, 
     funs(grepl(pattern, as.character(.), ignore.case = ignore.case, fixed = fixed))
@@ -169,20 +168,20 @@ Search <- function(dataset, pattern, ignore.case = TRUE, fixed = FALSE) {
 #' @param rows Select rows in the specified dataset
 #' @param na.rm Remove rows with missing values (default is FALSE)
 #' @param dec Number of decimals to show
-#' @seealso See \code{\link{getdata}} and \code{\link{filterdata}} 
+#' @seealso See \code{\link{get_data}} and \code{\link{filter_data}} 
 #' @examples
 #' \dontrun{
-#' viewdata(mtcars)
+#' view_data(mtcars)
 #' }
 #'
 #' @export
-viewdata <- function(
+view_data <- function(
   dataset, vars = "", filt = "",
   rows = NULL, na.rm = FALSE, dec = 3
 ) {
 
   ## based on http://rstudio.github.io/DT/server.html
-  dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = na.rm)
+  dat <- get_data(dataset, vars, filt = filt, rows = rows, na.rm = na.rm)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
 
@@ -233,7 +232,7 @@ viewdata <- function(
         {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0) else .}
       output$tbl <- DT::renderDataTable(widget)
       observeEvent(input$stop, {
-        stopApp(cat("Stopped viewdata"))
+        stopApp(cat("Stopped view_data"))
       })
     }
   )

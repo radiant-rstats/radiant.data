@@ -105,7 +105,7 @@ setup_report <- function(
   save_type = "Notebook", lib = "radiant"
 ) {
 
-  report <- fixMS(report) %>%
+  report <- fix_smart(report) %>%
     sub("^---\n(.*?)\n---", "", .) %>%
     sub("<!--(.*?)-->", "", .)
 
@@ -243,13 +243,17 @@ observeEvent(input$report_clean, {
       gsub("\"var_rm\"", "\"var\"", .) %>%
       gsub("\"sum_rm\"", "\"sum\"", .) %>%
       gsub("\"length\"", "\"n_obs\"", .) %>%
-      gsub("Search\\(\"(.*?)\",\\s*?.\\)", "Search(., \"\\1\")", .) %>%
-      gsub("tabsort = \"desc\\(n\\)\"", "tabsort = \"desc\\(n_obs\\)\"", .) %>%
+      gsub("Search\\(\"(.*?)\",\\s*?.\\)", "search_data(., \"\\1\")", .) %>%
+      gsub("toFct\\(\\)", "to_fct()", .) %>%
+      gsub("rounddf\\(", "round_df(", .) %>%
+      gsub("formatnr\\(", "format_nr(", .) %>%
+      gsub("formatdf\\(", "format_df(", .) %>%
       gsub("dataset\\s*=\\s*\"([^\"]+)\",", "\\1,", .) %>%
       gsub("store\\(pred, data\\s*=\\s*\"([^\"]+)\"", "\\1 <- store(\\1, pred", .) %>%
       gsub("pred_data\\s*=\\s*\"([^\"]+)\"", "pred_data = \\1", .) %>%
       gsub("(combinedata\\(\\s*x\\s*=\\s*)\"([^\"]+)\",(\\s*y\\s*=\\s*)\"([^\"]+)\",", "\\1\\2,\\3\\4,", .) %>%
       gsub("(combinedata\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
+      gsub("combinedata\\(", "combine_data(", .) %>%
       gsub("result\\s*<-\\s*(simulater\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>% 
       gsub("data\\s*=\\s*\"([^\"]+)\",", "data = \\1,", .) %>%
       gsub("(simulater\\((\n|.)*?)(register\\(\"(.*?)\"\\))\nsummary\\(result", "\\1\\3\nsummary(\\4", .) %>% 
@@ -275,7 +279,7 @@ observeEvent(input$report_clean, {
 
   shinyAce::updateAceEditor(
     session, "rmd_edit",
-    value = fixMS(report)
+    value = fix_smart(report)
   )
   removeModal()
 })
@@ -304,6 +308,9 @@ knit_it <- function(report, type = "rmd") {
      grepl("result\\s*<-\\s*simulater\\(", report)  ||
      grepl("result\\s*<-\\s*repeater\\(", report)  ||
      grepl("combinedata\\(\\s*x\\s*=\\s*\"[^\"]+?\"", report) ||
+     grepl("formatnr\\(", report) ||
+     grepl("formatdf\\(", report) ||
+     grepl("rounddf\\(", report) ||
      grepl("(mean_rm|median_rm|min_rm|max_rm|sd_rm|var_rm|sum_rm)", report))
   ) {
     showModal(
@@ -513,7 +520,7 @@ report_save_content <- function(file, type = "rmd") {
           save(list = ls(envir = r_data), envir = r_data, file = "r_data.rda")
 
           setup_report(report, save_type = "Rmd", lib = lib) %>%
-            fixMS() %>%
+            fix_smart() %>%
             cat(file = "report.Rmd", sep = "\n")
 
           zip(file, c("report.Rmd", "r_data.rda"),
@@ -536,7 +543,7 @@ report_save_content <- function(file, type = "rmd") {
         })
       } else if (save_type == "Rmd") {
         setup_report(report, save_type = "Rmd", lib = lib) %>%
-          fixMS() %>%
+          fix_smart() %>%
           cat(file = file, sep = "\n")
       } else if (save_type == "R") {
         cat(report, file = file, sep = "\n")
@@ -549,7 +556,7 @@ report_save_content <- function(file, type = "rmd") {
           report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
         }
 
-        init <- setup_report(fixMS(report), save_type = save_type, lib = lib)
+        init <- setup_report(fix_smart(report), save_type = save_type, lib = lib)
 
         ## on linux ensure you have you have pandoc > 1.14 installed
         ## you may need to use http://pandoc.org/installing.html#installing-from-source
@@ -558,7 +565,7 @@ report_save_content <- function(file, type = "rmd") {
           if (isTRUE(rmarkdown::pandoc_available())) {
             ## have to use current dir so (relative) paths work properly
             tmp_fn <- tempfile(pattern = "report-", tmpdir = ".", fileext = ".Rmd")
-            cat(fixMS(init), file = tmp_fn, sep = "\n")
+            cat(fix_smart(init), file = tmp_fn, sep = "\n")
             out <- rmarkdown::render(tmp_fn, switch(save_type,
               Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "hide"),
               HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
@@ -700,23 +707,23 @@ update_report_fun <- function(cmd, type = "rmd", rfiles = FALSE) {
       })
     } else if (sinit == "To Rmd") {
       withProgress(message = "Putting code chunk in Rstudio", value = 1, {
-        rstudioapi::insertText(Inf, fixMS(cmd))
+        rstudioapi::insertText(Inf, fix_smart(cmd))
       })
     } else if (sinit == "To R") {
       withProgress(message = "Putting R-code in Rstudio", value = 1, {
-        gsub("(```\\{.*\\}\n)|(```\n)", "", fixMS(paste0("\n", cmd, "\n"))) %>%
+        gsub("(```\\{.*\\}\n)|(```\n)", "", fix_smart(paste0("\n", cmd, "\n"))) %>%
           rstudioapi::insertText(Inf, .)
       })
     } else {
       if (is_empty(r_state[[editor]])) {
         r_state[[editor]] <<- paste0("## Your report title\n\n", cmd)
       } else {
-        r_state[[editor]] <<- paste0(fixMS(r_state[[editor]]), "\n", cmd)
+        r_state[[editor]] <<- paste0(fix_smart(r_state[[editor]]), "\n", cmd)
       }
       withProgress(message = paste0("Updating Report > ", sel), value = 1, {
         shinyAce::updateAceEditor(
           session, editor,
-          value = fixMS(r_state[[editor]])
+          value = fix_smart(r_state[[editor]])
         )
       })
     }

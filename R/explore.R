@@ -35,7 +35,7 @@ explore <- function(
   if (!is_empty(byvar)) tvars <- unique(c(tvars, byvar))
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- getdata(dataset, tvars, filt = data_filter, na.rm = FALSE)
+  dataset <- get_data(dataset, tvars, filt = data_filter, na.rm = FALSE)
   rm(tvars)
 
   ## in case : was used
@@ -43,7 +43,7 @@ explore <- function(
 
   ## converting factors for integer (1st level)
   ## see also R/visualize.R
-  dc <- getclass(dataset)
+  dc <- get_class(dataset)
   isFctNum <- "factor" == dc & names(dc) %in% setdiff(vars, byvar)
   if (sum(isFctNum)) {
     dataset[, isFctNum] <- select(dataset, which(isFctNum)) %>%
@@ -108,7 +108,7 @@ explore <- function(
 
   ## filtering the table if desired from Report > Rmd
   if (tabfilt != "") {
-    tab <- filterdata(tab, tabfilt)
+    tab <- filter_data(tab, tabfilt)
   }
 
   ## sorting the table if desired from Report > Rmd
@@ -194,7 +194,7 @@ summary.explore <- function(object, dec = 3, ...) {
   cat("Top         :", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[object$top], "\n")
   cat("\n")
 
-  formatdf(object$tab, dec = dec, mark = ",") %>%
+  format_df(object$tab, dec = dec, mark = ",") %>%
     print(row.names = FALSE)
   invisible()
 }
