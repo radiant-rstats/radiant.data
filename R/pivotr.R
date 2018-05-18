@@ -1,4 +1,4 @@
-#' Create a pivot table using dplyr
+#' Create a pivot table
 #'
 #' @details Create a pivot-table. See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
@@ -6,14 +6,14 @@
 #' @param cvars Categorical variables
 #' @param nvar Numerical variable
 #' @param fun Function to apply to numerical variable
-#' @param normalize Normalize the table by "row" total,"column" totals, or overall "total"
-#' @param tabfilt Expression used to filter the table. This should be a string (e.g., "Total > 10000")
-#' @param tabsort Expression used to sort the table (e.g., "-Total")
+#' @param normalize Normalize the table by row total, column totals, or overall total
+#' @param tabfilt Expression used to filter the table (e.g., "Total > 10000")
+#' @param tabsort Expression used to sort the table (e.g., "desc(Total)")
 #' @param nr Number of rows to display
-#' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
-#' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
+#' @param data_filter Expression used to filter the dataset before creating the table (e.g., "price > 10000")
 #'
 #' @examples
+#' pivotr(diamonds, cvars = "cut") %>% str()
 #' pivotr(diamonds, cvars = "cut")$tab
 #' pivotr(diamonds, cvars = c("cut","clarity","color"))$tab
 #' pivotr(diamonds, cvars = "cut:clarity", nvar = "price")$tab
@@ -24,7 +24,7 @@
 pivotr <- function(
   dataset, cvars = "", nvar = "None", fun = "mean",
   normalize = "None", tabfilt = "", tabsort = "", nr = NULL,
-  data_filter = "", shiny = FALSE
+  data_filter = ""
 ) {
 
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
@@ -144,7 +144,7 @@ pivotr <- function(
   nrow_tab <- nrow(tab) - 1
 
   ## ensure we don't have invalid column names
-  colnames(tab) <- make.names(colnames(tab))
+  colnames(tab) <- fix_names(colnames(tab))
 
   ## filtering the table if desired
   if (!is_empty(tabfilt)) {
@@ -191,7 +191,6 @@ pivotr <- function(
 #'
 #' @examples
 #' pivotr(diamonds, cvars = "cut") %>% summary(chi2 = TRUE)
-#' pivotr(diamonds, cvars = "cut", tabsort = "-n_obs") %>% summary()
 #' pivotr(diamonds, cvars = "cut", tabsort = "desc(n_obs)") %>% summary()
 #' pivotr(diamonds, cvars = "cut", tabfilt = "n_obs > 700") %>% summary()
 #' pivotr(diamonds, cvars = "cut:clarity", nvar = "price") %>% summary()
@@ -268,12 +267,12 @@ summary.pivotr <- function(
 #' @details See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{pivotr}}
-#' @param format Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")
+#' @param format Show Color bar ("color_bar"), Heat map ("heat"), or None ("none")
 #' @param perc Display numbers as percentages (TRUE or FALSE)
 #' @param dec Number of decimals to show
-#' @param searchCols Column search and filter. Used to save and restore state
-#' @param order Column sorting. Used to save and restore state
-#' @param pageLength Page length. Used to save and restore state
+#' @param searchCols Column search and filter
+#' @param order Column sorting
+#' @param pageLength Page length
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -387,12 +386,12 @@ dtab.pivotr <- function(
     ## show percentages
     dt_tab <- DT::formatPercentage(dt_tab, cn, dec)
   } else {
-    if (sum(isDbl) > 0) 
+    if (sum(isDbl) > 0)
       dt_tab <- DT::formatRound(dt_tab, names(isDbl)[isDbl], dec)
     if (sum(isInt) > 0) {
       dt_tab <- DT::formatRound(dt_tab, names(isInt)[isInt], 0)
     }
-  } 
+  }
 
   ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(
@@ -416,8 +415,8 @@ dtab.pivotr <- function(
 #'
 #' @examples
 #' pivotr(diamonds, cvars = "cut") %>% plot()
-#' pivotr(diamonds, cvars = c("cut","clarity")) %>% plot()
-#' pivotr(diamonds, cvars = c("cut","clarity","color")) %>% plot()
+#' pivotr(diamonds, cvars = c("cut", "clarity")) %>% plot()
+#' pivotr(diamonds, cvars = c("cut", "clarity", "color")) %>% plot()
 #'
 #' @seealso \code{\link{pivotr}} to generate summaries
 #' @seealso \code{\link{summary.pivotr}} to show summaries
@@ -504,8 +503,8 @@ store.pivotr <- function(dataset, object, name, ...) {
   } else {
     stop(
       paste0(
-        "This function is deprecated. Use the code below instead:\n\n", 
-        name, " <- ", deparse(substitute(object)), "$tab\nregister(\"", 
+        "This function is deprecated. Use the code below instead:\n\n",
+        name, " <- ", deparse(substitute(object)), "$tab\nregister(\"",
         name, ")"
       ),
       call. = FALSE

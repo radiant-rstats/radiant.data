@@ -22,6 +22,7 @@
 \alias{formatdf}
 \alias{rounddf}
 \alias{getclass}
+\alias{is_numeric}
 \alias{radiant.data-deprecated-package}
 \title{Deprecated function(s) in the radiant.data package}
 \usage{
@@ -54,6 +55,7 @@ radiant but will be removed
   \item Replace \code{formatdf} by \code{\link{format_df}}
   \item Replace \code{formatnr} by \code{\link{format_nr}}
   \item Replace \code{getclass} by \code{\link{get_class}}
+  \item Replace \code{is_numeric} by \code{\link{is_double}}
 }
 }
 

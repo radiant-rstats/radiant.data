@@ -10,17 +10,17 @@
 \arguments{
 \item{object}{Return value from \code{\link{pivotr}}}
 
-\item{format}{Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")}
+\item{format}{Show Color bar ("color_bar"), Heat map ("heat"), or None ("none")}
 
 \item{perc}{Display numbers as percentages (TRUE or FALSE)}
 
 \item{dec}{Number of decimals to show}
 
-\item{searchCols}{Column search and filter. Used to save and restore state}
+\item{searchCols}{Column search and filter}
 
-\item{order}{Column sorting. Used to save and restore state}
+\item{order}{Column sorting}
 
-\item{pageLength}{Page length. Used to save and restore state}
+\item{pageLength}{Page length}
 
 \item{...}{further arguments passed to or from other methods}
 }

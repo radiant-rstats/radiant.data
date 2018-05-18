@@ -1,3 +1,11 @@
+url: https://radiant-rstats.github.io/radiant.data
+
+template:
+  params:
+    docsearch:
+      api_key: 1234
+      index_name: radiant_data
+
 reference:
 - title: Data > Manage
   desc: Functions used with Data > Manage
@@ -32,16 +40,16 @@ reference:
   desc: Functions used with Data > Pivot
   contents:
     - pivotr
+    - summary.pivotr
     - dtab.pivotr
     - plot.pivotr
-    - summary.pivotr
 - title: Data > Explore
   desc: Functions used with Data > Pivot
   contents:
     - explore
+    - summary.explore
     - dtab.explore
     - flip
-    - summary.explore
 - title: Data > Transform
   desc: Functions used with Data > Transform
   contents:
@@ -68,7 +76,7 @@ reference:
     - inverse
     - is_empty
     - is_not
-    - is_numeric
+    - is_double
     - is_string
     - level_list
     - ln
@@ -116,9 +124,9 @@ reference:
     - format_nr
     - round_df
     - register
+    - render
     - render.datatables
     - render.plotly
-    - render
 - title: Convenience functions
   desc: Convenience functions
   contents:

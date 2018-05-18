@@ -30,8 +30,8 @@ See \url{https://radiant-rstats.github.io/docs/data/pivotr} for an example in Ra
 }
 \examples{
 pivotr(diamonds, cvars = "cut") \%>\% plot()
-pivotr(diamonds, cvars = c("cut","clarity")) \%>\% plot()
-pivotr(diamonds, cvars = c("cut","clarity","color")) \%>\% plot()
+pivotr(diamonds, cvars = c("cut", "clarity")) \%>\% plot()
+pivotr(diamonds, cvars = c("cut", "clarity", "color")) \%>\% plot()
 
 }
 \seealso{

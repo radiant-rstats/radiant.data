@@ -30,6 +30,7 @@ combine_data <- function(
     return(cat("No variables selected to join datasets\n"))
   }
 
+  ## legacy to deal for argument name change
   if (missing(x) || missing(y)) {
     depr <- list(...)
     x <- depr$dataset

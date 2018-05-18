@@ -1,26 +1,23 @@
-#' Explore data
+#' Explore and summarize data
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'
 #' @param dataset Dataset to explore
-#' @param vars (Numerical) variables to summaries
-#' @param byvar Variable(s) to group data by before summarizing
+#' @param vars (Numeric) variables to summarize
+#' @param byvar Variable(s) to group data by
 #' @param fun Functions to use for summarizing
-#' @param top The variable (type) to display at the top of the table
-#' @param tabfilt Expression used to filter the table. This should be a string (e.g., "Total > 10000")
-#' @param tabsort Expression used to sort the table (e.g., "-Total")
+#' @param top Use functions ("fun"), variables ("vars"), or group-by variables as column headers
+#' @param tabfilt Expression used to filter the table (e.g., "Total > 10000")
+#' @param tabsort Expression used to sort the table (e.g., "desc(Total)")
 #' @param nr Number of rows to display
-#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
-#' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
+#' @param data_filter Expression used to filter the dataset before creating the table (e.g., "price > 10000")
 #'
 #' @return A list of all variables defined in the function as an object of class explore
 #'
 #' @examples
-#' result <- explore(diamonds, "price:x")
-#' summary(result)
-#' result <- explore(diamonds, c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))
-#' summary(result)
-#' diamonds %>% explore("price", byvar = "cut", fun = c("n_obs", "n_distinct"))
+#' explore(diamonds, c("price", "carat")) %>% str()
+#' explore(diamonds, "price:x")$tab
+#' explore(diamonds, c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))$tab
 #'
 #' @seealso See \code{\link{summary.explore}} to show summaries
 #'
@@ -28,7 +25,7 @@
 explore <- function(
   dataset, vars = "", byvar = "", fun = c("mean", "sd"),
   top = "fun", tabfilt = "", tabsort = "", nr = NULL,
-  data_filter = "", shiny = FALSE
+  data_filter = ""
 ) {
 
   tvars <- vars
@@ -85,19 +82,10 @@ explore <- function(
       group_by_at(.vars = byvar) %>%
       summarise_all(fun, na.rm = TRUE)
 
-    ## setting up column names to work with gather code below
-    # if (length(fun) == 1) {
-    #   # colnames(tab)[ncol(tab)] <- fun
-    #   rng <- (length(byvar) + 1):ncol(tab)
-    #   # print(rng)
-    #   # print(paste0(vars, "_", fun))
-    #   colnames(tab)[rng] <- paste0(vars, "_", fun)[rng]
-    # }
-
-    ## setting up column names to work with gather code below
-    if (length(vars) == 1) {
+    ## adjust column names
+    if (length(vars) == 1 || length(fun) == 1) {
       rng <- (length(byvar) + 1):ncol(tab)
-      colnames(tab)[rng] <- paste0(vars, "_", colnames(tab)[rng])
+      colnames(tab)[rng] <- paste0(vars, "_", fun)
       rm(rng)
     }
 
@@ -106,10 +94,6 @@ explore <- function(
       separate(variable, into = c("variable", "fun"), sep = "_", extra = "merge") %>%
       mutate(fun = factor(fun, levels = !! fun), variable = factor(variable, levels = vars)) %>%
       spread("fun", "value")
-
-    if (length(fun) == 1) {
-      colnames(tab)[ncol(tab)] <- fun
-    }
   }
 
 
@@ -159,7 +143,6 @@ explore <- function(
     rm(ind)
   }
 
-
   ## objects no longer needed
   rm(dataset, check_int, isLogNum, isFctNum, dc, nrow_tab)
 
@@ -179,8 +162,7 @@ explore <- function(
 #' summary(result)
 #' result <- explore(diamonds, "price", byvar = "cut", fun = c("n_obs", "skew"))
 #' summary(result)
-#' diamonds %>% explore("price:x") %>% summary()
-#' diamonds %>% explore("price", byvar = "cut", fun = c("n_obs", "skew")) %>% summary()
+#' explore(diamonds, "price:x", byvar = "color") %>% summary()
 #'
 #' @seealso \code{\link{explore}} to generate summaries
 #'
@@ -198,11 +180,11 @@ summary.explore <- function(object, dec = 3, ...) {
   if (object$tabsort[1] != "") {
     cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
   }
-  nr <- attr(object$tab, "nrow")
-  if (!is.null(nr) && !is.null(object$nr) && object$nr < nr) {
-    cat(paste0("Rows shown  : ", object$nr, " (out of ", nr, ")\n"))
+  nrw <- attr(object$tab, "nrow")
+  if (!is.null(nrw) && !is.null(object$nr) && object$nr < nrw) {
+    cat(paste0("Rows shown  : ", object$nr, " (out of ", nrw, ")\n"))
   }
-  if (object$byvar[1] != "") {
+  if (!is_empty(object$byvar[1])) {
     cat("Grouped by  :", object$byvar, "\n")
   }
   cat("Functions   :", paste0(object$fun, collapse = ", "), "\n")
@@ -249,10 +231,11 @@ store.explore <- function(dataset, object, name, ...) {
 #' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by. "fun" is the default
 #'
 #' @examples
-#' result <- explore(diamonds, "price:x", top = "var")
-#' result <- explore(diamonds, "price", byvar = "cut", fun = c("n_obs", "skew"), top = "byvar")
+#' explore(diamonds, "price:x", top = "var") %>% summary()
+#' explore(diamonds, "price", byvar = "cut", fun = c("n_obs", "skew"), top = "byvar") %>% summary()
 #'
-#' @seealso \code{\link{explore}} to generate summaries
+#' @seealso \code{\link{explore}} to calculate summaries
+#' @seealso \code{\link{summary.explore}} to show summaries
 #' @seealso \code{\link{dtab.explore}} to create the DT table
 #'
 #' @export
@@ -268,7 +251,7 @@ flip <- function(expl, top = "fun") {
     expl$tab[[".function"]] %<>% factor(., levels = expl$fun)
 
     ## ensure we don't have invalid column names
-    colnames(expl$tab) <- make.names(colnames(expl$tab))
+    colnames(expl$tab) <- fix_names(colnames(expl$tab))
   }
 
   expl$tab
@@ -280,18 +263,20 @@ flip <- function(expl, top = "fun") {
 #'
 #' @param object Return value from \code{\link{explore}}
 #' @param dec Number of decimals to show
-#' @param searchCols Column search and filter. Used to save and restore state
-#' @param order Column sorting. Used to save and restore state
-#' @param pageLength Page length. Used to save and restore state
+#' @param searchCols Column search and filter
+#' @param order Column sorting
+#' @param pageLength Page length
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
+#' \dontrun{
 #' tab <- explore(diamonds, "price:x") %>% dtab()
 #' tab <- explore(diamonds, "price", byvar = "cut", fun = c("n_obs", "skew"), top = "byvar") %>%
 #'   dtab()
+#' }
 #'
-#' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
-#' @seealso \code{\link{summary.pivotr}} to print a plain text table
+#' @seealso \code{\link{pivotr}} to create a pivot table
+#' @seealso \code{\link{summary.pivotr}} to show summaries
 #'
 #' @export
 dtab.explore <- function(

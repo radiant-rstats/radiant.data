@@ -543,7 +543,7 @@ observeEvent(input$tr_change_type, {
       .[1:min(length(.), length(var))] %>%
       gsub("^\\s+|\\s+$", "", .)
   }
-  rnm <- make.names(rnm)
+  rnm <- fix_names(rnm)
 
   if (!store || !is.character(dataset)) {
     if (all(rnm == "")) return(dataset)
