@@ -12,9 +12,9 @@ viewdata(dataset, vars = "", filt = "", rows = NULL, na.rm = FALSE,
 
 \item{vars}{Variables to show (default is all)}
 
-\item{filt}{Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")}
+\item{filt}{Filter to apply to the specified dataset}
 
-\item{rows}{Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)}
+\item{rows}{Select rows in the specified dataset}
 
 \item{na.rm}{Remove rows with missing values (default is FALSE)}
 
@@ -31,4 +31,7 @@ View, search, sort, etc. your data
 viewdata(mtcars)
 }
 
+}
+\seealso{
+See \code{\link{getdata}} and \code{\link{filterdata}}
 }

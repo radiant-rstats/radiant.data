@@ -2,18 +2,25 @@
 % Please edit documentation in R/radiant.R
 \name{toFct}
 \alias{toFct}
-\title{Convert character to factors as needed}
+\title{Convert characters to factors}
 \usage{
-toFct(dataset, safx = 30)
+toFct(dataset, safx = 30, nuniq = 100, n = 100)
 }
 \arguments{
 \item{dataset}{Data frame}
 
-\item{safx}{Values to levels ratio}
-}
-\value{
-Data frame with factors
+\item{safx}{Ratio of number of rows to number of unique values}
+
+\item{nuniq}{Cutoff for number of unique values}
+
+\item{n}{Cutoff for small dataset}
 }
 \description{
-Convert character to factors as needed
+Convert characters to factors
+}
+\details{
+Convert columns of type character to factors based on a set of rules. By default columns will be converted for small datasets (<= 100 rows) with more rows than unique values. For larger datasets, columns are converted only when the number of unique values is <= 100 and there are 30 or more rows in the data for every unique value
+}
+\examples{
+tibble(a = c("a", "b"), b = c("a", "a"), c = 1:2) \%>\% toFct()
 }

@@ -478,7 +478,7 @@ observeEvent(input$rmd_load, {
       filter = "Select .Rmd, .md, or .html (*)",
       path = getOption("radiant.launch_dir")
     )
-    pp <- parse_path(path, chr = "")
+    pp <- parse_path(path, pdir = getOption("radiant.project_dir", ""), chr = "")
   } else {
     inFile <- input$rmd_load
     path <- inFile$datapath

@@ -1,11 +1,10 @@
 #' Load data through clipboard on Windows or macOS
 #'
-#' @details See \url{https://radiant-rstats.github.io/docs/data/manage.html} for an example in Radiant
-#'
+#' @details Extract data from the clipboard into a data.frame on Windows or macOS 
 #' @param delim Delimiter to use (tab is the default)
 #' @param text Text input to convert to table
 #' @param suppress Suppress warnings
-#'
+#' @seealso See the \code{\link{save_clip}}
 #' @export
 load_clip <- function(delim = "\t", text, suppress = TRUE) {
   sw <- if (suppress) suppressWarnings else function(x) x
@@ -42,12 +41,11 @@ load_clip <- function(delim = "\t", text, suppress = TRUE) {
   )
 }
 
-#' Save data.frame or tibble to clipboard on Windows or macOS
+#' Save data to clipboard on Windows or macOS
 #'
-#' @details See \url{https://radiant-rstats.github.io/docs/data/manage.html} for an example in Radiant
-#'
-#' @param dataset Dataset to push to clipboard
-#'
+#' @details Save a data.frame or tibble to the clipboard on Windows or macOS
+#' @param dataset Dataset to save to clipboard
+#' @seealso See the \code{\link{load_clip}}
 #' @export
 save_clip <- function(dataset) {
   os_type <- Sys.info()["sysname"]
@@ -61,20 +59,23 @@ save_clip <- function(dataset) {
   invisible()
 }
 
-#' Make column names that are valid in R
+#' Ensure column names are valid
 #'
-#' @details Removes symbols, trailing and leading spaces and converts to valid R column names
-#'
-#' @param x Data.frame or vector of column names
-#'
+#' @details Remove symbols, trailing and leading spaces, and convert to valid R column names. Opinionated version of \code{\link{make.names}}
+#' @param x Data.frame or vector of (column) names
+#' @examples
+#' fix_names(c(" var-name ", "$amount spent", "100"))
 #' @export
 fix_names <- function(x) {
-  cn <- if (is.data.frame(x)) colnames(x) else x
+  isdf <- is.data.frame(x)
+  cn <- if (isdf) colnames(x) else x
   cn <- gsub("(^\\s+|\\s+$)", "", cn) %>%
     gsub("\\s+", "_", .) %>%
-    # gsub("[^a-zA-Z0-9_\\.]", "", .) %>%
+    gsub("[[:punct:]]", "_", .) %>%
+    gsub("^[[:punct:]]", "", .) %>%
     make.names(unique = TRUE) %>%
     gsub("\\.{2,}", ".", .) %>%
-    gsub("_{2,}", "_", .)
-  if (is.data.frame(x)) stats::setNames(x, cn) else cn
+    gsub("_{2,}", "_", .) %>%
+    make.names(unique = TRUE) ## used twice to make sure names are still unique
+  if (isdf) stats::setNames(x, cn) else cn
 }

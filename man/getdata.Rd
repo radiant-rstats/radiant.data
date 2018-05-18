@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{getdata}
 \alias{getdata}
-\title{Get data for analysis functions}
+\title{Select variables and filter data}
 \usage{
 getdata(dataset, vars = "", filt = "", rows = NULL, na.rm = TRUE)
 }
@@ -11,9 +11,9 @@ getdata(dataset, vars = "", filt = "", rows = NULL, na.rm = TRUE)
 
 \item{vars}{Variables to extract from the data.frame}
 
-\item{filt}{Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")}
+\item{filt}{Filter to apply to the specified dataset}
 
-\item{rows}{Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)}
+\item{rows}{Select rows in the specified dataset}
 
 \item{na.rm}{Remove rows with missing values (default is TRUE)}
 }
@@ -21,5 +21,13 @@ getdata(dataset, vars = "", filt = "", rows = NULL, na.rm = TRUE)
 Data.frame with specified columns and rows
 }
 \description{
-Get data for analysis functions
+Select variables and filter data
+}
+\details{
+Function is used in radiant to select variables and filter data based on user input in string form
+}
+\examples{
+getdata(mtcars, vars = "cyl:vs", filt = "mpg > 25")
+getdata(mtcars , vars = c("mpg", "cyl"), rows = 1:10)
+
 }

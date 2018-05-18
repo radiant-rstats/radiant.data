@@ -247,7 +247,7 @@ if (isTRUE(getOption("radiant.local", FALSE))) {
     cmd <- paste0(cmd, " %>%\n  filter(", input$data_filter, ")")
   }
   if (!is_empty(ts$search)) {
-    cmd <- paste0(cmd, " %>%\n  filter(Search(\"", ts$search, "\", .))")
+    cmd <- paste0(cmd, " %>%\n  filter(Search(., \"", ts$search, "\"))")
   }
   if (!is_empty(ts$tabfilt)) {
     cmd <- paste0(cmd, " %>%\n  filter(", ts$tabfilt, ")")

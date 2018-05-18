@@ -379,14 +379,14 @@ if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
 observeEvent(input$r_load, {
 
   ## loading report from disk
-  if (!isTRUE(getOption("radiant.launch", "browser")== "browser")) {
+  if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
   # if (isTRUE(getOption("radiant.local", FALSE))) {
     path <- rstudioapi::selectFile(
       caption = "Select .R or .html",
       filter = "Select .R or .html (*)",
       path = getOption("radiant.launch_dir")
     )
-    pp <- parse_path(path, chr = "")
+    pp <- parse_path(path, pdir = getOption("radiant.project_dir", ""), chr = "")
   } else {
     inFile <- input$r_load
     path <- inFile$datapath

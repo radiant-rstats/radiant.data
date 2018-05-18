@@ -88,7 +88,13 @@ load_user_data <- function(
   }
 
   cmd <- NULL
-  pp <- suppressMessages(radiant.data::parse_path(uFile))
+  pp <- suppressMessages(
+    radiant.data::parse_path(
+      uFile, 
+      pdir = getOption("radiant.project_dir", ""), 
+      chr = "\""
+    )
+  )
 
   if (ext %in% c("rda", "rdata")) {
     ## objname will hold the name of the object(s) inside the R datafile
@@ -128,7 +134,7 @@ load_user_data <- function(
         r_data[[objname]] <- robj
         ## waiting for https://github.com/wesm/feather/pull/326
         # cmd <- paste0(objname, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", objname, "\", desc = feather::feather_metadata(\"", pp$rpath, "\")$description)")
-        cmd <- glue('{objname} <- feather::read_feather({pp$rpath} columns = c())')
+        cmd <- glue('{objname} <- feather::read_feather({pp$rpath}, columns = c())')
       }
     }
   } else if (ext %in% c("tsv", "csv", "txt")) {

@@ -2,25 +2,25 @@
 % Please edit documentation in R/view.R
 \name{Search}
 \alias{Search}
-\title{Search for a string in all columns of a data.frame}
+\title{Search for a pattern in all columns of a data.frame}
 \usage{
-Search(pattern, dataset, ignore.case = TRUE, fixed = FALSE)
+Search(dataset, pattern, ignore.case = TRUE, fixed = FALSE)
 }
 \arguments{
-\item{pattern}{String to match}
-
 \item{dataset}{Data.frame to search}
+
+\item{pattern}{String to match}
 
 \item{ignore.case}{Should search be case sensitive or not (default is FALSE)}
 
 \item{fixed}{Allow regular expressions or not (default is FALSE)}
 }
 \description{
-Search for a string in all columns of a data.frame
+Search for a pattern in all columns of a data.frame
 }
-\details{
-See \url{https://radiant-rstats.github.io/docs/data/view.html} for an example in Radiant
+\examples{
+publishers \%>\% filter(Search(., "^m"))
 }
 \seealso{
-See \code{\link{grepl}} for a more detailed description of the function arguments
+See \code{\link{grepl}} for a detailed description of the function arguments
 }

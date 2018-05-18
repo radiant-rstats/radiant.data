@@ -7,3 +7,4 @@ radiant.data.sublime-project
 radiant.data.Rproj
 .DS_Store
 ^revdep$
+cran-comments.md

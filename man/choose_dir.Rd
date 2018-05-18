@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{choose_dir}
 \alias{choose_dir}
-\title{Select a directory. Uses JavaScript on Mac, utils::choose.dir on Windows, and dirname(file.choose()) on Linux}
+\title{Choose a directory interactively}
 \usage{
 choose_dir(...)
 }
@@ -13,7 +13,10 @@ choose_dir(...)
 Path to the directory selected by the user
 }
 \description{
-Select a directory. Uses JavaScript on Mac, utils::choose.dir on Windows, and dirname(file.choose()) on Linux
+Choose a directory interactively
+}
+\details{
+Open a file dialog to select a directory. Uses JavaScript on Mac, utils::choose.dir on Windows, and dirname(file.choose()) on Linux
 }
 \examples{
 \dontrun{

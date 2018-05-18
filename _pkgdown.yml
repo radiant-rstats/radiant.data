@@ -14,7 +14,7 @@ reference:
     - parse_path
     - read_files
     - save_clip
-    - write_feather
+    - toFct
 - title: Data > View
   desc: Functions used with Data > View
   contents:
@@ -97,7 +97,6 @@ reference:
     - standardize
     - store
     - table2data
-    - toFct
     - varpop
     - varprop
     - wday
@@ -161,6 +160,7 @@ reference:
     - knit_print
     - kurtosi
     - skew
+    - write_feather
 - title: Data sets
   desc: Data sets bundled with radiant.data
   contents:
