@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{find_gdrive}
 \alias{find_gdrive}
-\title{Find a user's Google Drive folder}
+\title{Find Google Drive folder}
 \usage{
 find_gdrive()
 }
@@ -10,5 +10,8 @@ find_gdrive()
 Path to Google Drive folder
 }
 \description{
-Find a user's Google Drive folder
+Find Google Drive folder
+}
+\details{
+Find the path for Google Drive if available
 }

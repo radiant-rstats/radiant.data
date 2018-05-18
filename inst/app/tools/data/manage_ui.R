@@ -374,7 +374,14 @@ if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
 man_save_data <- function(file) {
   ext <- input$saveAs
   robj <- input$dataset
-  pp <- suppressMessages(radiant.data::parse_path(file))
+  # pp <- suppressMessages(radiant.data::parse_path(file), chr = "\"")
+  pp <- suppressMessages(
+    radiant.data::parse_path(
+      uFile, 
+      pdir = getOption("radiant.project_dir", ""), 
+      chr = "\""
+    )
+  )
   if (ext == "csv") {
     readr::write_csv(r_data[[robj]], file)
     r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_csv({robj}, path = {pp$rpath})')

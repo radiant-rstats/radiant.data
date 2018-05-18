@@ -2,18 +2,21 @@
 % Please edit documentation in R/radiant.R
 \name{choose_files}
 \alias{choose_files}
-\title{Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux}
+\title{Choose files interactively}
 \usage{
 choose_files(...)
 }
 \arguments{
-\item{...}{Strings used to determine which file types are available for selection (e.g., "csv" or "pdf")}
+\item{...}{Strings used to indicate which file types should be available for selection (e.g., "csv" or "pdf")}
 }
 \value{
 Vector of paths to files selected by the user
 }
 \description{
-Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux
+Choose files interactively
+}
+\details{
+Open a file dialog. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux
 }
 \examples{
 \dontrun{

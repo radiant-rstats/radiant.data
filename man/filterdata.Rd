@@ -9,7 +9,7 @@ filterdata(dataset, filt = "", drop = TRUE)
 \arguments{
 \item{dataset}{Data frame to filter}
 
-\item{filt}{Filter expression to apply to the specified dataset (e.g., "price > 10000" if dataset is "diamonds")}
+\item{filt}{Filter expression to apply to the specified dataset}
 
 \item{drop}{Drop unused factor levels after filtering (default is TRUE)}
 }
@@ -18,4 +18,11 @@ Filtered data frame
 }
 \description{
 Filter data with user-specified expression
+}
+\details{
+Filters can be used to view a sample from a selected dataset. For example, runif(nrow(.)) > .9 could be used to sample approximately 10% of the rows in the data and 1:nrow(.) < 101 would select only the first 100 rows in the data. Note: "." references the currently selected dataset.
+}
+\examples{
+select(diamonds, 1:3) \%>\% filterdata(filt = "price > max(.$price) - 100")
+select(diamonds, 1:3) \%>\% filterdata(filt = "runif(nrow(.)) > .995")
 }

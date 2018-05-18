@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{find_project}
 \alias{find_project}
-\title{Find the Rstudio project directory}
+\title{Find the Rstudio project folder}
 \usage{
 find_project(mess = TRUE)
 }
@@ -10,8 +10,11 @@ find_project(mess = TRUE)
 \item{mess}{Show or hide messages (default mess = TRUE)}
 }
 \value{
-Path to Rstudio project directory
+Path to Rstudio project folder if available or else and empty string. The returned path is normalized
 }
 \description{
-Find the Rstudio project directory
+Find the Rstudio project folder
+}
+\details{
+Find the path for the Rstudio project folder if available. The returned path is normalized (see \code{\link{normalizePath}})
 }

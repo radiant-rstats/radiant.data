@@ -2,9 +2,9 @@
 % Please edit documentation in R/radiant.R
 \name{parse_path}
 \alias{parse_path}
-\title{Parse path into useful components (used by read_files function)}
+\title{Parse file path into useful components}
 \usage{
-parse_path(path, chr = "\\"", pdir = getOption("radiant.project_dir", ""))
+parse_path(path, chr = "", pdir = getwd())
 }
 \arguments{
 \item{path}{Path to be parsed}
@@ -14,5 +14,11 @@ parse_path(path, chr = "\\"", pdir = getOption("radiant.project_dir", ""))
 \item{pdir}{Project directory if available}
 }
 \description{
-Parse path into useful components (used by read_files function)
+Parse file path into useful components
+}
+\details{
+Parse file path into useful components (i.e., file name, file extension, relative path, etc.)
+}
+\examples{
+list.files(".", full.names = TRUE)[1] \%>\% parse_path()
 }

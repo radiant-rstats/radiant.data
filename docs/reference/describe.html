@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Show dataset description, if available, in html form in Rstudio viewer or default browser — describe • radiant.data</title>
+<title>Show dataset description — describe • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,9 +28,9 @@
 
 
 
-<meta property="og:title" content="Show dataset description, if available, in html form in Rstudio viewer or default browser — describe" />
+<meta property="og:title" content="Show dataset description — describe" />
 
-<meta property="og:description" content="Show dataset description, if available, in html form in Rstudio viewer or default browser" />
+<meta property="og:description" content="Show dataset description" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -136,14 +136,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Show dataset description, if available, in html form in Rstudio viewer or default browser</h1>
+    <h1>Show dataset description</h1>
     <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
     <div class="hidden name"><code>describe.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Show dataset description, if available, in html form in Rstudio viewer or default browser</p>
+    <p>Show dataset description</p>
     
     </div>
 
@@ -154,9 +154,13 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dataset</th>
-      <td><p>Dataset</p></td>
+      <td><p>Dataset with "description" attribute</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Show dataset description, if available, in html form in Rstudio viewer or the default browser. The description should be in markdown format, attached to a data.frame as an attribute with the name "description"</p>
     
 
   </div>
@@ -164,7 +168,9 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#details">Details</a></li>
+          </ul>
 
   </div>
 </div>

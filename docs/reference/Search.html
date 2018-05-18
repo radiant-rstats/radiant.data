@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Search for a string in all columns of a data.frame — Search • radiant.data</title>
+<title>Search for a pattern in all columns of a data.frame — Search • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,9 +28,9 @@
 
 
 
-<meta property="og:title" content="Search for a string in all columns of a data.frame — Search" />
+<meta property="og:title" content="Search for a pattern in all columns of a data.frame — Search" />
 
-<meta property="og:description" content="Search for a string in all columns of a data.frame" />
+<meta property="og:description" content="Search for a pattern in all columns of a data.frame" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -136,29 +136,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Search for a string in all columns of a data.frame</h1>
+    <h1>Search for a pattern in all columns of a data.frame</h1>
     <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/view.R'><code>R/view.R</code></a></small>
     <div class="hidden name"><code>Search.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Search for a string in all columns of a data.frame</p>
+    <p>Search for a pattern in all columns of a data.frame</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>Search</span>(<span class='no'>pattern</span>, <span class='no'>dataset</span>, <span class='kw'>ignore.case</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>fixed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>Search</span>(<span class='no'>dataset</span>, <span class='no'>pattern</span>, <span class='kw'>ignore.case</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>fixed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>pattern</th>
-      <td><p>String to match</p></td>
-    </tr>
-    <tr>
       <th>dataset</th>
       <td><p>Data.frame to search</p></td>
+    </tr>
+    <tr>
+      <th>pattern</th>
+      <td><p>String to match</p></td>
     </tr>
     <tr>
       <th>ignore.case</th>
@@ -170,25 +170,24 @@
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>See <a href='https://radiant-rstats.github.io/docs/data/view.html'>https://radiant-rstats.github.io/docs/data/view.html</a> for an example in Radiant</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>See <code>grepl</code> for a more detailed description of the function arguments</p></div>
+    <div class='dont-index'><p>See <code>grepl</code> for a detailed description of the function arguments</p></div>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>publishers</span> <span class='kw'>%&gt;%</span> <span class='fu'>filter</span>(<span class='fu'>Search</span>(<span class='no'>.</span>, <span class='st'>"^m"</span>))</div><div class='output co'>#&gt;   publisher yr_founded
+#&gt; 1    Marvel       1939</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#details">Details</a></li>
-
       <li><a href="#see-also">See also</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

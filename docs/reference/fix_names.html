@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make column names that are valid in R — fix_names • radiant.data</title>
+<title>Ensure column names are valid — fix_names • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,9 +28,9 @@
 
 
 
-<meta property="og:title" content="Make column names that are valid in R — fix_names" />
+<meta property="og:title" content="Ensure column names are valid — fix_names" />
 
-<meta property="og:description" content="Make column names that are valid in R" />
+<meta property="og:description" content="Ensure column names are valid" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -136,14 +136,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make column names that are valid in R</h1>
+    <h1>Ensure column names are valid</h1>
     <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/manage.R'><code>R/manage.R</code></a></small>
     <div class="hidden name"><code>fix_names.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Make column names that are valid in R</p>
+    <p>Ensure column names are valid</p>
     
     </div>
 
@@ -154,15 +154,17 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Data.frame or vector of column names</p></td>
+      <td><p>Data.frame or vector of (column) names</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Removes symbols, trailing and leading spaces and converts to valid R column names</p>
+    <p>Remove symbols, trailing and leading spaces, and convert to valid R column names. Opinionated version of <code>make.names</code></p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>fix_names</span>(<span class='fu'>c</span>(<span class='st'>" var-name "</span>, <span class='st'>"$amount spent"</span>, <span class='st'>"100"</span>))</div><div class='output co'>#&gt; [1] "var_name"     "amount_spent" "X100"        </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -170,7 +172,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -2,13 +2,16 @@
 % Please edit documentation in R/radiant.R
 \name{describe}
 \alias{describe}
-\title{Show dataset description, if available, in html form in Rstudio viewer or default browser}
+\title{Show dataset description}
 \usage{
 describe(dataset)
 }
 \arguments{
-\item{dataset}{Dataset}
+\item{dataset}{Dataset with "description" attribute}
 }
 \description{
-Show dataset description, if available, in html form in Rstudio viewer or default browser
+Show dataset description
+}
+\details{
+Show dataset description, if available, in html form in Rstudio viewer or the default browser. The description should be in markdown format, attached to a data.frame as an attribute with the name "description"
 }

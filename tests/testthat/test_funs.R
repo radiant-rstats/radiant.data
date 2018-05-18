@@ -74,11 +74,25 @@ test_that("filterdata factor", {
   expect_equal(sum(dataset$price), 256587)
 })
 
-## manual testing of read_files to avoid adding numerous dataset to package
+## 'manual' testing of read_files to avoid adding numerous dataset to package
 # files <- list.files("tests/testthat/data", full.names = TRUE)
 # for (f in files) {
 #   radiant.data::read_files(f, type = "rmd", clipboard = FALSE)
-#   radiant.data::read_files(f, clipboard = FALSE)
+#   radiant.data::read_files(f, type = "r", clipboard = FALSE)
+# }
+
+## 'manual' testing with Dropbox folder
+# files <- list.files("~/Dropbox/radiant.data/data", full.names = TRUE)
+# for (f in files) {
+#   radiant.data::read_files(f, type = "rmd", clipboard = FALSE)
+#   radiant.data::read_files(f, type = "r", clipboard = FALSE)
+# }
+
+## 'manual' testing with Google Drive folder
+# files <- list.files("~/Google Drive/radiant.data/data", full.names = TRUE)
+# for (f in files) {
+#   radiant.data::read_files(f, type = "rmd", clipboard = FALSE)
+#   radiant.data::read_files(f, type = "r", clipboard = FALSE)
 # }
 
 ## load code into clipboard

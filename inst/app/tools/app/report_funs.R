@@ -243,6 +243,7 @@ observeEvent(input$report_clean, {
       gsub("\"var_rm\"", "\"var\"", .) %>%
       gsub("\"sum_rm\"", "\"sum\"", .) %>%
       gsub("\"length\"", "\"n_obs\"", .) %>%
+      gsub("Search\\(\"(.*?)\",\\s*?.\\)", "Search(., \"\\1\")", .) %>%
       gsub("tabsort = \"desc\\(n\\)\"", "tabsort = \"desc\\(n_obs\\)\"", .) %>%
       gsub("dataset\\s*=\\s*\"([^\"]+)\",", "\\1,", .) %>%
       gsub("store\\(pred, data\\s*=\\s*\"([^\"]+)\"", "\\1 <- store(\\1, pred", .) %>%

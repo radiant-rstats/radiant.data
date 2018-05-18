@@ -17,5 +17,8 @@ load_clip(delim = "\\t", text, suppress = TRUE)
 Load data through clipboard on Windows or macOS
 }
 \details{
-See \url{https://radiant-rstats.github.io/docs/data/manage.html} for an example in Radiant
+Extract data from the clipboard into a data.frame on Windows or macOS
+}
+\seealso{
+See the \code{\link{save_clip}}
 }

@@ -108,13 +108,14 @@ dtab.data.frame <- function(
 }
 
 #' Filter data with user-specified expression
-#'
+#' @details Filters can be used to view a sample from a selected dataset. For example, runif(nrow(.)) > .9 could be used to sample approximately 10% of the rows in the data and 1:nrow(.) < 101 would select only the first 100 rows in the data. Note: "." references the currently selected dataset.
 #' @param dataset Data frame to filter
-#' @param filt Filter expression to apply to the specified dataset (e.g., "price > 10000" if dataset is "diamonds")
+#' @param filt Filter expression to apply to the specified dataset
 #' @param drop Drop unused factor levels after filtering (default is TRUE)
-#'
 #' @return Filtered data frame
-#'
+#' @examples
+#' select(diamonds, 1:3) %>% filterdata(filt = "price > max(.$price) - 100")
+#' select(diamonds, 1:3) %>% filterdata(filt = "runif(nrow(.)) > .995")
 #' @export
 filterdata <- function(dataset, filt = "", drop = TRUE) {
   if (grepl("([^=!<>])=([^=])", filt)) {
@@ -138,22 +139,24 @@ filterdata <- function(dataset, filt = "", drop = TRUE) {
   dataset
 }
 
-#' Search for a string in all columns of a data.frame
+#' Search for a pattern in all columns of a data.frame
 #'
-#' @details See \url{https://radiant-rstats.github.io/docs/data/view.html} for an example in Radiant
-#'
-#' @param pattern String to match
 #' @param dataset Data.frame to search
+#' @param pattern String to match
 #' @param ignore.case Should search be case sensitive or not (default is FALSE)
 #' @param fixed Allow regular expressions or not (default is FALSE)
-#'
-#' @seealso See \code{\link{grepl}} for a more detailed description of the function arguments
-#'
+#' @seealso See \code{\link{grepl}} for a detailed description of the function arguments
+#' @examples
+#' publishers %>% filter(Search(., "^m"))
 #' @export
-Search <- function(pattern, dataset, ignore.case = TRUE, fixed = FALSE) {
-  mutate_all(dataset, funs(grepl(pattern, as.character(.), ignore.case = ignore.case, fixed = fixed))) %>%
-    transmute(., sel = rowSums(.) > 0) %>%
-    .[["sel"]]
+# Search <- function(pattern, dataset, ignore.case = TRUE, fixed = FALSE) {
+Search <- function(dataset, pattern, ignore.case = TRUE, fixed = FALSE) {
+  mutate_all(
+    dataset, 
+    funs(grepl(pattern, as.character(.), ignore.case = ignore.case, fixed = fixed))
+  ) %>%
+    transmute(sel = rowSums(.) > 0) %>%
+    pull("sel")
 }
 
 #' View data in a shiny-app
@@ -162,11 +165,11 @@ Search <- function(pattern, dataset, ignore.case = TRUE, fixed = FALSE) {
 #'
 #' @param dataset Data.frame or name of the dataframe to view
 #' @param vars Variables to show (default is all)
-#' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
-#' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
+#' @param filt Filter to apply to the specified dataset
+#' @param rows Select rows in the specified dataset
 #' @param na.rm Remove rows with missing values (default is FALSE)
 #' @param dec Number of decimals to show
-#'
+#' @seealso See \code{\link{getdata}} and \code{\link{filterdata}} 
 #' @examples
 #' \dontrun{
 #' viewdata(mtcars)

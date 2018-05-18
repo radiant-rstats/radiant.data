@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get data for analysis functions — getdata • radiant.data</title>
+<title>Select variables and filter data — getdata • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,9 +28,9 @@
 
 
 
-<meta property="og:title" content="Get data for analysis functions — getdata" />
+<meta property="og:title" content="Select variables and filter data — getdata" />
 
-<meta property="og:description" content="Get data for analysis functions" />
+<meta property="og:description" content="Select variables and filter data" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -136,14 +136,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get data for analysis functions</h1>
+    <h1>Select variables and filter data</h1>
     <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
     <div class="hidden name"><code>getdata.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Get data for analysis functions</p>
+    <p>Select variables and filter data</p>
     
     </div>
 
@@ -162,11 +162,11 @@
     </tr>
     <tr>
       <th>filt</th>
-      <td><p>Filter to apply to the specified dataset. For example "price &gt; 10000" if dataset is "diamonds" (default is "")</p></td>
+      <td><p>Filter to apply to the specified dataset</p></td>
     </tr>
     <tr>
       <th>rows</th>
-      <td><p>Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)</p></td>
+      <td><p>Select rows in the specified dataset</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
@@ -178,7 +178,30 @@
 
     <p>Data.frame with specified columns and rows</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>Function is used in radiant to select variables and filter data based on user input in string form</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>getdata</span>(<span class='no'>mtcars</span>, <span class='kw'>vars</span> <span class='kw'>=</span> <span class='st'>"cyl:vs"</span>, <span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>"mpg &gt; 25"</span>)</div><div class='output co'>#&gt;   cyl  disp  hp drat    wt  qsec vs
+#&gt; 1   4  78.7  66 4.08 2.200 19.47  1
+#&gt; 2   4  75.7  52 4.93 1.615 18.52  1
+#&gt; 3   4  71.1  65 4.22 1.835 19.90  1
+#&gt; 4   4  79.0  66 4.08 1.935 18.90  1
+#&gt; 5   4 120.3  91 4.43 2.140 16.70  0
+#&gt; 6   4  95.1 113 3.77 1.513 16.90  1</div><div class='input'><span class='fu'>getdata</span>(<span class='no'>mtcars</span> , <span class='kw'>vars</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"mpg"</span>, <span class='st'>"cyl"</span>), <span class='kw'>rows</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>)</div><div class='output co'>#&gt;                    mpg cyl
+#&gt; Mazda RX4         21.0   6
+#&gt; Mazda RX4 Wag     21.0   6
+#&gt; Datsun 710        22.8   4
+#&gt; Hornet 4 Drive    21.4   6
+#&gt; Hornet Sportabout 18.7   8
+#&gt; Valiant           18.1   6
+#&gt; Duster 360        14.3   8
+#&gt; Merc 240D         24.4   4
+#&gt; Merc 230          22.8   4
+#&gt; Merc 280          19.2   6</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -186,7 +209,11 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+
+      <li><a href="#details">Details</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

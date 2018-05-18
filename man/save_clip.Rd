@@ -2,16 +2,19 @@
 % Please edit documentation in R/manage.R
 \name{save_clip}
 \alias{save_clip}
-\title{Save data.frame or tibble to clipboard on Windows or macOS}
+\title{Save data to clipboard on Windows or macOS}
 \usage{
 save_clip(dataset)
 }
 \arguments{
-\item{dataset}{Dataset to push to clipboard}
+\item{dataset}{Dataset to save to clipboard}
 }
 \description{
-Save data.frame or tibble to clipboard on Windows or macOS
+Save data to clipboard on Windows or macOS
 }
 \details{
-See \url{https://radiant-rstats.github.io/docs/data/manage.html} for an example in Radiant
+Save a data.frame or tibble to the clipboard on Windows or macOS
+}
+\seealso{
+See the \code{\link{load_clip}}
 }

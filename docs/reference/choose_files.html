@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux — choose_files • radiant.data</title>
+<title>Choose files interactively — choose_files • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,9 +28,9 @@
 
 
 
-<meta property="og:title" content="Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux — choose_files" />
+<meta property="og:title" content="Choose files interactively — choose_files" />
 
-<meta property="og:description" content="Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux" />
+<meta property="og:description" content="Choose files interactively" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -136,14 +136,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux</h1>
+    <h1>Choose files interactively</h1>
     <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
     <div class="hidden name"><code>choose_files.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux</p>
+    <p>Choose files interactively</p>
     
     </div>
 
@@ -154,13 +154,17 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>...</th>
-      <td><p>Strings used to determine which file types are available for selection (e.g., "csv" or "pdf")</p></td>
+      <td><p>Strings used to indicate which file types should be available for selection (e.g., "csv" or "pdf")</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Vector of paths to files selected by the user</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Open a file dialog. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -175,6 +179,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

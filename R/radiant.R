@@ -190,15 +190,18 @@ sshh <- function(...) {
 #' @export
 sshhr <- function(...) suppressWarnings(suppressMessages(...))
 
-#' Get data for analysis functions
+#' Select variables and filter data
 #'
+#' @details Function is used in radiant to select variables and filter data based on user input in string form
 #' @param dataset Dataset or name of the data.frame
 #' @param vars Variables to extract from the data.frame
-#' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
-#' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
+#' @param filt Filter to apply to the specified dataset
+#' @param rows Select rows in the specified dataset
 #' @param na.rm Remove rows with missing values (default is TRUE)
-#'
 #' @return Data.frame with specified columns and rows
+#' @examples 
+#' getdata(mtcars, vars = "cyl:vs", filt = "mpg > 25")
+#' getdata(mtcars , vars = c("mpg", "cyl"), rows = 1:10)
 #'
 #' @export
 getdata <- function(
@@ -209,7 +212,6 @@ getdata <- function(
   filt <- gsub("\\n", "", filt) %>%
     gsub("\"", "\'", .)
 
-  ## extra {} around if (...) required to pass tests
   {if (is.data.frame(dataset)) {
     dataset
   } else if (exists("r_environment") && exists("r_data") && !is.null(r_data[[dataset]])) {
@@ -225,22 +227,22 @@ getdata <- function(
     {if (na.rm) na.omit(.) else .}
 }
 
-#' Convert character to factors as needed
-#'
+#' Convert characters to factors
+#' @details Convert columns of type character to factors based on a set of rules. By default columns will be converted for small datasets (<= 100 rows) with more rows than unique values. For larger datasets, columns are converted only when the number of unique values is <= 100 and there are 30 or more rows in the data for every unique value   
 #' @param dataset Data frame
-#' @param safx Values to levels ratio
-#'
-#' @return Data frame with factors
-#'
+#' @param safx Ratio of number of rows to number of unique values
+#' @param nuniq Cutoff for number of unique values
+#' @param n Cutoff for small dataset
+#' @examples
+#' tibble(a = c("a", "b"), b = c("a", "a"), c = 1:2) %>% toFct()
 #' @export
-toFct <- function(dataset, safx = 30) {
+toFct <- function(dataset, safx = 30, nuniq = 100, n = 100) {
   isChar <- sapply(dataset, is.character)
   if (sum(isChar) == 0) return(dataset)
+  nobs <- nrow(dataset)
   fab <- function(x) {
-    n <- length(x)
-    if (n < 101) return(TRUE)
     nd <- length(unique(x))
-    nd < 100 && (nd / n < (1 / safx))
+    (nobs <= n && nd < nobs) || (nd <= nuniq && (nd / nobs < (1 / safx)))
   }
   toFct <- select(dataset, which(isChar)) %>%
     summarise_all(funs(fab)) %>%
@@ -253,9 +255,11 @@ toFct <- function(dataset, safx = 30) {
   }
 }
 
-#' Select files. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux
+#' Choose files interactively
 #'
-#' @param ... Strings used to determine which file types are available for selection (e.g., "csv" or "pdf")
+#' @details Open a file dialog. Uses JavaScript on Mac, utils::choose.files on Windows, and file.choose() on Linux
+#'
+#' @param ... Strings used to indicate which file types should be available for selection (e.g., "csv" or "pdf")
 #'
 #' @return Vector of paths to files selected by the user
 #'
@@ -301,7 +305,9 @@ choose_files <- function(...) {
   }
 }
 
-#' Select a directory. Uses JavaScript on Mac, utils::choose.dir on Windows, and dirname(file.choose()) on Linux
+#' Choose a directory interactively
+#'
+#' @details Open a file dialog to select a directory. Uses JavaScript on Mac, utils::choose.dir on Windows, and dirname(file.choose()) on Linux
 #'
 #' @param ... Arguments passed to utils::choose.dir on Windows
 #'
@@ -649,9 +655,7 @@ formatnr <- function(
 #'
 #' @param tbl Data frame
 #' @param dec Number of decimals to show
-#'
 #' @return Data frame with rounded doubles
-#'
 #' @examples
 #' data.frame(x = as.factor(c("a", "b")), y = c(1L, 2L), z = c(-0.0005, 3.1)) %>%
 #'   rounddf(dec = 2)
@@ -661,14 +665,12 @@ rounddf <- function(tbl, dec = 3) {
   mutate_if(tbl, is_numeric, .funs = funs(round(., dec)))
 }
 
-#' Find a user's Dropbox folder
+#' Find Dropbox folder
 #'
-#' @param account If multiple accounts exist specifies the one to use. By default, the first account listed is used
-#'
+#' @details Find the path for Dropbox if available
+#' @param account Integer. If multiple accounts exist, specify which one to use. By default, the first account listed is used
 #' @return Path to Dropbox account
-#'
 #' @importFrom jsonlite fromJSON
-#'
 #' @export
 find_dropbox <- function(account = 1) {
   if (length(account) > 1) {
@@ -711,10 +713,10 @@ find_dropbox <- function(account = 1) {
   }
 }
 
-#' Find a user's Google Drive folder
+#' Find Google Drive folder
 #'
+#' @details Find the path for Google Drive if available
 #' @return Path to Google Drive folder
-#'
 #' @export
 find_gdrive <- function() {
   os_type <- Sys.info()["sysname"]
@@ -759,14 +761,12 @@ find_gdrive <- function() {
   }
 }
 
-#' Find the Rstudio project directory
+#' Find the Rstudio project folder
 #'
-#' @return Path to Rstudio project directory
-#'
+#' @details Find the path for the Rstudio project folder if available. The returned path is normalized (see \code{\link{normalizePath}})
 #' @param mess Show or hide messages (default mess = TRUE)
-#'
+#' @return Path to Rstudio project folder if available or else and empty string. The returned path is normalized
 #' @importFrom rstudioapi isAvailable getActiveProject
-#'
 #' @export
 find_project <- function(mess = TRUE) {
   if (rstudioapi::isAvailable()) {
@@ -823,7 +823,7 @@ store <- function(dataset, object = "deprecated", ...) {
   UseMethod("store", object)
 }
 
-#' Catch error messages when a user tries to store results 
+#' Catch error messages when a user tries to store results
 #'
 #' @param dataset Dataset
 #' @param object Object of type character
@@ -1020,7 +1020,7 @@ render.plotly <- function(object, ...) {
   }
 }
 
-#' Method to render rmarkdown documents 
+#' Method to render rmarkdown documents
 #'
 #' @param object File path to an R-markdown file
 #' @param ... Additional arguments passed on to rmarkdown::render
@@ -1046,9 +1046,11 @@ render.character <- function(object, ...) {
 #' @export
 render.shiny.render.function <- function(object, ...) object
 
-#' Show dataset description, if available, in html form in Rstudio viewer or default browser
+#' Show dataset description
+#' 
+#' @details Show dataset description, if available, in html form in Rstudio viewer or the default browser. The description should be in markdown format, attached to a data.frame as an attribute with the name "description"
 #'
-#' @param dataset Dataset
+#' @param dataset Dataset with "description" attribute
 #'
 #' @importFrom utils browseURL str
 #' @importFrom knitr knit2html
@@ -1171,18 +1173,18 @@ register <- function(new, org = "", descr = "", env) {
   invisible()
 }
 
-#' Parse path into useful components (used by read_files function)
-#'
+#' Parse file path into useful components
+#' @details Parse file path into useful components (i.e., file name, file extension, relative path, etc.)
 #' @param path Path to be parsed
 #' @param chr Character to wrap around path for display
 #' @param pdir Project directory if available
-#'
 #' @importFrom tools file_ext
-#'
+#' @examples
+#' list.files(".", full.names = TRUE)[1] %>% parse_path()
 #' @export
 parse_path <- function(
-  path, chr = "\"",
-  pdir = getOption("radiant.project_dir", "")
+  path, chr = "",
+  pdir = getwd()
 ) {
 
   if (is(path, "try-error") || is_empty(path)) {
@@ -1203,11 +1205,12 @@ parse_path <- function(
   fext <- tools::file_ext(filename)
 
   ## objname is used as the name of the data.frame, make case insensitive
-  objname <- sub(paste0("\\.", fext, "$"), "", filename, ignore.case = TRUE)
+  objname <- sub(glue('.{fext}$'), "", filename, ignore.case = TRUE)
   fext <- tolower(fext)
 
-  if (!is_empty(pdir) && grepl(paste0("^", pdir), path)) {
-    rpath <- paste0(chr, sub(paste0("^", pdir, "/"), "", path), chr)
+  if (!is_empty(pdir) && grepl(glue('^{pdir}'), path)) {
+    rpath <- sub(glue('^{pdir}'), "", path) %>% sub("^/", "", .)
+    rpath <- glue('{chr}{rpath}{chr}')
   } else {
     dbdir <- getOption("radiant.dropbox_dir", "")
     if (is_empty(dbdir)) {
@@ -1218,8 +1221,9 @@ parse_path <- function(
       }
     }
 
-    if (!is_empty(dbdir) && grepl(paste0("^", dbdir), path)) {
-      rpath <- paste0("file.path(radiant.data::find_dropbox(), ", chr, sub(paste0("^", dbdir), "", path), chr, ")")
+    if (!is_empty(dbdir) && grepl(glue('^{dbdir}'), path)) {
+      rpath <- sub(glue('^{dbdir}'), "", path) %>% sub("^/", "", .)
+      rpath <- glue('file.path(radiant.data::find_dropbox(), "{rpath}")')
     } else {
       gddir <- getOption("radiant.gdrive_dir", "")
       if (is_empty(gddir)) {
@@ -1229,10 +1233,11 @@ parse_path <- function(
           gddir <- ""
         }
       }
-      if (!is_empty(gddir) && grepl(paste0("^", gddir), path)) {
-        rpath <- paste0("file.path(radiant.data::find_gdrive(), ", chr, sub(paste0("^", gddir), "", path), chr, ")")
+      if (!is_empty(gddir) && grepl(glue('^{gddir}'), path)) {
+        rpath <- sub(glue('^{gddir}'), "", path) %>% sub("^/", "", .)
+        rpath <- glue('file.path(radiant.data::find_gdrive(), "{rpath}")')
       } else {
-        rpath <- paste0(chr, path, chr)
+        rpath <- glue('{chr}{path}{chr}')
       }
     }
   }
@@ -1240,16 +1245,18 @@ parse_path <- function(
   list(path = path, rpath = rpath, filename = filename, fext = fext, objname = objname)
 }
 
-#' Return code to read a file at the specified path. Will open a file browser if no path is provided
-#'
+#' Generate code to read a file 
+#' @details Return code to read a file at the specified path. Will open a file browser if no path is provided
 #' @param path Path to file. If empty, a file browser will be opened
 #' @param type Generate code for _Report > Rmd_ ("rmd") or _Report > R_ ("r")
 #' @param to Name to use for object. If empty, will use file name to derive an object name
 #' @param clipboard Return code to clipboard (not available on Linux)
 #' @param radiant Should returned code be formatted for use with other code generated by Radiant?
-#'
+#' @examples
+#' if (interactive()) {
+#' read_files(clipboard = FALSE)
+#' }
 #' @importFrom rstudioapi selectFile isAvailable
-#'
 #' @export
 read_files <- function(path, type = "rmd", to = "", clipboard = TRUE, radiant = FALSE) {
 
@@ -1269,72 +1276,71 @@ read_files <- function(path, type = "rmd", to = "", clipboard = TRUE, radiant = 
     if (is(path, "try-error") || is_empty(path)) {
       return("")
     } else {
-      pp <- parse_path(path, pdir = pdir)
+      pp <- parse_path(path, pdir = pdir, chr = "\"")
     }
   } else {
-    pp <- parse_path(path)
+    pp <- parse_path(path, chr = "\"")
   }
 
   if (to == "") {
-    to <- gsub("\\s+", "_", pp$objname) %>% make.names()
+    to <- gsub("\\s+", "_", pp$objname) %>% radiant.data::fix_names()
   }
   if (pp$fext %in% c("rda", "rdata")) {
-    cmd <- paste0("## loaded object names assigned to ", to, "\n", to, " <- load(", pp$rpath, ")\nregister(", to, ")")
+    cmd <- glue('## loaded object assigned to {to[1]}\n{to[1]} <- load({pp$rpath}) %>% get()\nregister("{to[1]}")')
   } else if (pp$fext == "rds") {
-    cmd <- paste0(to, " <- readr::read_rds(", pp$rpath, ")\nregister(\"", pp$objname, "\")")
+    cmd <- glue('{to} <- readr::read_rds({pp$rpath})\nregister("{pp$objname}")')
   } else if (pp$fext == "csv") {
-    cmd <- paste0(to, " <- readr::read_csv(", pp$rpath, ")\nregister(\"", pp$objname, "\")")
+    cmd <- glue('{to} <- readr::read_csv({pp$rpath})\nregister("{pp$objname}")')
   } else if (pp$fext == "tsv") {
-    cmd <- paste0(to, " <- readr::read_tsv(", pp$rpath, ")\nregister(\"", pp$objname, "\")")
+    cmd <- glue('{to} <- readr::read_tsv({pp$rpath})\nregister("{pp$objname}")')
   } else if (pp$fext %in% c("xls", "xlsx")) {
-    cmd <- paste0(to, " <- readxl::read_excel(", pp$rpath, ", sheet = 1)\nregister(\"", pp$objname, "\")")
+    cmd <- glue('{to} <- readxl::read_excel({pp$rpath}, sheet = 1)\nregister("{pp$objname}")')
   } else if (pp$fext == "feather") {
     ## waiting for https://github.com/wesm/feather/pull/326
     # cmd <- paste0(to, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", pp$objname, "\", desc = feather::feather_metadata(\"", pp$rpath, "\")$description)")
-    cmd <- paste0(to, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", pp$objname, "\"")
+    cmd <- glue('{to} <- feather::read_feather({pp$rpath}, columns = c())\nregister("{pp$objname}")')
   } else if (pp$fext == "yaml") {
-    cmd <- paste0(to, " <- yaml::yaml.load_file(", pp$rpath, ")\nregister(\"", pp$objname, "\")")
+    cmd <- glue('{to} <- yaml::yaml.load_file({pp$rpath})\nregister("{pp$objname}")')
   } else if (grepl("sqlite", pp$fext)) {
-    obj <- paste0(pp$objname, "_tab1")
+    obj <- glue('{pp$objname}_tab1')
     cmd <- "## see https://db.rstudio.com/dplyr/\n" %>%
-      paste0("library(DBI)\ncon <- dbConnect(RSQLite::SQLite(), dbname = ", pp$rpath, ")\n(tables <- dbListTables(con))\n", obj, " <- dplyr::tbl(con, from = tables[1])") %>%
-      paste0("\n", sub(pp$objname, obj, to), " <- collect(", obj, ")\nregister(\"", obj, "\")")
+        glue('library(DBI)\ncon <- dbConnect(RSQLite::SQLite(), dbname = {pp$rpath})\n(tables <- dbListTables(con))\n{obj} <- dplyr::tbl(con, from = tables[1]) %>% collect()\nregister("{obj}")')
   } else if (pp$fext == "sql") {
     if (type == "rmd")  {
-      cmd <- "## see http://rmarkdown.rstudio.com/authoring_knitr_engines.html\n" %>%
+      cmd <- "/* see http://rmarkdown.rstudio.com/authoring_knitr_engines.html */\n" %>%
         paste0(paste0(readLines(pp$path), collapse = "\n"))
-      cmd <- paste0("\n```{sql, connection = con, max.print = 20, output.var = \"", make.names(pp$objname), "\"}\n", cmd, "\n```\n")
+      cmd <- glue('\n\n```{sql, connection = con, max.print = 20}\n<<cmd>>\n```\n\n', .open = "<<", .close = ">>")
       type <- ""
     } else {
-      cmd <- paste0(to, " <- readLines(", pp$rpath, ")")
+      cmd <- glue('{to} <- readLines({pp$rpath})')
     }
   } else if (pp$fext %in% c("py", "css", "js")) {
     if (type == "rmd")  {
       cmd <- "## see http://rmarkdown.rstudio.com/authoring_knitr_engines.html\n" %>%
         paste0(paste0(readLines(pp$path), collapse = "\n"))
-      cmd <- paste0("\n```{", sub("py", "python", pp$fext), "}\n", cmd, "\n```\n")
+      cmd <- glue('\n\n```{<<sub("py", "python", pp$fext)>>}\n<<cmd>>\n```\n\n', .open = "<<", .close = ">>")
       type <- ""
     } else {
-      cmd <- paste0(to, " <- readLines(", pp$rpath, ")")
+      cmd <- glue('{to} <- readLines({pp$rpath})')
     }
   } else if (pp$fext %in% c("md", "rmd")) {
     if (type == "rmd")  {
-      cmd <- paste0("\n```{r child = ", pp$rpath, "}\n```\n")
+      cmd <- glue('\n```{r child = "<<pp$rpath>>"}\n```\n', .open = "<<", .close = ">>")
       type <- ""
     } else {
-      cmd <- paste0(to, " <- readLines(", pp$rpath, ")")
+      cmd <- glue('{to} <- readLines({pp$rpath})')
     }
   } else if (pp$fext %in% c("jpg", "jpeg", "png", "pdf")) {
     if (type == "rmd")  {
-      cmd <- paste0("\n![](`r ", pp$rpath, "`)\n")
+      cmd <- glue('\n\n![](`r {pp$rpath}`)\n\n')
       if (!grepl("file.path", cmd)) cmd <- sub("`r \"", "", cmd) %>% sub("\"`", "", .)
       type <- ""
     } else {
       cmd <- "## see https://cran.r-project.org/web/packages/magick/vignettes/intro.html\n" %>%
-        paste0(to, " <- magick::image_read(", pp$rpath, ")")
+        glue('{to} <- magick::image_read({pp$rpath})')
     }
   } else if (pp$fext %in% c("r", "R")) {
-    cmd <- paste0("source(", pp$rpath, ", local = TRUE, echo = TRUE)")
+    cmd <- glue('source({pp$rpath}, local = TRUE, echo = TRUE)')
   } else {
     cmd <- pp$rpath
   }
