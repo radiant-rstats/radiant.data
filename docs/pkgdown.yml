@@ -22,4 +22,7 @@ articles:
   transform: pkgdown/transform.html
   view: pkgdown/view.html
   visualize: pkgdown/visualize.html
+urls:
+  reference: https://radiant-rstats.github.io/radiant.data/reference
+  article: https://radiant-rstats.github.io/radiant.data/articles
 

@@ -27,6 +27,11 @@
 <script src="../pkgdown.js"></script>
 
 
+<!-- docsearch -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+
 
 <meta property="og:title" content="Summary method for pivotr — summary.pivotr" />
 
@@ -58,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.2</span>
       </span>
     </div>
 
@@ -125,6 +130,12 @@
   </a>
 </li>
       </ul>
+      
+      <form class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
       
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -203,19 +214,7 @@
 #&gt;      Total 3,000
 #&gt; 
 #&gt; Chi-squared: 1202.62 df(4), p.value &lt; .001
-#&gt; 0.0% of cells have expected values below 5</div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabsort</span> <span class='kw'>=</span> <span class='st'>"-n_obs"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Pivot table
-#&gt; Data        : diamonds 
-#&gt; Table sorted: -n_obs 
-#&gt; Categorical : cut 
-#&gt; 
-#&gt;        cut n_obs
-#&gt;      Ideal 1,176
-#&gt;    Premium   771
-#&gt;  Very Good   677
-#&gt;       Good   275
-#&gt;       Fair   101
-#&gt;      Total 3,000
-#&gt; </div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabsort</span> <span class='kw'>=</span> <span class='st'>"desc(n_obs)"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Pivot table
+#&gt; 0.0% of cells have expected values below 5</div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabsort</span> <span class='kw'>=</span> <span class='st'>"desc(n_obs)"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Pivot table
 #&gt; Data        : diamonds 
 #&gt; Table sorted: desc(n_obs) 
 #&gt; Categorical : cut 
@@ -242,7 +241,7 @@
 #&gt; Numeric     : price 
 #&gt; Function    : mean 
 #&gt; 
-#&gt;  clarity      Fair      Good Very.Good   Premium     Ideal     Total
+#&gt;  clarity      Fair      Good Very_Good   Premium     Ideal     Total
 #&gt;       I1 2,730.167 4,333.500 3,864.167 4,932.231 6,078.200 4,194.775
 #&gt;      SI2 5,893.964 5,280.919 5,045.621 5,568.019 4,435.673 5,100.189
 #&gt;      SI1 4,273.069 3,757.022 4,277.544 4,113.811 3,758.125 3,998.577
@@ -283,6 +282,23 @@
    </div>
 
   
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+<script>
+  docsearch({
+    
+    
+    apiKey: '1234',
+    indexName: 'radiant_data',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+
 
   </body>
 </html>

@@ -27,6 +27,11 @@
 <script src="../pkgdown.js"></script>
 
 
+<!-- docsearch -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+
 
 <meta property="og:title" content="Flip the DT table to put Function, Variable, or Group by on top — flip" />
 
@@ -58,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.2</span>
       </span>
     </div>
 
@@ -126,6 +131,12 @@
 </li>
       </ul>
       
+      <form class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -168,13 +179,29 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='explore.html'>explore</a></code> to generate summaries</p>
+    <div class='dont-index'><p><code><a href='explore.html'>explore</a></code> to calculate summaries</p>
+<p><code><a href='summary.explore.html'>summary.explore</a></code> to show summaries</p>
 <p><code><a href='dtab.explore.html'>dtab.explore</a></code> to create the DT table</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price:x"</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"var"</span>)
-<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price"</span>, <span class='kw'>byvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"n_obs"</span>, <span class='st'>"skew"</span>), <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"byvar"</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price:x"</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"var"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Explore
+#&gt; Data        : diamonds 
+#&gt; Functions   : mean, sd 
+#&gt; Top         : Variables 
+#&gt; 
+#&gt;  .function     price carat clarity   cut color  depth  table     x
+#&gt;       mean 3,907.186 0.794   0.013 0.034 0.127 61.753 57.465 5.722
+#&gt;         sd 3,956.915 0.474   0.115 0.180 0.333  1.446  2.241 1.124</div><div class='input'><span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price"</span>, <span class='kw'>byvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"n_obs"</span>, <span class='st'>"skew"</span>), <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"byvar"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Explore
+#&gt; Data        : diamonds 
+#&gt; Grouped by  : cut 
+#&gt; Functions   : n_obs, skew 
+#&gt; Top         : Group by 
+#&gt; 
+#&gt;  variable function.    Fair    Good Very_Good Premium     Ideal
+#&gt;     price     n_obs 101.000 275.000   677.000 771.000 1,176.000
+#&gt;     price      skew   1.574   1.489     1.601   1.413     1.799</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -204,6 +231,23 @@
    </div>
 
   
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+<script>
+  docsearch({
+    
+    
+    apiKey: '1234',
+    indexName: 'radiant_data',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+
 
   </body>
 </html>

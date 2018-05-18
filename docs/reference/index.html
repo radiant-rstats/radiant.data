@@ -27,6 +27,11 @@
 <script src="../pkgdown.js"></script>
 
 
+<!-- docsearch -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+
 
 <meta property="og:title" content="Function reference" />
 
@@ -55,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.2</span>
       </span>
     </div>
 
@@ -122,6 +127,12 @@
   </a>
 </li>
       </ul>
+      
+      <form class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
       
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -299,7 +310,13 @@
         <td>
           <p><code><a href="pivotr.html">pivotr()</a></code> </p>
         </td>
-        <td><p>Create a pivot table using dplyr</p></td>
+        <td><p>Create a pivot table</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="summary.pivotr.html">summary(<i>&lt;pivotr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Summary method for pivotr</p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -312,12 +329,6 @@
           <p><code><a href="plot.pivotr.html">plot(<i>&lt;pivotr&gt;</i>)</a></code> </p>
         </td>
         <td><p>Plot method for the pivotr function</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="summary.pivotr.html">summary(<i>&lt;pivotr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Summary method for pivotr</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -331,7 +342,13 @@
         <td>
           <p><code><a href="explore.html">explore()</a></code> </p>
         </td>
-        <td><p>Explore data</p></td>
+        <td><p>Explore and summarize data</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="summary.explore.html">summary(<i>&lt;explore&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Summary method for the explore function</p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -344,12 +361,6 @@
           <p><code><a href="flip.html">flip()</a></code> </p>
         </td>
         <td><p>Flip the DT table to put Function, Variable, or Group by on top</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="summary.explore.html">summary(<i>&lt;explore&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Summary method for the explore function</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -494,9 +505,9 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
-          <p><code><a href="is_numeric.html">is_numeric()</a></code> </p>
+          <p><code><a href="is_double.html">is_double()</a></code> </p>
         </td>
-        <td><p>Is input numeric (and not a date type)?</p></td>
+        <td><p>Is input a double (and not a date type)?</p></td>
       </tr><tr>
         <!--  -->
         <td>
@@ -720,6 +731,12 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
       </tr><tr>
         <!--  -->
         <td>
+          <p><code><a href="render.html">render()</a></code> </p>
+        </td>
+        <td><p>Base method used to render htmlwidgets</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
           <p><code><a href="render.datatables.html">render(<i>&lt;datatables&gt;</i>)</a></code> </p>
         </td>
         <td><p>Method to render DT tables</p></td>
@@ -729,12 +746,6 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
           <p><code><a href="render.plotly.html">render(<i>&lt;plotly&gt;</i>)</a></code> </p>
         </td>
         <td><p>Method to render plotly plots</p></td>
-      </tr><tr>
-        <!--  -->
-        <td>
-          <p><code><a href="render.html">render()</a></code> </p>
-        </td>
-        <td><p>Base method used to render htmlwidgets</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -1053,6 +1064,23 @@ Function based on <a href='http://www.movable-type.co.uk/scripts/latlong.html'>h
    </div>
 
   
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+<script>
+  docsearch({
+    
+    
+    apiKey: '1234',
+    indexName: 'radiant_data',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+
 
   </body>
 </html>

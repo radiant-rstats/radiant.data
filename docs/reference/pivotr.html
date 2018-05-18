@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a pivot table using dplyr — pivotr • radiant.data</title>
+<title>Create a pivot table — pivotr • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -27,10 +27,15 @@
 <script src="../pkgdown.js"></script>
 
 
+<!-- docsearch -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
-<meta property="og:title" content="Create a pivot table using dplyr — pivotr" />
 
-<meta property="og:description" content="Create a pivot table using dplyr" />
+<meta property="og:title" content="Create a pivot table — pivotr" />
+
+<meta property="og:description" content="Create a pivot table" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -58,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.2</span>
       </span>
     </div>
 
@@ -126,6 +131,12 @@
 </li>
       </ul>
       
+      <form class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -136,20 +147,20 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a pivot table using dplyr</h1>
+    <h1>Create a pivot table</h1>
     <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/pivotr.R'><code>R/pivotr.R</code></a></small>
     <div class="hidden name"><code>pivotr.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Create a pivot table using dplyr</p>
+    <p>Create a pivot table</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>pivotr</span>(<span class='no'>dataset</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>nvar</span> <span class='kw'>=</span> <span class='st'>"None"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='st'>"mean"</span>,
   <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='st'>"None"</span>, <span class='kw'>tabfilt</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>tabsort</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>nr</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>data_filter</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>data_filter</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -172,15 +183,15 @@
     </tr>
     <tr>
       <th>normalize</th>
-      <td><p>Normalize the table by "row" total,"column" totals, or overall "total"</p></td>
+      <td><p>Normalize the table by row total, column totals, or overall total</p></td>
     </tr>
     <tr>
       <th>tabfilt</th>
-      <td><p>Expression used to filter the table. This should be a string (e.g., "Total &gt; 10000")</p></td>
+      <td><p>Expression used to filter the table (e.g., "Total &gt; 10000")</p></td>
     </tr>
     <tr>
       <th>tabsort</th>
-      <td><p>Expression used to sort the table (e.g., "-Total")</p></td>
+      <td><p>Expression used to sort the table (e.g., "desc(Total)")</p></td>
     </tr>
     <tr>
       <th>nr</th>
@@ -188,11 +199,7 @@
     </tr>
     <tr>
       <th>data_filter</th>
-      <td><p>Expression used to filter the dataset. This should be a string (e.g., "price &gt; 10000")</p></td>
-    </tr>
-    <tr>
-      <th>shiny</th>
-      <td><p>Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app</p></td>
+      <td><p>Expression used to filter the dataset before creating the table (e.g., "price &gt; 10000")</p></td>
     </tr>
     </table>
     
@@ -202,13 +209,32 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>pivotr</span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>)$<span class='no'>tab</span></div><div class='output co'>#&gt;         cut n_obs
+    <pre class="examples"><div class='input'><span class='fu'>pivotr</span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>str</span>()</div><div class='output co'>#&gt; List of 13
+#&gt;  $ tab_freq   :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	6 obs. of  2 variables:
+#&gt;   ..$ cut  : Factor w/ 6 levels "Fair","Good",..: 1 2 3 4 5 6
+#&gt;   ..$ n_obs: int [1:6] 101 275 677 771 1176 3000
+#&gt;  $ tab        :'data.frame':	6 obs. of  2 variables:
+#&gt;   ..$ cut  : Factor w/ 6 levels "Fair","Good",..: 1 2 3 4 5 6
+#&gt;   ..$ n_obs: int [1:6] 101 275 677 771 1176 3000
+#&gt;   ..- attr(*, "nrow")= num 5
+#&gt;  $ df_name    : chr "diamonds"
+#&gt;  $ fill       : int 0
+#&gt;  $ vars       : chr "cut"
+#&gt;  $ cvars      : chr "cut"
+#&gt;  $ nvar       : chr "n_obs"
+#&gt;  $ fun        : chr "mean"
+#&gt;  $ normalize  : chr "None"
+#&gt;  $ tabfilt    : chr ""
+#&gt;  $ tabsort    : chr ""
+#&gt;  $ nr         : NULL
+#&gt;  $ data_filter: chr ""
+#&gt;  - attr(*, "class")= chr [1:2] "pivotr" "list"</div><div class='input'><span class='fu'>pivotr</span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>)$<span class='no'>tab</span></div><div class='output co'>#&gt;         cut n_obs
 #&gt; 1      Fair   101
 #&gt; 2      Good   275
 #&gt; 3 Very Good   677
 #&gt; 4   Premium   771
 #&gt; 5     Ideal  1176
-#&gt; 6     Total  3000</div><div class='input'><span class='fu'>pivotr</span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"cut"</span>,<span class='st'>"clarity"</span>,<span class='st'>"color"</span>))$<span class='no'>tab</span></div><div class='output co'>#&gt;    clarity color Fair Good Very.Good Premium Ideal Total
+#&gt; 6     Total  3000</div><div class='input'><span class='fu'>pivotr</span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"cut"</span>,<span class='st'>"clarity"</span>,<span class='st'>"color"</span>))$<span class='no'>tab</span></div><div class='output co'>#&gt;    clarity color Fair Good Very_Good Premium Ideal Total
 #&gt; 1       I1     D    0    1         0       3     0     4
 #&gt; 2       I1     E    1    1         2       1     0     5
 #&gt; 3       I1     F    2    1         2       2     4    11
@@ -265,7 +291,7 @@
 #&gt; 54      IF     H    0    0         2       3    15    20
 #&gt; 55      IF     I    0    1         2       3     5    11
 #&gt; 56      IF     J    0    0         0       1     1     2
-#&gt; 57   Total Total  101  275       677     771  1176  3000</div><div class='input'><span class='fu'>pivotr</span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut:clarity"</span>, <span class='kw'>nvar</span> <span class='kw'>=</span> <span class='st'>"price"</span>)$<span class='no'>tab</span></div><div class='output co'>#&gt;   clarity     Fair     Good Very.Good  Premium    Ideal    Total
+#&gt; 57   Total Total  101  275       677     771  1176  3000</div><div class='input'><span class='fu'>pivotr</span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut:clarity"</span>, <span class='kw'>nvar</span> <span class='kw'>=</span> <span class='st'>"price"</span>)$<span class='no'>tab</span></div><div class='output co'>#&gt;   clarity     Fair     Good Very_Good  Premium    Ideal    Total
 #&gt; 1      I1 2730.167 4333.500  3864.167 4932.231 6078.200 4194.775
 #&gt; 2     SI2 5893.964 5280.919  5045.621 5568.019 4435.673 5100.189
 #&gt; 3     SI1 4273.069 3757.022  4277.544 4113.811 3758.125 3998.577
@@ -315,6 +341,23 @@
    </div>
 
   
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+<script>
+  docsearch({
+    
+    
+    apiKey: '1234',
+    indexName: 'radiant_data',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+
 
   </body>
 </html>

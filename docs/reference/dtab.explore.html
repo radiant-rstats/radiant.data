@@ -27,6 +27,11 @@
 <script src="../pkgdown.js"></script>
 
 
+<!-- docsearch -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+
 
 <meta property="og:title" content="Make a table of summary statistics in DT — dtab.explore" />
 
@@ -58,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.2</span>
       </span>
     </div>
 
@@ -126,6 +131,12 @@
 </li>
       </ul>
       
+      <form class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -164,15 +175,15 @@
     </tr>
     <tr>
       <th>searchCols</th>
-      <td><p>Column search and filter. Used to save and restore state</p></td>
+      <td><p>Column search and filter</p></td>
     </tr>
     <tr>
       <th>order</th>
-      <td><p>Column sorting. Used to save and restore state</p></td>
+      <td><p>Column sorting</p></td>
     </tr>
     <tr>
       <th>pageLength</th>
-      <td><p>Page length. Used to save and restore state</p></td>
+      <td><p>Page length</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -186,14 +197,17 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='pivotr.html'>pivotr</a></code> to create the pivot-table using dplyr</p>
-<p><code><a href='summary.pivotr.html'>summary.pivotr</a></code> to print a plain text table</p></div>
+    <div class='dont-index'><p><code><a href='pivotr.html'>pivotr</a></code> to create a pivot table</p>
+<p><code><a href='summary.pivotr.html'>summary.pivotr</a></code> to show summaries</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price:x"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='dtab.html'>dtab</a></span>()
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price:x"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='dtab.html'>dtab</a></span>()
 <span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price"</span>, <span class='kw'>byvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"n_obs"</span>, <span class='st'>"skew"</span>), <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"byvar"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='dtab.html'>dtab</a></span>()</div></pre>
+  <span class='fu'><a href='dtab.html'>dtab</a></span>()
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -223,6 +237,23 @@
    </div>
 
   
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+<script>
+  docsearch({
+    
+    
+    apiKey: '1234',
+    indexName: 'radiant_data',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+
 
   </body>
 </html>

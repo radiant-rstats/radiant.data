@@ -2,48 +2,44 @@
 % Please edit documentation in R/explore.R
 \name{explore}
 \alias{explore}
-\title{Explore data}
+\title{Explore and summarize data}
 \usage{
 explore(dataset, vars = "", byvar = "", fun = c("mean", "sd"),
   top = "fun", tabfilt = "", tabsort = "", nr = NULL,
-  data_filter = "", shiny = FALSE)
+  data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset to explore}
 
-\item{vars}{(Numerical) variables to summaries}
+\item{vars}{(Numeric) variables to summarize}
 
-\item{byvar}{Variable(s) to group data by before summarizing}
+\item{byvar}{Variable(s) to group data by}
 
 \item{fun}{Functions to use for summarizing}
 
-\item{top}{The variable (type) to display at the top of the table}
+\item{top}{Use functions ("fun"), variables ("vars"), or group-by variables as column headers}
 
-\item{tabfilt}{Expression used to filter the table. This should be a string (e.g., "Total > 10000")}
+\item{tabfilt}{Expression used to filter the table (e.g., "Total > 10000")}
 
-\item{tabsort}{Expression used to sort the table (e.g., "-Total")}
+\item{tabsort}{Expression used to sort the table (e.g., "desc(Total)")}
 
 \item{nr}{Number of rows to display}
 
-\item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
-
-\item{shiny}{Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app}
+\item{data_filter}{Expression used to filter the dataset before creating the table (e.g., "price > 10000")}
 }
 \value{
 A list of all variables defined in the function as an object of class explore
 }
 \description{
-Explore data
+Explore and summarize data
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 }
 \examples{
-result <- explore(diamonds, "price:x")
-summary(result)
-result <- explore(diamonds, c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))
-summary(result)
-diamonds \%>\% explore("price", byvar = "cut", fun = c("n_obs", "n_distinct"))
+explore(diamonds, c("price", "carat")) \%>\% str()
+explore(diamonds, "price:x")$tab
+explore(diamonds, c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))$tab
 
 }
 \seealso{

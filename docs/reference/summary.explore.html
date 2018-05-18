@@ -27,6 +27,11 @@
 <script src="../pkgdown.js"></script>
 
 
+<!-- docsearch -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+
 
 <meta property="og:title" content="Summary method for the explore function — summary.explore" />
 
@@ -58,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.2</span>
       </span>
     </div>
 
@@ -125,6 +130,12 @@
   </a>
 </li>
       </ul>
+      
+      <form class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
       
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -203,31 +214,62 @@
 #&gt;       Good    price   275 1.489
 #&gt;  Very Good    price   677 1.601
 #&gt;    Premium    price   771 1.413
-#&gt;      Ideal    price 1,176 1.799</div><div class='input'><span class='no'>diamonds</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='explore.html'>explore</a></span>(<span class='st'>"price:x"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Explore
-#&gt; Data        : . 
+#&gt;      Ideal    price 1,176 1.799</div><div class='input'><span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price:x"</span>, <span class='kw'>byvar</span> <span class='kw'>=</span> <span class='st'>"color"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Explore
+#&gt; Data        : diamonds 
+#&gt; Grouped by  : color 
 #&gt; Functions   : mean, sd 
 #&gt; Top         : Function 
 #&gt; 
-#&gt;  variable      mean        sd
-#&gt;     price 3,907.186 3,956.915
-#&gt;     carat     0.794     0.474
-#&gt;   clarity     0.013     0.115
-#&gt;       cut     0.034     0.180
-#&gt;     color     0.127     0.333
-#&gt;     depth    61.753     1.446
-#&gt;     table    57.465     2.241
-#&gt;         x     5.722     1.124</div><div class='input'><span class='no'>diamonds</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='explore.html'>explore</a></span>(<span class='st'>"price"</span>, <span class='kw'>byvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"n_obs"</span>, <span class='st'>"skew"</span>)) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Explore
-#&gt; Data        : . 
-#&gt; Grouped by  : cut 
-#&gt; Functions   : n_obs, skew 
-#&gt; Top         : Function 
-#&gt; 
-#&gt;        cut variable n_obs  skew
-#&gt;       Fair    price   101 1.574
-#&gt;       Good    price   275 1.489
-#&gt;  Very Good    price   677 1.601
-#&gt;    Premium    price   771 1.413
-#&gt;      Ideal    price 1,176 1.799</div><div class='input'>
+#&gt;  color variable      mean        sd
+#&gt;      D    price 3,217.003 3,278.276
+#&gt;      D    carat     0.665     0.365
+#&gt;      D  clarity     0.010     0.102
+#&gt;      D      cut     0.039     0.194
+#&gt;      D    depth    61.705     1.452
+#&gt;      D    table    57.438     2.269
+#&gt;      D        x     5.437     0.943
+#&gt;      E    price 3,284.596 3,610.872
+#&gt;      E    carat     0.679     0.391
+#&gt;      E  clarity     0.009     0.095
+#&gt;      E      cut     0.025     0.157
+#&gt;      E    depth    61.768     1.391
+#&gt;      E    table    57.548     2.262
+#&gt;      E        x     5.455     0.999
+#&gt;      F    price 3,654.492 3,779.511
+#&gt;      F    carat     0.728     0.405
+#&gt;      F  clarity     0.019     0.138
+#&gt;      F      cut     0.030     0.171
+#&gt;      F    depth    61.686     1.396
+#&gt;      F    table    57.428     2.275
+#&gt;      F        x     5.590     1.016
+#&gt;      G    price 3,970.573 4,002.082
+#&gt;      G    carat     0.774     0.451
+#&gt;      G  clarity     0.008     0.091
+#&gt;      G      cut     0.027     0.162
+#&gt;      G    depth    61.669     1.404
+#&gt;      G    table    57.341     2.133
+#&gt;      G        x     5.686     1.094
+#&gt;      H    price 4,250.302 4,063.648
+#&gt;      H    carat     0.880     0.503
+#&gt;      H  clarity     0.018     0.132
+#&gt;      H      cut     0.046     0.210
+#&gt;      H    depth    61.841     1.463
+#&gt;      H    table    57.464     2.208
+#&gt;      H        x     5.914     1.186
+#&gt;      I    price 4,869.190 4,570.572
+#&gt;      I    carat     1.001     0.573
+#&gt;      I  clarity     0.018     0.132
+#&gt;      I      cut     0.039     0.193
+#&gt;      I    depth    61.938     1.620
+#&gt;      I    table    57.446     2.160
+#&gt;      I        x     6.163     1.251
+#&gt;      J    price 5,642.012 4,574.576
+#&gt;      J    carat     1.193     0.602
+#&gt;      J  clarity     0.012     0.110
+#&gt;      J      cut     0.043     0.203
+#&gt;      J    depth    61.779     1.549
+#&gt;      J    table    57.863     2.563
+#&gt;      J        x     6.578     1.237</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -258,6 +300,23 @@
    </div>
 
   
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+<script>
+  docsearch({
+    
+    
+    apiKey: '1234',
+    indexName: 'radiant_data',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+
 
   </body>
 </html>

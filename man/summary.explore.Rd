@@ -24,8 +24,7 @@ result <- explore(diamonds, "price:x")
 summary(result)
 result <- explore(diamonds, "price", byvar = "cut", fun = c("n_obs", "skew"))
 summary(result)
-diamonds \%>\% explore("price:x") \%>\% summary()
-diamonds \%>\% explore("price", byvar = "cut", fun = c("n_obs", "skew")) \%>\% summary()
+explore(diamonds, "price:x", byvar = "color") \%>\% summary()
 
 }
 \seealso{

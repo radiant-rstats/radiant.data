@@ -12,11 +12,11 @@
 
 \item{dec}{Number of decimals to show}
 
-\item{searchCols}{Column search and filter. Used to save and restore state}
+\item{searchCols}{Column search and filter}
 
-\item{order}{Column sorting. Used to save and restore state}
+\item{order}{Column sorting}
 
-\item{pageLength}{Page length. Used to save and restore state}
+\item{pageLength}{Page length}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -27,13 +27,15 @@ Make a table of summary statistics in DT
 See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 }
 \examples{
+\dontrun{
 tab <- explore(diamonds, "price:x") \%>\% dtab()
 tab <- explore(diamonds, "price", byvar = "cut", fun = c("n_obs", "skew"), top = "byvar") \%>\%
   dtab()
+}
 
 }
 \seealso{
-\code{\link{pivotr}} to create the pivot-table using dplyr
+\code{\link{pivotr}} to create a pivot table
 
-\code{\link{summary.pivotr}} to print a plain text table
+\code{\link{summary.pivotr}} to show summaries
 }

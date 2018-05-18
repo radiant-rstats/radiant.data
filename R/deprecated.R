@@ -6,8 +6,8 @@
 #' @name radiant.data-deprecated
 #' @param ... Parameters to be passed to the updated functions
 #' @docType package
-#' @export  mean_rm median_rm min_rm max_rm sd_rm var_rm sum_rm getdata filterdata combinedata viewdata toFct fixMS getsummary Search formatnr formatdf rounddf getclass
-#' @aliases mean_rm median_rm min_rm max_rm sd_rm var_rm sum_rm getdata filterdata combinedata viewdata toFct fixMS getsummary Search formatnr formatdf rounddf getclass
+#' @export  mean_rm median_rm min_rm max_rm sd_rm var_rm sum_rm getdata filterdata combinedata viewdata toFct fixMS getsummary Search formatnr formatdf rounddf getclass is_numeric
+#' @aliases mean_rm median_rm min_rm max_rm sd_rm var_rm sum_rm getdata filterdata combinedata viewdata toFct fixMS getsummary Search formatnr formatdf rounddf getclass is_numeric
 #' @section Details:
 #' \itemize{
 #'   \item Replace \code{mean_rm} by \code{\link{mean}}
@@ -27,6 +27,7 @@
 #'   \item Replace \code{formatdf} by \code{\link{format_df}}
 #'   \item Replace \code{formatnr} by \code{\link{format_nr}}
 #'   \item Replace \code{getclass} by \code{\link{get_class}}
+#'   \item Replace \code{is_numeric} by \code{\link{is_double}}
 #' }
 #'
 mean_rm <- function(...) {
@@ -104,5 +105,9 @@ rounddf <- function(...) {
 getclass <- function(...) {
   .Deprecated("get_class")
   get_class(...)
+}
+is_numeric <- function(...) {
+  .Deprecated("is_double")
+  is_double(...)
 }
 NULL

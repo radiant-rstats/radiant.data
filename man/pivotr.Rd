@@ -2,11 +2,11 @@
 % Please edit documentation in R/pivotr.R
 \name{pivotr}
 \alias{pivotr}
-\title{Create a pivot table using dplyr}
+\title{Create a pivot table}
 \usage{
 pivotr(dataset, cvars = "", nvar = "None", fun = "mean",
   normalize = "None", tabfilt = "", tabsort = "", nr = NULL,
-  data_filter = "", shiny = FALSE)
+  data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset to tabulate}
@@ -17,25 +17,24 @@ pivotr(dataset, cvars = "", nvar = "None", fun = "mean",
 
 \item{fun}{Function to apply to numerical variable}
 
-\item{normalize}{Normalize the table by "row" total,"column" totals, or overall "total"}
+\item{normalize}{Normalize the table by row total, column totals, or overall total}
 
-\item{tabfilt}{Expression used to filter the table. This should be a string (e.g., "Total > 10000")}
+\item{tabfilt}{Expression used to filter the table (e.g., "Total > 10000")}
 
-\item{tabsort}{Expression used to sort the table (e.g., "-Total")}
+\item{tabsort}{Expression used to sort the table (e.g., "desc(Total)")}
 
 \item{nr}{Number of rows to display}
 
-\item{data_filter}{Expression used to filter the dataset. This should be a string (e.g., "price > 10000")}
-
-\item{shiny}{Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app}
+\item{data_filter}{Expression used to filter the dataset before creating the table (e.g., "price > 10000")}
 }
 \description{
-Create a pivot table using dplyr
+Create a pivot table
 }
 \details{
 Create a pivot-table. See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 }
 \examples{
+pivotr(diamonds, cvars = "cut") \%>\% str()
 pivotr(diamonds, cvars = "cut")$tab
 pivotr(diamonds, cvars = c("cut","clarity","color"))$tab
 pivotr(diamonds, cvars = "cut:clarity", nvar = "price")$tab

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate inverse of a variable — inverse • radiant.data</title>
+<title>Is input a double (and not a date type)? — is_double • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -33,9 +33,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Calculate inverse of a variable — inverse" />
+<meta property="og:title" content="Is input a double (and not a date type)? — is_double" />
 
-<meta property="og:description" content="Calculate inverse of a variable" />
+<meta property="og:description" content="Is input a double (and not a date type)?" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -147,31 +147,31 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate inverse of a variable</h1>
-    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/transform.R'><code>R/transform.R</code></a></small>
-    <div class="hidden name"><code>inverse.Rd</code></div>
+    <h1>Is input a double (and not a date type)?</h1>
+    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
+    <div class="hidden name"><code>is_double.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Calculate inverse of a variable</p>
+    <p>Is input a double (and not a date type)?</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>inverse</span>(<span class='no'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>is_double</span>(<span class='no'>x</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Input variable</p></td>
+      <td><p>Input</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>1/x</p>
+    <p>TRUE if double and not a type of date, else FALSE</p>
     
 
   </div>
