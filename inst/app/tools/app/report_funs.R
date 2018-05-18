@@ -251,8 +251,8 @@ observeEvent(input$report_clean, {
       gsub("dataset\\s*=\\s*\"([^\"]+)\",", "\\1,", .) %>%
       gsub("store\\(pred, data\\s*=\\s*\"([^\"]+)\"", "\\1 <- store(\\1, pred", .) %>%
       gsub("pred_data\\s*=\\s*\"([^\"]+)\"", "pred_data = \\1", .) %>%
-      gsub("(combinedata\\(\\s*x\\s*=\\s*)\"([^\"]+)\",(\\s*y\\s*=\\s*)\"([^\"]+)\",", "\\1\\2,\\3\\4,", .) %>%
-      gsub("(combinedata\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
+      gsub("(combinedata\\(\\s*?x\\s*?=\\s*?)\"([^\"]+?)\",(\\s*?y\\s*?=\\s*?)\"([^\"]+?)\",", "\\1\\2,\\3\\4,", .) %>%
+      gsub("(combinedata\\((.|\n)*?),\\s*?name\\s*?=\\s*?\"([^\"`]+?)\"([^\\)]+?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
       gsub("combinedata\\(", "combine_data(", .) %>%
       gsub("result\\s*<-\\s*(simulater\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>% 
       gsub("data\\s*=\\s*\"([^\"]+)\",", "data = \\1,", .) %>%

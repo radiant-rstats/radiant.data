@@ -18,7 +18,7 @@ upload_error_handler <- function(objname, ret) {
 
 load_csv <- function(
   file, delim = ",", col_names = TRUE, dec = ".",
-  n_max = Inf, saf = TRUE, safx = 20
+  n_max = Inf, saf = TRUE, safx = 30
 ) {
 
   n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
@@ -47,7 +47,7 @@ load_csv <- function(
       rprob <- ""
     }
 
-    if (saf) dataset <- to_fctdataset, safx)
+    if (saf) dataset <- to_fct(dataset, safx)
     as.data.frame(dataset, stringsAsFactors = FALSE) %>%
       {set_colnames(., make.names(colnames(.)))} %>%
       set_attr("description", rprob)
