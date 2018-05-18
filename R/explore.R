@@ -86,6 +86,15 @@ explore <- function(
       summarise_all(fun, na.rm = TRUE)
 
     ## setting up column names to work with gather code below
+    # if (length(fun) == 1) {
+    #   # colnames(tab)[ncol(tab)] <- fun
+    #   rng <- (length(byvar) + 1):ncol(tab)
+    #   # print(rng)
+    #   # print(paste0(vars, "_", fun))
+    #   colnames(tab)[rng] <- paste0(vars, "_", fun)[rng]
+    # }
+
+    ## setting up column names to work with gather code below
     if (length(vars) == 1) {
       rng <- (length(byvar) + 1):ncol(tab)
       colnames(tab)[rng] <- paste0(vars, "_", colnames(tab)[rng])
@@ -96,7 +105,12 @@ explore <- function(
       separate(variable, into = c("variable", "fun"), sep = "_", extra = "merge") %>%
       mutate(fun = factor(fun, levels = !! fun), variable = factor(variable, levels = vars)) %>%
       spread("fun", "value")
+
+    if (length(fun) == 1) {
+      colnames(tab)[ncol(tab)] <- fun
+    }
   }
+
 
   ## flip the table if needed
   if (top != "fun") {
