@@ -302,7 +302,7 @@ dtab.pivotr <- function(
     {.[-which(cvars %in% .)]}
 
   ## for rounding
-  isNum <- sapply(tab, is_numeric)
+  isDbl <- sapply(tab, is_double)
   isInt <- sapply(tab, is.integer)
   dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
 
@@ -387,8 +387,8 @@ dtab.pivotr <- function(
     ## show percentages
     dt_tab <- DT::formatPercentage(dt_tab, cn, dec)
   } else {
-    if (sum(isNum) > 0) 
-      dt_tab <- DT::formatRound(dt_tab, names(isNum)[isNum], dec)
+    if (sum(isDbl) > 0) 
+      dt_tab <- DT::formatRound(dt_tab, names(isDbl)[isDbl], dec)
     if (sum(isInt) > 0) {
       dt_tab <- DT::formatRound(dt_tab, names(isInt)[isInt], 0)
     }

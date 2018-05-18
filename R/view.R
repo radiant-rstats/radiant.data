@@ -49,12 +49,12 @@ dtab.data.frame <- function(
 
   ## for rounding
   isInt <- sapply(dat, is.integer)
-  isNum <- sapply(dat, is_numeric)
+  isDbl <- sapply(dat, is_double)
   dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
 
   ## don't do normal rounding for perc variables
   isInt[intersect(names(isInt), perc)] <- FALSE
-  isNum[intersect(names(isNum), perc)] <- FALSE
+  isDbl[intersect(names(isDbl), perc)] <- FALSE
 
   ## avoid factor with a huge number of levels
   isBigFct <- function(x) is.factor(x) && length(levels(x)) > 1000
@@ -91,8 +91,8 @@ dtab.data.frame <- function(
   )
 
   ## rounding as needed
-  if (sum(isNum) > 0)
-    dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isNum], digits = dec)
+  if (sum(isDbl) > 0)
+    dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isDbl], digits = dec)
   if (sum(isInt) > 0)
     dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isInt], digits = 0)
   if (!is_empty(perc))
@@ -190,7 +190,7 @@ view_data <- function(
   dat <- mutate_if(dat, isBigFct, as.character)
 
   ## for rounding
-  isNum <- sapply(dat, is_numeric)
+  isDbl <- sapply(dat, is_double)
   isInt <- sapply(dat, is.integer)
   dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
 
@@ -228,7 +228,7 @@ view_data <- function(
           lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
         )
       ) %>%
-        {if (sum(isNum) > 0) DT::formatRound(., names(isNum)[isNum], dec) else .} %>%
+        {if (sum(isDbl) > 0) DT::formatRound(., names(isDbl)[isDbl], dec) else .} %>%
         {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0) else .}
       output$tbl <- DT::renderDataTable(widget)
       observeEvent(input$stop, {

@@ -217,8 +217,8 @@ store.explore <- function(dataset, object, name, ...) {
   } else {
     stop(
       paste0(
-        "This function is deprecated. Use the code below instead:\n\n", 
-        name, " <- ", deparse(substitute(object)), "$tab\nregister(\"", 
+        "This function is deprecated. Use the code below instead:\n\n",
+        name, " <- ", deparse(substitute(object)), "$tab\nregister(\"",
         name, ")"
       ),
       call. = FALSE
@@ -289,7 +289,7 @@ dtab.explore <- function(
   cn_num <- cn_all[sapply(tab, is.numeric)]
   cn_cat <- cn_all[-which(cn_all %in% cn_num)]
   isInt <- sapply(tab, is.integer)
-  isNum <- sapply(tab, is_numeric)
+  isDbl <- sapply(tab, is_double)
   dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
 
   top <- c("fun" = "Function", "var" = "Variables", "byvar" = paste0("Group by: ", object$byvar[1]))[object$top]
@@ -335,8 +335,8 @@ dtab.explore <- function(
     DT::formatStyle(., cn_cat, color = "white", backgroundColor = "grey")
 
   ## rounding as needed
-  if (sum(isNum) > 0)
-    dt_tab <- DT::formatRound(dt_tab, names(isNum)[isNum], dec)
+  if (sum(isDbl) > 0)
+    dt_tab <- DT::formatRound(dt_tab, names(isDbl)[isDbl], dec)
   if (sum(isInt) > 0)
     dt_tab <- DT::formatRound(dt_tab, names(isInt)[isInt], 0)
 
@@ -472,7 +472,7 @@ se <- function(x, na.rm = TRUE) {
 #' @export
 prop <- function(x, na.rm = TRUE) {
   if (na.rm) x <- na.omit(x)
-  if (is_numeric(x)) {
+  if (is.numeric(x)) {
     mean(x == max(x, 1))    ## gives proportion of max value in x
   } else if (is.factor(x)) {
     mean(x == levels(x)[1]) ## gives proportion of first level in x

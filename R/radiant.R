@@ -404,7 +404,7 @@ is_string <- function(x) {
   length(x) == 1 && is.character(x) && !is_empty(x)
 }
 
-#' Is input numeric (and not a date type)?
+#' Is input a double (and not a date type)?
 #'
 #' @param x Input
 #'
@@ -413,7 +413,7 @@ is_string <- function(x) {
 #' @importFrom lubridate is.Date is.POSIXt
 #'
 #' @export
-is_numeric <- function(x) {
+is_double <- function(x) {
   is.double(x) && !lubridate::is.Date(x) && !lubridate::is.POSIXt(x)
 }
 
@@ -602,7 +602,7 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #' @export
 format_df <- function(tbl, dec = NULL, perc = FALSE, mark = "", ...) {
   frm <- function(x, ...) {
-    if (is_numeric(x)) {
+    if (is_double(x)) {
       format_nr(x, dec = dec, perc = perc, mark = mark, ...)
     } else if (is.integer(x)) {
       format_nr(x, dec = 0, mark = mark, ...)
@@ -662,7 +662,7 @@ format_nr <- function(
 #'
 #' @export
 round_df <- function(tbl, dec = 3) {
-  mutate_if(tbl, is_numeric, .funs = funs(round(., dec)))
+  mutate_if(tbl, is_double, .funs = funs(round(., dec)))
 }
 
 #' Find Dropbox folder
