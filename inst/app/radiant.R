@@ -21,7 +21,7 @@ rem_non_active <- function(env = r_data) {
 
 active2list <- function(env = r_data) {
   # isactive <- sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env)) %>%
-  isactive <- is_active(env = r_data) %>% {names(.)[.]}
+  iact <- is_active(env = r_data) %>% {names(.)[.]}
   if (length(iact) > 0) {
     mget(iact, env)
   } else {

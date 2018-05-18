@@ -4,7 +4,7 @@
 #' @return If x is a numeric variable return x - mean(x)
 #' @export
 center <- function(x, na.rm = TRUE)
-  if (is_numeric(x)) {
+  if (is.numeric(x)) {
     x - mean(x, na.rm = na.rm)
   } else {
     x
@@ -16,7 +16,7 @@ center <- function(x, na.rm = TRUE)
 #' @return If x is a numeric variable return center(x) / mean(x)
 #' @export
 standardize <- function(x, na.rm = TRUE) {
-  if (is_numeric(x)) {
+  if (is.numeric(x)) {
     center(x, na.rm = na.rm) / sd(x, na.rm = na.rm)
   } else {
     x
@@ -33,16 +33,18 @@ square <- function(x) x ^ 2
 #' @param x Input variable
 #' @return 1/x
 #' @export
-inverse <- function(x)
-  if (is_numeric(x)) 1 / x else x
+inverse <- function(x) {
+  if (is.numeric(x)) 1 / x else x
+}
 
 #' Normalize a variable x by a variable y
 #' @param x Input variable
 #' @param y Normalizing variable
 #' @return x/y
 #' @export
-normalize <- function(x, y)
-  if (is_numeric(x) && is.numeric(y)) x / y else x
+normalize <- function(x, y) {
+  if (is.numeric(x) && is.numeric(y)) x / y else x
+}
 
 #' Convert input in month-day-year format to date
 #' @details Use as.character if x is a factor
