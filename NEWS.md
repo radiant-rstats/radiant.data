@@ -1,3 +1,7 @@
+# radiant.data 0.9.4.3
+
+* Fix to accomodate changes in `deparse` in R 3.5
+
 # radiant.data 0.9.3.5
 
 ## minor changes

@@ -133,6 +133,8 @@ if (getOption("width") != 250) {
   )
 }
 
+options(dctrl = if (getRversion() > "3.4.4") c("keepNA", "niceNames") else "keepNA")
+
 options(
   radiant.functions = list(
     "n_obs" = "n_obs", "n_missing" = "n_missing", "n_distinct" = "n_distinct",

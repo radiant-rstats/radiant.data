@@ -3,7 +3,7 @@ url: https://radiant-rstats.github.io/radiant.data
 template:
   params:
     docsearch:
-      api_key: 1234
+      api_key: 311c7eff313b1f67999e5838086df74e
       index_name: radiant_data
 
 reference:

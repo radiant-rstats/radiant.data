@@ -609,13 +609,15 @@ update_report <- function(
     wrap <- ifelse(lng > 70, TRUE, FALSE)
   }
 
+  dctrl <- getOption("dctrl")
+
   ## wrapping similar to styler
   depr <- function(x, wrap = FALSE) {
     if (wrap) {
       for (i in names(x)) {
         tmp <- x[[i]]
         wco <- ifelse(max(nchar(tmp)) > 20, 20L, 55L)
-        tmp <- deparse(tmp, control = "keepNA", width.cutoff = wco)
+        tmp <- deparse(tmp, control = dctrl, width.cutoff = wco)
         if ((nchar(i) + sum(nchar(tmp)) < 70) | (length(tmp) == 2 & tmp[2] == ")")) {
           tmp <- paste0(tmp, collapse = "")
         }
@@ -631,7 +633,7 @@ update_report <- function(
       x <- paste0(paste0(paste0("\n  ", names(x)), " = ", x), collapse = ", ")
       x <- paste0("list(", x, "\n)")
     } else {
-      x <- deparse(x, control = c("keepNA"), width.cutoff = 500L) %>%
+      x <- deparse(x, control = dctrl, width.cutoff = 500L) %>%
         paste(collapse = "")
     }
     x
@@ -659,7 +661,7 @@ update_report <- function(
             sub("list\\(", paste0(outputs[i], "\\(\n  ", inp, ", "), .) %>%
             paste0(cmd, "\n", .)
         } else {
-          cmd <- deparse(inp_out[[i]], control = c("keepNA"), width.cutoff = 500L) %>%
+          cmd <- deparse(inp_out[[i]], control = dctrl, width.cutoff = 500L) %>%
             sub("list\\(", paste0(outputs[i], "\\(", inp, ", "), .) %>%
             paste0(cmd, "\n", .)
         }
