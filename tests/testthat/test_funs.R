@@ -1,6 +1,14 @@
 # library(radiant.data)
 # library(testthat)
 
+context("R deparse")
+
+## See https://stackoverflow.com/questions/50422627/different-results-from-deparse-in-r-3-4-4-and-r-3-5
+test_that("deparse R 3.4.4 vs R 3.5", {
+  dctrl <- if (getRversion() > "3.4.4") c("keepNA", "niceNames") else "keepNA"
+  expect_equal(deparse(list(dec = 4L, b = "a"), control = dctrl), "list(dec = 4, b = \"a\")")
+})
+
 context("Radiant functions")
 
 test_that("set_attr", {

@@ -30,7 +30,8 @@ launch <- function(package = "radiant.data", run = "viewer") {
     scipen = max(getOption("scipen", 100), 100),
     max.print = max(getOption("max.print", 5000), 5000),
     stringsAsFactors = FALSE,
-    radiant.launch_dir = normalizePath(getwd(), winslash = "/")
+    radiant.launch_dir = normalizePath(getwd(), winslash = "/"),
+    dctrl = if (getRversion() > "3.4.4") c("keepNA", "niceNames") else "keepNA"
   )
   on.exit(base::options(oop), add = TRUE)
   if (is_empty(Sys.getenv("RSTUDIO"))) {
