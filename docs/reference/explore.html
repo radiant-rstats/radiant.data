@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.3</span>
       </span>
     </div>
 
@@ -232,15 +232,15 @@
 #&gt;  $ tabsort    : chr ""
 #&gt;  $ nr         : NULL
 #&gt;  $ data_filter: chr ""
-#&gt;  - attr(*, "class")= chr [1:2] "explore" "list"</div><div class='input'><span class='fu'>explore</span>(<span class='no'>diamonds</span>, <span class='st'>"price:x"</span>)$<span class='no'>tab</span></div><div class='output co'>#&gt;   variable         mean           sd
-#&gt; 1    price 3.907186e+03 3956.9154001
-#&gt; 2    carat 7.942833e-01    0.4738263
-#&gt; 3  clarity 1.333333e-02    0.1147168
-#&gt; 4      cut 3.366667e-02    0.1803998
-#&gt; 5    color 1.273333e-01    0.3334016
-#&gt; 6    depth 6.175267e+01    1.4460279
-#&gt; 7    table 5.746533e+01    2.2411022
-#&gt; 8        x 5.721823e+00    1.1240545</div><div class='input'><span class='fu'>explore</span>(<span class='no'>diamonds</span>, <span class='fu'>c</span>(<span class='st'>"price"</span>,<span class='st'>"carat"</span>), <span class='kw'>byvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"n_missing"</span>, <span class='st'>"skew"</span>))$<span class='no'>tab</span></div><div class='output co'>#&gt;          cut variable n_missing      skew
+#&gt;  - attr(*, "class")= chr [1:2] "explore" "list"</div><div class='input'><span class='fu'>explore</span>(<span class='no'>diamonds</span>, <span class='st'>"price:x"</span>)$<span class='no'>tab</span></div><div class='output co'>#&gt;   variable          mean           sd
+#&gt; 1    price 3907.18600000 3956.9154001
+#&gt; 2    carat    0.79428333    0.4738263
+#&gt; 3  clarity    0.01333333    0.1147168
+#&gt; 4      cut    0.03366667    0.1803998
+#&gt; 5    color    0.12733333    0.3334016
+#&gt; 6    depth   61.75266667    1.4460279
+#&gt; 7    table   57.46533333    2.2411022
+#&gt; 8        x    5.72182333    1.1240545</div><div class='input'><span class='fu'>explore</span>(<span class='no'>diamonds</span>, <span class='fu'>c</span>(<span class='st'>"price"</span>,<span class='st'>"carat"</span>), <span class='kw'>byvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"n_missing"</span>, <span class='st'>"skew"</span>))$<span class='no'>tab</span></div><div class='output co'>#&gt;          cut variable n_missing      skew
 #&gt; 1       Fair    price         0 1.5741334
 #&gt; 2       Fair    carat         0 0.9285670
 #&gt; 3       Good    price         0 1.4885765
@@ -288,7 +288,7 @@
   docsearch({
     
     
-    apiKey: '1234',
+    apiKey: '311c7eff313b1f67999e5838086df74e',
     indexName: 'radiant_data',
     inputSelector: 'input#search-input.form-control',
     transformData: function(hits) {
