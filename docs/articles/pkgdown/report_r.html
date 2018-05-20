@@ -133,7 +133,7 @@
 <p>If you started Radiant from Rstudio, you can also click the <code>Read files</code> button to browse for files and generate code to read it into Radiant. For example, read rda, rds, xls, yaml, and feather and add them to the <code>Datasets</code> dropdown. If the file type you want to load is not currently supported, the path to the file will be returned. The file path used will be relative to the Rstudio-project root. Paths to files synced to a local Dropbox or Google Drive folder will use the <code>find_dropbox</code> and <code>find_gdrive</code> functions to enhances reproducibility.</p>
 <p>As an example you can copy-and-paste the code below into the editor and press <code>Knit report (R)</code> to generate results.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## get the active dataset and show the first few observations
-<span class="kw">.getdata</span>() <span class="op">%&gt;%</span>
+<span class="kw">.get_data</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">head</span>()
 
 ## access a dataset

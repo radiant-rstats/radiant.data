@@ -10,7 +10,7 @@ As an example you can copy-and-paste the code below into the editor and press `K
 
 ```r
 ## get the active dataset and show the first few observations
-.getdata() %>%
+.get_data() %>%
   head()
 
 ## access a dataset
