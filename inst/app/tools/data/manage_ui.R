@@ -116,7 +116,9 @@ observeEvent(input$from_global_load, {
   r_info[["datasetlist"]] %<>% c(dfs, .) %>% unique()
   for (df in dfs) {
     r_data[[df]] <- get(df, envir = .GlobalEnv)
-    shiny::makeReactiveBinding(df, env = r_data)
+    if (!bindingIsActive(as.symbol(df), env = r_data)) {
+      shiny::makeReactiveBinding(df, env = r_data)
+    }
     r_info[[paste0(df, "_lcmd")]] <- glue('{df} <- get("{df}", envir = .GlobalEnv)\nregister("{df}")')
     if (input$from_global_move == "move") {
       rm(list = df, envir = .GlobalEnv)
@@ -513,7 +515,10 @@ observeEvent(input$url_rda_load, {
       }
     }
   }
-  shiny::makeReactiveBinding(objname, env = r_data)
+
+  if (exists(objname, envir = r_data) && !bindingIsActive(as.symbol(objname), env = r_data)) {
+    shiny::makeReactiveBinding(objname, env = r_data)
+  }
   r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
   r_info[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
   r_info[[paste0(objname, "_lcmd")]] <- cmd
@@ -578,7 +583,9 @@ observeEvent(input$url_csv_load, {
     }
   }
 
-  shiny::makeReactiveBinding(objname, env = r_data)
+  if (exists(objname, envir = r_data) && !bindingIsActive(as.symbol(objname), env = r_data)) {
+    shiny::makeReactiveBinding(objname, env = r_data)
+  }
   r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
   r_info[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
   r_info[[paste0(objname, "_lcmd")]] <- cmd
@@ -598,7 +605,9 @@ observeEvent(input$loadExampleData, {
   for (i in seq_len(nrow(exdat))) {
     item <- exdat[i, "Item"]
     data(list = item, package = exdat[i, "Package"], envir = r_data)
-    makeReactiveBinding(item, env = r_data)
+    if (exists(item, envir = r_data) && !bindingIsActive(as.symbol(item), env = r_data)) {
+      shiny::makeReactiveBinding(item, env = r_data)
+    }
     r_info[["datasetlist"]] <- c(item, r_info[["datasetlist"]]) %>% unique()
     r_info[[paste0(item, "_descr")]] <- attr(r_data[[item]], "description")
     r_info[[paste0(item, "_lcmd")]] <- glue('{item} <- data({item}, package = "{exdat[i, "Package"]}") %>% get()\nregister("{item}")')
@@ -633,7 +642,9 @@ observeEvent(input$loadClipData, {
     r_data[[objname]] <- dataset
     r_info[[paste0(objname, "_lcmd")]] <- glue('{cmd}\nregister("{objname}")')
   }
-  shiny::makeReactiveBinding(objname, env = r_data)
+  if (exists(objname, envir = r_data) && !bindingIsActive(as.symbol(objname), env = r_data)) {
+    shiny::makeReactiveBinding(objname, env = r_data)
+  }
   r_info[[paste0(objname, "_descr")]] <- ret
   r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
   updateSelectInput(
@@ -761,7 +772,9 @@ observeEvent(input$renameButton, {
   ## use lobstr::object_size to see that the size of the list doesn't change
   ## when you assign a list element another name
   r_data[[input$data_rename]] <- r_data[[input$dataset]]
-  shiny::makeReactiveBinding(input$data_rename, env = r_data)
+  if (!bindingIsActive(as.symbol(input$data_rename), env = r_data)) {
+    shiny::makeReactiveBinding(input$data_rename, env = r_data)
+  }
   r_data[[input$dataset]] <- NULL
   r_info[[paste0(input$data_rename, "_descr")]] <- r_info[[paste0(input$dataset, "_descr")]]
   r_info[[paste0(input$dataset, "_descr")]] <- NULL

@@ -81,7 +81,9 @@ init_data <- function(env = r_data) {
       r_info[[paste0(dn, "_lcmd")]] <- paste0(dn, " <- data(", dn, ", package = \"radiant.data\") %>% get()\nregister(\"", dn, "\")")
     }
     env[[dn]] <- df
-    makeReactiveBinding(dn, env = env)
+    if (!bindingIsActive(as.symbol(dn), env = env)) {
+      makeReactiveBinding(dn, env = env)
+    }
     r_info[[paste0(dn, "_descr")]] <- attr(df, "description")
   }
   r_info[["datasetlist"]] <- basename(df_names)
