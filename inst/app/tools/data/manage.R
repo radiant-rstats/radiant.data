@@ -161,7 +161,10 @@ load_user_data <- function(
     upload_error_handler(objname, ret)
   }
 
-  shiny::makeReactiveBinding(objname, env = r_data)
+  if (exists(objname, envir = r_data) && !bindingIsActive(as.symbol(objname), env = r_data)) {
+    shiny::makeReactiveBinding(objname, env = r_data)
+  }
+
   r_info[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
   if (!is_empty(cmd)) {
     cn <- colnames(r_data[[objname]])

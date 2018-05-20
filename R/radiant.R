@@ -1162,7 +1162,9 @@ register <- function(new, org = "", descr = "", env) {
       }
 
       r_info[["datasetlist"]] <- c(new, r_info[["datasetlist"]]) %>% unique()
-      shiny::makeReactiveBinding(new, env = env)
+      if (exists(new, envir = env) && !bindingIsActive(as.symbol(new), env = env)) {
+        shiny::makeReactiveBinding(new, env = env)
+      }
     } else if (is.list(env[[new]])) {
       r_info[["dtree_list"]] <- c(new, r_info[["dtree_list"]]) %>% unique()
     }

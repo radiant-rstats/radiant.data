@@ -89,6 +89,7 @@ saveStateOnRefresh <- function(session = session) {
 
 ## get active dataset and apply data-filter if available
 .get_data <- reactive({
+  # print(".get_data() invalidated")
   req(input$dataset)
   selcom <- input$data_filter %>%
     gsub("\\n", "", .) %>%

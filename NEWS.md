@@ -1,5 +1,6 @@
-# radiant.data 0.9.4.3
+# radiant.data 0.9.4.4
 
+* Don't update a reactive binding for an object if the binding already exists. See issue  https://github.com/rstudio/shiny/issues/2065
 * Fix to accomodate changes in `deparse` in R 3.5
 
 # radiant.data 0.9.3.5

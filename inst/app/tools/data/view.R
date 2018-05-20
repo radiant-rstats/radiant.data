@@ -142,12 +142,12 @@ output$dataviewer <- DT::renderDataTable({
 observeEvent(input$view_store, {
   req(input$view_name)
   data_filter <- if (input$show_filter) input$data_filter else ""
+
   r_data[[input$view_name]] <- get_data(
     input$dataset, vars = input$view_vars, filt = data_filter,
     rows = input$dataviewer_rows_all, na.rm = FALSE
   )
   register(input$view_name)
-
   updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
 
   if (input$dataset != input$view_name) {

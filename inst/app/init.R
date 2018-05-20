@@ -172,10 +172,14 @@ if (exists("r_data", envir = .GlobalEnv)) {
 
 isolate({
   for (ds in r_info[["datasetlist"]]) {
-    makeReactiveBinding(ds, env = r_data)
+    if (exists(ds, envir = r_data) && !bindingIsActive(as.symbol(ds), env = r_data)) {
+      shiny::makeReactiveBinding(ds, env = r_data)
+    }
   }
   for (dt in r_info[["dtree_list"]]) {
-    makeReactiveBinding(dt, env = r_data)
+    if (exists(dt, envir = r_data) && !bindingIsActive(as.symbol(dt), env = r_data)) {
+      shiny::makeReactiveBinding(dt, env = r_data)
+    }
   }
 })
 
