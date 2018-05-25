@@ -165,6 +165,8 @@ reference:
     - glance
     - tidy
     - glue
+    - glue_collapse
+    - glue_data
     - knit_print
     - kurtosi
     - skew

@@ -145,14 +145,9 @@ copy_attr <- function(to, from, attr) {
 #' @export
 add_class <- function(x, cl) `class<-`(x, c(cl, class(x)))
 
-#' Add stars '***' to a data.frame (from broom's `tidy` function) based on p.values
-#'
-#' @details Add stars to output from broom's `tidy` function
-#'
+#' Add stars based on p.values
 #' @param pval Vector of p-values
-#'
 #' @return A vector of stars
-#'
 #' @examples
 #' sig_stars(c(.0009, .049, .009, .4, .09))
 #'
@@ -652,7 +647,7 @@ format_nr <- function(
   }
 }
 
-#' Round double in a data.frame to a specified number of decimal places
+#' Round doubles in a data.frame to a specified number of decimal places
 #'
 #' @param tbl Data frame
 #' @param dec Number of decimals to show

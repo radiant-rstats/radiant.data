@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{round_df}
 \alias{round_df}
-\title{Round double in a data.frame to a specified number of decimal places}
+\title{Round doubles in a data.frame to a specified number of decimal places}
 \usage{
 round_df(tbl, dec = 3)
 }
@@ -15,7 +15,7 @@ round_df(tbl, dec = 3)
 Data frame with rounded doubles
 }
 \description{
-Round double in a data.frame to a specified number of decimal places
+Round doubles in a data.frame to a specified number of decimal places
 }
 \examples{
 data.frame(x = as.factor(c("a", "b")), y = c(1L, 2L), z = c(-0.0005, 3.1)) \%>\%
