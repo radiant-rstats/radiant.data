@@ -6,7 +6,6 @@ pvt_normalize <- c(
   "Total" = "total"
 )
 pvt_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
-pvt_type <- c("Dodge" = "dodge", "Fill" = "fill")
 
 ## list of function arguments
 pvt_args <- as.list(formals(pivotr))
@@ -47,6 +46,9 @@ pvt_plot_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(pvt_plot_args))
     pvt_plot_args[[i]] <- input[[paste0("pvt_", i)]]
+
+  pvt_plot_args$type <- ifelse(isTRUE(pvt_plot_args$type), "fill", "dodge")
+
   pvt_plot_args
 })
 
@@ -65,8 +67,8 @@ output$ui_pvt_cvars <- renderUI({
     } else {
       if (available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars)) {
         vars <- unique(c(r_state$pvt_cvars, vars))
-        names(vars) <- varnames() %>% 
-          {.[match(vars, .)]} %>% 
+        names(vars) <- varnames() %>%
+          {.[match(vars, .)]} %>%
           names()
       }
     }
@@ -77,7 +79,7 @@ output$ui_pvt_cvars <- renderUI({
     selected = state_multiple("pvt_cvars", vars, isolate(input$pvt_cvars)),
     multiple = TRUE,
     options = list(
-      placeholder = "Select categorical variables", 
+      placeholder = "Select categorical variables",
       plugins = list("remove_button", "drag_drop")
     )
   )
@@ -154,8 +156,8 @@ output$ui_pvt_run <- renderUI({
   ## updates when dataset changes
   req(input$dataset)
   actionButton(
-    "pvt_run", "Create pivot table", 
-    width = "100%", icon = icon("play"), 
+    "pvt_run", "Create pivot table",
+    width = "100%", icon = icon("play"),
     class = "btn-success"
   )
 })
@@ -164,7 +166,6 @@ observe({
   ## dep on most inputs
   input$data_filter
   input$show_filter
-  # dep on most inputs
   sapply(r_drop(names(pvt_args)), function(x) input[[paste0("pvt_", x)]])
 
   ## notify user when the plot needed to be updated
@@ -213,13 +214,12 @@ output$ui_Pivotr <- renderUI({
     conditionalPanel(
       "input.pvt_plot == true",
       wellPanel(
-        radioButtons(
-          "pvt_type", label = "Plot type:",
-          pvt_type,
-          selected = state_init("pvt_type", "dodge"),
-          inline = TRUE
-        ),
-        checkboxInput("pvt_flip", "Flip", value = state_init("pvt_flip", FALSE))
+        HTML("<label><strong>Plot type:</strong></label>"),
+        tags$table(
+          tags$td(checkboxInput("pvt_type", "Fill", value = state_init("pvt_type", FALSE))),
+          tags$td(checkboxInput("pvt_flip", "Flip", value = state_init("pvt_flip", FALSE))),
+          width = "50%"
+        )
       )
     ),
     wellPanel(
@@ -325,13 +325,18 @@ dl_pivot_tab <- function(file) {
 download_handler(id = "dl_pivot_tab", fun = dl_pivot_tab, fn = paste0(input$dataset, "_pivot.csv"))
 
 pvt_plot_width <- function() 750
-pvt_plot_height <- function() {
+
+## based on https://stackoverflow.com/a/40182833/1974918
+pvt_plot_height <- eventReactive({
+  c(input$pvt_run, input$pvt_flip)
+}, {
   pvt <- .pivotr()
   if (is.null(pvt)) return(400)
   pvt <- pvt_sorter(pvt, rows = r_info[["pvt_rows"]])
   if (length(input$pvt_cvars) > 2) {
     pvt$tab %>%
       .[[input$pvt_cvars[3]]] %>%
+      as.factor() %>%
       levels() %>%
       length() %>%
       {. * 200}
@@ -344,7 +349,7 @@ pvt_plot_height <- function() {
   } else {
     400
   }
-}
+})
 
 pvt_sorter <- function(pvt, rows = NULL) {
   if (is.null(rows)) return(pvt)
@@ -371,7 +376,9 @@ observeEvent(input$pivotr_rows_all, {
   r_info[["pvt_rows"]] <- input$pivotr_rows_all
 })
 
-.plot_pivot <- reactive({
+.plot_pivot <- eventReactive({
+  c(input$pvt_run, input$pvt_flip, input$pvt_type, input$pvt_perc)
+}, {
   pvt <- .pivotr()
   req(pvt)
   if (!is_empty(input$pvt_tab, FALSE)) {
@@ -387,7 +394,7 @@ output$plot_pivot <- renderPlot({
   validate(
     need(length(input$pvt_cvars) < 4, "Plots created for at most 3 categorical variables")
   )
-  .plot_pivot() 
+  .plot_pivot()
 }, width = pvt_plot_width, height = pvt_plot_height, res = 96)
 
 observeEvent(input$pvt_store, {
@@ -407,8 +414,8 @@ observeEvent(input$pvt_store, {
       title = "Data Stored",
       span(
         paste0("Dataset '", name, "' was successfully added to the
-                datasets dropdown. Add code to Report > Rmd or 
-                Report > R to (re)create the results by clicking the 
+                datasets dropdown. Add code to Report > Rmd or
+                Report > R to (re)create the results by clicking the
                 report icon on the bottom left of your screen.")
       ),
       footer = modalButton("OK"),
@@ -474,8 +481,8 @@ observeEvent(input$pivotr_report, {
 })
 
 download_handler(
-  id = "dlp_pivot", 
-  fun = download_handler_plot, 
+  id = "dlp_pivot",
+  fun = download_handler_plot,
   fn = paste0(input$dataset, "_pivot.png"),
   caption = "Download pivot plot",
   plot = .plot_pivot,
