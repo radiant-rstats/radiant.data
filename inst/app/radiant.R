@@ -29,6 +29,18 @@ active2list <- function(env = r_data) {
   }
 }
 
+## deal with https://github.com/rstudio/shiny/issues/2065
+MRB <- function(x, init = FALSE, env = r_data) {
+  if (exists(x, envir = env)) {
+    if (!bindingIsActive(as.symbol(x), env = env)) {
+      shiny::makeReactiveBinding(x, env = env)
+    }
+  } else if (init) {
+    ## initialize a binding even if object doesn't exist yet
+    shiny::makeReactiveBinding(x, env = env)
+  }
+}
+
 saveSession <- function(session = session) {
   if (!exists("r_sessions")) return()
 
