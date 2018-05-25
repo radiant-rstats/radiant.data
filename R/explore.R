@@ -576,12 +576,12 @@ does_vary <- function(x, na.rm = TRUE) {
   }
 }
 
-#' Convert categorical variables to factors and deal with empty/missing values (used in pivotr and explore)
+#' Convert categorical variables to factors and deal with empty/missing values
 #' @param x Categorical variable used in table
 #' @return Variable with updated levels
 #' @export
 empty_level <- function(x) {
-  if (!is.factor(x)) x %<>% as.factor
+  if (!is.factor(x)) x <- as.factor(x)
   levs <- levels(x)
   if ("" %in% levs) {
     levs[levs == ""] <- "NA"

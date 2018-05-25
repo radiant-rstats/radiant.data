@@ -2,7 +2,7 @@
 % Please edit documentation in R/explore.R
 \name{empty_level}
 \alias{empty_level}
-\title{Convert categorical variables to factors and deal with empty/missing values (used in pivotr and explore)}
+\title{Convert categorical variables to factors and deal with empty/missing values}
 \usage{
 empty_level(x)
 }
@@ -13,5 +13,5 @@ empty_level(x)
 Variable with updated levels
 }
 \description{
-Convert categorical variables to factors and deal with empty/missing values (used in pivotr and explore)
+Convert categorical variables to factors and deal with empty/missing values
 }

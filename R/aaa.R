@@ -29,10 +29,27 @@ globalVariables(
 NULL
 
 #' Exporting glue from glue
-#' @details See \code{\link[glue]{glue}} in the \code{glue]} package for more details
+#' @details See \code{\link[glue]{glue}} in the \code{glue} package for more details
 #' @importFrom glue glue
 #' @name glue
 #' @rdname glue
+#' @export
+NULL
+
+#' Exporting collapse from glue as glue_collapse
+#' @details See \code{\link[glue]{collapse}} in the \code{glue} package for more details
+#' @name glue_collapse
+#' @rdname glue_collapse
+#' @param ... arguments passed to \code{glue::collapse}
+#' @export
+glue_collapse <- function(...) glue::collapse(...)
+NULL
+
+#' Exporting glue_data from glue
+#' @details See \code{\link[glue]{glue_data}} in the \code{glue} package for more details
+#' @importFrom glue glue_data
+#' @name glue_data
+#' @rdname glue_data
 #' @export
 NULL
 
