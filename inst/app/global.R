@@ -429,7 +429,7 @@ options(
         tabPanel(
           actionLink(
             "stop_radiant", "Stop", icon = icon("stop"),
-            onclick = "setTimeout(function(){window.close();}, 100); "
+            onclick = "setTimeout(function(){window.close();}, 100);"
           )
         ),
         tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
