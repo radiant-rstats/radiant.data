@@ -250,12 +250,9 @@ output$ui_Manage <- renderUI({
         uiOutput("ui_man_save_data")
       )
     ),
-    # conditionalPanel(
-      # "output.is_browser == false",
-      wellPanel(
-        checkboxInput("man_show_log", "Show R-code", FALSE)
-      ),
-    # ),
+    wellPanel(
+      checkboxInput("man_show_log", "Show R-code", FALSE)
+    ),
     wellPanel(
       checkboxInput("man_show_remove", "Remove data from memory", FALSE),
       conditionalPanel(
@@ -300,7 +297,7 @@ output$man_descr_md <- renderUI({
       style = "width: 650px;",
       class = "form-control",
       autocorrect = "off",
-      autocapitalize="off",
+      autocapitalize = "off",
       descr_out(r_info[[paste0(input$dataset, "_descr")]], "md")
     )
   )
@@ -874,7 +871,6 @@ man_show_log <- reactive({
     }
     cmd
   } else {
-    # man_show_log_modal()
     "## No R-code available"
   }
 })
@@ -907,18 +903,15 @@ man_show_log_modal <- function() {
       title = "Generating R-code to load and save data",
       span(
         "R-code to load and save data is not generated and reported 
-         when using radiant with an (external) web browser (e.g., chrome).
+         when using radiant with an (external) web browser (e.g., Chrome).
          This is due to the fact that the web browser's file dialog does 
          not provide file path information for security reasons.", 
-         br(), br(), 
-         "To generate R-code to load and save data, macOS users can 
-         start Radiant in an Rstudio Window or in the Rstudio Viewer
-         (see Rstudio Addins drop down). On Windows, start Radiant in 
-         the Rstudio Viewer. Once Rstudio, Version 1.2 is 
-         available, Windows users will also be able to use Radiant 
-         conveniently in an Rstudio Window. The same applies for 
-         users on Linux or using Rstudio Server (i.e., use 'Start 
-         radiant (viewer)' from the Addins drop down)"
+        br(), br(), 
+        "To generate R-code to load and save data, start Radiant in an 
+         Rstudio Window or in the Rstudio Viewer (see Rstudio Addins drop 
+         down). Users on Windows or Linux should upgrade Rstudio using  
+         the following link. ", 
+         a("https://www.rstudio.com/products/rstudio/download/preview/")
       ),
       footer = modalButton("OK"),
       size = "s",
