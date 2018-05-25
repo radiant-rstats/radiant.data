@@ -57,23 +57,26 @@ load_csv <- function(
 
 load_user_data <- function(
   fname, uFile, ext, header = TRUE,
-  man_str_as_factor = TRUE, sep = ",", dec = ".", 
-  n_max = Inf
+  man_str_as_factor = TRUE, sep = ",", 
+  dec = ".", n_max = Inf
 ) {
 
   filename <- basename(fname)
   fext <- tools::file_ext(filename) %>% tolower()
 
   ## switch extension if needed
-  if (fext == "rdata") ext <- "rdata"
-  if (fext == "rds" && ext == "rda") ext <- "rds"
-  if (fext == "rda" && ext == "rds") ext <- "rda"
-  if (fext == "rdata" && ext == "rds") ext <- "rdata"
-  if (fext == "txt" && ext == "csv") ext <- "txt"
-  if (fext == "tsv" && ext == "csv") ext <- "tsv"
+  ext <- case_when(
+    fext == ext ~ ext,
+    fext == "rdata" ~ "rdata",
+    fext == "rds" && ext == "rda" ~ "rds", 
+    fext == "rda" && ext == "rds" ~ "rda",
+    fext == "txt" && ext == "csv" ~ "txt",
+    fext == "tsv" && ext == "csv" ~ "tsv",
+    TRUE ~ ext
+  )
 
   ## objname is used as the name of the data.frame, make case insensitive
-  objname <- sub(paste0(".", ext, "$"), "", filename, ignore.case = TRUE)
+  objname <- sub(glue('\\.{ext}$'), "", filename, ignore.case = TRUE)
 
   ## if ext isn't in the filename nothing was replaced and so ...
   if (objname == filename) {
@@ -127,8 +130,7 @@ load_user_data <- function(
     if (!"feather" %in% rownames(utils::installed.packages())) {
       upload_error_handler(objname, "#### The feather package is not installed. Please use install.packages('feather')")
     } else {
-      robj <- feather::read_feather(uFile) %>%
-        set_attr("description", feather::feather_metadata(uFile)$description)
+      robj <- feather::read_feather(uFile) # %>% set_attr("description", feather::feather_metadata(uFile)$description)
       if (is(robj, "try-error")) {
         upload_error_handler(objname, "#### There was an error loading the data. Please make sure the data are in feather format.")
       } else {
@@ -165,7 +167,7 @@ load_user_data <- function(
     shiny::makeReactiveBinding(objname, env = r_data)
   }
 
-  r_info[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
+  r_info[[glue('{objname}_descr')]] <- attr(r_data[[objname]], "description")
   if (!is_empty(cmd)) {
     cn <- colnames(r_data[[objname]])
     fn <- radiant.data::fix_names(cn)
@@ -173,9 +175,8 @@ load_user_data <- function(
       colnames(r_data[[objname]]) <- fn
       cmd <- paste0(cmd, " %>%\n  fix_names()")
     }
-    # cmd <- paste0(cmd, "\nregister(\"", objname, "\")")
     cmd <- glue('{cmd}\nregister("{objname}")')
   }
-  r_info[[paste0(objname, "_lcmd")]] <- cmd
+  r_info[[glue('{objname}_lcmd')]] <- cmd
   r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
 }

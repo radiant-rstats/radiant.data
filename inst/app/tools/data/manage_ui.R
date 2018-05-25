@@ -71,7 +71,6 @@ output$ui_clipboard_load <- renderUI({
 })
 
 output$ui_clipboard_save <- renderUI({
-  # if (isTRUE(getOption("radiant.local"))) {
   if (Sys.info()["sysname"] != "Linux") {
     actionButton("man_save_clip", "Copy data", icon = icon("copy"))
   } else {
@@ -373,10 +372,9 @@ if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
 man_save_data <- function(file) {
   ext <- input$saveAs
   robj <- input$dataset
-  # pp <- suppressMessages(radiant.data::parse_path(file), chr = "\"")
   pp <- suppressMessages(
     radiant.data::parse_path(
-      uFile, 
+      file, 
       pdir = getOption("radiant.project_dir", ""), 
       chr = "\""
     )
@@ -396,7 +394,7 @@ man_save_data <- function(file) {
       ## temporary workaround until PR goes through https://stackoverflow.com/a/47898172/1974918
       # feather::write_feather(tmp[[robj]], file)
       # radiant.data::write_feather(tmp[[robj]], file, description = attr(tmp[[robj]], "description"))
-      radiant.data::write_feather(r_data[[robj]], file)
+      feather::write_feather(r_data[[robj]], file)
       r_info[[paste0(robj, "_scmd")]] <- glue('feather::write_feather({robj}, path = {pp$rpath})')
     } else {
       save(list = robj, file = file, envir = r_data)
