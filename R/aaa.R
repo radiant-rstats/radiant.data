@@ -16,7 +16,7 @@ globalVariables(
 #' @importFrom rmarkdown render html_dependency_bootstrap pdf_document html_document word_document
 #' @importFrom magrittr %<>% %T>% %$% set_rownames set_colnames set_names divide_by add extract2
 #' @importFrom lubridate is.Date is.POSIXt now year month wday week hour minute second ymd mdy dmy ymd_hms hms hm as.duration parse_date_time
-#' @importFrom tidyr gather spread separate
+#' @importFrom tidyr gather spread separate extract
 #' @importFrom gridExtra grid.arrange
 #' @importFrom shinyAce aceEditor updateAceEditor
 #' @importFrom readr read_delim read_csv write_csv read_rds write_rds locale problems
@@ -46,7 +46,7 @@ glue_collapse <- function(...) glue::collapse(...)
 NULL
 
 #' Exporting glue_data from glue
-#' @details See \code{\link[glue]{glue_data}} in the \code{glue} package for more details
+#' @details See \code{\link[glue:glue]{glue::glue_data()}} in the \code{glue} package for more details
 #' @importFrom glue glue_data
 #' @name glue_data
 #' @rdname glue_data
