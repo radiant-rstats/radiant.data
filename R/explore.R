@@ -89,9 +89,13 @@ explore <- function(
       rm(rng)
     }
 
+    ## setup regular expression to split variable/function column appropriately
+    rex <- paste0("(.*?)_", glue('({glue::collapse(fun, "$|")}$)'))
+
     ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
     tab <- gather(tab, "variable", "value", !! -(1:length(byvar))) %>%
-      separate(variable, into = c("variable", "fun"), sep = "_", extra = "merge") %>%
+      # separate(variable, into = c("variable", "fun"), sep = "_", extra = "merge") %>%
+      extract(variable, into = c("variable", "fun"), regex = rex) %>%
       mutate(fun = factor(fun, levels = !! fun), variable = factor(variable, levels = vars)) %>%
       spread("fun", "value")
   }
