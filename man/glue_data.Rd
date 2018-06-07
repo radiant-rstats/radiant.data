@@ -7,5 +7,5 @@
 Exporting glue_data from glue
 }
 \details{
-See \code{\link[glue]{glue_data}} in the \code{glue} package for more details
+See \code{\link[glue:glue]{glue::glue_data()}} in the \code{glue} package for more details
 }

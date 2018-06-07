@@ -78,7 +78,7 @@ init_data <- function(env = r_data) {
         {gsub(paste0(".", tools::file_ext(.)), "", ., fixed = TRUE)}
     } else {
       df <- data(list = dn, package = "radiant.data", envir = environment()) %>% get()
-      r_info[[paste0(dn, "_lcmd")]] <- paste0(dn, " <- data(", dn, ", package = \"radiant.data\") %>% get()\nregister(\"", dn, "\")")
+      r_info[[paste0(dn, "_lcmd")]] <- glue::glue('{dn} <- data({dn}, package = "radiant.data") %>% get()\nregister("{dn}")')
     }
     env[[dn]] <- df
     if (!bindingIsActive(as.symbol(dn), env = env)) {

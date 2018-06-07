@@ -30,13 +30,14 @@ active2list <- function(env = r_data) {
 }
 
 ## deal with https://github.com/rstudio/shiny/issues/2065
-MRB <- function(x, init = FALSE, env = r_data) {
+MRB <- function(x, env = parent.frame(), init = FALSE) {
   if (exists(x, envir = env)) {
+    ## if the object exists and has a binding, don't do anything
     if (!bindingIsActive(as.symbol(x), env = env)) {
       shiny::makeReactiveBinding(x, env = env)
     }
   } else if (init) {
-    ## initialize a binding even if object doesn't exist yet
+    ## initialize a binding (and value) if object doesn't exist yet
     shiny::makeReactiveBinding(x, env = env)
   }
 }
