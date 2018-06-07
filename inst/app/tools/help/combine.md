@@ -922,12 +922,6 @@ The R(adiant) commands are the same as shown above, except you will need to repl
    <td style="text-align:left;"> DC </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> Batman </td>
-   <td style="text-align:left;"> good </td>
-   <td style="text-align:left;"> male </td>
-   <td style="text-align:left;"> DC </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> Mystique </td>
    <td style="text-align:left;"> bad </td>
    <td style="text-align:left;"> female </td>
@@ -944,6 +938,12 @@ The R(adiant) commands are the same as shown above, except you will need to repl
    <td style="text-align:left;"> bad </td>
    <td style="text-align:left;"> male </td>
    <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Batman </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> DC </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Captain America </td>
