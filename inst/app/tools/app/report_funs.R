@@ -116,11 +116,11 @@ setup_report <- function(
     if (save_type %in% c("PDF", "Word")) {
       yml <- ""
     } else if (save_type == "HTML") {
-      yml <- "---\ntitle: \"\"\noutput:\n  html_document:\n    highlight: textmate\n    theme: spacelab\n    df_print: paged\n    toc: yes\n---\n\n"
+      yml <- '---\noutput:\n  html_document:\n    highlight: textmate\n    theme: spacelab\n    df_print: paged\n    toc: yes\n---\n\n'
     } else if (save_type %in% c("Rmd", "Rmd + Data (zip)")) {
-      yml <- "---\ntitle: \"\"\noutput:\n  html_document:\n    highlight: textmate\n    theme: spacelab\n    df_print: paged\n    toc: yes\n    code_folding: hide\n    code_download: true\n---\n\n"
+      yml <- '---\noutput:\n  html_document:\n    highlight: textmate\n    theme: spacelab\n    df_print: paged\n    toc: yes\n    code_folding: hide\n    code_download: true\n---\n\n'
     } else {
-      yml <- "---\ntitle: \"\"\noutput:\n  html_notebook:\n    highlight: textmate\n    theme: spacelab\n    toc: yes\n    code_folding: hide\n---\n\n"
+      yml <- '---\noutput:\n  html_notebook:\n    highlight: textmate\n    theme: spacelab\n    toc: yes\n    code_folding: hide\n---\n\n'
     }
   } else {
     yml = ""
@@ -140,8 +140,8 @@ knitr::opts_chunk$set(
   echo = ", ech, ",
   error = TRUE,
   cache = FALSE,
-  message = FALSE,
-  dev = \"svg\",
+  message = FALSE,\n  ",
+  ifelse(save_type == "PDF", "dpi = 144,", "dev = \"svg\","), "
   warning = FALSE", sopts, "
 )
 
@@ -566,13 +566,19 @@ report_save_content <- function(file, type = "rmd") {
           if (isTRUE(rmarkdown::pandoc_available())) {
             ## have to use current dir so (relative) paths work properly
             tmp_fn <- tempfile(pattern = "report-", tmpdir = ".", fileext = ".Rmd")
-            cat(fix_smart(init), file = tmp_fn, sep = "\n")
-            out <- rmarkdown::render(tmp_fn, switch(save_type,
-              Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "hide"),
-              HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
-              PDF = rmarkdown::pdf_document(),
-              Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"), "app/www/style.docx"))
-            ), envir = r_data, quiet = TRUE)
+            cat(init, file = tmp_fn, sep = "\n")
+            out <- rmarkdown::render(
+              tmp_fn, 
+              switch(
+                save_type,
+                Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "hide"),
+                HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
+                PDF = rmarkdown::pdf_document(),
+                Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"), "app/www/style.docx"))
+              ), 
+              envir = r_data, quiet = TRUE, encoding = "UTF-8", 
+              output_options = list(pandoc_args = "--quiet")
+            )
             file.rename(out, file)
             file.remove(tmp_fn)
           } else {
