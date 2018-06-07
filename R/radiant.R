@@ -674,7 +674,9 @@ find_dropbox <- function(account = 1) {
   }
 
   os_type <- Sys.info()["sysname"]
-  if (os_type == "Windows") {
+  if (os_type == "Linux" && file.exists("~/Dropbox")) {
+    return(normalizePath("~/Dropbox", winslash = "/"))
+  } else if (os_type == "Windows") {
     fp <- file.path(Sys.getenv("APPDATA"), "Dropbox/info.json") %>% gsub("\\\\", "/", .)
     if (!file.exists(fp)) {
       fp <- file.path(Sys.getenv("LOCALAPPDATA"), "Dropbox/info.json") %>%
@@ -698,7 +700,16 @@ find_dropbox <- function(account = 1) {
     } else if (is.character(account) && !account %in% names(dbinfo)) {
       stop(paste0("Invalid account type. Choose ", paste0(names(dbinfo), collapse = " or ")))
     } else {
-      normalizePath(dbinfo[[account]]$path, winslash = "/")
+      dbp <- dbinfo[[account]]$path
+      if (file.exists(dbp)) {
+        normalizePath(dbp, winslash = "/")
+      } else if (file.exists("~/Dropbox")) {
+        normalizePath("~/Dropbox", winslash = "/")
+      } else if (file.exists("~/../Dropbox")) {
+        normalizePath("~/../Dropbox", winslash = "/")
+      } else {
+        stop("Failed to uncover the path to a Dropbox account")
+      }
     }
   } else if (file.exists("~/Dropbox")) {
     normalizePath("~/Dropbox", winslash = "/")
@@ -716,7 +727,9 @@ find_dropbox <- function(account = 1) {
 #' @export
 find_gdrive <- function() {
   os_type <- Sys.info()["sysname"]
-  if (os_type == "Windows") {
+  if (os_type == "Linux" && file.exists("~/Google Drive")) {
+    return(normalizePath("~/Google Drive", winslash = "/"))
+  } else if (os_type == "Windows") {
     fp <- file.path(Sys.getenv("LOCALAPPDATA"), "Google/Drive/sync_config.db") %>%
       gsub("\\\\", "/", .)
   } else if (os_type == "Darwin") {
@@ -744,11 +757,15 @@ find_gdrive <- function() {
     fp <- normalizePath(fp, winslash = "/")
     con <- DBI::dbConnect(RSQLite::SQLite(), fp)
     ret <- DBI::dbGetQuery(con, 'select data_value from data where entry_key = "local_sync_root_path"') %>%
-      as.character() %>%
-      normalizePath(winslash = "/")
+      unlist()
     DBI::dbDisconnect(con)
-    return(ret)
-  } else if (file.exists("~/Google Drive")) {
+
+    if (length(ret) > 0) {
+      return(normalizePath(ret, winslash = "/"))
+    }
+  } 
+
+  if (file.exists("~/Google Drive")) {
     normalizePath("~/Google Drive", winslash = "/")
   } else if (file.exists("~/../Google Drive")) {
     normalizePath("~/../Google Drive", winslash = "/")
