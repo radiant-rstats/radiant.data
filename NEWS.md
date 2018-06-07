@@ -1,3 +1,9 @@
+# radiant.data 0.9.4.7
+
+* Fix for `radiant.data::explore` when variable names contain an underscore 
+* Fix for `find_gdrive` when drive is not being synched
+* Fixes in _Report > Rmd_ and _Report > R_ to accomodate for pandoc > 2 
+
 # radiant.data 0.9.4.6
 
 * Don't update a reactive binding for an object if the binding already exists. See issue  https://github.com/rstudio/shiny/issues/2065
