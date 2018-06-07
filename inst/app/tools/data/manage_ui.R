@@ -774,17 +774,16 @@ observeEvent(input$renameButton, {
   r_info[[paste0(input$data_rename, "_descr")]] <- r_info[[paste0(input$dataset, "_descr")]]
   r_info[[paste0(input$dataset, "_descr")]] <- NULL
   lcmd <- r_info[[paste0(input$dataset, "_lcmd")]] %>%
-    sub(paste0("^", input$dataset, " <- "), paste0(input$data_rename, " <- "), .) %>%
+    sub(glue('^{input$dataset} <- '), glue('{input$data_rename} <- '), .) %>%
     sub(
-      paste0("register\\(\"", input$dataset, "\"\\)"), 
-      paste0("register\\(\"", input$data_rename, "\"\\)"),
+      glue('register\\("{input$dataset}"\\)'), 
+      glue('register\\("{input$data_rename}"\\)'), 
       .
     )
   r_info[[paste0(input$data_rename, "_lcmd")]] <- lcmd
   r_info[[paste0(input$dataset, "_lcmd")]] <- NULL
   scmd <- r_info[[paste0(input$dataset, "_scmd")]] %>%
-    sub(paste0("^", input$dataset, " <- "), input$data_rename, .) %>%
-    sub(paste0("^register\\(\"(", input$dataset, ")\"\\)"), input$data_rename, .)
+    sub(input$dataset, input$data_rename, .)
   r_info[[paste0(input$data_rename, "_scmd")]] <- scmd
   r_info[[paste0(input$dataset, "_scmd")]] <- NULL
   ind <- which(input$dataset == r_info[["datasetlist"]])
