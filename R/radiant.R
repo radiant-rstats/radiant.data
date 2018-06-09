@@ -195,7 +195,7 @@ sshhr <- function(...) suppressWarnings(suppressMessages(...))
 #' @param rows Select rows in the specified dataset
 #' @param na.rm Remove rows with missing values (default is TRUE)
 #' @return Data.frame with specified columns and rows
-#' @examples 
+#' @examples
 #' get_data(mtcars, vars = "cyl:vs", filt = "mpg > 25")
 #' get_data(mtcars , vars = c("mpg", "cyl"), rows = 1:10)
 #'
@@ -224,7 +224,7 @@ get_data <- function(
 }
 
 #' Convert characters to factors
-#' @details Convert columns of type character to factors based on a set of rules. By default columns will be converted for small datasets (<= 100 rows) with more rows than unique values. For larger datasets, columns are converted only when the number of unique values is <= 100 and there are 30 or more rows in the data for every unique value   
+#' @details Convert columns of type character to factors based on a set of rules. By default columns will be converted for small datasets (<= 100 rows) with more rows than unique values. For larger datasets, columns are converted only when the number of unique values is <= 100 and there are 30 or more rows in the data for every unique value
 #' @param dataset Data frame
 #' @param safx Ratio of number of rows to number of unique values
 #' @param nuniq Cutoff for number of unique values
@@ -763,7 +763,7 @@ find_gdrive <- function() {
     if (length(ret) > 0) {
       return(normalizePath(ret, winslash = "/"))
     }
-  } 
+  }
 
   if (file.exists("~/Google Drive")) {
     normalizePath("~/Google Drive", winslash = "/")
@@ -988,7 +988,15 @@ render.datatables <- function(object, ...) {
 #'
 #' @export
 ggplotly <- function(...) {
-  suppressMessages(plotly::ggplotly(...))
+  args <- list(...)
+  ## awaiting resolution of https://github.com/ropensci/plotly/issues/1171
+  # if (!"width" %in% names(args)) {
+  #   args$width <- knitr::opts_current$get('fig.width') * 96
+  # }
+  # if (!"height" %in% names(args)) {
+  #   args$height <- knitr::opts_current$get('fig.height') * 96
+  # }
+  suppressMessages(do.call(plotly::ggplotly, args))
 }
 
 #' Work around to avoid (harmless) messages from subplot
@@ -1001,6 +1009,7 @@ ggplotly <- function(...) {
 #'
 #' @export
 subplot <- function(..., margin = 0.04) {
+  ## awaiting resolution of https://github.com/ropensci/plotly/issues/1171
   suppressMessages(plotly::subplot(..., margin = margin))
 }
 
@@ -1056,7 +1065,7 @@ render.character <- function(object, ...) {
 render.shiny.render.function <- function(object, ...) object
 
 #' Show dataset description
-#' 
+#'
 #' @details Show dataset description, if available, in html form in Rstudio viewer or the default browser. The description should be in markdown format, attached to a data.frame as an attribute with the name "description"
 #'
 #' @param dataset Dataset with "description" attribute
@@ -1256,7 +1265,7 @@ parse_path <- function(
   list(path = path, rpath = rpath, filename = filename, fext = fext, objname = objname)
 }
 
-#' Generate code to read a file 
+#' Generate code to read a file
 #' @details Return code to read a file at the specified path. Will open a file browser if no path is provided
 #' @param path Path to file. If empty, a file browser will be opened
 #' @param type Generate code for _Report > Rmd_ ("rmd") or _Report > R_ ("r")
