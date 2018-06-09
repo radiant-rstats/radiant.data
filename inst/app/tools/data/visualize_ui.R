@@ -438,7 +438,7 @@ observeEvent(input$visualize_report, {
     vi$smooth <- viz_args$smooth
   }
   if (!input$viz_type %in% c("scatter", "box") && "jitter" %in% input$viz_check) {
-    vi$check <- setdiff(vi$check, "jitter")
+    vi$check <- base::setdiff(vi$check, "jitter")
   }
   if (input$viz_type != "scatter") {
     vi$size <- "none"

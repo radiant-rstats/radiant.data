@@ -34,7 +34,7 @@ pivotr <- function(
   dataset <- get_data(dataset, vars, filt = data_filter, na.rm = FALSE)
 
   ## in case : was used for cvars
-  cvars <- setdiff(colnames(dataset), nvar)
+  cvars <- base::setdiff(colnames(dataset), nvar)
 
   if (nvar == "None") {
     nvar <- "n_obs"
@@ -445,7 +445,7 @@ plot.pivotr <- function(
       set_names(cvars[1])
 
     p <- tab %>%
-      gather(!! cvars[1], !! nvar, !! setdiff(colnames(.), cvars[2])) %>%
+      gather(!! cvars[1], !! nvar, !! base::setdiff(colnames(.), cvars[2])) %>%
       na.omit() %>%
       mutate(!!! dots) %>%
       ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
@@ -459,7 +459,7 @@ plot.pivotr <- function(
       set_names(cvars[1])
 
     p <- tab %>%
-      gather(!! cvars[1], !! nvar, !! setdiff(colnames(.), cvars[2:3])) %>%
+      gather(!! cvars[1], !! nvar, !! base::setdiff(colnames(.), cvars[2:3])) %>%
       na.omit() %>%
       mutate(!!! dots) %>%
       ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +

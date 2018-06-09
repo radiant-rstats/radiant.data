@@ -90,7 +90,7 @@ output$ui_pvt_nvar <- renderUI({
   vars <- c("None", varnames()[isNum])
 
   if (any(vars %in% input$pvt_cvars)) {
-    vars <- setdiff(vars, input$pvt_cvars)
+    vars <- base::setdiff(vars, input$pvt_cvars)
     names(vars) <- varnames() %>%
       {.[which(. %in% vars)]} %>%
       {c("None", names(.))}

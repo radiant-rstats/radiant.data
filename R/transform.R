@@ -546,7 +546,7 @@ table2data <- function(dataset, freq = tail(colnames(dataset), 1)) {
 
   lapply(seq_len(nrow(dataset)), blowup) %>%
     bind_rows() %>%
-    select_at(.vars = setdiff(colnames(dataset), freq)) %>%
+    select_at(.vars = base::setdiff(colnames(dataset), freq)) %>%
     mutate_all(funs(as.factor))
 }
 
@@ -639,7 +639,7 @@ refactor <- function(x, levs = levels(x), repl = NA) {
 
   if (length(levs) > 0 && length(lv) > length(levs)) {
     if (!is_empty(repl)) levs <- unique(c(repl, levs))
-    x <- as_character(x) %>% ifelse(. %in% setdiff(lv, levs), repl, .)
+    x <- as_character(x) %>% ifelse(. %in% base::setdiff(lv, levs), repl, .)
   }
 
   factor(x, levels = levs)

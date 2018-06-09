@@ -36,19 +36,19 @@ explore <- function(
   rm(tvars)
 
   ## in case : was used
-  vars <- setdiff(colnames(dataset), byvar)
+  vars <- base::setdiff(colnames(dataset), byvar)
 
   ## converting factors for integer (1st level)
   ## see also R/visualize.R
   dc <- get_class(dataset)
-  isFctNum <- "factor" == dc & names(dc) %in% setdiff(vars, byvar)
+  isFctNum <- "factor" == dc & names(dc) %in% base::setdiff(vars, byvar)
   if (sum(isFctNum)) {
     dataset[, isFctNum] <- select(dataset, which(isFctNum)) %>%
       mutate_all(funs(as.integer(. == levels(.)[1])))
     dc[isFctNum] <- "integer"
   }
 
-  isLogNum <- "logical" == dc & names(dc) %in% setdiff(vars, byvar)
+  isLogNum <- "logical" == dc & names(dc) %in% base::setdiff(vars, byvar)
   if (sum(isLogNum)) {
     dataset[, isLogNum] <- select(dataset, which(isLogNum)) %>%
       mutate_all(funs(as.integer))

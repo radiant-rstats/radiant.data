@@ -227,7 +227,7 @@ if (isTRUE(getOption("radiant.local", FALSE))) {
   } else if ((max(ind) - min(ind) + 1) == length(vars)) {
     vars <- paste0(cn[min(ind)], ":", cn[max(ind)])
   } else if (length(vars) > (length(cn) / 2)) {
-    vars <- paste0("-", setdiff(cn, vars), collapse = ", ")
+    vars <- paste0("-", base::setdiff(cn, vars), collapse = ", ")
   } else {
     vars <- paste0(vars, collapse = ", ")
   }

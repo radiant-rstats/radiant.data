@@ -50,7 +50,7 @@ output$ui_expl_byvar <- renderUI({
   req(available(vars))
 
   if (any(vars %in% input$expl_vars)) {
-    vars <- setdiff(vars, input$expl_vars)
+    vars <- base::setdiff(vars, input$expl_vars)
     names(vars) <- varnames() %>%
       {.[match(vars, .)]} %>%
       names()
