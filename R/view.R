@@ -38,7 +38,7 @@ dtab <- function(object, ...) UseMethod("dtab", object)
 dtab.data.frame <- function(
   object, vars = "", filt = "", rows = NULL,
   nr = NULL, na.rm = FALSE, dec = 3, perc = "",
-  filter = "top", pageLength = 10, dom = "", 
+  filter = "top", pageLength = 10, dom = "",
   style = "bootstrap", rownames = FALSE, ...
 ) {
 
@@ -151,7 +151,7 @@ filter_data <- function(dataset, filt = "", drop = TRUE) {
 #' @export
 search_data <- function(dataset, pattern, ignore.case = TRUE, fixed = FALSE) {
   mutate_all(
-    dataset, 
+    dataset,
     funs(grepl(pattern, as.character(.), ignore.case = ignore.case, fixed = fixed))
   ) %>%
     transmute(sel = rowSums(.) > 0) %>%
@@ -168,7 +168,7 @@ search_data <- function(dataset, pattern, ignore.case = TRUE, fixed = FALSE) {
 #' @param rows Select rows in the specified dataset
 #' @param na.rm Remove rows with missing values (default is FALSE)
 #' @param dec Number of decimals to show
-#' @seealso See \code{\link{get_data}} and \code{\link{filter_data}} 
+#' @seealso See \code{\link{get_data}} and \code{\link{filter_data}}
 #' @examples
 #' \dontrun{
 #' view_data(mtcars)
