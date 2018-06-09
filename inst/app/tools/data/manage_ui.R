@@ -138,7 +138,7 @@ observeEvent(input$to_global_save, {
   req(df)
   assign(df, r_data[[df]], envir = .GlobalEnv)
   if (input$to_global_move == "move" && length(r_info[["datasetlist"]]) > 1) {
-    r_info[["datasetlist"]] %<>% setdiff(df)
+    r_info[["datasetlist"]] %<>% base::setdiff(df)
     r_info[[paste0(df, "_descr")]] <- NULL
     r_info[[paste0(df, "_lcmd")]] <- NULL
     r_info[[paste0(df, "_scmd")]] <- NULL

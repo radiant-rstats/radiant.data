@@ -472,7 +472,7 @@ observeEvent(input$tr_change_type, {
 
     ## in case the create command tries to over-write the group-by variable ...
     if (any(byvar %in% vars)) {
-      byvar <- setdiff(byvar, vars)
+      byvar <- base::setdiff(byvar, vars)
       updateSelectInput(session = session, inputId = "tr_vars", selected = character(0))
     }
 
@@ -596,12 +596,12 @@ observeEvent(input$tr_change_type, {
 ) {
 
   if (!store && !is.character(dataset)) {
-    if (is_empty(vars)) vars <- setdiff(colnames(dataset), freq)
+    if (is_empty(vars)) vars <- base::setdiff(colnames(dataset), freq)
     select_at(dataset, .vars = unique(c(vars, freq))) %>%
       table2data(freq)
   } else {
     if (store_dat == "") store_dat <- dataset
-    if (is_empty(vars)) vars <- setdiff(colnames(r_data[[dataset]]), freq)
+    if (is_empty(vars)) vars <- base::setdiff(colnames(r_data[[dataset]]), freq)
     vars <- unique(c(vars, freq))
     paste0("## Create data from a table\n", store_dat, " <- select(", dataset, ", ", paste0(vars, collapse = ", "), ") %>%\n  table2data(\"", freq, "\")\n")
   }
@@ -628,7 +628,7 @@ observeEvent(input$tr_change_type, {
     if (!vars[1] == "") dataset <- select_at(dataset, .vars = vars)
     cn <- colnames(dataset)
     if (!all(key %in% cn) || !value %in% cn) return("Key or value variable is not in the dataset")
-    nr <- distinct_(dataset, .dots = setdiff(cn, value), .keep_all = TRUE) %>%
+    nr <- distinct_(dataset, .dots = base::setdiff(cn, value), .keep_all = TRUE) %>%
       nrow()
     if (nr < nrow(dataset)) return("Rows are not unique. Select additional variables")
     if (length(key) > 1) {
