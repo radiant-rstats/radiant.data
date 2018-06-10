@@ -6,6 +6,39 @@ template:
       api_key: 311c7eff313b1f67999e5838086df74e
       index_name: radiant_data
 
+navbar:
+  title: "radiant.data"
+  left:
+    - icon: fa-home fa-lg
+      href: index.html
+    - text: "Reference"
+      href: reference/index.html
+    - text: "Articles"
+      href: articles/index.html
+    - text: "Changelog"
+      href: news/index.html
+    - text: "Other Packages"
+      menu:
+        - text: "radiant"
+          href: https://radiant-rstats.github.io/radiant/
+        - text: "radiant.data"
+          href: https://radiant-rstats.github.io/radiant.data/
+        - text: "radiant.design"
+          href: https://radiant-rstats.github.io/radiant.design/
+        - text: "radiant.basics"
+          href: https://radiant-rstats.github.io/radiant.basics/
+        - text: "radiant.model"
+          href: https://radiant-rstats.github.io/radiant.model/
+        - text: "radiant.multivariate"
+          href: https://radiant-rstats.github.io/radiant.multivariate/
+        - text: "docker"
+          href: https://github.com/radiant-rstats/docker
+  right:
+   - icon: fa-twitter fa-lg
+     href: https://twitter.com/vrnijs
+   - icon: fa-github fa-lg
+     href: https://github.com/radiant-rstats
+
 reference:
 - title: Data > Manage
   desc: Functions used with Data > Manage
@@ -186,6 +219,8 @@ reference:
     - store.explore
 articles:
 - title: Data Menu
+  desc: >
+    These vignettes provide an introduction to the Data menu in radiant
   contents:
     - pkgdown/manage
     - pkgdown/view
