@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.7</span>
       </span>
     </div>
 
@@ -46,52 +46,52 @@
 <li>
   <a href="../../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../../articles/index.html">Articles</a>
+</li>
+<li>
+  <a href="../../news/index.html">Changelog</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Other Packages
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../../articles/pkgdown/combine.html">Combine data sets (Data &gt; Combine)</a>
+      <a href="https://radiant-rstats.github.io/radiant/">radiant</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/explore.html">Summarize and explore your data (Data &gt; Explore)</a>
+      <a href="https://radiant-rstats.github.io/radiant.data/">radiant.data</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/manage.html">Loading and Saving data (Data &gt; Manage)</a>
+      <a href="https://radiant-rstats.github.io/radiant.design/">radiant.design</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/pivotr.html">Create pivot tables (Data &gt; Pivot)</a>
+      <a href="https://radiant-rstats.github.io/radiant.basics/">radiant.basics</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/report_r.html">Create a reproducible report using R (Report &gt; R)</a>
+      <a href="https://radiant-rstats.github.io/radiant.model/">radiant.model</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/report_rmd.html">Create a reproducible report using Rmarkdown (Report &gt; Rmd)</a>
+      <a href="https://radiant-rstats.github.io/radiant.multivariate/">radiant.multivariate</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/state.html">Loading and Saving the State of the application</a>
-    </li>
-    <li>
-      <a href="../../articles/pkgdown/transform.html">Transform variables (Data &gt; Transform)</a>
-    </li>
-    <li>
-      <a href="../../articles/pkgdown/view.html">View data in an interactive table (Data &gt; View)</a>
-    </li>
-    <li>
-      <a href="../../articles/pkgdown/visualize.html">Visualize data (Data &gt; Visualize)</a>
+      <a href="https://github.com/radiant-rstats/docker">docker</a>
     </li>
   </ul>
-</li>
-<li>
-  <a href="../../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/radiant-rstats/radiant.data">
+  <a href="https://twitter.com/vrnijs">
+    <span class="fa fa-twitter fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/radiant-rstats">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -132,13 +132,13 @@
 <h3 class="hasAnchor">
 <a href="#transform-command-log" class="anchor"></a>Transform command log</h3>
 <p>All transformations applied in the <em>Data &gt; Transform</em> tab can be logged. If, for example, you apply a <code>Ln (natural log)</code> transformation to numeric variables the following code is generated and put in the <code>Transform command log</code> window at the bottom of your screen when you click the <code>Store</code> button.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## transform variable
-diamonds &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mutate_ext.html">mutate_ext</a></span>(
-  diamonds, 
-  <span class="dt">.vars =</span> <span class="kw">vars</span>(price, carat), 
-  <span class="dt">.funs =</span> <span class="kw">funs</span>(log), 
-  <span class="dt">.ext =</span> <span class="st">"_ln"</span>
-)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">## transform variable</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">diamonds &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mutate_ext.html">mutate_ext</a></span>(</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">  diamonds, </a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">  <span class="dt">.vars =</span> <span class="kw">vars</span>(price, carat), </a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">  <span class="dt">.funs =</span> <span class="kw">funs</span>(log), </a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">  <span class="dt">.ext =</span> <span class="st">"_ln"</span></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">)</a></code></pre></div>
 <p>This is an important feature if you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to transform the data and to generate results, i.e., your work is now reproducible.</p>
 <p>To add commands contained in the command log window to a report in <a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank"><em>Report &gt; Rmd</em></a> click the <i title="report results" class="fa fa-edit"></i> icon.</p>
 </div>
@@ -193,30 +193,30 @@ diamonds &lt;-<span class="st"> </span><span class="kw"><a href="../../reference
 <li>Set values below 20 to <code>Low</code> and all others to <code>High</code>
 </li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lo<span class="op">:</span><span class="dv">20</span> =<span class="st"> 'Low'</span>; <span class="cf">else</span> =<span class="st"> 'High'</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">lo<span class="op">:</span><span class="dv">20</span> =<span class="st"> 'Low'</span>; <span class="cf">else</span> =<span class="st"> 'High'</span></a></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Set above 20 to <code>High</code> and all others to <code>Low</code>
 </li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">20</span><span class="op">:</span>hi =<span class="st"> 'High'</span>; <span class="cf">else</span> =<span class="st"> 'Low'</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="dv">20</span><span class="op">:</span>hi =<span class="st"> 'High'</span>; <span class="cf">else</span> =<span class="st"> 'Low'</span></a></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Set values 1 through 12 to <code>A</code>, 13:24 to <code>B</code>, and the remainder to <code>C</code>
 </li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">1</span><span class="op">:</span><span class="dv">12</span> =<span class="st"> 'A'</span>; <span class="dv">13</span><span class="op">:</span><span class="dv">24</span> =<span class="st"> 'B'</span>; <span class="cf">else</span> =<span class="st"> 'C'</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="dv">1</span><span class="op">:</span><span class="dv">12</span> =<span class="st"> 'A'</span>; <span class="dv">13</span><span class="op">:</span><span class="dv">24</span> =<span class="st"> 'B'</span>; <span class="cf">else</span> =<span class="st"> 'C'</span></a></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Collapse age categories for a <a href="https://radiant-rstats.github.io/docs/basics/cross_tabs.html" target="_blank"><em>Basics &gt; Tables &gt; Cross-tabs</em></a> cross-tab analysis. In the example below <code>&lt;25</code> and <code>25-34</code> are recoded to <code>&lt;35</code>, <code>35-44</code> and <code>35-44</code> are recoded to <code>35-54</code>, and <code>55-64</code> and <code>&gt;64</code> are recoded to <code>&gt;54</code>
 </li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="st">'&lt;25'</span> =<span class="st"> '&lt;35'</span>; <span class="st">'25-34'</span> =<span class="st"> '&lt;35'</span>; <span class="st">'35-44'</span> =<span class="st"> '35-54'</span>; <span class="st">'45-54'</span> =<span class="st"> '35-54'</span>; <span class="st">'55-64'</span> =<span class="st"> '&gt;54'</span>; <span class="st">'&gt;64'</span> =<span class="st"> '&gt;54'</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="st">'&lt;25'</span> =<span class="st"> '&lt;35'</span>; <span class="st">'25-34'</span> =<span class="st"> '&lt;35'</span>; <span class="st">'35-44'</span> =<span class="st"> '35-54'</span>; <span class="st">'45-54'</span> =<span class="st"> '35-54'</span>; <span class="st">'55-64'</span> =<span class="st"> '&gt;54'</span>; <span class="st">'&gt;64'</span> =<span class="st"> '&gt;54'</span></a></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>To exclude a particular value (e.g., an outlier in the data) for subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we would (1) select the variable <code>sales</code> in the <code>Select variable(s)</code> box and enter the command below in the <code>Recode</code> box. Press <code>return</code> and <code>Store</code> to add the recoded variable to the data</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">400</span> =<span class="st"> </span><span class="ot">NA</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="dv">400</span> =<span class="st"> </span><span class="ot">NA</span></a></code></pre></div>
 <ol start="5" style="list-style-type: decimal">
 <li>To recode specific numeric values (e.g., carat) to a new value (1) select the variable <code>carat</code> in the <code>Select variable(s)</code> box and enter the command below in the <code>Recode</code> box to set the value for carat to 2 in all rows where carat is currently larger than or equal to 2. Press <code>return</code> and <code>Store</code> to add the recoded variable to the data</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">2</span><span class="op">:</span>hi =<span class="st"> </span><span class="dv">2</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="dv">2</span><span class="op">:</span>hi =<span class="st"> </span><span class="dv">2</span></a></code></pre></div>
 <p><strong>Note:</strong> Do not use <code>=</code> in a variable label when using the recode function (e.g., <code>50:hi = '&gt;= 50'</code>) as this will cause an error.</p>
 </div>
 <div id="reorder-or-remove-levels" class="section level4">
@@ -271,80 +271,80 @@ diamonds &lt;-<span class="st"> </span><span class="kw"><a href="../../reference
 <li>Create a new variable <code>z</code> that is equal to the mean of price. To calculate the mean of price per group (e.g., per level of clarity) select <code>clarity</code> from the <code>Select variables</code> list before creating <code>z</code>
 </li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z =<span class="st"> </span><span class="kw">mean</span>(price)</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">z =<span class="st"> </span><span class="kw">mean</span>(price)</a></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Create a new variable <code>z</code> that is the difference between variables x and y</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z =<span class="st"> </span>x <span class="op">-</span><span class="st"> </span>y</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">z =<span class="st"> </span>x <span class="op">-</span><span class="st"> </span>y</a></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Create a new variable <code>z</code> that is a transformation of variable <code>x</code> with mean equal to zero (see also <code>Transform &gt; Center</code>):</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z =<span class="st"> </span>x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">z =<span class="st"> </span>x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x)</a></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Create a new _logical) variable <code>z</code> that takes on the value TRUE when <code>x &gt; y</code> and FALSE otherwise</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z =<span class="st"> </span>x <span class="op">&gt;</span><span class="st"> </span>y</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">z =<span class="st"> </span>x <span class="op">&gt;</span><span class="st"> </span>y</a></code></pre></div>
 <ol start="5" style="list-style-type: decimal">
 <li>Create a new <em>logical</em> <code>z</code> that takes on the value TRUE when <code>x</code> is equal to <code>y</code> and FALSE otherwise</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z =<span class="st"> </span>x <span class="op">==</span><span class="st"> </span>y</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">z =<span class="st"> </span>x <span class="op">==</span><span class="st"> </span>y</a></code></pre></div>
 <ol start="6" style="list-style-type: decimal">
 <li>Create a variable <code>z</code> that is equal to <code>x</code> lagged by 3 periods</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z =<span class="st"> </span><span class="kw">lag</span>(x,<span class="dv">3</span>)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">z =<span class="st"> </span><span class="kw">lag</span>(x,<span class="dv">3</span>)</a></code></pre></div>
 <ol start="7" style="list-style-type: decimal">
 <li>Create a categorical variable with two levels (i.e., <code>smaller</code> and <code>bigger</code>)</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z =<span class="st"> </span><span class="kw">ifelse</span>(x <span class="op">&lt;</span><span class="st"> </span>y, <span class="st">'smaller'</span>, <span class="st">'bigger'</span>)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">z =<span class="st"> </span><span class="kw">ifelse</span>(x <span class="op">&lt;</span><span class="st"> </span>y, <span class="st">'smaller'</span>, <span class="st">'bigger'</span>)</a></code></pre></div>
 <ol start="8" style="list-style-type: decimal">
 <li>Create a categorical variable with three levels. An alternative approach would be to use the <code>Recode</code> function described below</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z =<span class="st"> </span><span class="kw">ifelse</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">60</span>, <span class="st">'&lt; 60'</span>, <span class="kw">ifelse</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">65</span>, <span class="st">'&gt; 65'</span>, <span class="st">'60-65'</span>))</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">z =<span class="st"> </span><span class="kw">ifelse</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">60</span>, <span class="st">'&lt; 60'</span>, <span class="kw">ifelse</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">65</span>, <span class="st">'&gt; 65'</span>, <span class="st">'60-65'</span>))</a></code></pre></div>
 <ol start="9" style="list-style-type: decimal">
 <li>Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we could use an <code>ifelse</code> statement and enter the command below in the <code>Create</code> box. Press <code>return</code> and <code>Store</code> to add the <code>sales_rc</code> to the data. Note that if we had entered <code>sales</code> on the left-hand side of the <code>=</code> sign the original variable would have been overwritten</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sales_rc =<span class="st"> </span><span class="kw">ifelse</span>(sales <span class="op">&gt;</span><span class="st"> </span><span class="dv">400</span>, <span class="ot">NA</span>, sales)</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">sales_rc =<span class="st"> </span><span class="kw">ifelse</span>(sales <span class="op">&gt;</span><span class="st"> </span><span class="dv">400</span>, <span class="ot">NA</span>, sales)</a></code></pre></div>
 <ol start="10" style="list-style-type: decimal">
 <li>If a respondent with ID 3 provided information on the wrong scale in a survey (e.g., income in $1s rather than in $1000s) we could use an <code>ifelse</code> statement and enter the command below in the <code>Create</code> box. As before, press <code>return</code> and <code>Store</code> to add <code>sales_rc</code> to the data</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">income_rc =<span class="st"> </span><span class="kw">ifelse</span>(ID <span class="op">==</span><span class="st"> </span><span class="dv">3</span>, income<span class="op">/</span><span class="dv">1000</span>, income)</code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">income_rc =<span class="st"> </span><span class="kw">ifelse</span>(ID <span class="op">==</span><span class="st"> </span><span class="dv">3</span>, income<span class="op">/</span><span class="dv">1000</span>, income)</a></code></pre></div>
 <ol start="11" style="list-style-type: decimal">
 <li>If multiple respondents made the same scaling mistake (e.g., those with ID 1, 3, and 15) we again use <code>Create</code> and enter:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">income_rc =<span class="st"> </span><span class="kw">ifelse</span>(ID <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">15</span>), income<span class="op">/</span><span class="dv">1000</span>, income)</code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">income_rc =<span class="st"> </span><span class="kw">ifelse</span>(ID <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">15</span>), income<span class="op">/</span><span class="dv">1000</span>, income)</a></code></pre></div>
 <ol start="12" style="list-style-type: decimal">
 <li>If a date variable is in a format not available through the <code>Type</code> menu you can use the <code>parse_date_time</code> function. For a date formatted as <code>2-1-14</code> you would specify the command below (note that this format will also be parsed correctly by the <code>mdy</code> function in the <code>Type</code> menu)</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">date =<span class="st"> </span><span class="kw">parse_date_time</span>(x, <span class="st">'%m%d%y'</span>)</code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">date =<span class="st"> </span><span class="kw">parse_date_time</span>(x, <span class="st">'%m%d%y'</span>)</a></code></pre></div>
 <ol start="13" style="list-style-type: decimal">
 <li>Determine the time difference between two dates/times in seconds</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tdiff =<span class="st"> </span><span class="kw"><a href="../../reference/as_duration.html">as_duration</a></span>(time2 <span class="op">-</span><span class="st"> </span>time1)</code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">tdiff =<span class="st"> </span><span class="kw"><a href="../../reference/as_duration.html">as_duration</a></span>(time2 <span class="op">-</span><span class="st"> </span>time1)</a></code></pre></div>
 <ol start="14" style="list-style-type: decimal">
 <li>Extract the month from a date variable</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m =<span class="st"> </span><span class="kw"><a href="../../reference/month.html">month</a></span>(date)</code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">m =<span class="st"> </span><span class="kw"><a href="../../reference/month.html">month</a></span>(date)</a></code></pre></div>
 <ol start="15" style="list-style-type: decimal">
 <li>Other attributes that can be extracted from a date or date-time variable are <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, <code>quarter</code>, <code>year</code>, <code>wday</code> (for weekday). For <code>wday</code> and <code>month</code> it can be convenient to add <code>label = TRUE</code> to the call. For example, to extract the weekday from a date variable and use a label rather than a number</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wd =<span class="st"> </span><span class="kw"><a href="../../reference/wday.html">wday</a></span>(date, <span class="dt">label =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">wd =<span class="st"> </span><span class="kw"><a href="../../reference/wday.html">wday</a></span>(date, <span class="dt">label =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <ol start="16" style="list-style-type: decimal">
 <li>Calculate the distance between two locations using lat-long information</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dist =<span class="st"> </span><span class="kw"><a href="../../reference/as_distance.html">as_distance</a></span>(lat1, long1, lat2, long2)</code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">dist =<span class="st"> </span><span class="kw"><a href="../../reference/as_distance.html">as_distance</a></span>(lat1, long1, lat2, long2)</a></code></pre></div>
 <ol start="17" style="list-style-type: decimal">
 <li>Calculate quintiles for a variable <code>recency</code> by using the <code>xtile</code> command. To create deciles replace <code>5</code> by <code>10</code>.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rec_iq =<span class="st"> </span><span class="kw"><a href="../../reference/xtile.html">xtile</a></span>(recency, <span class="dv">5</span>)</code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">rec_iq =<span class="st"> </span><span class="kw"><a href="../../reference/xtile.html">xtile</a></span>(recency, <span class="dv">5</span>)</a></code></pre></div>
 <ol start="18" style="list-style-type: decimal">
 <li>To reverse the ordering of the quintiles created in 17 above use <code>rev = TRUE</code>
 </li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rec_iq =<span class="st"> </span><span class="kw"><a href="../../reference/xtile.html">xtile</a></span>(recency, <span class="dv">5</span>, <span class="dt">rev =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">rec_iq =<span class="st"> </span><span class="kw"><a href="../../reference/xtile.html">xtile</a></span>(recency, <span class="dv">5</span>, <span class="dt">rev =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <ol start="19" style="list-style-type: decimal">
-<li>To remove text from entries in a character or factor variable use <code>sub</code> to remove only the first instance or <code>gsub</code> to remove all instances. For example, suppose a each row for a variable <code>bk_score</code> has the letters “ltv” before a number (e.g., “ltv150”). We could replace each occurrence of “ltv” by “” as follows:</li>
+<li>To remove text from entries in a character or factor variable use <code>sub</code> to remove only the first instance or <code>gsub</code> to remove all instances. For example, suppose a each row for a variable <code>bk_score</code> has the letters “ltv” before a number (e.g., “ltv150”). We could replace each occurrence of “ltv” by "" as follows:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bk_score =<span class="st"> </span><span class="kw">sub</span>(<span class="st">"ltv"</span>, <span class="st">""</span>, bk_score)</code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">bk_score =<span class="st"> </span><span class="kw">sub</span>(<span class="st">"ltv"</span>, <span class="st">""</span>, bk_score)</a></code></pre></div>
 <p>Note: For examples 7, 8, and 15 above you may need to change the new variable to type <code>factor</code> before using it for further analysis (see also <code>Change type</code> above)</p>
 </div>
 </div>

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.7</span>
       </span>
     </div>
 
@@ -46,52 +46,52 @@
 <li>
   <a href="../../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../../articles/index.html">Articles</a>
+</li>
+<li>
+  <a href="../../news/index.html">Changelog</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Other Packages
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../../articles/pkgdown/combine.html">Combine data sets (Data &gt; Combine)</a>
+      <a href="https://radiant-rstats.github.io/radiant/">radiant</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/explore.html">Summarize and explore your data (Data &gt; Explore)</a>
+      <a href="https://radiant-rstats.github.io/radiant.data/">radiant.data</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/manage.html">Loading and Saving data (Data &gt; Manage)</a>
+      <a href="https://radiant-rstats.github.io/radiant.design/">radiant.design</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/pivotr.html">Create pivot tables (Data &gt; Pivot)</a>
+      <a href="https://radiant-rstats.github.io/radiant.basics/">radiant.basics</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/report_r.html">Create a reproducible report using R (Report &gt; R)</a>
+      <a href="https://radiant-rstats.github.io/radiant.model/">radiant.model</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/report_rmd.html">Create a reproducible report using Rmarkdown (Report &gt; Rmd)</a>
+      <a href="https://radiant-rstats.github.io/radiant.multivariate/">radiant.multivariate</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/state.html">Loading and Saving the State of the application</a>
-    </li>
-    <li>
-      <a href="../../articles/pkgdown/transform.html">Transform variables (Data &gt; Transform)</a>
-    </li>
-    <li>
-      <a href="../../articles/pkgdown/view.html">View data in an interactive table (Data &gt; View)</a>
-    </li>
-    <li>
-      <a href="../../articles/pkgdown/visualize.html">Visualize data (Data &gt; Visualize)</a>
+      <a href="https://github.com/radiant-rstats/docker">docker</a>
     </li>
   </ul>
-</li>
-<li>
-  <a href="../../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/radiant-rstats/radiant.data">
+  <a href="https://twitter.com/vrnijs">
+    <span class="fa fa-twitter fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/radiant-rstats">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -193,12 +193,12 @@
 <a href="#customizing-plots-in-report-rmd" class="anchor"></a>Customizing plots in <em>Report &gt; Rmd</em>
 </h3>
 <p>To customize a plot first generate the <code>visualize</code> command by clicking the report (<i title="Report results" class="fa fa-edit"></i>) icon on the bottom left of your screen or by pressing <code>ALT-enter</code> on your keyboard. The example below illustrates how to customize a command in the <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank"><em>Report &gt; Rmd</em></a> tab. Notice that <code>custom</code> is set to <code>TRUE</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../../reference/visualize.html">visualize</a></span>(diamonds, <span class="dt">yvar =</span> <span class="st">"price"</span>, <span class="dt">xvar =</span> <span class="st">"carat"</span>, <span class="dt">type =</span> <span class="st">"scatter"</span>, <span class="dt">custom =</span> <span class="ot">TRUE</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(
-    <span class="dt">title =</span> <span class="st">"A scatterplot"</span>, 
-    <span class="dt">y =</span> <span class="st">"Price in $"</span>,
-    <span class="dt">x =</span> <span class="st">"Carats"</span>
-  )</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="../../reference/visualize.html">visualize</a></span>(diamonds, <span class="dt">yvar =</span> <span class="st">"price"</span>, <span class="dt">xvar =</span> <span class="st">"carat"</span>, <span class="dt">type =</span> <span class="st">"scatter"</span>, <span class="dt">custom =</span> <span class="ot">TRUE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">    <span class="dt">title =</span> <span class="st">"A scatterplot"</span>, </a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">    <span class="dt">y =</span> <span class="st">"Price in $"</span>,</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">    <span class="dt">x =</span> <span class="st">"Carats"</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">  )</a></code></pre></div>
 <p><strong>Some common customization commands:</strong></p>
 <ul>
 <li>Add a title: <code>+ labs(title = "my title")</code>
@@ -233,14 +233,14 @@
 <p>For more on how to customize plots for communication see <a href="http://r4ds.had.co.nz/graphics-for-communication.html" target="_blank">http://r4ds.had.co.nz/graphics-for-communication.html</a>.</p>
 <p>See also the ggplot2 documentation site <a href="http://docs.ggplot2.org/" target="_blank">http://docs.ggplot2.org</a>.</p>
 <p>Suppose we create a set of three bar charts in <em>Data &gt; Visualize</em> using the <code>Diamond</code> data. To add a title above the group of plots and impose a one-column layout we could use <code><a href="http://www.rdocumentation.org/packages/gridExtra/topics/arrangeGrob">gridExtra::grid.arrange</a></code> as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot_list &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/visualize.html">visualize</a></span>(
-  diamonds, 
-  <span class="dt">xvar =</span> <span class="kw">c</span>(<span class="st">"clarity"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span>), 
-  <span class="dt">yvar =</span> <span class="st">"price"</span>, 
-  <span class="dt">type =</span> <span class="st">"bar"</span>, 
-  <span class="dt">custom =</span> <span class="ot">TRUE</span>
-) 
-gridExtra<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/gridExtra/topics/arrangeGrob">grid.arrange</a></span>(<span class="dt">grobs =</span> plot_list, <span class="dt">top =</span> <span class="st">"Three bar plots"</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">plot_list &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/visualize.html">visualize</a></span>(</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">  diamonds, </a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">  <span class="dt">xvar =</span> <span class="kw">c</span>(<span class="st">"clarity"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span>), </a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="dt">yvar =</span> <span class="st">"price"</span>, </a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">  <span class="dt">type =</span> <span class="st">"bar"</span>, </a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">  <span class="dt">custom =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">) </a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">gridExtra<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/gridExtra/topics/arrangeGrob">grid.arrange</a></span>(<span class="dt">grobs =</span> plot_list, <span class="dt">top =</span> <span class="st">"Three bar plots"</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)</a></code></pre></div>
 <p>See the <a href="https://cran.r-project.org/web/packages/gridExtra/vignettes/arrangeGrob.html">gridExtra vignette</a> for additional information on how to customize groups of plots.</p>
 </div>
 <div id="making-plots-interactive-in-report-rmd" class="section level3">
@@ -248,13 +248,13 @@ gridExtra<span class="op">::</span><span class="kw"><a href="http://www.rdocumen
 <a href="#making-plots-interactive-in-report-rmd" class="anchor"></a>Making plots interactive in <em>Report &gt; Rmd</em>
 </h3>
 <p>It is possible to transform (most) plots generated in Radiant into interactive graphics using the <code>plotly</code> library. After setting <code>custom = TRUE</code> you can use the <code>ggplotly</code> function to convert a single plot. See example below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../../reference/visualize.html">visualize</a></span>(diamonds, <span class="dt">xvar =</span> <span class="kw">c</span>(<span class="st">"price"</span>, <span class="st">"carat"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span>), <span class="dt">custom =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../../reference/ggplotly.html">ggplotly</a></span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../../reference/render.html">render</a></span>()</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="../../reference/visualize.html">visualize</a></span>(diamonds, <span class="dt">xvar =</span> <span class="kw">c</span>(<span class="st">"price"</span>, <span class="st">"carat"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span>), <span class="dt">custom =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../../reference/ggplotly.html">ggplotly</a></span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../../reference/render.html">render</a></span>()</a></code></pre></div>
 <p>If more than one plot is created, you can use the <code>subplot</code> function from the <code>plotly</code> package. Provide a value for the <code>nrows</code> argument to setup the plot layout grid. In the example below four plots are created. Because <code>nrow = 2</code> the plots will be displayed in a 2 X 2 grid.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../../reference/visualize.html">visualize</a></span>(diamonds, <span class="dt">xvar =</span> <span class="kw">c</span>(<span class="st">"carat"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span>), <span class="dt">custom =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../../reference/subplot.html">subplot</a></span>(<span class="dt">nrows =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../../reference/render.html">render</a></span>()</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="../../reference/visualize.html">visualize</a></span>(diamonds, <span class="dt">xvar =</span> <span class="kw">c</span>(<span class="st">"carat"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span>), <span class="dt">custom =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../../reference/subplot.html">subplot</a></span>(<span class="dt">nrows =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../../reference/render.html">render</a></span>()</a></code></pre></div>
 <p>For additional information on the <code>plotly</code> library see the links below:</p>
 <ul>
 <li>Getting started: <a href="https://plot.ly/r/getting-started/" class="uri">https://plot.ly/r/getting-started/</a>

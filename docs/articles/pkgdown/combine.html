@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.7</span>
       </span>
     </div>
 
@@ -46,52 +46,52 @@
 <li>
   <a href="../../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../../articles/index.html">Articles</a>
+</li>
+<li>
+  <a href="../../news/index.html">Changelog</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Other Packages
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../../articles/pkgdown/combine.html">Combine data sets (Data &gt; Combine)</a>
+      <a href="https://radiant-rstats.github.io/radiant/">radiant</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/explore.html">Summarize and explore your data (Data &gt; Explore)</a>
+      <a href="https://radiant-rstats.github.io/radiant.data/">radiant.data</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/manage.html">Loading and Saving data (Data &gt; Manage)</a>
+      <a href="https://radiant-rstats.github.io/radiant.design/">radiant.design</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/pivotr.html">Create pivot tables (Data &gt; Pivot)</a>
+      <a href="https://radiant-rstats.github.io/radiant.basics/">radiant.basics</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/report_r.html">Create a reproducible report using R (Report &gt; R)</a>
+      <a href="https://radiant-rstats.github.io/radiant.model/">radiant.model</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/report_rmd.html">Create a reproducible report using Rmarkdown (Report &gt; Rmd)</a>
+      <a href="https://radiant-rstats.github.io/radiant.multivariate/">radiant.multivariate</a>
     </li>
     <li>
-      <a href="../../articles/pkgdown/state.html">Loading and Saving the State of the application</a>
-    </li>
-    <li>
-      <a href="../../articles/pkgdown/transform.html">Transform variables (Data &gt; Transform)</a>
-    </li>
-    <li>
-      <a href="../../articles/pkgdown/view.html">View data in an interactive table (Data &gt; View)</a>
-    </li>
-    <li>
-      <a href="../../articles/pkgdown/visualize.html">Visualize data (Data &gt; Visualize)</a>
+      <a href="https://github.com/radiant-rstats/docker">docker</a>
     </li>
   </ul>
-</li>
-<li>
-  <a href="../../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/radiant-rstats/radiant.data">
+  <a href="https://twitter.com/vrnijs">
+    <span class="fa fa-twitter fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/radiant-rstats">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -431,11 +431,11 @@ DC
 <p align="center">
 <img src="https://radiant-rstats.github.io/docs/data/figures//inner_join.png"></p>
 <p>The R(adiant) commands are:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Radiant</span>
-<span class="kw"><a href="../../reference/radiant.data-deprecated.html">combinedata</a></span>(<span class="st">"superheroes"</span>, <span class="st">"publishers"</span>, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"inner_join"</span>)
-
-<span class="co"># R</span>
-<span class="kw">inner_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># Radiant</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="../../reference/radiant.data-deprecated.html">combinedata</a></span>(<span class="st">"superheroes"</span>, <span class="st">"publishers"</span>, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"inner_join"</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># R</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">inner_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</a></code></pre></div>
 <p><br></p>
 </div>
 <div id="left-join-superheroes-publishers" class="section level3">
@@ -588,11 +588,11 @@ NA
 <p align="center">
 <img src="https://radiant-rstats.github.io/docs/data/figures//left_join.png"></p>
 <p>The R(adiant) commands are:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Radiant</span>
-<span class="kw"><a href="../../reference/radiant.data-deprecated.html">combinedata</a></span>(<span class="st">"superheroes"</span>, <span class="st">"publishers"</span>, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"left_join"</span>)
-
-<span class="co"># R</span>
-<span class="kw">left_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># Radiant</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="../../reference/radiant.data-deprecated.html">combinedata</a></span>(<span class="st">"superheroes"</span>, <span class="st">"publishers"</span>, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"left_join"</span>)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># R</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="kw">left_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</a></code></pre></div>
 <p><br></p>
 </div>
 <div id="right-join-superheroes-publishers" class="section level3">
@@ -745,11 +745,11 @@ Image
 <p align="center">
 <img src="https://radiant-rstats.github.io/docs/data/figures//right_join.png"></p>
 <p>The R(adiant) commands are:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Radiant</span>
-<span class="kw"><a href="../../reference/radiant.data-deprecated.html">combinedata</a></span>(<span class="st">"superheroes"</span>, <span class="st">"publishers"</span>, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"right_join"</span>)
-
-<span class="co"># R</span>
-<span class="kw">right_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># Radiant</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="../../reference/radiant.data-deprecated.html">combinedata</a></span>(<span class="st">"superheroes"</span>, <span class="st">"publishers"</span>, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"right_join"</span>)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co"># R</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw">right_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</a></code></pre></div>
 <p><br></p>
 </div>
 <div id="full-join-superheroes-publishers" class="section level3">
@@ -919,11 +919,11 @@ Image
 <p align="center">
 <img src="https://radiant-rstats.github.io/docs/data/figures//full_join.png"></p>
 <p>The R(adiant) commands are:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Radiant</span>
-<span class="kw"><a href="../../reference/radiant.data-deprecated.html">combinedata</a></span>(<span class="st">"superheroes"</span>, <span class="st">"publishers"</span>, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"full_join"</span>)
-
-<span class="co"># R</span>
-<span class="kw">full_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># Radiant</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="../../reference/radiant.data-deprecated.html">combinedata</a></span>(<span class="st">"superheroes"</span>, <span class="st">"publishers"</span>, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"full_join"</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co"># R</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="kw">full_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</a></code></pre></div>
 </div>
 <div id="semi-join-superheroes-publishers" class="section level3">
 <h3 class="hasAnchor">
@@ -1034,11 +1034,11 @@ DC
 </tbody>
 </table>
 <p>We get a similar table as with <code>inner_join</code> but it contains only the variables in <code>superheroes</code>. The R(adiant) commands are:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Radiant</span>
-<span class="kw"><a href="../../reference/radiant.data-deprecated.html">combinedata</a></span>(<span class="st">"superheroes"</span>, <span class="st">"publishers"</span>, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"semi_join"</span>)
-
-<span class="co"># R</span>
-<span class="kw">semi_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Radiant</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="../../reference/radiant.data-deprecated.html">combinedata</a></span>(<span class="st">"superheroes"</span>, <span class="st">"publishers"</span>, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"semi_join"</span>)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co"># R</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="kw">semi_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</a></code></pre></div>
 <p><br></p>
 </div>
 <div id="anti-join-superheroes-publishers" class="section level3">
@@ -1517,11 +1517,11 @@ Dark Horse Comics
 </table>
 <p>If the <code>avengers</code> dataset were meant to extend the list of superheroes we could just stack the two datasets, one below the other. The new datasets has 14 rows and 4 columns. Due to a coding error in the <code>avengers</code> dataset (i.e.., <em>Magneto</em> is <em>not</em> an <em>Avenger</em>) there is a duplicate row in the new combined dataset. Something we probably don’t want.</p>
 <p>The R(adiant) commands are:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Radiant</span>
-<span class="kw"><a href="../../reference/radiant.data-deprecated.html">combinedata</a></span>(<span class="st">"avengers"</span>, <span class="st">"superheroes"</span>, <span class="dt">type =</span> <span class="st">"bind_rows"</span>)
-
-<span class="co"># R</span>
-<span class="kw">bind_rows</span>(avengers, superheroes)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Radiant</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw"><a href="../../reference/radiant.data-deprecated.html">combinedata</a></span>(<span class="st">"avengers"</span>, <span class="st">"superheroes"</span>, <span class="dt">type =</span> <span class="st">"bind_rows"</span>)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co"># R</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="kw">bind_rows</span>(avengers, superheroes)</a></code></pre></div>
 <p><br></p>
 </div>
 <div id="bind-columns" class="section level3">
