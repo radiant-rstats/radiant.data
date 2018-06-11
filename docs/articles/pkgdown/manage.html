@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4.7</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.5</span>
       </span>
     </div>
 
@@ -140,9 +140,9 @@
 <a href="#load-data" class="anchor"></a>Load data</h3>
 <p>The best way to load and save data for use in Radiant (and R) is to use the R-data format (rds or rda). These are binary files that can be stored compactly and read into R quickly. Select <code>rds</code> (or <code>rda</code>) from the <code>Load data of type</code> dropdown and click <code>Browse</code> to locate the file(s) you want to load on your computer.</p>
 <p>You can get data from a spreadsheet (e.g., Excel or Google sheets) into Radiant in two ways. First, you can save data from the spreadsheet in csv format and then, in Radiant, choose <code>csv</code> from the <code>Load data of type</code> dropdown. Most likely you will have a header row in the csv file with variable names. If the data are not comma separated you can choose semicolon or tab separated. To load a csv file click ‘Browse’ and locate the file on your computer.</p>
-<blockquote>
-<p><strong>Note:</strong> For Windows users with data that contain multibyte characters please make sure your data are in ANSI format so R(adiant) can load the characters correctly.</p>
-</blockquote>
+<!-- 
+> **Note:** For Windows users with data that contain multibyte characters please make sure your data are in ANSI format so R(adiant) can load the characters correctly.
+-->
 <p>Alternatively, you can select and copy the data in the spreadsheet using CTRL-C (or CMD-C on mac), go to Radiant, choose <code>clipboard</code> from the <code>Load data of type</code> dropdown, and click the <code>Paste</code> button. This is a short-cut that can be convenient for smaller datasets that are cleanly formatted.</p>
 <p>If the data is available in R’s global workspace (e.g., you opened a data set in Rstudio and then started Radiant from the <code>addins</code> menu) you can move (or copy) it to Radiant by selecting <code>from global workspace</code>. Select the data.frame(s) you want to use and click the <code>Load</code> button.</p>
 <p>To access all data files bundled with Radiant choose <code>examples</code> from the <code>Load data of type</code> dropdown and then click the <code>Load</code> button. These files are used to illustrate the various data and analysis tools accessible in Radiant. For example, the <code>avengers</code> and <code>publishers</code> data are used to illustrate how to combine data in R(adiant) (i.e., <em>Data &gt; Combine</em>).</p>
@@ -173,6 +173,11 @@
 <h3 class="hasAnchor">
 <a href="#using-commands-to-load-and-save-data" class="anchor"></a>Using commands to load and save data</h3>
 <p>R-code can be used in <em>Report &gt; Rmd</em> or <em>Report &gt; R</em> to load data from a file directly into the active Radiant session. Use <code><a href="../../reference/register.html">register("insert-dataset-name")</a></code> to add a dataset to the <code>Datasets</code> dropdown. R-code can also be used to extract data from Radiant and save it to disk.</p>
+</div>
+<div id="r-functions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#r-functions" class="anchor"></a>R-functions</h3>
+<p>For an overview of related R-functions used by Radiant to load and save data see <a href="https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-manage" target="_blank"><em>Data &gt; Manage</em></a></p>
 <p>© Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="./images/by-sa.png"></a></p>
 </div>
   </div>

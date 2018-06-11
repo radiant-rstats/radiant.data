@@ -2,7 +2,7 @@
 % Please edit documentation in R/view.R
 \name{dtab.data.frame}
 \alias{dtab.data.frame}
-\title{Create a DT table with bootstrap theme}
+\title{Create an interactive table to view, search, sort, and filter data}
 \usage{
 \method{dtab}{data.frame}(object, vars = "", filt = "", rows = NULL,
   nr = NULL, na.rm = FALSE, dec = 3, perc = "", filter = "top",
@@ -38,10 +38,10 @@
 \item{...}{Additional arguments}
 }
 \description{
-Create a DT table with bootstrap theme
+Create an interactive table to view, search, sort, and filter data
 }
 \details{
-View, search, sort, etc. your data. For styling options see \url{http://rstudio.github.io/DT/functions.html}
+View, search, sort, and filter a data.frame. For styling options see \url{http://rstudio.github.io/DT/functions.html}
 }
 \examples{
 \dontrun{

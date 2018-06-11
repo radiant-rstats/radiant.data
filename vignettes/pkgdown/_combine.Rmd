@@ -309,3 +309,7 @@ Add code to <a href="https://radiant-rstats.github.io/docs/data/report_rmd.html"
 
 --------
 For additional discussion see the chapter on relational data in <a href="http://r4ds.had.co.nz/relational-data.html" target="_blank">R for data science</a>.
+
+### R-functions
+
+For an overview of related R-functions used by Radiant to combine datasets see <a href = " https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-combine" target="_blank">_Data > Combine_</a>

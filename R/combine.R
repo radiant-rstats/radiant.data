@@ -52,10 +52,12 @@ combine_data <- function(
   y_descr <- attr(y, "description")
 
   if (is_join) {
-    x <- get(type)(x, y, by = by)
+    x <- get(type, envir = as.environment("package:dplyr"))(x, y, by = by)
+    # x <- get(type)(x, y, by = by)
     madd <- paste0("<br>\nBy: ", paste0(by, collapse = ", "))
   } else {
-    x <- get(type)(x, y)
+    x <- get(type, envir = as.environment("package:dplyr"))(x, y)
+    # x <- get(type)(x, y)
     madd <- ""
   }
 

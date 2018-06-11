@@ -64,3 +64,7 @@ Notes:
 * Tabs are converted to 2 spaces by default (i.e., 'soft' tabs). You can change the number of spaces used from 2 to, for example, 4
 * `showInvisibles` shows tabs and spaces in the editor
 * Autocomplete has options "live", "enabled", and "disabled" 
+
+### R-functions
+
+For an overview of related R-functions used by Radiant to generate reproducible reports see <a href = " https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-report" target="_blank">_Report_</a>

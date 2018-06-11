@@ -68,6 +68,8 @@ reference:
   desc: Function used with Data > Visualize
   contents:
     - visualize
+    - ggplotly
+    - subplot
     - print.gtable
 - title: Data > Pivot
   desc: Functions used with Data > Pivot
@@ -190,8 +192,6 @@ reference:
 - title: Re-exported
   desc: Functions exported from other packages
   contents:
-    - ggplotly
-    - subplot
     - as_tibble
     - tibble
     - rownames_to_column

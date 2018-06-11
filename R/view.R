@@ -10,9 +10,9 @@
 #' @export
 dtab <- function(object, ...) UseMethod("dtab", object)
 
-#' Create a DT table with bootstrap theme
+#' Create an interactive table to view, search, sort, and filter data
 #'
-#' @details View, search, sort, etc. your data. For styling options see \url{http://rstudio.github.io/DT/functions.html}
+#' @details View, search, sort, and filter a data.frame. For styling options see \url{http://rstudio.github.io/DT/functions.html}
 #'
 #' @param object Data.frame to display
 #' @param vars Variables to show (default is all)

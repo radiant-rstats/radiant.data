@@ -603,9 +603,13 @@ observeEvent(input$loadExampleData, {
     if (exists(item, envir = r_data) && !bindingIsActive(as.symbol(item), env = r_data)) {
       shiny::makeReactiveBinding(item, env = r_data)
     }
-    r_info[["datasetlist"]] <- c(item, r_info[["datasetlist"]]) %>% unique()
-    r_info[[paste0(item, "_descr")]] <- attr(r_data[[item]], "description")
-    r_info[[paste0(item, "_lcmd")]] <- glue('{item} <- data({item}, package = "{exdat[i, "Package"]}") %>% get()\nregister("{item}")')
+    if (is.data.frame(get(item, envir = r_data))) {
+      r_info[["datasetlist"]] <- c(item, r_info[["datasetlist"]]) %>% unique()
+      r_info[[paste0(item, "_descr")]] <- attr(r_data[[item]], "description")
+      r_info[[paste0(item, "_lcmd")]] <- glue('{item} <- data({item}, package = "{exdat[i, "Package"]}") %>% get()\nregister("{item}")')
+    } else {
+      r_info[["dtree_list"]] <- c(item, r_info[["dtree_list"]]) %>% unique()
+    }
   }
 
   ## sorting files alphabetically

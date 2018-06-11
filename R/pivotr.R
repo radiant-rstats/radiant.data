@@ -262,7 +262,7 @@ summary.pivotr <- function(
   }
 }
 
-#' Make a pivot table in DT
+#' Make an interactive pivot table
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/data/pivotr.html} for an example in Radiant
 #'
@@ -438,9 +438,9 @@ plot.pivotr <- function(
       geom_bar(stat = "identity", position = "dodge", alpha = opacity, fill = fillcol)
   } else if (length(cvars) == 2) {
     ctot <- which(colnames(tab) == "Total")
-    if (length(ctot) > 0) tab %<>% select(setdiff(colnames(.), "Total"))
+    if (length(ctot) > 0) tab %<>% select(base::setdiff(colnames(.), "Total"))
 
-    dots <- paste0("factor(", cvars[1], ", levels = c('", paste0(setdiff(colnames(tab), cvars[2]), collapse = "','"), "'))") %>%
+    dots <- paste0("factor(", cvars[1], ", levels = c('", paste0(base::setdiff(colnames(tab), cvars[2]), collapse = "','"), "'))") %>%
       rlang::parse_exprs(.) %>%
       set_names(cvars[1])
 
@@ -452,9 +452,9 @@ plot.pivotr <- function(
       geom_bar(stat = "identity", position = type, alpha = opacity)
   } else if (length(cvars) == 3) {
     ctot <- which(colnames(tab) == "Total")
-    if (length(ctot) > 0) tab %<>% select(setdiff(colnames(.), "Total"))
+    if (length(ctot) > 0) tab %<>% select(base::setdiff(colnames(.), "Total"))
 
-    dots <- paste0("factor(", cvars[1], ", levels = c('", paste0(setdiff(colnames(tab), cvars[2:3]), collapse = "','"), "'))") %>%
+    dots <- paste0("factor(", cvars[1], ", levels = c('", paste0(base::setdiff(colnames(tab), cvars[2:3]), collapse = "','"), "'))") %>%
       rlang::parse_exprs(.) %>%
       set_names(cvars[1])
 

@@ -225,7 +225,11 @@ help_menu <- function(hlp) {
       "", icon = icon("question-circle"),
       tabPanel("Help", uiOutput(hlp), icon = icon("question")),
       tabPanel(actionLink("help_keyboard", "Keyboard shortcuts", icon = icon("keyboard-o"))),
-      tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
+      # tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
+      tabPanel(tags$a(
+        "", href = "https://radiant-rstats.github.io/docs/tutorials.html", target = "_blank",
+        list(icon("film"), "Videos")
+      )),
       tabPanel("About", uiOutput("help_about"), icon = icon("info")),
       tabPanel(tags$a(
         "", href = "https://radiant-rstats.github.io/docs/", target = "_blank",

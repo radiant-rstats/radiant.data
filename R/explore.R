@@ -261,7 +261,7 @@ flip <- function(expl, top = "fun") {
   expl$tab
 }
 
-#' Make a table of summary statistics in DT
+#' Make an interactive table of summary statistics
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant
 #'

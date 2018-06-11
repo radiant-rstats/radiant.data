@@ -15,7 +15,9 @@ The best way to load and save data for use in Radiant (and R) is to use the R-da
 
 You can get data from a spreadsheet (e.g., Excel or Google sheets) into Radiant in two ways. First, you can save data from the spreadsheet in csv format and then, in Radiant, choose `csv` from the `Load data of type` dropdown. Most likely you will have a header row in the csv file with variable names. If the data are not comma separated you can choose semicolon or tab separated. To load a csv file click 'Browse' and locate the file on your computer.
 
+<!-- 
 > **Note:** For Windows users with data that contain multibyte characters please make sure your data are in ANSI format so R(adiant) can load the characters correctly.
+-->
 
 Alternatively, you can select and copy the data in the spreadsheet using CTRL-C (or CMD-C on mac), go to Radiant, choose `clipboard` from the `Load data of type` dropdown, and click the `Paste` button. This is a short-cut that can be convenient for smaller datasets that are cleanly formatted.
 
@@ -53,3 +55,7 @@ If data are loaded in memory that you no longer need in the current session chec
 ### Using commands to load and save data
 
 R-code can be used in _Report > Rmd_ or _Report > R_ to load data from a file directly into the active Radiant session. Use `register("insert-dataset-name")` to add a dataset to the `Datasets` dropdown. R-code can also be used to extract data from Radiant and save it to disk. 
+
+### R-functions
+
+For an overview of related R-functions used by Radiant to load and save data see <a href = " https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-manage" target="_blank">_Data > Manage_</a>
