@@ -306,3 +306,7 @@ Combine multiple variables into one column. If you have the `diamonds` dataset l
 #### Spread column
 
 _Spread_ one column into multiple columns. The opposite of `gather`. For a detailed discussion about _tidy_ data see the <a href="https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html" target = "_blank">tidy-data</a> vignette.
+
+### R-functions
+
+For an overview of related R-functions used by Radiant to transform data see <a href = " https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-transform" target="_blank">_Data > Transform_</a>

@@ -2,7 +2,7 @@
 % Please edit documentation in R/explore.R
 \name{dtab.explore}
 \alias{dtab.explore}
-\title{Make a table of summary statistics in DT}
+\title{Make an interactive table of summary statistics}
 \usage{
 \method{dtab}{explore}(object, dec = 3, searchCols = NULL, order = NULL,
   pageLength = NULL, ...)
@@ -21,7 +21,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Make a table of summary statistics in DT
+Make an interactive table of summary statistics
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example in Radiant

@@ -2,7 +2,6 @@
 ## Explore datasets
 #######################################
 
-# default_funs <- c("length", "mean_rm", "sd_rm", "min_rm", "max_rm")
 default_funs <- c("n_obs", "mean", "sd", "min", "max")
 expl_args <- as.list(formals(explore))
 

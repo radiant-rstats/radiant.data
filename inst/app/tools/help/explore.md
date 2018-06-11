@@ -33,3 +33,7 @@ Use the `Filter data` box to select (or omit) specific sets of rows from the dat
 ### Report > Rmd
 
 Add code to <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_Report > Rmd_</a> to (re)create the summary table by clicking the <i title="report results" class="fa fa-edit"></i> icon on the bottom left of your screen or by pressing `ALT-enter` on your keyboard.
+
+### R-functions
+
+For an overview of related R-functions used by Radiant to summarize and explore data see <a href = " https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-explore" target="_blank">_Data > Explore_</a>

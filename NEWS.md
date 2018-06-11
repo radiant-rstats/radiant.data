@@ -1,4 +1,4 @@
-# radiant.data 0.9.4.7
+# radiant.data 0.9.5.0
 
 * Fix for `radiant.data::explore` when variable names contain an underscore 
 * Fix for `find_gdrive` when drive is not being synched
