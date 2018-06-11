@@ -2,7 +2,7 @@
 
 ### Filter data
 
-Use the `Filter data` box to select (or omit) specific sets of rows from the data. See the helpfile for <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank">_Data > View_</a> for details.
+Use the `Filter data` box to select (or omit) specific sets of rows from the data. See the help file for <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank">_Data > View_</a> for details.
 
 ### Pause plotting
 
