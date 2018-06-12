@@ -161,6 +161,7 @@ knitr::opts_chunk$set(
   error = TRUE,
   fig.path = normalizePath(tempdir(), winslash = "/"),
   dev = "svg"
+  # dpi = 96
   # screenshot.force = FALSE,
 )
 
