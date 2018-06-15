@@ -1,3 +1,9 @@
+# radiant.data 0.9.5.1
+
+* Revert to storing the r_data environment as a list on stop to avoid reference problems (@josh1400)
+* Fix for plot type in _Data > Pivot_ in older state files (@josh1400)
+* Used all declared imports (CRAN)
+
 # radiant.data 0.9.5.0
 
 * Fix for `radiant.data::explore` when variable names contain an underscore 
