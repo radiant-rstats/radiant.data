@@ -14,11 +14,14 @@ stop_radiant <- function() {
       r_state[names(LiveInputs)] <- LiveInputs
       r_state$nav_radiant <- r_info[["nav_radiant"]]
       assign("r_state", r_state, envir = .GlobalEnv)
-      ## convert environment to a list and then back to an environment 
+      ## convert environment to a list and then back to an environment
       ## again to remove active bindings https://github.com/rstudio/shiny/issues/1905
       ## using an environment so you can "attach" and access data easily
       rem_non_active() ## keep only the active bindings (i.e., data, datalist, etc.)
-      assign("r_data", list2env(mget(ls(r_data), r_data)), envir = .GlobalEnv)
+
+      ## to env on stop causes reference problems
+      # assign("r_data", list2env(mget(ls(r_data), r_data)), envir = .GlobalEnv)
+      assign("r_data", env2list(r_data), envir = .GlobalEnv)
       assign("r_info", toList(r_info), envir = .GlobalEnv)
       ## removing r_sessions and functions defined in global.R
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)

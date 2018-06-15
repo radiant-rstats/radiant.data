@@ -26,6 +26,8 @@ globalVariables(
 #' @importFrom stats as.formula chisq.test dbinom median na.omit quantile sd setNames var weighted.mean
 #' @importFrom utils combn head tail install.packages read.table write.table
 #' @importFrom import from
+#' @importFrom curl curl_download
+#' @importFrom writexl write_xlsx
 NULL
 
 #' Exporting glue from glue

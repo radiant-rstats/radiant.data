@@ -66,7 +66,8 @@ r_ssuid <- if (getOption("radiant.local")) {
 session$sendCustomMessage("session_start", r_ssuid)
 
 ## identify the shiny environment
-r_environment <- environment()
+# r_environment <- environment()
+r_environment <- session$token
 
 r_info_legacy <- function() {
   r_info_elements <- c(
@@ -184,6 +185,15 @@ if (isTRUE(r_state$nav_radiant == "Code")) {
   r_state$nav_radiant <- "R"
 } else if (isTRUE(r_state$nav_radiant == "Report")) {
   r_state$nav_radiant <- "Rmd"
+}
+
+## legacy, to deal with radio buttons that were in Data > Pivot
+if (!is.null(r_state$pvt_type)) {
+  if (isTRUE(r_state$pvt_type == "fill")) {
+    r_state$pvt_type <- TRUE
+  } else {
+    r_state$pvt_type <- FALSE
+  }
 }
 
 ## legacy, to deal with state files created before
