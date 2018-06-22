@@ -243,6 +243,7 @@ observeEvent(input$report_clean, {
       gsub("\"var_rm\"", "\"var\"", .) %>%
       gsub("\"sum_rm\"", "\"sum\"", .) %>%
       gsub("\"length\"", "\"n_obs\"", .) %>%
+      gsub("tabsort = \"desc\\(n\\)\"", "tabsort = \"desc\\(n_obs\\)\"", .) %>%
       gsub("Search\\(\"(.*?)\",\\s*?.\\)", "search_data(., \"\\1\")", .) %>%
       gsub("toFct\\(\\)", "to_fct()", .) %>%
       gsub("rounddf\\(", "round_df(", .) %>%
@@ -312,6 +313,7 @@ knit_it <- function(report, type = "rmd") {
      grepl("formatnr\\(", report) ||
      grepl("formatdf\\(", report) ||
      grepl("rounddf\\(", report) ||
+     grepl("tabsort = \"desc\\(n\\)\"", report) ||
      grepl("(mean_rm|median_rm|min_rm|max_rm|sd_rm|var_rm|sum_rm)", report))
   ) {
     showModal(
