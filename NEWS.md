@@ -1,5 +1,7 @@
-# radiant.data 0.9.5.1
+# radiant.data 0.9.5.2
 
+* Fix smart comma's in data descriptions
+* Search and replace `desc(n)` in reports and replace by `desc(n_obs)`
 * Revert to storing the r_data environment as a list on stop to avoid reference problems (@josh1400)
 * Fix for plot type in _Data > Pivot_ in older state files (@josh1400)
 * Used all declared imports (CRAN)
