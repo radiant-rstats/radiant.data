@@ -21,19 +21,23 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
 <!-- docsearch -->
+<script src="../docsearch.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
 <meta property="og:title" content="Changelog" />
+
 
 
 <!-- mathjax -->
@@ -60,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.5</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.5.2</span>
       </span>
     </div>
 
@@ -148,6 +152,19 @@
       <small>Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="radiant-data-0-9-5-2" class="section level1">
+<h1 class="page-header">
+<a href="#radiant-data-0-9-5-2" class="anchor"></a>radiant.data 0.9.5.2<small> Unreleased </small>
+</h1>
+<ul>
+<li>Fix smart comma’s in data descriptions</li>
+<li>Search and replace <code>desc(n)</code> in reports and replace by <code>desc(n_obs)</code>
+</li>
+<li>Revert to storing the r_data environment as a list on stop to avoid reference problems (<a href='http://github.com/josh1400'>@josh1400</a>)</li>
+<li>Fix for plot type in <em>Data &gt; Pivot</em> in older state files (<a href='http://github.com/josh1400'>@josh1400</a>)</li>
+<li>Used all declared imports (CRAN)</li>
+</ul>
+</div>
     <div id="radiant-data-0-9-5-0" class="section level1">
 <h1 class="page-header">
 <a href="#radiant-data-0-9-5-0" class="anchor"></a>radiant.data 0.9.5.0<small> Unreleased </small>
@@ -567,7 +584,8 @@
 <ul>
 <li>varp_rm has been deprecated in favor of varpop</li>
 <li>sdp_rm has been deprecated in favor of sdpop</li>
-<li>mutate_each has been deprecated in favor of mutate_at, mutate_all, and radiant.data::mutate_ext</li>
+<li>mutate_each has been deprecated in favor of mutate_at, mutate_all, and radiant.<a href="data::mutate_ext" class="uri">data::mutate_ext</a>
+</li>
 </ul>
 </div>
 </div>
@@ -577,6 +595,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#radiant-data-0-9-5-2">0.9.5.2</a></li>
         <li><a href="#radiant-data-0-9-5-0">0.9.5.0</a></li>
         <li><a href="#radiant-data-0-9-4-6">0.9.4.6</a></li>
         <li><a href="#radiant-data-0-9-3-5">0.9.3.5</a></li>
