@@ -124,7 +124,8 @@ observeEvent(input$from_global_load, {
       r_info[[paste0(df, "_lcmd")]] <- paste0("# ", r_info[[paste0(df, "_lcmd")]])
     }
     r_info[[paste0(df, "_descr")]] <- attr(r_data[[df]], "description") %>%
-      {if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\nCheck the 'Add/edit data description' box on the top-left of your screen" else .}
+      {if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\nCheck the 'Add/edit data description' box on the top-left of your screen" else .} %>%
+      fix_smart()
   }
   updateSelectInput(
     session, "dataset", label = "Datasets:",
@@ -271,8 +272,9 @@ output$ui_Manage <- renderUI({
 
 ## updating the dataset description
 observeEvent(input$updateDescr, {
-  r_info[[paste0(input$dataset, "_descr")]] <- input$man_data_descr
-  attr(r_data[[input$dataset]], "description") <- input$man_data_descr
+  descr <- fix_smart(input$man_data_descr)
+  r_info[[paste0(input$dataset, "_descr")]] <- descr
+  attr(r_data[[input$dataset]], "description") <- descr
   updateCheckboxInput(
     session = session, "man_add_descr",
     "Add/edit data description", FALSE
@@ -384,7 +386,7 @@ man_save_data <- function(file) {
     r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_csv({robj}, path = {pp$rpath})')
   } else {
     if (!is_empty(input$man_data_descr)) {
-      attr(r_data[[robj]], "description") <- r_info[[paste0(robj, "_descr")]]
+      attr(r_data[[robj]], "description") <- fix_smart(r_info[[paste0(robj, "_descr")]])
     }
 
     if (ext == "rds") {
@@ -515,7 +517,7 @@ observeEvent(input$url_rda_load, {
     shiny::makeReactiveBinding(objname, env = r_data)
   }
   r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
-  r_info[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
+  r_info[[paste0(objname, "_descr")]] <- fix_smart(attr(r_data[[objname]], "description"))
   r_info[[paste0(objname, "_lcmd")]] <- cmd
 
   updateSelectInput(
@@ -582,7 +584,7 @@ observeEvent(input$url_csv_load, {
     shiny::makeReactiveBinding(objname, env = r_data)
   }
   r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
-  r_info[[paste0(objname, "_descr")]] <- attr(r_data[[objname]], "description")
+  r_info[[paste0(objname, "_descr")]] <- fix_smart(attr(r_data[[objname]], "description"))
   r_info[[paste0(objname, "_lcmd")]] <- cmd
 
   updateSelectInput(
@@ -605,7 +607,7 @@ observeEvent(input$loadExampleData, {
     }
     if (is.data.frame(get(item, envir = r_data))) {
       r_info[["datasetlist"]] <- c(item, r_info[["datasetlist"]]) %>% unique()
-      r_info[[paste0(item, "_descr")]] <- attr(r_data[[item]], "description")
+      r_info[[paste0(item, "_descr")]] <- fix_smart(attr(r_data[[item]], "description"))
       r_info[[paste0(item, "_lcmd")]] <- glue('{item} <- data({item}, package = "{exdat[i, "Package"]}") %>% get()\nregister("{item}")')
     } else {
       r_info[["dtree_list"]] <- c(item, r_info[["dtree_list"]]) %>% unique()
