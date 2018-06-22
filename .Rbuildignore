@@ -11,3 +11,4 @@ _pkgdown.yml
 ^tests/testthat/data$
 ^.*\.sublime-project$
 cran-comments.md
+^_pkgdown\.yml$

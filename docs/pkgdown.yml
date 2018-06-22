@@ -1,6 +1,6 @@
 pandoc: 1.19.2.1
-pkgdown: 1.1.0
-pkgdown_sha: ~
+pkgdown: 1.1.0.9000
+pkgdown_sha: b4c418c09daa4398fe70cea3b3416fbbdd1c78bf
 articles:
   _combine: pkgdown/_combine.html
   _explore: pkgdown/_explore.html
