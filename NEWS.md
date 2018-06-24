@@ -1,4 +1,4 @@
-# radiant.data 0.9.5.2
+# radiant.data 0.9.5.3
 
 * Fix smart comma's in data descriptions
 * Search and replace `desc(n)` in reports and replace by `desc(n_obs)`
