@@ -1268,6 +1268,7 @@ parse_path <- function(
 #' Generate code to read a file
 #' @details Return code to read a file at the specified path. Will open a file browser if no path is provided
 #' @param path Path to file. If empty, a file browser will be opened
+#' @param pdir Project dir
 #' @param type Generate code for _Report > Rmd_ ("rmd") or _Report > R_ ("r")
 #' @param to Name to use for object. If empty, will use file name to derive an object name
 #' @param clipboard Return code to clipboard (not available on Linux)
@@ -1278,7 +1279,8 @@ parse_path <- function(
 #' }
 #' @importFrom rstudioapi selectFile isAvailable
 #' @export
-read_files <- function(path, type = "rmd", to = "", clipboard = TRUE, radiant = FALSE) {
+read_files <- function(
+  path, pdir = "", type = "rmd", to = "", clipboard = TRUE, radiant = FALSE) {
 
   ## if no path is provided, an interactive file browser will be opened
   if (missing(path) || is_empty(path)) {
@@ -1299,7 +1301,11 @@ read_files <- function(path, type = "rmd", to = "", clipboard = TRUE, radiant = 
       pp <- parse_path(path, pdir = pdir, chr = "\"")
     }
   } else {
-    pp <- parse_path(path, chr = "\"")
+    if (is_empty(pdir)) {
+      pp <- parse_path(path, chr = "\"")
+    } else {
+      pp <- parse_path(path, pdir = pdir, chr = "\"")
+    }
   }
 
   if (to == "") {
@@ -1345,7 +1351,7 @@ read_files <- function(path, type = "rmd", to = "", clipboard = TRUE, radiant = 
     }
   } else if (pp$fext %in% c("md", "rmd")) {
     if (type == "rmd")  {
-      cmd <- glue('\n```{r child = "<<pp$rpath>>"}\n```\n', .open = "<<", .close = ">>")
+      cmd <- glue('\n```{r child = <<pp$rpath>>}\n```\n', .open = "<<", .close = ">>")
       type <- ""
     } else {
       cmd <- glue('{to} <- readLines({pp$rpath})')
