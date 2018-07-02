@@ -4,11 +4,13 @@
 \alias{read_files}
 \title{Generate code to read a file}
 \usage{
-read_files(path, type = "rmd", to = "", clipboard = TRUE,
+read_files(path, pdir = "", type = "rmd", to = "", clipboard = TRUE,
   radiant = FALSE)
 }
 \arguments{
 \item{path}{Path to file. If empty, a file browser will be opened}
+
+\item{pdir}{Project dir}
 
 \item{type}{Generate code for _Report > Rmd_ ("rmd") or _Report > R_ ("r")}
 
