@@ -5,3 +5,6 @@ r:
 warnings_are_errors: true
 sudo: required
 dist: trusty
+
+r_github_packages:
+  vnijs/shinyFiles

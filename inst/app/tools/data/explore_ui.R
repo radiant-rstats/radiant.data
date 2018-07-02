@@ -238,7 +238,8 @@ dl_explore_tab <- function(path) {
 download_handler(
   id = "dl_explore_tab", 
   fun = dl_explore_tab, 
-  fn = paste0(input$dataset, "_expl.csv")
+  fn = function() paste0(input$dataset, "_expl"),
+  type = "csv"
 )
 
 observeEvent(input$expl_store, {

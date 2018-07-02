@@ -49,7 +49,6 @@ load_csv <- function(
 
     if (saf) dataset <- to_fct(dataset, safx)
     as.data.frame(dataset, stringsAsFactors = FALSE) %>%
-      # {set_colnames(., make.names(colnames(.)))} %>%
       {set_colnames(., fix_names(colnames(.)))} %>%
       set_attr("description", rprob)
   }

@@ -322,7 +322,7 @@ dl_pivot_tab <- function(file) {
   }
 }
 
-download_handler(id = "dl_pivot_tab", fun = dl_pivot_tab, fn = paste0(input$dataset, "_pivot.csv"))
+download_handler(id = "dl_pivot_tab", fun = dl_pivot_tab, fn = function() paste0(input$dataset, "_pivot"))
 
 pvt_plot_width <- function() 750
 
@@ -483,7 +483,8 @@ observeEvent(input$pivotr_report, {
 download_handler(
   id = "dlp_pivot",
   fun = download_handler_plot,
-  fn = paste0(input$dataset, "_pivot.png"),
+  fn = function() paste0(input$dataset, "_pivot"),
+  type = "png",
   caption = "Download pivot plot",
   plot = .plot_pivot,
   width = pvt_plot_width,

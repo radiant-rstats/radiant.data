@@ -180,32 +180,7 @@ dl_view_tab <- function(file) {
   ) %>% write.csv(file, row.names = FALSE)
 }
 
-# if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-if (isTRUE(getOption("radiant.local", FALSE))) {
-  observeEvent(input$dl_view_tab, {
-    path <- rstudioapi::selectFile(
-      caption = "Download data",
-      path = file.path(
-        getOption("radiant.launch_dir", "~"),
-        paste0(input$dataset, "_view.csv")
-      ),
-      filter = "Download data (*.csv)",
-      existing = FALSE
-    )
-    if (!is(path, "try-error") && !is_empty(path)) {
-      dl_view_tab(path)
-    }
-  })
-} else {
-  output$dl_view_tab <- downloadHandler(
-    filename = function() {
-      paste0(input$dataset, "_view.csv")
-    },
-    content = function(file) {
-      dl_view_tab(file)
-    }
-  )
-}
+download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(input$dataset, "_view"))
 
 .dataviewer <- reactive({
   list(tab = .get_data()[1, ])

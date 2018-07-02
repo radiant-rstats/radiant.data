@@ -8,6 +8,26 @@
 # options(shiny.error = recover)
 # options(warn = 2)
 
+find_home <- function(os_type = Sys.info()["sysname"]) {
+  if (os_type == "Windows") {
+    ## gives /Users/x and not /Users/x/Documents
+    normalizePath(
+      file.path(Sys.getenv("HOMEDRIVE"), Sys.getenv("HOMEPATH")),
+      winslash = "/"
+    )
+  } else {
+    Sys.getenv("HOME")
+  }
+}
+volumes <- getOption("radiant.launch_dir")
+home <- find_home()
+if (home != volumes) {
+  volumes <- c(volumes, home) %>% set_names(c(basename(volumes), "home"))
+} else {
+  volumes <- c(home = home)
+}
+print(volumes)
+
 remove_session_files <- function(st = Sys.time()) {
   fl <- list.files(
     normalizePath("~/radiant.sessions/"),

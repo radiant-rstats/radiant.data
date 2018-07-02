@@ -4,11 +4,7 @@ file_upload_button <- function(
   class = "", icn = "upload", progress = FALSE
 ) {
 
-  if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-  # if (isTRUE(getOption("radiant.local", FALSE))) {
-    actionButton(inputId, buttonLabel, icon = icon(icn), class = class)
-  } else {
-
+  if (is_empty(Sys.getenv("RSTUDIO"))) {
     if (length(accept) > 0) {
       accept <- paste(accept, collapse = ",")
     } else {
@@ -36,6 +32,20 @@ file_upload_button <- function(
     }
 
     HTML(btn)
+  } else {
+    shinyFiles::shinyFileChoose(
+      input = input,
+      id = inputId,
+      session = session,
+      roots = volumes,
+      filetype = gsub(".", "", accept, fixed = TRUE)
+    )
+
+    # actionButton(inputId, buttonLabel, icon = icon(icn), class = class)
+    shinyFiles::shinyFilesButton(
+      inputId, buttonLabel, label, 
+      multiple = FALSE, class = class, icon = icon(icn)
+    )
   }
 }
 
@@ -141,7 +151,7 @@ knitr::opts_chunk$set(
   error = TRUE,
   cache = FALSE,
   message = FALSE,\n  ",
-  ifelse(save_type == "PDF", "dpi = 144,", "dev = \"svg\","), "
+  ifelse(save_type %in% c("PDF", "Word"), "dpi = 144,", "dev = \"svg\","), "
   warning = FALSE", sopts, "
 )
 
@@ -389,7 +399,10 @@ knit_it <- function(report, type = "rmd") {
 }
 
 sans_ext <- function(path) {
-  sub("(\\.rda$|\\.rds$|\\.rmd$|\\.r$|\\.rdata$)", "", path, ignore.case = TRUE)
+  sub(
+    "(\\.state\\.rda|\\.rda$|\\.rds$|\\.rmd$|\\.r$|\\.rdata$|\\.html|\\.nb\\.html|\\.pdf|\\.docx|\\.Rmd|\\.zip)", "", 
+    path, ignore.case = TRUE
+  )
 }
 
 report_name <- function(type = "rmd", out = "report", full.name = FALSE) {
@@ -428,6 +441,7 @@ report_name <- function(type = "rmd", out = "report", full.name = FALSE) {
 }
 
 report_save_filename <- function(type = "rmd", full.name = TRUE) {
+  req(input[[paste0(type, "_generate")]])
 
   if (input[[paste0(type, "_generate")]] %in% c("To Rmd", "To R")) {
     cnt <- rstudio_context(type = type)
