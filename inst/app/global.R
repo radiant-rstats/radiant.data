@@ -413,15 +413,9 @@ options(
       ),
       navbarMenu("",
         icon = icon("save"),
-        tabPanel(
-          if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-            actionLink("state_save", "   Save radiant state file", icon = icon("save"))
-          } else {
-            downloadLink("state_save", "   Save radiant state file", class = "fa fa-save")
-          }
-        ),
         ## inspiration for uploading state https://stackoverflow.com/a/11406690/1974918
         ## see also function in www/js/run_return.js
+        tabPanel(actionLink("state_save_link", "Save radiant state file", icon = icon("download"))),
         tabPanel(actionLink("state_load_link", "Load radiant state file", icon = icon("folder-open"))),
         tabPanel(actionLink("state_share", "Share radiant state", icon = icon("share"))),
         tabPanel("View radiant state", uiOutput("state_view"), icon = icon("user"))

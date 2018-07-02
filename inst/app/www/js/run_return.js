@@ -78,6 +78,10 @@ $(document).keydown(function(event) {
 });
 
 $(function(){
+  $("#state_save_link").on('click', function(e){
+    e.preventDefault();
+    $("#state_save").trigger('click');
+  });
   $("#state_load_link").on('click', function(e){
     e.preventDefault();
     $("#state_load").trigger('click');
