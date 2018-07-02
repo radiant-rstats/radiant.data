@@ -469,7 +469,8 @@ observeEvent(input$visualize_report, {
 download_handler(
   id = "dlp_visualize", 
   fun = download_handler_plot, 
-  fn = paste0(input$dataset, "_visualize.png"),
+  fn = function() paste0(input$dataset, "_visualize"),
+  type = "png",
   caption = "Download visualize plot",
   plot = .visualize,
   width = viz_plot_width,

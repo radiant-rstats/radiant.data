@@ -11,16 +11,14 @@ env2list <- function(x) mget(ls(x), x)
 is_active <- function(env = r_data) {
   sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env))
 }
- 
+
 ## remove non-active bindings
 rem_non_active <- function(env = r_data) {
-  # isactive <- sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env))
   iact <- is_active(env = r_data)
   rm(list = names(iact)[!iact], envir = env)
 }
 
 active2list <- function(env = r_data) {
-  # isactive <- sapply(ls(envir = env), function(x) bindingIsActive(as.symbol(x), env = env)) %>%
   iact <- is_active(env = r_data) %>% {names(.)[.]}
   if (length(iact) > 0) {
     mget(iact, env)
@@ -102,7 +100,6 @@ saveStateOnRefresh <- function(session = session) {
 
 ## get active dataset and apply data-filter if available
 .get_data <- reactive({
-  # print(".get_data() invalidated")
   req(input$dataset)
   selcom <- input$data_filter %>%
     gsub("\\n", "", .) %>%
@@ -154,8 +151,8 @@ groupable_vars <- reactive({
   .get_data() %>%
     summarise_all(
       funs(
-        is.factor(.) || is.logical(.) || lubridate::is.Date(.) || 
-        is.integer(.) || is.character(.) || 
+        is.factor(.) || is.logical(.) || lubridate::is.Date(.) ||
+        is.integer(.) || is.character(.) ||
         ((length(unique(.)) / n()) < .30)
       )
     ) %>%
@@ -167,8 +164,8 @@ groupable_vars_nonum <- reactive({
   .get_data() %>%
     summarise_all(
       funs(
-        is.factor(.) || is.logical(.) || 
-        lubridate::is.Date(.) || is.integer(.) || 
+        is.factor(.) || is.logical(.) ||
+        lubridate::is.Date(.) || is.integer(.) ||
         is.character(.)
       )
     ) %>%
@@ -205,7 +202,7 @@ varying_vars <- reactive({
 varnames <- reactive({
   var_class <- .get_class()
   req(var_class)
-  names(var_class) %>% 
+  names(var_class) %>%
     set_names(., paste0(., " {", var_class, "}"))
 })
 
@@ -242,11 +239,11 @@ not_available <- function(x) any(is.null(x)) || (sum(x %in% varnames()) < length
 ## check if a variable is null or not in the selected data.frame
 available <- function(x) !not_available(x)
 
-## check if a button was NOT pressed
-not_pressed <- function(x) is.null(x) || x == 0
-
 ## check if a button was pressed
-pressed <- function(x) !is.null(x) && x > 0
+pressed <- function(x) !is.null(x) && (is.list(x) || x > 0)
+
+## check if a button was NOT pressed
+not_pressed <- function(x) !pressed(x)
 
 ## check for duplicate entries
 has_duplicates <- function(x) length(unique(x)) < length(x)
@@ -403,7 +400,6 @@ textAreaInput <- function(
   )
 }
 
-
 ## avoid all sorts of 'helpful' behavior from your browser
 ## based on https://stackoverflow.com/a/35514029/1974918
 returnTextInput <- function(
@@ -427,39 +423,70 @@ returnTextInput <- function(
   )
 }
 
-if (!isTRUE(getOption("radiant.launch", "browser") == "browser")) {
-# if (isTRUE(getOption("radiant.local", FALSE))) {
-  download_link <- function(id) {
-    actionLink(id, "", class = "fa fa-download alignright")
-  }
-  download_button <- function(id, label, ic = "download", class = "") {
-    actionButton(id, label, icon = icon(ic), class = class)
-  }
-  download_handler <- function(id, fun = id, fn, caption = "Download to csv", type = "csv", ...) {
-    observeEvent(input[[id]], {
-      path <- rstudioapi::selectFile(
-        caption = caption,
-        path = file.path(getOption("radiant.launch_dir", "~"), fn),
-        filter = paste0(caption, " (*.", type[1], ")"),
-        existing = FALSE
-      )
-      if (!is(path, "try-error") && !is_empty(path)) {
-        fun(path, ...)
-      }
-    })
-  }
-} else {
+if (is_empty(Sys.getenv("RSTUDIO"))) {
   download_link <- function(id) {
     downloadLink(id, "", class = "fa fa-download alignright")
   }
-  download_button <- function(id, label, ic = "download", class = "") {
+  download_button <- function(id, label = "Save", ic = "download", class = "", ...) {
     downloadButton(id, label, class = class)
   }
-  download_handler <- function(id, fun = id, fn, caption = "Download to csv", type = "csv", ...) {
+  download_handler <- function(
+    id, label = "", fun = id, fn, type = "csv", caption = "Download to csv",
+    class = "", ic = "download", btn = "link", ...
+  ) {
     output[[id]] <- downloadHandler(
-      filename = function() { fn },
+      filename = function() {
+        if (is.function(fn)) fn <- fn()
+        if (is.function(type)) type <- type()
+        paste0(fn, ".", type)
+      },
       content = function(path) { fun(path, ...) }
     )
+  }
+} else {
+  download_link <- function(id) {
+    uiOutput(paste0("ui_", id))
+  }
+
+  download_button <- function(id, ...) {
+    uiOutput(paste0("ui_", id))
+  }
+
+  download_handler <- function(
+    id, label = "", fun = id, fn, type = "csv", caption = "Download to csv",
+    class = "", ic = "download", btn = "link", ...
+  ) {
+    ## create observer
+    shinyFiles::shinyFileSave(input, id, roots = volumes, session = session)
+
+    ## create renderUI
+    if (btn == "link") {
+      output[[paste0("ui_", id)]] <- renderUI({
+        if (is.function(fn)) fn <- fn()
+        if (is.function(type)) type <- type()
+        shinyFiles::shinySaveLink(
+          id, label, caption, filename = fn, filetype = type,
+          class = "alignright", icon = icon(ic)
+        )
+      })
+    } else {
+      output[[paste0("ui_", id)]] <- renderUI({
+        if (is.function(fn)) fn <- fn()
+        if (is.function(type)) type <- type()
+        shinyFiles::shinySaveButton(
+          id, label, caption, filename = fn, filetype = type,
+          class = class, icon = icon("download")
+        )
+      })
+    }
+
+    observeEvent(input[[id]], {
+      if (is.integer(input[[id]])) return()
+      path <-  shinyFiles::parseSavePath(volumes, input[[id]])
+      if (!is(path, "try-error") && !is_empty(path$datapath)) {
+        fun(path$datapath, ...)
+      }
+    })
   }
 }
 

@@ -1,3 +1,7 @@
+# radiant.data 0.9.5.6
+
+* Using [`shinyFiles`](https://github.com/thomasp85/shinyFiles) to provide convenient access to data located on a server
+
 # radiant.data 0.9.5.3
 
 * Fix smart comma's in data descriptions
