@@ -490,7 +490,7 @@ observeEvent(input$tr_change_type, {
       )
       vars <- c(byvar, vars) ## to avoid the 'added group_by variable' message
     }
-    if (is(nvar, "try-error")) {
+    if (inherits(nvar, "try-error")) {
       paste0("\nThe create command was not valid. The command entered was:\n\n", cmd, "\n\nThe error message was:\n\n", attr(nvar, "condition")$message, "\n\nPlease try again. Examples are shown in the help file")
     } else {
       select_at(nvar, .vars = vars) %>% 
@@ -521,7 +521,7 @@ observeEvent(input$tr_change_type, {
   if (!store || !is.character(dataset)) {
     if (cmd == "") return(dataset)
     nvar <- try(car::Recode(dataset[[var]], cmd), silent = TRUE)
-    if (is(nvar, "try-error")) {
+    if (inherits(nvar, "try-error")) {
       paste0("The recode command was not valid. The error message was:\n", attr(nvar, "condition")$message, "\nPlease try again. Examples are shown in the help file (click the ? icon).")
     } else {
       as.data.frame(nvar, stringsAsFactors = FALSE) %>% setNames(rcname)
@@ -919,7 +919,7 @@ transform_main <- reactive({
       return("Copy-and-paste data with a header row from a spreadsheet")
     } else {
       cpdat <- try(read.table(header = TRUE, comment.char = "", fill = TRUE, sep = "\t", as.is = TRUE, text = input$tr_paste), silent = TRUE)
-      if (is(cpdat, "try-error")) {
+      if (inherits(cpdat, "try-error")) {
         return("The pasted data was not well formated. Please make sure the number of rows **\n** in the data in Radiant and in the spreadsheet are the same and try again.")
       } else if (nrow(cpdat) != nrow(dat)) {
         return("The pasted data does not have the correct number of rows. Please make sure **\n** the number of rows in the data in Radiant and in the spreadsheet are the **\n** same and try again.")

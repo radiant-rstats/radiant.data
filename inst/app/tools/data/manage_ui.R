@@ -477,11 +477,11 @@ observeEvent(input$url_rda_load, {
   con <- try(curl::curl_download(url_rda, tempfile()), silent = TRUE)
 
   cmd <- NULL
-  if (is(con, "try-error")) {
+  if (inherits(con, "try-error")) {
     upload_error_handler(objname, "#### There was an error loading the r-data file from the provided url.")
   } else {
     robjname <- try(load(con), silent = TRUE)
-    if (is(robjname, "try-error")) {
+    if (inherits(robjname, "try-error")) {
       upload_error_handler(objname, "#### There was an error loading the r-data file from the provided url.")
     } else {
       if (length(robjname) > 1) {
@@ -523,7 +523,7 @@ observeEvent(input$url_csv_load, {
   ret <- try(curl::curl_download(url_csv, con), silent = TRUE)
 
   cmd <- NULL
-  if (is(ret, "try-error")) {
+  if (inherits(ret, "try-error")) {
     upload_error_handler(objname, "#### There was an error loading the csv file from the provided url")
   } else {
     dataset <- load_csv(
@@ -613,7 +613,7 @@ observeEvent(input$loadClipData, {
   ## reading data from clipboard
   objname <- "from_clipboard"
   dataset <- radiant.data::load_clip("\t", input$load_cdata)
-  if (is(dataset, "try-error") || length(dim(dataset)) < 2 || nrow(dataset) == 0) {
+  if (inherits(dataset, "try-error") || length(dim(dataset)) < 2 || nrow(dataset) == 0) {
     ret <- "#### Data in clipboard was not well formatted. Try exporting the data to csv format"
     upload_error_handler(objname, ret)
   } else {
@@ -652,7 +652,7 @@ output$refreshOnLoad <- renderUI({
     if (getOption("radiant.shinyFiles", FALSE)) {
       if (is.integer(input$state_load)) return()
       path <- shinyFiles::parseFilePaths(sf_volumes, input$state_load)
-      if (is(path, "try-error") || is_empty(path$datapath)) return()
+      if (inherits(path, "try-error") || is_empty(path$datapath)) return()
       path <- path$datapath
       sname <- basename(path)
     } else {

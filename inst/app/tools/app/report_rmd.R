@@ -487,11 +487,11 @@ observeEvent(input$rmd_load, {
     )
   }
 
-  if (!is(path, "try-error") && !is_empty(path)) {
+  if (!inherits(path, "try-error") && !is_empty(path)) {
     if (pp$fext == "html") {
       ## based on http://rmarkdown.rstudio.com/r_notebook_format.html
       rmd <- try(rmarkdown::parse_html_notebook(pp$path), silent = TRUE)
-      if (!is(rmd, "try-error")) {
+      if (!inherits(rmd, "try-error")) {
         rmd <- paste0(rmd$rmd, collapse = "\n")
         r_state$radiant_rmd_name <<- sub("(\\.nb\\.html|\\.html)", ".Rmd", pp$path)
       } else {
@@ -518,7 +518,7 @@ observeEvent(input$rmd_load, {
 
 observeEvent(input$rmd_read_files, {
   path <- shinyFiles::parseFilePaths(sf_volumes, input$rmd_read_files)
-  if (is(path, "try-error") || is_empty(path$datapath)) return()
+  if (inherits(path, "try-error") || is_empty(path$datapath)) return()
   pdir <- getOption("radiant.project_dir", default = rstudioapi::getActiveProject())
   cmd <- read_files(path$datapath, pdir = pdir, type = "rmd", clipboard = FALSE, radiant = TRUE)
   if (!is_empty(cmd)) {

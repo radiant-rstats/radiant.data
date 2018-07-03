@@ -312,7 +312,7 @@ output$pivotr_chi2 <- renderPrint({
 
 dl_pivot_tab <- function(file) {
   dat <- try(.pivotr(), silent = TRUE)
-  if (is(dat, "try-error") || is.null(dat)) {
+  if (inherits(dat, "try-error") || is.null(dat)) {
     write.csv(tibble::tibble("Data" = "[Empty]"), file, row.names = FALSE)
   } else {
     rows <- isolate(r_info[["pvt_rows"]])
@@ -395,12 +395,12 @@ output$plot_pivot <- renderPlot({
     need(length(input$pvt_cvars) < 4, "Plots created for at most 3 categorical variables")
   )
   .plot_pivot()
-}, width = pvt_plot_width, height = pvt_plot_height, res = 96)
+}, width = pvt_plot_width, height = pvt_plot_height, res = 144)
 
 observeEvent(input$pvt_store, {
   req(input$pvt_name)
   dat <- try(.pivotr(), silent = TRUE)
-  if (is(dat, "try-error") || is.null(dat)) return()
+  if (inherits(dat, "try-error") || is.null(dat)) return()
   name <- input$pvt_name
   rows <- input$pivotr_rows_all
   dat$tab %<>% {if (is.null(rows)) . else .[rows, , drop = FALSE]}

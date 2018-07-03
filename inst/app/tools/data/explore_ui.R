@@ -225,7 +225,7 @@ output$explore <- DT::renderDataTable({
 
 dl_explore_tab <- function(path) {
   dat <- try(.explore(), silent = TRUE)
-  if (is(dat, "try-error") || is.null(dat)) {
+  if (inherits(dat, "try-error") || is.null(dat)) {
     write.csv(tibble::tibble("Data" = "[Empty]"), path, row.names = FALSE)
   } else {
     rows <- input$explore_rows_all

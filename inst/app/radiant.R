@@ -116,7 +116,7 @@ saveStateOnRefresh <- function(session = session) {
       r_data[[input$dataset]] %>% filter(!! rlang::parse_expr(selcom)),
       silent = TRUE
     )
-    if (is(seldat, "try-error")) {
+    if (inherits(seldat, "try-error")) {
       isolate(r_info[["filter_error"]] <- paste0("Invalid filter: \"", attr(seldat, "condition")$message, "\". Update or remove the expression"))
     } else {
       isolate(r_info[["filter_error"]] <- "")
@@ -464,7 +464,7 @@ if (getOption("radiant.shinyFiles", FALSE)) {
     observeEvent(input[[id]], {
       if (is.integer(input[[id]])) return()
       path <-  shinyFiles::parseSavePath(sf_volumes, input[[id]])
-      if (!is(path, "try-error") && !is_empty(path$datapath)) {
+      if (!inherits(path, "try-error") && !is_empty(path$datapath)) {
         fun(path$datapath, ...)
       }
     })
@@ -501,7 +501,7 @@ plot_height <- function() {
 
 download_handler_plot <- function(path, plot, width = plot_width, height = plot_height) {
   plot <- try(plot(), silent = TRUE)
-  if (is(plot, "try-error") || is.character(plot) || is.null(plot)) {
+  if (inherits(plot, "try-error") || is.character(plot) || is.null(plot)) {
     plot <- ggplot() + labs(title = "Plot not available")
     inp <- c(500, 100, 96)
   } else {
