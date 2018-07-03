@@ -275,7 +275,6 @@ observeEvent(input$report_clean, {
       gsub("repeater\\(((.|\n)*?),\\s*sim+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "repeater(\n  \\3,\\1\\4)", .) %>%
       gsub("(```\\{r.*?\\})(\nresult <- pivotr(\n|.)*?)(\\s*)store\\(result, name = \"(.*?)\"\\)", "\\1\\2\\4\\5 <- result$tab; register(\"\\5\")\\6", .) %>% 
       gsub("(```\\{r.*?\\})(\nresult <- explore(\n|.)*?)(\\s*)store\\(result, name = \"(.*?)\"\\)", "\\1\\2\\4\\5 <- result$tab; register(\"\\5\")\\6", .) %>%
-      gsub(",\\s*?dpi\\s*?=\\s*?[0-9]+?\\}", "}", .) %>%
       gsub("store\\(result,\\s*name\\s*=\\s*\"(.*?)\",\\s*type\\s*=\\s*\"((P|I)W)\"\\)", "\\1 <- result$\\2; register(\"\\1\")", .)
   })
 
