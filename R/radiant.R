@@ -1207,7 +1207,7 @@ parse_path <- function(
   pdir = getwd()
 ) {
 
-  if (is(path, "try-error") || is_empty(path)) {
+  if (inherits(path, "try-error") || is_empty(path)) {
     return(
       list(path = "", rpath = "", base = "", base_name = "", ext = "", content = "")
     )
@@ -1215,7 +1215,7 @@ parse_path <- function(
 
   if (is_empty(pdir)) {
     pdir <- try(rstudioapi::getActiveProject(), silent = TRUE)
-    if (is(pdir, "try-error") || is_empty(pdir)) {
+    if (inherits(pdir, "try-error") || is_empty(pdir)) {
       # pdir <- getwd()
       pdir <- radiant.data::find_home()
     }
@@ -1236,7 +1236,7 @@ parse_path <- function(
     dbdir <- getOption("radiant.dropbox_dir", "")
     if (is_empty(dbdir)) {
       dbdir <- try(radiant.data::find_dropbox(), silent = TRUE)
-      if (is(dbdir, "try-error")) {
+      if (inherits(dbdir, "try-error")) {
         message("Not able to determine the location of a local the Dropbox folder")
         dbdir <- ""
       }
@@ -1249,7 +1249,7 @@ parse_path <- function(
       gddir <- getOption("radiant.gdrive_dir", "")
       if (is_empty(gddir)) {
         gddir <- try(radiant.data::find_gdrive(), silent = TRUE)
-        if (is(gddir, "try-error")) {
+        if (inherits(gddir, "try-error")) {
           message("Not able to determine the location of a local Google Drive folder")
           gddir <- ""
         }
@@ -1296,7 +1296,7 @@ read_files <- function(
       path <- try(choose_files(), silent = TRUE)
       pdir <- getwd()
     }
-    if (is(path, "try-error") || is_empty(path)) {
+    if (inherits(path, "try-error") || is_empty(path)) {
       return("")
     } else {
       pp <- parse_path(path, pdir = pdir, chr = "\"")

@@ -22,7 +22,6 @@ globalVariables(
 #' @importFrom readr read_delim read_csv write_csv read_rds write_rds locale problems
 #' @importFrom readxl read_excel
 #' @importFrom base64enc dataURI
-#' @importFrom methods is
 #' @importFrom stats as.formula chisq.test dbinom median na.omit quantile sd setNames var weighted.mean
 #' @importFrom utils combn head tail install.packages read.table write.table
 #' @importFrom import from

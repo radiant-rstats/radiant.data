@@ -128,7 +128,7 @@ observeEvent(input$cmb_store, {
   ## combining datasets
   req(length(r_info[["datasetlist"]]) > 1)
   result <- try(do.call(combine_data, cmb_inputs(), envir = r_data), silent = TRUE)
-  if (is(result, "try-error")) {
+  if (inherits(result, "try-error")) {
     r_info[["cmb_error"]] <- attr(result, "condition")$message
   } else {
     r_info[["cmb_error"]] <- ""

@@ -155,6 +155,11 @@ options(
   )
 )
 
+## see https://github.com/tidyverse/ggplot2/issues/2655
+if(!identical(getOption("bitmapType"), "cairo") && isTRUE(capabilities()[["cairo"]])) {
+  options(bitmapType = "cairo")
+}
+
 ## for report and code in menu R
 knitr::opts_knit$set(progress = TRUE)
 knitr::opts_chunk$set(
@@ -165,8 +170,8 @@ knitr::opts_chunk$set(
   warning = FALSE,
   error = TRUE,
   fig.path = normalizePath(tempdir(), winslash = "/"),
-  dev = "svg"
-  # dpi = 96
+  # dev = "svg" ## too slow with big scatter plots on server-side
+  dpi = 144
   # screenshot.force = FALSE,
 )
 
@@ -338,12 +343,12 @@ if (getOption("radiant.local", FALSE)) {
   }
 
   dbdir <- try(radiant.data::find_dropbox(), silent = TRUE)
-  dbdir <- if (is(dbdir, "try-error")) "" else paste0(dbdir, "/")
+  dbdir <- if (inherits(dbdir, "try-error")) "" else paste0(dbdir, "/")
   options(radiant.dropbox_dir = dbdir)
   rm(dbdir)
 
   gddir <- try(radiant.data::find_gdrive(), silent = TRUE)
-  gddir <- if (is(gddir, "try-error")) "" else paste0(gddir, "/")
+  gddir <- if (inherits(gddir, "try-error")) "" else paste0(gddir, "/")
   options(radiant.gdrive_dir = gddir)
   rm(gddir)
 }

@@ -126,7 +126,7 @@ filter_data <- function(dataset, filt = "", drop = TRUE) {
       dataset %>% filter(!! rlang::parse_expr(fix_smart(filt))),
       silent = TRUE
     )
-    if (is(seldat, "try-error")) {
+    if (inherits(seldat, "try-error")) {
       message(paste0("Invalid filter: \"", attr(seldat, "condition")$message, "\". Update or remove the expression"))
     } else {
       if (drop) {

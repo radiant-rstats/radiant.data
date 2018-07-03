@@ -124,7 +124,7 @@ if (exists("r_data", envir = .GlobalEnv)) {
   ## read from file if not in global
   fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", r_ssuid, ".rds")
   rs <- try(readRDS(fn), silent = TRUE)
-  if (is(rs, "try-error")) {
+  if (inherits(rs, "try-error")) {
     r_data <- new.env()
     r_info <- init_data(env = r_data)
     r_state <- list()
@@ -154,7 +154,7 @@ if (exists("r_data", envir = .GlobalEnv)) {
   ## restore from local folder but assign new ssuid
   fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", mrsf, ".rds")
   rs <- try(readRDS(fn), silent = TRUE)
-  if (is(rs, "try-error")) {
+  if (inherits(rs, "try-error")) {
     r_data <- new.env()
     r_info <- init_data(env = r_data)
     r_state <- list()

@@ -30,7 +30,7 @@ load_csv <- function(
       silent = TRUE
     )
   )
-  if (is(dataset, "try-error")) {
+  if (inherits(dataset, "try-error")) {
     "#### There was an error loading the data. Please make sure the data are in csv format"
   } else { 
     prb <- readr::problems(dataset)
@@ -102,7 +102,7 @@ load_user_data <- function(
   if (ext %in% c("rda", "rdata")) {
     ## objname will hold the name of the object(s) inside the R datafile
     robjname <- try(load(uFile), silent = TRUE)
-    if (is(robjname, "try-error")) {
+    if (inherits(robjname, "try-error")) {
       upload_error_handler(objname, "#### There was an error loading the data. Please make sure the data are in rda format.")
     } else if (length(robjname) > 1) {
       if (sum(robjname %in% c("r_state", "r_data", "r_info")) > 1) {
@@ -119,7 +119,7 @@ load_user_data <- function(
   } else if (ext == "rds") {
     ## objname will hold the name of the object(s) inside the R datafile
     robj <- try(readRDS(uFile), silent = TRUE)
-    if (is(robj, "try-error")) {
+    if (inherits(robj, "try-error")) {
       upload_error_handler(objname, "#### There was an error loading the data. Please make sure the data are in rds format.")
     } else {
       r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE) 
@@ -130,7 +130,7 @@ load_user_data <- function(
       upload_error_handler(objname, "#### The feather package is not installed. Please use install.packages('feather')")
     } else {
       robj <- feather::read_feather(uFile) # %>% set_attr("description", feather::feather_metadata(uFile)$description)
-      if (is(robj, "try-error")) {
+      if (inherits(robj, "try-error")) {
         upload_error_handler(objname, "#### There was an error loading the data. Please make sure the data are in feather format.")
       } else {
         r_data[[objname]] <- robj
