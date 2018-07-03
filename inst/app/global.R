@@ -6,6 +6,12 @@ suppressWarnings(
   )
 )
 
+if (sum(nzchar(getOption("radiant.sf_volumes", ""))) > 0 || isTRUE(Sys.getenv("RSTUDIO") != "")) {
+  options(radiant.shinyFiles = TRUE)
+} else {
+  options(radiant.shinyFiles = FALSE)
+}
+
 ## determining how radiant was launched
 ## should this be set in global?
 if (is.null(getOption("radiant.launch"))) {
@@ -143,8 +149,8 @@ options(
     "mean" = "mean", "median" = "median", "min" = "min", "max" = "max",
     "sum" = "sum", "var" = "var", "sd" = "sd", "se" = "se", "cv" = "cv",
     "prop" = "prop", "varprop" = "varprop", "sdprop" = "sdprop", "seprop" = "seprop",
-    "varpop" = "varpop", "sdpop" = "sdpop", "1%" = "p01", "2.5%" = "p025", "5%" = "p05", 
-    "10%" = "p10", "25%" = "p25", "75%" = "p75", "90%" = "p90", "95%" = "p95", 
+    "varpop" = "varpop", "sdpop" = "sdpop", "1%" = "p01", "2.5%" = "p025", "5%" = "p05",
+    "10%" = "p10", "25%" = "p25", "75%" = "p75", "90%" = "p90", "95%" = "p95",
     "97.5%" = "p975", "99%" = "p99", "skew" = "skew", "kurtosis" = "kurtosi"
   )
 )
@@ -168,7 +174,8 @@ knitr::opts_chunk$set(
 r_sessions <- new.env(parent = emptyenv())
 
 ## create directory to hold session files
-file.path(normalizePath("~"), "radiant.sessions") %>% {
+# file.path(normalizePath("~"), "radiant.sessions") %>% {
+file.path(radiant.data::find_home(), "radiant.sessions") %>% {
   if (!file.exists(.)) dir.create(.)
 }
 
@@ -324,7 +331,7 @@ if (getOption("radiant.local", FALSE)) {
   options(radiant.write_dir = ifelse(radiant.data::is_empty(getOption("radiant.project_dir")), "~/", ""))
   if (radiant.data::is_empty(getOption("radiant.launch_dir"))) {
     if (radiant.data::is_empty(getOption("radiant.project_dir"))) {
-      options(radiant.launch_dir = "~")
+      options(radiant.launch_dir = radiant.data::find_home())
     } else {
       options(radiant.launch_dir = getOption("radiant.project_dir"))
     }
@@ -415,10 +422,14 @@ options(
         icon = icon("save"),
         ## inspiration for uploading state https://stackoverflow.com/a/11406690/1974918
         ## see also function in www/js/run_return.js
+        "Server",
         tabPanel(actionLink("state_save_link", "Save radiant state file", icon = icon("download"))),
-        tabPanel(actionLink("state_load_link", "Load radiant state file", icon = icon("folder-open"))),
+        tabPanel(actionLink("state_load_link", "Load radiant state file", icon = icon("upload"))),
         tabPanel(actionLink("state_share", "Share radiant state", icon = icon("share"))),
-        tabPanel("View radiant state", uiOutput("state_view"), icon = icon("user"))
+        tabPanel("View radiant state", uiOutput("state_view"), icon = icon("user")),
+        "----", "Local",
+        tabPanel(downloadLink("state_download", "   Download radiant state file", class = "fa fa-download")),
+        tabPanel(actionLink("state_upload_link", "Upload radiant state file", icon = icon("upload")))
       ),
 
       ## stop app *and* close browser window

@@ -8,25 +8,23 @@
 # options(shiny.error = recover)
 # options(warn = 2)
 
-find_home <- function(os_type = Sys.info()["sysname"]) {
-  if (os_type == "Windows") {
-    ## gives /Users/x and not /Users/x/Documents
-    normalizePath(
-      file.path(Sys.getenv("HOMEDRIVE"), Sys.getenv("HOMEPATH")),
-      winslash = "/"
-    )
+if (getOption("radiant.shinyFiles", FALSE)) {
+  if (isTRUE(Sys.getenv("RSTUDIO") == "")) {
+    ## Users not on Rstudio will only get access to pre-specified volumes
+    sf_volumes <- getOption("radiant.sf_volumes", "")
   } else {
-    Sys.getenv("HOME")
+    sf_volumes <- getOption("radiant.launch_dir")
+    home <- radiant.data::find_home()
+    if (home != sf_volumes) {
+      sf_volumes <- c(sf_volumes, home) %>% set_names(c(basename(sf_volumes), "Home"))
+    } else {
+      sf_volumes <- c(Home = home)
+    }
+    if (sum(nzchar(getOption("radiant.sf_volumes", ""))) > 0) {
+      sf_volumes <- getOption("radiant.sf_volumes") %>% {c(sf_volumes, .[!. %in% sf_volumes])}
+    }
   }
 }
-volumes <- getOption("radiant.launch_dir")
-home <- find_home()
-if (home != volumes) {
-  volumes <- c(volumes, home) %>% set_names(c(basename(volumes), "home"))
-} else {
-  volumes <- c(home = home)
-}
-print(volumes)
 
 remove_session_files <- function(st = Sys.time()) {
   fl <- list.files(

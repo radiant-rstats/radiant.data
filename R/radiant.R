@@ -34,7 +34,7 @@ launch <- function(package = "radiant.data", run = "viewer") {
     dctrl = if (getRversion() > "3.4.4") c("keepNA", "niceNames") else "keepNA"
   )
   on.exit(base::options(oop), add = TRUE)
-  if (is_empty(Sys.getenv("RSTUDIO"))) {
+  if (run == "browser" || run == "external") {
     message(sprintf("\nStarting %s in the default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer\nor %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
     options(radiant.launch = "browser")
     run <- TRUE
@@ -1216,7 +1216,8 @@ parse_path <- function(
   if (is_empty(pdir)) {
     pdir <- try(rstudioapi::getActiveProject(), silent = TRUE)
     if (is(pdir, "try-error") || is_empty(pdir)) {
-      pdir <- getwd()
+      # pdir <- getwd()
+      pdir <- radiant.data::find_home()
     }
   }
 
@@ -1392,5 +1393,20 @@ read_files <- function(
     } else {
       cat(cmd)
     }
+  }
+}
+
+#' Find users home directory
+#' @details Returns gives /Users/x and not /Users/x/Documents
+#' @export
+find_home <- function() {
+  os_type = Sys.info()["sysname"]
+  if (os_type == "Windows") {
+    normalizePath(
+      file.path(Sys.getenv("HOMEDRIVE"), Sys.getenv("HOMEPATH")),
+      winslash = "/"
+    )
+  } else {
+    Sys.getenv("HOME")
   }
 }

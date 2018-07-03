@@ -1,10 +1,24 @@
 file_upload_button <- function(
   inputId, label = "", multiple = FALSE,
-  accept = NULL, buttonLabel = "Load",
+  accept = NULL, buttonLabel = "Load", title = "Load data",
   class = "", icn = "upload", progress = FALSE
 ) {
 
-  if (is_empty(Sys.getenv("RSTUDIO"))) {
+  if (getOption("radiant.shinyFiles", FALSE)) {
+    shinyFiles::shinyFileChoose(
+      input = input,
+      id = inputId,
+      session = session,
+      roots = sf_volumes,
+      filetype = gsub(".", "", accept, fixed = TRUE)
+    )
+
+    # actionButton(inputId, buttonLabel, icon = icon(icn), class = class)
+    shinyFiles::shinyFilesButton(
+      inputId, buttonLabel, label, title = title, 
+      multiple = FALSE, class = class, icon = icon(icn)
+    )
+  } else {
     if (length(accept) > 0) {
       accept <- paste(accept, collapse = ",")
     } else {
@@ -32,20 +46,6 @@ file_upload_button <- function(
     }
 
     HTML(btn)
-  } else {
-    shinyFiles::shinyFileChoose(
-      input = input,
-      id = inputId,
-      session = session,
-      roots = volumes,
-      filetype = gsub(".", "", accept, fixed = TRUE)
-    )
-
-    # actionButton(inputId, buttonLabel, icon = icon(icn), class = class)
-    shinyFiles::shinyFilesButton(
-      inputId, buttonLabel, label, 
-      multiple = FALSE, class = class, icon = icon(icn)
-    )
   }
 }
 
@@ -407,7 +407,7 @@ sans_ext <- function(path) {
 
 report_name <- function(type = "rmd", out = "report", full.name = FALSE) {
 
-  ldir <- getOption("radiant.launch_dir", default = "~")
+  ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
   pdir <- getOption("radiant.project_dir", default = ldir)
 
   ## generate report name based on state or project name

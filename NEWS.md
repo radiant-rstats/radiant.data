@@ -1,4 +1,6 @@
-# radiant.data 0.9.5.6
+# radiant.data 0.9.6.0
+
+## Major changes
 
 * Using [`shinyFiles`](https://github.com/thomasp85/shinyFiles) to provide convenient access to data located on a server
 
@@ -24,13 +26,13 @@
 
 # radiant.data 0.9.3.5
 
-## minor changes
+## Minor changes
 
 * Use `dev = "svg"` for plots in _Report > Rmd_ and _Report > R_
 
 # radiant.data 0.9.3.4
 
-## minor changes
+## Minor changes
 
 * Add argument to `dtab.data.frame` to format specified columns as a percentage
 

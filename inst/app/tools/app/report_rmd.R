@@ -231,9 +231,17 @@ output$ui_rmd_save_type <- renderUI({
   )
 })
 
-conditional_download_button <- function(id) {
+conditional_save_report <- function(id) {
   if (isTRUE(getOption("radiant.report"))) {
     download_button(id, "Save report", class = "btn-primary")
+  } else {
+    invisible()
+  }
+}
+
+conditional_read_files <- function(id) {
+  if (getOption("radiant.shinyFiles", FALSE)) {
+    download_button(id, "Read files", class = "btn-primary")
   } else {
     invisible()
   }
@@ -243,14 +251,16 @@ output$ui_rmd_load <- renderUI({
   file_upload_button(
     "rmd_load",
     accept = c(".Rmd", ".rmd", ".md", ".html"),
-    buttonLabel = "Load report"
+    buttonLabel = "Load report",
+    title = "Load report",
+    class = "btn-default"
   )
 })
 
-if (!is_empty(Sys.getenv("RSTUDIO"))) {
+if (getOption("radiant.shinyFiles", FALSE)) {
   output$ui_rmd_read_files <- renderUI({
     shinyFiles::shinyFilesButton(
-      "rmd_read_files", "Read files", "Generate code to read selected file:", 
+      "rmd_read_files", "Read files", "Generate code to read selected file", 
       multiple = FALSE, icon = icon("book"), class = "btn-primary"
     )
   })
@@ -258,7 +268,7 @@ if (!is_empty(Sys.getenv("RSTUDIO"))) {
     input = input,
     id = "rmd_read_files",
     session = session,
-    roots = volumes
+    roots = sf_volumes
   )
 }
 
@@ -314,9 +324,9 @@ output$report_rmd <- renderUI({
         td(uiOutput("ui_rmd_view")),
         td(uiOutput("ui_rmd_switch")),
         td(uiOutput("ui_rmd_save_type")),
-        td(conditional_download_button("rmd_save"), style = "padding-top:5px;"),
+        td(conditional_save_report("rmd_save"), style = "padding-top:5px;"),
         td(uiOutput("ui_rmd_load"), style = "padding-top:5px;"),
-        td(conditional_download_button("rmd_read_files"), style = "padding-top:5px;"),
+        td(conditional_read_files("rmd_read_files"), style = "padding-top:5px;"),
         td(actionButton("rmd_clear", "Clear output", icon = icon("trash"), class = "btn-danger"), style = "padding-top:5px;")
       )
     ),
@@ -451,17 +461,23 @@ report_save_filename_rmd <- function() report_save_filename(type = "rmd", full.n
 
 download_handler(
   id = "rmd_save", 
+  label = "Save report",
   fun = function(x, type = "rmd") report_save_content(x, type), 
   fn = function() report_save_filename_rmd() %>% sans_ext(),
   type = function() report_save_filename_rmd() %>% {if (grepl("nb\\.html", .)) "nb.html" else tools::file_ext(.)},
+  caption = "Save report",
   btn = "button",
-  label = "Save report",
   class = "btn-primary"
 )
 
 observeEvent(input$rmd_load, {
   ## loading report from disk
-  if (is_empty(Sys.getenv("RSTUDIO"))) {
+  if (getOption("radiant.shinyFiles", FALSE)) {
+    inFile <- shinyFiles::parseFilePaths(sf_volumes, input$rmd_load)
+    if (is.integer(inFile) || nrow(inFile) == 0) return()
+    path <- inFile$datapath
+    pp <- parse_path(path, pdir = getOption("radiant.project_dir", ""), chr = "")
+  } else {
     inFile <- input$rmd_load
     path <- inFile$datapath
     pp <- list(
@@ -469,11 +485,6 @@ observeEvent(input$rmd_load, {
       filename = inFile$name,
       fext = tools::file_ext(inFile$name)
     )
-  } else {
-    inFile <- shinyFiles::parseFilePaths(volumes, input$rmd_load)
-    if (is.integer(inFile) || nrow(inFile) == 0) return()
-    path <- inFile$datapath
-    pp <- parse_path(path, pdir = getOption("radiant.project_dir", ""), chr = "")
   }
 
   if (!is(path, "try-error") && !is_empty(path)) {
@@ -488,10 +499,10 @@ observeEvent(input$rmd_load, {
       }
     } else {
       rmd <- paste0(readLines(pp$path), collapse = "\n")
-      if (is_empty(Sys.getenv("RSTUDIO"))) {
-        r_state$radiant_rmd_name <<- pp$filename
-      } else {
+      if (getOption("radiant.shinyFiles", FALSE)) {
         r_state$radiant_rmd_name <<- pp$path
+      } else {
+        r_state$radiant_rmd_name <<- pp$filename
       }
     }
 
@@ -506,7 +517,7 @@ observeEvent(input$rmd_load, {
 })
 
 observeEvent(input$rmd_read_files, {
-  path <- shinyFiles::parseFilePaths(volumes, input$rmd_read_files)
+  path <- shinyFiles::parseFilePaths(sf_volumes, input$rmd_read_files)
   if (is(path, "try-error") || is_empty(path$datapath)) return()
   pdir <- getOption("radiant.project_dir", default = rstudioapi::getActiveProject())
   cmd <- read_files(path$datapath, pdir = pdir, type = "rmd", clipboard = FALSE, radiant = TRUE)

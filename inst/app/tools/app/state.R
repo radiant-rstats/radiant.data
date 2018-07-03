@@ -44,7 +44,7 @@ output$state_view <- renderUI({
 
 state_name <- function(out = paste0("radiant-", Sys.Date(), ".state.rda"), full.name = FALSE) {
   rsn <- r_state$radiant_state_name
-  ldir <- getOption("radiant.launch_dir", default = "~")
+  ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
   pdir <- getOption("radiant.project_dir", default = ldir)
   ## legacy
   if (is_empty(rsn)) rsn <- r_state$state_name 
@@ -80,6 +80,16 @@ observeEvent(input$state_share, {
     saveSession(session)
   })
 })
+
+output$state_download <- downloadHandler(
+  filename = function() {
+    fn <- state_name_dlh() %>% sans_ext()
+    type <- state_name_dlh() %>% 
+      {if (grepl("\\.state\\.rda", .)) "state.rda" else tools::file_ext(.)}
+    paste0(fn, ".", type)
+  },
+  content = function(path) { saveState(path) }
+)
 
 output$show_session <- renderPrint({
   input$show_session ## only update when you toggle the checkbox

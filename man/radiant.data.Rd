@@ -4,7 +4,6 @@
 \name{radiant.data}
 \alias{radiant.data}
 \alias{radiant.data-package}
-\alias{radiant.data}
 \title{radiant.data}
 \usage{
 radiant.data()

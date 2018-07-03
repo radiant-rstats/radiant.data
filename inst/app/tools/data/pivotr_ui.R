@@ -485,7 +485,7 @@ download_handler(
   fun = download_handler_plot,
   fn = function() paste0(input$dataset, "_pivot"),
   type = "png",
-  caption = "Download pivot plot",
+  caption = "Save pivot plot",
   plot = .plot_pivot,
   width = pvt_plot_width,
   height = pvt_plot_height
