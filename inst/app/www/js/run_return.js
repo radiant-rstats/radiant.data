@@ -86,6 +86,10 @@ $(function(){
     e.preventDefault();
     $("#state_load").trigger('click');
   });
+  $("#state_upload_link").on('click', function(e){
+    e.preventDefault();
+    $("#state_upload").trigger('click');
+  });
 });
 
 // from https://stackoverflow.com/a/33251536/1974918 by Dean Attali

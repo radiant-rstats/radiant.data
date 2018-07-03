@@ -471,7 +471,7 @@ download_handler(
   fun = download_handler_plot, 
   fn = function() paste0(input$dataset, "_visualize"),
   type = "png",
-  caption = "Download visualize plot",
+  caption = "Save visualize plot",
   plot = .visualize,
   width = viz_plot_width,
   height = viz_plot_height

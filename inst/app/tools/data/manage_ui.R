@@ -3,24 +3,24 @@
 #######################################
 
 output$ui_state_load <- renderUI({
-  if (is_empty(Sys.getenv("RSTUDIO"))) {
-    fileInput("state_load", "Load radiant state file:", accept = ".rda")
-  } else {
+  if (getOption("radiant.shinyFiles", FALSE)) {
     tagList(
       HTML("<label>Load radiant state file:</label></br>"),
       shinyFiles::shinyFilesButton(
-        "state_load", "Load", "Load radiant state file:", 
+        "state_load", "Load", "Load radiant state file", 
         multiple = FALSE, icon = icon("upload")
       )
     )
+  } else {
+    fileInput("state_load", "Load radiant state file:", accept = ".rda")
   }
 })
 
 make_uploadfile <- function(accept) {
-  if (is_empty(Sys.getenv("RSTUDIO"))) {
-    fileInput("uploadfile", NULL, multiple = TRUE, accept = accept)
-  } else {
+  if (getOption("radiant.shinyFiles", FALSE)) {
     shinyFiles::shinyFilesButton("uploadfile", "Load", "Load data", multiple = TRUE, icon = icon("upload"))
+  } else {
+    fileInput("uploadfile", NULL, multiple = TRUE, accept = accept)
   }
 }
 
@@ -217,7 +217,8 @@ output$ui_Manage <- renderUI({
       conditionalPanel(
         condition = "input.dataType == 'state'",
         uiOutput("ui_state_load"),
-        uiOutput("refreshOnUpload")
+        uiOutput("ui_state_upload"),
+        uiOutput("refreshOnLoad")
       )
     ),
     wellPanel(
@@ -373,7 +374,7 @@ man_save_data <- function(file) {
   }
 }
 
-if (!is_empty(Sys.getenv("RSTUDIO"))) {
+if (getOption("radiant.shinyFiles", FALSE)) {
   sf_filetypes <- function() {
     if (length(input$dataType) == 0) {
       ""
@@ -392,7 +393,7 @@ if (!is_empty(Sys.getenv("RSTUDIO"))) {
     input = input,
     id = "uploadfile",
     session = session,
-    roots = volumes,
+    roots = sf_volumes,
     filetype = sf_filetypes
   )
 
@@ -400,7 +401,7 @@ if (!is_empty(Sys.getenv("RSTUDIO"))) {
     input = input,
     id = "state_load",
     session = session,
-    roots = volumes,
+    roots = sf_volumes,
     filetype = c("rda", "state.rda")
   )
 } else {
@@ -433,16 +434,17 @@ download_handler(
   fun = man_save_data, 
   fn = function() input$dataset,
   type = function() input$saveAs,
+  caption = "Save data",
   btn = "button",
   label = "Save"
 )
 
 observeEvent(input$uploadfile, {
-  if (is_empty(Sys.getenv("RSTUDIO"))) {
-    inFile <- input$uploadfile
-  } else {
-    inFile <- shinyFiles::parseFilePaths(volumes, input$uploadfile)
+  if (getOption("radiant.shinyFiles", FALSE)) {
+    inFile <- shinyFiles::parseFilePaths(sf_volumes, input$uploadfile)
     if (is.integer(inFile) || nrow(inFile) == 0) return()
+  } else {
+    inFile <- input$uploadfile
   }
 
   ## iterating through the files to upload
@@ -642,20 +644,41 @@ observeEvent(input$loadClipData, {
 #######################################
 # Load previous state
 #######################################
-output$refreshOnUpload <- renderUI({
-  req(input$state_load)
-  if (is_empty(Sys.getenv("RSTUDIO"))) {
-    path <- input$state_load$datapath
-    sname <- input$state_load$name
+output$refreshOnLoad <- renderUI({
+  # req(input$state_load)
+  req(pressed(input$state_load) || pressed(input$state_upload))
+
+  if (pressed(input$state_load)) {
+    if (getOption("radiant.shinyFiles", FALSE)) {
+      if (is.integer(input$state_load)) return()
+      path <- shinyFiles::parseFilePaths(sf_volumes, input$state_load)
+      if (is(path, "try-error") || is_empty(path$datapath)) return()
+      path <- path$datapath
+      sname <- basename(path)
+    } else {
+      path <- input$state_load$datapath
+      sname <- input$state_load$name
+    }
   } else {
-    if (is.integer(input$state_load)) return()
-    path <- shinyFiles::parseFilePaths(volumes, input$state_load)
-    if (is(path, "try-error") || is_empty(path$datapath)) return()
-    path <- path$datapath
-    sname <- basename(path)
+    path <- input$state_upload$datapath
+    sname <- input$state_upload$name
   }
 
-  if (is_empty(path)) return(invisible())
+  if (is_empty(path)) {
+    invisible()
+  } else {
+    refreshOnLoad(path, sname)
+    ## Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
+    tags$script("window.location.reload();")
+  }
+})
+
+output$ui_state_upload <- renderUI({
+  fileInput("state_upload", "Upload radiant state file:", accept = ".rda")
+})
+
+refreshOnLoad <- function(path, sname) {
+
   tmpEnv <- new.env(parent = emptyenv())
   load(path, envir = tmpEnv)
 
@@ -667,7 +690,7 @@ output$refreshOnUpload <- renderUI({
         title = "Restore radiant state failed",
         span(
           "Unable to restore radiant state from the selected file.
-          Choose another state file or select 'rda' from the 'Load
+          Choose another state file or select 'rds | rda | rdata' from the 'Load
           data of type' dropdown to load an R-data file and try again"
         ),
         footer = modalButton("OK"),
@@ -717,20 +740,16 @@ output$refreshOnUpload <- renderUI({
   )
 
   rm(tmpEnv)
-
-  ## Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
-  tags$script("window.location.reload();")
-})
-
+}
 
 ## need to set suspendWhenHidden to FALSE so that the href for the
 ## these outputs is available on startup and keyboard shortcuts will work
 ## see https://shiny.rstudio.com/reference/shiny/0.11/outputOptions.html
 ## see https://stackoverflow.com/questions/48117501/click-link-in-navbar-menu
 ## https://stackoverflow.com/questions/3871358/get-all-the-href-attributes-of-a-web-site
-outputOptions(output, "refreshOnUpload", suspendWhenHidden = FALSE)
+outputOptions(output, "refreshOnLoad", suspendWhenHidden = FALSE)
 outputOptions(output, "ui_state_load", suspendWhenHidden = FALSE)
-# outputOptions(output, "ui_state_save", suspendWhenHidden = FALSE)
+outputOptions(output, "ui_state_upload", suspendWhenHidden = FALSE)
 
 #######################################
 # Save state
@@ -841,9 +860,7 @@ output$man_summary <- renderPrint({
 })
 
 man_show_log <- reactive({
-  if (is_empty(Sys.getenv("RSTUDIO"))) {
-    "## No R-code available"
-  } else {
+  if (getOption("radiant.shinyFiles", FALSE)) {
     lcmd <- r_info[[paste0(input$dataset, "_lcmd")]]
     cmd <- ""
     if (!is_empty(lcmd)) {
@@ -854,6 +871,8 @@ man_show_log <- reactive({
       cmd <- paste0(cmd, "\n\n## Save commands\n", scmd)
     }
     cmd
+  } else {
+    "## No R-code available"
   }
 })
 
@@ -897,9 +916,9 @@ man_show_log_modal <- function() {
 }
 
 observeEvent(input$manage_report, {
-  if (is_empty(Sys.getenv("RSTUDIO"))) {
-    man_show_log_modal()
-  } else {
+  if (getOption("radiant.shinyFiles", FALSE)) {
     update_report(cmd = man_show_log(), outputs = NULL, figs = FALSE)
+  } else {
+    man_show_log_modal()
   }
 })

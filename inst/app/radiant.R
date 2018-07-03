@@ -80,10 +80,11 @@ saveStateOnRefresh <- function(session = session) {
       if (not_pressed(input$refresh_radiant) &&
           not_pressed(input$stop_radiant) &&
           not_pressed(input$state_load) &&
+          not_pressed(input$state_upload) &&
           !"fixed" %in% names(url_query)) {
         saveSession(session)
       } else {
-        if (not_pressed(input$state_load)) {
+        if (not_pressed(input$state_load) && not_pressed(input$state_upload)) {
           if (exists("r_sessions")) {
             sshhr(try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE))
             sshhr(try(rm(r_ssuid), silent = TRUE))
@@ -423,27 +424,7 @@ returnTextInput <- function(
   )
 }
 
-if (is_empty(Sys.getenv("RSTUDIO"))) {
-  download_link <- function(id) {
-    downloadLink(id, "", class = "fa fa-download alignright")
-  }
-  download_button <- function(id, label = "Save", ic = "download", class = "", ...) {
-    downloadButton(id, label, class = class)
-  }
-  download_handler <- function(
-    id, label = "", fun = id, fn, type = "csv", caption = "Download to csv",
-    class = "", ic = "download", btn = "link", ...
-  ) {
-    output[[id]] <- downloadHandler(
-      filename = function() {
-        if (is.function(fn)) fn <- fn()
-        if (is.function(type)) type <- type()
-        paste0(fn, ".", type)
-      },
-      content = function(path) { fun(path, ...) }
-    )
-  }
-} else {
+if (getOption("radiant.shinyFiles", FALSE)) {
   download_link <- function(id) {
     uiOutput(paste0("ui_", id))
   }
@@ -453,11 +434,11 @@ if (is_empty(Sys.getenv("RSTUDIO"))) {
   }
 
   download_handler <- function(
-    id, label = "", fun = id, fn, type = "csv", caption = "Download to csv",
+    id, label = "", fun = id, fn, type = "csv", caption = "Save to csv",
     class = "", ic = "download", btn = "link", ...
   ) {
     ## create observer
-    shinyFiles::shinyFileSave(input, id, roots = volumes, session = session)
+    shinyFiles::shinyFileSave(input, id, roots = sf_volumes, session = session)
 
     ## create renderUI
     if (btn == "link") {
@@ -482,11 +463,31 @@ if (is_empty(Sys.getenv("RSTUDIO"))) {
 
     observeEvent(input[[id]], {
       if (is.integer(input[[id]])) return()
-      path <-  shinyFiles::parseSavePath(volumes, input[[id]])
+      path <-  shinyFiles::parseSavePath(sf_volumes, input[[id]])
       if (!is(path, "try-error") && !is_empty(path$datapath)) {
         fun(path$datapath, ...)
       }
     })
+  }
+} else {
+  download_link <- function(id) {
+    downloadLink(id, "", class = "fa fa-download alignright")
+  }
+  download_button <- function(id, label = "Save", ic = "download", class = "", ...) {
+    downloadButton(id, label, class = class)
+  }
+  download_handler <- function(
+    id, label = "", fun = id, fn, type = "csv", caption = "Save to csv",
+    class = "", ic = "download", btn = "link", ...
+  ) {
+    output[[id]] <- downloadHandler(
+      filename = function() {
+        if (is.function(fn)) fn <- fn()
+        if (is.function(type)) type <- type()
+        paste0(fn, ".", type)
+      },
+      content = function(path) { fun(path, ...) }
+    )
   }
 }
 

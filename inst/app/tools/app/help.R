@@ -117,9 +117,9 @@ observeEvent(input$help_keyboard, {
           tr(class = "border_bottom padding_bottom",
              td("Estimate/Run (green)"), td("CMD-enter"), td("CTRL-enter")),
           tr(class = "border_bottom padding_bottom",
-             td("Download/save (blue)"), td("CMD-s"), td("CTRL-s")),
+             td("Save (blue)"), td("CMD-s"), td("CTRL-s")),
           tr(class = "border_bottom padding_bottom",
-             td("Upload (blue)"), td("CMD-o"), td("CTRL-o"))
+             td("Load (blue)"), td("CMD-o"), td("CTRL-o"))
           # tr(class = "border_bottom padding_bottom",
              # td("Viewer pane full screen"), td("Shift-CTRL-9"), td("Shift-CTRL-9"))
         )
