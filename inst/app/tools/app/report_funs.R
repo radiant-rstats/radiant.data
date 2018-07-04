@@ -75,7 +75,7 @@ rstudio_context <- function(type = "rmd") {
     list(path = "", rpath = "", base = "", base_name = "", ext = "", content = "")
   } else {
     path <- normalizePath(path, winslash = "/")
-    pdir <- getOption("radiant.project_dir", default = "")
+    pdir <- getOption("radiant.project_dir", default = radiant.data::find_home())
 
     sel <- rse$selection[[1]][["text"]]
     if (is_empty(sel)) {
@@ -355,7 +355,7 @@ knit_it <- function(report, type = "rmd") {
 
   ## fragment also available with rmarkdown
   ## http://rmarkdown.rstudio.com/html_fragment_format.html
-  pdir <- getOption("radiant.project_dir", default = "")
+  pdir <- getOption("radiant.project_dir", default = radiant.data::find_home())
   if (!is_empty(pdir)) {
     owd <- setwd(pdir)
     on.exit(setwd(owd))
@@ -483,7 +483,7 @@ report_save_content <- function(file, type = "rmd") {
 
   if (isTRUE(getOption("radiant.report"))) {
     isolate({
-      ldir <- getOption("radiant.launch_dir", default = "~/")
+      ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
       pdir <- getOption("radiant.project_dir", default = ldir)
 
       tdir <- tempdir()

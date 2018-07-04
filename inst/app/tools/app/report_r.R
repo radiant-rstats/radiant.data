@@ -119,7 +119,7 @@ observeEvent(input$r_generate, {
           ## useful if you are not using an Rstudio project
           rstudioapi::navigateToFile(rcode)
         } else {
-          pdir <- getOption("radiant.project_dir", default = "")
+          pdir <- getOption("radiant.project_dir", default = radiant.data::find_home())
           path <- file.path(pdir, rcode)
           if (file.exists(path)) {
             rstudioapi::navigateToFile(path)
@@ -369,7 +369,7 @@ observeEvent(input$r_load, {
     inFile <- shinyFiles::parseFilePaths(sf_volumes, input$rmd_load)
     if (is.integer(inFile) || nrow(inFile) == 0) return()
     path <- inFile$datapath
-    pp <- parse_path(path, pdir = getOption("radiant.project_dir", ""), chr = "")
+    pp <- parse_path(path, pdir = getOption("radiant.project_dir", radiant.data::find_home()), chr = "")
   } else {
     inFile <- input$r_load
     path <- inFile$datapath
@@ -410,7 +410,7 @@ observeEvent(input$r_load, {
 observeEvent(input$r_read_files, {
   path <- shinyFiles::parseFilePaths(sf_volumes, input$r_read_files)
   if (inherits(path, "try-error") || is_empty(path$datapath)) return()
-  pdir <- getOption("radiant.project_dir", default = rstudioapi::getActiveProject())
+  pdir <- getOption("radiant.project_dir", default = radiant.data::find_home())
   cmd <- read_files(path$datapath, pdir = pdir, type = "r", clipboard = FALSE, radiant = TRUE)
 
   if (!is_empty(cmd)) {
