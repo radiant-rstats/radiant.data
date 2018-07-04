@@ -333,13 +333,18 @@ rm(tmp, radiant.versions)
 
 if (getOption("radiant.local", FALSE)) {
   options(radiant.project_dir = radiant.data::find_project(mess = FALSE))
-  options(radiant.write_dir = ifelse(radiant.data::is_empty(getOption("radiant.project_dir")), "~/", ""))
+  # options(radiant.write_dir = ifelse(radiant.data::is_empty(getOption("radiant.project_dir")), radiant.data::find_home(), ""))
   if (radiant.data::is_empty(getOption("radiant.launch_dir"))) {
     if (radiant.data::is_empty(getOption("radiant.project_dir"))) {
       options(radiant.launch_dir = radiant.data::find_home())
+      options(radiant.project_dir = getOption("radiant.launch_dir"))
     } else {
       options(radiant.launch_dir = getOption("radiant.project_dir"))
     }
+  }
+
+  if (radiant.data::is_empty(getOption("radiant.project_dir"))) {
+    options(radiant.project_dir = getOption("radiant.launch_dir"))
   }
 
   dbdir <- try(radiant.data::find_dropbox(), silent = TRUE)
@@ -351,8 +356,10 @@ if (getOption("radiant.local", FALSE)) {
   gddir <- if (inherits(gddir, "try-error")) "" else paste0(gddir, "/")
   options(radiant.gdrive_dir = gddir)
   rm(gddir)
+} else {
+  options(radiant.launch_dir = radiant.data::find_home())
+  options(radiant.project_dir = getOption("radiant.launch_dir"))
 }
-
 navbar_proj <- function(navbar) {
   pdir <- getOption("radiant.project_dir", default = "")
   proj <- if (radiant.data::is_empty(pdir)) {
