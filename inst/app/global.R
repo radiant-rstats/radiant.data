@@ -331,9 +331,26 @@ if (length(tmp) > 0) {
 options(radiant.versions = paste(radiant.versions, collapse = ", "))
 rm(tmp, radiant.versions)
 
-if (getOption("radiant.local", FALSE)) {
-  options(radiant.project_dir = radiant.data::find_project(mess = FALSE))
-  # options(radiant.write_dir = ifelse(radiant.data::is_empty(getOption("radiant.project_dir")), radiant.data::find_home(), ""))
+navbar_proj <- function(navbar) {
+  pdir <- radiant.data::find_project(mess = FALSE)
+  options(radiant.project_dir = pdir)
+  proj <- if (radiant.data::is_empty(pdir)) {
+    "Project: (None)"
+  } else {
+    paste0("Project: ", basename(pdir)) %>%
+      {if(nchar(.) > 35) paste0(strtrim(., 31), " ...") else .}
+  }
+  proj <- tags$span(class = "nav navbar-brand navbar-right", proj)
+  ## based on: https://stackoverflow.com/a/40755608/1974918
+  navbar[[3]][[1]]$children[[1]]$children[[2]] <- htmltools::tagAppendChild(
+    navbar[[3]][[1]]$children[[1]]$children[[2]],
+    proj
+  )
+
+  navbar
+}
+
+if (getOption("radiant.shinyFiles", FALSE)) {
   if (radiant.data::is_empty(getOption("radiant.launch_dir"))) {
     if (radiant.data::is_empty(getOption("radiant.project_dir"))) {
       options(radiant.launch_dir = radiant.data::find_home())
@@ -359,23 +376,6 @@ if (getOption("radiant.local", FALSE)) {
 } else {
   options(radiant.launch_dir = radiant.data::find_home())
   options(radiant.project_dir = getOption("radiant.launch_dir"))
-}
-navbar_proj <- function(navbar) {
-  pdir <- getOption("radiant.project_dir", default = "")
-  proj <- if (radiant.data::is_empty(pdir)) {
-    "Project: (None)"
-  } else {
-    paste0("Project: ", basename(pdir)) %>%
-      {if(nchar(.) > 35) paste0(strtrim(., 31), " ...") else .}
-  }
-  proj <- tags$span(class = "nav navbar-brand navbar-right", proj)
-  ## based on: https://stackoverflow.com/a/40755608/1974918
-  navbar[[3]][[1]]$children[[1]]$children[[2]] <- htmltools::tagAppendChild(
-    navbar[[3]][[1]]$children[[1]]$children[[2]],
-    proj
-  )
-
-  navbar
 }
 
 ## formatting data.frames printed in Report > Rmd and Report > R
@@ -440,7 +440,7 @@ options(
         tabPanel(actionLink("state_share", "Share radiant state", icon = icon("share"))),
         tabPanel("View radiant state", uiOutput("state_view"), icon = icon("user")),
         "----", "Local",
-        tabPanel(downloadLink("state_download", "   Download radiant state file", class = "fa fa-download")),
+        tabPanel(downloadLink("state_download", "    Download radiant state file", class = "fa fa-download")),
         tabPanel(actionLink("state_upload_link", "Upload radiant state file", icon = icon("upload")))
       ),
 
