@@ -7,11 +7,11 @@
 glue_collapse(...)
 }
 \arguments{
-\item{...}{arguments passed to \code{glue::collapse}}
+\item{...}{arguments passed to \code{glue::glue_collapse}}
 }
 \description{
 Exporting collapse from glue as glue_collapse
 }
 \details{
-See \code{\link[glue]{collapse}} in the \code{glue} package for more details
+See \code{\link[glue]{glue_collapse}} in the \code{glue} package for more details
 }

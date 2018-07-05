@@ -90,7 +90,7 @@ explore <- function(
     }
 
     ## setup regular expression to split variable/function column appropriately
-    rex <- paste0("(.*?)_", glue('({glue::collapse(fun, "$|")}$)'))
+    rex <- paste0("(.*?)_", glue('({glue_collapse(fun, "$|")}$)'))
 
     ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
     tab <- gather(tab, "variable", "value", !! -(1:length(byvar))) %>%
