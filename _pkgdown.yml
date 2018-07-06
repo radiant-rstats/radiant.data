@@ -48,6 +48,7 @@ reference:
     - describe
     - find_dropbox
     - find_gdrive
+    - find_home
     - find_project
     - fix_names
     - get_data
