@@ -5,25 +5,34 @@
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/7L3hDpLw53I" frameborder="0" allowfullscreen></iframe>
 
-## Installing Radiant on Windows
+## Installing R, Rstudio, and Radiant on Windows
 
-For Windows, download and run the all-in-one installer for <a href="http://rady.ucsd.edu/faculty/directory/nijs/pub/docs/radiant/Rady-Radiant-Installer-64bit.exe">R, Rstudio, and Radiant</a>. For a video tutorial see the `Install Radiant on Windows` video below:
+For Windows, download and run the all-in-one installer for <a href="https://www.dropbox.com/s/0l6va4pz3s8wghq/Rady-Radiant-Installer-Latest.exe?dl=1" target="_blank">R, Rstudio, and Radiant</a>. For a video tutorial see the `Install Radiant on Windows` video below:
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/iaB4mTrm2Co" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/16B5SvtW8Ks" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+> Note: You may see the two messages below pop-up when installing `TinyTex`. This is expected and nothing to worry about. Just click "OK" and let the install process continue. 
+
+<p align="center">
+  <img src="images/mess1.png" style="width: 45%">
+  <img src="images/mess2.png" style="width: 45%">
+</p>
+
+> Note: Some users have reported that the Malwarebytes software can inappropriately block R-packages from being installed or updated. If you use Malwarebytes and are experiencing problems you can try (temporarily) turning it off during the install process or when upgrading.
 
 > Credits: Thanks go to Brandon Salas at the Rady School of Management for creating the Windows installer
 
-## Installing Radiant on Mac
+## Installing R, Rstudio, and Radiant on macOS
 
-For Mac, first download and install R from <a href="https://cran.r-project.org/bin/macosx/" target="_blank">https://cran.r-project.org/bin/macosx/</a>. After R has been installed, open R, copy-and-paste the command below into R, and press return. Accept all default settings during the install process:
+For Mac, first download and install R from <a href="https://cloud.r-project.org/bin/macosx/el-capitan/base/R-latest.pkg" target="_blank">https://cran.r-project.org/bin/macosx/</a>. Download the .pkg file, double-click, and follow the prompts. After R has been installed, open R, copy-and-paste the command below into R, and press return. Accept all default settings during the install process:
 
 ```r
 source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/install.R")
 ```
 
-For a video tutorial see the `Install Radiant on Mac` video below:
+For a video tutorial see the `Installing R, Rstudio, and Radiant on macOS` video below:
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/WheqHpobMZg" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/CpjL8aa1dg4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 ## Starting and stopping
 
