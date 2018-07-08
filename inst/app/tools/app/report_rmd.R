@@ -205,6 +205,7 @@ observeEvent(input$rmd_generate, {
       updateSelectInput(session, "r_generate", selected = "auto")
     }
   } else {
+    updateSelectInput(session, "r_generate", selected = "Use Rmd")
     updateSelectInput(session, "rmd_switch", selected = "switch")
     updateSelectInput(session, "rmd_view", selected = "dual")
   }
@@ -473,10 +474,11 @@ download_handler(
 observeEvent(input$rmd_load, {
   ## loading report from disk
   if (getOption("radiant.shinyFiles", FALSE)) {
+    if (is.integer(input$rmd_load)) return()
     inFile <- shinyFiles::parseFilePaths(sf_volumes, input$rmd_load)
-    if (is.integer(inFile) || nrow(inFile) == 0) return()
+    if (nrow(inFile) == 0) return()
     path <- inFile$datapath
-    pp <- parse_path(path, pdir = getOption("radiant.project_dir", radiant.data::find_home()), chr = "")
+    pp <- parse_path(path, pdir = getOption("radiant.project_dir", radiant.data::find_home()), chr = "", mess = FALSE)
   } else {
     inFile <- input$rmd_load
     path <- inFile$datapath
@@ -517,6 +519,7 @@ observeEvent(input$rmd_load, {
 })
 
 observeEvent(input$rmd_read_files, {
+  if (is.integer(input$rmd_read_files)) return()
   path <- shinyFiles::parseFilePaths(sf_volumes, input$rmd_read_files)
   if (inherits(path, "try-error") || is_empty(path$datapath)) return()
   pdir <- getOption("radiant.project_dir", default = radiant.data::find_home())

@@ -399,8 +399,8 @@ knit_it <- function(report, type = "rmd") {
 
 sans_ext <- function(path) {
   sub(
-    "(\\.state\\.rda|\\.rda$|\\.rds$|\\.rmd$|\\.r$|\\.rdata$|\\.html|\\.nb\\.html|\\.pdf|\\.docx|\\.Rmd|\\.zip)", "", 
-    path, ignore.case = TRUE
+    "(\\.state\\.rda|\\.rda$|\\.rds$|\\.rmd$|\\.r$|\\.rdata$|\\.html|\\.nb\\.html|\\.pdf|\\.docx|\\.rmd|\\.zip)", "", 
+    tolower(path), ignore.case = TRUE
   )
 }
 
@@ -695,7 +695,11 @@ update_report <- function(
   if (xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
 
   ## make into chunks if needed
-  type <- ifelse(state_init("rmd_generate", "auto") == "Use R", "r", "rmd")
+  if (length(input$rmd_generate) == 0) {
+    type <- ifelse(state_init("r_generate", "Use Rmd") == "Use Rmd", "rmd", "r")
+  } else {
+    type <- ifelse(state_init("rmd_generate", "auto") == "Use R", "r", "rmd")
+  }
 
   if (type == "r") {
     update_report_fun(cmd, type = "r")

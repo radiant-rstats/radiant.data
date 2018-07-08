@@ -104,56 +104,59 @@ output$ui_r_view <- renderUI({
 })
 
 observeEvent(input$r_generate, {
-
-  if (state_init("r_generate", "auto") == "To R") {
-
-    updateSelectInput(session, "r_switch", selected = "no_switch")
-    updateSelectInput(session, "r_view", selected = "pr_only")
-
-    ## get info from rstudio editor
-    cnt <- rstudio_context(type = "r")
-    if (is_empty(cnt$path) || cnt$ext != "r") {
-      rcode <- r_state$radiant_r_name
-      if (!is_empty(rcode)) {
-        if (file.exists(rcode)) {
-          ## useful if you are not using an Rstudio project
-          rstudioapi::navigateToFile(rcode)
-        } else {
-          pdir <- getOption("radiant.project_dir", default = radiant.data::find_home())
-          path <- file.path(pdir, rcode)
-          if (file.exists(path)) {
-            rstudioapi::navigateToFile(path)
-          }
-        }
-      } else {
-
-        ## popup to suggest user create an .Rmd file
-        showModal(
-          modalDialog(
-            title = "Radiant to R (Rstudio)",
-            span(
-              "Radiant is set to use an R document in Rstudio
-              ('To Rstudio (R)'). However, the active document in
-              Rstudio does not seem to be of type .R. Please open an
-              existing .R file or create a new one in Rstudio. The
-              file must be saved to disk before it can be accessed. If
-              you want to use the editor in Radiant instead, change
-              'To Rstudio (R)' to 'Auto paste' or 'Manual paste'."
-            ),
-            footer = modalButton("OK"),
-            size = "s",
-            easyClose = TRUE
-          )
-        )
-      }
-    }
-  } else if (state_init("r_generate", "auto") == "Use Rmd") {
+  if (state_init("r_generate", "Use Rmd") == "Use Rmd") {
     if (state_init("rmd_generate", "auto") == "Use R") {
       updateSelectInput(session, "rmd_generate", selected = "auto")
     }
   } else {
-    updateSelectInput(session, "r_switch", selected = "switch")
-    updateSelectInput(session, "r_view", selected = "dual")
+    updateSelectInput(session, "rmd_generate", selected = "Use R")
+
+    if (state_init("r_generate", "Use Rmd") == "To R") {
+
+      updateSelectInput(session, "r_switch", selected = "no_switch")
+      updateSelectInput(session, "r_view", selected = "pr_only")
+
+      ## get info from rstudio editor
+      cnt <- rstudio_context(type = "r")
+      if (is_empty(cnt$path) || cnt$ext != "r") {
+        rcode <- r_state$radiant_r_name
+        if (!is_empty(rcode)) {
+          if (file.exists(rcode)) {
+            ## useful if you are not using an Rstudio project
+            rstudioapi::navigateToFile(rcode)
+          } else {
+            pdir <- getOption("radiant.project_dir", default = radiant.data::find_home())
+            path <- file.path(pdir, rcode)
+            if (file.exists(path)) {
+              rstudioapi::navigateToFile(path)
+            }
+          }
+        } else {
+
+          ## popup to suggest user create an .Rmd file
+          showModal(
+            modalDialog(
+              title = "Radiant to R (Rstudio)",
+              span(
+                "Radiant is set to use an R document in Rstudio
+                ('To Rstudio (R)'). However, the active document in
+                Rstudio does not seem to be of type .R. Please open an
+                existing .R file or create a new one in Rstudio. The
+                file must be saved to disk before it can be accessed. If
+                you want to use the editor in Radiant instead, change
+                'To Rstudio (R)' to 'Auto paste' or 'Manual paste'."
+              ),
+              footer = modalButton("OK"),
+              size = "s",
+              easyClose = TRUE
+            )
+          )
+        }
+      }
+    } else {
+      updateSelectInput(session, "r_switch", selected = "switch")
+      updateSelectInput(session, "r_view", selected = "dual")
+    }
   }
 })
 
@@ -366,10 +369,11 @@ observeEvent(input$r_load, {
 
   ## loading report from disk
   if (getOption("radiant.shinyFiles", FALSE)) {
-    inFile <- shinyFiles::parseFilePaths(sf_volumes, input$rmd_load)
-    if (is.integer(inFile) || nrow(inFile) == 0) return()
+    if (is.integer(input$r_load)) return()
+    inFile <- shinyFiles::parseFilePaths(sf_volumes, input$r_load)
+    if (nrow(inFile) == 0) return()
     path <- inFile$datapath
-    pp <- parse_path(path, pdir = getOption("radiant.project_dir", radiant.data::find_home()), chr = "")
+    pp <- parse_path(path, pdir = getOption("radiant.project_dir", radiant.data::find_home()), chr = "", mess = FALSE)
   } else {
     inFile <- input$r_load
     path <- inFile$datapath
@@ -408,6 +412,7 @@ observeEvent(input$r_load, {
 })
 
 observeEvent(input$r_read_files, {
+  if (is.integer(input$r_read_files)) return()
   path <- shinyFiles::parseFilePaths(sf_volumes, input$r_read_files)
   if (inherits(path, "try-error") || is_empty(path$datapath)) return()
   pdir <- getOption("radiant.project_dir", default = radiant.data::find_home())
