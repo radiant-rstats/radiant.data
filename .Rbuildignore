@@ -12,3 +12,4 @@ _pkgdown.yml
 ^.*\.sublime-project$
 cran-comments.md
 ^_pkgdown\.yml$
+^.vscode$
