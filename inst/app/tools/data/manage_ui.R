@@ -347,7 +347,8 @@ man_save_data <- function(file) {
     radiant.data::parse_path(
       file,
       pdir = getOption("radiant.project_dir", ""),
-      chr = "\""
+      chr = "\"",
+      mess = FALSE
     )
   )
   if (ext == "csv") {
@@ -441,6 +442,7 @@ download_handler(
 
 observeEvent(input$uploadfile, {
   if (getOption("radiant.shinyFiles", FALSE)) {
+    if (is.integer(input$uploadfile)) return()
     inFile <- shinyFiles::parseFilePaths(sf_volumes, input$uploadfile)
     if (is.integer(inFile) || nrow(inFile) == 0) return()
   } else {

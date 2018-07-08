@@ -1198,14 +1198,12 @@ register <- function(new, org = "", descr = "", env) {
 #' @param path Path to be parsed
 #' @param chr Character to wrap around path for display
 #' @param pdir Project directory if available
+#' @param mess Print messages if Dropbox or Google Drive not found
 #' @importFrom tools file_ext
 #' @examples
 #' list.files(".", full.names = TRUE)[1] %>% parse_path()
 #' @export
-parse_path <- function(
-  path, chr = "",
-  pdir = getwd()
-) {
+parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
 
   if (inherits(path, "try-error") || is_empty(path)) {
     return(
@@ -1236,7 +1234,7 @@ parse_path <- function(
     dbdir <- getOption("radiant.dropbox_dir", "")
     if (is_empty(dbdir)) {
       dbdir <- try(radiant.data::find_dropbox(), silent = TRUE)
-      if (inherits(dbdir, "try-error")) {
+      if (inherits(dbdir, "try-error") && mess) {
         message("Not able to determine the location of a local the Dropbox folder")
         dbdir <- ""
       }
@@ -1249,7 +1247,7 @@ parse_path <- function(
       gddir <- getOption("radiant.gdrive_dir", "")
       if (is_empty(gddir)) {
         gddir <- try(radiant.data::find_gdrive(), silent = TRUE)
-        if (inherits(gddir, "try-error")) {
+        if (inherits(gddir, "try-error") && mess) {
           message("Not able to determine the location of a local Google Drive folder")
           gddir <- ""
         }
@@ -1299,13 +1297,13 @@ read_files <- function(
     if (inherits(path, "try-error") || is_empty(path)) {
       return("")
     } else {
-      pp <- parse_path(path, pdir = pdir, chr = "\"")
+      pp <- parse_path(path, pdir = pdir, chr = "\"", mess = FALSE)
     }
   } else {
     if (is_empty(pdir)) {
-      pp <- parse_path(path, chr = "\"")
+      pp <- parse_path(path, chr = "\"", mess = FALSE)
     } else {
-      pp <- parse_path(path, pdir = pdir, chr = "\"")
+      pp <- parse_path(path, pdir = pdir, chr = "\"", mess = FALSE)
     }
   }
 

@@ -4,7 +4,7 @@
 \alias{parse_path}
 \title{Parse file path into useful components}
 \usage{
-parse_path(path, chr = "", pdir = getwd())
+parse_path(path, chr = "", pdir = getwd(), mess = TRUE)
 }
 \arguments{
 \item{path}{Path to be parsed}
@@ -12,6 +12,8 @@ parse_path(path, chr = "", pdir = getwd())
 \item{chr}{Character to wrap around path for display}
 
 \item{pdir}{Project directory if available}
+
+\item{mess}{Print messages if Dropbox or Google Drive not found}
 }
 \description{
 Parse file path into useful components

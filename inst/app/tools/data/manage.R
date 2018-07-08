@@ -95,7 +95,8 @@ load_user_data <- function(
     radiant.data::parse_path(
       uFile, 
       pdir = getOption("radiant.project_dir", ""), 
-      chr = "\""
+      chr = "\"",
+      mess = FALSE
     )
   )
 
