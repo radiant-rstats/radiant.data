@@ -1,4 +1,4 @@
-# radiant.data 0.9.6.4
+# radiant.data 0.9.6.5
 
 ## Major changes
 
@@ -6,6 +6,7 @@
 
 ## Minor changes
 
+* Fix for `radiant.sf_volumes` used for the `shinyFiles` file browser
 * Improvements for sending code from Radiant to Rstudio
 * Better support for paths when using radiant on a server (i.e., revert to home directory using `radiant.data::find_home()`)
 * Revert from `svg` to `png` for plots in `_Report > Rmd_ and _Report > R_. `svg` scatter plots with many point get to big for practical use on servers that have to transfer images to a local browser

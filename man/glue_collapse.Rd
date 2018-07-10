@@ -13,5 +13,5 @@ glue_collapse(...)
 Exporting collapse from glue as glue_collapse
 }
 \details{
-See \code{\link[glue]{glue_collapse}} in the \code{glue} package for more details
+See \code{\link[glue]{collapse}} in the \code{glue} package for more details
 }

@@ -7,7 +7,7 @@ output$ui_state_load <- renderUI({
     tagList(
       HTML("<label>Load radiant state file:</label></br>"),
       shinyFiles::shinyFilesButton(
-        "state_load", "Load", "Load radiant state file", 
+        "state_load", "Load", "Load radiant state file",
         multiple = FALSE, icon = icon("upload")
       )
     )
@@ -414,16 +414,16 @@ if (getOption("radiant.shinyFiles", FALSE)) {
 state_name_dlh <- function() state_name(full.name = FALSE)
 
 download_handler(
-  id = "state_save", 
+  id = "state_save",
   label = "Save",
-  fun = saveState, 
+  fun = saveState,
   fn = function() state_name_dlh() %>% sans_ext(),
   type = function() state_name_dlh() %>% {if (grepl("\\.state\\.rda", .)) "state.rda" else tools::file_ext(.)},
   btn = "button",
   caption = "Save radiant state file"
 )
 
-## need to set suspendWhenHidden to FALSE so that the href for the 
+## need to set suspendWhenHidden to FALSE so that the href for the
 ## download handler is set and keyboard shortcuts will work
 ## see https://shiny.rstudio.com/reference/shiny/0.11/outputOptions.html
 ## see https://stackoverflow.com/questions/48117501/click-link-in-navbar-menu
@@ -431,8 +431,8 @@ download_handler(
 outputOptions(output, "ui_state_save", suspendWhenHidden = FALSE)
 
 download_handler(
-  id = "man_save_data", 
-  fun = man_save_data, 
+  id = "man_save_data",
+  fun = man_save_data,
   fn = function() input$dataset,
   type = function() input$saveAs,
   caption = "Save data",
@@ -444,7 +444,7 @@ observeEvent(input$uploadfile, {
   if (getOption("radiant.shinyFiles", FALSE)) {
     if (is.integer(input$uploadfile)) return()
     inFile <- shinyFiles::parseFilePaths(sf_volumes, input$uploadfile)
-    if (is.integer(inFile) || nrow(inFile) == 0) return()
+    if (nrow(inFile) == 0) return()
   } else {
     inFile <- input$uploadfile
   }
@@ -903,11 +903,11 @@ man_show_log_modal <- function() {
       title = "Generating R-code to load and save data",
       span(
         "R-code to load and save data is not generated and reported
-         when using radiant from (shiny) server. This is due to the 
-         fact that the web browser's file dialog does not provide 
+         when using radiant from (shiny) server. This is due to the
+         fact that the web browser's file dialog does not provide
          file path information for security reasons.",
         br(), br(),
-        "To generate R-code to load and save data, start Radiant from 
+        "To generate R-code to load and save data, start Radiant from
          Rstudio."
       ),
       footer = modalButton("OK"),

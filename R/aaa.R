@@ -38,7 +38,7 @@ NULL
 NULL
 
 #' Exporting collapse from glue as glue_collapse
-#' @details See \code{\link[glue]{glue_collapse}} in the \code{glue} package for more details
+#' @details See \code{\link[glue]{collapse}} in the \code{glue} package for more details
 #' @name glue_collapse
 #' @rdname glue_collapse
 #' @param ... arguments passed to \code{glue::glue_collapse}

@@ -14,6 +14,9 @@ if (getOption("radiant.shinyFiles", FALSE)) {
     sf_volumes <- getOption("radiant.sf_volumes", "")
   } else {
     sf_volumes <- getOption("radiant.launch_dir")
+    if (!is_empty(getOption("radiant.project_dir"))) {
+      sf_volumes <- unique(getOption("radiant.project_dir"), sf_volumes)
+    }
     home <- radiant.data::find_home()
     if (home != sf_volumes) {
       sf_volumes <- c(sf_volumes, home) %>% set_names(c(basename(sf_volumes), "Home"))
