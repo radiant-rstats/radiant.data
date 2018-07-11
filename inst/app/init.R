@@ -14,7 +14,7 @@ if (getOption("radiant.shinyFiles", FALSE)) {
     sf_volumes <- getOption("radiant.sf_volumes", "")
   } else {
     sf_volumes <- getOption("radiant.launch_dir")
-    if (!is_empty(getOption("radiant.project_dir"))) {
+    if (getOption("radiant.project_dir", "") == "") {
       sf_volumes <- unique(getOption("radiant.project_dir"), sf_volumes)
     }
     home <- radiant.data::find_home()
@@ -249,7 +249,7 @@ observeEvent(session$clientData$url_search, {
   url_query <- parseQueryString(session$clientData$url_search)
   if ("url" %in% names(url_query)) {
     r_info[["url"]] <- url_query$url
-  } else if (is_empty(r_info[["url"]])) {
+  } else if (radiant.data::is_empty(r_info[["url"]])) {
     return()
   }
 
