@@ -3,6 +3,7 @@
 ## Major changes
 
 * Using [`shinyFiles`](https://github.com/thomasp85/shinyFiles) to provide convenient access to data located on a server
+* Avoid `XQuartz` requirement
 
 ## Minor changes
 

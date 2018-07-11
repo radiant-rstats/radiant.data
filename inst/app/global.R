@@ -156,9 +156,10 @@ options(
 )
 
 ## see https://github.com/tidyverse/ggplot2/issues/2655
-if(!identical(getOption("bitmapType"), "cairo") && isTRUE(capabilities()[["cairo"]])) {
-  options(bitmapType = "cairo")
-}
+## requires XQuartz!
+# if(!identical(getOption("bitmapType"), "cairo") && isTRUE(capabilities()[["cairo"]])) {
+#   options(bitmapType = "cairo")
+# }
 
 ## for report and code in menu R
 knitr::opts_knit$set(progress = TRUE)
