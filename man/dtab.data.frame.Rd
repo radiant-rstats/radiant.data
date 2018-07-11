@@ -6,8 +6,7 @@
 \usage{
 \method{dtab}{data.frame}(object, vars = "", filt = "", rows = NULL,
   nr = NULL, na.rm = FALSE, dec = 3, perc = "", filter = "top",
-  pageLength = 10, dom = "", style = "bootstrap", rownames = FALSE,
-  ...)
+  pageLength = 10, dom = "", style = "bootstrap", rownames = FALSE, ...)
 }
 \arguments{
 \item{object}{Data.frame to display}

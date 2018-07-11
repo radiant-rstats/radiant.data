@@ -4,8 +4,8 @@
 \alias{dtab.explore}
 \title{Make an interactive table of summary statistics}
 \usage{
-\method{dtab}{explore}(object, dec = 3, searchCols = NULL,
-  order = NULL, pageLength = NULL, ...)
+\method{dtab}{explore}(object, dec = 3, searchCols = NULL, order = NULL,
+  pageLength = NULL, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{explore}}}
