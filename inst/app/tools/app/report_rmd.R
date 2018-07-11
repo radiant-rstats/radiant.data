@@ -163,11 +163,32 @@ observeEvent(input$rmd_generate, {
     updateSelectInput(session, "rmd_view", selected = "pr_only")
     report_rmd$clear <- 1
 
+    no_rmd <- function() {
+      ## popup to suggest user create an .Rmd file
+      showModal(
+        modalDialog(
+          title = "Radiant to Rmd (Rstudio)",
+          span(
+            "Radiant is set to use an rmarkdown document in Rstudio
+            ('To Rstudio (Rmd)'). However, the active document in
+            Rstudio does not seem to be of type .Rmd. Please open an
+            existing .Rmd file or create a new one in Rstudio. The
+            file must be saved to disk before it can be accessed. If
+            you want to use the editor in Radiant instead, change
+            'To Rstudio (Rmd)' to 'Auto paste' or 'Manual paste'."
+          ),
+          footer = modalButton("OK"),
+          size = "s",
+          easyClose = TRUE
+        )
+      )
+    }
+
     ## get info from rstudio editor
     cnt <- rstudio_context(type = "rmd")
     if (is_empty(cnt$path) || cnt$ext != "rmd") {
       rmd <- r_state$radiant_rmd_name
-      if (!is_empty(rmd)) {
+     if (!is_empty(rmd)) {
         if (file.exists(rmd)) {
           ## useful if you are not using an Rstudio project
           rstudioapi::navigateToFile(rmd)
@@ -176,28 +197,12 @@ observeEvent(input$rmd_generate, {
           path <- file.path(pdir, rmd)
           if (file.exists(path)) {
             rstudioapi::navigateToFile(path)
+          } else {
+            no_rmd()
           }
         }
       } else {
-
-        ## popup to suggest user create an .Rmd file
-        showModal(
-          modalDialog(
-            title = "Radiant to Rmd (Rstudio)",
-            span(
-              "Radiant is set to use an rmarkdown document in Rstudio
-              ('To Rstudio (Rmd)'). However, the active document in
-              Rstudio does not seem to be of type .Rmd. Please open an
-              existing .Rmd file or create a new one in Rstudio. The
-              file must be saved to disk before it can be accessed. If
-              you want to use the editor in Radiant instead, change
-              'To Rstudio (Rmd)' to 'Auto paste' or 'Manual paste'."
-            ),
-            footer = modalButton("OK"),
-            size = "s",
-            easyClose = TRUE
-          )
-        )
+        no_rmd()
       }
     }
   } else if (state_init("rmd_generate", "auto") == "Use R") {
@@ -261,7 +266,7 @@ output$ui_rmd_load <- renderUI({
 if (getOption("radiant.shinyFiles", FALSE)) {
   output$ui_rmd_read_files <- renderUI({
     shinyFiles::shinyFilesButton(
-      "rmd_read_files", "Read files", "Generate code to read selected file", 
+      "rmd_read_files", "Read files", "Generate code to read selected file",
       multiple = FALSE, icon = icon("book"), class = "btn-primary"
     )
   })
@@ -458,12 +463,14 @@ output$rmd_knitted <- renderUI({
   rmd_knitted()
 })
 
-report_save_filename_rmd <- function() report_save_filename(type = "rmd", full.name = FALSE)
+report_save_filename_rmd <- function() {
+  report_save_filename(type = "rmd", full.name = FALSE)
+}
 
 download_handler(
-  id = "rmd_save", 
+  id = "rmd_save",
   label = "Save report",
-  fun = function(x, type = "rmd") report_save_content(x, type), 
+  fun = function(x, type = "rmd") report_save_content(x, type),
   fn = function() report_save_filename_rmd() %>% sans_ext(),
   type = function() report_save_filename_rmd() %>% {if (grepl("nb\\.html", .)) "nb.html" else tools::file_ext(.)},
   caption = "Save report",

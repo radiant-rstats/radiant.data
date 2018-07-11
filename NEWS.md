@@ -1,4 +1,4 @@
-# radiant.data 0.9.6.6
+# radiant.data 0.9.6.7
 
 ## Major changes
 
@@ -6,6 +6,7 @@
 
 ## Minor changes
 
+* Modal shown if and Rmd (R) file is not available when using "To Rstudio (Rmd)" in _Report > Rmd_ or "To Rstudio (R)" in _Report > R_
 * Track progress loading (state) files
 * Fix for `radiant.sf_volumes` used for the `shinyFiles` file browser
 * Improvements for sending code from Radiant to Rstudio

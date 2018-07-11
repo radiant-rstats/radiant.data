@@ -115,7 +115,26 @@ observeEvent(input$r_generate, {
 
       updateSelectInput(session, "r_switch", selected = "no_switch")
       updateSelectInput(session, "r_view", selected = "pr_only")
-
+      ## popup to suggest user create an .Rmd file
+      no_r <- function() {
+        showModal(
+          modalDialog(
+            title = "Radiant to R (Rstudio)",
+            span(
+              "Radiant is set to use an R document in Rstudio
+                  ('To Rstudio (R)'). However, the active document in
+                  Rstudio does not seem to be of type .R. Please open an
+                  existing .R file or create a new one in Rstudio. The
+                  file must be saved to disk before it can be accessed. If
+                  you want to use the editor in Radiant instead, change
+                  'To Rstudio (R)' to 'Auto paste' or 'Manual paste'."
+            ),
+            footer = modalButton("OK"),
+            size = "s",
+            easyClose = TRUE
+          )
+        )
+      }
       ## get info from rstudio editor
       cnt <- rstudio_context(type = "r")
       if (is_empty(cnt$path) || cnt$ext != "r") {
@@ -129,28 +148,12 @@ observeEvent(input$r_generate, {
             path <- file.path(pdir, rcode)
             if (file.exists(path)) {
               rstudioapi::navigateToFile(path)
+            } else {
+              no_r()
             }
           }
         } else {
-
-          ## popup to suggest user create an .Rmd file
-          showModal(
-            modalDialog(
-              title = "Radiant to R (Rstudio)",
-              span(
-                "Radiant is set to use an R document in Rstudio
-                ('To Rstudio (R)'). However, the active document in
-                Rstudio does not seem to be of type .R. Please open an
-                existing .R file or create a new one in Rstudio. The
-                file must be saved to disk before it can be accessed. If
-                you want to use the editor in Radiant instead, change
-                'To Rstudio (R)' to 'Auto paste' or 'Manual paste'."
-              ),
-              footer = modalButton("OK"),
-              size = "s",
-              easyClose = TRUE
-            )
-          )
+          no_r()
         }
       }
     } else {
@@ -188,14 +191,14 @@ output$ui_r_load <- renderUI({
     buttonLabel = "Load report",
     title = "Load report",
     class = "btn-default"
- 
+
   )
 })
 
 if (getOption("radiant.shinyFiles", FALSE)) {
   output$ui_r_read_files <- renderUI({
     shinyFiles::shinyFilesButton(
-      "r_read_files", "Read files", "Generate code to read selected file", 
+      "r_read_files", "Read files", "Generate code to read selected file",
       multiple = FALSE, icon = icon("book"), class = "btn-primary"
     )
   })
@@ -351,11 +354,13 @@ output$r_knitted <- renderUI({
   })
 })
 
-report_save_filename_r <- function() report_save_filename(type = "r", full.name = FALSE)
+report_save_filename_r <- function() {
+  report_save_filename(type = "r", full.name = FALSE)
+}
 
 download_handler(
-  id = "r_save", 
-  fun = function(x, type = "r") report_save_content(x, type), 
+  id = "r_save",
+  fun = function(x, type = "r") report_save_content(x, type),
   fn = function() report_save_filename_r() %>% sans_ext(),
   type = function() report_save_filename_r() %>% {if (grepl("nb\\.html", .)) "nb.html" else tools::file_ext(.)},
   btn = "button",
