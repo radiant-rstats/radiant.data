@@ -1,4 +1,4 @@
-# radiant.data 0.9.6.5
+# radiant.data 0.9.6.6
 
 ## Major changes
 
@@ -6,6 +6,7 @@
 
 ## Minor changes
 
+* Track progress loading (state) files
 * Fix for `radiant.sf_volumes` used for the `shinyFiles` file browser
 * Improvements for sending code from Radiant to Rstudio
 * Better support for paths when using radiant on a server (i.e., revert to home directory using `radiant.data::find_home()`)

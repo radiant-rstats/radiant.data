@@ -669,7 +669,9 @@ output$refreshOnLoad <- renderUI({
   if (is_empty(path)) {
     invisible()
   } else {
-    refreshOnLoad(path, sname)
+    withProgress(message = "Loading state file", value = 1, {
+      refreshOnLoad(path, sname)
+    })
     ## Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
     tags$script("window.location.reload();")
   }
