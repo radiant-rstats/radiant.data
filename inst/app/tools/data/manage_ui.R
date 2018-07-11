@@ -230,8 +230,6 @@ output$ui_Manage <- renderUI({
       conditionalPanel(
         condition = "input.saveAs == 'state'",
         HTML("<label>Save radiant state file:</label><br/>"),
-        # download_button("state_save", "Save", ic = "download")
-        # download_button("state_save", "Save", ic = "download")
         uiOutput("ui_state_save")
       ),
       conditionalPanel(
@@ -450,18 +448,20 @@ observeEvent(input$uploadfile, {
   }
 
   ## iterating through the files to upload
-  for (i in 1:(dim(inFile)[1])) {
-    load_user_data(
-      inFile[i, "name"],
-      inFile[i, "datapath"],
-      input$dataType,
-      header = input$man_header,
-      man_str_as_factor = input$man_str_as_factor,
-      sep = input$man_sep,
-      dec = input$man_dec,
-      n_max = input$man_n_max
-    )
-  }
+  withProgress(message = "Loading ...", value = 1, {
+    for (i in 1:(dim(inFile)[1])) {
+      load_user_data(
+        inFile[i, "name"],
+        inFile[i, "datapath"],
+        input$dataType,
+        header = input$man_header,
+        man_str_as_factor = input$man_str_as_factor,
+        sep = input$man_sep,
+        dec = input$man_dec,
+        n_max = input$man_n_max
+      )
+    }
+  })
 
   updateSelectInput(
     session, "dataset",
