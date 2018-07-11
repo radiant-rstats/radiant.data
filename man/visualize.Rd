@@ -8,9 +8,9 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   type = ifelse(is_empty(yvar), "dist", "scatter"), nrobs = -1,
   facet_row = ".", facet_col = ".", color = "none", fill = "none",
   size = "none", fillcol = "blue", linecol = "black",
-  pointcol = "black", bins = 10, smooth = 1, fun = "mean", check = "",
-  axes = "", alpha = 0.5, xlim = NULL, ylim = NULL, data_filter = "",
-  shiny = FALSE, custom = FALSE)
+  pointcol = "black", bins = 10, smooth = 1, fun = "mean",
+  check = "", axes = "", alpha = 0.5, xlim = NULL, ylim = NULL,
+  data_filter = "", shiny = FALSE, custom = FALSE)
 }
 \arguments{
 \item{dataset}{Data to plot (data.frame or tibble)}

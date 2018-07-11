@@ -5,8 +5,8 @@
 \title{Distance in kilometers or miles between two locations based on lat-long
 Function based on \url{http://www.movable-type.co.uk/scripts/latlong.html}. Uses the haversine formula}
 \usage{
-as_distance(lat1, long1, lat2, long2, unit = "km", R = c(km = 6371, miles =
-  3959)[[unit]])
+as_distance(lat1, long1, lat2, long2, unit = "km", R = c(km = 6371,
+  miles = 3959)[[unit]])
 }
 \arguments{
 \item{lat1}{Latitude of location 1}

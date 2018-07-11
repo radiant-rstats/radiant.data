@@ -4,8 +4,8 @@
 \alias{read_files}
 \title{Generate code to read a file}
 \usage{
-read_files(path, pdir = "", type = "rmd", to = "", clipboard = TRUE,
-  radiant = FALSE)
+read_files(path, pdir = "", type = "rmd", to = "",
+  clipboard = TRUE, radiant = FALSE)
 }
 \arguments{
 \item{path}{Path to file. If empty, a file browser will be opened}
