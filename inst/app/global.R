@@ -6,6 +6,7 @@ suppressWarnings(
   )
 )
 
+
 if (sum(nzchar(getOption("radiant.sf_volumes", ""))) > 0 || isTRUE(Sys.getenv("RSTUDIO") != "")) {
   options(radiant.shinyFiles = TRUE)
 } else {
@@ -108,6 +109,9 @@ if (Sys.getenv("SHINY_PORT") == "") {
   options(radiant.report = getOption("radiant.report", default = FALSE))
   ## limit upload filesize on server (10MB)
   options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = 10 * 1024 ^ 2))
+  if (Sys.getlocale(category = "LC_ALL") == "C") {
+    Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
+  }
 }
 
 ## encoding
