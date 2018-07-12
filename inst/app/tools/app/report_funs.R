@@ -15,7 +15,7 @@ file_upload_button <- function(
 
     # actionButton(inputId, buttonLabel, icon = icon(icn), class = class)
     shinyFiles::shinyFilesButton(
-      inputId, buttonLabel, label, title = title, 
+      inputId, buttonLabel, label, title = title,
       multiple = FALSE, class = class, icon = icon(icn)
     )
   } else {
@@ -150,7 +150,7 @@ knitr::opts_chunk$set(
   echo = ", ech, ",
   error = TRUE,
   cache = FALSE,
-  message = FALSE,\n 
+  message = FALSE,\n
   dpi = 144,
   warning = FALSE", sopts, "
 )
@@ -242,7 +242,7 @@ knit_it_save <- function(report) {
 
 observeEvent(input$report_clean, {
   withProgress(message = "Cleaning report", value = 1, {
-    report <- gsub("\nr_data\\[\\[\"([^\n]+?)\"\\]\\] \\%>\\%(.*?)\\%>\\%\\s*?store\\(\"(.*?)\", (\".*?\")\\)", "\n\\3 <- \\1 %>%\\2\nregister(\"\\3\", \\4)", input$rmd_edit) %>% 
+    report <- gsub("\nr_data\\[\\[\"([^\n]+?)\"\\]\\] \\%>\\%(.*?)\\%>\\%\\s*?store\\(\"(.*?)\", (\".*?\")\\)", "\n\\3 <- \\1 %>%\\2\nregister(\"\\3\", \\4)", input$rmd_edit) %>%
       gsub("r_data\\[\\[\"([^\"]+?)\"\\]\\]", "\\1", .) %>%
       gsub("r_data\\$", "", .) %>%
       gsub("\"mean_rm\"", "\"mean\"", .) %>%
@@ -265,15 +265,15 @@ observeEvent(input$report_clean, {
       gsub("(combinedata\\(\\s*?x\\s*?=\\s*?)\"([^\"]+?)\",(\\s*?y\\s*?=\\s*?)\"([^\"]+?)\",", "\\1\\2,\\3\\4,", .) %>%
       gsub("(combinedata\\((.|\n)*?),\\s*?name\\s*?=\\s*?\"([^\"`]+?)\"([^\\)]+?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
       gsub("combinedata\\(", "combine_data(", .) %>%
-      gsub("result\\s*<-\\s*(simulater\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>% 
+      gsub("result\\s*<-\\s*(simulater\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
       gsub("data\\s*=\\s*\"([^\"]+)\",", "data = \\1,", .) %>%
-      gsub("(simulater\\((\n|.)*?)(register\\(\"(.*?)\"\\))\nsummary\\(result", "\\1\\3\nsummary(\\4", .) %>% 
-      gsub("(simulater\\((\n|.)*?)(register\\(\"(.*?)\"\\))\n(summary.*?)\nplot\\(result", "\\1\\3\n\\5\nplot(\\4", .) %>% 
+      gsub("(simulater\\((\n|.)*?)(register\\(\"(.*?)\"\\))\nsummary\\(result", "\\1\\3\nsummary(\\4", .) %>%
+      gsub("(simulater\\((\n|.)*?)(register\\(\"(.*?)\"\\))\n(summary.*?)\nplot\\(result", "\\1\\3\n\\5\nplot(\\4", .) %>%
       gsub("result\\s*<-\\s*(repeater\\((.|\n)*?),\\s*name+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "\\3 <- \\1\\4)\nregister(\"\\3\")", .) %>%
-      gsub("(repeater\\((\n|.)*?)(register\\(\"(.*?)\"\\))\nsummary\\(result", "\\1\\3\nsummary(\\4", .) %>% 
-      gsub("(repeater\\((\n|.)*?)(register\\(\"(.*?)\"\\))\n(summary.*?)\nplot\\(result", "\\1\\3\n\\5\nplot(\\4", .) %>% 
+      gsub("(repeater\\((\n|.)*?)(register\\(\"(.*?)\"\\))\nsummary\\(result", "\\1\\3\nsummary(\\4", .) %>%
+      gsub("(repeater\\((\n|.)*?)(register\\(\"(.*?)\"\\))\n(summary.*?)\nplot\\(result", "\\1\\3\n\\5\nplot(\\4", .) %>%
       gsub("repeater\\(((.|\n)*?),\\s*sim+\\s*=\\s*\"([^\"`]*?)\"([^\\)]*?)\\)", "repeater(\n  \\3,\\1\\4)", .) %>%
-      gsub("(```\\{r.*?\\})(\nresult <- pivotr(\n|.)*?)(\\s*)store\\(result, name = \"(.*?)\"\\)", "\\1\\2\\4\\5 <- result$tab; register(\"\\5\")\\6", .) %>% 
+      gsub("(```\\{r.*?\\})(\nresult <- pivotr(\n|.)*?)(\\s*)store\\(result, name = \"(.*?)\"\\)", "\\1\\2\\4\\5 <- result$tab; register(\"\\5\")\\6", .) %>%
       gsub("(```\\{r.*?\\})(\nresult <- explore(\n|.)*?)(\\s*)store\\(result, name = \"(.*?)\"\\)", "\\1\\2\\4\\5 <- result$tab; register(\"\\5\")\\6", .) %>%
       gsub("store\\(result,\\s*name\\s*=\\s*\"(.*?)\",\\s*type\\s*=\\s*\"((P|I)W)\"\\)", "\\1 <- result$\\2; register(\"\\1\")", .)
   })
@@ -328,17 +328,17 @@ knit_it <- function(report, type = "rmd") {
     showModal(
       modalDialog(
         title = "The report contains deprecated code",
-        span("The use of, e.g., r_data[[...]]], dataset = \"...\", etc. in your report is 
-           deprecated. Click the 'Clean report' button to remove references that are no 
-           longer needed.", br(), br(), "Warning: It may not be possible to update all code 
-           to the latest standard automatically. For example, the use of 'store(...)' 
-           functions has changed and not all forms can be automatically updated. If this 
-           applies to your report a message should be shown when you Knit the report 
-           demonstrating how the code should be changed. You can, of course, also use the 
-           browser interface to recreate the code you need or use the help function in R or 
-           Rstudio for more information (e.g., ?radiant.model::store.model, 
-           ?radiant.model::store.model.predict, or ?radiant.model::simulater)", br(), br(), 
-           "To avoid the code-cleaning step click 'Cancel' or, if you believe the code is 
+        span("The use of, e.g., r_data[[...]]], dataset = \"...\", etc. in your report is
+           deprecated. Click the 'Clean report' button to remove references that are no
+           longer needed.", br(), br(), "Warning: It may not be possible to update all code
+           to the latest standard automatically. For example, the use of 'store(...)'
+           functions has changed and not all forms can be automatically updated. If this
+           applies to your report a message should be shown when you Knit the report
+           demonstrating how the code should be changed. You can, of course, also use the
+           browser interface to recreate the code you need or use the help function in R or
+           Rstudio for more information (e.g., ?radiant.model::store.model,
+           ?radiant.model::store.model.predict, or ?radiant.model::simulater)", br(), br(),
+           "To avoid the code-cleaning step click 'Cancel' or, if you believe the code is
            correct as-is, click the 'Ignore' button and continue to Knit your report"
         ),
         footer = tagList(
@@ -399,7 +399,7 @@ knit_it <- function(report, type = "rmd") {
 
 sans_ext <- function(path) {
   sub(
-    "(\\.state\\.rda|\\.rda$|\\.rds$|\\.rmd$|\\.r$|\\.rdata$|\\.html|\\.nb\\.html|\\.pdf|\\.docx|\\.rmd|\\.zip)", "", 
+    "(\\.state\\.rda|\\.rda$|\\.rds$|\\.rmd$|\\.r$|\\.rdata$|\\.html|\\.nb\\.html|\\.pdf|\\.docx|\\.rmd|\\.zip)", "",
     tolower(path), ignore.case = TRUE
   )
 }
@@ -583,19 +583,21 @@ report_save_content <- function(file, type = "rmd") {
             tmp_fn <- tempfile(pattern = "report-", tmpdir = ".", fileext = ".Rmd")
             cat(init, file = tmp_fn, sep = "\n")
             out <- rmarkdown::render(
-              tmp_fn, 
+              tmp_fn,
               switch(
                 save_type,
                 Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "hide"),
                 HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
                 PDF = rmarkdown::pdf_document(),
                 Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"), "app/www/style.docx"))
-              ), 
-              envir = r_data, quiet = TRUE, encoding = "UTF-8", 
+              ),
+              envir = r_data, quiet = TRUE, encoding = "UTF-8",
               output_options = list(pandoc_args = "--quiet")
             )
-            file.rename(out, file)
-            file.remove(tmp_fn)
+            ## file.rename may fail to overwrite even if confirmed by the users
+            # file.rename(out, file)
+            file.copy(out, file, overwrite = TRUE)
+            file.remove(out, tmp_fn)
           } else {
             ## still needed because rmarkdown requires pandoc
             setup_report(report, add_yml = FALSE, type = save_type, lib = lib) %>%
@@ -615,7 +617,7 @@ report_save_content <- function(file, type = "rmd") {
 update_report <- function(
   inp_main = "", fun_name = "", inp_out = list("", ""),
   cmd = "", pre_cmd = "result <- ", post_cmd = "",
-  xcmd = "", outputs = c("summary", "plot"), inp = "result", 
+  xcmd = "", outputs = c("summary", "plot"), inp = "result",
   wrap, figs = TRUE, fig.width = 7, fig.height = 7
 ) {
 
