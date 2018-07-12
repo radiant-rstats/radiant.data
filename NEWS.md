@@ -1,4 +1,4 @@
-# radiant.data 0.9.6.9
+# radiant.data 0.9.6.10
 
 ## Major changes
 
@@ -7,6 +7,7 @@
 
 ## Minor changes
 
+* Fix for `sf_volumes` used to set the root directories to load and save files
 * Set default locale to "en_US.UTF-8" when using shiny-server unless `Sys.getlocale(category = "LC_ALL")` what set to something other than "C"
 * Modal shown if and Rmd (R) file is not available when using "To Rstudio (Rmd)" in _Report > Rmd_ or "To Rstudio (R)" in _Report > R_
 * Track progress loading (state) files

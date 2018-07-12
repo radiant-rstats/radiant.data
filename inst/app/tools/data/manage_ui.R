@@ -349,28 +349,31 @@ man_save_data <- function(file) {
       mess = FALSE
     )
   )
-  if (ext == "csv") {
-    readr::write_csv(r_data[[robj]], file)
-    r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_csv({robj}, path = {pp$rpath})')
-  } else {
-    if (!is_empty(input$man_data_descr)) {
-      attr(r_data[[robj]], "description") <- fix_smart(r_info[[paste0(robj, "_descr")]])
-    }
 
-    if (ext == "rds") {
-      readr::write_rds(r_data[[robj]], path = file)
-      r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_rds({robj}, path = {pp$rpath})')
-    } else if (ext == "feather") {
-      ## temporary workaround until PR goes through https://stackoverflow.com/a/47898172/1974918
-      # feather::write_feather(tmp[[robj]], file)
-      # radiant.data::write_feather(tmp[[robj]], file, description = attr(tmp[[robj]], "description"))
-      feather::write_feather(r_data[[robj]], file)
-      r_info[[paste0(robj, "_scmd")]] <- glue('feather::write_feather({robj}, path = {pp$rpath})')
+  withProgress(message = "Saving ...", value = 1, {
+    if (ext == "csv") {
+      readr::write_csv(r_data[[robj]], file)
+      r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_csv({robj}, path = {pp$rpath})')
     } else {
-      save(list = robj, file = file, envir = r_data)
-      r_info[[paste0(robj, "_scmd")]] <- glue('save({robj}, file = {pp$rpath})')
+      if (!is_empty(input$man_data_descr)) {
+        attr(r_data[[robj]], "description") <- fix_smart(r_info[[paste0(robj, "_descr")]])
+      }
+
+      if (ext == "rds") {
+        readr::write_rds(r_data[[robj]], path = file)
+        r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_rds({robj}, path = {pp$rpath})')
+      } else if (ext == "feather") {
+        ## temporary workaround until PR goes through https://stackoverflow.com/a/47898172/1974918
+        # feather::write_feather(tmp[[robj]], file)
+        # radiant.data::write_feather(tmp[[robj]], file, description = attr(tmp[[robj]], "description"))
+        feather::write_feather(r_data[[robj]], file)
+        r_info[[paste0(robj, "_scmd")]] <- glue('feather::write_feather({robj}, path = {pp$rpath})')
+      } else {
+        save(list = robj, file = file, envir = r_data)
+        r_info[[paste0(robj, "_scmd")]] <- glue('save({robj}, file = {pp$rpath})')
+      }
     }
-  }
+  })
 }
 
 if (getOption("radiant.shinyFiles", FALSE)) {
