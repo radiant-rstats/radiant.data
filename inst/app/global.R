@@ -110,7 +110,7 @@ if (Sys.getenv("SHINY_PORT") == "") {
   ## limit upload filesize on server (10MB)
   options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = 10 * 1024 ^ 2))
   if (Sys.getlocale(category = "LC_ALL") == "C") {
-    Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
+    ret <- Sys.setlocale("LC_CTYPE", "en_US.UTF-8"); rm(ret)
   }
 }
 
