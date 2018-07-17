@@ -1,5 +1,5 @@
 language: r
-# cache: packages
+cache: packages
 r:
   - oldrel
   - release
@@ -7,9 +7,6 @@ r:
 warnings_are_errors: true
 sudo: required
 dist: trusty
-
-r_github_packages:
-  vnijs/shinyFiles
 
 after_success:
   - Rscript -e 'pkgdown::build_site()'
