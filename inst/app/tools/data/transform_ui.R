@@ -465,8 +465,7 @@ observeEvent(input$tr_change_type, {
 
     cmd <- gsub("\"", "\'", cmd) %>%
       gsub("<-", "=", .)
-    vars <-
-      strsplit(cmd, ";")[[1]] %>%
+    vars <- strsplit(cmd, ";")[[1]] %>%
       strsplit(., "=") %>%
       sapply("[", 1)
 
@@ -475,6 +474,11 @@ observeEvent(input$tr_change_type, {
       byvar <- base::setdiff(byvar, vars)
       updateSelectInput(session = session, inputId = "tr_vars", selected = character(0))
     }
+
+    ## usefull if functions created in Report > R and Report > Rmd are
+    ## called in Data > Transform > Create
+    attach(r_data)
+    on.exit(detach(r_data))
 
     if (is_empty(byvar)) {
       ## using within and do.call because it provides better err messages

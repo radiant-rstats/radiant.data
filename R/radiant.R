@@ -1188,6 +1188,17 @@ register <- function(new, org = "", descr = "", env) {
       }
     } else if (is.list(env[[new]])) {
       r_info[["dtree_list"]] <- c(new, r_info[["dtree_list"]]) %>% unique()
+    } else {
+      ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+      showModal(
+        modalDialog(
+          title = "Data not registered",
+          span("Only data.frames can be registered"),
+          footer = modalButton("OK"),
+          size = "s",
+          easyClose = TRUE
+        )
+      )
     }
   }
   invisible()

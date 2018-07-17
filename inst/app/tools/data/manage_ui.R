@@ -851,18 +851,18 @@ output$uiRename <- renderUI({
 })
 
 output$man_example <- renderText({
-  if (is.null(.get_data())) return()
+  req(!is.null(r_data[[input$dataset]]))
   ## Show only the first 10 (or 20) rows
   show_data_snippet(nshow = 10)
 })
 
 output$man_str <- renderPrint({
-  req(is.data.frame(.get_data()))
+  req(is.data.frame(r_data[[input$dataset]]))
   str(r_data[[input$dataset]])
 })
 
 output$man_summary <- renderPrint({
-  req(is.data.frame(.get_data()))
+  req(is.data.frame(r_data[[input$dataset]]))
   get_summary(r_data[[input$dataset]])
 })
 

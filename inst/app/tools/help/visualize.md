@@ -68,6 +68,14 @@ visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter", custom = T
   )
 ```
 
+The default resolution for plots is 144 dots per inch (dpi). You can change this setting up or down in _Report > Rmd_. For example, the code-chunk header below ensures the plot will be 7" wide, 3.5" tall, with a resolution of 600 dpi.
+
+```` ```{r fig.width = 7, fig.height = 3.5, dpi = 600} ````
+
+If you have the `svglite` package installed, the code-chunk header below will produce graphs in high quality `svg` format.
+
+```` ```{r fig.width = 7, fig.height = 3.5, dev = "svglite"} ````
+
 **Some common customization commands:**
 
 * Add a title: `+ labs(title = "my title")`
@@ -103,7 +111,6 @@ gridExtra::grid.arrange(grobs = plot_list, top = "Three bar plots", ncol = 1)
 ```
 
 See the <a href="https://cran.r-project.org/web/packages/gridExtra/vignettes/arrangeGrob.html">gridExtra vignette</a> for additional information on how to customize groups of plots.
-
 
 ### Making plots interactive in _Report > Rmd_
 

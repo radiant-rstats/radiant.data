@@ -34,7 +34,7 @@ For a video tutorial see the `Installing R, Rstudio, and Radiant on macOS` video
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/CpjL8aa1dg4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-## Starting and stopping
+## Starting, stopping, and updating
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/rNPnnqJhmD4" frameborder="0" allowfullscreen></iframe>
 
