@@ -10,5 +10,5 @@ coverage.R
 ^.*\.sublime-project$
 cran-comments.md
 _pkgdown.yml
-^docs$
-^.vscode$
+docs/
+radiant.data.code-workspace

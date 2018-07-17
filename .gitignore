@@ -5,7 +5,6 @@
 .Ruserdata
 radiant.data.Rproj
 .DS_Store
-^revdep$
+revdep/
 cran-comments.md
-^docs$
-radiant.data.code-workspace
+docs/
