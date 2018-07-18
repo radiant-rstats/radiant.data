@@ -11,7 +11,7 @@ The examples below are adapted from the [Cheatsheet for dplyr join functions](ht
 ```{r results = 'asis', echo = FALSE}
 tab_small <- "class='table table-condensed table-hover' style='width:30%;'"
 tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
-data(superheroes, package = "radiant.data")
+data(superheroes, package = "radiant.data", envir = environment())
 knitr::kable(
   superheroes, align = 'l', format = 'html', 
   caption = "Superheroes", table.attr = tab_big
@@ -19,7 +19,7 @@ knitr::kable(
 ```
 
 ```{r results = 'asis', echo = FALSE}
-data(publishers, package = "radiant.data")
+data(publishers, package = "radiant.data", envir = environment())
 knitr::kable(
   publishers, align = 'l', format = 'html', 
   caption = "Publishers", table.attr = tab_small
@@ -234,7 +234,7 @@ In the screen-shot of the _Data > Combine_ tab below we see the two datasets. Th
 ### Bind rows
 
 ```{r results = 'asis', echo = FALSE}
-data(avengers, package = "radiant.data")
+data(avengers, package = "radiant.data", envir = environment())
 dplyr::bind_rows(avengers, superheroes) %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```

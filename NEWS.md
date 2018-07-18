@@ -1,4 +1,4 @@
-# radiant.data 0.9.6.12
+# radiant.data 0.9.6.13
 
 ## Major changes
 
@@ -7,6 +7,7 @@
 
 ## Minor changes
 
+* Load `data(...)` into the current environment rather than defaulting only to the global environment
 * `file.rename` failed using docker on windows when saving a report. Using `file.copy` instead 
 * Fix for `sf_volumes` used to set the root directories to load and save files
 * Set default locale to "en_US.UTF-8" when using shiny-server unless `Sys.getlocale(category = "LC_ALL")` what set to something other than "C"

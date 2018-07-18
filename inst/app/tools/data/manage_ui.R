@@ -598,7 +598,7 @@ observeEvent(input$loadExampleData, {
     if (is.data.frame(get(item, envir = r_data))) {
       r_info[["datasetlist"]] <- c(item, r_info[["datasetlist"]]) %>% unique()
       r_info[[paste0(item, "_descr")]] <- fix_smart(attr(r_data[[item]], "description"))
-      r_info[[paste0(item, "_lcmd")]] <- glue('{item} <- data({item}, package = "{exdat[i, "Package"]}") %>% get()\nregister("{item}")')
+      r_info[[paste0(item, "_lcmd")]] <- glue('{item} <- data({item}, package = "{exdat[i, "Package"]}", envir = environment()) %>% get()\nregister("{item}")')
     } else {
       r_info[["dtree_list"]] <- c(item, r_info[["dtree_list"]]) %>% unique()
     }
