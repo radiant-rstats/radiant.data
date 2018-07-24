@@ -454,8 +454,8 @@ observeEvent(input$uploadfile, {
   withProgress(message = "Loading ...", value = 1, {
     for (i in 1:(dim(inFile)[1])) {
       load_user_data(
-        inFile[i, "name"],
-        inFile[i, "datapath"],
+        as.character(inFile[i, "name"]),
+        as.character(inFile[i, "datapath"]),
         input$dataType,
         header = input$man_header,
         man_str_as_factor = input$man_str_as_factor,

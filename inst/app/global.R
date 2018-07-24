@@ -6,8 +6,16 @@ suppressWarnings(
   )
 )
 
-
-if (sum(nzchar(getOption("radiant.sf_volumes", ""))) > 0 || isTRUE(Sys.getenv("RSTUDIO") != "")) {
+if (isTRUE(getOption("radiant.sf_volumes", "") != "") || isTRUE(Sys.getenv("RSTUDIO") != "")) {
+  if (isTRUE(getOption("radiant.sf_volumes", "") == "")) {
+    sf_volumes <- c(Home = radiant.data::find_home())
+    Dropbox <- try(radiant.data::find_dropbox(), silent = TRUE)
+    if (!inherits(Dropbox, "try-error")) {
+      sf_volumes <- c(sf_volumes, Dropbox = Dropbox)
+    }
+    sf_volumes <- c(sf_volumes, shinyFiles::getVolumes()())
+    options(radiant.sf_volumes = sf_volumes)
+  }
   options(radiant.shinyFiles = TRUE)
 } else {
   options(radiant.shinyFiles = FALSE)

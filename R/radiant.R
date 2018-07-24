@@ -1405,8 +1405,8 @@ read_files <- function(
   }
 }
 
-#' Find users home directory
-#' @details Returns gives /Users/x and not /Users/x/Documents
+#' Find user directory
+#' @details Returns /Users/x and not /Users/x/Documents
 #' @export
 find_home <- function() {
   os_type = Sys.info()["sysname"]

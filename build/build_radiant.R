@@ -11,19 +11,19 @@ rv <- paste0(rv$major, ".", strsplit(rv$minor, ".", fixed = TRUE)[[1]][1])
 rvprompt <- readline(prompt = paste0("Running for R version: ", rv, ". Is that what you wanted y/n: "))
 if (grepl("[nN]", rvprompt)) stop("Change R-version")
 
-dirsrc <- file.path("../minicran/src/contrib")
+dirsrc <- "../minicran/src/contrib"
 
 if (rv == "3.3") {
-  dirmac <- file.path("../minicran/bin/macosx/mavericks/contrib", rv)
+  dirmac <- fs::path("../minicran/bin/macosx/mavericks/contrib", rv)
 } else {
-  dirmac <- file.path("../minicran/bin/macosx/el-capitan/contrib", rv)
+  dirmac <- fs::path("../minicran/bin/macosx/el-capitan/contrib", rv)
 }
 
-dirwin <- file.path("../minicran/bin/windows/contrib", rv)
+dirwin <- fs::path("../minicran/bin/windows/contrib", rv)
 
-if (!file.exists(dirsrc)) dir.create(dirsrc, recursive = TRUE)
-if (!file.exists(dirmac)) dir.create(dirmac, recursive = TRUE)
-if (!file.exists(dirwin)) dir.create(dirwin, recursive = TRUE)
+if (!fs::file_exists(dirsrc)) fs::dir_create(dirsrc, recursive = TRUE)
+if (!fs::file_exists(dirmac)) fs::dir_create(dirmac, recursive = TRUE)
+if (!fs::file_exists(dirwin)) fs::dir_create(dirwin, recursive = TRUE)
 
 ## delete older version of radiant
 rem_old <- function(app) {
@@ -41,12 +41,14 @@ win <- readline(prompt = "Did you build on Windows? y/n: ")
 if (grepl("[yY]", win)) {
 
   ## move packages to radiant_miniCRAN. must package in Windows first
-  path <- normalizePath("../")
-  sapply(list.files(path, pattern = "*.tar.gz", full.names = TRUE), file.copy, dirsrc)
+  # path <- normalizePath("../")
+  pth <- fs::path_abs("../")
+
+  sapply(list.files(pth, pattern = "*.tar.gz", full.names = TRUE), file.copy, dirsrc)
   unlink("../*.tar.gz")
-  sapply(list.files(path, pattern = "*.tgz", full.names = TRUE), file.copy, dirmac)
+  sapply(list.files(pth, pattern = "*.tgz", full.names = TRUE), file.copy, dirmac)
   unlink("../*.tgz")
-  sapply(list.files(path, pattern = "*.zip", full.names = TRUE), file.copy, dirwin)
+  sapply(list.files(pth, pattern = "*.zip", full.names = TRUE), file.copy, dirwin)
   unlink("../*.zip")
 
   tools::write_PACKAGES(dirmac, type = "mac.binary")
