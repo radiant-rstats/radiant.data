@@ -7,6 +7,27 @@ viz_axes <- c(
   "Flip" = "flip", "Log X" = "log_x", "Log Y" = "log_y",
   "Scale-y" = "scale_y", "Density" = "density", "Sort" = "sort"
 )
+viz_theme <- c(
+  "Gray" = "theme_gray", "Black and White" = "theme_bw",
+  "Light" = "theme_light", "Dark" = "theme_dark",
+  "Minimal" = "theme_minimal", "Classic" = "theme_classic"
+)
+viz_base_family = c(
+  "Theme default" = "", "Helvetica" = "Helvetica", "Serif" = "serif",
+  "Sans" = "sans", "Mono" = "mono", "Courier" = "Courier", "Times" = "Times"
+)
+
+viz_labs <- c("title", "subtitle", "caption", "x", "y")
+viz_add_labs <- function() {
+  lab_list <- list()
+  for(l in viz_labs) {
+    inp <- input[[paste0("viz_labs_", l)]]
+    if(length(inp) > 0 && nchar(inp) > 0) {
+      lab_list[[l]] <- inp
+    }
+  }
+  lab_list
+}
 
 ## list of function arguments
 viz_args <- as.list(formals(visualize))
@@ -17,7 +38,8 @@ viz_inputs <- reactive({
   viz_args$data_filter <- if (isTRUE(input$show_filter)) input$data_filter else ""
   viz_args$dataset <- input$dataset
   viz_args$shiny <- input$shiny
-  for (i in r_drop(names(viz_args)))
+  viz_args$labs <- viz_add_labs()
+  for (i in r_drop(names(viz_args), drop = c("dataset", "data_filter", "labs")))
     viz_args[[i]] <- input[[paste0("viz_", i)]]
   # isolate({
   #   # cat(paste0(names(viz_args), " ", viz_args, collapse = ", "), file = stderr(), "\n")
@@ -43,7 +65,7 @@ output$ui_viz_nrobs <- renderUI({
   choices <- c("1,000" = 1000, "5,000" = 5000, "10,000" = 10000, "All" = -1) %>%
     .[. < nrobs]
   selectInput(
-    "viz_nrobs", "Number of data points plotted:", 
+    "viz_nrobs", "Number of data points plotted:",
     choices = choices,
     selected = state_single("viz_nrobs", choices, 1000)
   )
@@ -126,7 +148,7 @@ observeEvent(input$viz_check, {
 output$ui_viz_facet_row <- renderUI({
   vars <- c("None" = ".", groupable_vars_nonum())
   selectizeInput(
-    "viz_facet_row", "Facet row", vars,
+    "viz_facet_row", "Facet row:", vars,
     selected = state_single("viz_facet_row", vars, init = "."),
     multiple = FALSE
   )
@@ -135,7 +157,7 @@ output$ui_viz_facet_row <- renderUI({
 output$ui_viz_facet_col <- renderUI({
   vars <- c("None" = ".", groupable_vars_nonum())
   selectizeInput(
-    "viz_facet_col", "Facet column", vars,
+    "viz_facet_col", "Facet column:", vars,
     selected = state_single("viz_facet_col", vars, init = "."),
     multiple = FALSE
   )
@@ -151,7 +173,7 @@ output$ui_viz_color <- renderUI({
 
   if (isTRUE(input$viz_comby) && length(input$viz_yvar) > 1) vars <- c("None" = "none")
   selectizeInput(
-    "viz_color", "Color", vars, multiple = FALSE,
+    "viz_color", "Color:", vars, multiple = FALSE,
     selected = state_single("viz_color", vars, init = "none")
   )
 })
@@ -160,7 +182,7 @@ output$ui_viz_fill <- renderUI({
   vars <- c("None" = "none", groupable_vars())
   if (isTRUE(input$viz_combx) && length(input$viz_xvar) > 1) vars <- vars[1]
   selectizeInput(
-    "viz_fill", "Fill", vars, multiple = FALSE,
+    "viz_fill", "Fill:", vars, multiple = FALSE,
     selected = state_single("viz_fill", vars, init = "none")
   )
 })
@@ -171,7 +193,7 @@ output$ui_viz_size <- renderUI({
   vars <- c("None" = "none", varnames()[isNum])
   if (isTRUE(input$viz_comby) && length(input$viz_yvar) > 1) vars <- c("None" = "none")
   selectizeInput(
-    "viz_size", "Size", vars, multiple = FALSE,
+    "viz_size", "Size:", vars, multiple = FALSE,
     selected = state_single("viz_size", vars, init = "none")
   )
 })
@@ -233,6 +255,53 @@ output$ui_viz_run <- renderUI({
   ## https://stackoverflow.com/questions/43641103/change-color-actionbutton-shiny-r
 })
 
+output$ui_viz_labs <- renderUI({
+  ## updates when dataset changes
+  req(input$dataset)
+  wellPanel(
+    textAreaInput("viz_labs_title", NULL, "", placeholder = "Title", rows = 1),
+    textAreaInput("viz_labs_subtitle", NULL, "", placeholder = "Subtitle", rows = 1),
+    textAreaInput("viz_labs_caption", NULL, "", placeholder = "Caption", rows = 1),
+    textAreaInput("viz_labs_y", NULL, "", placeholder = "Y-label", rows = 1),
+    textAreaInput("viz_labs_x", NULL, "", placeholder = "X-label", rows = 1)
+  )
+})
+
+output$ui_viz_colors <- renderUI({
+  tagList(
+    conditionalPanel(
+      condition = "input.viz_type == 'bar' |
+                   input.viz_type == 'dist' |
+                   input.viz_type == 'box' |
+                   input.viz_type == 'density'",
+      selectInput(
+        "viz_fillcol", "Fill color:", choices = colors(),
+        selected = state_single("viz_fillcol", colors(), "blue")
+      )
+    ),
+    conditionalPanel(
+      condition = "input.viz_type == 'dist' |
+                   input.viz_type == 'density' |
+                   input.viz_type == 'box' |
+                   input.viz_type == 'scatter' |
+                   input.viz_type == 'line'",
+      selectInput(
+        "viz_linecol", "Line color:", choices = colors(),
+        selected = state_single("viz_linecol", colors(), "black")
+      )
+    ),
+    conditionalPanel(
+      condition = "input.viz_type == 'scatter' |
+                   input.viz_type == 'line' |
+                   input.viz_type == 'box'",
+      selectInput(
+        "viz_pointcol", "Point color:", choices = colors(),
+        selected = state_single("viz_pointcol", colors(), "black")
+      )
+    )
+  )
+})
+
 observe({
   ## dep on most inputs
   input$data_filter
@@ -254,91 +323,125 @@ output$ui_Visualize <- renderUI({
     wellPanel(
       uiOutput("ui_viz_run")
     ),
-    wellPanel(
-      uiOutput("ui_viz_type"),
-      conditionalPanel("input.viz_type == 'scatter'",
-        uiOutput("ui_viz_nrobs")
-      ),
-      conditionalPanel(
-        condition = "input.viz_type != 'dist' & input.viz_type != 'density'",
-        uiOutput("ui_viz_yvar"),
+    checkboxInput("viz_details_main", "Main", state_init("viz_details_main", TRUE)),
+    conditionalPanel("input.viz_details_main == true",
+      wellPanel(
+        uiOutput("ui_viz_type"),
+        conditionalPanel("input.viz_type == 'scatter'",
+          uiOutput("ui_viz_nrobs")
+        ),
         conditionalPanel(
-          "input.viz_yvar != undefined && input.viz_yvar != null && input.viz_yvar.length > 1",
-          uiOutput("ui_viz_comby")
-        )
-      ),
-      uiOutput("ui_viz_xvar"),
-      conditionalPanel(
-        "input.viz_type == 'dist' | input.viz_type == 'density'",
+          condition = "input.viz_type != 'dist' & input.viz_type != 'density'",
+          uiOutput("ui_viz_yvar"),
+          conditionalPanel(
+            "input.viz_yvar != undefined && input.viz_yvar != null && input.viz_yvar.length > 1",
+            uiOutput("ui_viz_comby")
+          )
+        ),
+        uiOutput("ui_viz_xvar"),
         conditionalPanel(
-          "input.viz_xvar != undefined && input.viz_xvar != null && input.viz_xvar.length > 1",
-          uiOutput("ui_viz_combx")
+          "input.viz_type == 'dist' | input.viz_type == 'density'",
+          conditionalPanel(
+            "input.viz_xvar != undefined && input.viz_xvar != null && input.viz_xvar.length > 1",
+            uiOutput("ui_viz_combx")
+          )
+        ),
+        uiOutput("ui_viz_facet_row"),
+        uiOutput("ui_viz_facet_col"),
+        conditionalPanel(
+          condition = "input.viz_type == 'bar' |
+                       input.viz_type == 'dist' |
+                       input.viz_type == 'density' |
+                       input.viz_type == 'surface'",
+          uiOutput("ui_viz_fill")
+        ),
+        conditionalPanel(
+          condition = "input.viz_type == 'scatter' |
+                       input.viz_type == 'line' |
+                       input.viz_type == 'box'",
+          uiOutput("ui_viz_color")
+        ),
+        conditionalPanel(
+          condition = "input.viz_type == 'scatter'",
+          uiOutput("ui_viz_size")
+        ),
+        conditionalPanel(
+          condition = "input.viz_type == 'bar' |
+                       input.viz_type == 'scatter' |
+                       input.viz_type == 'line'",
+          selectInput(
+            "viz_fun", "Function:", choices =  getOption("radiant.functions"),
+            selected = state_single("viz_fun", getOption("radiant.functions"), "mean")
+          )
+        ),
+        conditionalPanel(
+          condition = "input.viz_type == 'scatter' |
+                       input.viz_type == 'line' |
+                       input.viz_type == 'surface' |
+                       input.viz_type == 'box'",
+          uiOutput("ui_viz_check")
+        ),
+        uiOutput("ui_viz_axes"),
+        conditionalPanel(
+          condition = "input.viz_type == 'dist'",
+          sliderInput(
+            "viz_bins", label = "Number of bins:",
+            value = state_init("viz_bins", 10),
+            min = 2, max = 50, step = 1
+          )
+        ),
+        conditionalPanel(
+          "input.viz_type == 'density' |
+           (input.viz_type == 'scatter' & (input.viz_check && input.viz_check.indexOf('loess') >= 0))",
+          sliderInput(
+            "viz_smooth", label = "Smooth:",
+            value = state_init("viz_smooth", 1),
+            min = 0.1, max = 3, step = .1
+          )
         )
-      ),
-      uiOutput("ui_viz_facet_row"),
-      uiOutput("ui_viz_facet_col"),
-      conditionalPanel(
-        condition = "input.viz_type == 'bar' |
-                     input.viz_type == 'dist' |
-                     input.viz_type == 'density' |
-                     input.viz_type == 'surface'",
-        uiOutput("ui_viz_fill")
-      ),
-      conditionalPanel(
-        condition = "input.viz_type == 'scatter' |
-                     input.viz_type == 'line' |
-                     input.viz_type == 'box'",
-        uiOutput("ui_viz_color")
-      ),
-      conditionalPanel(
-        condition = "input.viz_type == 'scatter'",
-        uiOutput("ui_viz_size")
-      ),
-      conditionalPanel(
-        condition = "input.viz_type == 'scatter' |
-                     input.viz_type == 'line' |
-                     input.viz_type == 'surface' |
-                     input.viz_type == 'box'",
-        uiOutput("ui_viz_check")
-      ),
-      uiOutput("ui_viz_axes"),
-      conditionalPanel(
-        condition = "input.viz_type == 'dist'",
-        sliderInput(
-          "viz_bins", label = "Number of bins:",
-          value = state_init("viz_bins", 10),
-          min = 2, max = 50, step = 1
-        )
-      ),
-      conditionalPanel(
-        "input.viz_type == 'density' |
-         (input.viz_type == 'scatter' & (input.viz_check && input.viz_check.indexOf('loess') >= 0))",
-        sliderInput(
-          "viz_smooth", label = "Smooth:",
-          value = state_init("viz_smooth", 1),
-          min = 0.1, max = 3, step = .1
-        )
-      ),
-      sliderInput(
-        "viz_alpha", label = "Opacity:",
-        value = state_init("viz_alpha", .5),
-        min = 0, max = 1, step = .01
-      ),
-      tags$table(
-        tags$td(numericInput(
-          "viz_plot_height", label = "Plot height:", min = 100,
-          max = 2000, step = 50,
-          value = state_init("viz_plot_height", r_info[["plot_height"]]),
-          width = "117px"
-        )),
-        tags$td(numericInput(
-          "viz_plot_width", label = "Plot width:", min = 100,
-          max = 2000, step = 50,
-          value = state_init("viz_plot_width", r_info[["plot_width"]]),
-          width = "117px"
-        ))
       )
     ),
+    checkboxInput("viz_details_labels", "Labels", state_init("viz_details_labels", FALSE)),
+    conditionalPanel("input.viz_details_labels == true",
+      uiOutput("ui_viz_labs")
+    ),
+    checkboxInput("viz_details_style", "Style", state_init("viz_details_style", FALSE)),
+    conditionalPanel("input.viz_details_style == true",
+      wellPanel(
+        selectInput(
+          "viz_theme", "Plot theme:", choices = viz_theme,
+          selected = state_single("viz_theme", viz_theme, "theme_gray")
+        ),
+        numericInput(
+          "viz_base_size", "Base font size:", value = state_init("viz_base_size", 11)
+        ),
+        selectInput(
+          "viz_base_family", "Font family:", choices = viz_base_family,
+          selected = state_single("viz_base_family", viz_base_family, "helvetica")
+        ),
+        uiOutput("ui_viz_colors"),
+        sliderInput(
+          "viz_alpha", label = "Opacity:",
+          value = state_init("viz_alpha", .5),
+          min = 0, max = 1, step = .01
+        ),
+        tags$table(
+          tags$td(numericInput(
+            "viz_plot_height", label = "Plot height:", min = 100,
+            max = 2000, step = 50,
+            value = state_init("viz_plot_height", r_info[["plot_height"]]),
+            width = "117px"
+          )),
+          tags$td(numericInput(
+            "viz_plot_width", label = "Plot width:", min = 100,
+            max = 2000, step = 50,
+            value = state_init("viz_plot_width", r_info[["plot_width"]]),
+            width = "117px"
+          ))
+        )
+      )
+    ),
+    # HTML("</details>"),
     help_and_report(
       modal_title = "Visualize",
       fun_name = "visualize",
@@ -418,12 +521,12 @@ output$visualize <- renderPlot({
   }
 
   req(!is.null(input$viz_color) || !is.null(input$viz_fill))
-
-
   withProgress(message = "Making plot", value = 1, {
     do.call(visualize, c(viz_inputs(), shiny = TRUE))
   })
 })
+
+
 
 observeEvent(input$visualize_report, {
   ## resetting hidden elements to default values
@@ -453,6 +556,20 @@ observeEvent(input$visualize_report, {
     vi$fill <- NULL
   }
 
+  if (!input$viz_type %in% c("bar", "dist", "box", "density")) {
+    vi$fillcol <- "blue"
+  }
+  if (!input$viz_type %in% c("dist", "density", "box", "scatter", "line")) {
+    vi$linecol <- "black"
+  }
+  if (!input$viz_type %in% c("box", "scatter", "line")) {
+    vi$pointcol <- "black"
+  }
+
+  if (!input$viz_type %in% c("bar", "line", "scatter")) {
+    vi$fun <- "mean"
+  }
+
   inp_main <- c(clean_args(vi, viz_args), custom = FALSE)
 
   update_report(
@@ -467,8 +584,8 @@ observeEvent(input$visualize_report, {
 })
 
 download_handler(
-  id = "dlp_visualize", 
-  fun = download_handler_plot, 
+  id = "dlp_visualize",
+  fun = download_handler_plot,
   fn = function() paste0(input$dataset, "_visualize"),
   type = "png",
   caption = "Save visualize plot",

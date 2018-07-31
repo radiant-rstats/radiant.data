@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/data/visualize.html} for an example in Radiant
 #'
-#' @param dataset Data to plot (data.frame or tibble) 
+#' @param dataset Data to plot (data.frame or tibble)
 #' @param xvar One or more variables to display along the X-axis of the plot
 #' @param yvar Variable to display along the Y-axis of the plot (default = "none")
 #' @param comby Combine yvars in plot (TRUE or FALSE, FALSE is the default)
@@ -23,6 +23,10 @@
 #' @param check Add a regression line ("line"), a loess line ("loess"), or jitter ("jitter") to a scatter plot
 #' @param axes Flip the axes in a plot ("flip") or apply a log transformation (base e) to the y-axis ("log_y") or the x-axis ("log_x")
 #' @param alpha Opacity for plot elements (0 to 1)
+#' @param theme ggplot theme to use (e.g., "theme_gray" or "theme_classic")
+#' @param base_size Base font size to use (default = 11)
+#' @param base_family Base font family to use (e.g., "Times" or "Helvetica")
+#' @param labs Labels to use for plots
 #' @param xlim Set limit for y-axis (e.g., c(0, 1))
 #' @param ylim Set limit for y-axis (e.g., c(0, 1))
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
@@ -40,7 +44,7 @@
 #' visualize(diamonds, yvar = "price", xvar = c("cut","clarity"),
 #'   type = "line", fun = "max")
 #' visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter",
-#'           size = "table", custom = TRUE) + scale_size(range=c(1,10), guide = "none")
+#'           size = "table", custom = TRUE) + scale_size(range = c(1, 10), guide = "none")
 #' visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
 #'   labs(title = "A scatterplot", x = "price in $")
 #' visualize(diamonds, xvar = "price:carat", custom = TRUE) %>%
@@ -55,8 +59,9 @@ visualize <- function(
   facet_row = ".", facet_col = ".", color = "none", fill = "none",
   size = "none", fillcol = "blue", linecol = "black", pointcol = "black",
   bins = 10, smooth = 1, fun = "mean", check = "", axes = "",
-  alpha = 0.5, xlim = NULL, ylim = NULL, data_filter = "", shiny = FALSE,
-  custom = FALSE
+  alpha = 0.5, theme = "theme_gray", base_size = 11, base_family = "",
+  labs = list(), xlim = NULL, ylim = NULL, data_filter = "",
+  shiny = FALSE, custom = FALSE
 ) {
 
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
@@ -331,14 +336,14 @@ visualize <- function(
             plot_list[[itt]] <- plot_list[[itt]] +
               stat_summary(
                 fun.data = fun1, na.rm = TRUE, aes(fill = fun[1]),
-                geom = "crossbar", show.legend = FALSE, 
+                geom = "crossbar", show.legend = FALSE,
                 color = linecol[1]
               )
           } else {
             plot_list[[itt]] <- plot_list[[itt]] +
               stat_summary(
                 fun.data = fun1, na.rm = TRUE, aes(fill = fun[1]),
-                geom = "crossbar", show.legend = TRUE, 
+                geom = "crossbar", show.legend = TRUE,
                 color = linecol[1]
               )
 
@@ -351,7 +356,7 @@ visualize <- function(
               plot_list[[itt]] <- plot_list[[itt]] +
                 stat_summary(
                   fun.data = fun2, na.rm = TRUE, aes(fill = fun[2]),
-                  geom = "crossbar", show.legend = FALSE, 
+                  geom = "crossbar", show.legend = FALSE,
                   color = linecol[2]
                 )
             }
@@ -365,7 +370,7 @@ visualize <- function(
               plot_list[[itt]] <- plot_list[[itt]] +
                 stat_summary(
                   fun.data = fun3, na.rm = TRUE, aes(fill = fun[3]),
-                  geom = "crossbar", show.legend = FALSE, 
+                  geom = "crossbar", show.legend = FALSE,
                   color = linecol[3]
                 )
             }
@@ -429,7 +434,7 @@ visualize <- function(
               # summarise_all(fun, na.rm = TRUE)
             colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j)) + geom_line(aes(group = 1), color = linecol)
-            if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point(color = linecol)
+            if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point(color = pointcol)
           } else {
             plot_list[[itt]] <- ggplot(dataset, aes_string(x = i, y = j)) + geom_line(color = linecol)
           }
@@ -519,7 +524,7 @@ visualize <- function(
       for (j in yvar) {
         if (color == "none") {
           plot_list[[itt]] <- ggplot(dataset, aes_string(x = i, y = j)) +
-            geom_boxplot(alpha = alpha, fill = fillcol)
+            geom_boxplot(alpha = alpha, fill = fillcol, outlier.color = pointcol, color = linecol)
         } else {
           plot_list[[itt]] <- ggplot(dataset, aes_string(x = i, y = j, fill = color)) +
             geom_boxplot(alpha = alpha)
@@ -612,6 +617,22 @@ visualize <- function(
         guides(fill = guide_legend(reverse = TRUE)) +
         guides(color = guide_legend(reverse = TRUE))
     }
+  }
+
+  if (length(labs) > 0) {
+    if (is.list(labs[[1]])) {
+      for (i in 1:length(labs)) {
+        plot_list[[i]] <- plot_list[[i]] + ggplot2::labs(labs[[i]])
+      }
+    } else {
+      plot_list[[1]] <- plot_list[[1]] + ggplot2::labs(labs)
+    }
+  }
+
+  ## setting theme
+  for (i in 1:length(plot_list)) {
+    plot_list[[i]] <- plot_list[[i]] +
+      get(theme)(base_size = ifelse(is.na(base_size), 11, base_size), base_family = base_family)
   }
 
   if (custom) {

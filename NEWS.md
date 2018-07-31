@@ -1,3 +1,7 @@
+# radiant.data 0.9.6.15
+
+Additional styling and labeling options for _Data > Visualize_ are now available in the browser interface
+
 # radiant.data 0.9.6.14
 
 ## Major changes

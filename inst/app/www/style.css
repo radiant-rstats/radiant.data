@@ -2,6 +2,20 @@ ul, ol {
   padding-left: 18px;
 }
 
+/*
+summary {
+  font-weight: bold;
+}
+
+details:focus, summary:focus {
+  outline: none;
+}
+*/
+
+#viz_details_main + span, #viz_details_labels + span, #viz_details_style + span {
+  font-weight:bold;
+}
+
 .table {
   width: auto;
 }
