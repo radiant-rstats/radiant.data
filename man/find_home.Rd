@@ -2,13 +2,13 @@
 % Please edit documentation in R/radiant.R
 \name{find_home}
 \alias{find_home}
-\title{Find users home directory}
+\title{Find user directory}
 \usage{
 find_home()
 }
 \description{
-Find users home directory
+Find user directory
 }
 \details{
-Returns gives /Users/x and not /Users/x/Documents
+Returns /Users/x and not /Users/x/Documents
 }

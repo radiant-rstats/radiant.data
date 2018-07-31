@@ -8,9 +8,10 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   type = ifelse(is_empty(yvar), "dist", "scatter"), nrobs = -1,
   facet_row = ".", facet_col = ".", color = "none", fill = "none",
   size = "none", fillcol = "blue", linecol = "black",
-  pointcol = "black", bins = 10, smooth = 1, fun = "mean", check = "",
-  axes = "", alpha = 0.5, xlim = NULL, ylim = NULL, data_filter = "",
-  shiny = FALSE, custom = FALSE)
+  pointcol = "black", bins = 10, smooth = 1, fun = "mean",
+  check = "", axes = "", alpha = 0.5, theme = "theme_gray",
+  base_size = 11, base_family = "", labs = list(), xlim = NULL,
+  ylim = NULL, data_filter = "", shiny = FALSE, custom = FALSE)
 }
 \arguments{
 \item{dataset}{Data to plot (data.frame or tibble)}
@@ -55,6 +56,14 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 
 \item{alpha}{Opacity for plot elements (0 to 1)}
 
+\item{theme}{ggplot theme to use (e.g., "theme_gray" or "theme_classic")}
+
+\item{base_size}{Base font size to use (default = 11)}
+
+\item{base_family}{Base font family to use (e.g., "Times" or "Helvetica")}
+
+\item{labs}{Labels to use for plots}
+
 \item{xlim}{Set limit for y-axis (e.g., c(0, 1))}
 
 \item{ylim}{Set limit for y-axis (e.g., c(0, 1))}
@@ -83,7 +92,7 @@ visualize(diamonds, yvar = "price", xvar = c("cut","clarity"),
 visualize(diamonds, yvar = "price", xvar = c("cut","clarity"),
   type = "line", fun = "max")
 visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter",
-          size = "table", custom = TRUE) + scale_size(range=c(1,10), guide = "none")
+          size = "table", custom = TRUE) + scale_size(range = c(1, 10), guide = "none")
 visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
   labs(title = "A scatterplot", x = "price in $")
 visualize(diamonds, xvar = "price:carat", custom = TRUE) \%>\%
