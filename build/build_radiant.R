@@ -1,6 +1,8 @@
 ## could this ensure inst/rstudio/*.dcf are ignored during build?
 ## see https://stackoverflow.com/a/42907049/1974918
 # devtools::use_build_ignore(c("inst/rstudio"))
+
+setwd(rstudioapi::getActiveProject())
 curr <- getwd()
 pkg <- basename(curr)
 
