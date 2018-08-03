@@ -12,7 +12,7 @@ descr_out <- function(descr, ret_type = "html") {
 
 ## create an empty data.frame and return error message as description
 upload_error_handler <- function(objname, ret) {
-  r_data[[objname]] <- data.frame(matrix(rep("", 12), nrow = 2), stringsAsFactors = FALSE) %>% 
+  r_data[[objname]] <- data.frame(matrix(rep("", 12), nrow = 2), stringsAsFactors = FALSE) %>%
     set_attr("description", ret)
 }
 
@@ -24,24 +24,24 @@ load_csv <- function(
   n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
   dataset <- sshhr(try(
       readr::read_delim(
-        file, delim = delim, locale = readr::locale(decimal_mark = dec, grouping_mark = delim), 
+        file, delim = delim, locale = readr::locale(decimal_mark = dec, grouping_mark = delim),
         col_names = col_names, n_max = n_max, trim_ws = TRUE
-      ), 
+      ),
       silent = TRUE
     )
   )
   if (inherits(dataset, "try-error")) {
     "#### There was an error loading the data. Please make sure the data are in csv format"
-  } else { 
+  } else {
     prb <- readr::problems(dataset)
     if (nrow(prb) > 0) {
       tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
       rprob <- knitr::kable(
-        prb[1:(min(nrow(prb):10)), , drop = FALSE], 
-        align = "l", 
-        format = "html", 
-        table.attr = tab_big, 
-        caption = "Read issues (max 10 rows shown): To reload the file you may need to refresh the browser first"
+        prb[1:(min(nrow(prb):10)), , drop = FALSE],
+        align = "l",
+        format = "html",
+        table.attr = tab_big,
+        caption = "Read issues (max 10 rows shown):"
       )
     } else {
       rprob <- ""
@@ -56,7 +56,7 @@ load_csv <- function(
 
 load_user_data <- function(
   fname, uFile, ext, header = TRUE,
-  man_str_as_factor = TRUE, sep = ",", 
+  man_str_as_factor = TRUE, sep = ",",
   dec = ".", n_max = Inf
 ) {
 
@@ -67,7 +67,7 @@ load_user_data <- function(
   ext <- case_when(
     fext == ext ~ ext,
     fext == "rdata" ~ "rdata",
-    fext == "rds" && ext == "rda" ~ "rds", 
+    fext == "rds" && ext == "rda" ~ "rds",
     fext == "rda" && ext == "rds" ~ "rda",
     fext == "txt" && ext == "csv" ~ "txt",
     fext == "tsv" && ext == "csv" ~ "tsv",
@@ -93,8 +93,8 @@ load_user_data <- function(
   cmd <- NULL
   pp <- suppressMessages(
     radiant.data::parse_path(
-      uFile, 
-      pdir = getOption("radiant.project_dir", ""), 
+      uFile,
+      pdir = getOption("radiant.project_dir", ""),
       chr = "\"",
       mess = FALSE
     )
@@ -109,12 +109,12 @@ load_user_data <- function(
       if (sum(robjname %in% c("r_state", "r_data", "r_info")) > 1) {
         upload_error_handler(objname, "#### To restore state select 'radiant state file' from the 'Load data of type' drowdown before loading the file")
         ## need to remove the local copies of r_state, r_data, and r_info
-        suppressWarnings(rm(r_state, r_data, r_info)) 
+        suppressWarnings(rm(r_state, r_data, r_info))
       } else {
         upload_error_handler(objname, "#### More than one R object contained in the data.")
       }
     } else {
-      r_data[[objname]] <- as.data.frame(get(robjname), stringsAsFactors = FALSE) 
+      r_data[[objname]] <- as.data.frame(get(robjname), stringsAsFactors = FALSE)
       cmd <- glue('{objname} <- load({pp$rpath}) %>% get()')
     }
   } else if (ext == "rds") {
@@ -123,7 +123,7 @@ load_user_data <- function(
     if (inherits(robj, "try-error")) {
       upload_error_handler(objname, "#### There was an error loading the data. Please make sure the data are in rds format.")
     } else {
-      r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE) 
+      r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE)
       cmd <- glue('{objname} <- readr::read_rds({pp$rpath})')
     }
   } else if (ext == "feather") {
@@ -142,20 +142,20 @@ load_user_data <- function(
     }
   } else if (ext %in% c("tsv", "csv", "txt")) {
     r_data[[objname]] <- load_csv(
-        uFile, delim = sep, col_names = header, n_max = n_max, 
+        uFile, delim = sep, col_names = header, n_max = n_max,
         dec = dec, saf = man_str_as_factor
-    ) %>% 
-      {if (is.character(.)) upload_error_handler(objname, "#### There was an error loading the data") else .} 
+    ) %>%
+      {if (is.character(.)) upload_error_handler(objname, "#### There was an error loading the data") else .}
     n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
     if (ext == "csv" && sep == "," && dec == "." && header) {
-      cmd <- glue('{objname} <- readr::read_csv({pp$rpath}, n_max = {n_max})') 
+      cmd <- glue('{objname} <- readr::read_csv({pp$rpath}, n_max = {n_max})')
     } else {
       cmd <- glue('
         {objname} <- readr::read_delim(
-          {pp$rpath}, 
+          {pp$rpath},
           delim = "{sep}", col_names = {header}, n_max = {n_max},
           locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{sep}")
-        )') 
+        )')
     }
     if (man_str_as_factor) cmd <- paste0(cmd, " %>%\n  to_fct()")
   } else if (ext != "---") {
