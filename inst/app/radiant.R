@@ -719,7 +719,7 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
             bnd <- strsplit(i[[2]], "...", fixed = TRUE)[[1]] %>% gsub(" ", "", .)
             cname <- paste0(cname, " >= '", bnd[1], "' & ", cname, " <= '", bnd[2], "'") %>% gsub("  ", " ", .)
           } else if (type == "character") {
-            cname <- paste0("grepl('", i[[2]], "', ", cname, ", fixed = TRUE)")
+            cname <- paste0("grepl('", i[[2]], "', ", cname, ", ignore.case = TRUE)")
           } else if (type == "logical") {
             cname <- paste0(cname, " == ", toupper(sub("\\['(true|false)'\\]", "\\1", i[[2]])))
           } else {

@@ -1,6 +1,7 @@
-# radiant.data 0.9.6.15
+# radiant.data 0.9.6.17
 
-Additional styling and labeling options for _Data > Visualize_ are now available in the browser interface
+* Additional styling and labeling options for _Data > Visualize_ are now available in the browser interface
+* Fix for code generation related to DT filters
 
 # radiant.data 0.9.6.14
 
