@@ -565,7 +565,8 @@ observeEvent(input$url_csv_load, {
             locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{delim}")
           )')
       }
-      if (saf) cmd <- glue('{cmd} %>% to_fct()')
+      cmd <- paste0(cmd, " %>%\n  fix_names()")
+      if (saf) cmd <- paste0(cmd, " %>%\n  to_fct()")
       cmd <- glue('{cmd}\nregister("{objname}")')
     }
   }
@@ -628,7 +629,7 @@ observeEvent(input$loadClipData, {
     fn <- radiant.data::fix_names(cn)
     if (!identical(cn, fn)) {
       colnames(dataset) <- fn
-      cmd <- paste0(cmd, "%>% fix_names()")
+      cmd <- paste0(cmd, " %>% fix_names()")
     }
     r_data[[objname]] <- dataset
     r_info[[paste0(objname, "_lcmd")]] <- glue('{cmd}\nregister("{objname}")')

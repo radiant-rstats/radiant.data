@@ -157,6 +157,8 @@ load_user_data <- function(
           locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{sep}")
         )')
     }
+    ## make sure all columns names are "fixed"
+    cmd <- paste0(cmd, " %>%\n  fix_names()")
     if (man_str_as_factor) cmd <- paste0(cmd, " %>%\n  to_fct()")
   } else if (ext != "---") {
     ret <- glue('#### The selected filetype is not currently supported ({fext})')

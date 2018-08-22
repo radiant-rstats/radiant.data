@@ -3,10 +3,10 @@ output$ui_tr_vars <- renderUI({
   vars <- varnames()
   req(available(vars))
   selectInput(
-    "tr_vars", "Select variable(s):", 
+    "tr_vars", "Select variable(s):",
     choices = vars,
-    multiple = TRUE, 
-    size = min(8, length(vars)), 
+    multiple = TRUE,
+    size = min(8, length(vars)),
     selectize = FALSE
   )
 })
@@ -407,7 +407,7 @@ observeEvent(input$tr_change_type, {
 })
 
 .change_type <- function(
-  dataset, fun, vars = "", .ext = "", 
+  dataset, fun, vars = "", .ext = "",
   store_dat = "", store = TRUE
 ) {
 
@@ -497,7 +497,7 @@ observeEvent(input$tr_change_type, {
     if (inherits(nvar, "try-error")) {
       paste0("\nThe create command was not valid. The command entered was:\n\n", cmd, "\n\nThe error message was:\n\n", attr(nvar, "condition")$message, "\n\nPlease try again. Examples are shown in the help file")
     } else {
-      select_at(nvar, .vars = vars) %>% 
+      select_at(nvar, .vars = vars) %>%
         ungroup()
     }
   } else {
@@ -537,7 +537,7 @@ observeEvent(input$tr_change_type, {
 }
 
 .rename <- function(
-  dataset, var, rnm, 
+  dataset, var, rnm,
   store_dat = "", store = TRUE
 ) {
 
@@ -551,18 +551,24 @@ observeEvent(input$tr_change_type, {
 
   if (!store || !is.character(dataset)) {
     if (all(rnm == "")) return(dataset)
-    names(dataset)[1:length(rnm)] <- rnm
+    # names(dataset)[1:length(rnm)] <- rnm
+    names(dataset)[seq_len(length(rnm))] <- rnm
     dataset
   } else {
     if (store_dat == "") store_dat <- dataset
+    if (!all(fix_names(var) == var)) var <- paste0("`", var, "`")
     paste0("## rename variable(s)\n", store_dat, " <- rename(", dataset, ", ", paste(rnm, var, sep = " = ", collapse = ", "), ")\n")
   }
 }
 
 .replace <- function(
-  dataset, var, rpl, 
+  dataset, var, rpl,
   store_dat = "", store = TRUE
 ) {
+
+  if (!all(fix_names(var) == var) || !all(fix_names(rpl) == rpl)) {
+    return("\nSome of the variables names used are not valid. Please use 'Rename' to ensure\nvariable names do not have any spaces or symbols and start with a letter")
+  }
 
   if (!store || !is.character(dataset)) {
     select_at(dataset, .vars = rpl) %>% set_colnames(var)
@@ -612,7 +618,7 @@ observeEvent(input$tr_change_type, {
 }
 
 .gather <- function(
-  dataset, vars, key, value, 
+  dataset, vars, key, value,
   store_dat = "", store = TRUE
 ) {
   if (!store && !is.character(dataset)) {
@@ -677,7 +683,7 @@ observeEvent(input$tr_change_type, {
   dataset, vars = "", bins = 10, rev = FALSE,
   .ext = "_dec", store_dat = "", store = TRUE
 ) {
-  
+
   if (!store && !is.character(dataset)) {
     if (is.na(bins) || !is.integer(bins)) return("Please specify the (integer) number of bins to use")
     xt <- function(x, bins, rev) radiant.data::xtile(x, bins, rev = rev)
@@ -696,7 +702,7 @@ observeEvent(input$tr_change_type, {
 
 .training <- function(
   dataset, vars = "", n = .7, nr = 100,
-  name = "training", seed = 1234, 
+  name = "training", seed = 1234,
   store_dat = "", store = TRUE
 ) {
 
