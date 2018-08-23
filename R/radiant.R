@@ -682,8 +682,6 @@ find_dropbox <- function(account = 1) {
       fp <- file.path(Sys.getenv("LOCALAPPDATA"), "Dropbox/info.json") %>%
         gsub("\\\\", "/", .)
     }
-  } else if (os_type == "Darwin") {
-    fp <- "~/.dropbox/info.json"
   } else {
     fp <- "~/.dropbox/info.json"
   }
