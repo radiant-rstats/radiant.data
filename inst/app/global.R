@@ -486,7 +486,8 @@ onStop(function() {
     unlink("~/r_figures/", recursive = TRUE)
     clean_up_list <- c(
       "r_sessions", "help_menu", "make_url_patterns", "import_fs",
-      "init_data", "navbar_proj", "knit_print.data.frame", "withMathJax"
+      "init_data", "navbar_proj", "knit_print.data.frame", "withMathJax",
+      "Dropbox", "sf_volumes"
     )
     suppressWarnings(
       suppressMessages({

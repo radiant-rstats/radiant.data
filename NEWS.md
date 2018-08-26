@@ -1,5 +1,7 @@
-# radiant.data 0.9.6.17
+# radiant.data 0.9.6.19
 
+* Cleanup environment after closing app
+* Fix column names with spaces, etc. when reading csv files
 * Additional styling and labeling options for _Data > Visualize_ are now available in the browser interface
 * Fix for code generation related to DT filters
 
