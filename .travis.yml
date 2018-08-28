@@ -8,6 +8,9 @@ warnings_are_errors: true
 sudo: required
 dist: trusty
 
+r_packages:
+  - devtools
+
 after_success:
   - Rscript -e 'pkgdown::build_site()'
 
