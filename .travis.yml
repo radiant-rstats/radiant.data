@@ -11,6 +11,7 @@ dist: trusty
 after_success:
   - Rscript -e 'pkgdown::build_site()'
 
+## based on https://www.datacamp.com/community/tutorials/cd-package-docs-pkgdown-travis
 deploy:
   provider: pages
   skip-cleanup: true
