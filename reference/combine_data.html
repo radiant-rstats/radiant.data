@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.6.19</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.6.20</span>
       </span>
     </div>
 
@@ -208,65 +208,57 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>avengers</span> <span class='kw'>%&gt;%</span> <span class='fu'>combine_data</span>(<span class='no'>superheroes</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"bind_cols"</span>)</div><div class='output co'>#&gt;              name alignment gender publisher    name1 alignment1 gender1
-#&gt; 1            Thor      good   male    Marvel  Magneto        bad    male
-#&gt; 2        Iron Man      good   male    Marvel    Storm       good  female
-#&gt; 3            Hulk      good   male    Marvel Mystique        bad  female
-#&gt; 4         Hawkeye      good   male    Marvel   Batman       good    male
-#&gt; 5     Black Widow      good female    Marvel    Joker        bad    male
-#&gt; 6 Captain America      good   male    Marvel Catwoman        bad  female
-#&gt; 7         Magneto       bad   male    Marvel  Hellboy       good    male
-#&gt;          publisher1
-#&gt; 1            Marvel
-#&gt; 2            Marvel
-#&gt; 3            Marvel
-#&gt; 4                DC
-#&gt; 5                DC
-#&gt; 6                DC
-#&gt; 7 Dark Horse Comics</div><div class='input'><span class='fu'>combine_data</span>(<span class='no'>avengers</span>, <span class='no'>superheroes</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"bind_cols"</span>)</div><div class='output co'>#&gt;              name alignment gender publisher    name1 alignment1 gender1
-#&gt; 1            Thor      good   male    Marvel  Magneto        bad    male
-#&gt; 2        Iron Man      good   male    Marvel    Storm       good  female
-#&gt; 3            Hulk      good   male    Marvel Mystique        bad  female
-#&gt; 4         Hawkeye      good   male    Marvel   Batman       good    male
-#&gt; 5     Black Widow      good female    Marvel    Joker        bad    male
-#&gt; 6 Captain America      good   male    Marvel Catwoman        bad  female
-#&gt; 7         Magneto       bad   male    Marvel  Hellboy       good    male
-#&gt;          publisher1
-#&gt; 1            Marvel
-#&gt; 2            Marvel
-#&gt; 3            Marvel
-#&gt; 4                DC
-#&gt; 5                DC
-#&gt; 6                DC
-#&gt; 7 Dark Horse Comics</div><div class='input'><span class='no'>avengers</span> <span class='kw'>%&gt;%</span> <span class='fu'>combine_data</span>(<span class='no'>superheroes</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"bind_rows"</span>)</div><div class='output co'>#&gt;               name alignment gender         publisher
-#&gt; 1             Thor      good   male            Marvel
-#&gt; 2         Iron Man      good   male            Marvel
-#&gt; 3             Hulk      good   male            Marvel
-#&gt; 4          Hawkeye      good   male            Marvel
-#&gt; 5      Black Widow      good female            Marvel
-#&gt; 6  Captain America      good   male            Marvel
-#&gt; 7          Magneto       bad   male            Marvel
-#&gt; 8          Magneto       bad   male            Marvel
-#&gt; 9            Storm      good female            Marvel
-#&gt; 10        Mystique       bad female            Marvel
-#&gt; 11          Batman      good   male                DC
-#&gt; 12           Joker       bad   male                DC
-#&gt; 13        Catwoman       bad female                DC
-#&gt; 14         Hellboy      good   male Dark Horse Comics</div><div class='input'><span class='no'>avengers</span> <span class='kw'>%&gt;%</span> <span class='fu'>combine_data</span>(<span class='no'>superheroes</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='st'>"publisher"</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"bind_rows"</span>)</div><div class='output co'>#&gt;               name alignment gender         publisher
-#&gt; 1             Thor      good   male            Marvel
-#&gt; 2         Iron Man      good   male            Marvel
-#&gt; 3             Hulk      good   male            Marvel
-#&gt; 4          Hawkeye      good   male            Marvel
-#&gt; 5      Black Widow      good female            Marvel
-#&gt; 6  Captain America      good   male            Marvel
-#&gt; 7          Magneto       bad   male            Marvel
-#&gt; 8          Magneto       bad   male            Marvel
-#&gt; 9            Storm      good female            Marvel
-#&gt; 10        Mystique       bad female            Marvel
-#&gt; 11          Batman      good   male                DC
-#&gt; 12           Joker       bad   male                DC
-#&gt; 13        Catwoman       bad female                DC
-#&gt; 14         Hellboy      good   male Dark Horse Comics</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='no'>avengers</span> <span class='kw'>%&gt;%</span> <span class='fu'>combine_data</span>(<span class='no'>superheroes</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"bind_cols"</span>)</div><div class='output co'>#&gt; # A tibble: 7 x 8
+#&gt;   name       alignment gender publisher name1  alignment1 gender1 publisher1   
+#&gt;   &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;        
+#&gt; 1 Thor       good      male   Marvel    Magne… bad        male    Marvel       
+#&gt; 2 Iron Man   good      male   Marvel    Storm  good       female  Marvel       
+#&gt; 3 Hulk       good      male   Marvel    Mysti… bad        female  Marvel       
+#&gt; 4 Hawkeye    good      male   Marvel    Batman good       male    DC           
+#&gt; 5 Black Wid… good      female Marvel    Joker  bad        male    DC           
+#&gt; 6 Captain A… good      male   Marvel    Catwo… bad        female  DC           
+#&gt; 7 Magneto    bad       male   Marvel    Hellb… good       male    Dark Horse C…</div><div class='input'><span class='fu'>combine_data</span>(<span class='no'>avengers</span>, <span class='no'>superheroes</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"bind_cols"</span>)</div><div class='output co'>#&gt; # A tibble: 7 x 8
+#&gt;   name       alignment gender publisher name1  alignment1 gender1 publisher1   
+#&gt;   &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;        
+#&gt; 1 Thor       good      male   Marvel    Magne… bad        male    Marvel       
+#&gt; 2 Iron Man   good      male   Marvel    Storm  good       female  Marvel       
+#&gt; 3 Hulk       good      male   Marvel    Mysti… bad        female  Marvel       
+#&gt; 4 Hawkeye    good      male   Marvel    Batman good       male    DC           
+#&gt; 5 Black Wid… good      female Marvel    Joker  bad        male    DC           
+#&gt; 6 Captain A… good      male   Marvel    Catwo… bad        female  DC           
+#&gt; 7 Magneto    bad       male   Marvel    Hellb… good       male    Dark Horse C…</div><div class='input'><span class='no'>avengers</span> <span class='kw'>%&gt;%</span> <span class='fu'>combine_data</span>(<span class='no'>superheroes</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"bind_rows"</span>)</div><div class='output co'>#&gt; # A tibble: 14 x 4
+#&gt;    name            alignment gender publisher        
+#&gt;    &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;            
+#&gt;  1 Thor            good      male   Marvel           
+#&gt;  2 Iron Man        good      male   Marvel           
+#&gt;  3 Hulk            good      male   Marvel           
+#&gt;  4 Hawkeye         good      male   Marvel           
+#&gt;  5 Black Widow     good      female Marvel           
+#&gt;  6 Captain America good      male   Marvel           
+#&gt;  7 Magneto         bad       male   Marvel           
+#&gt;  8 Magneto         bad       male   Marvel           
+#&gt;  9 Storm           good      female Marvel           
+#&gt; 10 Mystique        bad       female Marvel           
+#&gt; 11 Batman          good      male   DC               
+#&gt; 12 Joker           bad       male   DC               
+#&gt; 13 Catwoman        bad       female DC               
+#&gt; 14 Hellboy         good      male   Dark Horse Comics</div><div class='input'><span class='no'>avengers</span> <span class='kw'>%&gt;%</span> <span class='fu'>combine_data</span>(<span class='no'>superheroes</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='st'>"publisher"</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"bind_rows"</span>)</div><div class='output co'>#&gt; # A tibble: 14 x 4
+#&gt;    name            alignment gender publisher        
+#&gt;    &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;            
+#&gt;  1 Thor            good      male   Marvel           
+#&gt;  2 Iron Man        good      male   Marvel           
+#&gt;  3 Hulk            good      male   Marvel           
+#&gt;  4 Hawkeye         good      male   Marvel           
+#&gt;  5 Black Widow     good      female Marvel           
+#&gt;  6 Captain America good      male   Marvel           
+#&gt;  7 Magneto         bad       male   Marvel           
+#&gt;  8 Magneto         bad       male   Marvel           
+#&gt;  9 Storm           good      female Marvel           
+#&gt; 10 Mystique        bad       female Marvel           
+#&gt; 11 Batman          good      male   DC               
+#&gt; 12 Joker           bad       male   DC               
+#&gt; 13 Catwoman        bad       female DC               
+#&gt; 14 Hellboy         good      male   Dark Horse Comics</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

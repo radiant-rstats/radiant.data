@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.6.19</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.6.20</span>
       </span>
     </div>
 
@@ -191,26 +191,30 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>select</span>(<span class='no'>diamonds</span>, <span class='fl'>1</span>:<span class='fl'>3</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter_data</span>(<span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>"price &gt; max(.$price) - 100"</span>)</div><div class='output co'>#&gt;   price carat clarity
-#&gt; 1 18791  2.15     SI2
-#&gt; 2 18745  2.36     SI2</div><div class='input'><span class='fu'>select</span>(<span class='no'>diamonds</span>, <span class='fl'>1</span>:<span class='fl'>3</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter_data</span>(<span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>"runif(nrow(.)) &gt; .995"</span>)</div><div class='output co'>#&gt;    price carat clarity
-#&gt; 1    650  0.34     SI1
-#&gt; 2    743  0.33     SI1
-#&gt; 3   3774  0.83    VVS1
-#&gt; 4   1214  0.50     SI1
-#&gt; 5    589  0.32     SI1
-#&gt; 6    989  0.41     VS1
-#&gt; 7   2715  0.80     SI2
-#&gt; 8  11826  1.51    VVS2
-#&gt; 9   2407  0.70     SI1
-#&gt; 10   974  0.46    VVS1
-#&gt; 11   969  0.41     SI1
-#&gt; 12 13827  2.24     SI2
-#&gt; 13  2096  0.54      IF
-#&gt; 14  4375  1.04     SI2
-#&gt; 15   911  0.30     VS2
-#&gt; 16  1320  0.55     SI1
-#&gt; 17   687  0.31    VVS1</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>select</span>(<span class='no'>diamonds</span>, <span class='fl'>1</span>:<span class='fl'>3</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter_data</span>(<span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>"price &gt; max(.$price) - 100"</span>)</div><div class='output co'>#&gt; # A tibble: 2 x 3
+#&gt;   price carat clarity
+#&gt;   &lt;int&gt; &lt;dbl&gt; &lt;fct&gt;  
+#&gt; 1 18791  2.15 SI2    
+#&gt; 2 18745  2.36 SI2    </div><div class='input'><span class='fu'>select</span>(<span class='no'>diamonds</span>, <span class='fl'>1</span>:<span class='fl'>3</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter_data</span>(<span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>"runif(nrow(.)) &gt; .995"</span>)</div><div class='output co'>#&gt; # A tibble: 17 x 3
+#&gt;    price carat clarity
+#&gt;    &lt;int&gt; &lt;dbl&gt; &lt;fct&gt;  
+#&gt;  1   650  0.34 SI1    
+#&gt;  2   743  0.33 SI1    
+#&gt;  3  3774  0.83 VVS1   
+#&gt;  4  1214  0.5  SI1    
+#&gt;  5   589  0.32 SI1    
+#&gt;  6   989  0.41 VS1    
+#&gt;  7  2715  0.8  SI2    
+#&gt;  8 11826  1.51 VVS2   
+#&gt;  9  2407  0.7  SI1    
+#&gt; 10   974  0.46 VVS1   
+#&gt; 11   969  0.41 SI1    
+#&gt; 12 13827  2.24 SI2    
+#&gt; 13  2096  0.54 IF     
+#&gt; 14  4375  1.04 SI2    
+#&gt; 15   911  0.3  VS2    
+#&gt; 16  1320  0.55 SI1    
+#&gt; 17   687  0.31 VVS1   </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
