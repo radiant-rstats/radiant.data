@@ -1,5 +1,7 @@
-# radiant.data 0.9.6.19
+# radiant.data 0.9.6.20
 
+* Make sort and filter state of tables in Data > Explore and Data > Pivot available in Report > Rmd
+* Fix names for data sets loaded using the `Read files` button in Report > Rmd or Report > R
 * Cleanup environment after closing app
 * Fix column names with spaces, etc. when reading csv files
 * Additional styling and labeling options for _Data > Visualize_ are now available in the browser interface
