@@ -39,16 +39,14 @@ pvt_plot_args <- as.list(if (exists("plot.pivotr")) {
   formals(plot.pivotr)
 } else {
   formals(radiant.data:::plot.pivotr)
-} )
+})
 
 ## list of function inputs selected by user
 pvt_plot_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(pvt_plot_args))
     pvt_plot_args[[i]] <- input[[paste0("pvt_", i)]]
-
   pvt_plot_args$type <- ifelse(isTRUE(pvt_plot_args$type), "fill", "dodge")
-
   pvt_plot_args
 })
 
@@ -185,6 +183,7 @@ output$ui_Pivotr <- renderUI({
       uiOutput("ui_pvt_run")
     ),
     wellPanel(
+      # actionLink("pvt_clear", "Clear settings", icon = icon("refresh"), style="color:black"),
       uiOutput("ui_pvt_cvars"),
       uiOutput("ui_pvt_nvar"),
       conditionalPanel("input.pvt_nvar != 'None'", uiOutput("ui_pvt_fun")),
@@ -268,8 +267,7 @@ observeEvent(input$pivotr_search_columns, {
 })
 
 observeEvent(input$pivotr_state, {
-  r_state$pivotr_state <<-
-    if (is.null(input$pivotr_state)) list() else input$pivotr_state
+  r_state$pivotr_state <<- if (is.null(input$pivotr_state)) list() else input$pivotr_state
 })
 
 output$pivotr <- DT::renderDataTable({
@@ -377,7 +375,7 @@ observeEvent(input$pivotr_rows_all, {
 })
 
 .plot_pivot <- eventReactive({
-  c(input$pvt_run, input$pvt_flip, input$pvt_type, input$pvt_perc)
+  c(input$pvt_run, input$pvt_flip, input$pvt_type, input$pvt_perc, req(input$pivotr_state))
 }, {
   pvt <- .pivotr()
   req(pvt)
@@ -396,6 +394,11 @@ output$plot_pivot <- renderPlot({
   )
   .plot_pivot()
 }, width = pvt_plot_width, height = pvt_plot_height, res = 144)
+
+# observeEvent(input$pvt_clear, {
+#   r_state$pivotr_state <<- list()
+#   updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
+# })
 
 observeEvent(input$pvt_store, {
   req(input$pvt_name)

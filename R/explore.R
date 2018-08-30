@@ -325,6 +325,7 @@ dtab.explore <- function(
     style = "bootstrap",
     options = list(
       dom = dom,
+      stateSave = TRUE, ## store state
       searchCols = searchCols,
       order = order,
       columnDefs = list(list(orderSequence = c("desc", "asc"), targets = "_all")),
@@ -334,7 +335,8 @@ dtab.explore <- function(
         if (is.null(pageLength)) 10 else pageLength
       },
       lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
-    )
+    ),
+    callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
   ) %>%
     DT::formatStyle(., cn_cat, color = "white", backgroundColor = "grey")
 

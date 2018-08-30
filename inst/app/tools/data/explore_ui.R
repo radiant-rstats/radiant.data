@@ -62,8 +62,8 @@ output$ui_expl_byvar <- renderUI({
     } else {
       if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
         vars <- unique(c(r_state$expl_byvar, vars))
-        names(vars) <- varnames() %>% 
-          {.[match(vars, .)]} %>% 
+        names(vars) <- varnames() %>%
+          {.[match(vars, .)]} %>%
           names()
       }
     }
@@ -146,7 +146,8 @@ output$ui_Explore <- renderUI({
     wellPanel(
       uiOutput("ui_expl_run")
     ),
-    wellPanel(
+   wellPanel(
+      # actionLink("expl_clear", "Clear settings", icon = icon("refresh"), style="color:black"),
       uiOutput("ui_expl_vars"),
       uiOutput("ui_expl_byvar"),
       uiOutput("ui_expl_fun"),
@@ -203,7 +204,7 @@ output$explore <- DT::renderDataTable({
       expl_reset("expl_vars", nc)
       expl_reset("expl_byvar", nc)
       expl_reset("expl_fun", nc)
-      if (!is.null(r_state$expl_top) && 
+      if (!is.null(r_state$expl_top) &&
           !is.null(input$expl_top) &&
           !identical(r_state$expl_top, input$expl_top)) {
         r_state$expl_top <<- input$expl_top
@@ -236,11 +237,16 @@ dl_explore_tab <- function(path) {
 }
 
 download_handler(
-  id = "dl_explore_tab", 
-  fun = dl_explore_tab, 
+  id = "dl_explore_tab",
+  fun = dl_explore_tab,
   fn = function() paste0(input$dataset, "_expl"),
   type = "csv"
 )
+
+# observeEvent(input$expl_clear, {
+#   r_state$explore_state <<- list()
+#   updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
+# })
 
 observeEvent(input$expl_store, {
   req(input$expl_name)
@@ -259,8 +265,8 @@ observeEvent(input$expl_store, {
       title = "Data Stored",
       span(
         paste0("Dataset '", name, "' was successfully added to the
-                datasets dropdown. Add code to Report > Rmd or 
-                Report > R to (re)create the results by clicking 
+                datasets dropdown. Add code to Report > Rmd or
+                Report > R to (re)create the results by clicking
                 the report icon on the bottom left of your screen.")
       ),
       footer = modalButton("OK"),
