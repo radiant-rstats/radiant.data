@@ -1324,11 +1324,23 @@ read_files <- function(
   } else if (pp$fext == "rds") {
     cmd <- glue('{to} <- readr::read_rds({pp$rpath})\nregister("{pp$objname}")')
   } else if (pp$fext == "csv") {
-    cmd <- glue('{to} <- readr::read_csv({pp$rpath})\nregister("{pp$objname}")')
+    cmd <- glue('
+      {to} <- readr::read_csv({pp$rpath}) %>%
+        fix_names() %>%
+        to_fct()
+       register("{pp$objname}")')
   } else if (pp$fext == "tsv") {
-    cmd <- glue('{to} <- readr::read_tsv({pp$rpath})\nregister("{pp$objname}")')
+    cmd <- glue('
+      {to} <- readr::read_tsv({pp$rpath}) %>%
+        fix_names() %>%
+        to_fct()
+      register("{pp$objname}")')
   } else if (pp$fext %in% c("xls", "xlsx")) {
-    cmd <- glue('{to} <- readxl::read_excel({pp$rpath}, sheet = 1)\nregister("{pp$objname}")')
+    cmd <- glue('
+      {to} <- readxl::read_excel({pp$rpath}, sheet = 1) %>%
+        fix_names() %>%
+        to_fct()
+      register("{pp$objname}")')
   } else if (pp$fext == "feather") {
     ## waiting for https://github.com/wesm/feather/pull/326
     # cmd <- paste0(to, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", pp$objname, "\", desc = feather::feather_metadata(\"", pp$rpath, "\")$description)")
