@@ -724,17 +724,26 @@ update_report_fun <- function(cmd, type = "rmd", rfiles = FALSE) {
     if (sinit == "manual") {
       os_type <- Sys.info()["sysname"]
       if (os_type == "Windows") {
-        cat(cmd, file = "clipboard")
+        withProgress(message = "Putting command in clipboard", value = 1, {
+          cat(cmd, file = "clipboard")
+        })
       } else if (os_type == "Darwin") {
-        out <- pipe("pbcopy")
-        cat(cmd, file = out)
-        close(out)
+        withProgress(message = "Putting command in clipboard", value = 1, {
+          out <- pipe("pbcopy")
+          cat(cmd, file = out)
+          close(out)
+        })
       } else if (os_type == "Linux") {
-        cat("Clipboard not supported on linux")
+        showModal(
+          modalDialog(
+            title = "Copy-and-paste the code shown below",
+            pre(cmd),
+            footer = modalButton("Cancel"),
+            size = "s",
+            easyClose = TRUE
+          )
+        )
       }
-      withProgress(message = "Putting command in clipboard", value = 1, {
-        cat("")
-      })
     } else if (sinit == "To Rmd") {
       withProgress(message = "Putting code chunk in Rstudio", value = 1, {
         rstudioapi::insertText(Inf, fix_smart(cmd))
