@@ -6,11 +6,11 @@ Use the `Filter data` box to select (or omit) specific sets of rows from the dat
 
 ### Pause plotting
 
-For larger datasets it can useful to click `Pause plotting` before selecting variables, entering filters, etc. When you are ready to generate a plot make sure that `Pause plotting` is un-checked. When `Pause plotting` is un-checked, any input change will automatically result in a new plot.
+For larger data sets it can useful to click `Pause plotting` before selecting variables, entering filters, etc. When you are ready to generate a plot make sure that `Pause plotting` is un-checked. When `Pause plotting` is un-checked, any input change will automatically result in a new plot.
 
 ### Plot-type
 
-Select the plot type you want. For example, with the `diamonds` data loaded select `Distribution` and all (X) variables (use CTRL-a or CMD-a). This will create a histogram for all numeric variables and a bar-plot for all categorical variables in the dataset. Density plots can only be used with numeric variables. Scatter plots are used to visualize the relationship between two variables. Select one or more variables to plot on the Y-axis and one or more variables to plot on the X-axis. If one of the variables is categorical (i.e., a {factor}) it should be specified as an X-variable. Information about additional variables can be added through the `Color` or `Size` dropdown. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Surface plots are similar to `Heat maps` and require 3 input variables: X, Y, and Fill. Bar plots are used to show the relationship between a categorical (or integer) variable (X) and the (mean) value of a numeric variable (Y). If the Y-variable in a bar plot is categorical (i.e., a {factor}) the proportion of occurrence of the first-level in that variable is shown (e.g., if we select `color` from the `diamonds` data as the Y-variable each bar represents the proportion of observations with the value `D`). Box-plots are also used when we have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.
+Select the plot type you want. For example, with the `diamonds` data loaded select `Distribution` and all (X) variables (use CTRL-a or CMD-a). This will create a histogram for all numeric variables and a bar-plot for all categorical variables in the data set. Density plots can only be used with numeric variables. Scatter plots are used to visualize the relationship between two variables. Select one or more variables to plot on the Y-axis and one or more variables to plot on the X-axis. If one of the variables is categorical (i.e., a {factor}) it should be specified as an X-variable. Information about additional variables can be added through the `Color` or `Size` dropdown. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Surface plots are similar to `Heat maps` and require 3 input variables: X, Y, and Fill. Bar plots are used to show the relationship between a categorical (or integer) variable (X) and the (mean) value of a numeric variable (Y). If the Y-variable in a bar plot is categorical (i.e., a {factor}) the proportion of occurrence of the first-level in that variable is shown (e.g., if we select `color` from the `diamonds` data as the Y-variable each bar represents the proportion of observations with the value `D`). Box-plots are also used when we have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.
 
 > Note that when a categorical variable (`factor`) is selected as the `Y-variable` in a Bar chart it is converted to a 0-1 (binary) variable where the first level is coded as 1 and all other levels as 0.
 
@@ -91,7 +91,9 @@ If you have the `svglite` package installed, the code-chunk header below will pr
 * Draw a horizontal line: `+ geom_hline(yintercept = 0.1)`
 * Draw a vertical line: `+ geom_vline(xintercept = 8)`
 * Scale the y-axis as a percentage: `+ scale_y_continuous(labels = scales::percent)`
+* Scale the y-axis in millions: `+ scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))`
 * Display y-axis in \$'s: `+ scale_y_continuous(labels = scales::dollar_format())`
+* Use `,` as a thousand separator for the y-axis: `+ scale_y_continuous(labels = scales::comma)`
 
 For more on how to customize plots for communication see <a href="http://r4ds.had.co.nz/graphics-for-communication.html" target="_blank">http://r4ds.had.co.nz/graphics-for-communication.html</a>.
 
