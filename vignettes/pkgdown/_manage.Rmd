@@ -32,7 +32,7 @@ Again, it is good practice to add a description of the data and variables to eac
 
 Getting data from Radiant into a spreadsheet can be achieved in two ways. First, you can save data in csv format and load the file into the spreadsheet (i.e., choose `csv` from the `Save data to type` dropdown and click the `Save` button). Alternatively, you can copy the data from Radiant into the clipboard by choosing `clipboard` from the dropdown and clicking the `Copy` button, open the spreadsheet, and paste the data from Radiant using CTRL-V (or CMD-V on mac).
 
-To move or copy data from Radiant into R(studios)'s global workspace select `to global workspace` from the `Save data to type` dropdown and click the `Save` button.
+To move or copy data from Radiant into R(studio)'s global workspace select `to global workspace` from the `Save data to type` dropdown and click the `Save` button.
 
 ### Save and load state
 
