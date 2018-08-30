@@ -75,7 +75,7 @@ output$ui_clipboard_save <- renderUI({
     actionButton("man_save_clip", "Copy data", icon = icon("copy"))
   } else {
     textAreaInput(
-      "man_save_clip_text_area", "Copy-and-paste data below:",
+      "man_save_clip_text_area", "Copy-and-paste data shown below:",
       rows = 5, resize = "vertical",
       value = capture.output(
         write.table(r_data[[input$dataset]], file = "", row.names = FALSE, sep = "\t")

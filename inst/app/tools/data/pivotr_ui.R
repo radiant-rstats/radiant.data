@@ -393,7 +393,7 @@ output$plot_pivot <- renderPlot({
     need(length(input$pvt_cvars) < 4, "Plots created for at most 3 categorical variables")
   )
   .plot_pivot()
-}, width = pvt_plot_width, height = pvt_plot_height, res = 144)
+}, width = pvt_plot_width, height = pvt_plot_height, res = 96)
 
 # observeEvent(input$pvt_clear, {
 #   r_state$pivotr_state <<- list()
