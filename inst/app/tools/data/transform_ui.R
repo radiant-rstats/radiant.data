@@ -459,15 +459,15 @@ observeEvent(input$tr_change_type, {
   cmd <- fix_smart(cmd)
 
   if (!store || !is.character(dataset)) {
-    cmd <- gsub("\\s+", "", cmd)
 
-    if (cmd == "") return(dataset)
+    if (is_empty(cmd)) return(dataset)
 
     cmd <- gsub("\"", "\'", cmd) %>%
       gsub("<-", "=", .)
     vars <- strsplit(cmd, ";")[[1]] %>%
-      strsplit(., "=") %>%
-      sapply("[", 1)
+      strsplit("=") %>%
+      sapply("[", 1) %>%
+      gsub("\\s+", "", .)
 
     ## in case the create command tries to over-write the group-by variable ...
     if (any(byvar %in% vars)) {
@@ -536,10 +536,7 @@ observeEvent(input$tr_change_type, {
   }
 }
 
-.rename <- function(
-  dataset, var, rnm,
-  store_dat = "", store = TRUE
-) {
+.rename <- function(dataset, var, rnm, store_dat = "", store = TRUE) {
 
   rnm <- gsub(";", ",", rnm)
   if (gsub("\\s+", "", rnm) != "") {
@@ -551,20 +548,17 @@ observeEvent(input$tr_change_type, {
 
   if (!store || !is.character(dataset)) {
     if (all(rnm == "")) return(dataset)
-    # names(dataset)[1:length(rnm)] <- rnm
     names(dataset)[seq_len(length(rnm))] <- rnm
     dataset
   } else {
     if (store_dat == "") store_dat <- dataset
-    if (!all(fix_names(var) == var)) var <- paste0("`", var, "`")
+    name_check <- fix_names(var) != var
+    if (any(name_check)) var[name_check] <- paste0("`", var[name_check], "`")
     paste0("## rename variable(s)\n", store_dat, " <- rename(", dataset, ", ", paste(rnm, var, sep = " = ", collapse = ", "), ")\n")
   }
 }
 
-.replace <- function(
-  dataset, var, rpl,
-  store_dat = "", store = TRUE
-) {
+.replace <- function(dataset, var, rpl, store_dat = "", store = TRUE) {
 
   if (!all(fix_names(var) == var) || !all(fix_names(rpl) == rpl)) {
     return("\nSome of the variables names used are not valid. Please use 'Rename' to ensure\nvariable names do not have any spaces or symbols and start with a letter")
