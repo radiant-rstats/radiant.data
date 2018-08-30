@@ -13,9 +13,9 @@ output$ui_view_vars <- renderUI({
   })
 
   selectInput(
-    "view_vars", "Select variables to show:", 
+    "view_vars", "Select variables to show:",
     choices = vars,
-    selected = state_multiple("view_vars", vars, vars), 
+    selected = state_multiple("view_vars", vars, vars),
     multiple = TRUE,
     selectize = FALSE, size = min(15, length(vars))
   )
@@ -90,8 +90,8 @@ output$dataviewer <- DT::renderDataTable({
   }
 
   ## for rounding
-  isInt <- sapply(dat, is.integer)
-  isNum <- sapply(dat, function(x) is.double(x) && !is.Date(x))
+  isInt <- sapply(dat, function(x) is.integer(x))
+  isDbl <- sapply(dat, is_double)
   dec <- input$view_dec %>% {ifelse(is_empty(.) || . < 0, 3, round(., 0))}
 
   withProgress(
@@ -134,7 +134,7 @@ output$dataviewer <- DT::renderDataTable({
       ),
       callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
     ) %>%
-      {if (sum(isNum) > 0) DT::formatRound(., names(isNum)[isNum], dec) else .} %>%
+      {if (sum(isDbl) > 0) DT::formatRound(., names(isDbl)[isDbl], dec) else .} %>%
       {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0) else .}
   )
 })
