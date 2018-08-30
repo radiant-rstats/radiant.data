@@ -22,9 +22,7 @@ viz_add_labs <- function() {
   lab_list <- list()
   for(l in viz_labs) {
     inp <- input[[paste0("viz_labs_", l)]]
-    if(length(inp) > 0 && nchar(inp) > 0) {
-      lab_list[[l]] <- inp
-    }
+    if(!is_empty(inp)) lab_list[[l]] <- inp
   }
   lab_list
 }

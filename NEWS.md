@@ -1,5 +1,6 @@
-# radiant.data 0.9.6.20
+# radiant.data 0.9.6.21
 
+* Fix code formatting for _Report > Rmd_ when arguments include a list (e.g., ggplot labels)
 * On Linux use a modal to show code in Report > Rmd and Report > R when reporting is set to "manual" 
 * Use `is_double` to ensure dates are not treated as numeric variables in _Data > View_
 * Make sort and filter state of tables in Data > Explore and Data > Pivot available in Report > Rmd

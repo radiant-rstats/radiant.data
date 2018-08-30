@@ -645,12 +645,17 @@ update_report <- function(
           tmp <- paste0(tmp, collapse = "")
         }
         if (length(tmp) > 1) {
-          tmp <- c("c(", sub("^c\\(", "", tmp))
+          if (grepl("^c\\(", tmp[1])) {
+            tmp <- c("c(", sub("^c\\(", "", tmp))
+          } else {
+            tmp <- c("list(", sub("^list\\(", "", tmp))
+          }
           if (tail(tmp, 1) != ")") {
             tmp <- c(sub("\\)$", "", tmp), ")")
           }
         }
-        x[[i]] <- paste0(tmp, collapse = "\n    ") %>%
+        x[[i]] <- sub("^\\s+", "", tmp) %>%
+          paste0(collapse = "\n    ") %>%
           sub("[ ]+\\)", "  \\)", .)
       }
       x <- paste0(paste0(paste0("\n  ", names(x)), " = ", x), collapse = ", ")
