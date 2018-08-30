@@ -10,4 +10,5 @@ _pkgdown.yml
 cran-comments.md
 coverage.R
 ^tests/testthat/data$
+.vscode
 radiant.data.code-workspace
