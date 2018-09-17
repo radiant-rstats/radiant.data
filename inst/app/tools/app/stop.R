@@ -26,6 +26,8 @@ stop_radiant <- function() {
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
       unlink("~/r_figures/", recursive = TRUE)
       sshhr(try(rm(help_menu, make_url_patterns, import_fs, init_data, navbar_proj, knit_print.data.frame, withMathJax, Dropbox, sf_volumes, envir = .GlobalEnv), silent = TRUE))
+      options(radiant.launch_dir = NULL)
+      options(radiant.project_dir = NULL)
       message("\nStopped Radiant. State information is available in the r_state and r_info lists and the r_data environment. Use attach(r_data) to access data loaded into Radiant.\n")
       stopApp()
     })

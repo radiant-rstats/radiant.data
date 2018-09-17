@@ -346,7 +346,7 @@ rm(tmp, radiant.versions)
 
 navbar_proj <- function(navbar) {
   pdir <- radiant.data::find_project(mess = FALSE)
-  options(radiant.project_dir = pdir)
+  options(radiant.project_dir = if (radiant.data::is_empty(pdir)) NULL else pdir)
   proj <- if (radiant.data::is_empty(pdir)) {
     "Project: (None)"
   } else {
@@ -495,6 +495,8 @@ onStop(function() {
         rm(res)
       })
     )
+    options(radiant.launch_dir = NULL)
+    options(radiant.project_dir = NULL)
     message("Stopped Radiant\n")
     stopApp()
   }
