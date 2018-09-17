@@ -114,8 +114,7 @@ pivotr <- function(
         data.frame(t(col_total[[2]]), stringsAsFactors = FALSE) %>%
           set_colnames(col_total[[1]])
       )
-    ) %>%
-      bind_cols(row_total)
+    ) %>% bind_cols(row_total)
 
     rm(col_total, row_total, vars)
   }
@@ -144,7 +143,10 @@ pivotr <- function(
   nrow_tab <- nrow(tab) - 1
 
   ## ensure we don't have invalid column names
-  colnames(tab) <- fix_names(colnames(tab))
+  ## but skip variable names already being used
+  cn <- colnames(tab)
+  cni <- !c(cvars, nvar) %in% cn
+  colnames(tab)[cni] <- fix_names(cn[cni])
 
   ## filtering the table if desired
   if (!is_empty(tabfilt)) {

@@ -1,5 +1,7 @@
-# radiant.data 0.9.6.21
+# radiant.data 0.9.6.22
 
+* Fix for [#81](https://github.com/radiant-rstats/radiant/issues/81) when variables used in _Data > Pivot_ contain dots
+* Fix for `radiant.project_dir` when no Rstudio project is used which could cause incorrect relative paths to be used
 * Fix code formatting for _Report > Rmd_ when arguments include a list (e.g., ggplot labels)
 * On Linux use a modal to show code in Report > Rmd and Report > R when reporting is set to "manual" 
 * Use `is_double` to ensure dates are not treated as numeric variables in _Data > View_
