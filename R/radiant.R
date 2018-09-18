@@ -1376,6 +1376,8 @@ read_files <- function(
     } else {
       cmd <- glue('{to} <- readLines({pp$rpath})')
     }
+  } else if (pp$fext == "txt") {
+    cmd <- glue('{to} <- readLines({pp$rpath})')
   } else if (pp$fext %in% c("jpg", "jpeg", "png", "pdf")) {
     if (type == "rmd")  {
       cmd <- glue('\n\n![](`r {pp$rpath}`)\n\n')
