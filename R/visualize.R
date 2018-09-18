@@ -176,7 +176,6 @@ visualize <- function(
   }
 
   ## 1 of first level of factor, else 0
-  # if (type == "bar" || type == "scatter" || type == "line") {
   if (type == "bar") {
     isFctY <- "factor" == dc & names(dc) %in% yvar
     if (sum(isFctY)) {
@@ -591,8 +590,7 @@ visualize <- function(
       plot_list[[i]] <- plot_list[[i]] +
         sshhr(
           geom_smooth(
-            method = "lm", fill = fillcol, alpha = 0.1, size = .75,
-            linetype = "dashed", color = linecol
+            method = "lm", alpha = 0.2, size = .75, linetype = "dashed"
         )
       )
     }
@@ -603,8 +601,7 @@ visualize <- function(
       plot_list[[i]] <- plot_list[[i]] +
         sshhr(
           geom_smooth(
-            span = smooth, method = "loess", size = .75,
-            linetype = "dotdash", aes(group = 1)
+            span = smooth, method = "loess", alpha = 0.2, size = .75, linetype = "dotdash"
           )
         )
     }
