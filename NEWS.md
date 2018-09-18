@@ -1,5 +1,8 @@
 # radiant.data 0.9.6.22
 
+* Add "txt" as a recognized file type for `Read files` in _Report > Rmd_ and _Report > R_
+* Allow multiple `lines` or `loess` curves based on a selected `color` variable for scatter plots in _Data > Visualize_
+* Indicate that a plot in _Data > Visualize_ should be updated when plot labels are changed
 * Fix for [#81](https://github.com/radiant-rstats/radiant/issues/81) when variables used in _Data > Pivot_ contain dots
 * Fix for `radiant.project_dir` when no Rstudio project is used which could cause incorrect relative paths to be used
 * Fix code formatting for _Report > Rmd_ when arguments include a list (e.g., ggplot labels)
