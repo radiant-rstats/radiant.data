@@ -314,8 +314,6 @@ visualize <- function(
         if (dc[i] == "factor") {
 
           ## make range comparable to bar plot
-          # ymax <- max(dataset[[j]]) %>% {if (. < 0) 0 else .}
-          # ymin <- min(dataset[[j]]) %>% {if (. > 0) 0 else .}
           ymax <- max(0, max(dataset[[j]]))
           ymin <- min(0, min(dataset[[j]]))
           plot_list[[itt]] <- plot_list[[itt]] + ylim(ymin, ymax)
@@ -430,7 +428,6 @@ visualize <- function(
               select_at(.vars = c(tbv, j)) %>%
               na.omit() %>%
               summarise_all(fun)
-              # summarise_all(fun, na.rm = TRUE)
             colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j)) + geom_line(aes(group = 1), color = linecol)
             if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point(color = pointcol)
@@ -445,7 +442,6 @@ visualize <- function(
               select_at(.vars = c(tbv, color, j)) %>%
               na.omit() %>%
               summarise_all(fun)
-              # summarise_all(fun, na.rm = TRUE)
             colnames(tmp)[ncol(tmp)] <- j
             plot_list[[itt]] <- ggplot(tmp, aes_string(x = i, y = j, color = color, group = color)) + geom_line()
             if (nrow(tmp) < 101) plot_list[[itt]] <- plot_list[[itt]] + geom_point()
@@ -474,7 +470,6 @@ visualize <- function(
           select_at(.vars = c(tbv, j)) %>%
           na.omit() %>%
           summarise_all(fun)
-          # summarise_all(fun, na.rm = TRUE)
         colnames(tmp)[ncol(tmp)] <- j
 
         if ("sort" %in% axes && facet_row == "." && facet_col == ".") {
@@ -503,7 +498,6 @@ visualize <- function(
         if (dc[i] %in% c("factor", "integer", "date") && nrow(tmp) < nrow(dataset)) {
           if (exists("levs")) {
             if (j %in% names(levs)) {
-              # plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, " of ", ., " == ", levs[j], ")")
               plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, " {", levs[j], "})")
             } else {
               plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
