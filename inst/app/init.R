@@ -320,7 +320,7 @@ if (getOption("radiant.from.package", default = TRUE)) {
 } else {
   ## for shiny-server and development
   for (file in list.files("../../R", pattern = "\\.(r|R)$", full.names = TRUE)) {
-    source(file, encoding = getOption("radiant.encoding"), local = TRUE)
+    source(file, encoding = getOption("radiant.encoding", "UTF-8"), local = TRUE)
   }
   # cat("\nGetting radiant.data from source ...\n")
 }

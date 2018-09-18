@@ -1,6 +1,6 @@
 shinyServer(function(input, output, session) {
 
-  enc <- getOption("radiant.encoding")
+  enc <- getOption("radiant.encoding", "UTF-8")
 
   ## source shared functions
   source("init.R", encoding = enc, local = TRUE)
