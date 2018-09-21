@@ -180,7 +180,7 @@ dl_view_tab <- function(file) {
   ) %>% write.csv(file, row.names = FALSE)
 }
 
-download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(input$dataset, "_view"))
+download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(input$view_name))
 
 .dataviewer <- reactive({
   list(tab = .get_data()[1, ])
