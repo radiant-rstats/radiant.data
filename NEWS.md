@@ -1,5 +1,7 @@
-# radiant.data 0.9.6.22
+# radiant.data 0.9.6.23
 
+* Apply `radiant.data::fix_names` to files loaded into radiant to ensure valid R-object names
+* Use the content of the `Store filtered data as` input to name the csv download in _Data > View_ 
 * Add "txt" as a recognized file type for `Read files` in _Report > Rmd_ and _Report > R_
 * Allow multiple `lines` or `loess` curves based on a selected `color` variable for scatter plots in _Data > Visualize_
 * Indicate that a plot in _Data > Visualize_ should be updated when plot labels are changed

@@ -100,6 +100,9 @@ load_user_data <- function(
     )
   )
 
+  ## can't have spaces, dashes, etc. in objectname
+  objname <- radiant.data::fix_names(objname)
+
   if (ext %in% c("rda", "rdata")) {
     ## objname will hold the name of the object(s) inside the R datafile
     robjname <- try(load(uFile), silent = TRUE)

@@ -1,7 +1,7 @@
 Package: radiant.data
 Title: Data Menu for Radiant: Business Analytics using R and Shiny
-Version: 0.9.6.22
-Date: 2018-9-17
+Version: 0.9.6.23
+Date: 2018-9-20
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description: The Radiant Data menu includes interfaces for loading, saving,
     viewing, visualizing, summarizing, transforming, and combining data. It also

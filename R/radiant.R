@@ -1232,8 +1232,9 @@ parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
   filename <- basename(path)
   fext <- tools::file_ext(filename)
 
-  ## objname is used as the name of the data.frame, make case insensitive
-  objname <- sub(glue('.{fext}$'), "", filename, ignore.case = TRUE)
+  ## objname is used as the name of the data.frame without any spaces, dashes, etc.
+  objname <- sub(glue('.{fext}$'), "", filename, ignore.case = TRUE) %>% fix_names()
+
   fext <- tolower(fext)
 
   if (!is_empty(pdir) && grepl(glue('^{pdir}'), path)) {
