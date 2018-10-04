@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.6.19</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7</span>
       </span>
     </div>
 
@@ -133,15 +133,10 @@
 <a href="#filter-data" class="anchor"></a>Filter data</h3>
 <p>Use the <code>Filter data</code> box to select (or omit) specific sets of rows from the data. See the help file for <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank"><em>Data &gt; View</em></a> for details.</p>
 </div>
-<div id="pause-plotting" class="section level3">
-<h3 class="hasAnchor">
-<a href="#pause-plotting" class="anchor"></a>Pause plotting</h3>
-<p>For larger datasets it can useful to click <code>Pause plotting</code> before selecting variables, entering filters, etc. When you are ready to generate a plot make sure that <code>Pause plotting</code> is un-checked. When <code>Pause plotting</code> is un-checked, any input change will automatically result in a new plot.</p>
-</div>
 <div id="plot-type" class="section level3">
 <h3 class="hasAnchor">
 <a href="#plot-type" class="anchor"></a>Plot-type</h3>
-<p>Select the plot type you want. For example, with the <code>diamonds</code> data loaded select <code>Distribution</code> and all (X) variables (use CTRL-a or CMD-a). This will create a histogram for all numeric variables and a bar-plot for all categorical variables in the dataset. Density plots can only be used with numeric variables. Scatter plots are used to visualize the relationship between two variables. Select one or more variables to plot on the Y-axis and one or more variables to plot on the X-axis. If one of the variables is categorical (i.e., a {factor}) it should be specified as an X-variable. Information about additional variables can be added through the <code>Color</code> or <code>Size</code> dropdown. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Surface plots are similar to <code>Heat maps</code> and require 3 input variables: X, Y, and Fill. Bar plots are used to show the relationship between a categorical (or integer) variable (X) and the (mean) value of a numeric variable (Y). If the Y-variable in a bar plot is categorical (i.e., a {factor}) the proportion of occurrence of the first-level in that variable is shown (e.g., if we select <code>color</code> from the <code>diamonds</code> data as the Y-variable each bar represents the proportion of observations with the value <code>D</code>). Box-plots are also used when we have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.</p>
+<p>Select the plot type you want. For example, with the <code>diamonds</code> data loaded select <code>Distribution</code> and all (X) variables (use CTRL-a or CMD-a). This will create a histogram for all numeric variables and a bar-plot for all categorical variables in the data set. Density plots can only be used with numeric variables. Scatter plots are used to visualize the relationship between two variables. Select one or more variables to plot on the Y-axis and one or more variables to plot on the X-axis. If one of the variables is categorical (i.e., a {factor}) it should be specified as an X-variable. Information about additional variables can be added through the <code>Color</code> or <code>Size</code> dropdown. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Surface plots are similar to <code>Heat maps</code> and require 3 input variables: X, Y, and Fill. Bar plots are used to show the relationship between a categorical (or integer) variable (X) and the (mean) value of a numeric variable (Y). If the Y-variable in a bar plot is categorical (i.e., a {factor}) the proportion of occurrence of the first-level in that variable is shown (e.g., if we select <code>color</code> from the <code>diamonds</code> data as the Y-variable each bar represents the proportion of observations with the value <code>D</code>). Box-plots are also used when we have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.</p>
 <blockquote>
 <p>Note that when a categorical variable (<code>factor</code>) is selected as the <code>Y-variable</code> in a Bar chart it is converted to a 0-1 (binary) variable where the first level is coded as 1 and all other levels as 0.</p>
 </blockquote>
@@ -231,7 +226,11 @@
 </li>
 <li>Scale the y-axis as a percentage: <code>+ scale_y_continuous(labels = scales::percent)</code>
 </li>
+<li>Scale the y-axis in millions: <code>+ scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))</code>
+</li>
 <li>Display y-axis in $’s: <code>+ scale_y_continuous(labels = scales::dollar_format())</code>
+</li>
+<li>Use <code>,</code> as a thousand separator for the y-axis: <code>+ scale_y_continuous(labels = scales::comma)</code>
 </li>
 </ul>
 <p>For more on how to customize plots for communication see <a href="http://r4ds.had.co.nz/graphics-for-communication.html" target="_blank">http://r4ds.had.co.nz/graphics-for-communication.html</a>.</p>
