@@ -564,6 +564,28 @@ report_save_content <- function(file, type = "rmd") {
       } else if (save_type == "R") {
         cat(report, file = file, sep = "\n")
       } else {
+        if (file.access(getwd(), mode = 2) == -1) {
+          ## A writable working directory is required to save reports
+          showModal(
+            modalDialog(
+              title = "Working directory is not writable",
+              HTML(
+                paste0(
+                  "<span>
+                    The working directory used by radiant (\"", getwd(), "\") is not writable. This is required to save a report.
+                    To save reports, restart radiant from a writable directory. Preferaby by setting up an Rstudio 
+                    project folder. See <a href='https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects' target='_blank'> 
+                    https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects</a> for more information
+                  </span>"
+                )
+              ),
+              footer = modalButton("OK"),
+              size = "s",
+              easyClose = TRUE
+            )
+          )
+          return(invisible())
+        }
 
         ## hack for rmarkdown from Report > Rmd and Report > R
         options(radiant.rmarkdown = TRUE)
