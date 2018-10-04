@@ -27,6 +27,7 @@ globalVariables(
 #' @importFrom import from
 #' @importFrom curl curl_download
 #' @importFrom writexl write_xlsx
+#' @importFrom summarytools dfSummary
 NULL
 
 #' Exporting glue from glue

@@ -1,5 +1,7 @@
-# radiant.data 0.9.6.23
+# radiant.data 0.9.7.0
 
+* Use `summarytools` to generate summary information for datasets in _Data > Manage_
+* Show modal with warning about non-writable working directory when saving reports in _Report > Rmd_ or _Report > R_
 * Apply `radiant.data::fix_names` to files loaded into radiant to ensure valid R-object names
 * Use the content of the `Store filtered data as` input to name the csv download in _Data > View_ 
 * Add "txt" as a recognized file type for `Read files` in _Report > Rmd_ and _Report > R_

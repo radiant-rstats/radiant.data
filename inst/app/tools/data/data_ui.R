@@ -20,7 +20,7 @@ output$ui_data <- renderUI({
           conditionalPanel("input.tabs_data != 'Manage'",
             checkboxInput("show_filter", "Filter data", value = state_init("show_filter", FALSE)),
             conditionalPanel("input.show_filter == true",
-              returnTextAreaInput("data_filter", 
+              returnTextAreaInput("data_filter",
                 label = "",
                 value = state_init("data_filter"),
                 placeholder = "Provide a filter (e.g., price >  5000) and press return"
@@ -42,9 +42,9 @@ output$ui_data <- renderUI({
           tabPanel("Manage",
             conditionalPanel("input.dman_preview == 'preview'", h2("Data preview"), htmlOutput("man_example")),
             conditionalPanel("input.dman_preview == 'str'", h2("Data structure"), verbatimTextOutput("man_str")),
-            conditionalPanel("input.dman_preview == 'summary'", h2("Data summary"), verbatimTextOutput("man_summary")),
+            conditionalPanel("input.dman_preview == 'summary'", h2("Data summary"), htmlOutput("man_summary")),
             conditionalPanel(condition = "input.man_show_log == true",
-              h2("Data load and save commands"), 
+              h2("Data load and save commands"),
               uiOutput("ui_man_log")
             ),
             conditionalPanel("input.man_add_descr == false", uiOutput("man_descr_html")),
