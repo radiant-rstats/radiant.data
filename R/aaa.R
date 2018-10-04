@@ -38,26 +38,19 @@ NULL
 #' @export
 NULL
 
-#' Exporting collapse from glue as glue_collapse
-#' @details See \code{\link[glue]{collapse}} in the \code{glue} package for more details
-#' @name glue_collapse
-#' @rdname glue_collapse
-#' @param ... arguments passed to \code{glue::glue_collapse}
-#' @export
-glue_collapse <- function(...) {
-  if (utils::packageVersion("glue") > "1.2.0") {
-    utils::getFromNamespace("glue_collapse", "glue")(...)
-  } else {
-    utils::getFromNamespace("collapse", "glue")(...)
-  }
-}
-NULL
-
 #' Exporting glue_data from glue
 #' @details See \code{\link[glue:glue]{glue::glue_data()}} in the \code{glue} package for more details
 #' @importFrom glue glue_data
 #' @name glue_data
 #' @rdname glue_data
+#' @export
+NULL
+
+#' Exporting glue_collapse from glue
+#' @details See \code{\link[glue:glue]{glue::glue_collapse()}} in the \code{glue} package for more details
+#' @importFrom glue glue_collapse
+#' @name glue_collapse
+#' @rdname glue_collapse
 #' @export
 NULL
 

@@ -2,16 +2,10 @@
 % Please edit documentation in R/aaa.R
 \name{glue_collapse}
 \alias{glue_collapse}
-\title{Exporting collapse from glue as glue_collapse}
-\usage{
-glue_collapse(...)
-}
-\arguments{
-\item{...}{arguments passed to \code{glue::glue_collapse}}
-}
+\title{Exporting glue_collapse from glue}
 \description{
-Exporting collapse from glue as glue_collapse
+Exporting glue_collapse from glue
 }
 \details{
-See \code{\link[glue]{collapse}} in the \code{glue} package for more details
+See \code{\link[glue:glue]{glue::glue_collapse()}} in the \code{glue} package for more details
 }
