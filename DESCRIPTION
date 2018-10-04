@@ -13,7 +13,7 @@ Depends:
     ggplot2 (>= 2.2.1),
     lubridate (>= 1.7.4),
     tidyr (>= 0.8.0),
-    dplyr (>= 0.7.5)
+    dplyr (>= 0.7.6)
 Imports:
     tibble (>= 1.4.2),
     rlang (>= 0.2.0),

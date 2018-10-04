@@ -56,7 +56,7 @@ For a video tutorial see the `Installing R, Rstudio, and Radiant on macOS` video
 
 ## Using Radiant for Model Evaluation
 
-The state file used in the demo is available for download from [GitHub](https://radiant-rstats.github.io/docs/examples/demo-state2-dvd-rnd.rda) 
+The state file used in the demo is available for download from [GitHub](https://radiant-rstats.github.io/docs/examples/demo-dvd-rnd.state.rda) 
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/9fugq5dXNhk" frameborder="0" allowfullscreen></iframe>
 
