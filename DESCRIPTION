@@ -16,7 +16,7 @@ Depends:
     dplyr (>= 0.7.6)
 Imports:
     tibble (>= 1.4.2),
-    rlang (>= 0.2.0),
+    rlang (>= 0.2.2),
     broom (>= 0.4.3),
     car (>= 3.0-0),
     grid (>= 3.3.1),
