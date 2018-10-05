@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.6.19</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7</span>
       </span>
     </div>
 
@@ -140,9 +140,6 @@
 <a href="#load-data" class="anchor"></a>Load data</h3>
 <p>The best way to load and save data for use in Radiant (and R) is to use the R-data format (rds or rda). These are binary files that can be stored compactly and read into R quickly. Select <code>rds</code> (or <code>rda</code>) from the <code>Load data of type</code> dropdown and click <code>Browse</code> to locate the file(s) you want to load on your computer.</p>
 <p>You can get data from a spreadsheet (e.g., Excel or Google sheets) into Radiant in two ways. First, you can save data from the spreadsheet in csv format and then, in Radiant, choose <code>csv</code> from the <code>Load data of type</code> dropdown. Most likely you will have a header row in the csv file with variable names. If the data are not comma separated you can choose semicolon or tab separated. To load a csv file click ‘Browse’ and locate the file on your computer.</p>
-<!-- 
-> **Note:** For Windows users with data that contain multibyte characters please make sure your data are in ANSI format so R(adiant) can load the characters correctly.
--->
 <p>Alternatively, you can select and copy the data in the spreadsheet using CTRL-C (or CMD-C on mac), go to Radiant, choose <code>clipboard</code> from the <code>Load data of type</code> dropdown, and click the <code>Paste</code> button. This is a short-cut that can be convenient for smaller datasets that are cleanly formatted.</p>
 <p>If the data is available in R’s global workspace (e.g., you opened a data set in Rstudio and then started Radiant from the <code>addins</code> menu) you can move (or copy) it to Radiant by selecting <code>from global workspace</code>. Select the data.frame(s) you want to use and click the <code>Load</code> button.</p>
 <p>To access all data files bundled with Radiant choose <code>examples</code> from the <code>Load data of type</code> dropdown and then click the <code>Load</code> button. These files are used to illustrate the various data and analysis tools accessible in Radiant. For example, the <code>avengers</code> and <code>publishers</code> data are used to illustrate how to combine data in R(adiant) (i.e., <em>Data &gt; Combine</em>).</p>
@@ -154,7 +151,7 @@
 <p>As mentioned above, the most convenient way to get data in and out of Radiant is to use the R-data format (rds or rda). Choose <code>rds</code> (or <code>rda</code>) from the <code>Save data to type</code> dropdown and click the <code>Save</code> button to save the selected dataset to file.</p>
 <p>Again, it is good practice to add a description of the data and variables to each file you use. To add a description for your own data click the ‘Add/edit data description’ check-box, add text to the text-input window shown in <a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format, and then click the <code>Update description</code> button. When you save the data as an rds (or rda) file the description you created (or edited) will automatically be added to the file as an <code>attribute</code>.</p>
 <p>Getting data from Radiant into a spreadsheet can be achieved in two ways. First, you can save data in csv format and load the file into the spreadsheet (i.e., choose <code>csv</code> from the <code>Save data to type</code> dropdown and click the <code>Save</code> button). Alternatively, you can copy the data from Radiant into the clipboard by choosing <code>clipboard</code> from the dropdown and clicking the <code>Copy</code> button, open the spreadsheet, and paste the data from Radiant using CTRL-V (or CMD-V on mac).</p>
-<p>To move or copy data from Radiant into R’s global workspace select <code>to global workspace</code> from the <code>Save data to type</code> dropdown and click the <code>Save</code> button.</p>
+<p>To move or copy data from Radiant into R(studio)’s global workspace select <code>to global workspace</code> from the <code>Save data to type</code> dropdown and click the <code>Save</code> button.</p>
 </div>
 <div id="save-and-load-state" class="section level3">
 <h3 class="hasAnchor">

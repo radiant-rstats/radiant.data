@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.6.19</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7</span>
       </span>
     </div>
 
@@ -152,11 +152,31 @@
       <small>Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="radiant-data-0-9-6-19" class="section level1">
+    <div id="radiant-data-0-9-7-0" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-6-19" class="anchor"></a>radiant.data 0.9.6.19<small> Unreleased </small>
+<a href="#radiant-data-0-9-7-0" class="anchor"></a>radiant.data 0.9.7.0<small> Unreleased </small>
 </h1>
 <ul>
+<li>Use <code>summarytools</code> to generate summary information for datasets in <em>Data &gt; Manage</em>
+</li>
+<li>Show modal with warning about non-writable working directory when saving reports in <em>Report &gt; Rmd</em> or <em>Report &gt; R</em>
+</li>
+<li>Apply <code><a href="../reference/fix_names.html">radiant.data::fix_names</a></code> to files loaded into radiant to ensure valid R-object names</li>
+<li>Use the content of the <code>Store filtered data as</code> input to name the csv download in <em>Data &gt; View</em>
+</li>
+<li>Add “txt” as a recognized file type for <code>Read files</code> in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
+</li>
+<li>Allow multiple <code>lines</code> or <code>loess</code> curves based on a selected <code>color</code> variable for scatter plots in <em>Data &gt; Visualize</em>
+</li>
+<li>Indicate that a plot in <em>Data &gt; Visualize</em> should be updated when plot labels are changed</li>
+<li>Fix for <a href="https://github.com/radiant-rstats/radiant/issues/81"><a href='https://github.com/radiant-rstats/radiant.data/issues/81'>#81</a></a> when variables used in <em>Data &gt; Pivot</em> contain dots</li>
+<li>Fix for <code>radiant.project_dir</code> when no Rstudio project is used which could cause incorrect relative paths to be used</li>
+<li>Fix code formatting for <em>Report &gt; Rmd</em> when arguments include a list (e.g., ggplot labels)</li>
+<li>On Linux use a modal to show code in Report &gt; Rmd and Report &gt; R when reporting is set to “manual”</li>
+<li>Use <code>is_double</code> to ensure dates are not treated as numeric variables in <em>Data &gt; View</em>
+</li>
+<li>Make sort and filter state of tables in Data &gt; Explore and Data &gt; Pivot available in Report &gt; Rmd</li>
+<li>Fix names for data sets loaded using the <code>Read files</code> button in Report &gt; Rmd or Report &gt; R</li>
 <li>Cleanup environment after closing app</li>
 <li>Fix column names with spaces, etc. when reading csv files</li>
 <li>Additional styling and labeling options for <em>Data &gt; Visualize</em> are now available in the browser interface</li>
@@ -637,7 +657,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#radiant-data-0-9-6-19">0.9.6.19</a></li>
+        <li><a href="#radiant-data-0-9-7-0">0.9.7.0</a></li>
         <li><a href="#radiant-data-0-9-6-14">0.9.6.14</a></li>
         <li><a href="#radiant-data-0-9-5-3">0.9.5.3</a></li>
         <li><a href="#radiant-data-0-9-5-0">0.9.5.0</a></li>
