@@ -1,3 +1,7 @@
+# radiant.data 0.9.7.1
+
+* Update example report in _Report > Rmd_
+
 # radiant.data 0.9.7.0
 
 * Use `summarytools` to generate summary information for datasets in _Data > Manage_
