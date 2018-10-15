@@ -4,6 +4,7 @@
 #'
 #' @param package Radiant package to start. One of "radiant.data", "radiant.design", "radiant.basics", "radiant.model", "radiant.multivariate", or "radiant"
 #' @param run Run a radiant app in an external browser ("browser"), an Rstudio window ("window"), or in the Rstudio viewer ("viewer")
+#' @param state Path to statefile to load
 #'
 #' @importFrom shiny paneViewer
 #'
@@ -16,7 +17,7 @@
 #' }
 #'
 #' @export
-launch <- function(package = "radiant.data", run = "viewer") {
+launch <- function(package = "radiant.data", run = "viewer", state) {
   ## check if package attached
   if (!paste0("package:", package) %in% search()) {
     if (!suppressWarnings(suppressMessages(suppressPackageStartupMessages(require(package, character.only = TRUE)))))  {
@@ -24,7 +25,7 @@ launch <- function(package = "radiant.data", run = "viewer") {
     }
   }
 
-  ## from Yihui's DT::datatable function
+ ## from Yihui's DT::datatable function
   oop <- base::options(
     width = max(getOption("width", 250), 250),
     scipen = max(getOption("scipen", 100), 100),
@@ -61,6 +62,15 @@ launch <- function(package = "radiant.data", run = "viewer") {
     run <- TRUE
   }
 
+  ## load radiant state file if specified
+  if (!missing(state)) {
+    if (grepl("^www\\.|^http:|^https:", state)) {
+      load(url(state), envir = .GlobalEnv)
+    } else if (file.exists(state)) {
+      load(state, envir = .GlobalEnv)
+    }
+  }
+
   ## cannot (yet) supress ERROR: [on_request_read] connection reset by peer in viewer
   suppressPackageStartupMessages(
     shiny::runApp(system.file("app", package = package), launch.browser = run)
@@ -69,31 +79,38 @@ launch <- function(package = "radiant.data", run = "viewer") {
 
 #' Launch the radiant.data app in the default web browser
 #'
+#' @param state Path to statefile to load
+#'
 #' @examples
 #' \dontrun{
 #' radiant.data()
+#' radiant.data("https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda")
 #' radiant.data("viewer")
 #' }
 #' @export
-radiant.data <- function() launch(package = "radiant.data", run = "browser")
+radiant.data <- function(state) launch(package = "radiant.data", run = "browser", state)
 
 #' Launch the radiant.data app in an Rstudio window
+#'
+#' @param state Path to statefile to load
 #'
 #' @examples
 #' \dontrun{
 #' radiant.data_window()
 #' }
 #' @export
-radiant.data_window <- function() launch(package = "radiant.data", run = "window")
+radiant.data_window <- function(state) launch(package = "radiant.data", run = "window", state)
 
 #' Launch the radiant.data app in the Rstudio viewer
+#'
+#' @param state Path to statefile to load
 #'
 #' @examples
 #' \dontrun{
 #' radiant.data_viewer()
 #' }
 #' @export
-radiant.data_viewer <- function() launch(package = "radiant.data", run = "viewer")
+radiant.data_viewer <- function(state) launch(package = "radiant.data", run = "viewer", state)
 
 #' Install webshot and phantomjs
 #' @export
@@ -1162,11 +1179,11 @@ register <- function(new, org = "", descr = "", env) {
         message("Only one object can be registered at a time")
         return(invisible())
       } else if (!is_string(new) || is.null(env[[new]])) {
-        message("No dataset with that name has been loaded in Radiant")
+        message("No dataset with that name (", new, ") has been loaded in Radiant")
         return(invisible())
       }
     } else {
-      message("Unable to assign data to ", env, "as this does not seem to be an environment")
+      message("Unable to assign data (", new, ") to ", env, "as this does not seem to be an environment")
       return(invisible())
     }
 
@@ -1200,6 +1217,28 @@ register <- function(new, org = "", descr = "", env) {
     }
   }
   invisible()
+}
+
+#' Deregister a data.frame or list in Radiant
+#'
+#' @param dataset String containing the name of the data.frame to register
+#'
+#' @export
+deregister <- function(dataset) {
+  if (exists("r_environment")) {
+    datasets <- r_info[["datasetlist"]]
+    if (!dataset %in% datasets) {
+      message("No dataset with that name (", dataset, ") has been loaded in Radiant")
+    } else {
+      r_info[[paste0(dataset, "_descr")]] <- NULL
+      r_info[[paste0(dataset, "_lcmd")]] <- NULL
+      r_info[[paste0(dataset, "_scmd")]] <- NULL
+      r_info[["datasetlist"]] <- setdiff(datasets, dataset)
+      rm(list = dataset, envir = r_data)
+    }
+  } else {
+    rm(list = dataset, envir = parent.frame())
+  }
 }
 
 #' Parse file path into useful components

@@ -4,7 +4,10 @@
 \alias{radiant.data_viewer}
 \title{Launch the radiant.data app in the Rstudio viewer}
 \usage{
-radiant.data_viewer()
+radiant.data_viewer(state)
+}
+\arguments{
+\item{state}{Path to statefile to load}
 }
 \description{
 Launch the radiant.data app in the Rstudio viewer

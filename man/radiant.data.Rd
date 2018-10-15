@@ -6,7 +6,10 @@
 \alias{radiant.data-package}
 \title{radiant.data}
 \usage{
-radiant.data()
+radiant.data(state)
+}
+\arguments{
+\item{state}{Path to statefile to load}
 }
 \description{
 radiant.data
@@ -16,6 +19,7 @@ Launch the radiant.data app in the default web browser
 \examples{
 \dontrun{
 radiant.data()
+radiant.data("https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda")
 radiant.data("viewer")
 }
 }

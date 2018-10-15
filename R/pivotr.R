@@ -145,7 +145,7 @@ pivotr <- function(
   ## ensure we don't have invalid column names
   ## but skip variable names already being used
   cn <- colnames(tab)
-  cni <- !c(cvars, nvar) %in% cn
+  cni <- cn %in% setdiff(cn, c(cvars, nvar))
   colnames(tab)[cni] <- fix_names(cn[cni])
 
   ## filtering the table if desired
