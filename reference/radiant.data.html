@@ -68,7 +68,7 @@ Launch the radiant.data app in the default web browser" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7.3</span>
       </span>
     </div>
 
@@ -164,18 +164,29 @@ Launch the radiant.data app in the default web browser" />
     
     </div>
 
-    <pre class="usage"><span class='fu'>radiant.data</span>()</pre>
-        
+    <pre class="usage"><span class='fu'>radiant.data</span>(<span class='no'>state</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>state</th>
+      <td><p>Path to statefile to load</p></td>
+    </tr>
+    </table>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'>radiant.data</span>()
+<span class='fu'>radiant.data</span>(<span class='st'>"https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda"</span>)
 <span class='fu'>radiant.data</span>(<span class='st'>"viewer"</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
             
       <li><a href="#examples">Examples</a></li>
     </ul>
