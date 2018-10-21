@@ -836,6 +836,81 @@ which.pmax <- function(...) unname(apply(cbind(...), 1, which.max))
 #' @export
 which.pmin <- function(...) unname(apply(cbind(...), 1, which.min))
 
+#' Summarize a set of numeric vectors per row
+#' @rdname pfun
+#' @details Calculate summary statistics of the input vectors per row (or 'parallel')
+#' @param ... Numeric vectors of the same length
+#' @param fun Function to apply
+#' @param na.rm	 a logical indicating whether missing values should be removed.
+#' @return A vector of ‘parallel’ summaries of the argument vectors.
+#' @seealso See also \code{\link{pmin}} and \code{\link{pmax}}
+#' @examples
+#' pfun(1:10, fun = mean)
+#' @export
+pfun <- function(..., fun, na.rm = TRUE) unname(apply(cbind(...), 1, fun, na.rm = na.rm))
+
+#' @rdname pfun
+#' @examples
+#' psum(1:10, 10:1)
+#' @export
+psum <- function(..., na.rm = TRUE) pfun(..., fun = sum, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pmean <- function(..., na.rm = TRUE) pfun(..., fun = mean, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pmedian <- function(..., na.rm = TRUE) pfun(..., fun = median, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+psd <- function(..., na.rm = TRUE) pfun(..., fun = sd, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pvar <- function(..., na.rm = TRUE) pfun(..., fun = var, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pcv <- function(..., na.rm = TRUE) pfun(..., fun = cv, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pp01 <- function(..., na.rm = TRUE) pfun(..., fun = p01, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pp025 <- function(..., na.rm = TRUE) pfun(..., fun = p025, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pp05 <- function(..., na.rm = TRUE) pfun(..., fun = p05, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pp10 <- function(..., na.rm = TRUE) pfun(..., fun = p10, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pp25 <- function(..., na.rm = TRUE) pfun(..., fun = p25, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pp75 <- function(..., na.rm = TRUE) pfun(..., fun = p75, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pp95 <- function(..., na.rm = TRUE) pfun(..., fun = p95, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pp975 <- function(..., na.rm = TRUE) pfun(..., fun = p975, na.rm = na.rm)
+
+#' @rdname pfun
+#' @export
+pp99 <- function(..., na.rm = TRUE)  pfun(..., fun = p99, na.rm = na.rm)
+
 #' Method to store variables in a dataset in Radiant
 #'
 #' @param dataset Dataset
