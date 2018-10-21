@@ -9,6 +9,9 @@ suppressWarnings(
 if (isTRUE(getOption("radiant.sf_volumes", "") != "") || isTRUE(Sys.getenv("RSTUDIO") != "")) {
   if (isTRUE(getOption("radiant.sf_volumes", "") == "")) {
     sf_volumes <- c(Home = radiant.data::find_home())
+    if (dir.exists(paste0(sf_volumes["Home"], "/Desktop"))) {
+      sf_volumes <- c(sf_volumes, Desktop = paste0(sf_volumes["Home"], "/Desktop"))
+    }
     Dropbox <- try(radiant.data::find_dropbox(), silent = TRUE)
     if (!inherits(Dropbox, "try-error")) {
       sf_volumes <- c(sf_volumes, Dropbox = Dropbox)
