@@ -1,10 +1,12 @@
-# radiant.data 0.9.7.3
+# radiant.data 0.9.7.4
 
+* Similar to `pmin` and `pmax`, `pfun` et al. calculate summary statistics elementwise across multiple vectors
+* Add `Desktop` as a default directory to show in the `shinyFiles` file browser
 * Load a state file on startup by providing a (relative) file path or a url. For example, radiant.data::radiant.data("https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda") 
+or radiant.data::radiant.data("assignment.state.rda")
 * Update example report in _Report > Rmd_
 * Add `deregister` function to remove data in radiant from memory and the `datasets` dropdown list
 * Fix for invalid column names if used in `Data > Pivot`
-* Option to add path to state file to be loaded on launch (e.g., radiant.data::radiant.data(""))
 
 # radiant.data 0.9.7.0
 

@@ -147,6 +147,20 @@ reference:
     - weighted.sd
     - which.pmax
     - which.pmin
+    - pfun
+    - psum
+    - pmean
+    - psd
+    - pvar
+    - pcv
+    - pp01
+    - pp025
+    - pp05
+    - pp25
+    - pp75
+    - pp95
+    - pp975
+    - pp99
     - xtile
 - title: Data > Combine
   desc: Functions used with Data > Combine
@@ -160,6 +174,7 @@ reference:
     - format_nr
     - round_df
     - register
+    - deregister
     - render
     - render.datatables
     - render.plotly

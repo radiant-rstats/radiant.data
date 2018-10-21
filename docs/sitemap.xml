@@ -94,6 +94,9 @@
     <loc>https://radiant-rstats.github.io/radiant.data/reference/cv.html</loc>
   </url>
   <url>
+    <loc>https://radiant-rstats.github.io/radiant.data/reference/deregister.html</loc>
+  </url>
+  <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/describe.html</loc>
   </url>
   <url>
@@ -239,6 +242,9 @@
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/percentiles.html</loc>
+  </url>
+  <url>
+    <loc>https://radiant-rstats.github.io/radiant.data/reference/pfun.html</loc>
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/pivotr.html</loc>
