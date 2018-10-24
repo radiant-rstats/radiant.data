@@ -259,7 +259,7 @@ visualize <- function(
       plot_list[[i]] <- ggplot(dataset, aes_string(x = i))
       if ("density" %in% axes && !"factor" %in% dc[i]) {
         hist_par <- c(list(aes(y = ..density..)), hist_par)
-        plot_list[[i]] <- plot_list[[i]] + geom_density(color = linecol, size = .5)
+        plot_list[[i]] <- plot_list[[i]] + geom_density(adjust = smooth, color = linecol, size = .5)
       }
       if ("factor" %in% dc[i]) {
         plot_fun <- get("geom_bar")

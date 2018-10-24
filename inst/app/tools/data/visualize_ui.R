@@ -392,8 +392,10 @@ output$ui_Visualize <- renderUI({
             min = 2, max = 50, step = 1
           )
         ),
+
         conditionalPanel(
           "input.viz_type == 'density' |
+           input.viz_type == 'dist' & (input.viz_axes && input.viz_axes.indexOf('density')) >= 0 |
            (input.viz_type == 'scatter' & (input.viz_check && input.viz_check.indexOf('loess') >= 0))",
           sliderInput(
             "viz_smooth", label = "Smooth:",
@@ -528,8 +530,6 @@ output$visualize <- renderPlot({
   })
 })
 
-
-
 observeEvent(input$visualize_report, {
   ## resetting hidden elements to default values
   vi <- viz_inputs()
@@ -539,7 +539,8 @@ observeEvent(input$visualize_report, {
   if (input$viz_type %in% c("dist", "density")) {
     vi$yvar <- viz_args$yvar
   }
-  if (!input$viz_type %in% c("density", "scatter") || !"loess" %in% input$viz_check) {
+  if (!input$viz_type %in% c("density", "scatter", "dist") ||
+      !("loess" %in% input$viz_check || "density" %in% input$viz_axes || input$viz_type == "density")) {
     vi$smooth <- viz_args$smooth
   }
   if (!input$viz_type %in% c("scatter", "box") && "jitter" %in% input$viz_check) {
