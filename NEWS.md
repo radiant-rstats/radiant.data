@@ -1,5 +1,6 @@
-# radiant.data 0.9.7.4
+# radiant.data 0.9.7.5
 
+* Added option to change `smooth` setting for histograms with a density plot
 * Similar to `pmin` and `pmax`, `pfun` et al. calculate summary statistics elementwise across multiple vectors
 * Add `Desktop` as a default directory to show in the `shinyFiles` file browser
 * Load a state file on startup by providing a (relative) file path or a url. For example, radiant.data::radiant.data("https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda") 
