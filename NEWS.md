@@ -1,5 +1,6 @@
-# radiant.data 0.9.7.5
+# radiant.data 0.9.7.6
 
+* Fix for directory set when using `Knit report` in _Report > Rmd_ and _Report > R_ without an Rstudio project. Will now correctly default to the working directory used in R(studio)
 * Added option to change `smooth` setting for histograms with a density plot
 * Similar to `pmin` and `pmax`, `pfun` et al. calculate summary statistics elementwise across multiple vectors
 * Add `Desktop` as a default directory to show in the `shinyFiles` file browser
