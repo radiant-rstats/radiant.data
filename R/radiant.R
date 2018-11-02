@@ -1337,7 +1337,6 @@ parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
   if (is_empty(pdir)) {
     pdir <- try(rstudioapi::getActiveProject(), silent = TRUE)
     if (inherits(pdir, "try-error") || is_empty(pdir)) {
-      # pdir <- getwd()
       pdir <- radiant.data::find_home()
     }
   }

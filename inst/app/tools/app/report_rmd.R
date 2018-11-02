@@ -526,7 +526,9 @@ observeEvent(input$rmd_read_files, {
   if (is.integer(input$rmd_read_files)) return()
   path <- shinyFiles::parseFilePaths(sf_volumes, input$rmd_read_files)
   if (inherits(path, "try-error") || is_empty(path$datapath)) return()
-  pdir <- getOption("radiant.project_dir", default = radiant.data::find_home())
+  ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
+  pdir <- getOption("radiant.project_dir", default = ldir)
+
   cmd <- read_files(path$datapath, pdir = pdir, type = "rmd", clipboard = FALSE, radiant = TRUE)
   if (!is_empty(cmd)) {
     update_report_fun(cmd, type = "rmd", rfiles = TRUE)

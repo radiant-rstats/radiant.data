@@ -355,11 +355,14 @@ knit_it <- function(report, type = "rmd") {
 
   ## fragment also available with rmarkdown
   ## http://rmarkdown.rstudio.com/html_fragment_format.html
-  pdir <- getOption("radiant.project_dir", default = radiant.data::find_home())
-  if (!is_empty(pdir)) {
-    owd <- setwd(pdir)
-    on.exit(setwd(owd))
-  }
+  
+  ## setting the working directory to use
+  ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
+  pdir <- getOption("radiant.project_dir", default = ldir)
+
+  tdir <- tempdir()
+  owd <- ifelse(is_empty(pdir), setwd(tdir), setwd(pdir))
+  on.exit(setwd(owd))
 
   ## sizing issue with ggplotly and knitr
   ## see https://github.com/ropensci/plotly/issues/1171

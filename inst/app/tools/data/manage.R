@@ -90,11 +90,14 @@ load_user_data <- function(
     ext <- "---"
   }
 
+  ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
+  pdir <- getOption("radiant.project_dir", default = ldir)
   cmd <- NULL
+
   pp <- suppressMessages(
     radiant.data::parse_path(
       uFile,
-      pdir = getOption("radiant.project_dir", ""),
+      pdir = pdir,
       chr = "\"",
       mess = FALSE
     )

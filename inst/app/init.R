@@ -9,7 +9,7 @@
 # options(warn = 2)
 
 if (getOption("radiant.shinyFiles", FALSE)) {
-  if (isTRUE(Sys.getenv("RSTUDIO") == "")) {
+  if (isTRUE(Sys.getenv("RSTUDIO") == "") && isTRUE(Sys.getenv("SHINY_PORT") != "")) {
     ## Users not on Rstudio will only get access to pre-specified volumes
     sf_volumes <- getOption("radiant.sf_volumes", "")
   } else {

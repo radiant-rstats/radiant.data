@@ -6,7 +6,12 @@ suppressWarnings(
   )
 )
 
-if (isTRUE(getOption("radiant.sf_volumes", "") != "") || isTRUE(Sys.getenv("RSTUDIO") != "")) {
+## set volumes if sf_volumes was preset (e.g., on a server) or
+## we are running in Rstudio or if we are running locally
+if (isTRUE(getOption("radiant.sf_volumes", "") != "") || 
+    isTRUE(Sys.getenv("RSTUDIO") != "") || 
+    isTRUE(Sys.getenv("SHINY_PORT") == "")) {
+
   if (isTRUE(getOption("radiant.sf_volumes", "") == "")) {
     sf_volumes <- c(Home = radiant.data::find_home())
     if (dir.exists(paste0(sf_volumes["Home"], "/Desktop"))) {

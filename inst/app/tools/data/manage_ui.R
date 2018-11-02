@@ -341,10 +341,12 @@ observeEvent(input$man_save_clip, {
 man_save_data <- function(file) {
   ext <- input$saveAs
   robj <- input$dataset
+  ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
+  pdir <- getOption("radiant.project_dir", default = ldir)
   pp <- suppressMessages(
     radiant.data::parse_path(
       file,
-      pdir = getOption("radiant.project_dir", ""),
+      pdir = pdir,
       chr = "\"",
       mess = FALSE
     )
