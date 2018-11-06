@@ -602,6 +602,7 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #' @param dec Number of decimals to show
 #' @param perc Display numbers as percentages (TRUE or FALSE)
 #' @param mark Thousand separator
+#' @param na.rm Remove missing values
 #' @param ... Additional arguments for format_nr
 #'
 #' @return Data.frame for printing
@@ -609,16 +610,18 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #' @examples
 #' data.frame(x = c("a", "b"), y = c(1L, 2L), z = c(-0.0005, 3)) %>%
 #'   format_df(dec = 4)
-#' data.frame(x = c(1L, 2L), y = c(0.05, 0.8)) %>%
+#' data.frame(x = c(1L, 2L), y = c(0.06, 0.8)) %>%
 #'   format_df(dec = 2, perc = TRUE)
+#' data.frame(x = c(1L, 2L, NA), y = c(NA, 1.008, 2.8)) %>%
+#'   format_df(dec = 2)
 #'
 #' @export
-format_df <- function(tbl, dec = NULL, perc = FALSE, mark = "", ...) {
+format_df <- function(tbl, dec = NULL, perc = FALSE, mark = "", na.rm = FALSE, ...) {
   frm <- function(x, ...) {
     if (is_double(x)) {
-      format_nr(x, dec = dec, perc = perc, mark = mark, ...)
+      format_nr(x, dec = dec, perc = perc, mark = mark, na.rm = na.rm, ...)
     } else if (is.integer(x)) {
-      format_nr(x, dec = 0, mark = mark, ...)
+      format_nr(x, dec = 0, mark = mark, na.rm = na.rm, ...)
     } else {
       x
     }

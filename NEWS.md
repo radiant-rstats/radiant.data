@@ -1,5 +1,6 @@
-# radiant.data 0.9.7.7
+# radiant.data 0.9.7.8
 
+* Fix for `format_df` when the data.frame contains missing values. This fix is relevant for several `summary` functions run in _Report > Rmd_ or _Report > R_
 * Fix for directory set when using `Knit report` in _Report > Rmd_ and _Report > R_ **without** an Rstudio project. Will now correctly default to the working directory used in R(studio)
 * Added option to change `smooth` setting for histograms with a density plot
 * Similar to `pmin` and `pmax`, `pfun` et al. calculate summary statistics elementwise across multiple vectors
