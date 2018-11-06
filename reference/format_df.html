@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7.7</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7.8</span>
       </span>
     </div>
 
@@ -162,7 +162,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>format_df</span>(<span class='no'>tbl</span>, <span class='kw'>dec</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>perc</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>mark</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>format_df</span>(<span class='no'>tbl</span>, <span class='kw'>dec</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>perc</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>mark</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -184,6 +185,10 @@
       <td><p>Thousand separator</p></td>
     </tr>
     <tr>
+      <th>na.rm</th>
+      <td><p>Remove missing values</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Additional arguments for format_nr</p></td>
     </tr>
@@ -198,10 +203,14 @@
     <pre class="examples"><div class='input'><span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1L</span>, <span class='fl'>2L</span>), <span class='kw'>z</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>0.0005</span>, <span class='fl'>3</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'>format_df</span>(<span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>4</span>)</div><div class='output co'>#&gt;   x y       z
 #&gt; 1 a 1 -0.0005
-#&gt; 2 b 2  3.0000</div><div class='input'><span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1L</span>, <span class='fl'>2L</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.05</span>, <span class='fl'>0.8</span>)) <span class='kw'>%&gt;%</span>
+#&gt; 2 b 2  3.0000</div><div class='input'><span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1L</span>, <span class='fl'>2L</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.06</span>, <span class='fl'>0.8</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'>format_df</span>(<span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>perc</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;   x      y
-#&gt; 1 1  5.00%
-#&gt; 2 2 80.00%</div><div class='input'>
+#&gt; 1 1  6.00%
+#&gt; 2 2 80.00%</div><div class='input'><span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1L</span>, <span class='fl'>2L</span>, <span class='fl'>NA</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>NA</span>, <span class='fl'>1.008</span>, <span class='fl'>2.8</span>)) <span class='kw'>%&gt;%</span>
+  <span class='fu'>format_df</span>(<span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt;    x    y
+#&gt; 1  1   NA
+#&gt; 2  2 1.01
+#&gt; 3 NA 2.80</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
