@@ -1,5 +1,9 @@
-# radiant.data 0.9.7.8
+# radiant.data 0.9.7.9
 
+* Option for automatic cleanup of deprecated code in both _Report > Rmd_ and _Report > R_
+* Avoid attempt to fix deprecated code in _Report > Rmd_ if `pred_data = ""` 
+* Fix for download icon linked to downloading of a state file after upgrade to shiny 1.2
+* Update documentation for _Data > Combine_
 * Fix for `format_df` when the data.frame contains missing values. This fix is relevant for several `summary` functions run in _Report > Rmd_ or _Report > R_
 * Fix for directory set when using `Knit report` in _Report > Rmd_ and _Report > R_ **without** an Rstudio project. Will now correctly default to the working directory used in R(studio)
 * Added option to change `smooth` setting for histograms with a density plot
