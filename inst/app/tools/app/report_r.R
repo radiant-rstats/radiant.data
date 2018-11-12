@@ -348,7 +348,7 @@ output$r_knitted <- renderUI({
           }
         }
         report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
-        knit_it(report)
+        knit_it(report, type = "r")
       })
     }
   })

@@ -240,9 +240,9 @@ knit_it_save <- function(report) {
     gsub("<table>", "<table class='table table-condensed table-hover'>", .)
 }
 
-observeEvent(input$report_clean, {
+report_clean <- function(report) {
   withProgress(message = "Cleaning report", value = 1, {
-    report <- gsub("\nr_data\\[\\[\"([^\n]+?)\"\\]\\] \\%>\\%(.*?)\\%>\\%\\s*?store\\(\"(.*?)\", (\".*?\")\\)", "\n\\3 <- \\1 %>%\\2\nregister(\"\\3\", \\4)", input$rmd_edit) %>%
+    report <- gsub("\nr_data\\[\\[\"([^\n]+?)\"\\]\\] \\%>\\%(.*?)\\%>\\%\\s*?store\\(\"(.*?)\", (\".*?\")\\)", "\n\\3 <- \\1 %>%\\2\nregister(\"\\3\", \\4)", report) %>%
       gsub("r_data\\[\\[\"([^\"]+?)\"\\]\\]", "\\1", .) %>%
       gsub("r_data\\$", "", .) %>%
       gsub("\"mean_rm\"", "\"mean\"", .) %>%
@@ -287,12 +287,22 @@ observeEvent(input$report_clean, {
   #     report <- paste0(readLines(tmp_fn), collapse = "\n")
   #   })
   # }
+  removeModal()
+  fix_smart(report)
+}
 
+observeEvent(input$report_clean_r, {
+  shinyAce::updateAceEditor(
+    session, "r_edit",
+    value = report_clean(input$r_edit)
+  )
+})
+
+observeEvent(input$report_clean_rmd, {
   shinyAce::updateAceEditor(
     session, "rmd_edit",
-    value = fix_smart(report)
+    value = report_clean(input$rmd_edit)
   )
-  removeModal()
 })
 
 observeEvent(input$report_ignore, {
@@ -315,7 +325,7 @@ knit_it <- function(report, type = "rmd") {
      grepl("store\\(pred,\\s*data\\s*=\\s*\"", report) ||
      grepl("\\s+data\\s*=\\s*\".*?\",", report)  ||
      grepl("\\s+dataset\\s*=\\s*\".*?\",", report)  ||
-     grepl("\\s+pred_data\\s*=\\s*\".*?\",", report)  ||
+     grepl("\\s+pred_data\\s*=\\s*\"[^\"]+?\",", report)  ||
      grepl("result\\s*<-\\s*simulater\\(", report)  ||
      grepl("result\\s*<-\\s*repeater\\(", report)  ||
      grepl("combinedata\\(\\s*x\\s*=\\s*\"[^\"]+?\"", report) ||
@@ -344,7 +354,7 @@ knit_it <- function(report, type = "rmd") {
         footer = tagList(
           modalButton("Cancel"),
           actionButton("report_ignore", "Ignore", title = "Ignore cleaning popup", class = "btn-primary"),
-          actionButton("report_clean", "Clean report", title = "Clean report", class = "btn-success")
+          actionButton(paste0("report_clean_", type), "Clean report", title = "Clean report", class = "btn-success")
         ),
         size = "s",
         easyClose = TRUE
@@ -355,7 +365,7 @@ knit_it <- function(report, type = "rmd") {
 
   ## fragment also available with rmarkdown
   ## http://rmarkdown.rstudio.com/html_fragment_format.html
-  
+
   ## setting the working directory to use
   ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
   pdir <- getOption("radiant.project_dir", default = ldir)
@@ -576,8 +586,8 @@ report_save_content <- function(file, type = "rmd") {
                 paste0(
                   "<span>
                     The working directory used by radiant (\"", getwd(), "\") is not writable. This is required to save a report.
-                    To save reports, restart radiant from a writable directory. Preferaby by setting up an Rstudio 
-                    project folder. See <a href='https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects' target='_blank'> 
+                    To save reports, restart radiant from a writable directory. Preferaby by setting up an Rstudio
+                    project folder. See <a href='https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects' target='_blank'>
                     https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects</a> for more information
                   </span>"
                 )
