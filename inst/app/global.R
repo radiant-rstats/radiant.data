@@ -8,8 +8,8 @@ suppressWarnings(
 
 ## set volumes if sf_volumes was preset (e.g., on a server) or
 ## we are running in Rstudio or if we are running locally
-if (isTRUE(getOption("radiant.sf_volumes", "") != "") || 
-    isTRUE(Sys.getenv("RSTUDIO") != "") || 
+if (isTRUE(getOption("radiant.sf_volumes", "") != "") ||
+    isTRUE(Sys.getenv("RSTUDIO") != "") ||
     isTRUE(Sys.getenv("SHINY_PORT") == "")) {
 
   if (isTRUE(getOption("radiant.sf_volumes", "") == "")) {
@@ -459,7 +459,7 @@ options(
         tabPanel(actionLink("state_share", "Share radiant state", icon = icon("share"))),
         tabPanel("View radiant state", uiOutput("state_view"), icon = icon("user")),
         "----", "Local",
-        tabPanel(downloadLink("state_download", "    Download radiant state file", class = "fa fa-download")),
+        tabPanel(downloadLink("state_download", tagList(icon("download"), "Download radiant state file"))),
         tabPanel(actionLink("state_upload_link", "Upload radiant state file", icon = icon("upload")))
       ),
 
