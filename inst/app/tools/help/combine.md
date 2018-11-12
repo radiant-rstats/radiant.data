@@ -164,7 +164,7 @@ The R(adiant) commands are:
 
 ```r
 # Radiant
-combinedata("superheroes", "publishers", by = "publisher", type = "inner_join")
+combine_data(superheroes, publishers, by = "publisher", type = "inner_join")
 
 # R
 inner_join(superheroes, publishers, by = "publisher")
@@ -247,7 +247,7 @@ The R(adiant) commands are:
 
 ```r
 # Radiant
-combinedata("superheroes", "publishers", by = "publisher", type = "left_join")
+combine_data(superheroes, publishers, by = "publisher", type = "left_join")
 
 # R
 left_join(superheroes, publishers, by = "publisher")
@@ -330,7 +330,7 @@ The R(adiant) commands are:
 
 ```r
 # Radiant
-combinedata("superheroes", "publishers", by = "publisher", type = "right_join")
+combine_data(superheroes, publishers, by = "publisher", type = "right_join")
 
 # R
 right_join(superheroes, publishers, by = "publisher")
@@ -420,7 +420,7 @@ The R(adiant) commands are:
 
 ```r
 # Radiant
-combinedata("superheroes", "publishers", by = "publisher", type = "full_join")
+combine_data(superheroes, publishers, by = "publisher", type = "full_join")
 
 # R
 full_join(superheroes, publishers, by = "publisher")
@@ -483,7 +483,7 @@ We get a similar table as with `inner_join` but it contains only the variables i
 
 ```r
 # Radiant
-combinedata("superheroes", "publishers", by = "publisher", type = "semi_join")
+combine_data(superheroes, publishers, by = "publisher", type = "semi_join")
 
 # R
 semi_join(superheroes, publishers, by = "publisher")
@@ -763,7 +763,7 @@ The R(adiant) commands are:
 
 ```r
 # Radiant
-combinedata("avengers", "superheroes", type = "bind_rows")
+combine_data(avengers, superheroes, type = "bind_rows")
 
 # R
 bind_rows(avengers, superheroes)
@@ -916,6 +916,12 @@ The R(adiant) commands are the same as shown above, except you will need to repl
    <td style="text-align:left;"> DC </td>
   </tr>
   <tr>
+   <td style="text-align:left;"> Joker </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> DC </td>
+  </tr>
+  <tr>
    <td style="text-align:left;"> Batman </td>
    <td style="text-align:left;"> good </td>
    <td style="text-align:left;"> male </td>
@@ -950,12 +956,6 @@ The R(adiant) commands are the same as shown above, except you will need to repl
    <td style="text-align:left;"> good </td>
    <td style="text-align:left;"> female </td>
    <td style="text-align:left;"> Marvel </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Joker </td>
-   <td style="text-align:left;"> bad </td>
-   <td style="text-align:left;"> male </td>
-   <td style="text-align:left;"> DC </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Hawkeye </td>
@@ -1051,9 +1051,8 @@ The R(adiant) commands are the same as shown above, except you will need to repl
 
 Add code to <a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank">_Report > Rmd_</a> to (re)create the combined dataset by clicking the <i title="report results" class="fa fa-edit"></i> icon on the bottom left of your screen or by pressing `ALT-enter` on your keyboard.
 
---------
-For additional discussion see the chapter on relational data in <a href="http://r4ds.had.co.nz/relational-data.html" target="_blank">R for data science</a>.
+For additional discussion see the chapter on relational data in <a href="http://r4ds.had.co.nz/relational-data.html" target="_blank">R for data science</a> and <https://github.com/gadenbuie/tidyexplain/blob/master/README.md>{target="_blank"}.
 
 ### R-functions
 
-For an overview of related R-functions used by Radiant to combine datasets see <a href = " https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-combine" target="_blank">_Data > Combine_</a>
+For help with the `combine_data` function see <a href = " https://radiant-rstats.github.io/radiant.data/reference/combine_data.html" target="_blank">_Data > Combine_</a>
