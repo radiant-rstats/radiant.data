@@ -5,6 +5,7 @@
 #' @param package Radiant package to start. One of "radiant.data", "radiant.design", "radiant.basics", "radiant.model", "radiant.multivariate", or "radiant"
 #' @param run Run a radiant app in an external browser ("browser"), an Rstudio window ("window"), or in the Rstudio viewer ("viewer")
 #' @param state Path to statefile to load
+#' @param ... additional arguments to pass to shiny::runApp (e.g, port = 8080)
 #'
 #' @importFrom shiny paneViewer
 #'
@@ -17,7 +18,7 @@
 #' }
 #'
 #' @export
-launch <- function(package = "radiant.data", run = "viewer", state) {
+launch <- function(package = "radiant.data", run = "viewer", state, ...) {
   ## check if package attached
   if (!paste0("package:", package) %in% search()) {
     if (!suppressWarnings(suppressMessages(suppressPackageStartupMessages(require(package, character.only = TRUE)))))  {
@@ -73,13 +74,14 @@ launch <- function(package = "radiant.data", run = "viewer", state) {
 
   ## cannot (yet) supress ERROR: [on_request_read] connection reset by peer in viewer
   suppressPackageStartupMessages(
-    shiny::runApp(system.file("app", package = package), launch.browser = run)
+    shiny::runApp(system.file("app", package = package), launch.browser = run, ...)
   )
 }
 
 #' Launch the radiant.data app in the default web browser
 #'
 #' @param state Path to statefile to load
+#' @param ... additional arguments to pass to shiny::runApp (e.g, port = 8080)
 #'
 #' @examples
 #' \dontrun{
@@ -88,29 +90,31 @@ launch <- function(package = "radiant.data", run = "viewer", state) {
 #' radiant.data("viewer")
 #' }
 #' @export
-radiant.data <- function(state) launch(package = "radiant.data", run = "browser", state)
+radiant.data <- function(state, ...) launch(package = "radiant.data", run = "browser", state, ...)
 
 #' Launch the radiant.data app in an Rstudio window
 #'
 #' @param state Path to statefile to load
+#' @param ... additional arguments to pass to shiny::runApp (e.g, port = 8080)
 #'
 #' @examples
 #' \dontrun{
 #' radiant.data_window()
 #' }
 #' @export
-radiant.data_window <- function(state) launch(package = "radiant.data", run = "window", state)
+radiant.data_window <- function(state, ...) launch(package = "radiant.data", run = "window", state, ...)
 
 #' Launch the radiant.data app in the Rstudio viewer
 #'
 #' @param state Path to statefile to load
+#' @param ... additional arguments to pass to shiny::runApp (e.g, port = 8080)
 #'
 #' @examples
 #' \dontrun{
 #' radiant.data_viewer()
 #' }
 #' @export
-radiant.data_viewer <- function(state) launch(package = "radiant.data", run = "viewer", state)
+radiant.data_viewer <- function(state, ...) launch(package = "radiant.data", run = "viewer", state, ...)
 
 #' Install webshot and phantomjs
 #' @export
@@ -1274,6 +1278,9 @@ register <- function(new, org = "", descr = "", env) {
       } else {
         r_info[[paste0(new, "_descr")]] <- attr(env[[new]], "description")
       }
+
+      ## add description to the data.frame
+      attr(env[[new]], "description") <- r_info[[paste0(new, "_descr")]]
 
       r_info[["datasetlist"]] <- c(new, r_info[["datasetlist"]]) %>% unique()
       if (exists(new, envir = env) && !bindingIsActive(as.symbol(new), env = env)) {

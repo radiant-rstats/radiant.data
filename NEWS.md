@@ -1,5 +1,7 @@
-# radiant.data 0.9.7.9
+# radiant.data 0.9.7.10
 
+* Add a specified description to a data.frame immediately on `register`
+* Option to pass additional arguments to `shiny::runApp` when starting radiant such as the port to use. For example, radiant.data::radiant.data("https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda", port = 8080) 
 * Option for automatic cleanup of deprecated code in both _Report > Rmd_ and _Report > R_
 * Avoid attempt to fix deprecated code in _Report > Rmd_ if `pred_data = ""` 
 * Fix for download icon linked to downloading of a state file after upgrade to shiny 1.2

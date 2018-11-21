@@ -6,10 +6,12 @@
 \alias{radiant.data-package}
 \title{radiant.data}
 \usage{
-radiant.data(state)
+radiant.data(state, ...)
 }
 \arguments{
 \item{state}{Path to statefile to load}
+
+\item{...}{additional arguments to pass to shiny::runApp (e.g, port = 8080)}
 }
 \description{
 radiant.data

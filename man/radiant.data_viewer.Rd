@@ -4,10 +4,12 @@
 \alias{radiant.data_viewer}
 \title{Launch the radiant.data app in the Rstudio viewer}
 \usage{
-radiant.data_viewer(state)
+radiant.data_viewer(state, ...)
 }
 \arguments{
 \item{state}{Path to statefile to load}
+
+\item{...}{additional arguments to pass to shiny::runApp (e.g, port = 8080)}
 }
 \description{
 Launch the radiant.data app in the Rstudio viewer
