@@ -434,7 +434,7 @@ is_double <- function(x) {
   is.double(x) && !lubridate::is.Date(x) && !lubridate::is.POSIXt(x)
 }
 
-#' Create a vector of interaction terms
+#' Create a vector of interaction terms for linear and logistic regression
 #'
 #' @param vars Variables labels to use
 #' @param nway 2-way (2) or 3-way (3) interactions labels to create
@@ -449,15 +449,25 @@ is_double <- function(x) {
 #'
 #' @export
 iterms <- function(vars, nway, sep = ":") {
-  if (!nway %in% c(2, 3)) return(character(0))
-  it <- c()
-  for (i in 2:nway) {
-    it %<>% {c(., combn(vars, i) %>% apply(2, paste, collapse = sep))}
-    ## lm doesn't evaluate a:a
-    # if (i == 2) it <- c(it, paste(vars, vars, sep = "*"))
-    # if (i == 3) it <- c(it, paste(vars, vars, vars, sep = "*"))
-  }
-  it
+  sapply(2:min(nway, length(vars)), function(x) combn(vars, x) %>% apply(2, paste, collapse = sep)) %>%
+    unlist() %>%
+    as.vector()
+}
+
+#' Create a vector of quadratic and cubed terms for use in linear and logist regression
+#'
+#' @param vars Variables labels to use
+#' @param nway 2-way (2) or 3-way (3) interactions labels to create
+#'
+#' @return Character vector of regression term labels
+#'
+#' @examples
+#' qterms(c("a", "b"), 3)
+#' qterms(c("a", "b"), 2)
+#'
+#' @export
+qterms <- function(vars, nway) {
+  sapply(2:nway, function(x) glue("I({vars}^{x})")) %>% as.vector()
 }
 
 #' Source for package functions
@@ -949,44 +959,44 @@ store.character <- function(dataset = NULL, object, ...) {
     ## using get("...") to avoid 'undefined' global function warnings
     get("store.conjoint")(dataset = NULL, object = dataset, ...)
   } else if ("model" %in% class(dataset)) {
-    stop(
-      paste0(
-        "This usage of the store function is now deprecated.\nUse the code below instead:\n\n",
-        dataset$df_name, " <- store(", dataset$df_name, ", ", deparse(substitute(dataset)), ", name = \"", list(...)[["name"]], "\")"
-      ),
-      call. = FALSE
-    )
+    paste0(
+      "This usage of the store function is now deprecated.\nUse the code below instead:\n\n",
+      dataset$df_name, " <- store(", dataset$df_name, ", ", deparse(substitute(dataset)), ", name = \"", list(...)[["name"]], "\")"
+    ) %>% store_character_popup()
   } else if ("data.frame" %in% class(dataset)) {
-    stop(
-      paste0(
-        "This usage of the store function is now deprecated.\nUse the code below instead:\n\n",
-        object, " <- ..."
-      ),
-      call. = FALSE
-    )
+    if (grepl("\\s", object)) {
+      store_character_popup(object)
+    } else {
+      paste0("This usage of the store function is now deprecated.\nUse the code below instead:\n\n", object, " <- ...") %>%
+        store_character_popup()
+    }
   } else {
     if (missing(object)) {
       object <- "Incorrect call to the 'store' function. The function should be\ncalled as follows:\n\ndata <- store(data, model, name = \"new_column_name\")"
     }
-    mess <- paste0("Unable to store output. The returned message was:\n\n", object)
-    if (exists("r_environment")) {
-      ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
-      showModal(
-        modalDialog(
-          title = "Data not stored",
-          span(HTML(gsub("\n", "</br>", mess))),
-          footer = modalButton("OK"),
-          size = "s",
-          easyClose = TRUE
-        )
-      )
-    } else {
-      message(mess)
-    }
+    paste0("Unable to store output. The returned message was:\n\n", object) %>%
+      store_character_popup()
   }
 
-  ## ensure the original data is not over-written of what is to be store is a character object
+  ## ensure the original data is not over-written if what is to be stores is a character object
   dataset
+}
+
+store_character_popup <- function(mess) {
+  if (exists("r_environment")) {
+    ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+    showModal(
+      modalDialog(
+        title = "Data not stored",
+        span(HTML(gsub("\n", "</br>", mess))),
+        footer = modalButton("OK"),
+        size = "s",
+        easyClose = TRUE
+      )
+    )
+  } else {
+    stop(mess, call. = FALSE)
+  }
 }
 
 #' Find index corrected for missing values and filters

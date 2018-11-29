@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{iterms}
 \alias{iterms}
-\title{Create a vector of interaction terms}
+\title{Create a vector of interaction terms for linear and logistic regression}
 \usage{
 iterms(vars, nway, sep = ":")
 }
@@ -17,7 +17,7 @@ iterms(vars, nway, sep = ":")
 Character vector of interaction term labels
 }
 \description{
-Create a vector of interaction terms
+Create a vector of interaction terms for linear and logistic regression
 }
 \examples{
 paste0("var", 1:3) \%>\% iterms(2)

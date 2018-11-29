@@ -1,5 +1,7 @@
-# radiant.data 0.9.7.10
+# radiant.data 0.9.7.11
 
+* Add option to generate square and cubed terms for use in linear and logistic regression in `radiant.model`
+* Fix for error when trying to save invalid predictions in `radiant.model`. This action now generates a pop-up in the browser interface
 * Add a specified description to a data.frame immediately on `register`
 * Option to pass additional arguments to `shiny::runApp` when starting radiant such as the port to use. For example, radiant.data::radiant.data("https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda", port = 8080) 
 * Option for automatic cleanup of deprecated code in both _Report > Rmd_ and _Report > R_
