@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Diamond prices — diamonds • radiant.data</title>
+<title>Create a vector of quadratic and cubed terms for use in linear and logist regression — qterms • radiant.data</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -35,9 +35,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Diamond prices — diamonds" />
+<meta property="og:title" content="Create a vector of quadratic and cubed terms for use in linear and logist regression — qterms" />
 
-<meta property="og:description" content="Diamond prices" />
+<meta property="og:description" content="Create a vector of quadratic and cubed terms for use in linear and logist regression" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -152,37 +152,50 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Diamond prices</h1>
-    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/aaa.R'><code>R/aaa.R</code></a></small>
-    <div class="hidden name"><code>diamonds.Rd</code></div>
+    <h1>Create a vector of quadratic and cubed terms for use in linear and logist regression</h1>
+    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
+    <div class="hidden name"><code>qterms.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Diamond prices</p>
+    <p>Create a vector of quadratic and cubed terms for use in linear and logist regression</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>diamonds</span>)</pre>
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    <p>A data frame with 3000 rows and 10 variables</p>
+    <pre class="usage"><span class='fu'>qterms</span>(<span class='no'>vars</span>, <span class='no'>nway</span>)</pre>
     
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>vars</th>
+      <td><p>Variables labels to use</p></td>
+    </tr>
+    <tr>
+      <th>nway</th>
+      <td><p>2-way (2) or 3-way (3) interactions labels to create</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A sample of 3,000 from the diamonds dataset bundled with ggplot2. Description provided in attr(diamonds,"description")</p>
+    <p>Character vector of regression term labels</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>qterms</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>), <span class='fl'>3</span>)</div><div class='output co'>#&gt; [1] "I(a^2)" "I(b^2)" "I(a^3)" "I(b^3)"</div><div class='input'><span class='fu'>qterms</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>), <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] "I(a^2)" "I(b^2)"</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#format">Format</a></li>
-
-      <li><a href="#details">Details</a></li>
-          </ul>
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
