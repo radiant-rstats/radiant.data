@@ -1,5 +1,6 @@
-# radiant.data 0.9.7.11
+# radiant.data 0.9.7.12
 
+* Fix to visualize now `ggplot::labs` no longer accepts a list as input
 * Add option to generate square and cubed terms for use in linear and logistic regression in `radiant.model`
 * Fix for error when trying to save invalid predictions in `radiant.model`. This action now generates a pop-up in the browser interface
 * Add a specified description to a data.frame immediately on `register`

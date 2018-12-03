@@ -611,10 +611,10 @@ visualize <- function(
   if (length(labs) > 0) {
     if (is.list(labs[[1]])) {
       for (i in 1:length(labs)) {
-        plot_list[[i]] <- plot_list[[i]] + ggplot2::labs(labs[[i]])
+        plot_list[[i]] <- plot_list[[i]] + do.call(ggplot2::labs, labs[[i]])
       }
     } else {
-      plot_list[[1]] <- plot_list[[1]] + ggplot2::labs(labs)
+      plot_list[[1]] <- plot_list[[1]] + do.call(ggplot2::labs, labs)
     }
   }
 
