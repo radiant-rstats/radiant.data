@@ -57,16 +57,16 @@ saveSession <- function(session = session) {
   )
 
   ## saving session information to file
-  fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", r_ssuid, ".rds")
+  fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, ".rds")
   saveRDS(r_sessions[[r_ssuid]], file = fn)
 }
 
 observeEvent(input$refresh_radiant, {
   if (isTRUE(getOption("radiant.local"))) {
-    fn <- normalizePath("~/radiant.sessions")
+    fn <- normalizePath("~/.radiant.sessions")
     file.remove(list.files(fn, full.names = TRUE))
   } else {
-    fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", r_ssuid, ".rds")
+    fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, ".rds")
     if (file.exists(fn)) unlink(fn, force = TRUE)
   }
 

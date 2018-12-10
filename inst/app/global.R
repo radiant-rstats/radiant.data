@@ -200,8 +200,7 @@ knitr::opts_chunk$set(
 r_sessions <- new.env(parent = emptyenv())
 
 ## create directory to hold session files
-# file.path(radiant.data::find_home(), "radiant.sessions") %>% {
-"~/radiant.sessions" %>% {if (!file.exists(.)) dir.create(.)}
+"~/.radiant.sessions" %>% {if (!file.exists(.)) dir.create(.)}
 
 ## adding the figures path to avoid making a copy of all figures in www/figures
 addResourcePath("figures", file.path(getOption("radiant.path.data"), "app/tools/help/figures/"))

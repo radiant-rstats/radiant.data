@@ -31,7 +31,7 @@ if (getOption("radiant.shinyFiles", FALSE)) {
 
 remove_session_files <- function(st = Sys.time()) {
   fl <- list.files(
-    normalizePath("~/radiant.sessions/"),
+    normalizePath("~/.radiant.sessions/"),
     pattern = "*.rds",
     full.names = TRUE
   )
@@ -52,7 +52,7 @@ isolate({
 
 most_recent_session_file <- function() {
   fl <- list.files(
-    normalizePath("~/radiant.sessions/"),
+    normalizePath("~/.radiant.sessions/"),
     pattern = "*.rds",
     full.names = TRUE
   )
@@ -123,9 +123,9 @@ if (exists("r_data", envir = .GlobalEnv)) {
     r_info <- do.call(reactiveValues, r_sessions[[r_ssuid]]$r_info)
   }
   r_state <- r_sessions[[r_ssuid]]$r_state
-} else if (file.exists(paste0("~/radiant.sessions/r_", r_ssuid, ".rds"))) {
+} else if (file.exists(paste0("~/.radiant.sessions/r_", r_ssuid, ".rds"))) {
   ## read from file if not in global
-  fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", r_ssuid, ".rds")
+  fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, ".rds")
   rs <- try(readRDS(fn), silent = TRUE)
   if (inherits(rs, "try-error")) {
     r_data <- new.env()
@@ -153,9 +153,9 @@ if (exists("r_data", envir = .GlobalEnv)) {
 
   unlink(fn, force = TRUE)
   rm(rs)
-} else if (isTRUE(getOption("radiant.local")) && file.exists(paste0("~/radiant.sessions/r_", mrsf, ".rds"))) {
+} else if (isTRUE(getOption("radiant.local")) && file.exists(paste0("~/.radiant.sessions/r_", mrsf, ".rds"))) {
   ## restore from local folder but assign new ssuid
-  fn <- paste0(normalizePath("~/radiant.sessions"), "/r_", mrsf, ".rds")
+  fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", mrsf, ".rds")
   rs <- try(readRDS(fn), silent = TRUE)
   if (inherits(rs, "try-error")) {
     r_data <- new.env()
