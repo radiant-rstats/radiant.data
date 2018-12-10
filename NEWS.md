@@ -1,5 +1,6 @@
-# radiant.data 0.9.7.12
+# radiant.data 0.9.7.13
 
+* Ensure variable and dataset names are valid for R (i.e., no spaces or symbols), "fixing" the input as needed
 * Fix to visualize now `ggplot::labs` no longer accepts a list as input
 * Add option to generate square and cubed terms for use in linear and logistic regression in `radiant.model`
 * Fix for error when trying to save invalid predictions in `radiant.model`. This action now generates a pop-up in the browser interface

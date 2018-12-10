@@ -132,8 +132,12 @@ observeEvent(input$cmb_store, {
     r_info[["cmb_error"]] <- attr(result, "condition")$message
   } else {
     r_info[["cmb_error"]] <- ""
-    r_data[[input$cmb_name]] <- result
-    register(input$cmb_name, descr = attr(result, "description"))
+    dataset <- fix_names(input$cmb_name)
+    if (input$cmb_name != dataset) {
+      updateTextInput(session, inputId = "cmb_name", value = dataset)
+    }
+    r_data[[dataset]] <- result
+    register(dataset, descr = attr(result, "description"))
     updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
     updateSelectInput(session = session, inputId = "cmb_y", selected = input$cmd_y)
   }
@@ -145,12 +149,16 @@ observeEvent(input$combine_report, {
   if (identical(inp$add, colnames(r_data[[input$cmb_y]]))) {
     inp$add <- NULL
   }
-  xcmd <- paste0("register(\"", input$cmb_name, "\")")
+  dataset <- fix_names(input$cmb_name)
+  if (input$cmb_name != dataset) {
+    updateTextInput(session, inputId = "cmb_name", value = dataset)
+  }
+  xcmd <- paste0("register(\"", dataset, "\")")
   update_report(
     inp_main = inp,
     fun_name = "combine_data",
     outputs = character(0),
-    pre_cmd = paste0(input$cmb_name, " <- "),
+    pre_cmd = paste0(dataset, " <- "),
     xcmd = xcmd,
     figs = FALSE
   )
@@ -177,18 +185,21 @@ output$cmb_possible <- renderText({
 output$cmb_data <- renderText({
   req(length(r_info[["datasetlist"]]) > 1)
   req(input$cmb_store) ## dependence is needed to update cmb_type when result doesn't change
-  name <- if (is_empty(input$cmb_name)) {
-    paste0("cmb_", isolate(input$dataset))
+  if (is_empty(input$cmb_name)) {
+    dataset <- paste0("cmb_", isolate(input$dataset))
   } else {
-    input$cmb_name
+    dataset <- fix_names(input$cmb_name)
+    if (input$cmb_name != dataset) {
+      updateTextInput(session, inputId = "cmb_name", value = dataset)
+    }
   }
 
   if (!is_empty(r_info[["cmb_error"]])) {
     HTML(paste0("</br><h4>Combining data failed. The error message was:</br></br>\"", r_info[["cmb_error"]], "\"</h4>"))
-  } else if (!is.null(r_data[[name]])) {
-    show_data_snippet(name, nshow = 15, title = paste0(
+  } else if (!is.null(r_data[[dataset]])) {
+    show_data_snippet(dataset, nshow = 15, title = paste0(
       "<h3>Combined dataset: ",
-      name, " [<font color='blue'>", isolate(input$cmb_type), "</font>]</h3>"
+      dataset, " [<font color='blue'>", isolate(input$cmb_type), "</font>]</h3>"
     ))
   }
 })

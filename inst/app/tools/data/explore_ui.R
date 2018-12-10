@@ -252,11 +252,14 @@ observeEvent(input$expl_store, {
   req(input$expl_name)
   dat <- .explore()
   if (is.null(dat)) return()
-  name <- input$expl_name
+  dataset <- fix_names(input$expl_name)
+  if (input$expl_name != dataset) {
+    updateTextInput(session, inputId = "expl_name", value = dataset)
+  }
   rows <- input$explore_rows_all
   dat$tab %<>% {if (is.null(rows)) . else .[rows, , drop = FALSE]}
-  r_data[[name]] <- dat$tab
-  register(name)
+  r_data[[dataset]] <- dat$tab
+  register(dataset)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
   ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
@@ -264,7 +267,7 @@ observeEvent(input$expl_store, {
     modalDialog(
       title = "Data Stored",
       span(
-        paste0("Dataset '", name, "' was successfully added to the
+        paste0("Dataset '", dataset, "' was successfully added to the
                 datasets dropdown. Add code to Report > Rmd or
                 Report > R to (re)create the results by clicking
                 the report icon on the bottom left of your screen.")
@@ -289,7 +292,11 @@ observeEvent(input$explore_report, {
   }
   xcmd <- paste0(xcmd, ") %>% render()")
   if (!is_empty(input$expl_name)) {
-    xcmd <- paste0(xcmd, "\n", input$expl_name, " <- result$tab; register(\"", input$expl_name, "\")")
+    dataset <- fix_names(input$expl_name)
+    if (input$expl_name != dataset) {
+      updateTextInput(session, inputId = "expl_name", value = dataset)
+    }
+    xcmd <- paste0(xcmd, "\n", dataset, " <- result$tab\nregister(\"", dataset, "\")")
   }
 
   inp_main <- clean_args(expl_inputs(), expl_args)

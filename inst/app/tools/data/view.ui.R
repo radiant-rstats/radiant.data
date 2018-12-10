@@ -143,20 +143,25 @@ observeEvent(input$view_store, {
   req(input$view_name)
   data_filter <- if (input$show_filter) input$data_filter else ""
 
-  r_data[[input$view_name]] <- get_data(
+  dataset <- fix_names(input$view_name)
+  if (input$view_name != dataset) {
+    updateTextInput(session, inputId = "view_name", value = dataset)
+  }
+
+  r_data[[dataset]] <- get_data(
     input$dataset, vars = input$view_vars, filt = data_filter,
     rows = input$dataviewer_rows_all, na.rm = FALSE
   )
-  register(input$view_name)
+  register(dataset)
   updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
 
-  if (input$dataset != input$view_name) {
+  if (input$dataset != dataset) {
     ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
     showModal(
       modalDialog(
         title = "Data Stored",
         span(
-          paste0("Dataset '", input$view_name, "' was successfully added to
+          paste0("Dataset '", dataset, "' was successfully added to
                   the datasets dropdown. Add code to Report > Rmd or
                   Report > R to (re)create the dataset by clicking the report i
                   con on the bottom left of your screen.")
@@ -189,7 +194,11 @@ download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(i
 .viewcmd <- function(mess = "") {
   ## get the state of the dt table
   ts <- dt_state("dataviewer", vars = input$view_vars)
-  dataset <- input$view_name
+  dataset <- fix_names(input$view_name)
+  if (input$view_name != dataset) {
+    updateTextInput(session, inputId = "view_name", value = dataset)
+  }
+
   cmd <- ""
 
   ## shorten list of variales if possible
@@ -217,7 +226,7 @@ download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(i
   xcmd <- paste0(xcmd, ", nr = 100) %>% render()")
 
   ## create the command to filter and sort the data
-  cmd <- paste0(cmd, "## filter and sort the dataset\n", input$view_name, " <- ", input$dataset)
+  cmd <- paste0(cmd, "## filter and sort the dataset\n", dataset, " <- ", input$dataset)
   if (input$show_filter && !is_empty(input$data_filter)) {
     cmd <- paste0(cmd, " %>%\n  filter(", input$data_filter, ")")
   }

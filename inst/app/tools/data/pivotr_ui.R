@@ -404,11 +404,16 @@ observeEvent(input$pvt_store, {
   req(input$pvt_name)
   dat <- try(.pivotr(), silent = TRUE)
   if (inherits(dat, "try-error") || is.null(dat)) return()
-  name <- input$pvt_name
+
+  dataset <- fix_names(input$pvt_name)
+  if (input$pvt_name != dataset) {
+    updateTextInput(session, inputId = "pvt_name", value = dataset)
+  }
+
   rows <- input$pivotr_rows_all
   dat$tab %<>% {if (is.null(rows)) . else .[rows, , drop = FALSE]}
-  r_data[[name]] <- dat$tab
-  register(name)
+  r_data[[dataset]] <- dat$tab
+  register(dataset)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
   ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
@@ -416,7 +421,7 @@ observeEvent(input$pvt_store, {
     modalDialog(
       title = "Data Stored",
       span(
-        paste0("Dataset '", name, "' was successfully added to the
+        paste0("Dataset '", dataset, "' was successfully added to the
                 datasets dropdown. Add code to Report > Rmd or
                 Report > R to (re)create the results by clicking the
                 report icon on the bottom left of your screen.")
@@ -458,7 +463,11 @@ observeEvent(input$pivotr_report, {
   }
   xcmd <- paste0(xcmd, ") %>% render()")
   if (!is_empty(input$pvt_name)) {
-    xcmd <- paste0(xcmd, "\n", input$pvt_name, " <- result$tab; register(\"", input$pvt_name, "\")")
+    dataset <- fix_names(input$pvt_name)
+    if (input$pvt_name != dataset) {
+      updateTextInput(session, inputId = "pvt_name", value = dataset)
+    }
+    xcmd <- paste0(xcmd, "\n", dataset, " <- result$tab\nregister(\"", dataset, "\")")
   }
 
   inp_main <- clean_args(pvt_inputs(), pvt_args)
