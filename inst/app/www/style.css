@@ -92,7 +92,7 @@ pre, code, pre code {
 
 /* allow all textareas and multiple-select inputs to resize vertically */
 /* have to set overfow to make resize work on Safari                   */
-/* base on https://css-tricks.com/almanac/properties/r/resize/         */
+/* based on https://css-tricks.com/almanac/properties/r/resize/         */
 textarea, select {
   resize: vertical;
   overflow: auto;
