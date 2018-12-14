@@ -37,11 +37,11 @@ output$ui_fileUpload <- renderUI({
     make_uploadfile(accept = c(".rda", ".rds", ".rdata"))
   } else if (input$dataType == "feather") {
     make_uploadfile(accept = ".feather")
-  } else if (input$dataType == "url_rda") {
+  } else if (input$dataType == "url_rds") {
     with(tags, table(
       tr(
-        td(textInput("url_rda", NULL, "")),
-        td(actionButton("url_rda_load", "Load", icon = icon("upload")), style = "padding-top:5px;")
+        td(textInput("url_rds", NULL, "")),
+        td(actionButton("url_rds_load", "Load", icon = icon("upload")), style = "padding-top:5px;")
       )
     ))
   } else if (input$dataType == "url_csv") {
@@ -159,7 +159,7 @@ output$ui_Manage <- renderUI({
   data_types_in <- c(
     "rds | rda | rdata" = "rds", "csv" = "csv",
     "clipboard" = "clipboard", "examples" = "examples",
-    "rda (url)" = "url_rda", "csv (url)" = "url_csv",
+    "rds (url)" = "url_rds", "csv (url)" = "url_csv",
     "feather" = "feather", "from global workspace" = "from_global",
     "radiant state file" = "state"
   )
@@ -476,33 +476,27 @@ observeEvent(input$uploadfile, {
   )
 })
 
-observeEvent(input$url_rda_load, {
-  ## loading rda file from url, example https://radiant-rstats.github.io/docs/examples/houseprices.rda
-  if (input$url_rda == "") return()
-  url_rda <- gsub("^\\s+|\\s+$", "", input$url_rda)
-  objname <- "rda_url"
-  con <- try(curl::curl_download(url_rda, tempfile()), silent = TRUE)
+observeEvent(input$url_rds_load, {
+  ## loading rds file from url, example https://radiant-rstats.github.io/docs/examples/houseprices.rds
+  # input <- list(url_rds = "https://raw.githubusercontent.com/radiant-rstats/docs/gh-pages/examples/sales.rds")
+  # url_rds <- "https://www.dropbox.com/s/jetbhuconwn6mdb/price_sales.rds?raw=1"
+  # url_rds <- "https://radiant-rstats.github.io/docs/examples/houseprices.rds"
+  if (radiant.data::is_empty(input$url_rds)) return()
+  url_rds <- gsub("^\\s+|\\s+$", "", input$url_rds)
 
-  cmd <- NULL
-  if (inherits(con, "try-error")) {
+  objname <- basename(url_rds) %>% sub("\\.rds","",.) %>% sub("\\?.*$","",.)
+
+  if (!objname == radiant.data::fix_names(objname)) {
+    objname <- "rds_url"
+  }
+
+  robj <- try(readr::read_rds(url(url_rds)), silent = TRUE)
+  cmd <- ""
+  if (inherits(robj, "try-error")) {
     upload_error_handler(objname, "#### There was an error loading the r-data file from the provided url.")
   } else {
-    robjname <- try(load(con), silent = TRUE)
-    if (inherits(robjname, "try-error")) {
-      upload_error_handler(objname, "#### There was an error loading the r-data file from the provided url.")
-    } else {
-      if (length(robjname) > 1) {
-        if (sum(robjname %in% c("r_state", "r_data", "r_info")) > 1) {
-          upload_error_handler(objname, "#### To restore app state from a radiant state file please choose the 'radiant state file' option from the dropdown.")
-        } else {
-          upload_error_handler(objname, "#### More than one R object is contained in the specified data file.")
-        }
-      } else {
-        r_data[[objname]] <- as.data.frame(get(robjname), stringsAsFactors = FALSE)
-        cmd <- glue('{objname} <- load(url("{url_rda}")) %>% get()\nregister("{objname}")')
-
-      }
-    }
+    r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE)
+    cmd <- glue('{objname} <- readr::read_rds(url("{url_rds}")) %>% get()\nregister("{objname}")')
   }
 
   if (exists(objname, envir = r_data) && !bindingIsActive(as.symbol(objname), env = r_data)) {
@@ -522,55 +516,52 @@ observeEvent(input$url_rda_load, {
 
 observeEvent(input$url_csv_load, {
   ## loading csv file from url, example https://radiant-rstats.github.io/docs/examples/houseprices.csv
-  objname <- "csv_url"
-  if (input$url_csv == "") return()
+  if (radiant.data::is_empty(input$url_csv)) return()
   url_csv <- gsub("^\\s+|\\s+$", "", input$url_csv)
 
-  con <- tempfile()
-  ret <- try(curl::curl_download(url_csv, con), silent = TRUE)
+  objname <- basename(url_csv) %>% sub("\\.csv","",.) %>% sub("\\?.*$","",.)
+  if (!objname == radiant.data::fix_names(objname)) {
+    objname <- "csv_url"
+  }
 
-  cmd <- NULL
-  if (inherits(ret, "try-error")) {
+  dataset <- try(load_csv(
+    url(url_csv),
+    delim = input$man_sep,
+    col_names = input$man_header,
+    n_max = input$man_n_max,
+    dec = input$man_dec,
+    saf = input$man_str_as_factor
+  ), silent = TRUE)
+
+  cmd <- ""
+  if (inherits(dataset, "try-error") || is.character(dataset)) {
     upload_error_handler(objname, "#### There was an error loading the csv file from the provided url")
   } else {
-    dataset <- load_csv(
-      con,
-      delim = input$man_sep,
-      col_names = input$man_header,
-      n_max = input$man_n_max,
-      dec = input$man_dec,
-      saf = input$man_str_as_factor
-    )
-
-    if (is.character(dataset)) {
-      upload_error_handler(objname, dataset)
+    r_data[[objname]] <- dataset
+    ## generate command
+    delim <- input$man_sep
+    col_names <- input$man_header
+    dec <- input$man_dec
+    saf <- input$man_str_as_factor
+    n_max <- input$man_n_max
+    n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
+    if (delim == "," && dec == "." && col_names == FALSE) {
+      cmd <- glue('
+        {objname} <- readr::read_csv(
+          "{url_csv}",
+          n_max = {n_max}
+        )')
     } else {
-      r_data[[objname]] <- dataset
-      ## generate command
-      delim <- input$man_sep
-      col_names <- input$man_header
-      dec <- input$man_dec
-      saf <- input$man_str_as_factor
-      n_max <- input$man_n_max
-      n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
-      if (delim == "," && dec == "." && col_names == FALSE) {
-        cmd <- glue('
-          {objname} <- readr::read_csv(
-            "{url_csv}",
-            n_max = {n_max}
-          )')
-      } else {
-        cmd <- glue('
-          {objname} <- readr::read_delim(
-            "{url_csv}",
-            delim = "{delim}", col_names = {col_names}, n_max = {n_max},
-            locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{delim}")
-          )')
-      }
-      cmd <- paste0(cmd, " %>%\n  fix_names()")
-      if (saf) cmd <- paste0(cmd, " %>%\n  to_fct()")
-      cmd <- glue('{cmd}\nregister("{objname}")')
+      cmd <- glue('
+        {objname} <- readr::read_delim(
+          "{url_csv}",
+          delim = "{delim}", col_names = {col_names}, n_max = {n_max},
+          locale = readr::locale(decimal_mark = "{dec}", grouping_mark = "{delim}")
+        )')
     }
+    cmd <- paste0(cmd, " %>%\n  fix_names()")
+    if (saf) cmd <- paste0(cmd, " %>%\n  to_fct()")
+    cmd <- glue('{cmd}\nregister("{objname}")')
   }
 
   if (exists(objname, envir = r_data) && !bindingIsActive(as.symbol(objname), env = r_data)) {

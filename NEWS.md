@@ -1,5 +1,6 @@
 # radiant.data 0.9.7.13
 
+* Replace option to load an `.rda` from from a URL in _Data > Manage_ to load `.rds` files instead
 * Ensure variable and dataset names are valid for R (i.e., no spaces or symbols), "fixing" the input as needed
 * Fix to visualize now `ggplot::labs` no longer accepts a list as input
 * Add option to generate square and cubed terms for use in linear and logistic regression in `radiant.model`
