@@ -40,7 +40,7 @@ MRB <- function(x, env = parent.frame(), init = FALSE) {
   }
 }
 
-saveSession <- function(session = session) {
+saveSession <- function(session = session, timestamp = FALSE) {
   if (!exists("r_sessions")) return()
 
   LiveInputs <- toList(input)
@@ -60,7 +60,11 @@ saveSession <- function(session = session) {
   )
 
   ## saving session information to state file
-  fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, ".state.rda")
+  if (timestamp) {
+    fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, "-", gsub("( |:)", "-", Sys.time()), ".state.rda")
+  } else {
+    fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, ".state.rda")
+  }
   save(r_data, r_info, r_state, file = fn)
 }
 
@@ -835,3 +839,42 @@ state_multiple <- function(var, vals, init = character(0)) {
 #   out <- paste0(capture.output(...), collapse = "\n")
 #   cat("--\n", out, "\n--", sep = "\n", file = "~/r_cat.txt", append = TRUE)
 # }
+
+## autosave option
+if (length(getOption("radiant.autosave", default = NULL) > 0)) {
+  start_time <- Sys.time()
+  interval <- getOption("radiant.autosave")[1] * 60000
+  max_duration <- getOption("radiant.autosave")[2]
+  reactivePoll(
+    interval,
+    session,
+    checkFunc = function() {
+      curr_time <- Sys.time()
+      diff_time <- difftime(curr_time, start_time, units = "mins")
+      if (diff_time < max_duration) {
+        saveSession(session, timestamp = TRUE)
+        options(radiant.autosave = c(interval, max_duration - diff_time))
+        message("Radiant state was auto-saved at ", curr_time)
+      } else {
+        if (length(getOption("radiant.autosave", default = NULL) > 0)) {
+          showModal(
+            modalDialog(
+              title = "Radiant state autosave",
+              span("The autosave feature has been turned off. Time to save and submit your work by clicking
+                on the 'Save' icon in the navigation bar and then on 'Save radiant state file'. To clean the
+                state files that were auto-saved, run the following command from the R(studio) console:
+                unlink('~/.radiant.sessions/*.state.rda', force = TRUE)"),
+              footer = modalButton("OK"),
+              size = "s",
+              easyClose = TRUE
+            )
+          )
+          options(radiant.autosave = NULL)
+        }
+      }
+    },
+    valueFunc = function() {
+      return()
+    }
+  )
+}
