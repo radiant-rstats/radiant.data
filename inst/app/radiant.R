@@ -49,16 +49,19 @@ saveSession <- function(session = session) {
   ## removing the non-active bindings
   rem_non_active()
 
+  r_data <- env2list(r_data)
+  r_info <- toList(r_info)
+
   r_sessions[[r_ssuid]] <- list(
-    r_data = env2list(r_data),
-    r_info = toList(r_info),
+    r_data = r_data,
+    r_info = r_info,
     r_state = r_state,
     timestamp = Sys.time()
   )
 
-  ## saving session information to file
-  fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, ".rds")
-  saveRDS(r_sessions[[r_ssuid]], file = fn)
+  ## saving session information to state file
+  fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, ".state.rda")
+  save(r_data, r_info, r_state, file = fn)
 }
 
 observeEvent(input$refresh_radiant, {
@@ -66,7 +69,7 @@ observeEvent(input$refresh_radiant, {
     fn <- normalizePath("~/.radiant.sessions")
     file.remove(list.files(fn, full.names = TRUE))
   } else {
-    fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, ".rds")
+    fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, ".state.rda")
     if (file.exists(fn)) unlink(fn, force = TRUE)
   }
 

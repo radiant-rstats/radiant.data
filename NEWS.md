@@ -1,5 +1,6 @@
-# radiant.data 0.9.7.13
+# radiant.data 0.9.7.15
 
+* Emergency backups are now saved to `~/.radiant.session/r_some_id.state.rda`. The files should be automatically loaded when needed but can also be loaded as a regular radiant state file
 * Replace option to load an `.rda` from from a URL in _Data > Manage_ to load `.rds` files instead
 * Ensure variable and dataset names are valid for R (i.e., no spaces or symbols), "fixing" the input as needed
 * Fix to visualize now `ggplot::labs` no longer accepts a list as input
