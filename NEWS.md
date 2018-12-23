@@ -1,4 +1,4 @@
-# radiant.data 0.9.7.16
+# radiant.data 0.9.8.0
 
 * Added an "autosave" options. Use `options(radiant.autosave = c(10, 180)); radiant::radiant()` to auto-save the application state to the `~/.radiant.session` folder every 10 minutes for the next 180 minutes. This can be useful if radiant is being used during an exam, for example.
 * Emergency backups are now saved to `~/.radiant.session/r_some_id.state.rda`. The files should be automatically loaded when needed but can also be loaded as a regular radiant state file
