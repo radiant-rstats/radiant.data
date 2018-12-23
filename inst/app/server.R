@@ -6,7 +6,6 @@ shinyServer(function(input, output, session) {
   source("init.R", encoding = enc, local = TRUE)
   source("radiant.R", encoding = enc, local = TRUE)
 
-
   ## packages to use for example data
   options(radiant.example.data = "radiant.data")
 
