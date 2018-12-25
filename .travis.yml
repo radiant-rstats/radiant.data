@@ -8,6 +8,9 @@ warnings_are_errors: true
 sudo: required
 dist: trusty
 
+r_github_packages:
+  - trestletech/shinyAce
+
 r_packages:
   - devtools
 
