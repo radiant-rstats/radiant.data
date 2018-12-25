@@ -107,16 +107,19 @@ output$ui_tr_reorg_levs <- renderUI({
 output$ui_tr_log <- renderUI({
   tagList(
     HTML("<label>Transform command log:</label><br>"),
-    tags$textarea(
-      state_init("tr_log", ""),
-      id = "tr_log",
-      type = "text",
-      rows = 5,
-      autocomplete = "off",
-      autocorrect = "off",
-      autocapitalize = "off",
-      spellcheck = "false",
-      class = "form-control"
+    shinyAce::aceEditor(
+      "tr_log",
+      mode = "r",
+      theme = getOption("radiant.ace_theme", default = "tomorrow"),
+      wordWrap = TRUE,
+      value = state_init("tr_log", "") %>% fix_smart(),
+      vimKeyBinding = getOption("radiant.ace_vim.keys", default = FALSE),
+      tabSize = getOption("radiant.ace_tabSize", 2),
+      useSoftTabs = getOption("radiant.ace_useSoftTabs", TRUE),
+      showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
+      autoScrollEditorIntoView = TRUE,
+      minLines = 5,
+      maxLines = 15
     )
   )
 })
@@ -1247,7 +1250,8 @@ observeEvent(input$tr_store, {
   }
 
   ## update the command log
-  updateTextAreaInput(session, "tr_log", value = paste0(input$tr_log, paste0(cmd, ncmd), "\n"))
+  # updateTextAreaInput(session, "tr_log", value = paste0(input$tr_log, paste0(cmd, ncmd), "\n"))
+  shinyAce::updateAceEditor(session, "tr_log", value = paste0(input$tr_log, paste0(cmd, ncmd), "\n"))
 
   ## reset input values once the changes have been applied
   updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")
@@ -1277,7 +1281,8 @@ observeEvent(input$transform_report, {
       sub("^\n", "", .) %>%
       sub("\n$", "", .)
 
-    updateTextInput(session, "tr_log", value = "")
+    # updateTextInput(session, "tr_log", value = "")
+    shinyAce::updateAceEditor(session, "tr_log", value = "")
     update_report(cmd = cmd, outputs = NULL, figs = FALSE)
   }
 })

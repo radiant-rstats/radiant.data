@@ -1,3 +1,7 @@
+# radiant.data 0.9.8.1
+
+* Use an expandable `shinyAce` input for the R-code log in _Data > Transform_
+
 # radiant.data 0.9.8.0
 
 * Added an "autosave" options. Use `options(radiant.autosave = c(10, 180)); radiant::radiant()` to auto-save the application state to the `~/.radiant.session` folder every 10 minutes for the next 180 minutes. This can be useful if radiant is being used during an exam, for example.
