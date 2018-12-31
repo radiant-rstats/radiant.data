@@ -27,7 +27,7 @@
 #' @param base_size Base font size to use (default = 11)
 #' @param base_family Base font family to use (e.g., "Times" or "Helvetica")
 #' @param labs Labels to use for plots
-#' @param xlim Set limit for y-axis (e.g., c(0, 1))
+#' @param xlim Set limit for x-axis (e.g., c(0, 1))
 #' @param ylim Set limit for y-axis (e.g., c(0, 1))
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
@@ -561,14 +561,16 @@ visualize <- function(
       plot_list[[i]] <- plot_list[[i]] + aes_string(fill = fill)
   }
 
-  if (!is_empty(ylim, "none") && is.numeric(ylim) && length(ylim) == 2) {
+  if ((length(xlim) == 2 && is.numeric(xlim)) &&
+      (length(ylim) == 2 && is.numeric(ylim))) {
     for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + coord_cartesian(ylim = ylim)
-  }
-
-  if (!is_empty(xlim, "none") && is.numeric(xlim) && length(xlim) == 2) {
+      plot_list[[i]] <- plot_list[[i]] + coord_cartesian(xlim = xlim, ylim = ylim)
+  } else if (length(xlim) == 2 && is.numeric(xlim)) {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] + coord_cartesian(xlim = xlim)
+  } else if (length(ylim) == 2 && is.numeric(ylim)) {
+    for (i in 1:length(plot_list))
+      plot_list[[i]] <- plot_list[[i]] + coord_cartesian(ylim = ylim)
   }
 
   if ("jitter" %in% check) {
@@ -580,22 +582,14 @@ visualize <- function(
   if ("line" %in% check) {
     for (i in 1:length(plot_list)) {
       plot_list[[i]] <- plot_list[[i]] +
-        sshhr(
-          geom_smooth(
-            method = "lm", alpha = 0.2, size = .75, linetype = "dashed"
-        )
-      )
+        sshhr(geom_smooth(method = "lm", alpha = 0.2, size = .75, linetype = "dashed"))
     }
   }
 
   if ("loess" %in% check) {
     for (i in 1:length(plot_list)) {
       plot_list[[i]] <- plot_list[[i]] +
-        sshhr(
-          geom_smooth(
-            span = smooth, method = "loess", alpha = 0.2, size = .75, linetype = "dotdash"
-          )
-        )
+        sshhr(geom_smooth(span = smooth, method = "loess", alpha = 0.2, size = .75, linetype = "dotdash"))
     }
   }
 

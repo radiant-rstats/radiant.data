@@ -64,7 +64,7 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 
 \item{labs}{Labels to use for plots}
 
-\item{xlim}{Set limit for y-axis (e.g., c(0, 1))}
+\item{xlim}{Set limit for x-axis (e.g., c(0, 1))}
 
 \item{ylim}{Set limit for y-axis (e.g., c(0, 1))}
 
