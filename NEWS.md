@@ -1,5 +1,6 @@
-# radiant.data 0.9.8.2
+# radiant.data 0.9.8.3
 
+* New radiant icon
 * Fix for setting where both `xlim` and `ylim` are set in `visualize` function 
 * Use an expandable `shinyAce` input for the R-code log in _Data > Transform_
 
