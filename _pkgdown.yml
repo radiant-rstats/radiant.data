@@ -69,6 +69,7 @@ reference:
   desc: Function used with Data > Visualize
   contents:
     - visualize
+    - qscatter
     - ggplotly
     - subplot
     - print.gtable

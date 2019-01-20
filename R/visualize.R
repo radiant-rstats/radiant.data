@@ -630,3 +630,35 @@ visualize <- function(
     {if (shiny) . else print(.)}
 }
 
+#' Create a qscatter plot similar to Stata
+#'
+#' @param dataset Data to plot (data.frame or tibble)
+#' @param xvar Character indicating the variable to display along the X-axis of the plot
+#' @param yvar Character indicating the variable to display along the Y-axis of the plot
+#' @param lev Level in yvar to use if yvar is of type character of factor. If lev is empty then the first level is used
+#' @param fun Summary measure to apply to both the x and y variable
+#' @param bins Number of bins to use
+#'
+#' @examples
+#' qscatter(diamonds, "price", "carat")
+#' qscatter(titanic, "age", "survived")
+#'
+#' @export
+qscatter <- function(dataset, xvar, yvar, lev = "", fun = "mean", bins = 20) {
+  if (is.character(dataset[[yvar]])) {
+    dataset <- mutate_at(dataset, .vars = yvar, .funs = as.factor)
+  }
+  if (is.factor(dataset[[yvar]])) {
+    if (is_empty(lev)) lev <- levels(pull(dataset, !! yvar))[1]
+    dataset <- mutate_at(dataset, .vars = yvar, .funs = function(y) as.integer(y == lev))
+    lev <- paste0(" {", lev, "}")
+  } else {
+    lev <- ""
+  }
+  mutate_at(dataset, .vars = xvar, .funs = funs(bins = radiant.data::xtile(., bins))) %>%
+    group_by(bins) %>%
+    summarize_at(.vars = c(xvar, yvar), .funs = fun) %>%
+    ggplot(aes_string(x = xvar, y = yvar)) +
+    geom_point() +
+    labs(y = paste0(yvar, " (", fun, lev, ")"))
+}

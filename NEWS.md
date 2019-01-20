@@ -1,5 +1,6 @@
-# radiant.data 0.9.8.3
+# radiant.data 0.9.8.4
 
+* Create a `qscatter` plot similar to the function of the same name in Stata
 * New radiant icon
 * Fix for setting where both `xlim` and `ylim` are set in `visualize` function 
 * Use an expandable `shinyAce` input for the R-code log in _Data > Transform_
