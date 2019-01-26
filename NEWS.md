@@ -1,5 +1,7 @@
-# radiant.data 0.9.8.4
+# radiant.data 0.9.8.5
 
+* Add empty line before and after code chunks when saving reports to Rmarkdown
+* Use `rio` to load `sav`, `dta`, or `sas7bdat` files through the `read files` button in _Report > Rmd_ and _Report > R_.
 * Create a `qscatter` plot similar to the function of the same name in Stata
 * New radiant icon
 * Fix for setting where both `xlim` and `ylim` are set in `visualize` function 

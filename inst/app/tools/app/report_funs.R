@@ -116,6 +116,8 @@ setup_report <- function(
 ) {
 
   report <- fix_smart(report) %>%
+    gsub("^```\\s*\\{", "\n\n```{", .) %>%
+    gsub("^```\\s*\n", "```\n\n", .) %>%
     sub("^---\n(.*?)\n---", "", .) %>%
     sub("<!--(.*?)-->", "", .)
 
