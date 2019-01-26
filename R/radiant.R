@@ -1479,6 +1479,8 @@ read_files <- function(
     ## waiting for https://github.com/wesm/feather/pull/326
     # cmd <- paste0(to, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", pp$objname, "\", desc = feather::feather_metadata(\"", pp$rpath, "\")$description)")
     cmd <- glue('{to} <- feather::read_feather({pp$rpath}, columns = c())\nregister("{pp$objname}")')
+  } else if (pp$fext %in% c("dta", "sav", "sas7bdat")) {
+    cmd <- glue('{to} <- rio::import({pp$rpath})\nregister("{pp$objname}")')
   } else if (pp$fext == "yaml") {
     cmd <- glue('{to} <- yaml::yaml.load_file({pp$rpath})\nregister("{pp$objname}")')
   } else if (grepl("sqlite", pp$fext)) {
