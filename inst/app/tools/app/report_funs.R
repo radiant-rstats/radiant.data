@@ -609,7 +609,8 @@ report_save_content <- function(file, type = "rmd") {
           report <- paste0("\n```{r echo = TRUE}\n", report, "\n```\n")
         }
 
-        init <- setup_report(fix_smart(report), save_type = save_type, lib = lib)
+        init <- setup_report(report, save_type = save_type, lib = lib) %>%
+          fix_smart()
 
         ## on linux ensure you have you have pandoc > 1.14 installed
         ## you may need to use http://pandoc.org/installing.html#installing-from-source
@@ -631,13 +632,13 @@ report_save_content <- function(file, type = "rmd") {
               envir = r_data, quiet = TRUE, encoding = "UTF-8",
               output_options = list(pandoc_args = "--quiet")
             )
-            ## file.rename may fail to overwrite even if confirmed by the users
-            # file.rename(out, file)
+            ## no using file.rename as it may fail to overwrite even if confirmed by the users
             file.copy(out, file, overwrite = TRUE)
             file.remove(out, tmp_fn)
           } else {
             ## still needed because rmarkdown requires pandoc
             setup_report(report, add_yml = FALSE, type = save_type, lib = lib) %>%
+              fix_smart() %>%
               knit_it_save() %>%
               cat(file = file, sep = "\n")
           }

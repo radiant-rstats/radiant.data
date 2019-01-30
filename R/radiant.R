@@ -1235,7 +1235,16 @@ fix_smart <- function(text, all = FALSE) {
     gsub("[\x80-\xFF]", "", text)
   } else {
     ## based on https://stackoverflow.com/a/1262210/1974918
-    gsub("\xC2\xAB", '"', text) %>%
+    ## possibly expand with https://gist.github.com/tushortz/9fbde5d023c0a0204333267840b592f9
+    gsub("\xC2\x82", "'", text) %>%
+      gsub("\xC2\x84", '"', .) %>%
+      gsub("\xC2\x8B", "'", .) %>%
+      gsub("\xC2\x91", "'", .) %>%
+      gsub("\xC2\x92", "'", .) %>%
+      gsub("\xC2\x93", '"', .) %>%
+      gsub("\xC2\x94", '"', .) %>%
+      gsub("\xC2\x9B", "'", .) %>%
+      gsub("\xC2\xAB", '"', .) %>%
       gsub("\xC2\xBB", '"', .) %>%
       gsub("\xE2\x80\x98", "'", .) %>%
       gsub("\xE2\x80\x99", "'", .) %>%
@@ -1247,8 +1256,12 @@ fix_smart <- function(text, all = FALSE) {
       gsub("\xE2\x80\x9F", '"', .) %>%
       gsub("\xE2\x80\xB9", "'", .) %>%
       gsub("\xE2\x80\xBA", "'", .) %>%
+      gsub("\xE2\x80\x90", "-", .) %>%
+      gsub("\xE2\x80\x91", "-", .) %>%
+      gsub("\xE2\x80\x92", "-", .) %>%
       gsub("\xE2\x80\x93", "-", .) %>%
-      gsub("\r", "\n", .) %>%
+      gsub("\xE2\x80\x94", "-", .) %>%
+      gsub("\r\n", "\n", .) %>%
       gsub("\f", "\n", .)
   }
 }
