@@ -1267,7 +1267,7 @@ fix_smart <- function(text, all = FALSE) {
       gsub("“", '"', .) %>%
       gsub("”", '"', .) %>%
       gsub("•", "*", .) %>%
-      gsub("...", "...", .) %>%
+      gsub("…", "...", .) %>%
       gsub("\r\n", "\n", .) %>%
       gsub("\f", "\n", .)
   }
