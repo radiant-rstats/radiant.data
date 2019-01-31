@@ -1243,11 +1243,19 @@ fix_smart <- function(text, all = FALSE) {
       gsub("\xC2\x92", "'", .) %>%
       gsub("\xC2\x93", '"', .) %>%
       gsub("\xC2\x94", '"', .) %>%
-      gsub("\xC2\x9B", "'", .) %>%
+      gsub("\xC2\x98", "'", .) %>%
+      gsub("\xC2\x99", "'", .) %>%
+      gsub("\xC2\x9A", "'", .) %>%
+      gsub("\xC2\x9B", '"', .) %>%
+      gsub("\xC2\x9C", '"', .) %>%
+      gsub("\xC2\x9D", '"', .) %>%
+      gsub("\xC2\x9E", '"', .) %>%
+      gsub("\xC2\x9F", '"', .) %>%
       gsub("\xC2\xAB", '"', .) %>%
+      gsub("\xC2\xA2", "*", .) %>%
+      gsub("\xC2\xA6", "...", .) %>%
       gsub("\xC2\xBB", '"', .) %>%
-      gsub("\xE2\x80\x98", "'", .) %>%
-      gsub("\xE2\x80\x99", "'", .) %>%
+
       gsub("\xE2\x80\x9A", "'", .) %>%
       gsub("\xE2\x80\x9B", "'", .) %>%
       gsub("\xE2\x80\x9C", '"', .) %>%
@@ -1261,17 +1269,24 @@ fix_smart <- function(text, all = FALSE) {
       gsub("\xE2\x80\x92", "-", .) %>%
       gsub("\xE2\x80\x93", "-", .) %>%
       gsub("\xE2\x80\x94", "-", .) %>%
-      gsub("–", "-", .) %>%
-      gsub("’", "'", .) %>%
-      gsub("‘", "'", .) %>%
-      gsub("“", '"', .) %>%
-      gsub("”", '"', .) %>%
-      gsub("•", "*", .) %>%
-      gsub("…", "...", .) %>%
+      gsub("\xE2\x80\x98", "'", .) %>%
+      gsub("\xE2\x80\x99", "'", .) %>%
+      # gsub("–", "-", .) %>%
+      # gsub("’", "'", .) %>%
+      # gsub("‘", "'", .) %>%
+      # gsub("“", '"', .) %>%
+      # gsub("”", '"', .) %>%
+      # gsub("•", "*", .) %>%
+      gsub("\xE2\x80\xA2", "*", .) %>%
+      # gsub("…", "...", .) %>%
+      gsub("\xE2\x80\xA6", "...", .) %>%
       gsub("\r\n", "\n", .) %>%
       gsub("\f", "\n", .)
   }
 }
+
+# fix_smart("A big dot •")
+# fix_smart("A big dot …")
 
 #' Register a data.frame or list in Radiant
 #'
