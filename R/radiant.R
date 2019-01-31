@@ -1261,6 +1261,11 @@ fix_smart <- function(text, all = FALSE) {
       gsub("\xE2\x80\x92", "-", .) %>%
       gsub("\xE2\x80\x93", "-", .) %>%
       gsub("\xE2\x80\x94", "-", .) %>%
+      gsub("–", "-", .) %>%
+      gsub("’", "'", .) %>%
+      gsub("‘", "'", .) %>%
+      gsub("“", '"', .) %>%
+      gsub("”", '"', .) %>%
       gsub("\r\n", "\n", .) %>%
       gsub("\f", "\n", .)
   }
