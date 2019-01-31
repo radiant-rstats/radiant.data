@@ -1237,16 +1237,11 @@ fix_smart <- function(text, all = FALSE) {
     ## based on https://stackoverflow.com/a/1262210/1974918
     ## possibly expand with https://gist.github.com/tushortz/9fbde5d023c0a0204333267840b592f9
     stringi::stri_trans_general(text, "ascii") %>%
-      gsub("\x95\xE2\x80\xA2", "*", .) %>%
-      gsub("\xE2\x80\xA2", "*", .) %>%
+      gsub("[\x95\xE2\x80\xA2]", "*", .) %>%
       gsub("\r\n", "\n", .) %>%
       gsub("\f", "\n", .)
   }
 }
-
- # gsub("\x95\xE2\x80\xA2", "*", "A big dot •")
- # gsub("\xE2\x80\xA2", "*", "A big dot •")
- # stringi::stri_trans_general(c("•", "…", "–", "’", "‘", "”", "“"), "ascii")
 
 #' Register a data.frame or list in Radiant
 #'
