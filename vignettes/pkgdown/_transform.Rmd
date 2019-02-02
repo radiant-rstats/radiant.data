@@ -9,7 +9,7 @@ All transformations applied in the _Data > Transform_ tab can be logged. If, for
 diamonds <- mutate_ext(
   diamonds, 
   .vars = vars(price, carat), 
-  .funs = funs(log), 
+  .funs = log, 
   .ext = "_ln"
 )
 ```

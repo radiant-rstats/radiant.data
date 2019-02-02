@@ -150,12 +150,12 @@ visualize <- function(
   isChar <- dc == "character"
   if (sum(isChar) > 0) {
     if (type == "density") {
-      dataset[, isChar] <- select(dataset, which(isChar)) %>% mutate_all(funs(as_numeric))
+      dataset[, isChar] <- select(dataset, which(isChar)) %>% mutate_all(as_numeric)
       if ("character" %in% get_class(select(dataset, which(isChar)))) {
         return("Character variable(s) were not converted to numeric for plotting.\nTo use these variables in a plot convert them to numeric\nvariables (or factors) in the Data > Transform tab")
       }
     } else {
-      dataset[, isChar] <- select(dataset, which(isChar)) %>% mutate_all(funs(as_factor))
+      dataset[, isChar] <- select(dataset, which(isChar)) %>% mutate_all(as_factor)
       nrlev <- sapply(dataset, function(x) if (is.factor(x)) length(levels(x)) else 0)
       if (max(nrlev) > 500) {
         return("Character variable(s) were not converted to factors for plotting.\nTo use these variable in a plot convert them to factors\n(or numeric variables) in the Data > Transform tab")
@@ -181,7 +181,7 @@ visualize <- function(
     if (sum(isFctY)) {
       levs <- sapply(dataset[, isFctY, drop = FALSE], function(x) levels(x)[1])
       dataset[, isFctY] <- select(dataset, which(isFctY)) %>%
-        mutate_all(funs(as.integer(. == levels(.)[1])))
+        mutate_all(~ as.integer(. == levels(.)[1]))
       dc[isFctY] <- "integer"
     }
   }
@@ -202,7 +202,7 @@ visualize <- function(
       return("'Log X' is only meaningful for X-variables of type integer or numeric")
     }
     to_log <- (dc[xvar] %in% c("integer", "numeric")) %>% xvar[.]
-    dataset[, to_log] <- select_at(dataset, .vars = to_log) %>% mutate_all(funs(log_trans))
+    dataset <- mutate_at(dataset, .vars = to_log, .funs = log_trans)
   }
 
   if ("log_y" %in% axes) {
@@ -210,7 +210,7 @@ visualize <- function(
       return("'Log Y' is only meaningful for Y-variables of type integer or numeric")
     }
     to_log <- (dc[yvar] %in% c("integer", "numeric")) %>% yvar[.]
-    dataset[, to_log] <- select_at(dataset, .vars = to_log) %>% mutate_all(funs(log_trans))
+    dataset <- mutate_at(dataset, .vars = to_log, .funs = log_trans)
   }
 
   ## combining Y-variables if needed
@@ -476,7 +476,7 @@ visualize <- function(
           if ("flip" %in% axes) {
             tmp <- arrange_at(ungroup(tmp), .vars = j)
           } else {
-            tmp <- arrange_at(ungroup(tmp), .vars = j, .funs = funs(desc(.)))
+            tmp <- arrange_at(ungroup(tmp), .vars = j, .funs = desc)
           }
           tmp[[i]] %<>% factor(., levels = unique(.))
         }
@@ -655,7 +655,7 @@ qscatter <- function(dataset, xvar, yvar, lev = "", fun = "mean", bins = 20) {
   } else {
     lev <- ""
   }
-  mutate_at(dataset, .vars = xvar, .funs = funs(bins = radiant.data::xtile(., bins))) %>%
+  mutate_at(dataset, .vars = xvar, .funs = list(bins = ~ radiant.data::xtile(., bins))) %>%
     group_by(bins) %>%
     summarize_at(.vars = c(xvar, yvar), .funs = fun) %>%
     ggplot(aes_string(x = xvar, y = yvar)) +

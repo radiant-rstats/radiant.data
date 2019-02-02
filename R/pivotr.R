@@ -49,7 +49,7 @@ pivotr <- function(
   }
 
   ## convert categorical variables to factors and deal with empty/missing values
-  dataset <- mutate_at(dataset, .vars = cvars, .funs = funs(empty_level(.)))
+  dataset <- mutate_at(dataset, .vars = cvars, .funs = empty_level)
 
   sel <- function(x, nvar, cvar = c()) {
     if (nvar == "n_obs") x else select_at(x, .vars = c(nvar, cvar))
@@ -62,7 +62,7 @@ pivotr <- function(
         count(select_at(x, .vars = cvars)) %>% rename("n_obs" = "n")
       }
     } else {
-      dataset <- mutate_at(x, .vars = nvar, .funs = funs(as.numeric)) %>%
+      dataset <- mutate_at(x, .vars = nvar, .funs = as.numeric) %>%
         summarise_at(.vars = nvar, .funs = fun, na.rm = TRUE)
       colnames(dataset)[ncol(dataset)] <- nvar
       dataset
@@ -81,8 +81,12 @@ pivotr <- function(
   if (length(cvars) == 1) {
     tab <-
       bind_rows(
-        mutate_at(ungroup(tab), .vars = cvars, .funs = funs(as.character)),
-        bind_cols(data.frame("Total", stringsAsFactors = FALSE) %>% setNames(cvars), total %>% set_colnames(nvar))
+        mutate_at(ungroup(tab), .vars = cvars, .funs = as.character),
+        bind_cols(
+          data.frame("Total", stringsAsFactors = FALSE) %>% 
+          setNames(cvars), total %>% 
+          set_colnames(nvar)
+        )
       )
   } else {
     col_total <-
@@ -90,7 +94,7 @@ pivotr <- function(
       sel(nvar, cvars[1]) %>%
       sfun(nvar, cvars[1], fun) %>%
       ungroup() %>%
-      mutate_at(.vars = cvars[1], .funs = funs(as.character))
+      mutate_at(.vars = cvars[1], .funs = as.character)
 
     row_total <-
       group_by_at(dataset, .vars = cvars[-1]) %>%
@@ -103,7 +107,7 @@ pivotr <- function(
     ## creating cross tab
     tab <- spread(tab, !! cvars[1], !! nvar, fill = fill) %>%
       ungroup() %>%
-      mutate_at(.vars = cvars[-1], .funs = funs(as.character))
+      mutate_at(.vars = cvars[-1], .funs = as.character)
 
     tab <- bind_rows(
       tab,
@@ -239,7 +243,7 @@ summary.pivotr <- function(
       cst <- object$tab_freq %>%
         filter(.[[1]] != "Total") %>%
         select(-which(names(.) %in% c(object$cvars, "Total"))) %>%
-        mutate_all(funs(ifelse(is.na(.), 0, .))) %>%
+        mutate_all(~ ifelse(is.na(.), 0, .)) %>%
         {sshhr(chisq.test(., correct = FALSE))}
 
       res <- tidy(cst)

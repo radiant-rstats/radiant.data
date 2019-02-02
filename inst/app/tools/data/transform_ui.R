@@ -427,17 +427,17 @@ fix_ext <- function(ext) {
   if (!store || !is.character(dataset)) {
     fun <- get(fun)
     if (is_empty(.ext)) {
-      mutate_at(dataset, .vars = vars, .funs = funs(fun))
+      mutate_at(dataset, .vars = vars, .funs = fun)
     } else {
-      mutate_at(dataset, .vars = vars, .funs = funs(fun)) %>%
+      mutate_at(dataset, .vars = vars, .funs = fun) %>%
         set_colnames(paste0(vars, .ext))
     }
   } else {
     if (store_dat == "") store_dat <- dataset
     if (is_empty(.ext)) {
-      paste0("## change variable type\n", store_dat, " <- mutate_at(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = funs(", fun, "))\n")
+      paste0("## change variable type\n", store_dat, " <- mutate_at(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ", fun, ")\n")
     } else {
-      paste0("## change variable type\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = funs(", fun, "), .ext = \"", .ext, "\")\n")
+      paste0("## change variable type\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ", fun, ", .ext = \"", .ext, "\")\n")
     }
   }
 }
@@ -452,9 +452,9 @@ fix_ext <- function(ext) {
   if (!store && !is.character(dataset)) {
     fun <- get(fun)
     if (is_empty(.ext)) {
-      result <- try(mutate_at(dataset, .vars = vars, .funs = funs(fun)), silent = TRUE)
+      result <- try(mutate_at(dataset, .vars = vars, .funs = fun), silent = TRUE)
     } else {
-      result <- try(mutate_at(dataset, .vars = vars, .funs = funs(fun)) %>% set_colnames(paste0(vars, .ext)), silent = TRUE)
+      result <- try(mutate_at(dataset, .vars = vars, .funs = fun) %>% set_colnames(paste0(vars, .ext)), silent = TRUE)
     }
     if (inherits(result, "try-error")) {
       paste0("\nThe transformation type you selected generated an error.\n\nThe error message was:\n\n", attr(result, "condition")$message, "\n\nPlease change the selection of variables or the transformation type and try again.")
@@ -464,9 +464,9 @@ fix_ext <- function(ext) {
   } else {
     if (store_dat == "") store_dat <- dataset
     if (is_empty(.ext)) {
-      paste0("## transform variable\n", store_dat, " <- mutate_at(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = funs(", fun, "))\n")
+      paste0("## transform variable\n", store_dat, " <- mutate_at(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ", fun, ")\n")
     } else {
-      paste0("## transform variable\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = funs(", fun, "), .ext = \"", .ext, "\")\n")
+      paste0("## transform variable\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ", fun, ", .ext = \"", .ext, "\")\n")
     }
   }
 }
@@ -615,7 +615,7 @@ fix_ext <- function(ext) {
       set_colnames(paste0(vars, .ext))
   } else {
     if (store_dat == "") store_dat <- dataset
-    paste0("## normalize variables\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = funs(normalize(.,", nzvar, ")), .ext = \"", .ext, "\")\n")
+    paste0("## normalize variables\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ~ normalize(., ", nzvar, "), .ext = \"", .ext, "\")\n")
   }
 }
 
@@ -714,16 +714,15 @@ fix_ext <- function(ext) {
 
   if (!store && !is.character(dataset)) {
     if (is.na(bins) || !is.integer(bins)) return("Please specify the (integer) number of bins to use")
-    xt <- function(x, bins, rev) radiant.data::xtile(x, bins, rev = rev)
     select_at(dataset, .vars = vars) %>%
-      mutate_all(funs(xt(., bins, rev = rev))) %>%
+      mutate_all(~ xtile(., bins, rev = rev)) %>%
       set_colnames(paste0(vars, .ext))
   } else {
     if (store_dat == "") store_dat <- dataset
     if (rev) {
-      paste0("## bin variables\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = funs(xtile(., ", bins, ", rev = TRUE)), .ext = \"", .ext, "\")\n")
+      paste0("## bin variables\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ~ xtile(., ", bins, ", rev = TRUE), .ext = \"", .ext, "\")\n")
     } else {
-      paste0("## bin variables\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = funs(xtile(., ", bins, ")), .ext = \"", .ext, "\")\n")
+      paste0("## bin variables\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ~ xtile(., ", bins, "), .ext = \"", .ext, "\")\n")
     }
   }
 }

@@ -9,7 +9,7 @@ mutate_ext(.tbl, .funs, ..., .ext = "", .vars = c())
 \arguments{
 \item{.tbl}{Data frame to add transformed variables to}
 
-\item{.funs}{Function(s) to apply (e.g., funs(log))}
+\item{.funs}{Function(s) to apply (e.g., log)}
 
 \item{...}{Variables to transform}
 
@@ -24,9 +24,9 @@ Add transformed variables to a data frame with the option to include a custom va
 Wrapper for dplyr::mutate_at that allows custom variable name extensions
 }
 \examples{
-mutate_ext(mtcars, funs(log), mpg, cyl, .ext = "_ln")
-mutate_ext(mtcars, funs(log), .ext = "_ln")
-mutate_ext(mtcars, funs(log))
-mutate_ext(mtcars, funs(log), .ext = "_ln", .vars = vars(mpg, cyl))
+mutate_ext(mtcars, .funs = log, mpg, cyl, .ext = "_ln")
+mutate_ext(mtcars, .funs = log, .ext = "_ln")
+mutate_ext(mtcars, .funs = log)
+mutate_ext(mtcars, .funs = log, .ext = "_ln", .vars = vars(mpg, cyl))
 
 }

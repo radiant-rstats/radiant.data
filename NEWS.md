@@ -1,5 +1,10 @@
-# radiant.data 0.9.8.5
+# radiant.data 0.9.8.7
 
+* Various fixes to address breaking changes in dplyr 0.8.0
+
+# radiant.data 0.9.8.6
+
+* Use `stringi::stri_trans_general` to replace special symbols in Rmarkdown that may cause problems
 * Add empty line before and after code chunks when saving reports to Rmarkdown
 * Use `rio` to load `sav`, `dta`, or `sas7bdat` files through the `read files` button in _Report > Rmd_ and _Report > R_.
 * Create a `qscatter` plot similar to the function of the same name in Stata

@@ -86,7 +86,7 @@ output$dataviewer <- DT::renderDataTable({
 
   isBigFct <- sapply(dat, function(x) is.factor(x) && length(levels(x)) > 1000)
   if (sum(isBigFct) > 0) {
-    dat[, isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(funs(as.character))
+    dat[, isBigFct] <- select(dat, which(isBigFct)) %>% mutate_all(as.character)
   }
 
   ## for rounding

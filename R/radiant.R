@@ -262,13 +262,13 @@ to_fct <- function(dataset, safx = 30, nuniq = 100, n = 100) {
     (nobs <= n && nd < nobs) || (nd <= nuniq && (nd / nobs < (1 / safx)))
   }
   toFct <- select(dataset, which(isChar)) %>%
-    summarise_all(funs(fab)) %>%
+    summarise_all(fab) %>%
     select(which(. == TRUE)) %>%
     names()
   if (length(toFct) == 0) {
     dataset
   } else {
-    mutate_at(dataset, .vars = toFct, .funs = funs(as.factor))
+    mutate_at(dataset, .vars = toFct, .funs = as.factor)
   }
 }
 
@@ -640,7 +640,7 @@ format_df <- function(tbl, dec = NULL, perc = FALSE, mark = "", na.rm = FALSE, .
       x
     }
   }
-  mutate_all(tbl, .funs = funs(frm))
+  mutate_all(tbl, .funs = frm)
 }
 
 #' Format a number with a specified number of decimal places, thousand sep, and a symbol
@@ -692,7 +692,7 @@ format_nr <- function(
 #'
 #' @export
 round_df <- function(tbl, dec = 3) {
-  mutate_if(tbl, is_double, .funs = funs(round(., dec)))
+  mutate_if(tbl, is_double, .funs = ~ round(., dec))
 }
 
 #' Find Dropbox folder
@@ -1227,6 +1227,8 @@ describe <- function(dataset) {
 #' @param text Text to be parsed
 #' @param all Should all non-ascii characters be removed? Default is FALSE
 #'
+#' @importFrom stringi stri_trans_general
+#'
 #' @export
 fix_smart <- function(text, all = FALSE) {
 
@@ -1235,7 +1237,7 @@ fix_smart <- function(text, all = FALSE) {
     gsub("[\x80-\xFF]", "", text)
   } else {
     ## based on https://stackoverflow.com/a/1262210/1974918
-    ## possibly expand with https://gist.github.com/tushortz/9fbde5d023c0a0204333267840b592f9
+    ## based on https://stackoverflow.com/a/54467895/1974918
     stringi::stri_trans_general(text, "ascii") %>%
       gsub("[\x95\xE2\x80\xA2]", "*", .) %>%
       gsub("\r\n", "\n", .) %>%

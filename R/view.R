@@ -152,7 +152,7 @@ filter_data <- function(dataset, filt = "", drop = TRUE) {
 search_data <- function(dataset, pattern, ignore.case = TRUE, fixed = FALSE) {
   mutate_all(
     dataset,
-    funs(grepl(pattern, as.character(.), ignore.case = ignore.case, fixed = fixed))
+    ~ grepl(pattern, as.character(.), ignore.case = ignore.case, fixed = fixed)
   ) %>%
     transmute(sel = rowSums(.) > 0) %>%
     pull("sel")

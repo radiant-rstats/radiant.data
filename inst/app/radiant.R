@@ -158,8 +158,8 @@ saveStateOnRefresh <- function(session = session) {
 groupable_vars <- reactive({
   .get_data() %>%
     summarise_all(
-      funs(
-        is.factor(.) || is.logical(.) || lubridate::is.Date(.) ||
+      list(
+        ~ is.factor(.) || is.logical(.) || lubridate::is.Date(.) ||
         is.integer(.) || is.character(.) ||
         ((length(unique(.)) / n()) < .30)
       )
@@ -171,8 +171,8 @@ groupable_vars <- reactive({
 groupable_vars_nonum <- reactive({
   .get_data() %>%
     summarise_all(
-      funs(
-        is.factor(.) || is.logical(.) ||
+      list(
+        ~ is.factor(.) || is.logical(.) ||
         lubridate::is.Date(.) || is.integer(.) ||
         is.character(.)
       )
@@ -191,7 +191,7 @@ two_level_vars <- reactive({
     }
   }
   .get_data() %>%
-    summarise_all(funs(two_levs)) %>%
+    summarise_all(two_levs) %>%
     {. == 2} %>%
     which(.) %>%
     varnames()[.]
@@ -200,7 +200,7 @@ two_level_vars <- reactive({
 ## used in visualize - don't plot Y-variables that don't vary
 varying_vars <- reactive({
   .get_data() %>%
-    summarise_all(funs(does_vary(.))) %>%
+    summarise_all(does_vary) %>%
     as.logical() %>%
     which() %>%
     varnames()[.]
@@ -270,7 +270,7 @@ show_data_snippet <- function(dataset = input$dataset, nshow = 7, title = "", fi
   ## name exists
   dataset[1:min(nshow, nr), , drop = FALSE] %>%
     mutate_if(is_date, as.character) %>%
-    mutate_if(is.character, funs(strtrim(., 40))) %>%
+    mutate_if(is.character, list(~ strtrim(., 40))) %>%
     xtable::xtable(.) %>%
     print(
       type = "html", print.results = FALSE, include.rownames = FALSE,
