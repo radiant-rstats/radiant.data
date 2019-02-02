@@ -290,7 +290,7 @@ as_distance <- function(
 #'
 #' @export
 make_train <- function(n = .7, nr = 100, seed = 1234) {
-  seed %>% gsub("[^0-9]", "", .) %>% 
+  seed %>% gsub("[^0-9]", "", .) %>%
     {if (!is_empty(.)) set.seed(seed)}
   if (n < 1) n <- round(n * nr) %>% max(1)
   ind <- seq_len(nr)
@@ -443,15 +443,15 @@ get_summary <- function(dataset, dc = get_class(dataset)) {
           median = median,
           min = min,
           max = max,
-          `25%` = p25,
-          `75%` = p75,
+          p25 = p25,
+          p75 = p75,
           sd = sd,
           se = se
         ),
         na.rm = TRUE
       ) %>%
       data.frame(check.names = FALSE, stringsAsFactors = FALSE) %>%
-      mutate_if(is.numeric, ~ round(., 3)) %>%
+      format_df(dec = 3, mark = ",") %>%
       set_colnames(c("", colnames(.)[-1])) %>%
       print(row.names = FALSE)
     cat("\n")
