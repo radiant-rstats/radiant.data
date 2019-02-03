@@ -212,13 +212,13 @@ summary.pivotr <- function(
   if (!shiny) {
     cat("Pivot table\n")
     cat("Data        :", object$df_name, "\n")
-    if (object$data_filter %>% gsub("\\s", "", .) != "") {
+    if (!is_empty(object$data_filter)) {
       cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
     }
-    if (object$tabfilt != "") {
+    if (!is_empty(object$tabfilt)) {
       cat("Table filter:", object$tabfilt, "\n")
     }
-    if (object$tabsort[1] != "") {
+    if (!is_empty(object$tabsort[1])) {
       cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
     }
     nr <- attr(object$tab, "radiant_nrow")
