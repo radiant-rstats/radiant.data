@@ -94,7 +94,7 @@ test_that("explore 8 x 2", {
     57.4653333333333, 5.72182333333333), sd = c(3956.91540005997,
     0.473826329139292, 0.114716791286006, 0.180399751234967,
     0.333401571319236, 1.44602785395269, 2.24110219949434, 1.12405453974662
-    )), class = "data.frame", row.names = c(NA, -8L), nrow = 8L),
+    )), class = "data.frame", row.names = c(NA, -8L), radiant_nrow = 8L),
     df_name = "diamonds", vars = c("price", "carat", "clarity",
     "cut", "color", "depth", "table", "x"), byvar = "", fun = c("mean",
     "sd"), top = "fun", tabfilt = "", tabsort = "", nr = NULL,
@@ -107,7 +107,7 @@ test_that("explore 1 x 2", {
   # summary(result)
   expect_equal(result, structure(list(tab = structure(list(variable = structure(1L, .Label = "price", class = "factor"),
     mean = 3907.186, sd = 3956.91540005997), class = "data.frame", row.names = c(NA,
-    -1L), nrow = 1L), df_name = "diamonds", vars = "price", byvar = "",
+    -1L), radiant_nrow = 1L), df_name = "diamonds", vars = "price", byvar = "",
     fun = c("mean", "sd"), top = "fun", tabfilt = "", tabsort = "",
     nr = NULL, data_filter = ""), class = c("explore",
     "list")
@@ -134,7 +134,7 @@ test_that("explore 1 x 1 x 2", {
     "G", "H", "I", "J"), class = "factor"), cut = structure(1L, .Label = c("Fair",
     "Good", "Very Good", "Premium", "Ideal"), class = "factor"),
     variable = structure(1L, .Label = "price", class = "factor"),
-    n_obs = 15L), nrow = 35L, row.names = 1L, class = "data.frame"
+    n_obs = 15L), radiant_nrow = 35L, row.names = 1L, class = "data.frame"
   ))
 })
 

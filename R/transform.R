@@ -417,9 +417,10 @@ weighted.sd <- function(x, wt, na.rm = TRUE) {
 #'
 #' @param dataset Data.frame
 #' @param dc Class for each variable
+#' @param dec Number of decimals to show
 #'
 #' @export
-get_summary <- function(dataset, dc = get_class(dataset)) {
+get_summary <- function(dataset, dc = get_class(dataset), dec = 3) {
   isFct <- "factor" == dc
   isNum <- dc %in% c("numeric", "integer", "Duration")
   isDate <- "date" == dc
@@ -451,7 +452,7 @@ get_summary <- function(dataset, dc = get_class(dataset)) {
         na.rm = TRUE
       ) %>%
       data.frame(check.names = FALSE, stringsAsFactors = FALSE) %>%
-      format_df(dec = 3, mark = ",") %>%
+      format_df(dec = dec, mark = ",") %>%
       set_colnames(c("", colnames(.)[-1])) %>%
       print(row.names = FALSE)
     cat("\n")
@@ -517,12 +518,13 @@ get_summary <- function(dataset, dc = get_class(dataset)) {
   if (sum(isLogic) > 0) {
     cat("Summarize logical variables:\n")
     select(dataset, which(isLogic)) %>%
-      summarise_all(list(sum, mean, n_missing), na.rm = TRUE) %>%
-      mutate_if(is.numeric, ~ round(., 4)) %>%
+      summarise_all(list(x = ~ sum(., na.rm = TRUE), y = ~ mean(., na.rm = TRUE), z = ~ n_missing(.))) %>%
+      round(dec) %>%
       matrix(ncol = 3) %>%
-      data.frame(stringsAsFactors = FALSE) %>%
+      as.data.frame(stringsAsFactors = FALSE) %>%
       set_colnames(c("# TRUE", "% TRUE", "n_missing")) %>%
       set_rownames(names(dataset)[isLogic]) %>%
+      format(big.mark = ",", scientific = FALSE) %>%
       print()
     cat("\n")
   }

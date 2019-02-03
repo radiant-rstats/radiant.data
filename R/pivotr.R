@@ -173,7 +173,7 @@ pivotr <- function(
   }
 
   tab <- as.data.frame(tab, stringsAsFactors = FALSE)
-  attr(tab, "nrow") <- nrow_tab
+  attr(tab, "radiant_nrow") <- nrow_tab
   if (!is.null(nr)) {
     ind <- if (nr >= nrow(tab)) 1:nrow(tab) else c(1:nr, nrow(tab))
     tab <- tab[ind, , drop = FALSE]
@@ -221,7 +221,7 @@ summary.pivotr <- function(
     if (object$tabsort[1] != "") {
       cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
     }
-    nr <- attr(object$tab, "nrow")
+    nr <- attr(object$tab, "radiant_nrow")
     if (!is.null(nr) && !is.null(object$nr) && object$nr < nr) {
       cat(paste0("Rows shown  : ", object$nr, " (out of ", nr, ")\n"))
     }

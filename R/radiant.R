@@ -132,7 +132,7 @@ install_webshot <- function() {
 #' @param value Value to set
 #
 #' @examples
-#' foo <- data.frame(price = 1:5) %>% set_attr("desc", "price set in experiment ...")
+#' foo <- data.frame(price = 1:5) %>% set_attr("description", "price set in experiment ...")
 #'
 #' @export
 set_attr <- function(x, which, value) `attr<-`(x, which, value)

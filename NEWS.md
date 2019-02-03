@@ -1,6 +1,7 @@
 # radiant.data 0.9.8.7
 
 * Various fixes to address breaking changes in dplyr 0.8.0
+* Added `radiant_` prefix to all attributes, except `description`, to avoid conflicts with other packages (e.g., `vars` in dplyr)
 
 # radiant.data 0.9.8.6
 

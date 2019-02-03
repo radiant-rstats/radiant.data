@@ -17,6 +17,6 @@ set_attr(x, which, value)
 Alias used to add an attribute
 }
 \examples{
-foo <- data.frame(price = 1:5) \%>\% set_attr("desc", "price set in experiment ...")
+foo <- data.frame(price = 1:5) \%>\% set_attr("description", "price set in experiment ...")
 
 }

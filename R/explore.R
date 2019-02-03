@@ -138,7 +138,7 @@ explore <- function(
 
   ## convert to data.frame to maintain attributes
   tab <- as.data.frame(tab, stringsAsFactors = FALSE)
-  attr(tab, "nrow") <- nrow_tab
+  attr(tab, "radiant_nrow") <- nrow_tab
   if (!is.null(nr)) {
     ind <- if (nr > nrow(tab)) 1:nrow(tab) else 1:nr
     tab <- tab[ind, , drop = FALSE]
@@ -182,7 +182,7 @@ summary.explore <- function(object, dec = 3, ...) {
   if (object$tabsort[1] != "") {
     cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
   }
-  nrw <- attr(object$tab, "nrow")
+  nrw <- attr(object$tab, "radiant_nrow")
   if (!is.null(nrw) && !is.null(object$nr) && object$nr < nrw) {
     cat(paste0("Rows shown  : ", object$nr, " (out of ", nrw, ")\n"))
   }

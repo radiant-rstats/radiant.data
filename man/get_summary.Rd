@@ -4,12 +4,14 @@
 \alias{get_summary}
 \title{Create data.frame summary}
 \usage{
-get_summary(dataset, dc = get_class(dataset))
+get_summary(dataset, dc = get_class(dataset), dec = 3)
 }
 \arguments{
 \item{dataset}{Data.frame}
 
 \item{dc}{Class for each variable}
+
+\item{dec}{Number of decimals to show}
 }
 \description{
 Create data.frame summary
