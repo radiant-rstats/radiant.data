@@ -1240,6 +1240,7 @@ fix_smart <- function(text, all = FALSE) {
     ## based on https://stackoverflow.com/a/54467895/1974918
     stringi::stri_trans_general(text, "ascii") %>%
       gsub("[\x95\xE2\x80\xA2]", "*", .) %>%
+      # gsub("\u2022", "*", .) %>%
       gsub("\r\n", "\n", .) %>%
       gsub("\f", "\n", .)
   }
