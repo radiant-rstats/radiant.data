@@ -1,5 +1,7 @@
-# radiant.data 0.9.8.7
+# radiant.data 0.9.8.8
 
+* Remove specific symbols from reports in _Report > Rmd_ to avoid issues when generating HTML or PDF documents
+* Keyboard shortcuts, i.e., CTRL-O and CTRL-S (CMD-O and CMD-S on macOS) to open and save data files in the _Data > Manage_ tab 
 * Various fixes to address breaking changes in dplyr 0.8.0
 * Added `radiant_` prefix to all attributes, except `description`, to avoid conflicts with other packages (e.g., `vars` in dplyr)
 

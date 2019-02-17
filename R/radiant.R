@@ -1238,9 +1238,14 @@ fix_smart <- function(text, all = FALSE) {
   } else {
     ## based on https://stackoverflow.com/a/1262210/1974918
     ## based on https://stackoverflow.com/a/54467895/1974918
-    stringi::stri_trans_general(text, "ascii") %>%
-      gsub("[\x95\xE2\x80\xA2]", "*", .) %>%
-      # gsub("\u2022", "*", .) %>%
+    gsub("\u2022", "*", text) %>%
+      gsub("\u2026", "...", .) %>%
+      gsub("\u2013", "-", .) %>%
+      gsub("\u2019", "'", .) %>%
+      gsub("\u2018", "'", .) %>%
+      gsub("\u201D", '"', .) %>%
+      gsub("\u201C", '"', .) %>%
+      # stringi::stri_trans_general(., "ascii") %>%
       gsub("\r\n", "\n", .) %>%
       gsub("\f", "\n", .)
   }

@@ -34,6 +34,14 @@ $(document).keydown(function(event) {
   } else if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.keyCode == 79) {
     document.getElementById("state_load").click();
     event.preventDefault();
+  } else if ($("#uploadfile").is(":visible") && (event.metaKey || event.ctrlKey) &&
+      event.shiftKey === false && event.keyCode == 79) {
+    $("#uploadfile").click();
+    event.preventDefault();
+  } else if ($("#man_save_data").is(":visible") && (event.metaKey || event.ctrlKey) &&
+     event.shiftKey === false && event.keyCode == 83) {
+    $("#man_save_data").click();
+    event.preventDefault();
   }
 
   // focusing in text (area) inputs
