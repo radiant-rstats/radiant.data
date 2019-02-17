@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.8.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.8.8</span>
       </span>
     </div>
 
@@ -175,7 +175,7 @@
     </tr>
     <tr>
       <th>.funs</th>
-      <td><p>Function(s) to apply (e.g., funs(log))</p></td>
+      <td><p>Function(s) to apply (e.g., log)</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -197,7 +197,7 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>mutate_ext</span>(<span class='no'>mtcars</span>, <span class='fu'>funs</span>(<span class='no'>log</span>), <span class='no'>mpg</span>, <span class='no'>cyl</span>, <span class='kw'>.ext</span> <span class='kw'>=</span> <span class='st'>"_ln"</span>)</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+    <pre class="examples"><div class='input'><span class='fu'>mutate_ext</span>(<span class='no'>mtcars</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='no'>log</span>, <span class='no'>mpg</span>, <span class='no'>cyl</span>, <span class='kw'>.ext</span> <span class='kw'>=</span> <span class='st'>"_ln"</span>)</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 #&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
 #&gt; Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
 #&gt; Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
@@ -262,7 +262,7 @@
 #&gt; Ford Pantera L      2.760010 2.079442
 #&gt; Ferrari Dino        2.980619 1.791759
 #&gt; Maserati Bora       2.708050 2.079442
-#&gt; Volvo 142E          3.063391 1.386294</div><div class='input'><span class='fu'>mutate_ext</span>(<span class='no'>mtcars</span>, <span class='fu'>funs</span>(<span class='no'>log</span>), <span class='kw'>.ext</span> <span class='kw'>=</span> <span class='st'>"_ln"</span>)</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Volvo 142E          3.063391 1.386294</div><div class='input'><span class='fu'>mutate_ext</span>(<span class='no'>mtcars</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='no'>log</span>, <span class='kw'>.ext</span> <span class='kw'>=</span> <span class='st'>"_ln"</span>)</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 #&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
 #&gt; Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
 #&gt; Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
@@ -360,7 +360,7 @@
 #&gt; Ford Pantera L      2.674149  -Inf     0 1.609438 1.3862944
 #&gt; Ferrari Dino        2.740840  -Inf     0 1.609438 1.7917595
 #&gt; Maserati Bora       2.681022  -Inf     0 1.609438 2.0794415
-#&gt; Volvo 142E          2.923162     0     0 1.386294 0.6931472</div><div class='input'><span class='fu'>mutate_ext</span>(<span class='no'>mtcars</span>, <span class='fu'>funs</span>(<span class='no'>log</span>))</div><div class='output co'>#&gt;                          mpg      cyl     disp       hp     drat        wt
+#&gt; Volvo 142E          2.923162     0     0 1.386294 0.6931472</div><div class='input'><span class='fu'>mutate_ext</span>(<span class='no'>mtcars</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='no'>log</span>)</div><div class='output co'>#&gt;                          mpg      cyl     disp       hp     drat        wt
 #&gt; Mazda RX4           3.044522 1.791759 5.075174 4.700480 1.360977 0.9631743
 #&gt; Mazda RX4 Wag       3.044522 1.791759 5.075174 4.700480 1.360977 1.0560527
 #&gt; Datsun 710          3.126761 1.386294 4.682131 4.532599 1.348073 0.8415672
@@ -425,7 +425,7 @@
 #&gt; Ford Pantera L      2.674149 -Inf    0 1.609438 1.3862944
 #&gt; Ferrari Dino        2.740840 -Inf    0 1.609438 1.7917595
 #&gt; Maserati Bora       2.681022 -Inf    0 1.609438 2.0794415
-#&gt; Volvo 142E          2.923162    0    0 1.386294 0.6931472</div><div class='input'><span class='fu'>mutate_ext</span>(<span class='no'>mtcars</span>, <span class='fu'>funs</span>(<span class='no'>log</span>), <span class='kw'>.ext</span> <span class='kw'>=</span> <span class='st'>"_ln"</span>, <span class='kw'>.vars</span> <span class='kw'>=</span> <span class='fu'>vars</span>(<span class='no'>mpg</span>, <span class='no'>cyl</span>))</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; Volvo 142E          2.923162    0    0 1.386294 0.6931472</div><div class='input'><span class='fu'>mutate_ext</span>(<span class='no'>mtcars</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='no'>log</span>, <span class='kw'>.ext</span> <span class='kw'>=</span> <span class='st'>"_ln"</span>, <span class='kw'>.vars</span> <span class='kw'>=</span> <span class='fu'>vars</span>(<span class='no'>mpg</span>, <span class='no'>cyl</span>))</div><div class='output co'>#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 #&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
 #&gt; Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
 #&gt; Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
