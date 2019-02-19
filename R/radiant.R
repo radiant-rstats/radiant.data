@@ -436,9 +436,9 @@ is_double <- function(x) {
 
 #' Create a vector of interaction terms for linear and logistic regression
 #'
-#' @param vars Variables labels to use
-#' @param nway 2-way (2) or 3-way (3) interactions labels to create
-#' @param sep Separator between variable names (default is :)
+#' @param vars Variableslabels to use
+#' @param nway 2-way (2) or 3-way (3) interaction labels to create
+#' @param sep Separator to use between variable names (e.g., :)
 #'
 #' @return Character vector of interaction term labels
 #'
@@ -448,8 +448,8 @@ is_double <- function(x) {
 #' paste0("var", 1:3) %>% iterms(2, sep = ".")
 #'
 #' @export
-iterms <- function(vars, nway, sep = ":") {
-  sapply(2:min(nway, length(vars)), function(x) combn(vars, x) %>% apply(2, paste, collapse = sep)) %>%
+iterms <- function(vars, nway = 2, sep = ":") {
+  sapply(2:min(as.integer(nway), length(vars)), function(x) apply(combn(vars, x), 2, paste, collapse = sep)) %>%
     unlist() %>%
     as.vector()
 }
@@ -457,17 +457,18 @@ iterms <- function(vars, nway, sep = ":") {
 #' Create a vector of quadratic and cubed terms for use in linear and logist regression
 #'
 #' @param vars Variables labels to use
-#' @param nway 2-way (2) or 3-way (3) interactions labels to create
+#' @param nway quadratic (2) or cubic (3) term labels to create
 #'
-#' @return Character vector of regression term labels
+#' @return Character vector of (regression) term labels
 #'
 #' @examples
 #' qterms(c("a", "b"), 3)
 #' qterms(c("a", "b"), 2)
 #'
 #' @export
-qterms <- function(vars, nway) {
-  sapply(2:nway, function(x) glue("I({vars}^{x})")) %>% as.vector()
+qterms <- function(vars, nway = 2) {
+  sapply(2:as.integer(nway), function(x) glue("I({vars}^{x})")) %>%
+    as.vector()
 }
 
 #' Source for package functions

@@ -4,15 +4,15 @@
 \alias{qterms}
 \title{Create a vector of quadratic and cubed terms for use in linear and logist regression}
 \usage{
-qterms(vars, nway)
+qterms(vars, nway = 2)
 }
 \arguments{
 \item{vars}{Variables labels to use}
 
-\item{nway}{2-way (2) or 3-way (3) interactions labels to create}
+\item{nway}{quadratic (2) or cubic (3) term labels to create}
 }
 \value{
-Character vector of regression term labels
+Character vector of (regression) term labels
 }
 \description{
 Create a vector of quadratic and cubed terms for use in linear and logist regression

@@ -4,14 +4,14 @@
 \alias{iterms}
 \title{Create a vector of interaction terms for linear and logistic regression}
 \usage{
-iterms(vars, nway, sep = ":")
+iterms(vars, nway = 2, sep = ":")
 }
 \arguments{
-\item{vars}{Variables labels to use}
+\item{vars}{Variableslabels to use}
 
-\item{nway}{2-way (2) or 3-way (3) interactions labels to create}
+\item{nway}{2-way (2) or 3-way (3) interaction labels to create}
 
-\item{sep}{Separator between variable names (default is :)}
+\item{sep}{Separator to use between variable names (e.g., :)}
 }
 \value{
 Character vector of interaction term labels
