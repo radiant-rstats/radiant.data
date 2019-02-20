@@ -126,7 +126,7 @@ output$dataviewer <- DT::renderDataTable({
           list(className = "dt-center", targets = "_all")
         ),
         autoWidth = TRUE,
-        processing = FALSE,
+        processing = isTRUE(fbox == "none"),
         pageLength = {
           if (is.null(r_state$dataviewer_state$length)) 10 else r_state$dataviewer_state$length
         },
