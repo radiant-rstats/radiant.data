@@ -664,8 +664,7 @@ fix_ext <- function(ext) {
     if (!vars[1] == "") dataset <- select_at(dataset, .vars = vars)
     cn <- colnames(dataset)
     if (!all(key %in% cn) || !value %in% cn) return("Key or value variable is not in the dataset")
-    # nr <- distinct_(dataset, .vars = base::setdiff(cn, value), .keep_all = TRUE) %>%
-    nr <- distinct_(dataset, .dots = base::setdiff(cn, value), .keep_all = TRUE) %>%
+    nr <- distinct_at(dataset, .vars = base::setdiff(cn, value), .keep_all = TRUE) %>%
       nrow()
     if (nr < nrow(dataset)) return("Rows are not unique. Select additional variables")
     if (length(key) > 1) {
@@ -805,9 +804,7 @@ fix_ext <- function(ext) {
     if (all(vars == "") || length(unique(vars)) == ncol(dataset)) {
       dat <- distinct(dataset)
     } else {
-      ## keeping the _ version for now because there is no distinct_at
-      # dat <- distinct_at(dataset, .vars = vars, .keep_all = TRUE)
-      dat <- distinct_(dataset, .dots = vars, .keep_all = TRUE)
+      dat <- distinct_at(dataset, .vars = vars, .keep_all = TRUE)
     }
 
     if (nrow(dat) == nrow(dataset)) {

@@ -1,5 +1,6 @@
-# radiant.data 0.9.8.9
+# radiant.data 0.9.8.10
 
+* Removed dependency on `summarytools` due to breaking changes
 * Fix for interaction (`iterm`) and non-linear term (`qterm`) creation if character strings rather than integers are passed to the function
 * Remove specific symbols from reports in _Report > Rmd_ to avoid issues when generating HTML or PDF documents
 * Keyboard shortcuts, i.e., CTRL-O and CTRL-S (CMD-O and CMD-S on macOS) to open and save data files in the _Data > Manage_ tab 

@@ -11,9 +11,6 @@ dist: trusty
 r_packages:
   - devtools
 
-# r_github_packages:
-#  - trestletech/shinyAce
-
 after_success:
   - Rscript -e 'pkgdown::build_site()'
 

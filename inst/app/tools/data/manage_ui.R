@@ -855,10 +855,15 @@ output$man_str <- renderPrint({
   str(r_data[[input$dataset]])
 })
 
-output$man_summary <- renderUI({
-  req(is.data.frame(r_data[[input$dataset]]))
-  summarytools::dfSummary(r_data[[input$dataset]], style = 'grid', plain.ascii = FALSE, graph.magnif = 0.85) %>%
-    print(method = 'render', omit.headings = TRUE)
+# output$man_summary <- renderUI({
+#   req(is.data.frame(r_data[[input$dataset]]))
+#   summarytools::dfSummary(r_data[[input$dataset]], style = 'grid', plain.ascii = FALSE, graph.magnif = 0.85) %>%
+#     print(method = 'render', omit.headings = TRUE)
+# })
+
+output$man_summary <- renderPrint({
+ req(is.data.frame(r_data[[input$dataset]]))
+ get_summary(r_data[[input$dataset]])
 })
 
 man_show_log <- reactive({

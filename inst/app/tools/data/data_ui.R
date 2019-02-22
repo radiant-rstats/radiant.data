@@ -42,7 +42,8 @@ output$ui_data <- renderUI({
           tabPanel("Manage",
             conditionalPanel("input.dman_preview == 'preview'", h2("Data preview"), htmlOutput("man_example")),
             conditionalPanel("input.dman_preview == 'str'", h2("Data structure"), verbatimTextOutput("man_str")),
-            conditionalPanel("input.dman_preview == 'summary'", h2("Data summary"), htmlOutput("man_summary")),
+            # conditionalPanel("input.dman_preview == 'summary'", h2("Data summary"), htmlOutput("man_summary")),
+            conditionalPanel("input.dman_preview == 'summary'", h2("Data summary"), verbatimTextOutput("man_summary")),
             conditionalPanel(condition = "input.man_show_log == true",
               h2("Data load and save commands"),
               uiOutput("ui_man_log")
