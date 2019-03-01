@@ -1,5 +1,6 @@
-# radiant.data 0.9.8.10
+# radiant.data 0.9.8.11
 
+* Added option to save _Report > Rmd_ as a powerpoint file using `Rmarkdown`
 * Removed dependency on `summarytools` due to breaking changes
 * Fix for interaction (`iterm`) and non-linear term (`qterm`) creation if character strings rather than integers are passed to the function
 * Remove specific symbols from reports in _Report > Rmd_ to avoid issues when generating HTML or PDF documents

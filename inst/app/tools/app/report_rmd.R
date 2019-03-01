@@ -9,7 +9,7 @@ rmd_generate <- c(
   "Auto paste" = "auto",
   "Manual paste" = "manual"
 )
-rmd_save_type <- c("Notebook", "HTML", "PDF", "Word", "Rmd")
+rmd_save_type <- c("Notebook", "HTML", "PDF", "Word", "Powerpoint", "Rmd")
 rmd_set <- c("To Rmd", "auto", "manual")
 rmd_set_rstudio <- c("To Rmd", "To R")
 

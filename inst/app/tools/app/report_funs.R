@@ -125,7 +125,7 @@ setup_report <- function(
   sopts <- ifelse(save_type == "PDF", ",\n  screenshot.opts = list(vheight = 1200)", "")
 
   if (add_yml) {
-    if (save_type %in% c("PDF", "Word")) {
+    if (save_type %in% c("PDF", "Word", "Powerpoint")) {
       yml <- ""
     } else if (save_type == "HTML") {
       yml <- '---\noutput:\n  html_document:\n    highlight: textmate\n    theme: spacelab\n    df_print: paged\n    toc: yes\n---\n\n'
@@ -139,7 +139,7 @@ setup_report <- function(
   }
 
   if (missing(ech)) {
-    ech <- if (save_type %in% c("PDF", "Word", "HTML")) "FALSE" else "TRUE"
+    ech <- if (save_type %in% c("PDF", "Word", "Powerpoint", "HTML")) "FALSE" else "TRUE"
   }
 
   if (grepl("```{r r_setup, include = FALSE}\n", report, fixed = TRUE)) {
@@ -414,7 +414,7 @@ knit_it <- function(report, type = "rmd") {
 
 sans_ext <- function(path) {
   sub(
-    "(\\.state\\.rda|\\.rda$|\\.rds$|\\.rmd$|\\.r$|\\.rdata$|\\.html|\\.nb\\.html|\\.pdf|\\.docx|\\.rmd|\\.zip)", "",
+    "(\\.state\\.rda|\\.rda$|\\.rds$|\\.rmd$|\\.r$|\\.rdata$|\\.html|\\.nb\\.html|\\.pdf|\\.docx|\\.pptx|\\.rmd|\\.zip)", "",
     tolower(path), ignore.case = TRUE
   )
 }
@@ -487,6 +487,7 @@ report_save_filename <- function(type = "rmd", full.name = TRUE) {
     HTML = "html",
     PDF = "pdf",
     Word = "docx",
+    Powerpoint = "pptx",
     Rmd = "Rmd",
     `Rmd + Data (zip)` = "zip",
     R = "R",
@@ -627,7 +628,12 @@ report_save_content <- function(file, type = "rmd") {
                 Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "hide"),
                 HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
                 PDF = rmarkdown::pdf_document(),
-                Word = rmarkdown::word_document(reference_docx = file.path(system.file(package = "radiant.data"), "app/www/style.docx"))
+                Word = rmarkdown::word_document(
+                  reference_docx = getOption("radiant.word_style", default = file.path(system.file(package = "radiant.data"), "app/www/style.docx")),
+                ),
+                Powerpoint = rmarkdown::powerpoint_presentation(
+                  reference_doc = getOption("radiant.powerpoint_style", default = file.path(system.file(package = "radiant.data"), "app/www/style.potx"))
+                )
               ),
               envir = r_data, quiet = TRUE, encoding = "UTF-8",
               output_options = list(pandoc_args = "--quiet")
