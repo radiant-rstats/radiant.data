@@ -30,7 +30,7 @@ If you are using Radiant for a class I suggest you use the _Report > Rmd_ featur
 
 ## Options
 
-The editor used in _Report > Rmd_ and _Report > R_ has several options that can be set in `.Rprofile`.
+The editor used in _Report > Rmd_ and _Report > R_ has several options that can be set in `.Rprofile`. You can use `usethis::edit_r_profile()` to alter the settings in .Rprofile
 
 <pre>
 options(radiant.ace_vim.keys = FALSE)
@@ -39,6 +39,8 @@ options(radiant.ace_tabSize = 2)
 options(radiant.ace_useSoftTabs = TRUE)
 options(radiant.ace_showInvisibles = TRUE)
 options(radiant.ace_autoComplete = "live")
+options(radiant.powerpoint_style = "~/Dropbox/rmd-styles/style.potx")
+options(radiant.word_style = "~/Dropbox/rmd-styles/style.docx")
 </pre>
 
 Notes:
@@ -48,6 +50,9 @@ Notes:
 * Tabs are converted to 2 spaces by default (i.e., 'soft' tabs). You can change the number of spaces used from 2 to, for example, 4
 * `showInvisibles` shows tabs and spaces in the editor
 * Autocomplete has options "live", "enabled", and "disabled" 
+* Radiant has default styles for Word and Powerpoint files but these can be replaced with styles files you created. Run the commands below to see the path to the style files in Radiant on your that you can then edit
+    * [Word style file](https://github.com/radiant-rstats/radiant.data/raw/master/inst/app/www/style.docx){target="_blank"}
+    * [Powerpoint style file](https://github.com/radiant-rstats/radiant.data/raw/master/inst/app/www/style.potx){target="_blank"}
 
 ### R-functions
 
