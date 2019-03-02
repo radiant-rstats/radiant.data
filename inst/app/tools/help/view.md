@@ -77,7 +77,7 @@ It is important to note that these filters are _persistent_ and will be applied 
 </tbody>
 </table>
 
-Filters can also be used with R-code to quickly view a sample from the selected dataset. For example, `runif(nrow(.)) > .9` could be used to sample approximately 10% of the rows in the data and `1:nrow(.) < 101` would select only the first 100 rows in the data. Note: `.` references the currently selected dataset.
+Filters can also be used with R-code to quickly view a sample from the selected dataset. For example, `runif(n()) > .9` could be used to sample approximately 10% of the rows in the data and `1:n() < 101` would select only the first 100 rows in the data. Note: `.` references the currently selected dataset.
 
 ### Select variables to show
 

@@ -21,7 +21,7 @@ In sum:
 where Q1 is the 25th percentile and Q3 is the 75th percentile. You may have to read the two bullets above a few times before it sinks in. The plot below should help to explain the structure of the box plot.
 
 <p align="center"><img src="figures/boxplot.png"></p>
-[Source](http://en.wikipedia.org/wiki/File:Boxplot_vs_PDF.svg)
+[Source](http://en.wikipedia.org/wiki/File:Boxplot_vs_PDF.svg){target="_blank"}
 
 ### Sub-plots and heat-maps
 
@@ -53,7 +53,7 @@ The best way to keep/store plots is to generate a `visualize` command by clickin
 
 ### Customizing plots in _Report > Rmd_
 
-To customize a plot first generate the `visualize` command by clicking the report (<i title='Report results' class='fa fa-edit'></i>) icon on the bottom left of your screen or by pressing `ALT-enter` on your keyboard. The example below illustrates how to customize a command in the <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_Report > Rmd_</a> tab. Notice that `custom` is set to `TRUE`.
+To customize a plot first generate the `visualize` command by clicking the report (<i title='Report results' class='fa fa-edit'></i>) icon on the bottom left of your screen or by pressing `ALT-enter` on your keyboard. The example below illustrates how to customize a command in the <a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank">_Report > Rmd_</a> tab. Notice that `custom` is set to `TRUE`.
 
 ```r
 visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
@@ -91,9 +91,9 @@ If you have the `svglite` package installed, the code-chunk header below will pr
 * Display y-axis in \$'s: `+ scale_y_continuous(labels = scales::dollar_format())`
 * Use `,` as a thousand separator for the y-axis: `+ scale_y_continuous(labels = scales::comma)`
 
-For more on how to customize plots for communication see <a href="http://r4ds.had.co.nz/graphics-for-communication.html" target="_blank">http://r4ds.had.co.nz/graphics-for-communication.html</a>.
+For more on how to customize plots for communication see <http://r4ds.had.co.nz/graphics-for-communication.html>{target="_blank"}.
 
-See also the ggplot2 documentation site <a href="http://docs.ggplot2.org/" target="_blank">http://docs.ggplot2.org</a>.
+See also the ggplot2 documentation site <http://docs.ggplot2.org>{target="_blank"}.
 
 Suppose we create a set of three bar charts in _Data > Visualize_ using the `Diamond` data. To add a title above the group of plots and impose a one-column layout we could use `gridExtra::grid.arrange` as follows:
 
@@ -130,10 +130,10 @@ visualize(diamonds, xvar = c("carat", "clarity", "cut", "color"), custom = TRUE)
 
 For additional information on the `plotly` library see the links below:
 
-* Getting started: https://plot.ly/r/getting-started/
-* Reference: https://plot.ly/r/reference/
-* Book: https://cpsievert.github.io/plotly_book
-* Code: https://github.com/ropensci/plotly
+* Getting started: <https://plot.ly/r/getting-started/>{target="_blank"}
+* Reference: <https://plot.ly/r/reference/>{target="_blank"}
+* Book: <https://cpsievert.github.io/plotly_book>{target="_blank"}
+* Code: <https://github.com/ropensci/plotly>{target="_blank"}
 
 ### R-functions
 

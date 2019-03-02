@@ -15,7 +15,7 @@ You can also use string matching to select rows. For example, type `grepl('ood',
 It is important to note that these filters are _persistent_ and will be applied to any analysis conducted through in Radiant. To deactivate a filter un-check the `Filter data` check-box. To remove a filter simply delete it.
 
 
-```{r results = 'asis', echo = FALSE}
+```{r operators, results = 'asis', echo = FALSE}
 tab_large <- "class='table table-condensed table-hover' style='width:60%;'"
 data.frame(
   "Operator" = c("`<`","`<=`","`>`","`>=`","`==`","`!=`","`|`","`&`", "`%in%`", "is.na"),
@@ -25,7 +25,7 @@ data.frame(
 knitr::kable(align = 'l', format = 'html', escape = FALSE, table.attr = tab_large)
 ```
 
-Filters can also be used with R-code to quickly view a sample from the selected dataset. For example, `runif(nrow(.)) > .9` could be used to sample approximately 10% of the rows in the data and `1:nrow(.) < 101` would select only the first 100 rows in the data. Note: `.` references the currently selected dataset.
+Filters can also be used with R-code to quickly view a sample from the selected dataset. For example, `runif(n()) > .9` could be used to sample approximately 10% of the rows in the data and `1:n() < 101` would select only the first 100 rows in the data. Note: `.` references the currently selected dataset.
 
 ### Select variables to show
 

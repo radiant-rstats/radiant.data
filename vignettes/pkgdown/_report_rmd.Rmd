@@ -51,8 +51,8 @@ Notes:
 * `showInvisibles` shows tabs and spaces in the editor
 * Autocomplete has options "live", "enabled", and "disabled" 
 * Radiant has default styles for Word and Powerpoint files but these can be replaced with styles files you created. Run the commands below to see the path to the style files in Radiant on your that you can then edit
-    * [Word style file](https://github.com/radiant-rstats/radiant.data/raw/master/inst/app/www/style.docx){target="_blank"}
-    * [Powerpoint style file](https://github.com/radiant-rstats/radiant.data/raw/master/inst/app/www/style.potx){target="_blank"}
+    * <a href="https://github.com/radiant-rstats/radiant.data/raw/master/inst/app/www/style.docx" target="_blank">Word style file</a>
+    * <a href="https://github.com/radiant-rstats/radiant.data/raw/master/inst/app/www/style.potx" target="_blank">Powerpoint style file</a>
 
 ### R-functions
 

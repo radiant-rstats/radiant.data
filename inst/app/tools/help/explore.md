@@ -1,6 +1,6 @@
 > Summarize and explore your data
 
-Generate summary statistics for one or more variables in your data. The most powerful feature in _Data > Explore_ is that you can easily describe the data _by_ one or more other variables. Where the <a href="https://radiant-rstats.github.io/docs/data/pivot.html" target="_blank">_Data > Pivot_</a> tab works best for frequency tables and to summarize a single numeric variable, the _Data > Explore_ tab allows you to summarize multiple variables at the same time using various statistics.
+Generate summary statistics for one or more variables in your data. The most powerful feature in _Data > Explore_ is that you can easily describe the data _by_ one or more other variables. Where the <a href="https://radiant-rstats.github.io/docs/data/pivotr.html" target="_blank">_Data > Pivot_</a> tab works best for frequency tables and to summarize a single numeric variable, the _Data > Explore_ tab allows you to summarize multiple variables at the same time using various statistics.
 
 For example, if we select `price` from the `diamonds` dataset and click the `Create table` button we can see the number of observations (n), the mean, the variance, etc. However, the mean price for each clarity level of the diamond can also be easily provided by choosing `clarity` as the `Group by` variable.
 
@@ -32,7 +32,7 @@ Use the `Filter data` box to select (or omit) specific sets of rows from the dat
 
 ### Report > Rmd
 
-Add code to <a href="https://radiant-rstats.github.io/docs/data/report.html" target="_blank">_Report > Rmd_</a> to (re)create the summary table by clicking the <i title="report results" class="fa fa-edit"></i> icon on the bottom left of your screen or by pressing `ALT-enter` on your keyboard.
+Add code to <a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank">_Report > Rmd_</a> to (re)create the summary table by clicking the <i title="report results" class="fa fa-edit"></i> icon on the bottom left of your screen or by pressing `ALT-enter` on your keyboard.
 
 ### R-functions
 
