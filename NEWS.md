@@ -1,4 +1,4 @@
-# radiant.data 0.9.8.11
+# radiant.data 0.9.9.0
 
 * Added option to save _Report > Rmd_ as a powerpoint file using `Rmarkdown`
 * Removed dependency on `summarytools` due to breaking changes
