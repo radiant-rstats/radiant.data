@@ -50,7 +50,7 @@ Notes:
 * Tabs are converted to 2 spaces by default (i.e., 'soft' tabs). You can change the number of spaces used from 2 to, for example, 4
 * `showInvisibles` shows tabs and spaces in the editor
 * Autocomplete has options "live", "enabled", and "disabled" 
-* Radiant has default styles for Word and Powerpoint files but these can be replaced with styles files you created. Run the commands below to see the path to the style files in Radiant on your that you can then edit
+* Radiant has default styles for Word and Powerpoint files. These can be replaced with styles files you created however. Click the links below to download the style files used in Radiant to your computer. Edit the files and use `options` as shown above to tell Radiant where to find the style files you want to use.
     * <a href="https://github.com/radiant-rstats/radiant.data/raw/master/inst/app/www/style.docx" target="_blank">Word style file</a>
     * <a href="https://github.com/radiant-rstats/radiant.data/raw/master/inst/app/www/style.potx" target="_blank">Powerpoint style file</a>
 
