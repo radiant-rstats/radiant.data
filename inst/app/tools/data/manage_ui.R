@@ -496,7 +496,7 @@ observeEvent(input$url_rds_load, {
     upload_error_handler(objname, "#### There was an error loading the r-data file from the provided url.")
   } else {
     r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE)
-    cmd <- glue('{objname} <- readr::read_rds(url("{url_rds}")) %>% get()\nregister("{objname}")')
+    cmd <- glue('{objname} <- readr::read_rds(url("{url_rds}"))\nregister("{objname}")')
   }
 
   if (exists(objname, envir = r_data) && !bindingIsActive(as.symbol(objname), env = r_data)) {
