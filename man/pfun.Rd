@@ -59,7 +59,7 @@ pp99(..., na.rm = TRUE)
 \item{na.rm}{a logical indicating whether missing values should be removed.}
 }
 \value{
-A vector of ‘parallel’ summaries of the argument vectors.
+A vector of 'parallel' summaries of the argument vectors.
 }
 \description{
 Summarize a set of numeric vectors per row
