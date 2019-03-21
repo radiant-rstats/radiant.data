@@ -421,6 +421,23 @@ knit_print.data.frame <- function(x, ...) {
 #   knitr::asis_output(res)
 # }
 
+# registerS3method("knitknit_print", "datatables", knit_print.datatables)
+# knit_print.datatables <- function(x, ...) {
+#   # res <- shiny::knit_print.shiny.render.function(
+#   # shiny::knit_print.shiny.render.function(
+#     DT::renderDataTable(x)
+#   # )
+#   # knitr::asis_output(res)
+# }
+
+# knit_print.datatables <- function(x, ...) {
+#   # shiny::knit_print.shiny.render.function(
+#   res <- shiny::knit_print.shiny.render.function(
+#     DT::renderDataTable(x)
+#   )
+#   knitr::asis_output(res)
+# }
+
 options(
   radiant.nav_ui =
     list(

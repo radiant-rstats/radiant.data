@@ -6,6 +6,14 @@ setwd(rstudioapi::getActiveProject())
 curr <- getwd()
 pkg <- basename(curr)
 
+
+## see commit for an application
+## https://github.com/hrbrmstr/hrbraddins/commit/9cbd162def065593d4850c387ce581b8f911cf03
+# fvec <- list.files(".", pattern = "(*.R$|*.r)", recursive = TRUE)
+# for (f in fvec) {
+#   tools::showNonASCIIfile(f)
+# }
+
 ## building shinyAce packages for mac and windows
 rv <- R.Version()
 rv <- paste0(rv$major, ".", strsplit(rv$minor, ".", fixed = TRUE)[[1]][1])
