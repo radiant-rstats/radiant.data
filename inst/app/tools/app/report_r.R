@@ -237,7 +237,7 @@ output$report_r <- renderUI({
       height = "auto",
       value = state_init("r_edit", r_example) %>% fix_smart(),
       vimKeyBinding = getOption("radiant.ace_vim.keys", default = FALSE),
-      hotkeys = list(r_hotkey = list(win = "CTRL-ENTER", mac = "CMD-ENTER")),
+      hotkeys = list(r_hotkey = list(win = "CTRL-ENTER|SHIFT-ENTER", mac = "CMD-ENTER|SHIFT-ENTER")),
       tabSize = getOption("radiant.ace_tabSize", 2),
       useSoftTabs = getOption("radiant.ace_useSoftTabs", TRUE),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),

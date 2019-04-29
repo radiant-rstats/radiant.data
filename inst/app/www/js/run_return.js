@@ -9,7 +9,7 @@ $(document).keydown(function(event) {
 
   // console.log(document.activeElement)
   if ($(".btn-success:visible" || ".shiny-bound-input:visible").is(":visible") &&
-       (event.metaKey || event.ctrlKey) && event.keyCode == 13) {
+       (event.metaKey || event.ctrlKey || event.shiftKey) && event.keyCode == 13) {
      $(".btn-success:visible" || ".shiny-bound-input:visible").click();
   } else if ($(".fa-edit:visible" || ".shiny-bound-input:visible").is(":visible") &&
        event.altKey && event.keyCode == 13) {
