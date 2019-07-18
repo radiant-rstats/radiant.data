@@ -1,3 +1,9 @@
+# radiant.data 1.0.0
+
+* Support for series of class `ts` (e.g., Data > Transform > Change type > Time series)
+* Require shinyAce 0.4.0
+* Vertical jitter set to 0 by default
+
 # radiant.data 0.9.9.0
 
 * Added option to save _Report > Rmd_ as a powerpoint file using `Rmarkdown`

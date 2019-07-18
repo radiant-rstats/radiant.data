@@ -335,18 +335,20 @@ output$report_rmd <- renderUI({
     ),
     shinyAce::aceEditor(
       "rmd_edit",
-      selectionId = "rmd_edit_selection",
+      selectionId = "selection",
       mode = "markdown",
       theme = getOption("radiant.ace_theme", default = "tomorrow"),
       wordWrap = TRUE,
       height = "auto",
       value = state_init("rmd_edit", rmd_example) %>% fix_smart(),
+      placeholder = "Type text for your report using markdown to format it\n(http://commonmark.org/help/). Add R-code to include\nyour analysis results in the report as well. Click the ?\nicon on the top left of your screen for more information",
       vimKeyBinding = getOption("radiant.ace_vim.keys", default = FALSE),
-      hotkeys = list(rmd_hotkey = list(win = "CTRL-ENTER|SHIFT-ENTER", mac = "CMD-ENTER|SHIFT-ENTER")),
+      code_hotkeys = list("r", list(hotkey = list(win = "CTRL-ENTER|SHIFT-ENTER", mac = "CMD-ENTER|SHIFT-ENTER"))),
       tabSize = getOption("radiant.ace_tabSize", 2),
       useSoftTabs = getOption("radiant.ace_useSoftTabs", TRUE),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
       autoComplete = getOption("radiant.ace_autoComplete", "live"),
+      autoCompleters = c("static", "text"),
       autoCompleteList = isolate(radiant_auto_complete())
     ),
     htmlOutput("rmd_knitted"),
@@ -377,7 +379,7 @@ observeEvent(input$rmd_clear, {
 })
 
 observe({
-  input$rmd_hotkey
+  input$rmd_edit_hotkey
   if (!is.null(input$rmd_knit)) {
     isolate({
       report_rmd$report <- report_rmd$report + 1
@@ -442,8 +444,8 @@ rmd_knitted <- eventReactive(report_rmd$report != 1, {
       } else if (!is_empty(input$rmd_edit)) {
         if (!is_empty(input$rmd_edit_selection, "")) {
           report <- input$rmd_edit_selection
-        } else if (!is_empty(input$rmd_hotkey$line, "") && report_rmd$knit_button == 0) {
-          report <- input$rmd_hotkey$line
+        } else if (!is_empty(input$rmd_edit_hotkey$line, "") && report_rmd$knit_button == 0) {
+          report <- input$rmd_edit_hotkey$line
         } else {
           report <- input$rmd_edit
           ## hack to allow processing current line
