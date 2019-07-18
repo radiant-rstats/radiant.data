@@ -289,9 +289,9 @@ visualize <- function(
     itt <- 1
     if ("jitter" %in% check) {
       if (color == "none") {
-        gs <- geom_jitter(alpha = alpha, color = pointcol, position = position_jitter(width = 0.4, height = 0.05))
+        gs <- geom_jitter(alpha = alpha, color = pointcol, position = position_jitter(width = 0.4, height = 0.0))
       } else {
-        gs <- geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.05))
+        gs <- geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.0))
       }
       check <- sub("jitter", "", check)
     } else {
@@ -576,7 +576,7 @@ visualize <- function(
   if ("jitter" %in% check) {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] +
-        geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.05))
+        geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.0))
   }
 
   if ("line" %in% check) {
