@@ -41,6 +41,7 @@ When you select `Type` from the `Transformation type` drop-down another drop-dow
 2. As number: convert a variable to type numeric
 3. As integer: convert a variable to type integer
 4. As character: convert a variable to type character (i.e., strings)
+4. As times series: convert a variable to type ts 
 5. As date (mdy): convert a variable to a date if the dates are structured as month-day-year
 6. As date (dmy): convert a variable to a date if the dates are structured as day-month-year
 7. As date (ymd): convert a variable to a date if the dates are structured as year-month-day
@@ -50,6 +51,8 @@ When you select `Type` from the `Transformation type` drop-down another drop-dow
 11. As date/time (dmy\_hm): convert a variable to a date if the dates are structured as day-month-year-hour-minute
 12. As date/time (ymd\_hms): convert a variable to a date if the dates are structured as year-month-day-hour-minute-second
 13. As date/time (ymd\_hm): convert a variable to a date if the dates are structured as year-month-day-hour-minute
+
+**Note:** When converting a variable to type `ts` (i.e., time series) you should, at least, specify a starting period and the frequency data. For example, for weekly data that starts in the 4th week of the year, enter `4` as the `Start period` and set `Frequency` to `52`.
 
 #### Normalize
 
