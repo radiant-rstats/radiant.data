@@ -23,7 +23,7 @@ output$ui_tr_replace <- renderUI({
 })
 
 output$ui_tr_normalizer <- renderUI({
-  isNum <- .get_class() %in% c("numeric", "integer")
+  isNum <- .get_class() %in% c("numeric", "integer", "ts")
   vars <- varnames()[isNum]
   if (length(vars) == 0) return()
   selectInput(
@@ -34,7 +34,7 @@ output$ui_tr_normalizer <- renderUI({
 })
 
 output$ui_tr_tab2dat <- renderUI({
-  isNum <- .get_class() %in% c("numeric", "integer")
+  isNum <- .get_class() %in% c("numeric", "integer", "ts")
   vars <- varnames()[isNum]
   selectInput(
     "tr_tab2dat", "Frequency variable:",
@@ -227,8 +227,9 @@ trans_options <- list(
 type_options <- list(
   "None" = "none", "As factor" = "as_factor",
   "As numeric" = "as_numeric", "As integer" = "as_integer",
-  "As character" = "as_character", "As date (mdy)" = "as_mdy",
-  "As date (dmy)" = "as_dmy", "As date (ymd)" = "as_ymd",
+  "As character" = "as_character", "As time series" = "ts",
+  "As date (mdy)" = "as_mdy", "As date (dmy)" = "as_dmy",
+  "As date (ymd)" = "as_ymd",
   "As date/time (mdy_hms)" = "as_mdy_hms",
   "As date/time (mdy_hm)" = "as_mdy_hm",
   "As date/time (dmy_hms)" = "as_dmy_hms",
@@ -282,7 +283,19 @@ output$ui_Transform <- renderUI({
       selectizeInput("tr_change_type", "Transformation type:", trans_types, selected = "none"),
       conditionalPanel(
         condition = "input.tr_change_type == 'type'",
-        selectInput("tr_typefunction", "Change variable type:", type_options, selected = "none")
+        selectInput("tr_typefunction", "Change variable type:", type_options, selected = "none"),
+        conditionalPanel(
+          condition = "input.tr_typefunction == 'ts'",
+          tags$table(
+            tags$td(numericInput("tr_ts_start_year", label = "Start year:", min = 1, value = NA)),
+            tags$td(numericInput("tr_ts_start_period", label = "Start period:", min = 1, value = 1))
+          ),
+          tags$table(
+            tags$td(numericInput("tr_ts_end_year", label = "End year:", value = NA)),
+            tags$td(numericInput("tr_ts_end_period", label = "End period:", value = NA))
+          ),
+          numericInput("tr_ts_frequency", label = "Frequency:", min = 1, value = 52)
+        )
       ),
       conditionalPanel(
         condition = "input.tr_change_type == 'transform'",
@@ -418,26 +431,39 @@ fix_ext <- function(ext) {
 }
 
 .change_type <- function(
-  dataset, fun, vars = "", .ext = "",
+  dataset, fun, tr_ts, vars = "", .ext = "",
   store_dat = "", store = TRUE
 ) {
 
   .ext <- fix_ext(.ext)
 
+  if (!is_empty(tr_ts)) {
+    tr_ts <- lapply(tr_ts, function(x) x[!is.na(x)]) %>% {.[sapply(., length) > 0]}
+  }
+
   if (!store || !is.character(dataset)) {
     fun <- get(fun)
     if (is_empty(.ext)) {
-      mutate_at(dataset, .vars = vars, .funs = fun)
+      do.call(mutate_at, c(list(.tbl = dataset, .vars = vars), .funs = ts, tr_ts))
+
     } else {
-      mutate_at(dataset, .vars = vars, .funs = fun) %>%
+      do.call(mutate_at, c(list(.tbl = dataset, .vars = vars), .funs = ts, tr_ts)) %>%
         set_colnames(paste0(vars, .ext))
     }
   } else {
     if (store_dat == "") store_dat <- dataset
-    if (is_empty(.ext)) {
-      paste0("## change variable type\n", store_dat, " <- mutate_at(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ", fun, ")\n")
+    if (is_empty(tr_ts)) {
+      tr_ts <- ""
     } else {
-      paste0("## change variable type\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ", fun, ", .ext = \"", .ext, "\")\n")
+      tr_ts <- deparse(tr_ts, control = getOption("dctrl"), width.cutoff = 500L) %>%
+        sub("list\\(", ", ", .) %>%
+        sub("\\)$", "", .)
+    }
+
+    if (is_empty(.ext)) {
+      paste0("## change variable type\n", store_dat, " <- mutate_at(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ", fun, tr_ts, ")\n")
+    } else {
+      paste0("## change variable type\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ", fun, tr_ts, ", .ext = \"", .ext, "\")\n")
     }
   }
 }
@@ -1051,7 +1077,16 @@ transform_main <- reactive({
       if (input$tr_typefunction == "none") {
         return("Select a transformation type for the selected variables")
       } else {
-        return(.change_type(dat, input$tr_typefunction, inp_vars("tr_vars"), input$tr_typename, store = FALSE))
+        if (input$tr_typefunction == "ts") {
+          tr_ts <- list(
+            start = c(input$tr_ts_start_year, input$tr_ts_start_period),
+            end = c(input$tr_ts_end_year, input$tr_ts_end_period),
+            frequency = input$tr_ts_frequency
+          )
+        } else {
+          tr_ts <- NULL
+        }
+        return(.change_type(dat, input$tr_typefunction, tr_ts, inp_vars("tr_vars"), input$tr_typename, store = FALSE))
       }
     }
 
@@ -1212,7 +1247,16 @@ observeEvent(input$tr_store, {
     cmd <- .reorg_vars(input$dataset, vars = input$tr_reorg_vars, df_name)
     r_data[[df_name]] <- dat
   } else if (input$tr_change_type == "type") {
-    cmd <- .change_type(input$dataset, fun = input$tr_typefunction, vars = input$tr_vars, .ext = input$tr_typename, df_name)
+   if (input$tr_typefunction == "ts") {
+      tr_ts <- list(
+        start = c(input$tr_ts_start_year, input$tr_ts_start_period),
+        end = c(input$tr_ts_end_year, input$tr_ts_end_period),
+        frequency = input$tr_ts_frequency
+      )
+    } else {
+      tr_ts <- NULL
+    }
+    cmd <- .change_type(input$dataset, fun = input$tr_typefunction, tr_ts, vars = input$tr_vars, .ext = input$tr_typename, df_name)
     r_data[[df_name]][, colnames(dat)] <- dat
   } else if (input$tr_change_type == "transform") {
     cmd <- .transform(input$dataset, fun = input$tr_transfunction, vars = input$tr_vars, .ext = input$tr_ext, df_name)

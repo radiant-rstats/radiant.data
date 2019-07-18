@@ -31,6 +31,7 @@ explore <- function(
   tvars <- vars
   if (!is_empty(byvar)) tvars <- unique(c(tvars, byvar))
 
+
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   dataset <- get_data(dataset, tvars, filt = data_filter, na.rm = FALSE)
   rm(tvars)
@@ -57,7 +58,7 @@ explore <- function(
 
   if (is_empty(byvar)) {
     isNum <- dc %>%
-      {which("numeric" == . | "integer" == .)}
+      {which("numeric" == . | "integer" == . | "ts" == .)}
     tab <- dataset %>%
       select_at(.vars = names(isNum)) %>%
       gather("variable", "value", factor_key = TRUE) %>%

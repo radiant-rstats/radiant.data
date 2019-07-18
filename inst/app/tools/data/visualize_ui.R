@@ -187,7 +187,7 @@ output$ui_viz_fill <- renderUI({
 
 output$ui_viz_size <- renderUI({
   req(input$viz_type)
-  isNum <- .get_class() %in% c("integer", "numeric")
+  isNum <- .get_class() %in% c("integer", "numeric", "ts")
   vars <- c("None" = "none", varnames()[isNum])
   if (isTRUE(input$viz_comby) && length(input$viz_yvar) > 1) vars <- c("None" = "none")
   selectizeInput(

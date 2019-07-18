@@ -32,7 +32,7 @@ expl_sum_inputs <- reactive({
 
 ## UI-elements for explore
 output$ui_expl_vars <- renderUI({
-  isNum <- .get_class() %in% c("integer", "numeric", "factor", "logical")
+  isNum <- .get_class() %in% c("integer", "numeric", "ts", "factor", "logical")
   vars <- varnames()[isNum]
   req(available(vars))
   selectInput(

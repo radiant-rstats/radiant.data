@@ -427,6 +427,7 @@ get_summary <- function(dataset, dc = get_class(dataset), dec = 3) {
   isChar <- "character" == dc
   isLogic <- "logical" == dc
   isPeriod <- "period" == dc
+  isTs <- "ts" == dc
 
   if (sum(isNum) > 0) {
     cn <- names(dc)[isNum]
@@ -453,6 +454,40 @@ get_summary <- function(dataset, dc = get_class(dataset), dec = 3) {
       ) %>%
       data.frame(check.names = FALSE, stringsAsFactors = FALSE) %>%
       format_df(dec = dec, mark = ",") %>%
+      set_colnames(c("", colnames(.)[-1])) %>%
+      print(row.names = FALSE)
+    cat("\n")
+  }
+
+  if (sum(isTs) > 0) {
+    cn <- names(dc)[isTs]
+
+    cat("Summarize time-series variables:\n")
+    lapply(
+      select(dataset, which(isTs)),
+      function(x) {
+        as.data.frame(x) %>%
+          summarise_all(
+            list(
+              n_obs = n_obs,
+              n_missing = n_missing,
+              n_distinct = n_distinct,
+              mean = mean,
+              median = median,
+              min = min,
+              max = max,
+              start = ~ attr(., "tsp")[1] %>% round(dec),
+              end = ~ attr(., "tsp")[2] %>% round(dec),
+              frequency = ~ attr(., "tsp")[3] %>% as.integer()
+            ),
+            na.rm = TRUE
+          )
+      }
+    ) %>%
+      bind_rows() %>%
+      data.frame(check.names = FALSE, stringsAsFactors = FALSE) %>%
+      data.frame(.vars = cn, .) %>%
+      format_df(dec = 3, mark = ",") %>%
       set_colnames(c("", colnames(.)[-1])) %>%
       print(row.names = FALSE)
     cat("\n")

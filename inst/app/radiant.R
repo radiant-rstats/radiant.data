@@ -719,7 +719,7 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
           type <- gc[cname]
           if (type == "factor") {
             cname <- paste0(cname, " %in% ", sub("\\[", "c(", i[[2]]) %>% sub("\\]", ")", .))
-          } else if (type %in% c("numeric", "integer")) {
+          } else if (type %in% c("numeric", "integer", "ts")) {
             bnd <- strsplit(i[[2]], "...", fixed = TRUE)[[1]]
             cname <- paste0(cname, " >= ", bnd[1], " & ", cname, " <= ", bnd[2]) %>% gsub("  ", " ", .)
           } else if (type %in% c("date", "period")) {

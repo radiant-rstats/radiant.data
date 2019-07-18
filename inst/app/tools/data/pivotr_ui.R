@@ -84,7 +84,7 @@ output$ui_pvt_cvars <- renderUI({
 })
 
 output$ui_pvt_nvar <- renderUI({
-  isNum <- .get_class() %in% c("integer", "numeric", "factor", "logical")
+  isNum <- .get_class() %in% c("integer", "numeric", "ts", "factor", "logical")
   vars <- c("None", varnames()[isNum])
 
   if (any(vars %in% input$pvt_cvars)) {
