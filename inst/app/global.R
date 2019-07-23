@@ -93,12 +93,16 @@ init_data <- function(env = r_data) {
   ## that needs to be reactive
   r_info <- reactiveValues()
 
+  strip_ext <- function(x) sub(paste0("\\.", tools::file_ext(x), "$"), "", x)
+  datasetlist <- c()
   df_names <- getOption("radiant.init.data", default = c("diamonds", "titanic"))
   for (dn in df_names) {
     if (file.exists(dn)) {
       df <- load(dn) %>% get()
-      dn <- basename(dn) %>%
-        {gsub(paste0(".", tools::file_ext(.)), "", ., fixed = TRUE)}
+      if (!inherits(df, "data.frame")) next  # only keep data.frames
+      dn_path <- dn
+      dn <- basename(dn) %>% strip_ext()
+      r_info[[paste0(dn, "_lcmd")]] <- glue::glue('{dn} <- load("{dn_path}") %>% get()\nregister("{dn}")')
     } else {
       df <- data(list = dn, package = "radiant.data", envir = environment()) %>% get()
       r_info[[paste0(dn, "_lcmd")]] <- glue::glue('{dn} <- data({dn}, package = "radiant.data", envir = environment()) %>% get()\nregister("{dn}")')
@@ -108,8 +112,9 @@ init_data <- function(env = r_data) {
       makeReactiveBinding(dn, env = env)
     }
     r_info[[paste0(dn, "_descr")]] <- attr(df, "description")
+    datasetlist <- c(datasetlist, dn)
   }
-  r_info[["datasetlist"]] <- basename(df_names)
+  r_info[["datasetlist"]] <- datasetlist
   r_info[["url"]] <- NULL
   r_info
 }
