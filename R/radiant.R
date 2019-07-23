@@ -436,7 +436,7 @@ is_double <- function(x) {
 
 #' Create a vector of interaction terms for linear and logistic regression
 #'
-#' @param vars Variableslabels to use
+#' @param vars Labels to use
 #' @param nway 2-way (2) or 3-way (3) interaction labels to create
 #' @param sep Separator to use between variable names (e.g., :)
 #'
