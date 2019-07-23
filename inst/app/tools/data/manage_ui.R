@@ -281,18 +281,23 @@ output$man_descr_html <- renderUI({
 })
 
 output$man_descr_md <- renderUI({
-  ## avoid all sorts of 'helpful' behavior from your browser
-  ## based on https://stackoverflow.com/a/35514029/1974918
   tagList(
     HTML("<label>Add data description:</label><br>"),
-    tags$textarea(
-      id = "man_data_descr",
-      rows = 15,
-      style = "width: 650px;",
-      class = "form-control",
-      autocorrect = "off",
-      autocapitalize = "off",
-      descr_out(r_info[[paste0(input$dataset, "_descr")]], "md")
+    shinyAce::aceEditor(
+      "man_data_descr",
+      mode = "markdown",
+      theme = getOption("radiant.ace_theme", default = "tomorrow"),
+      wordWrap = TRUE,
+      value =  descr_out(r_info[[paste0(input$dataset, "_descr")]], "md"),
+      placeholder = "Type text to describe the data using markdown to format it.\nSee http://commonmark.org/help/ for more information",
+      vimKeyBinding = getOption("radiant.ace_vim.keys", default = FALSE),
+      debounce = 0,
+      tabSize = getOption("radiant.ace_tabSize", 2),
+      useSoftTabs = getOption("radiant.ace_useSoftTabs", TRUE),
+      showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
+      autoScrollEditorIntoView = TRUE,
+      minLines = 15,
+      maxLines = 30
     )
   )
 })

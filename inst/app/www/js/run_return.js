@@ -14,6 +14,9 @@ $(document).keydown(function(event) {
   } else if ($(".fa-edit:visible" || ".shiny-bound-input:visible").is(":visible") &&
        event.altKey && event.keyCode == 13) {
      $(".fa-edit:visible" || ".shiny-bound-input:visible").click();
+  } else if ($("#updateDescr").is(":visible") && (event.metaKey || event.ctrlKey) && event.keyCode == 13) {
+    $("#updateDescr").click();
+    event.preventDefault();
   } else if ($("#rmd_read_files").is(":visible") && (event.metaKey || event.ctrlKey) && event.shiftKey === false && event.keyCode == 79) {
     $("#rmd_read_files").click();
     event.preventDefault();
