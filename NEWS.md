@@ -342,7 +342,7 @@ or radiant.data::radiant.data("assignment.state.rda")
 * Correctly handle decimal indicators when loading csv files in _Data > Manage_
 * Don't overwrite a dataset to combine if combine generates an error when user sets the the name of the combined data to that of an already selected dataset
 * When multiple variables were selected, data were not correctly summarized in Data > Transform
-* Add (function) lable to bar plot when x-variable is an integer
+* Add (function) label to bar plot when x-variable is an integer
 * Maintain order of variables in Data > Visualize when using "color", "fill", "comby", or "combx"
 * Avoid warning when switching datasets in Data > Transform and variables being summarized do not exists in the new dataset
 * which.pmax produced a list but needed to be integer
