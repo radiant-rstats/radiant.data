@@ -56,10 +56,10 @@ Note: Markdown is used to format the report. Go to [commonmark.org](http://commo
 You can even include math if you want:
 
 $$
-\\\\begin{aligned}
-  y_t &= \\\\alpha + \\\\beta x_t + \\\\epsilon_{yt}, \\\\\\\\
-  z_t &= 3 \\\\times 9 + y_t + \\\\epsilon_{zt}.
-\\\\end{aligned}
+\\begin{aligned}
+  y_t &= \\alpha + \\beta x_t + \\epsilon_{yt}, \\\\
+  z_t &= 3 \\times 9 + y_t + \\epsilon_{zt}.
+\\end{aligned}
 $$
 
 To show the output, press the `Knit report (Rmd)` button.
@@ -119,12 +119,6 @@ visualize(
 > **Put your own code here or delete this sample report and create your own**
 
 "
-
-## weird escaping issue in Ace Editor related to single quotes (') on Mac
-## not yet tested on linux
-if (grepl("'", rmd_example) && Sys.info()["sysname"] != "Windows") {
-  rmd_example <- gsub("\\\\\\\\", "\\\\", rmd_example)
-}
 
 ## allow running code through button or keyboard shortcut
 report_rmd <- reactiveValues(report = 0, knit_button = 0, clear = 0)

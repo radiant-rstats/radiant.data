@@ -226,15 +226,7 @@ if (!is.null(r_state$rmd_report) && is.null(r_state$rmd_edit)) {
 }
 
 if (length(r_state$rmd_edit) > 0) {
-  if (!grepl("'", r_state$rmd_edit)) {
-    ## weird escaping issue in Ace Editor related to single quotes (') on macOS
-    r_state$rmd_edit <- gsub("\\\\", "\\\\\\\\", r_state$rmd_edit) %>%
-      radiant.data::fix_smart()
-  } else if (Sys.info()["sysname"] == "Windows") {
-    ## Windows needs more \\\\
-    r_state$rmd_edit <- gsub("\\\\", "\\\\\\\\", r_state$rmd_edit) %>%
-      radiant.data::fix_smart()
-  }
+  r_state$rmd_edit <- r_state$rmd_edit %>% radiant.data::fix_smart()
 }
 
 ## legacy, to deal with state files created before

@@ -1,3 +1,10 @@
+# radiant.data 1.0.2
+
+* Use a shinyAce input to generate data descriptions
+* Allow custom initial dataset list
+* Fix for latex formulas in _Report > Rmd_ on Windows
+* Updated requirements for markdown and Rmarkdown
+
 # radiant.data 1.0.0
 
 * Support for series of class `ts` (e.g., Data > Transform > Change type > Time series)
@@ -103,13 +110,13 @@ or radiant.data::radiant.data("assignment.state.rda")
 # radiant.data 0.9.5.0
 
 * Fix for `radiant.data::explore` when variable names contain an underscore 
-* Fix for `find_gdrive` when drive is not being synched
-* Fixes in _Report > Rmd_ and _Report > R_ to accomodate for pandoc > 2 
+* Fix for `find_gdrive` when drive is not being synced
+* Fixes in _Report > Rmd_ and _Report > R_ to accommodate  for pandoc > 2 
 
 # radiant.data 0.9.4.6
 
 * Don't update a reactive binding for an object if the binding already exists. See issue  https://github.com/rstudio/shiny/issues/2065
-* Fix to accomodate changes in `deparse` in R 3.5
+* Fix to accommodate changes in `deparse` in R 3.5
 * Fix for saving data in _Data > Manage_ and generating the relevant R-code
 
 # radiant.data 0.9.3.5
@@ -133,7 +140,7 @@ or radiant.data::radiant.data("assignment.state.rda")
 ## Major changes
 
 * When using radiant with Rstudio Viewer or in an Rstudio Window, loading and saving data through _Data > Manage_ generates R-code the user can add to _Report > Rmd_ or _Report > R_. Clicking the `Show R-code` checkbox displays the R-code used to load or save the current dataset
-* Various changes to the code to accomodate the use of `shiny::makeReactiveBinding`. The advantage is that the code generated for _Report > Rmd_ and _Report > R_ will no longer have to use a list (`r_data`) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well
+* Various changes to the code to accommodate the use of `shiny::makeReactiveBinding`. The advantage is that the code generated for _Report > Rmd_ and _Report > R_ will no longer have to use a list (`r_data`) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well
 * Removed `loadr`, `saver`, `load_csv`, `loadcsv_url`, `loadrds_url`, and `make_funs` functions as they are no longer needed
 * Deprecated `mean_rm`, `median_rm`, `min_rm`, `max_rm, `sd_rm`, `var_rm, and `sum_rm` functions as they are no longer needed 
 
@@ -200,7 +207,7 @@ or radiant.data::radiant.data("assignment.state.rda")
 
 * Allow all textarea inputs and multi-select inputs to be resized manually by the user
 * Use 200 dpi for plots in _Report > Rmd_ and _Report > R_
-* _Data > Vizualize_ now has an option to select a sample of data for scatter plots (e.g., 1K, 5K, 10K, or All)
+* _Data > Visualize_ now has an option to select a sample of data for scatter plots (e.g., 1K, 5K, 10K, or All)
 
 ## Bug fixes
 
@@ -239,7 +246,7 @@ or radiant.data::radiant.data("assignment.state.rda")
 * Cleanup now also occurs when the stop button is used in Rstudio to close the app
 * Fix to include `DiagrammeR` based plots in Rmarkdown reports
 * Fix in `read_files` for SQLite data names
-* De-activate spellcheck autocorrection in `selectizeInput` in Rstudio Viewer [shiny #1916](https://github.com/rstudio/shiny/issues/1916)
+* De-activate spell check auto correction in `selectizeInput` in Rstudio Viewer [shiny #1916](https://github.com/rstudio/shiny/issues/1916)
 * Fix to allow selecting and copying text output from _Report > Rmd_ and _Report > R_
 * Remove "fancy" quotes from filters
 * Known issue: The Rstudio viewer may not always close the viewer window when trying to stop the application with the `Stop` link in the navbar. As a work-around, use Rstudio's stop buttons instead. 
@@ -297,7 +304,7 @@ or radiant.data::radiant.data("assignment.state.rda")
 
 ## Bug fixes
 
-* Chi-sqaure results were not displayed correctly in _Data > Pivot_
+* Chi-square results were not displayed correctly in _Data > Pivot_
 * Fix for `state_multiple`
 
 # radiant.data 0.8.1.0
