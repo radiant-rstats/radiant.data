@@ -1,9 +1,10 @@
-# radiant.data 1.0.2
+# radiant.data 1.0.3
 
 * Use a shinyAce input to generate data descriptions
 * Allow custom initial dataset list
 * Fix for latex formulas in _Report > Rmd_ on Windows
 * Updated requirements for markdown and Rmarkdown
+* Fix for `radiant.init.data` with shiny-server
 
 # radiant.data 1.0.0
 

@@ -95,7 +95,8 @@ init_data <- function(env = r_data) {
 
   strip_ext <- function(x) sub(paste0("\\.", tools::file_ext(x), "$"), "", x)
   datasetlist <- c()
-  df_names <- getOption("radiant.init.data", default = c("diamonds", "titanic"))
+  df_names <- getOption("radiant.init.data")
+  if (length(df_names) == 0) df_names <- c("diamonds", "titanic")
   for (dn in df_names) {
     if (file.exists(dn)) {
       df <- load(dn) %>% get()
