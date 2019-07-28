@@ -850,6 +850,7 @@ output$uiRename <- renderUI({
 })
 
 output$man_example <- renderText({
+  req(input$dataset)
   req(!is.null(r_data[[input$dataset]]))
   ## Show only the first 10 (or 20) rows
   show_data_snippet(nshow = 10)
