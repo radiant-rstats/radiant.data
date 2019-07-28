@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -171,7 +171,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>expl</th>
-      <td><p>Return value from <code>explore</code></p></td>
+      <td><p>Return value from <code><a href='explore.html'>explore</a></code></p></td>
     </tr>
     <tr>
       <th>top</th>
@@ -185,20 +185,20 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code>explore</code> to calculate summaries</p>
-<p><code>summary.explore</code> to show summaries</p>
-<p><code>dtab.explore</code> to create the DT table</p></div>
+    <div class='dont-index'><p><code><a href='explore.html'>explore</a></code> to calculate summaries</p>
+<p><code><a href='summary.explore.html'>summary.explore</a></code> to show summaries</p>
+<p><code><a href='dtab.explore.html'>dtab.explore</a></code> to create the DT table</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>explore</span>(<span class='no'>diamonds</span>, <span class='st'>"price:x"</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"var"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>()</div><div class='output co'>#&gt; Explore
+    <pre class="examples"><div class='input'><span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price:x"</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"var"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>()</div><div class='output co'>#&gt; Explore
 #&gt; Data        : diamonds 
 #&gt; Functions   : mean, sd 
 #&gt; Top         : Variables 
 #&gt; 
 #&gt;  .function     price carat clarity   cut color  depth  table     x
 #&gt;       mean 3,907.186 0.794   0.013 0.034 0.127 61.753 57.465 5.722
-#&gt;         sd 3,956.915 0.474   0.115 0.180 0.333  1.446  2.241 1.124</div><div class='input'><span class='fu'>explore</span>(<span class='no'>diamonds</span>, <span class='st'>"price"</span>, <span class='kw'>byvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"n_obs"</span>, <span class='st'>"skew"</span>), <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"byvar"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>()</div><div class='output co'>#&gt; Explore
+#&gt;         sd 3,956.915 0.474   0.115 0.180 0.333  1.446  2.241 1.124</div><div class='input'><span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price"</span>, <span class='kw'>byvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"n_obs"</span>, <span class='st'>"skew"</span>), <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"byvar"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>()</div><div class='output co'>#&gt; Explore
 #&gt; Data        : diamonds 
 #&gt; Grouped by  : cut 
 #&gt; Functions   : n_obs, skew 

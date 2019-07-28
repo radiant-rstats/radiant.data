@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -173,7 +173,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>Return value from <code>pivotr</code></p></td>
+      <td><p>Return value from <code><a href='pivotr.html'>pivotr</a></code></p></td>
     </tr>
     <tr>
       <th>perc</th>
@@ -203,11 +203,11 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code>pivotr</code> to create the pivot-table using dplyr</p></div>
+    <div class='dont-index'><p><code><a href='pivotr.html'>pivotr</a></code> to create the pivot-table using dplyr</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>pivotr</span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='kw'>chi2</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Pivot table
+    <pre class="examples"><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='kw'>chi2</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Pivot table
 #&gt; Data        : diamonds 
 #&gt; Categorical : cut 
 #&gt; 
@@ -220,7 +220,7 @@
 #&gt;      Total 3,000
 #&gt; 
 #&gt; Chi-squared: 1202.62 df(4), p.value &lt; .001
-#&gt; 0.0% of cells have expected values below 5</div><div class='input'><span class='fu'>pivotr</span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabsort</span> <span class='kw'>=</span> <span class='st'>"desc(n_obs)"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>()</div><div class='output co'>#&gt; Pivot table
+#&gt; 0.0% of cells have expected values below 5</div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabsort</span> <span class='kw'>=</span> <span class='st'>"desc(n_obs)"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>()</div><div class='output co'>#&gt; Pivot table
 #&gt; Data        : diamonds 
 #&gt; Table sorted: desc(n_obs) 
 #&gt; Categorical : cut 
@@ -232,7 +232,7 @@
 #&gt;       Good   275
 #&gt;       Fair   101
 #&gt;      Total 3,000
-#&gt; </div><div class='input'><span class='fu'>pivotr</span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabfilt</span> <span class='kw'>=</span> <span class='st'>"n_obs &gt; 700"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>()</div><div class='output co'>#&gt; Pivot table
+#&gt; </div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>tabfilt</span> <span class='kw'>=</span> <span class='st'>"n_obs &gt; 700"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>()</div><div class='output co'>#&gt; Pivot table
 #&gt; Data        : diamonds 
 #&gt; Table filter: n_obs &gt; 700 
 #&gt; Categorical : cut 
@@ -241,7 +241,7 @@
 #&gt;  Premium   771
 #&gt;    Ideal 1,176
 #&gt;    Total 3,000
-#&gt; </div><div class='input'><span class='fu'>pivotr</span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut:clarity"</span>, <span class='kw'>nvar</span> <span class='kw'>=</span> <span class='st'>"price"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>()</div><div class='output co'>#&gt; Pivot table
+#&gt; </div><div class='input'><span class='fu'><a href='pivotr.html'>pivotr</a></span>(<span class='no'>diamonds</span>, <span class='kw'>cvars</span> <span class='kw'>=</span> <span class='st'>"cut:clarity"</span>, <span class='kw'>nvar</span> <span class='kw'>=</span> <span class='st'>"price"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>()</div><div class='output co'>#&gt; Pivot table
 #&gt; Data        : diamonds 
 #&gt; Categorical : cut clarity 
 #&gt; Numeric     : price 
