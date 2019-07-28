@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for explore</span>
-<span class='fu'><a href='dtab.html'>dtab</a></span>(<span class='no'>object</span>, <span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>searchCols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='fu'>dtab</span>(<span class='no'>object</span>, <span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>searchCols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>order</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pageLength</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -173,7 +173,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>Return value from <code><a href='explore.html'>explore</a></code></p></td>
+      <td><p>Return value from <code>explore</code></p></td>
     </tr>
     <tr>
       <th>dec</th>
@@ -203,15 +203,15 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='pivotr.html'>pivotr</a></code> to create a pivot table</p>
-<p><code><a href='summary.pivotr.html'>summary.pivotr</a></code> to show summaries</p></div>
+    <div class='dont-index'><p><code>pivotr</code> to create a pivot table</p>
+<p><code>summary.pivotr</code> to show summaries</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price:x"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='dtab.html'>dtab</a></span>()
-<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price"</span>, <span class='kw'>byvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"n_obs"</span>, <span class='st'>"skew"</span>), <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"byvar"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='dtab.html'>dtab</a></span>()
+<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='fu'>explore</span>(<span class='no'>diamonds</span>, <span class='st'>"price:x"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>dtab</span>()
+<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='fu'>explore</span>(<span class='no'>diamonds</span>, <span class='st'>"price"</span>, <span class='kw'>byvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"n_obs"</span>, <span class='st'>"skew"</span>), <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"byvar"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>dtab</span>()
 <span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
