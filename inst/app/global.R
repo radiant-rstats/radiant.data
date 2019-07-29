@@ -1,10 +1,13 @@
 ## based on https://github.com/rstudio/shiny/issues/1237
-suppressWarnings(
-  try(
-    rm("registerShinyDebugHook", envir = as.environment("tools:rstudio")),
-    silent = TRUE
-  )
-)
+# suppressWarnings(
+#   try(
+#     rm("registerShinyDebugHook", envir = as.environment("tools:rstudio")),
+#     silent = TRUE
+#   )
+# )
+
+# options(shiny.trace = TRUE)
+# options(radiant.autosave = c(1, 5))
 
 ## set volumes if sf_volumes was preset (e.g., on a server) or
 ## we are running in Rstudio or if we are running locally

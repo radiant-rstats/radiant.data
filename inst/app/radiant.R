@@ -43,29 +43,32 @@ MRB <- function(x, env = parent.frame(), init = FALSE) {
 saveSession <- function(session = session, timestamp = FALSE) {
   if (!exists("r_sessions")) return()
 
-  LiveInputs <- toList(input)
-  r_state[names(LiveInputs)] <- LiveInputs
+  isolate({
+  
+    LiveInputs <- toList(input)
+    r_state[names(LiveInputs)] <- LiveInputs
 
-  ## removing the non-active bindings
-  rem_non_active()
+    ## removing the non-active bindings
+    rem_non_active()
 
-  r_data <- env2list(r_data)
-  r_info <- toList(r_info)
+    r_data <- env2list(r_data)
+    r_info <- toList(r_info)
 
-  r_sessions[[r_ssuid]] <- list(
-    r_data = r_data,
-    r_info = r_info,
-    r_state = r_state,
-    timestamp = Sys.time()
-  )
+    r_sessions[[r_ssuid]] <- list(
+      r_data = r_data,
+      r_info = r_info,
+      r_state = r_state,
+      timestamp = Sys.time()
+    )
 
-  ## saving session information to state file
-  if (timestamp) {
-    fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, "-", gsub("( |:)", "-", Sys.time()), ".state.rda")
-  } else {
-    fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, ".state.rda")
-  }
-  save(r_data, r_info, r_state, file = fn)
+    ## saving session information to state file
+    if (timestamp) {
+      fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, "-", gsub("( |:)", "-", Sys.time()), ".state.rda")
+    } else {
+      fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, ".state.rda")
+    }
+    save(r_data, r_info, r_state, file = fn)
+  })
 }
 
 observeEvent(input$refresh_radiant, {
@@ -841,7 +844,9 @@ state_multiple <- function(var, vals, init = character(0)) {
 # }
 
 ## autosave option
-if (length(getOption("radiant.autosave", default = NULL) > 0)) {
+## provide a vector in minutes for (1) the save interval and (2) the total duration
+# options(radiant.autosave = c(1, 5))
+if (length(getOption("radiant.autosave", default = NULL)) > 0) {
   start_time <- Sys.time()
   interval <- getOption("radiant.autosave")[1] * 60000
   max_duration <- getOption("radiant.autosave")[2]
@@ -856,7 +861,7 @@ if (length(getOption("radiant.autosave", default = NULL) > 0)) {
         options(radiant.autosave = c(interval, max_duration - diff_time))
         message("Radiant state was auto-saved at ", curr_time)
       } else {
-        if (length(getOption("radiant.autosave", default = NULL) > 0)) {
+        if (length(getOption("radiant.autosave", default = NULL)) > 0) {
           showModal(
             modalDialog(
               title = "Radiant state autosave",
