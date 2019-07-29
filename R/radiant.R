@@ -57,6 +57,8 @@ launch <- function(package = "radiant.data", run = "viewer", state, ...) {
     # run <- shiny::dialogViewer("Radiant", 1200, 800)
     ## using eval(parse(text = ...)) to avoid foreign function call warnings
     run <- eval(parse(text = "function(url) {invisible(.Call('rs_shinyviewer', url, getwd(), 3))}"))
+  } else if (run == FALSE) {
+    options(radiant.launch = "browser")
   } else {
     message(sprintf("\nStarting %s in the default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer or %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
     options(radiant.launch = "browser")
