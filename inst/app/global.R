@@ -131,7 +131,8 @@ if (Sys.getenv("SHINY_PORT") == "") {
   options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = -1))
 } else {
   options(radiant.local = FALSE)
-  options(radiant.report = getOption("radiant.report", default = FALSE))
+  # options(radiant.report = getOption("radiant.report", default = FALSE))
+  options(radiant.report = getOption("radiant.report", default = TRUE))
   ## limit upload filesize on server (10MB)
   options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = 10 * 1024 ^ 2))
   if (Sys.getlocale(category = "LC_ALL") == "C") {
