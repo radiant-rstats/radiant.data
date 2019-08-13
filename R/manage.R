@@ -1,6 +1,6 @@
 #' Load data through clipboard on Windows or macOS
 #'
-#' @details Extract data from the clipboard into a data.frame on Windows or macOS 
+#' @details Extract data from the clipboard into a data.frame on Windows or macOS
 #' @param delim Delimiter to use (tab is the default)
 #' @param text Text input to convert to table
 #' @param suppress Suppress warnings
@@ -9,32 +9,32 @@
 load_clip <- function(delim = "\t", text, suppress = TRUE) {
   sw <- if (suppress) suppressWarnings else function(x) x
   sw(
-    try({ 
+    try({
       os_type <- Sys.info()["sysname"]
       if (os_type == "Windows") {
         dataset <- read.table(
-          "clipboard", header = TRUE, sep = delim, 
+          "clipboard", header = TRUE, sep = delim,
           comment.char = "", fill = TRUE, as.is = TRUE,
           check.names = FALSE
-        ) 
+        )
       } else if (os_type == "Darwin") {
         dataset <- read.table(
-          pipe("pbpaste"), header = TRUE, sep = delim, 
+          pipe("pbpaste"), header = TRUE, sep = delim,
           comment.char = "", fill = TRUE, as.is = TRUE,
           check.names = FALSE
-        ) 
+        )
       } else if (os_type == "Linux") {
         if (missing(text) || is_empty(text)) {
           message("Loading data through clipboard is currently only supported on Windows and macOS")
           return(invisible())
         } else {
           dataset <- read.table(
-            text = text, header = TRUE, sep = delim, 
+            text = text, header = TRUE, sep = delim,
             comment.char = "", fill = TRUE, as.is = TRUE,
             check.names = FALSE
           )
         }
-      } 
+      }
       as.data.frame(dataset, check.names = FALSE, stringsAsFactors = FALSE) %>%
         radiant.data::to_fct()
     }, silent = TRUE)
@@ -63,10 +63,11 @@ save_clip <- function(dataset) {
 #'
 #' @details Remove symbols, trailing and leading spaces, and convert to valid R column names. Opinionated version of \code{\link{make.names}}
 #' @param x Data.frame or vector of (column) names
+#' @param lower Set letters to lower case (TRUE or FALSE)
 #' @examples
 #' fix_names(c(" var-name ", "$amount spent", "100"))
 #' @export
-fix_names <- function(x) {
+fix_names <- function(x, lower = FALSE) {
   isdf <- is.data.frame(x)
   cn <- if (isdf) colnames(x) else x
   cn <- gsub("(^\\s+|\\s+$)", "", cn) %>%
@@ -76,6 +77,7 @@ fix_names <- function(x) {
     make.names(unique = TRUE) %>%
     gsub("\\.{2,}", ".", .) %>%
     gsub("_{2,}", "_", .) %>%
-    make.names(unique = TRUE) ## used twice to make sure names are still unique
+    make.names(unique = TRUE) %>% ## used twice to make sure names are still unique
+    {if (lower) tolower(.) else .}
   if (isdf) stats::setNames(x, cn) else cn
 }

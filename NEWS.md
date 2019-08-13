@@ -1,5 +1,7 @@
-# radiant.data 1.0.3
+# radiant.data 1.0.4
 
+* Option to `fix_names` to lower case
+* Keyboard shortcut (Enter) to load remove csv and rds files
 * Use a shinyAce input to generate data descriptions
 * Allow custom initial dataset list
 * Fix for latex formulas in _Report > Rmd_ on Windows

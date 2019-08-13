@@ -4,10 +4,12 @@
 \alias{fix_names}
 \title{Ensure column names are valid}
 \usage{
-fix_names(x)
+fix_names(x, lower = FALSE)
 }
 \arguments{
 \item{x}{Data.frame or vector of (column) names}
+
+\item{lower}{Set letters to lower case (TRUE or FALSE)}
 }
 \description{
 Ensure column names are valid
