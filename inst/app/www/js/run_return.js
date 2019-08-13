@@ -50,6 +50,10 @@ $(document).keydown(function(event) {
   // focusing in text (area) inputs
   if ($("#data_rename").is(":focus") && event.keyCode == 13) {
     $("#renameButton").click();
+  } else if ($("#url_csv").is(":focus") && event.keyCode == 13) {
+    $("#url_csv_load").click();
+  } else if ($("#url_rds").is(":focus") && event.keyCode == 13) {
+    $("#url_rds_load").click();
   } else if ($("#view_name").is(":focus") && event.keyCode == 13) {
     $("#view_store").click();
   } else if ($("#pvt_name").is(":focus") && event.keyCode == 13) {
