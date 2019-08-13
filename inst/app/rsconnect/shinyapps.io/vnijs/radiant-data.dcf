@@ -5,9 +5,8 @@ account: vnijs
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 375418
-bundleId: 1729909
+bundleId: 2302217
 url: https://vnijs.shinyapps.io/radiant-data/
-when: 1543533255.91813
+when: 1565298147.64033
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: .Rapp.history
