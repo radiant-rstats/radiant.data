@@ -28,7 +28,7 @@ if (rstudioapi::isAvailable()) {
 }
 
 ## can still save report, code, and data without permission to run code
-if (!getOption("radiant.report")) {
+if (!isTRUE(getOption("radiant.report"))) {
   r_save_type <- "R"
 }
 
