@@ -1,4 +1,4 @@
-# radiant.data 1.0.4
+# radiant.data 1.0.5
 
 * Option to `fix_names` to lower case
 * Keyboard shortcut (Enter) to load remove csv and rds files
@@ -7,7 +7,11 @@
 * Fix for latex formulas in _Report > Rmd_ on Windows
 * Updated requirements for markdown and Rmarkdown
 * Fix for `radiant.init.data` with shiny-server
-
+* Improvements to setup to allow access to server-side files by adding options to .Rprofile:
+   - Add `options(radiant.report = TRUE)` to allow report generation in _Report > Rmd_ and _Report > R_
+   - Add `options(radiant.shinyFiles = TRUE)` to allow server-side access to files
+   - List specific directories you want to use with radiant using, for example, `options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))`
+ 
 # radiant.data 1.0.0
 
 * Support for series of class `ts` (e.g., Data > Transform > Change type > Time series)
