@@ -1,5 +1,6 @@
-# radiant.data 1.0.5
+# radiant.data 1.0.6
 
+* Fix for `Data > Transform > Change type`
 * Option to `fix_names` to lower case
 * Keyboard shortcut (Enter) to load remove csv and rds files
 * Use a shinyAce input to generate data descriptions

@@ -444,10 +444,10 @@ fix_ext <- function(ext) {
   if (!store || !is.character(dataset)) {
     fun <- get(fun)
     if (is_empty(.ext)) {
-      do.call(mutate_at, c(list(.tbl = dataset, .vars = vars), .funs = ts, tr_ts))
+      do.call(mutate_at, c(list(.tbl = dataset, .vars = vars), .funs = fun, tr_ts))
 
     } else {
-      do.call(mutate_at, c(list(.tbl = dataset, .vars = vars), .funs = ts, tr_ts)) %>%
+      do.call(mutate_at, c(list(.tbl = dataset, .vars = vars), .funs = fun, tr_ts)) %>%
         set_colnames(paste0(vars, .ext))
     }
   } else {
