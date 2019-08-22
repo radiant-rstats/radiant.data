@@ -1551,6 +1551,7 @@ read_files <- function(
     } else {
       cat(cmd)
     }
+    return(invisible(cmd))
   }
 }
 
