@@ -341,7 +341,7 @@ output$report_rmd <- renderUI({
       tabSize = getOption("radiant.ace_tabSize", 2),
       useSoftTabs = getOption("radiant.ace_useSoftTabs", TRUE),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
-      autoComplete = getOption("radiant.ace_autoComplete", "live"),
+      autoComplete = getOption("radiant.ace_autoComplete", "enable"),
       autoCompleters = c("static", "text"),
       autoCompleteList = isolate(radiant_auto_complete())
     ),
