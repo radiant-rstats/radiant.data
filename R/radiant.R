@@ -1463,7 +1463,7 @@ read_files <- function(
       {to} <- readr::read_csv({pp$rpath}) %>%
         fix_names() %>%
         to_fct()
-       register("{pp$objname}")')
+      register("{pp$objname}")')
   } else if (pp$fext == "tsv") {
     cmd <- glue('
       {to} <- readr::read_tsv({pp$rpath}) %>%
