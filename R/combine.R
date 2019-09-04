@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/data/combine.html} for an example in Radiant
 #'
-#' @param x Dataset 
+#' @param x Dataset
 #' @param y Dataset to combine with x
 #' @param by Variables used to combine `x` and `y`
 #' @param add Variables to add from `y`
@@ -10,7 +10,7 @@
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
 #' @param ... further arguments passed to or from other methods
 #'
-#' @return If list `r_data` exists the combined dataset is added as `name`. Else the combined dataset will be returned as `name`
+#' @return Combined dataset
 #'
 #' @examples
 #' avengers %>% combine_data(superheroes, type = "bind_cols")
@@ -20,8 +20,8 @@
 #'
 #' @export
 combine_data <- function(
-  x, y, by = "", add = "", 
-  type = "inner_join", 
+  x, y, by = "", add = "",
+  type = "inner_join",
   data_filter = "", ...
 ) {
 
@@ -30,7 +30,7 @@ combine_data <- function(
     return(cat("No variables selected to join datasets\n"))
   }
 
-  ## legacy to deal for argument name change
+  ## legacy to deal with argument name change
   if (missing(x) || missing(y)) {
     depr <- list(...)
     x <- depr$dataset
@@ -53,11 +53,9 @@ combine_data <- function(
 
   if (is_join) {
     x <- get(type, envir = as.environment("package:dplyr"))(x, y, by = by)
-    # x <- get(type)(x, y, by = by)
     madd <- paste0("<br>\nBy: ", paste0(by, collapse = ", "))
   } else {
     x <- get(type, envir = as.environment("package:dplyr"))(x, y)
-    # x <- get(type)(x, y)
     madd <- ""
   }
 
