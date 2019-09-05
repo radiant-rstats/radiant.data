@@ -1,8 +1,8 @@
 > Combine two datasets
 
-There are six _join_ (or _merge_) options available in Radiant from the [dplyr](http://www.rdocumentation.org/packages/dplyr){target="_dplyr"} package developed by Hadley Wickham and Romain Francois.
+There are six _join_ (or _merge_) options available in Radiant from the <a href="http://www.rdocumentation.org/packages/dplyr" target="_blank">dplyr</a> package developed by Hadley Wickham et.al.
 
-The examples below are adapted from the [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html){target="blank"} by [Jenny Bryan](http://www.stat.ubc.ca/~jenny/){target="_blank"} and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and other ways to combine datasets in R and Radiant. The data are also available in csv format through the links below:
+The examples below are adapted from the <a href="http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html" target="_blank">Cheatsheet for dplyr join functions</a> by <a href="http://www.stat.ubc.ca/~jenny/" target="_blank">Jenny Bryan</a> and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and other ways to combine datasets in R and Radiant. The data are also available in csv format through the links below:
 
 * <a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/superheroes.csv" target = "_blank">superheroes.csv</a>
 * <a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/publishers.csv" target = "_blank">publishers.csv</a>

@@ -21,7 +21,7 @@ In sum:
 where Q1 is the 25th percentile and Q3 is the 75th percentile. You may have to read the two bullets above a few times before it sinks in. The plot below should help to explain the structure of the box plot.
 
 <p align="center"><img src="https://radiant-rstats.github.io/docs/data/figures//boxplot.png"></p>
-[Source](http://en.wikipedia.org/wiki/File:Boxplot_vs_PDF.svg){target="_blank"}
+<a href="http://en.wikipedia.org/wiki/File:Boxplot_vs_PDF.svg" target="_blank">Source</a>
 
 ### Sub-plots and heat-maps
 
@@ -91,9 +91,9 @@ If you have the `svglite` package installed, the code-chunk header below will pr
 * Display y-axis in \$'s: `+ scale_y_continuous(labels = scales::dollar_format())`
 * Use `,` as a thousand separator for the y-axis: `+ scale_y_continuous(labels = scales::comma)`
 
-For more on how to customize plots for communication see <http://r4ds.had.co.nz/graphics-for-communication.html>{target="_blank"}.
+For more on how to customize plots for communication see <a href="http://r4ds.had.co.nz/graphics-for-communication.html" target="_blank">http://r4ds.had.co.nz/graphics-for-communication.html</a>.
 
-See also the ggplot2 documentation site <http://docs.ggplot2.org>{target="_blank"}.
+See also the ggplot2 documentation site <a href="http://docs.ggplot2.org" target="_blank">http://docs.ggplot2.org</a>.
 
 Suppose we create a set of three bar charts in _Data > Visualize_ using the `Diamond` data. To add a title above the group of plots and impose a one-column layout we could use `gridExtra::grid.arrange` as follows:
 
@@ -130,10 +130,10 @@ visualize(diamonds, xvar = c("carat", "clarity", "cut", "color"), custom = TRUE)
 
 For additional information on the `plotly` library see the links below:
 
-* Getting started: <https://plot.ly/r/getting-started/>{target="_blank"}
-* Reference: <https://plot.ly/r/reference/>{target="_blank"}
-* Book: <https://cpsievert.github.io/plotly_book>{target="_blank"}
-* Code: <https://github.com/ropensci/plotly>{target="_blank"}
+* Getting started: <a href="https://plot.ly/r/getting-started/" target="_blank">https://plot.ly/r/getting-started/</a>
+* Reference: <a href="https://plot.ly/r/reference/" target="_blank">https://plot.ly/r/reference/</a>
+* Book: <a href="https://cpsievert.github.io/plotly_book" target="_blank">https://cpsievert.github.io/plotly_book</a>
+* Code: <a href="https://github.com/ropensci/plotly" target="_blank">https://github.com/ropensci/plotly</a>
 
 ### R-functions
 
