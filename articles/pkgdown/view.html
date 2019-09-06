@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>View data in an interactive table (Data &gt; View) • radiant.data</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../../pkgdown.css" rel="stylesheet">
 <script src="../../pkgdown.js"></script><!-- docsearch --><script src="../../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="View data in an interactive table (Data &gt; View)">
@@ -32,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -98,7 +99,7 @@
   </a>
 </li>
       </ul>
-<form class="navbar-form navbar-right" role="search">
+<form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
         <div class="form-group">
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
 </div>
@@ -112,6 +113,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -137,9 +139,9 @@
 <div id="filter-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#filter-data" class="anchor"></a>Filter data</h3>
-<p>There are several ways to select a subset of the data to view. The <code>Filter data</code> box on the left (click the check-box) can be used with <code>&gt;</code> and <code>&lt;</code> symbols. You can also combine subset commands, for example, <code>x &gt; 3 &amp; y == 2</code> would show only those rows for which the variable <code>x</code> has values larger than 3 <strong>AND</strong> for which <code>y</code> is equal to 2. Note that in R, and most other programming languages, <code>=</code> is used to <em>assign</em> a value and <code>==</code> to determine if values are equal to each other. In contrast, <code>!=</code> is used to determine if two values are <em>unequal</em>. You can also use expressions that have an <strong>OR</strong> condition. For example, to select rows where <code>Salary</code> is smaller than $100,000 <strong>OR</strong> larger than $20,000 use <code>Salary &gt; 20000 | Salary &lt; 100000</code>. <code>|</code> is the symbol for <strong>OR</strong> and <code>&amp;</code> is the symbol for <strong>AND</strong></p>
+<p>There are several ways to select a subset of the data to view. The <code>Filter data</code> box on the left (click the check-box) can be used with <code><a href="https://rdrr.io/r/base/Comparison.html">&gt;</a></code> and <code><a href="https://rdrr.io/r/base/Comparison.html">&lt;</a></code> symbols. You can also combine subset commands, for example, <code>x &gt; 3 &amp; y == 2</code> would show only those rows for which the variable <code>x</code> has values larger than 3 <strong>AND</strong> for which <code>y</code> is equal to 2. Note that in R, and most other programming languages, <code>=</code> is used to <em>assign</em> a value and <code><a href="https://rdrr.io/r/base/Comparison.html">==</a></code> to determine if values are equal to each other. In contrast, <code><a href="https://rdrr.io/r/base/Comparison.html">!=</a></code> is used to determine if two values are <em>unequal</em>. You can also use expressions that have an <strong>OR</strong> condition. For example, to select rows where <code>Salary</code> is smaller than $100,000 <strong>OR</strong> larger than $20,000 use <code>Salary &gt; 20000 | Salary &lt; 100000</code>. <code><a href="https://rdrr.io/r/base/Logic.html">|</a></code> is the symbol for <strong>OR</strong> and <code><a href="https://rdrr.io/r/base/Logic.html">&amp;</a></code> is the symbol for <strong>AND</strong></p>
 <p>It is also possible to filter using dates. For example, to select rows with dates before June 1st, 2014 enter <code>date &lt; "2014-6-1"</code> into the filter box and press return.</p>
-<p>You can also use string matching to select rows. For example, type <code><a href="https://www.rdocumentation.org/packages/base/topics/grep">grepl('ood', cut)</a></code> to select rows with <code>Good</code> or <code>Very good</code> cut. This search is case sensitive by default. For case insensitive search use <code><a href="https://www.rdocumentation.org/packages/base/topics/grep">grepl("GOOD", cut, ignore.case = TRUE)</a></code>. Type your statement in the <code>Filter</code> box and press return to see the result on screen or an error below the box if the expression is invalid.</p>
+<p>You can also use string matching to select rows. For example, type <code><a href="https://rdrr.io/r/base/grep.html">grepl('ood', cut)</a></code> to select rows with <code>Good</code> or <code>Very good</code> cut. This search is case sensitive by default. For case insensitive search use <code><a href="https://rdrr.io/r/base/grep.html">grepl("GOOD", cut, ignore.case = TRUE)</a></code>. Type your statement in the <code>Filter</code> box and press return to see the result on screen or an error below the box if the expression is invalid.</p>
 <p>It is important to note that these filters are <em>persistent</em> and will be applied to any analysis conducted through in Radiant. To deactivate a filter un-check the <code>Filter data</code> check-box. To remove a filter simply delete it.</p>
 <table class="table table table-condensed table-hover">
 <thead><tr>
@@ -156,7 +158,7 @@ Example
 <tbody>
 <tr>
 <td style="text-align:left;">
-<code>&lt;</code>
+<code><a href="https://rdrr.io/r/base/Comparison.html">&lt;</a></code>
 </td>
 <td style="text-align:left;">
 less than
@@ -167,7 +169,7 @@ less than
 </tr>
 <tr>
 <td style="text-align:left;">
-<code>&lt;=</code>
+<code><a href="https://rdrr.io/r/base/Comparison.html">&lt;=</a></code>
 </td>
 <td style="text-align:left;">
 less than or equal to
@@ -178,7 +180,7 @@ less than or equal to
 </tr>
 <tr>
 <td style="text-align:left;">
-<code>&gt;</code>
+<code><a href="https://rdrr.io/r/base/Comparison.html">&gt;</a></code>
 </td>
 <td style="text-align:left;">
 greater than
@@ -189,7 +191,7 @@ greater than
 </tr>
 <tr>
 <td style="text-align:left;">
-<code>&gt;=</code>
+<code><a href="https://rdrr.io/r/base/Comparison.html">&gt;=</a></code>
 </td>
 <td style="text-align:left;">
 greater than or equal to
@@ -200,7 +202,7 @@ greater than or equal to
 </tr>
 <tr>
 <td style="text-align:left;">
-<code>==</code>
+<code><a href="https://rdrr.io/r/base/Comparison.html">==</a></code>
 </td>
 <td style="text-align:left;">
 exactly equal to
@@ -211,7 +213,7 @@ exactly equal to
 </tr>
 <tr>
 <td style="text-align:left;">
-<code>!=</code>
+<code><a href="https://rdrr.io/r/base/Comparison.html">!=</a></code>
 </td>
 <td style="text-align:left;">
 not equal to
@@ -222,7 +224,7 @@ not equal to
 </tr>
 <tr>
 <td style="text-align:left;">
-<code>|</code>
+<code><a href="https://rdrr.io/r/base/Logic.html">|</a></code>
 </td>
 <td style="text-align:left;">
 x OR y
@@ -233,7 +235,7 @@ x OR y
 </tr>
 <tr>
 <td style="text-align:left;">
-<code>&amp;</code>
+<code><a href="https://rdrr.io/r/base/Logic.html">&amp;</a></code>
 </td>
 <td style="text-align:left;">
 x AND y
@@ -244,7 +246,7 @@ x AND y
 </tr>
 <tr>
 <td style="text-align:left;">
-<code>%in%</code>
+<code><a href="https://rdrr.io/r/base/match.html">%in%</a></code>
 </td>
 <td style="text-align:left;">
 x is one of y
@@ -261,7 +263,7 @@ is.na
 is missing
 </td>
 <td style="text-align:left;">
-<code><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na(price)</a></code>
+<code><a href="https://rdrr.io/r/base/NA.html">is.na(price)</a></code>
 </td>
 </tr>
 </tbody>
@@ -288,7 +290,7 @@ is missing
 <a href="#column-filters-and-search" class="anchor"></a>Column filters and Search</h3>
 <p>For variables that have a limited number of different values (i.e., a factor) you can select the levels to keep from the column filter below the variable name. For example, to filter on rows with ideal cut click in the box below the <code>cut</code> column header and select <code>Ideal</code> from the dropdown menu shown. You can also type a string into these column filters and then press return. Note that matching is case-insensitive. In fact, typing <code>eal</code> would produce the same result because the search will match any part of a string. Similarly, you can type a string to select rows based on character variables (e.g., street names).</p>
 <p>For numeric variables the column filter boxes have some special features that make them almost as powerful as the <code>Filter data</code> box. For numeric and integer variables you can use <code>...</code> to indicate a range. For example, to select <code>price</code> values between $500 and $2000 type <code>500 ... 2000</code> and press return. The range is inclusive of the values typed. Furthermore, if we want to filter on <code>carat</code> <code>0.32 ...</code> will show only diamonds with carat values larger than or equal to 0.32. Numeric variables also have a slider that you can use to define the range of values to keep.</p>
-<p>If you want to get <em>really</em> fancy you can use the search box on the top right to search across all columns in the data using <strong>regular expressions</strong>. For example, to find all rows that have an entry in <em>any</em> column ending with the number 72 type <code>72$</code> (i.e., the <code>$</code> sign is used to indicate the end of an entry). For all rows with entries that start with 60 use <code>^60</code> (i.e., the <code>^</code> is used to indicate the first character in an entry). Regular expressions are incredibly powerful for search but this is a <em>big</em> topic area. To learn more about regular expressions see this <a href="http://www.regular-expressions.info/tutorial.html" target="_blank">tutorial</a>.</p>
+<p>If you want to get <em>really</em> fancy you can use the search box on the top right to search across all columns in the data using <strong>regular expressions</strong>. For example, to find all rows that have an entry in <em>any</em> column ending with the number 72 type <code>72$</code> (i.e., the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> sign is used to indicate the end of an entry). For all rows with entries that start with 60 use <code>^60</code> (i.e., the <code><a href="https://rdrr.io/r/base/Arithmetic.html">^</a></code> is used to indicate the first character in an entry). Regular expressions are incredibly powerful for search but this is a <em>big</em> topic area. To learn more about regular expressions see this <a href="http://www.regular-expressions.info/tutorial.html" target="_blank">tutorial</a>.</p>
 </div>
 <div id="store-filters" class="section level3">
 <h3 class="hasAnchor">
@@ -306,9 +308,11 @@ is missing
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
       </div>
 
 </div>
+
 
 
       <footer><div class="copyright">
@@ -316,8 +320,9 @@ is missing
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
 </div>
+
       </footer>
 </div>
 

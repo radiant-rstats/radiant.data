@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Combine data sets (Data &gt; Combine) • radiant.data</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../../pkgdown.css" rel="stylesheet">
 <script src="../../pkgdown.js"></script><!-- docsearch --><script src="../../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Combine data sets (Data &gt; Combine)">
@@ -32,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -98,7 +99,7 @@
   </a>
 </li>
       </ul>
-<form class="navbar-form navbar-right" role="search">
+<form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
         <div class="form-group">
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
 </div>
@@ -112,6 +113,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -129,8 +131,8 @@
 <blockquote>
 <p>Combine two datasets</p>
 </blockquote>
-<p>There are six <em>join</em> (or <em>merge</em>) options available in Radiant from the <a href="http://www.rdocumentation.org/packages/dplyr" target="_dplyr">dplyr</a> package developed by Hadley Wickham and Romain Francois.</p>
-<p>The examples below are adapted from the <a href="http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html" target="blank">Cheatsheet for dplyr join functions</a> by <a href="http://www.stat.ubc.ca/~jenny/" target="_blank">Jenny Bryan</a> and focus on three small datasets, <code>superheroes</code>, <code>publishers</code>, and <code>avengers</code>, to illustrate the different <em>join</em> types and other ways to combine datasets in R and Radiant. The data are also available in csv format through the links below:</p>
+<p>There are six <em>join</em> (or <em>merge</em>) options available in Radiant from the <a href="http://www.rdocumentation.org/packages/dplyr" target="_blank">dplyr</a> package developed by Hadley Wickham et.al.</p>
+<p>The examples below are adapted from the <a href="http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html" target="_blank">Cheatsheet for dplyr join functions</a> by <a href="http://www.stat.ubc.ca/~jenny/" target="_blank">Jenny Bryan</a> and focus on three small datasets, <code>superheroes</code>, <code>publishers</code>, and <code>avengers</code>, to illustrate the different <em>join</em> types and other ways to combine datasets in R and Radiant. The data are also available in csv format through the links below:</p>
 <ul>
 <li><a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/superheroes.csv" target="_blank">superheroes.csv</a></li>
 <li><a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/publishers.csv" target="_blank">publishers.csv</a></li>
@@ -433,7 +435,7 @@ DC
 <img src="https://radiant-rstats.github.io/docs/data/figures//inner_join.png"></p>
 <p>The R(adiant) commands are:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># Radiant</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="../../reference/combine_data.html">combine_data</a></span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"inner_join"</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">combine_data</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"inner_join"</span>)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># R</span></a>
 <a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">inner_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</a></code></pre></div>
@@ -590,7 +592,7 @@ NA
 <img src="https://radiant-rstats.github.io/docs/data/figures//left_join.png"></p>
 <p>The R(adiant) commands are:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># Radiant</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="../../reference/combine_data.html">combine_data</a></span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"left_join"</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">combine_data</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"left_join"</span>)</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># R</span></a>
 <a class="sourceLine" id="cb2-5" data-line-number="5"><span class="kw">left_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</a></code></pre></div>
@@ -747,7 +749,7 @@ Image
 <img src="https://radiant-rstats.github.io/docs/data/figures//right_join.png"></p>
 <p>The R(adiant) commands are:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># Radiant</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="../../reference/combine_data.html">combine_data</a></span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"right_join"</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">combine_data</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"right_join"</span>)</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co"># R</span></a>
 <a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw">right_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</a></code></pre></div>
@@ -921,7 +923,7 @@ Image
 <img src="https://radiant-rstats.github.io/docs/data/figures//full_join.png"></p>
 <p>The R(adiant) commands are:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># Radiant</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="../../reference/combine_data.html">combine_data</a></span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"full_join"</span>)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">combine_data</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"full_join"</span>)</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co"># R</span></a>
 <a class="sourceLine" id="cb4-5" data-line-number="5"><span class="kw">full_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</a></code></pre></div>
@@ -1036,7 +1038,7 @@ DC
 </table>
 <p>We get a similar table as with <code>inner_join</code> but it contains only the variables in <code>superheroes</code>. The R(adiant) commands are:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Radiant</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="../../reference/combine_data.html">combine_data</a></span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"semi_join"</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">combine_data</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>, <span class="dt">type =</span> <span class="st">"semi_join"</span>)</a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co"># R</span></a>
 <a class="sourceLine" id="cb5-5" data-line-number="5"><span class="kw">semi_join</span>(superheroes, publishers, <span class="dt">by =</span> <span class="st">"publisher"</span>)</a></code></pre></div>
@@ -1519,7 +1521,7 @@ Dark Horse Comics
 <p>If the <code>avengers</code> dataset were meant to extend the list of superheroes we could just stack the two datasets, one below the other. The new datasets has 14 rows and 4 columns. Due to a coding error in the <code>avengers</code> dataset (i.e.., <em>Magneto</em> is <em>not</em> an <em>Avenger</em>) there is a duplicate row in the new combined dataset. Something we probably don’t want.</p>
 <p>The R(adiant) commands are:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Radiant</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw"><a href="../../reference/combine_data.html">combine_data</a></span>(avengers, superheroes, <span class="dt">type =</span> <span class="st">"bind_rows"</span>)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">combine_data</span>(avengers, superheroes, <span class="dt">type =</span> <span class="st">"bind_rows"</span>)</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co"># R</span></a>
 <a class="sourceLine" id="cb6-5" data-line-number="5"><span class="kw">bind_rows</span>(avengers, superheroes)</a></code></pre></div>
@@ -2111,9 +2113,11 @@ Marvel
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
       </div>
 
 </div>
+
 
 
       <footer><div class="copyright">
@@ -2121,8 +2125,9 @@ Marvel
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
 </div>
+
       </footer>
 </div>
 
