@@ -92,6 +92,7 @@ r_ssuid <- if (getOption("radiant.local")) {
 session$sendCustomMessage("session_start", r_ssuid)
 
 ## identify the shiny environment
+## deprecated - will be removed in future version
 r_environment <- session$token
 
 r_info_legacy <- function() {
@@ -313,14 +314,14 @@ isolate({
 
 if (getOption("radiant.from.package", default = TRUE)) {
   ## launch using installed radiant.data package
-  radiant.data::copy_all(radiant.data)
-  # cat("\nGetting radiant.data from source ...\n")
+  # radiant.data::copy_all("radiant.data")
+  # cat("\nGetting radiant.data from package ...\n")
 } else {
   ## for shiny-server and development
   for (file in list.files("../../R", pattern = "\\.(r|R)$", full.names = TRUE)) {
     source(file, encoding = getOption("radiant.encoding", "UTF-8"), local = TRUE)
   }
-  # cat("\nGetting radiant.data from source ...\n")
+  cat("\nGetting radiant.data from source ...\n")
 }
 
 ## Getting screen width ...
@@ -329,3 +330,6 @@ if (getOption("radiant.from.package", default = TRUE)) {
 observeEvent(input$get_screen_width, {
   if (getOption("width", default = 250) != 250) options(width = 250)
 })
+
+
+radiant.data::copy_from(radiant.data, register, deregister)

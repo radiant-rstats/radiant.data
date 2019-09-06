@@ -104,6 +104,13 @@ output$ui_tr_reorg_levs <- renderUI({
   )
 })
 
+transform_auto_complete <- reactive({
+  req(input$dataset)
+  comps <- list(r_info[["datasetlist"]][input$dataset], as.vector(varnames()))
+  names(comps) <- c("{datasets}", paste0("{", input$dataset, "}"))
+  comps
+})
+
 output$ui_tr_log <- renderUI({
   tagList(
     HTML("<label>Transform command log:</label><br>"),
@@ -118,11 +125,27 @@ output$ui_tr_log <- renderUI({
       useSoftTabs = getOption("radiant.ace_useSoftTabs", TRUE),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
       autoScrollEditorIntoView = TRUE,
+      autoComplete = getOption("radiant.ace_autoComplete", "enable"),
+      autoCompleters = c("static", "rlang"),
+      autoCompleteList = isolate(transform_auto_complete()),
       minLines = 5,
       maxLines = 15
     )
   )
 })
+
+transform_annotater <- shinyAce::aceAnnotate("tr_log")
+transform_tooltip <- shinyAce::aceTooltip("tr_log")
+transform_ac <- shinyAce::aceAutocomplete("tr_log")
+
+observe({
+  shinyAce::updateAceEditor(
+    session, "tr_log",
+    autoCompleters = c("static", "rlang"),
+    autoCompleteList = transform_auto_complete()
+  )
+})
+
 
 ext_options <- list(
   "none" = "", "log" = "_ln", "exp" = "_exp",
@@ -795,7 +818,7 @@ fix_ext <- function(ext) {
 
 .reorg_vars <- function(dataset, vars = "", store_dat = "", store = TRUE) {
  if (!store || !is.character(dataset)) {
-    get_data(dataset, vars, filt = "", na.rm = FALSE)
+    get_data(dataset, vars, filt = "", na.rm = FALSE, envir = r_data)
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## reorder/remove variables\n", store_dat, " <- select(", dataset, ", ", paste0(vars, collapse = ", "), ")\n")
@@ -894,7 +917,7 @@ fix_ext <- function(ext) {
   }
 
   if (!store || !is.character(dataset)) {
-    get_data(dataset, vars = vars, filt = filt, na.rm = FALSE)
+    get_data(dataset, vars = vars, filt = filt, na.rm = FALSE, envir = r_data)
   } else {
     filt <- gsub("\"", "'", filt)
     if (all(vars == "")) {

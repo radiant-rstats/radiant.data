@@ -172,7 +172,9 @@ output$ui_Explore <- renderUI({
   if (not_available(input$expl_vars) || is.null(input$expl_top)) return()
   if (!is_empty(input$expl_byvar) && not_available(input$expl_byvar)) return()
   if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) return()
-  sshhr(do.call(explore, expl_inputs()))
+  expli <- expl_inputs()
+  expli$envir <- r_data
+  sshhr(do.call(explore, expli))
 })
 
 observeEvent(input$explore_search_columns, {

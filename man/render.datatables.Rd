@@ -4,10 +4,13 @@
 \alias{render.datatables}
 \title{Method to render DT tables}
 \usage{
-\method{render}{datatables}(object, ...)
+\method{render}{datatables}(object,
+  shiny = shiny::getDefaultReactiveDomain(), ...)
 }
 \arguments{
 \item{object}{DT table}
+
+\item{shiny}{Check if function is called from a shiny application}
 
 \item{...}{Additional arguments}
 }

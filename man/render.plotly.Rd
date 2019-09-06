@@ -4,10 +4,13 @@
 \alias{render.plotly}
 \title{Method to render plotly plots}
 \usage{
-\method{render}{plotly}(object, ...)
+\method{render}{plotly}(object,
+  shiny = shiny::getDefaultReactiveDomain(), ...)
 }
 \arguments{
 \item{object}{plotly object}
+
+\item{shiny}{Check if function is called from a shiny application}
 
 \item{...}{Additional arguments}
 }

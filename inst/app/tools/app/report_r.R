@@ -243,7 +243,7 @@ output$report_r <- renderUI({
       useSoftTabs = getOption("radiant.ace_useSoftTabs", TRUE),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
       autoComplete = getOption("radiant.ace_autoComplete", "enable"),
-      autoCompleters = c("static", "text"),
+      autoCompleters = c("static", "rlang"),
       autoCompleteList = isolate(radiant_auto_complete())
     ),
     htmlOutput("r_knitted"),
@@ -251,13 +251,17 @@ output$report_r <- renderUI({
   )
 })
 
+radiant_r_annotater <- shinyAce::aceAnnotate("r_edit")
+radiant_r_tooltip <- shinyAce::aceTooltip("r_edit")
+radiant_r_ac <- shinyAce::aceAutocomplete("r_edit")
+
 ## auto completion of available R functions, datasets, and variables
 observe({
   ## don't need to run until report generated
   req(report_r$report > 1)
   shinyAce::updateAceEditor(
     session, "r_edit",
-    autoCompleters = c("static", "text"),
+    autoCompleters = c("static", "rlang"),
     autoCompleteList = radiant_auto_complete()
   )
 })

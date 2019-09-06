@@ -150,7 +150,7 @@ observeEvent(input$view_store, {
 
   r_data[[dataset]] <- get_data(
     input$dataset, vars = input$view_vars, filt = data_filter,
-    rows = input$dataviewer_rows_all, na.rm = FALSE
+    rows = input$dataviewer_rows_all, na.rm = FALSE, envir = r_data
   )
   register(dataset)
   updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
@@ -181,7 +181,8 @@ dl_view_tab <- function(file) {
     vars = input$view_vars,
     filt = data_filter,
     rows = input$dataviewer_rows_all,
-    na.rm = FALSE
+    na.rm = FALSE,
+    envir = r_data
   ) %>% write.csv(file, row.names = FALSE)
 }
 

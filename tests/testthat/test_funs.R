@@ -104,7 +104,6 @@ test_that("explore 8 x 2", {
 
 test_that("explore 1 x 2", {
   result <- explore(diamonds, "price")
-  # summary(result)
   expect_equal(result, structure(list(tab = structure(list(variable = structure(1L, .Label = "price", class = "factor"),
     mean = 3907.186, sd = 3956.91540005997), class = "data.frame", row.names = c(NA,
     -1L), radiant_nrow = 1L), df_name = "diamonds", vars = "price", byvar = "",

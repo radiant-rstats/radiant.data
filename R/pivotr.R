@@ -11,6 +11,7 @@
 #' @param tabsort Expression used to sort the table (e.g., "desc(Total)")
 #' @param nr Number of rows to display
 #' @param data_filter Expression used to filter the dataset before creating the table (e.g., "price > 10000")
+#' @param envir Environment to extract data from
 #'
 #' @examples
 #' pivotr(diamonds, cvars = "cut") %>% str()
@@ -24,14 +25,14 @@
 pivotr <- function(
   dataset, cvars = "", nvar = "None", fun = "mean",
   normalize = "None", tabfilt = "", tabsort = "", nr = NULL,
-  data_filter = ""
+  data_filter = "", envir = parent.frame()
 ) {
 
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   fill <- if (nvar == "None") 0L else NA
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- get_data(dataset, vars, filt = data_filter, na.rm = FALSE)
+  dataset <- get_data(dataset, vars, filt = data_filter, na.rm = FALSE, envir = envir)
 
   ## in case : was used for cvars
   cvars <- base::setdiff(colnames(dataset), nvar)
@@ -179,7 +180,7 @@ pivotr <- function(
     tab <- tab[ind, , drop = FALSE]
   }
 
-  rm(isNum, dataset, sfun, sel, i, levs, total, ind, nrow_tab)
+  rm(isNum, dataset, sfun, sel, i, levs, total, ind, nrow_tab, envir)
 
   as.list(environment()) %>% add_class("pivotr")
 }

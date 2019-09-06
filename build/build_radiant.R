@@ -14,7 +14,7 @@ pkg <- basename(curr)
 #   tools::showNonASCIIfile(f)
 # }
 
-## building shinyAce packages for mac and windows
+## building radiant packages for mac and windows
 rv <- R.Version()
 rv <- paste0(rv$major, ".", strsplit(rv$minor, ".", fixed = TRUE)[[1]][1])
 

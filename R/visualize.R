@@ -32,6 +32,7 @@
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This option can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org} for options.
+#' @param envir Environment to extract data from
 #'
 #' @return Generated plots
 #'
@@ -61,7 +62,7 @@ visualize <- function(
   bins = 10, smooth = 1, fun = "mean", check = "", axes = "",
   alpha = 0.5, theme = "theme_gray", base_size = 11, base_family = "",
   labs = list(), xlim = NULL, ylim = NULL, data_filter = "",
-  shiny = FALSE, custom = FALSE
+  shiny = FALSE, custom = FALSE, envir = parent.frame()
 ) {
 
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
@@ -127,7 +128,7 @@ visualize <- function(
 
   ## so you can also pass-in a data.frame
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- get_data(dataset, vars, filt = data_filter)
+  dataset <- get_data(dataset, vars, filt = data_filter, envir = envir)
 
   if (type == "scatter" && !is_empty(nrobs)) {
     nrobs <- as.integer(nrobs)

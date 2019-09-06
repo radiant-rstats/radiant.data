@@ -11,6 +11,7 @@
 #' @param tabsort Expression used to sort the table (e.g., "desc(Total)")
 #' @param nr Number of rows to display
 #' @param data_filter Expression used to filter the dataset before creating the table (e.g., "price > 10000")
+#' @param envir Environment to extract data from
 #'
 #' @return A list of all variables defined in the function as an object of class explore
 #'
@@ -25,7 +26,7 @@
 explore <- function(
   dataset, vars = "", byvar = "", fun = c("mean", "sd"),
   top = "fun", tabfilt = "", tabsort = "", nr = NULL,
-  data_filter = ""
+  data_filter = "", envir = parent.frame()
 ) {
 
   tvars <- vars
@@ -33,7 +34,7 @@ explore <- function(
 
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- get_data(dataset, tvars, filt = data_filter, na.rm = FALSE)
+  dataset <- get_data(dataset, tvars, filt = data_filter, na.rm = FALSE, envir = envir)
   rm(tvars)
 
   ## in case : was used
@@ -147,7 +148,7 @@ explore <- function(
   }
 
   ## objects no longer needed
-  rm(dataset, check_int, isLogNum, isFctNum, dc, nrow_tab)
+  rm(dataset, check_int, isLogNum, isFctNum, dc, nrow_tab, envir)
 
   as.list(environment()) %>% add_class("explore")
 }

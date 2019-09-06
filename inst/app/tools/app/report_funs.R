@@ -153,7 +153,7 @@ knitr::opts_chunk$set(
   error = TRUE,
   cache = FALSE,
   message = FALSE,\n
-  dpi = 144,
+  dpi = 96,
   warning = FALSE", sopts, "
 )
 
@@ -166,7 +166,7 @@ options(
 )
 
 ## make all required libraries available by loading radiant package if needed
-if (!exists(\"r_environment\")) library(", lib, ")
+if (is.null(shiny::getDefaultReactiveDomain())) library(", lib, ")
 
 ## include code to load the data you require
 ## for interactive use attach the r_data environment
@@ -398,6 +398,9 @@ knit_it <- function(report, type = "rmd") {
     quiet = TRUE
   )
 
+  ## removing annoying fig.caps for unnamed chunks
+  md <- gsub("<p class=\"caption\">plot of chunk unnamed-chunk-[0-9]+</p>", "", md)
+
   ## add basic styling to tables
   paste(
     markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
@@ -621,6 +624,13 @@ report_save_content <- function(file, type = "rmd") {
             ## have to use current dir so (relative) paths work properly
             tmp_fn <- tempfile(pattern = "report-", tmpdir = ".", fileext = ".Rmd")
             cat(init, file = tmp_fn, sep = "\n")
+
+            if (!save_type %in% c("Notebook", "HTML")) {
+              oop <- knitr::opts_chunk$get()$screenshot.force
+              knitr::opts_chunk$set(screenshot.force = TRUE)
+              on.exit(knitr::opts_chunk$set(screenshot.force = oop))
+            }
+
             out <- rmarkdown::render(
               tmp_fn,
               switch(
@@ -756,7 +766,7 @@ update_report <- function(
     update_report_fun(cmd, type = "r")
   } else {
     if (figs) {
-      cmd <- paste0("\n```{r fig.width = ", round(7 * fig.width / 650, 2), ", fig.height = ", round(7 * fig.height / 650, 2), ", dpi = 144}\n", cmd, "\n```\n")
+      cmd <- paste0("\n```{r fig.width = ", round(7 * fig.width / 650, 2), ", fig.height = ", round(7 * fig.height / 650, 2), ", dpi = 96}\n", cmd, "\n```\n")
     } else {
       cmd <- paste0("\n```{r}\n", cmd, "\n```\n")
     }

@@ -5,7 +5,7 @@
 \title{Combine datasets using dplyr's bind and join functions}
 \usage{
 combine_data(x, y, by = "", add = "", type = "inner_join",
-  data_filter = "", ...)
+  data_filter = "", envir = parent.frame(), ...)
 }
 \arguments{
 \item{x}{Dataset}
@@ -20,10 +20,12 @@ combine_data(x, y, by = "", add = "", type = "inner_join",
 
 \item{data_filter}{Expression used to filter the dataset. This should be a string (e.g., "price > 10000")}
 
+\item{envir}{Environment to extract data from}
+
 \item{...}{further arguments passed to or from other methods}
 }
 \value{
-If list `r_data` exists the combined dataset is added as `name`. Else the combined dataset will be returned as `name`
+Combined dataset
 }
 \description{
 Combine datasets using dplyr's bind and join functions

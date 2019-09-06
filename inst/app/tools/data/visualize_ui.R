@@ -525,8 +525,11 @@ output$visualize <- renderPlot({
   }
 
   req(!is.null(input$viz_color) || !is.null(input$viz_fill))
+  vizi <- viz_inputs()
+  vizi$shiny <- TRUE
+  vizi$envir <- r_data
   withProgress(message = "Making plot", value = 1, {
-    do.call(visualize, c(viz_inputs(), shiny = TRUE))
+    do.call(visualize, vizi)
   })
 })
 

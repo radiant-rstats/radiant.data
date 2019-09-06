@@ -44,7 +44,7 @@ saveSession <- function(session = session, timestamp = FALSE) {
   if (!exists("r_sessions")) return()
 
   isolate({
-  
+
     LiveInputs <- toList(input)
     r_state[names(LiveInputs)] <- LiveInputs
 
@@ -263,11 +263,11 @@ has_duplicates <- function(x) length(unique(x)) < length(x)
 is_date <- function(x) inherits(x, c("Date", "POSIXlt", "POSIXct"))
 
 ## drop elements from .._args variables obtained using formals
-r_drop <- function(x, drop = c("dataset", "data_filter")) x[-which(x %in% drop)]
+r_drop <- function(x, drop = c("dataset", "data_filter", "envir")) x[-which(x %in% drop)]
 
 ## show a few rows of a dataframe
 show_data_snippet <- function(dataset = input$dataset, nshow = 7, title = "", filt = "") {
-  if (is.character(dataset) && length(dataset) == 1) dataset <- get_data(dataset, filt = filt, na.rm = FALSE)
+  if (is.character(dataset) && length(dataset) == 1) dataset <- get_data(dataset, filt = filt, na.rm = FALSE, envir = r_data)
   nr <- nrow(dataset)
   ## avoid slice with variables outside of the df in case a column with the same
   ## name exists

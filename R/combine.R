@@ -8,6 +8,7 @@
 #' @param add Variables to add from `y`
 #' @param type The main bind and join types from the dplyr package are provided. \bold{inner_join} returns all rows from x with matching values in y, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. \bold{left_join} returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. \bold{right_join} is equivalent to a left join for datasets y and x. \bold{full_join} combines two datasets, keeping rows and columns that appear in either. \bold{semi_join} returns all rows from x with matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. \bold{anti_join} returns all rows from x without matching values in y, keeping only columns from x. \bold{bind_rows} and \bold{bind_cols} are also included, as are \bold{intersect}, \bold{union}, and \bold{setdiff}. See \url{https://radiant-rstats.github.io/docs/data/combine.html} for further details
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
+#' @param envir Environment to extract data from
 #' @param ... further arguments passed to or from other methods
 #'
 #' @return Combined dataset
@@ -22,7 +23,9 @@
 combine_data <- function(
   x, y, by = "", add = "",
   type = "inner_join",
-  data_filter = "", ...
+  data_filter = "", 
+  envir = parent.frame(),
+  ...
 ) {
 
   is_join <- grepl("_join", type)
@@ -40,11 +43,11 @@ combine_data <- function(
   x_name <- ifelse(is_string(x), x, deparse(substitute(x)))
   y_name <- ifelse(is_string(y), y, deparse(substitute(y)))
 
-  x <- get_data(x, filt = data_filter, na.rm = FALSE)
+  x <- get_data(x, filt = data_filter, na.rm = FALSE, envir = envir)
   if (all(add == "")) {
-    y <- get_data(y, na.rm = FALSE)
+    y <- get_data(y, na.rm = FALSE, envir = envir)
   } else {
-    y <- get_data(y, unique(c(by, add)), na.rm = FALSE)
+    y <- get_data(y, unique(c(by, add)), na.rm = FALSE, envir = envir)
   }
 
   ## keeping data descriptions

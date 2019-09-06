@@ -11,7 +11,8 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   pointcol = "black", bins = 10, smooth = 1, fun = "mean",
   check = "", axes = "", alpha = 0.5, theme = "theme_gray",
   base_size = 11, base_family = "", labs = list(), xlim = NULL,
-  ylim = NULL, data_filter = "", shiny = FALSE, custom = FALSE)
+  ylim = NULL, data_filter = "", shiny = FALSE, custom = FALSE,
+  envir = parent.frame())
 }
 \arguments{
 \item{dataset}{Data to plot (data.frame or tibble)}
@@ -73,6 +74,8 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 \item{shiny}{Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app}
 
 \item{custom}{Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This option can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org} for options.}
+
+\item{envir}{Environment to extract data from}
 }
 \value{
 Generated plots

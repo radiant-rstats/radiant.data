@@ -4,7 +4,8 @@
 \alias{get_data}
 \title{Select variables and filter data}
 \usage{
-get_data(dataset, vars = "", filt = "", rows = NULL, na.rm = TRUE)
+get_data(dataset, vars = "", filt = "", rows = NULL, na.rm = TRUE,
+  envir = c())
 }
 \arguments{
 \item{dataset}{Dataset or name of the data.frame}
@@ -16,6 +17,8 @@ get_data(dataset, vars = "", filt = "", rows = NULL, na.rm = TRUE)
 \item{rows}{Select rows in the specified dataset}
 
 \item{na.rm}{Remove rows with missing values (default is TRUE)}
+
+\item{envir}{Environment to extract data from}
 }
 \value{
 Data.frame with specified columns and rows

@@ -258,7 +258,7 @@ observeEvent(input$pvt_nvar, {
   if (!is_empty(pvti$nvar, "None")) {
     req(available(pvti$nvar))
   }
-
+  pvti$envir <- r_data
   sshhr(do.call(pivotr, pvti))
 })
 

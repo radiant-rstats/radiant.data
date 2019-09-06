@@ -4,7 +4,8 @@
 \alias{register}
 \title{Register a data.frame or list in Radiant}
 \usage{
-register(new, org = "", descr = "", env)
+register(new, org = "", descr = "",
+  shiny = shiny::getDefaultReactiveDomain(), envir = r_data)
 }
 \arguments{
 \item{new}{String containing the name of the data.frame to register}
@@ -13,7 +14,9 @@ register(new, org = "", descr = "", env)
 
 \item{descr}{Data description in markdown format}
 
-\item{env}{Environment to assign data to}
+\item{shiny}{Check if function is called from a shiny application}
+
+\item{envir}{Environment to assign data to}
 }
 \description{
 Register a data.frame or list in Radiant

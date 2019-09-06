@@ -7,7 +7,7 @@
 \method{dtab}{data.frame}(object, vars = "", filt = "", rows = NULL,
   nr = NULL, na.rm = FALSE, dec = 3, perc = "", filter = "top",
   pageLength = 10, dom = "", style = "bootstrap", rownames = FALSE,
-  ...)
+  envir = parent.frame(), ...)
 }
 \arguments{
 \item{object}{Data.frame to display}
@@ -35,6 +35,8 @@
 \item{style}{Table formatting style ("bootstrap" or "default")}
 
 \item{rownames}{Show data.frame rownames. Default is FALSE}
+
+\item{envir}{Environment to extract data from}
 
 \item{...}{Additional arguments}
 }

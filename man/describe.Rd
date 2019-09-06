@@ -4,10 +4,12 @@
 \alias{describe}
 \title{Show dataset description}
 \usage{
-describe(dataset)
+describe(dataset, envir = parent.frame())
 }
 \arguments{
 \item{dataset}{Dataset with "description" attribute}
+
+\item{envir}{Environment to extract data from}
 }
 \description{
 Show dataset description

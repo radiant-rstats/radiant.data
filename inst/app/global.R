@@ -164,13 +164,16 @@ options(radiant.path.data =
 )
 
 ## import required functions and packages
-options(radiant.from.package = TRUE)
 ## if radiant.data is not in search main function from dplyr etc. won't be available
-if (!"package:radiant.data" %in% search()) {
+if (!"package:radiant.data" %in% search() &&
+    # isTRUE(Sys.getenv("SHINY_PORT") == "") &&
+    isTRUE(getOption("radiant.development")) &&
+    getOption("radiant.path.data") == "..") {
   import_fs("radiant.data", libs = c("magrittr", "ggplot2", "lubridate", "tidyr", "dplyr", "broom", "tibble", "glue"))
-  if (getOption("radiant.path.data") == "..") {
-    options(radiant.from.package = FALSE)
-  }
+  options(radiant.from.package = FALSE)
+} else {
+  options(radiant.from.package = TRUE)
+  library(radiant.data)
 }
 
 ## basic options when run on server
@@ -208,14 +211,15 @@ knitr::opts_knit$set(progress = TRUE)
 knitr::opts_chunk$set(
   echo = FALSE,
   comment = NA,
+  # fig.cap = "",
   cache = FALSE,
   message = FALSE,
   warning = FALSE,
   error = TRUE,
   fig.path = normalizePath(tempdir(), winslash = "/"),
+  dpi = 144,
+  screenshot.force = FALSE
   # dev = "svg" ## too slow with big scatter plots on server-side
-  dpi = 144
-  # screenshot.force = FALSE,
 )
 
 ## environment to hold session information

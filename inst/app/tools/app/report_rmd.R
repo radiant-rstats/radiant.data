@@ -269,33 +269,11 @@ if (getOption("radiant.shinyFiles", FALSE)) {
   )
 }
 
-radiant_auto <- reactive({
-  if (any(grepl("package:radiant", search()))) {
-    list()
-  } else {
-    withProgress(message = "Initializing auto-complete list", value = 1, {
-      grep("radiant", installed.packages()[,"Package"], value = TRUE) %>%
-        sapply(function(x) grep("^[A-Za-z]", getNamespaceExports(x), value = TRUE)) %>%
-        set_names(., paste0("{", names(.), "}"))
-    })
-  }
-})
-
-radiant_auto_search <- reactive({
-  report_rmd$report
-  report_r$report
-  grep("package:*", search(), value = TRUE) %>%
-    gsub("package:", "", .)  %>%
-    unique() %>%
-    sapply(function(x) grep("^[A-Za-z]", getNamespaceExports(x), value = TRUE)) %>%
-    set_names(., paste0("{", names(.), "}"))
-})
-
 radiant_auto_complete <- reactive({
   req(input$dataset)
   comps <- list(r_info[["datasetlist"]], as.vector(varnames()))
   names(comps) <- c("{datasets}", paste0("{", input$dataset, "}"))
-  c(comps, radiant_auto(), radiant_auto_search())
+  comps
 })
 
 output$report_rmd <- renderUI({
@@ -342,7 +320,8 @@ output$report_rmd <- renderUI({
       useSoftTabs = getOption("radiant.ace_useSoftTabs", TRUE),
       showInvisibles = getOption("radiant.ace_showInvisibles", FALSE),
       autoComplete = getOption("radiant.ace_autoComplete", "enable"),
-      autoCompleters = c("static", "text"),
+      # autoCompleters = c("static", "text", "rlang"),
+      autoCompleters = c("static", "rlang"),
       autoCompleteList = isolate(radiant_auto_complete())
     ),
     htmlOutput("rmd_knitted"),
@@ -350,13 +329,18 @@ output$report_rmd <- renderUI({
   )
 })
 
+# radiant_rmd_annotater <- shinyAce::aceAnnotate("rmd_edit")
+radiant_rmd_tooltip <- shinyAce::aceTooltip("rmd_edit")
+radiant_rmd_ac <- shinyAce::aceAutocomplete("rmd_edit")
+
 ## auto completion of available R functions, datasets, and variables
 observe({
   ## don't need to run until report generated
   req(report_rmd$report > 1)
   shinyAce::updateAceEditor(
     session, "rmd_edit",
-    autoCompleters = c("static", "text"),
+    # autoCompleters = c("static", "text", "rlang"),
+    autoCompleters = c("static", "rlang"),
     autoCompleteList = radiant_auto_complete()
   )
 })

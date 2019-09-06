@@ -5,7 +5,7 @@
 \title{View data in a shiny-app}
 \usage{
 view_data(dataset, vars = "", filt = "", rows = NULL,
-  na.rm = FALSE, dec = 3)
+  na.rm = FALSE, dec = 3, envir = parent.frame())
 }
 \arguments{
 \item{dataset}{Data.frame or name of the dataframe to view}
@@ -19,6 +19,8 @@ view_data(dataset, vars = "", filt = "", rows = NULL,
 \item{na.rm}{Remove rows with missing values (default is FALSE)}
 
 \item{dec}{Number of decimals to show}
+
+\item{envir}{Environment to extract data from}
 }
 \description{
 View data in a shiny-app
