@@ -64,41 +64,41 @@ To use the recode feature select the variable you want to change and choose `Rec
 
 1. Set values below 20 to `Low` and all others to `High`
 
-```r
-lo:20 = 'Low'; else = 'High'
-```
+  ```r
+  lo:20 = 'Low'; else = 'High'
+  ```
 
 2. Set above 20 to `High` and all others to `Low`
 
-```r
-20:hi = 'High'; else = 'Low'
-```
+  ```r
+  20:hi = 'High'; else = 'Low'
+  ```
 
-2. Set values 1 through 12 to `A`, 13:24 to `B`, and the remainder to `C`
+3. Set values 1 through 12 to `A`, 13:24 to `B`, and the remainder to `C`
 
-```r
-1:12 = 'A'; 13:24 = 'B'; else = 'C'
-```
+  ```r
+  1:12 = 'A'; 13:24 = 'B'; else = 'C'
+  ```
 
-3. Collapse age categories for a <a href="https://radiant-rstats.github.io/docs/basics/cross_tabs.html" target="_blank">_Basics > Tables > Cross-tabs_</a> cross-tab analysis. In the example below `<25` and `25-34` are recoded to `<35`, `35-44` and `35-44` are recoded to `35-54`, and `55-64` and `>64` are recoded to `>54`
-
-
-```r
-'<25' = '<35'; '25-34' = '<35'; '35-44' = '35-54'; '45-54' = '35-54'; '55-64' = '>54'; '>64' = '>54'
-```
-
-4. To exclude a particular value (e.g., an outlier in the data) for subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we would (1) select the variable `sales` in the `Select variable(s)` box and enter the command below in the `Recode` box. Press `return` and `Store` to add the recoded variable to the data
+4. Collapse age categories for a <a href="https://radiant-rstats.github.io/docs/basics/cross_tabs.html" target="_blank">_Basics > Tables > Cross-tabs_</a> cross-tab analysis. In the example below `<25` and `25-34` are recoded to `<35`, `35-44` and `35-44` are recoded to `35-54`, and `55-64` and `>64` are recoded to `>54`
 
 
-```r
-400 = NA
-```
+  ```r
+  '<25' = '<35'; '25-34' = '<35'; '35-44' = '35-54'; '45-54' = '35-54'; '55-64' = '>54'; '>64' = '>54'
+  ```
+
+5. To exclude a particular value (e.g., an outlier in the data) for subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we would (1) select the variable `sales` in the `Select variable(s)` box and enter the command below in the `Recode` box. Press `return` and `Store` to add the recoded variable to the data
+
+
+  ```r
+  400 = NA
+  ```
 
 5. To recode specific numeric values (e.g., carat) to a new value (1) select the variable `carat` in the `Select variable(s)` box and enter the command below in the `Recode` box to set the value for carat to 2 in all rows where carat is currently larger than or equal to 2. Press `return` and `Store` to add the recoded variable to the data
 
-```r
-2:hi = 2
-```
+  ```r
+  2:hi = 2
+  ```
 
 **Note:** Do not use `=` in a variable label when using the recode function (e.g., `50:hi = '>= 50'`) as this will cause an error.
 
@@ -142,118 +142,117 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
 1. Create a new variable `z` that is equal to the mean of price. To calculate the mean of price per group (e.g., per level of clarity) select `clarity` from the `Select variables` list before creating `z`
 
-```r
-z = mean(price)
-```
+  ```r
+  z = mean(price)
+  ```
 
 2. Create a new variable `z` that is the difference between variables x and y
 
-```r
-z = x - y
-```
+  ```r
+  z = x - y
+  ```
 
 3. Create a new variable `z` that is a transformation of variable `x` with mean equal to zero (see also `Transform > Center`):
 
-```r
-z = x - mean(x)
-```
+  ```r
+  z = x - mean(x)
+  ```
 
 4. Create a new _logical) variable `z` that takes on the value TRUE when `x > y` and FALSE otherwise
 
-```r
-z = x > y
-```
+  ```r
+  z = x > y
+  ```
 
 5. Create a new _logical_ `z` that takes on the value TRUE when `x` is equal to `y` and FALSE otherwise
 
-```r
-z = x == y
-```
+  ```r
+  z = x == y
+  ```
 
 6. Create a variable `z` that is equal to `x` lagged by 3 periods
 
-```r
-z = lag(x,3)
-```
+  ```r
+  z = lag(x,3)
+  ```
 
 7. Create a categorical variable with two levels (i.e., `smaller` and `bigger`)
 
-```r
-z = ifelse(x < y, 'smaller', 'bigger')
-```
+  ```r
+  z = ifelse(x < y, 'smaller', 'bigger')
+  ```
 
 8. Create a categorical variable with three levels. An alternative approach would be to use the `Recode` function described below
 
-```r
-z = ifelse(x < 60, '< 60', ifelse(x > 65, '> 65', '60-65'))
-```
+  ```r
+  z = ifelse(x < 60, '< 60', ifelse(x > 65, '> 65', '60-65'))
+  ```
 
 9. Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we could use an `ifelse` statement and enter the command below in the `Create` box. Press `return` and `Store` to add the `sales_rc` to the data. Note that if we had entered `sales` on the left-hand side of the `=` sign the original variable would have been overwritten
 
-```r
-sales_rc = ifelse(sales > 400, NA, sales)
-```
+  ```r
+  sales_rc = ifelse(sales > 400, NA, sales)
+  ```
 
 10. If a respondent with ID 3 provided information on the wrong scale in a survey (e.g., income in \$1s rather than in \$1000s) we could use an `ifelse` statement and enter the command below in the `Create` box. As before, press `return` and `Store` to add `sales_rc` to the data
 
-```r
-income_rc = ifelse(ID == 3, income/1000, income)
-```
+  ```r
+  income_rc = ifelse(ID == 3, income/1000, income)
+  ```
 
 11. If multiple respondents made the same scaling mistake (e.g., those with ID 1, 3, and 15) we again use `Create` and enter:
 
-```r
-income_rc = ifelse(ID %in% c(1, 3, 15), income/1000, income)
-```
+  ```r
+  income_rc = ifelse(ID %in% c(1, 3, 15), income/1000, income)
+  ```
 
 12. If a date variable is in a format not available through the `Type` menu you can use the `parse_date_time` function. For a date formatted as `2-1-14` you would specify the command below (note that this format will also be parsed correctly by the `mdy` function in the `Type` menu)
 
-```r
-date = parse_date_time(x, '%m%d%y')
-```
+  ```r
+  date = parse_date_time(x, '%m%d%y')
+  ```
 
 13. Determine the time difference between two dates/times in seconds
 
-```r
-tdiff = as_duration(time2 - time1)
-```
+  ```r
+  tdiff = as_duration(time2 - time1)
+  ```
 
 14. Extract the month from a date variable
 
-```r
-m = month(date)
-```
+  ```r
+  m = month(date)
+  ```
 
 15. Other attributes that can be extracted from a date or date-time variable are `minute`, `hour`, `day`, `week`, `quarter`, `year`, `wday` (for weekday). For `wday` and `month` it can be convenient to add `label = TRUE` to the call. For example, to extract the weekday from a date variable and use a label rather than a number
 
-```r
-wd = wday(date, label = TRUE)
-```
+  ```r
+  wd = wday(date, label = TRUE)
+  ```
 
 16. Calculate the distance between two locations using lat-long information
 
-```r
-dist = as_distance(lat1, long1, lat2, long2)
-```
+  ```r
+  dist = as_distance(lat1, long1, lat2, long2)
+  ```
 
 17. Calculate quintiles for a variable `recency` by using the `xtile` command. To create deciles replace `5` by `10`.
 
-```r
-rec_iq = xtile(recency, 5)
-```
+  ```r
+  rec_iq = xtile(recency, 5)
+  ```
 
 18. To reverse the ordering of the quintiles created in 17 above use `rev = TRUE`
 
-
-```r
-rec_iq = xtile(recency, 5, rev = TRUE)
-```
+  ```r
+  rec_iq = xtile(recency, 5, rev = TRUE)
+  ```
 
 19. To remove text from entries in a character or factor variable use `sub` to remove only the first instance or `gsub` to remove all instances. For example, suppose a each row for a variable `bk_score` has the letters "ltv" before a number (e.g., "ltv150"). We could replace each occurrence of "ltv" by "" as follows:
 
-```r
-bk_score = sub("ltv", "", bk_score)
-```
+  ```r
+  bk_score = sub("ltv", "", bk_score)
+  ```
 
 Note: For examples 7, 8, and 15 above you may need to change the new variable to type `factor` before using it for further analysis (see also `Change type` above)
 

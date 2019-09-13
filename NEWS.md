@@ -1,5 +1,6 @@
-# radiant.data 1.1.0
+# radiant.data 1.1.1
 
+* Fix for example numbering in the help file for _Data > Transform_
 * Numerous small code changes to support enhanced auto-completion, tooltips, and annotations in shinyAce 0.4.1
 
 # radiant.data 1.0.6
