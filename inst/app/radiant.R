@@ -651,10 +651,11 @@ help_and_report <- function(
 
 ## function to render .md files to html
 inclMD <- function(path) {
-  markdown::markdownToHTML(
-    path, fragment.only = TRUE, options = "",
-    stylesheet = ""
-  )
+  paste(readLines(path, warn = FALSE), collapse = "\n") %>%
+    markdown::markdownToHTML(
+      text = ., fragment.only = TRUE, options = "",
+      stylesheet = ""
+    )
 }
 
 ## function to render .Rmd files to html
