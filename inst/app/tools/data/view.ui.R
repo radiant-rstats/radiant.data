@@ -132,7 +132,8 @@ output$dataviewer <- DT::renderDataTable({
         },
         lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
       ),
-      callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+      ## https://github.com/rstudio/DT/issues/146#issuecomment-534319155
+      callback = DT::JS('$(window).on("unload", function() { table.state.clear(); })')
     ) %>%
       {if (sum(isDbl) > 0) DT::formatRound(., names(isDbl)[isDbl], dec) else .} %>%
       {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0) else .}

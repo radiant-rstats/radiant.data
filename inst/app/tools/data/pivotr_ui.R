@@ -477,7 +477,7 @@ observeEvent(input$pivotr_report, {
   if (ts$tabfilt != "") {
     inp_main <- c(inp_main, tabfilt = ts$tabfilt)
   }
-  inp_main <- c(inp_main, nr = ts$nr - 1)
+  inp_main <- c(inp_main, nr = Inf)
 
   ## update Report > Rmd or Report > R
   update_report(

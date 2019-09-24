@@ -24,7 +24,7 @@
 #' @export
 pivotr <- function(
   dataset, cvars = "", nvar = "None", fun = "mean",
-  normalize = "None", tabfilt = "", tabsort = "", nr = NULL,
+  normalize = "None", tabfilt = "", tabsort = "", nr = Inf,
   data_filter = "", envir = parent.frame()
 ) {
 
@@ -175,7 +175,7 @@ pivotr <- function(
 
   tab <- as.data.frame(tab, stringsAsFactors = FALSE)
   attr(tab, "radiant_nrow") <- nrow_tab
-  if (!is.null(nr)) {
+  if (!isTRUE(is.infinite(nr))) {
     ind <- if (nr >= nrow(tab)) 1:nrow(tab) else c(1:nr, nrow(tab))
     tab <- tab[ind, , drop = FALSE]
   }
@@ -223,7 +223,7 @@ summary.pivotr <- function(
       cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
     }
     nr <- attr(object$tab, "radiant_nrow")
-    if (!is.null(nr) && !is.null(object$nr) && object$nr < nr) {
+    if (!isTRUE(is.infinite(nr)) && !isTRUE(is.infinite(object$nr)) && object$nr < nr) {
       cat(paste0("Rows shown  : ", object$nr, " (out of ", nr, ")\n"))
     }
     cat("Categorical :", object$cvars, "\n")
@@ -366,7 +366,8 @@ dtab.pivotr <- function(
       },
       lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
     ),
-    callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+    ## https://github.com/rstudio/DT/issues/146#issuecomment-534319155
+    callback = DT::JS('$(window).on("unload", function() { table.state.clear(); })')
   ) %>%
     DT::formatStyle(., cvars, color = "white", backgroundColor = "grey") %>%
     {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}

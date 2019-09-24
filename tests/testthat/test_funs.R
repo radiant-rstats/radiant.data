@@ -97,7 +97,7 @@ test_that("explore 8 x 2", {
     )), class = "data.frame", row.names = c(NA, -8L), radiant_nrow = 8L),
     df_name = "diamonds", vars = c("price", "carat", "clarity",
     "cut", "color", "depth", "table", "x"), byvar = "", fun = c("mean",
-    "sd"), top = "fun", tabfilt = "", tabsort = "", nr = NULL,
+    "sd"), top = "fun", tabfilt = "", tabsort = "", nr = Inf,
     data_filter = ""), class = c("explore", "list"
   )))
 })
@@ -108,7 +108,7 @@ test_that("explore 1 x 2", {
     mean = 3907.186, sd = 3956.91540005997), class = "data.frame", row.names = c(NA,
     -1L), radiant_nrow = 1L), df_name = "diamonds", vars = "price", byvar = "",
     fun = c("mean", "sd"), top = "fun", tabfilt = "", tabsort = "",
-    nr = NULL, data_filter = ""), class = c("explore",
+    nr = Inf, data_filter = ""), class = c("explore",
     "list")
   ))
 })

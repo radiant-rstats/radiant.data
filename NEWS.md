@@ -1,5 +1,9 @@
-# radiant.data 1.1.1
+# radiant.data 1.1.3
 
+* Guard against _using Data > Transform > Reorder/remove levels_ with too many levels (i.e., > 100)
+* Guard against _using Data > Transform > Reorder/remove variables_ with too many variables (i.e., > 100)
+* Fix for DT table callbacks when shiny 1.4 hits CRAN (see https://github.com/rstudio/DT/issues/146#issuecomment-534319155)
+* Tables from _Data > Pivot_ and _Data > Explore_ now have `nr` set to `Inf` by default (i.e., show all rows). The user can change this to the number of desired rows to show (e.g., select 3 rows in a sorted table)
 * Fix for example numbering in the help file for _Data > Transform_
 * Numerous small code changes to support enhanced auto-completion, tooltips, and annotations in shinyAce 0.4.1
 

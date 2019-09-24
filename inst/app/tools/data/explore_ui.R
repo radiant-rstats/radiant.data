@@ -304,7 +304,7 @@ observeEvent(input$explore_report, {
   inp_main <- clean_args(expl_inputs(), expl_args)
   if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)
   if (ts$tabfilt != "") inp_main <- c(inp_main, tabfilt = ts$tabfilt)
-  inp_main <- c(inp_main, nr = ts$nr)
+  inp_main <- c(inp_main, nr = Inf)
   inp_out <- list(clean_args(expl_sum_inputs(), expl_sum_args[-1]))
 
   update_report(

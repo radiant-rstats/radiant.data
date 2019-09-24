@@ -25,7 +25,7 @@
 #' @export
 explore <- function(
   dataset, vars = "", byvar = "", fun = c("mean", "sd"),
-  top = "fun", tabfilt = "", tabsort = "", nr = NULL,
+  top = "fun", tabfilt = "", tabsort = "", nr = Inf,
   data_filter = "", envir = parent.frame()
 ) {
 
@@ -141,7 +141,7 @@ explore <- function(
   ## convert to data.frame to maintain attributes
   tab <- as.data.frame(tab, stringsAsFactors = FALSE)
   attr(tab, "radiant_nrow") <- nrow_tab
-  if (!is.null(nr)) {
+  if (!isTRUE(is.infinite(nr))) {
     ind <- if (nr > nrow(tab)) 1:nrow(tab) else 1:nr
     tab <- tab[ind, , drop = FALSE]
     rm(ind)
@@ -184,9 +184,9 @@ summary.explore <- function(object, dec = 3, ...) {
   if (!is_empty(object$tabsort[1])) {
     cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
   }
-  nrw <- attr(object$tab, "radiant_nrow")
-  if (!is.null(nrw) && !is.null(object$nr) && object$nr < nrw) {
-    cat(paste0("Rows shown  : ", object$nr, " (out of ", nrw, ")\n"))
+  nr <- attr(object$tab, "radiant_nrow")
+  if (!isTRUE(is.infinite(nr)) && !isTRUE(is.infinite(object$nr)) && object$nr < nr) {
+    cat(paste0("Rows shown  : ", object$nr, " (out of ", nr, ")\n"))
   }
   if (!is_empty(object$byvar[1])) {
     cat("Grouped by  :", object$byvar, "\n")
@@ -336,7 +336,8 @@ dtab.explore <- function(
       },
       lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
     ),
-    callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+    ## https://github.com/rstudio/DT/issues/146#issuecomment-534319155
+    callback = DT::JS('$(window).on("unload", function() { table.state.clear(); })')
   ) %>%
     DT::formatStyle(., cn_cat, color = "white", backgroundColor = "grey")
 

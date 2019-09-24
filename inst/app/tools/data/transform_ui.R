@@ -70,6 +70,9 @@ output$ui_tr_spread <- renderUI({
 output$ui_tr_reorg_vars <- renderUI({
   req(input$tr_change_type)
   vars <- varnames()
+  validate(
+    need(length(vars) < 101, "Interactive re-ordering is only supported up to 100 variables. See ?dplyr::select for information on how to re-order variables in R")
+  )
   selectizeInput(
     "tr_reorg_vars", "Reorder/remove variables:", choices = vars,
     selected = vars, multiple = TRUE,
@@ -89,7 +92,9 @@ output$ui_tr_reorg_levs <- renderUI({
   )
   fct <- .get_data_transform()[[fctCol]]
   levs <- if (is.factor(fct)) levels(fct) else levels(as_factor(fct))
-
+  validate(
+    need(length(levs) < 101, "Interactive re-ordering is only supported up to 100 levels. See ?radiant.data::refactor for information on how to re-order levels in R")
+  )
   tagList(
     selectizeInput(
       "tr_reorg_levs", "Reorder/remove levels:", choices = levs,
@@ -1125,7 +1130,11 @@ transform_main <- reactive({
     if (input$tr_change_type == "reorg_levs") {
       fct <- input$tr_vars[1]
       if (is.factor(dat[[fct]]) || is.character(dat[[fct]])) {
-        return(.reorg_levs(dat, fct, input$tr_reorg_levs, input$tr_rorepl, input$tr_roname, store = FALSE))
+        if (length(unique(dat[[fct]])) > 100) {
+          return("Interactive re-ordering is only supported up to 100 levels. See\n?radiant.data::refactor for information on how to re-order levels in R")
+        } else {
+          return(.reorg_levs(dat, fct, input$tr_reorg_levs, input$tr_rorepl, input$tr_roname, store = FALSE))
+        }
       } else {
         return("Select a variable of type factor or character to change the ordering\nand/or number of levels")
       }
