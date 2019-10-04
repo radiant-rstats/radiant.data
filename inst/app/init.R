@@ -201,8 +201,11 @@ isolate({
     }
   }
   for (dt in r_info[["dtree_list"]]) {
-    if (exists(dt, envir = r_data) && !bindingIsActive(as.symbol(dt), env = r_data)) {
-      shiny::makeReactiveBinding(dt, env = r_data)
+    if (exists(dt, envir = r_data)) {
+      r_data[[dt]] <- add_class(r_data[[dt]], "dtree")
+      if (!bindingIsActive(as.symbol(dt), env = r_data)) {
+        shiny::makeReactiveBinding(dt, env = r_data)
+      }
     }
   }
 })

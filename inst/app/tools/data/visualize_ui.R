@@ -268,9 +268,9 @@ output$ui_viz_labs <- renderUI({
 output$ui_viz_colors <- renderUI({
   tagList(
     conditionalPanel(
-      condition = "input.viz_type == 'bar' |
-                   input.viz_type == 'dist' |
-                   input.viz_type == 'box' |
+      condition = "input.viz_type == 'bar' ||
+                   input.viz_type == 'dist' ||
+                   input.viz_type == 'box' ||
                    input.viz_type == 'density'",
       selectInput(
         "viz_fillcol", "Fill color:", choices = colors(),
@@ -278,10 +278,10 @@ output$ui_viz_colors <- renderUI({
       )
     ),
     conditionalPanel(
-      condition = "input.viz_type == 'dist' |
-                   input.viz_type == 'density' |
-                   input.viz_type == 'box' |
-                   input.viz_type == 'scatter' |
+      condition = "input.viz_type == 'dist' ||
+                   input.viz_type == 'density' ||
+                   input.viz_type == 'box' ||
+                   input.viz_type == 'scatter' ||
                    input.viz_type == 'line'",
       selectInput(
         "viz_linecol", "Line color:", choices = colors(),
@@ -289,8 +289,8 @@ output$ui_viz_colors <- renderUI({
       )
     ),
     conditionalPanel(
-      condition = "input.viz_type == 'scatter' |
-                   input.viz_type == 'line' |
+      condition = "input.viz_type == 'scatter' ||
+                   input.viz_type == 'line' ||
                    input.viz_type == 'box'",
       selectInput(
         "viz_pointcol", "Point color:", choices = colors(),
@@ -333,7 +333,7 @@ output$ui_Visualize <- renderUI({
           uiOutput("ui_viz_nrobs")
         ),
         conditionalPanel(
-          condition = "input.viz_type != 'dist' & input.viz_type != 'density'",
+          condition = "input.viz_type != 'dist' && input.viz_type != 'density'",
           uiOutput("ui_viz_yvar"),
           conditionalPanel(
             "input.viz_yvar != undefined && input.viz_yvar != null && input.viz_yvar.length > 1",
@@ -342,7 +342,7 @@ output$ui_Visualize <- renderUI({
         ),
         uiOutput("ui_viz_xvar"),
         conditionalPanel(
-          "input.viz_type == 'dist' | input.viz_type == 'density'",
+          "input.viz_type == 'dist' || input.viz_type == 'density'",
           conditionalPanel(
             "input.viz_xvar != undefined && input.viz_xvar != null && input.viz_xvar.length > 1",
             uiOutput("ui_viz_combx")
@@ -351,15 +351,15 @@ output$ui_Visualize <- renderUI({
         uiOutput("ui_viz_facet_row"),
         uiOutput("ui_viz_facet_col"),
         conditionalPanel(
-          condition = "input.viz_type == 'bar' |
-                       input.viz_type == 'dist' |
-                       input.viz_type == 'density' |
+          condition = "input.viz_type == 'bar' ||
+                       input.viz_type == 'dist' ||
+                       input.viz_type == 'density' ||
                        input.viz_type == 'surface'",
           uiOutput("ui_viz_fill")
         ),
         conditionalPanel(
-          condition = "input.viz_type == 'scatter' |
-                       input.viz_type == 'line' |
+          condition = "input.viz_type == 'scatter' ||
+                       input.viz_type == 'line' ||
                        input.viz_type == 'box'",
           uiOutput("ui_viz_color")
         ),
@@ -368,8 +368,8 @@ output$ui_Visualize <- renderUI({
           uiOutput("ui_viz_size")
         ),
         conditionalPanel(
-          condition = "input.viz_type == 'bar' |
-                       input.viz_type == 'scatter' |
+          condition = "input.viz_type == 'bar' ||
+                       input.viz_type == 'scatter' ||
                        input.viz_type == 'line'",
           selectInput(
             "viz_fun", "Function:", choices =  getOption("radiant.functions"),
@@ -377,9 +377,9 @@ output$ui_Visualize <- renderUI({
           )
         ),
         conditionalPanel(
-          condition = "input.viz_type == 'scatter' |
-                       input.viz_type == 'line' |
-                       input.viz_type == 'surface' |
+          condition = "input.viz_type == 'scatter' ||
+                       input.viz_type == 'line' ||
+                       input.viz_type == 'surface' ||
                        input.viz_type == 'box'",
           uiOutput("ui_viz_check")
         ),
@@ -394,9 +394,9 @@ output$ui_Visualize <- renderUI({
         ),
 
         conditionalPanel(
-          "input.viz_type == 'density' |
-           input.viz_type == 'dist' & (input.viz_axes && input.viz_axes.indexOf('density')) >= 0 |
-           (input.viz_type == 'scatter' & (input.viz_check && input.viz_check.indexOf('loess') >= 0))",
+          "input.viz_type == 'density' ||
+           input.viz_type == 'dist' && (input.viz_axes && input.viz_axes.indexOf('density')) >= 0 ||
+           (input.viz_type == 'scatter' && (input.viz_check && input.viz_check.indexOf('loess') >= 0))",
           sliderInput(
             "viz_smooth", label = "Smooth:",
             value = state_init("viz_smooth", 1),

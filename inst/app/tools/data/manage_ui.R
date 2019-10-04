@@ -184,7 +184,7 @@ output$ui_Manage <- renderUI({
         condition = "input.dataType != 'clipboard' &&
                      input.dataType != 'examples'",
         conditionalPanel(
-          "input.dataType == 'csv' | input.dataType == 'url_csv'",
+          "input.dataType == 'csv' || input.dataType == 'url_csv'",
           with(tags, table(
             td(checkboxInput("man_header", "Header", TRUE)),
             td(HTML("&nbsp;&nbsp;")),

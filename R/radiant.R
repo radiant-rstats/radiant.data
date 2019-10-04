@@ -209,6 +209,21 @@ sshh <- function(...) {
 #' @export
 sshhr <- function(...) suppressWarnings(suppressMessages(...))
 
+#' Find user directory
+#' @details Returns /Users/x and not /Users/x/Documents
+#' @export
+find_home <- function() {
+  os_type = Sys.info()["sysname"]
+  if (os_type == "Windows") {
+    normalizePath(
+      file.path(Sys.getenv("HOMEDRIVE"), Sys.getenv("HOMEPATH")),
+      winslash = "/"
+    )
+  } else {
+    Sys.getenv("HOME")
+  }
+}
+
 #' Select variables and filter data
 #'
 #' @details Function is used in radiant to select variables and filter data based on user input in string form
@@ -1570,17 +1585,3 @@ read_files <- function(
   }
 }
 
-#' Find user directory
-#' @details Returns /Users/x and not /Users/x/Documents
-#' @export
-find_home <- function() {
-  os_type = Sys.info()["sysname"]
-  if (os_type == "Windows") {
-    normalizePath(
-      file.path(Sys.getenv("HOMEDRIVE"), Sys.getenv("HOMEPATH")),
-      winslash = "/"
-    )
-  } else {
-    Sys.getenv("HOME")
-  }
-}
