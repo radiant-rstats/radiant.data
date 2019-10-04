@@ -443,6 +443,8 @@ output$ui_Transform <- renderUI({
 observeEvent(input$tr_change_type, {
   if (input$tr_change_type == "create") {
     updateSelectInput(session = session, inputId = "tr_vars", label = "Group by:", selected = character(0))
+  } else if (input$tr_change_type == "training") {
+    updateSelectInput(session = session, inputId = "tr_vars", label = "Block by:", selected = character(0))
   } else if (input$tr_change_type == "spread") {
     updateSelectInput(session = session, inputId = "tr_vars", selected = character(0))
   } else {
@@ -794,10 +796,22 @@ fix_ext <- function(ext) {
   }
   if (!store && !is.character(dataset)) {
     n <- n %>% {ifelse(. < 0 || is.na(.) || . > nr, .7, .)}
-    data.frame(make_train(n, nr, seed), stringsAsFactors = FALSE) %>% setNames(name)
+    if (is_empty(vars)) {
+      blocks <- NULL
+    } else {
+      blocks <- dataset[,vars]
+    }
+
+    make_train(n, nr, blocks = blocks, seed = seed) %>%
+      data.frame(stringsAsFactors = FALSE) %>%
+      setNames(name)
   } else {
     if (store_dat == "") store_dat <- dataset
-    paste0("## created variable to select training sample\n", store_dat, " <- mutate(", dataset, ", ", name, " = make_train(", n, ", n(), seed = ", seed, "))\n")
+    if (is_empty(vars)) {
+      paste0("## created variable to select training sample\n", store_dat, " <- mutate(", dataset, ", ", name, " = make_train(", n, ", n(), seed = ", seed, "))\n")
+    } else {
+      paste0("## created variable to select training sample\n", store_dat, " <- mutate(", dataset, ", ", name, " = make_train(", n, ", blocks = select(", dataset, ", ", paste0(vars, collapse = ", "), "), seed = ", seed, "))\n")
+    }
   }
 }
 
@@ -986,7 +1000,7 @@ transform_main <- reactive({
 
   ## create training variable
   if (input$tr_change_type == "training") {
-    return(.training(dat, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, seed = input$tr_training_seed, store = FALSE))
+    return(.training(dat, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, vars = inp_vars("tr_vars"), seed = input$tr_training_seed, store = FALSE))
   }
 
   if (input$tr_change_type == "create") {
@@ -1198,6 +1212,8 @@ output$transform_summary <- renderPrint({
         cat("** Press the 'Store' button to add your changes to the data **\n\n")
         if (!is_empty(input$tr_vars) && input$tr_change_type == "create") {
           cat("** Results are grouped by", paste(input$tr_vars, collapse = ", "), "**\n\n")
+        } else if (!is_empty(input$tr_vars) && input$tr_change_type == "training") {
+          cat("** Results are blocked by", paste(input$tr_vars, collapse = ", "), "**\n\n")
         }
       }
 
@@ -1294,7 +1310,7 @@ observeEvent(input$tr_store, {
     cmd <- .transform(input$dataset, fun = input$tr_transfunction, vars = input$tr_vars, .ext = input$tr_ext, df_name)
     r_data[[df_name]][, colnames(dat)] <- dat
   } else if (input$tr_change_type == "training") {
-    cmd <- .training(input$dataset, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, seed = input$tr_training_seed, df_name)
+    cmd <- .training(input$dataset, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, vars = input$tr_vars, seed = input$tr_training_seed, df_name)
     r_data[[df_name]][, colnames(dat)] <- dat
   } else if (input$tr_change_type == "normalize") {
     cmd <- .normalize(input$dataset, vars = input$tr_vars, nzvar = input$tr_normalizer, .ext = input$tr_ext_nz, df_name)

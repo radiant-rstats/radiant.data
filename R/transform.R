@@ -283,20 +283,42 @@ as_distance <- function(
 #' Generate a variable used to selected a training sample
 #' @param n Number (or fraction) of observations to label as training
 #' @param nr Number of rows in the dataset
+#' @param blocks A vector to use for blocking or a data.frame from which to construct a blocking vector
 #' @param seed Random seed
+#'
 #' @return 0/1 variables for filtering
+#'
+#' @importFrom randomizr complete_ra block_ra
+#'
 #' @examples
 #' make_train(.5, 10)
+#' make_train(.5, 10) %>% table()
+#' make_train(100, 1000) %>% table()
+#' make_train(.15, blocks = mtcars$vs) %>% table() / nrow(mtcars)
+#' make_train(.10, blocks = iris$Species) %>% table() / nrow(iris)
+#' make_train(.5, blocks = iris[, c("Petal.Width", "Species")]) %>% table()
 #'
 #' @export
-make_train <- function(n = .7, nr = 100, seed = 1234) {
-  seed %>% gsub("[^0-9]", "", .) %>%
-    {if (!is_empty(.)) set.seed(seed)}
-  if (n < 1) n <- round(n * nr) %>% max(1)
-  ind <- seq_len(nr)
-  training <- rep_len(0L, nr)
-  training[sample(ind, n)] <- 1L
-  training
+make_train <- function(n = .7, nr = NULL, blocks = NULL, seed = 1234) {
+  seed <- gsub("[^0-9]", "", seed)
+  if (!is_empty(seed)) set.seed(seed)
+
+  if (is_empty(nr) && is_empty(blocks)) {
+    stop("Please provided the number of rows in the data (nr) or a vector with blocking information (blocks)")
+  } else if (is.data.frame(blocks)) {
+    blocks <- do.call(paste, c(blocks, sep = "-"))
+    nr <- length(blocks)
+  } else if (is.vector(blocks)) {
+    nr <- length(blocks)
+  }
+
+  if (n > 1) n <- n / nr
+
+  if (length(blocks) > 0) {
+    randomizr::block_ra(blocks, prob = n)
+  } else {
+    randomizr::complete_ra(N = nr, prob = n)
+  }
 }
 
 #' Add transformed variables to a data frame with the option to include a custom variable name extension

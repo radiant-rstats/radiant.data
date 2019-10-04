@@ -1,3 +1,7 @@
+# radiant.data 1.1.4
+
+* _Data > Transform > Training_ now uses the `randomizr` package to allow blocking variables when creating a training variables. 
+
 # radiant.data 1.1.3
 
 * Guard against _using Data > Transform > Reorder/remove levels_ with too many levels (i.e., > 100)

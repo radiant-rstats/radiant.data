@@ -4,12 +4,14 @@
 \alias{make_train}
 \title{Generate a variable used to selected a training sample}
 \usage{
-make_train(n = 0.7, nr = 100, seed = 1234)
+make_train(n = 0.7, nr = NULL, blocks = NULL, seed = 1234)
 }
 \arguments{
 \item{n}{Number (or fraction) of observations to label as training}
 
 \item{nr}{Number of rows in the dataset}
+
+\item{blocks}{A vector to use for blocking or a data.frame from which to construct a blocking vector}
 
 \item{seed}{Random seed}
 }
@@ -21,5 +23,10 @@ Generate a variable used to selected a training sample
 }
 \examples{
 make_train(.5, 10)
+make_train(.5, 10) \%>\% table()
+make_train(100, 1000) \%>\% table()
+make_train(.15, blocks = mtcars$vs) \%>\% table() / nrow(mtcars)
+make_train(.10, blocks = iris$Species) \%>\% table() / nrow(iris)
+make_train(.5, blocks = iris[, c("Petal.Width", "Species")]) \%>\% table()
 
 }
