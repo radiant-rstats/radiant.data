@@ -27,9 +27,11 @@ dtab <- function(object, ...) UseMethod("dtab", object)
 #' @param dom Table control elements to show on the page. See \url{https://datatables.net/reference/option/dom}
 #' @param style Table formatting style ("bootstrap" or "default")
 #' @param rownames Show data.frame rownames. Default is FALSE
+#' @param caption Table caption
 #' @param envir Environment to extract data from
 #' @param ... Additional arguments
 #'
+#' @importFrom shiny tags
 #' @examples
 #' \dontrun{
 #' dtab(mtcars)
@@ -41,11 +43,12 @@ dtab.data.frame <- function(
   nr = NULL, na.rm = FALSE, dec = 3, perc = "",
   filter = "top", pageLength = 10, dom = "",
   style = "bootstrap", rownames = FALSE, 
+  caption = NULL,
   envir = parent.frame(), ...
 ) {
 
   dat <- get_data(object, vars, filt = filt, rows = rows, na.rm = na.rm, envir = envir)
-  if (!is_empty(nr)) {
+  if (!is_empty(nr) && nr < nrow(dat)) {
     dat <- dat[seq_len(nr), , drop = FALSE]
   }
 
@@ -67,8 +70,14 @@ dtab.data.frame <- function(
     dom <- if (pageLength == -1 || nrow(dat) < pageLength) "t" else "lftip"
   }
 
+  if (!is_empty(caption)) {
+    ## from https://github.com/rstudio/DT/issues/630#issuecomment-461191378
+    caption <- shiny::tags$caption(style = 'caption-side: top; text-align: left; color:black; font-size:150%;', caption)
+  }
+
   dt_tab <- DT::datatable(
     dat,
+    caption = caption,
     filter = filter,
     selection = "none",
     rownames = rownames,
