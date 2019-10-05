@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.4</span>
       </span>
     </div>
 
@@ -161,11 +161,24 @@
       <small>Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="radiant-data-1-1-1" class="section level1">
+    <div id="radiant-data-1-1-4" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-1-1-1" class="anchor"></a>radiant.data 1.1.1<small> Unreleased </small>
+<a href="#radiant-data-1-1-4" class="anchor"></a>radiant.data 1.1.4<small> Unreleased </small>
 </h1>
 <ul>
+<li>
+<em>Data &gt; Transform &gt; Training</em> now uses the <code>randomizr</code> package to allow blocking variables when creating a training variables.</li>
+</ul>
+</div>
+    <div id="radiant-data-1-1-3" class="section level1">
+<h1 class="page-header">
+<a href="#radiant-data-1-1-3" class="anchor"></a>radiant.data 1.1.3<small> Unreleased </small>
+</h1>
+<ul>
+<li>Guard against <em>using Data &gt; Transform &gt; Reorder/remove levels</em> with too many levels (i.e., &gt; 100)</li>
+<li>Guard against <em>using Data &gt; Transform &gt; Reorder/remove variables</em> with too many variables (i.e., &gt; 100)</li>
+<li>Fix for DT table callbacks when shiny 1.4 hits CRAN (see <a href="https://github.com/rstudio/DT/issues/146#issuecomment-534319155" class="uri">https://github.com/rstudio/DT/issues/146#issuecomment-534319155</a>)</li>
+<li>Tables from <em>Data &gt; Pivot</em> and <em>Data &gt; Explore</em> now have <code>nr</code> set to <code>Inf</code> by default (i.e., show all rows). The user can change this to the number of desired rows to show (e.g., select 3 rows in a sorted table)</li>
 <li>Fix for example numbering in the help file for <em>Data &gt; Transform</em>
 </li>
 <li>Numerous small code changes to support enhanced auto-completion, tooltips, and annotations in shinyAce 0.4.1</li>
@@ -778,7 +791,8 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#radiant-data-1-1-1">1.1.1</a></li>
+        <li><a href="#radiant-data-1-1-4">1.1.4</a></li>
+        <li><a href="#radiant-data-1-1-3">1.1.3</a></li>
         <li><a href="#radiant-data-1-0-6">1.0.6</a></li>
         <li><a href="#radiant-data-1-0-0">1.0.0</a></li>
         <li><a href="#radiant-data-0-9-9-0">0.9.9.0</a></li>
@@ -817,7 +831,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>

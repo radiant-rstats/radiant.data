@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.4</span>
       </span>
     </div>
 
@@ -404,7 +404,8 @@
 <div id="training-variable" class="section level4">
 <h4 class="hasAnchor">
 <a href="#training-variable" class="anchor"></a>Training variable</h4>
-<p>To create a variable that can be used to (randomly) filter a dataset for training and testing, select <code>Training variable</code> from the <code>Transformation type</code> dropdown. Specify either the number of observations to use for training (e.g., set <code>Size</code> to 2000) or a proportion of observations to select (e.g., set <code>Size</code> to .7). The new variable will have a value <code>1</code> for training and <code>0</code> holdout.</p>
+<p>To create a variable that can be used to (randomly) filter a dataset for model training and testing, select <code>Training variable</code> from the <code>Transformation type</code> dropdown. Specify either the number of observations to use for training (e.g., set <code>Size</code> to 2000) or a proportion of observations to select (e.g., set <code>Size</code> to .7). The new variable will have a value <code>1</code> for training and <code>0</code> test data.</p>
+<p>It is also possible to select one or morel variables for <code>blocking</code> in random assignment to the training and test samples. This can help ensure that, for example, the proportion of positive and negative and negative cases (e.g., “buy” vs “no buy”) for a variable of interest is (almost) identical in the training and test sample.</p>
 </div>
 </div>
 <div id="tidy-data" class="section level3">
@@ -442,7 +443,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>
