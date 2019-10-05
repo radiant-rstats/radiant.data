@@ -8,11 +8,13 @@
 
 <title>Changelog • radiant.data</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -36,7 +38,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+
 <meta property="og:title" content="Changelog" />
+
 
 
 
@@ -66,7 +70,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.4</span>
       </span>
     </div>
 
@@ -118,7 +122,6 @@
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/vrnijs">
@@ -154,9 +157,57 @@
       <small>Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="radiant-data-1-1-4" class="section level1">
+<h1 class="page-header">
+<a href="#radiant-data-1-1-4" class="anchor"></a>radiant.data 1.1.4<small> Unreleased </small>
+</h1>
+<ul>
+<li>
+<em>Data &gt; Transform &gt; Training</em> now uses the <code>randomizr</code> package to allow blocking variables when creating a training variables.</li>
+</ul>
+</div>
+    <div id="radiant-data-1-1-3" class="section level1">
+<h1 class="page-header">
+<a href="#radiant-data-1-1-3" class="anchor"></a>radiant.data 1.1.3<small> Unreleased </small>
+</h1>
+<ul>
+<li>Guard against <em>using Data &gt; Transform &gt; Reorder/remove levels</em> with too many levels (i.e., &gt; 100)</li>
+<li>Guard against <em>using Data &gt; Transform &gt; Reorder/remove variables</em> with too many variables (i.e., &gt; 100)</li>
+<li>Fix for DT table callbacks when shiny 1.4 hits CRAN (see <a href="https://github.com/rstudio/DT/issues/146#issuecomment-534319155" class="uri">https://github.com/rstudio/DT/issues/146#issuecomment-534319155</a>)</li>
+<li>Tables from <em>Data &gt; Pivot</em> and <em>Data &gt; Explore</em> now have <code>nr</code> set to <code>Inf</code> by default (i.e., show all rows). The user can change this to the number of desired rows to show (e.g., select 3 rows in a sorted table)</li>
+<li>Fix for example numbering in the help file for <em>Data &gt; Transform</em>
+</li>
+<li>Numerous small code changes to support enhanced auto-completion, tooltips, and annotations in shinyAce 0.4.1</li>
+</ul>
+</div>
+    <div id="radiant-data-1-0-6" class="section level1">
+<h1 class="page-header">
+<a href="#radiant-data-1-0-6" class="anchor"></a>radiant.data 1.0.6<small> 2019-08-22 </small>
+</h1>
+<ul>
+<li>Fix for <code>Data &gt; Transform &gt; Change type</code>
+</li>
+<li>Option to <code>fix_names</code> to lower case</li>
+<li>Keyboard shortcut (Enter) to load remove csv and rds files</li>
+<li>Use a shinyAce input to generate data descriptions</li>
+<li>Allow custom initial dataset list</li>
+<li>Fix for latex formulas in <em>Report &gt; Rmd</em> on Windows</li>
+<li>Updated requirements for markdown and Rmarkdown</li>
+<li>Fix for <code>radiant.init.data</code> with shiny-server</li>
+<li>Improvements to setup to allow access to server-side files by adding options to .Rprofile:
+<ul>
+<li>Add <code><a href="https://www.rdocumentation.org/packages/base/topics/options">options(radiant.report = TRUE)</a></code> to allow report generation in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
+</li>
+<li>Add <code><a href="https://www.rdocumentation.org/packages/base/topics/options">options(radiant.shinyFiles = TRUE)</a></code> to allow server-side access to files</li>
+<li>List specific directories you want to use with radiant using, for example, <code><a href="https://www.rdocumentation.org/packages/base/topics/options">options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))</a></code>
+</li>
+</ul>
+</li>
+</ul>
+</div>
     <div id="radiant-data-1-0-0" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-1-0-0" class="anchor"></a>radiant.data 1.0.0<small> Unreleased </small>
+<a href="#radiant-data-1-0-0" class="anchor"></a>radiant.data 1.0.0<small> 2019-07-18 </small>
 </h1>
 <ul>
 <li>Support for series of class <code>ts</code> (e.g., Data &gt; Transform &gt; Change type &gt; Time series)</li>
@@ -313,8 +364,8 @@
 </h1>
 <ul>
 <li>Fix for <code><a href="../reference/explore.html">radiant.data::explore</a></code> when variable names contain an underscore</li>
-<li>Fix for <code>find_gdrive</code> when drive is not being synched</li>
-<li>Fixes in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> to accomodate for pandoc &gt; 2</li>
+<li>Fix for <code>find_gdrive</code> when drive is not being synced</li>
+<li>Fixes in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> to accommodate for pandoc &gt; 2</li>
 </ul>
 </div>
     <div id="radiant-data-0-9-4-6" class="section level1">
@@ -324,7 +375,7 @@
 <ul>
 <li>Don’t update a reactive binding for an object if the binding already exists. See issue <a href="https://github.com/rstudio/shiny/issues/2065" class="uri">https://github.com/rstudio/shiny/issues/2065</a>
 </li>
-<li>Fix to accomodate changes in <code>deparse</code> in R 3.5</li>
+<li>Fix to accommodate changes in <code>deparse</code> in R 3.5</li>
 <li>Fix for saving data in <em>Data &gt; Manage</em> and generating the relevant R-code</li>
 </ul>
 </div>
@@ -369,7 +420,7 @@
 <a href="#major-changes-1" class="anchor"></a>Major changes</h2>
 <ul>
 <li>When using radiant with Rstudio Viewer or in an Rstudio Window, loading and saving data through <em>Data &gt; Manage</em> generates R-code the user can add to <em>Report &gt; Rmd</em> or <em>Report &gt; R</em>. Clicking the <code>Show R-code</code> checkbox displays the R-code used to load or save the current dataset</li>
-<li>Various changes to the code to accomodate the use of <code><a href="https://www.rdocumentation.org/packages/shiny/topics/makeReactiveBinding">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
+<li>Various changes to the code to accommodate the use of <code><a href="https://www.rdocumentation.org/packages/shiny/topics/makeReactiveBinding">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
 <li>Removed <code>loadr</code>, <code>saver</code>, <code>load_csv</code>, <code>loadcsv_url</code>, <code>loadrds_url</code>, and <code>make_funs</code> functions as they are no longer needed</li>
 <li>Deprecated <code>mean_rm</code>, <code>median_rm</code>, <code>min_rm</code>, <code>max_rm,</code>sd_rm<code>,</code>var_rm, and <code>sum_rm</code> functions as they are no longer needed</li>
 </ul>
@@ -476,7 +527,7 @@
 <li>Use 200 dpi for plots in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
 </li>
 <li>
-<em>Data &gt; Vizualize</em> now has an option to select a sample of data for scatter plots (e.g., 1K, 5K, 10K, or All)</li>
+<em>Data &gt; Visualize</em> now has an option to select a sample of data for scatter plots (e.g., 1K, 5K, 10K, or All)</li>
 </ul>
 </div>
 <div id="bug-fixes-2" class="section level2">
@@ -544,7 +595,7 @@
 <li>Cleanup now also occurs when the stop button is used in Rstudio to close the app</li>
 <li>Fix to include <code>DiagrammeR</code> based plots in Rmarkdown reports</li>
 <li>Fix in <code>read_files</code> for SQLite data names</li>
-<li>De-activate spellcheck autocorrection in <code>selectizeInput</code> in Rstudio Viewer <a href="https://github.com/rstudio/shiny/issues/1916">shiny <a href='https://github.com/radiant-rstats/radiant.data/issues/1916'>#1916</a></a>
+<li>De-activate spell check auto correction in <code>selectizeInput</code> in Rstudio Viewer <a href="https://github.com/rstudio/shiny/issues/1916">shiny <a href='https://github.com/radiant-rstats/radiant.data/issues/1916'>#1916</a></a>
 </li>
 <li>Fix to allow selecting and copying text output from <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
 </li>
@@ -650,7 +701,7 @@
 <h2 class="hasAnchor">
 <a href="#bug-fixes-6" class="anchor"></a>Bug fixes</h2>
 <ul>
-<li>Chi-sqaure results were not displayed correctly in <em>Data &gt; Pivot</em>
+<li>Chi-square results were not displayed correctly in <em>Data &gt; Pivot</em>
 </li>
 <li>Fix for <code>state_multiple</code>
 </li>
@@ -711,7 +762,7 @@
 </li>
 <li>Don’t overwrite a dataset to combine if combine generates an error when user sets the the name of the combined data to that of an already selected dataset</li>
 <li>When multiple variables were selected, data were not correctly summarized in Data &gt; Transform</li>
-<li>Add (function) lable to bar plot when x-variable is an integer</li>
+<li>Add (function) label to bar plot when x-variable is an integer</li>
 <li>Maintain order of variables in Data &gt; Visualize when using “color”, “fill”, “comby”, or “combx”</li>
 <li>Avoid warning when switching datasets in Data &gt; Transform and variables being summarized do not exists in the new dataset</li>
 <li>which.pmax produced a list but needed to be integer</li>
@@ -736,6 +787,9 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#radiant-data-1-1-4">1.1.4</a></li>
+        <li><a href="#radiant-data-1-1-3">1.1.3</a></li>
+        <li><a href="#radiant-data-1-0-6">1.0.6</a></li>
         <li><a href="#radiant-data-1-0-0">1.0.0</a></li>
         <li><a href="#radiant-data-0-9-9-0">0.9.9.0</a></li>
         <li><a href="#radiant-data-0-9-8-6">0.9.8.6</a></li>
