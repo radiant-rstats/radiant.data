@@ -296,8 +296,9 @@ To create a holdout sample based on a filter, select `Holdout sample` from the `
 
 #### Training variable
 
-To create a variable that can be used to (randomly) filter a dataset for training and testing, select `Training variable` from the `Transformation type` dropdown. Specify either the number of observations to use for training (e.g., set `Size` to 2000) or a proportion of observations to select (e.g., set `Size` to .7). The new variable will have a value `1` for training and `0` holdout.
+To create a variable that can be used to (randomly) filter a dataset for model training and testing, select `Training variable` from the `Transformation type` dropdown. Specify either the number of observations to use for training (e.g., set `Size` to 2000) or a proportion of observations to select (e.g., set `Size` to .7). The new variable will have a value `1` for training and `0` test data. 
 
+It is also possible to select one or morel variables for `blocking` in random assignment to the training and test samples. This can help ensure that, for example, the proportion of positive and negative and negative cases (e.g., "buy" vs "no buy") for a variable of interest is (almost) identical in the training and test sample.
 
 ### Tidy data
 
