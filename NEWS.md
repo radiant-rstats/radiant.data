@@ -1,5 +1,6 @@
-# radiant.data 1.1.4
+# radiant.data 1.1.5
 
+* Improvements for wrapping generated code to _Report > Rmd_ or _Report > R_
 * _Data > Transform > Training_ now uses the `randomizr` package to allow blocking variables when creating a training variables. 
 
 # radiant.data 1.1.3

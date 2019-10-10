@@ -57,7 +57,6 @@ getdeps <- function() {
     htmltools::tagList(),
     c(
       htmlwidgets:::getDependency("DiagrammeR", "DiagrammeR"),
-      # htmlwidgets:::getDependency("datatables", "DT"),
       htmlwidgets:::getDependency("plotly", "plotly")
     )
   )
@@ -690,33 +689,43 @@ update_report <- function(
 
   ## wrapping similar to styler
   depr <- function(x, wrap = FALSE) {
-    if (wrap) {
-      for (i in names(x)) {
-        tmp <- x[[i]]
-        wco <- ifelse(max(nchar(tmp)) > 20, 20L, 55L)
-        tmp <- deparse(tmp, control = dctrl, width.cutoff = wco)
-        if ((nchar(i) + sum(nchar(tmp)) < 70) | (length(tmp) == 2 & tmp[2] == ")")) {
-          tmp <- paste0(tmp, collapse = "")
-        }
+    cutoff <- ifelse (wrap, 20L, 55L) 
+    for (i in names(x)) {
+      tmp <- x[[i]]
+      wco <- ifelse(max(nchar(tmp)) > cutoff, cutoff, 55L)
+      if (inherits(tmp, "fractions")) {
         if (length(tmp) > 1) {
-          if (grepl("^c\\(", tmp[1])) {
-            tmp <- c("c(", sub("^c\\(", "", tmp))
-          } else {
-            tmp <- c("list(", sub("^list\\(", "", tmp))
-          }
-          if (tail(tmp, 1) != ")") {
-            tmp <- c(sub("\\)$", "", tmp), ")")
-          }
+          tmp <- paste0("c(", paste(tmp, collapse = ", "), ")")
+        } else {
+          tmp <- as.character(tmp)
         }
-        x[[i]] <- sub("^\\s+", "", tmp) %>%
-          paste0(collapse = "\n    ") %>%
-          sub("[ ]+\\)", "  \\)", .)
+      } else {
+        tmp <- deparse(tmp, control = dctrl, width.cutoff = wco)
       }
+      if ((nchar(i) + sum(nchar(tmp)) < 70) | (length(tmp) == 2 & tmp[2] == ")")) {
+        tmp <- paste0(tmp, collapse = "")
+      }
+      if (length(tmp) > 1) {
+        if (grepl("^c\\(", tmp[1])) {
+          tmp <- c("c(", sub("^c\\(", "", tmp))
+        } else {
+          tmp <- c("list(", sub("^list\\(", "", tmp))
+        }
+        if (tail(tmp, 1) != ")") {
+          tmp <- c(sub("\\)$", "", tmp), ")")
+        }
+      }
+      x[[i]] <- sub("^\\s+", "", tmp) %>%
+        paste0(collapse = "\n    ") %>%
+        sub("[ ]+\\)", "  \\)", .)
+    }
+
+    if (wrap) {
       x <- paste0(paste0(paste0("\n  ", names(x)), " = ", x), collapse = ", ")
       x <- paste0("list(", x, "\n)")
     } else {
-      x <- deparse(x, control = dctrl, width.cutoff = 500L) %>%
-        paste(collapse = "")
+      x <- paste0(paste0(names(x), " = ", x), collapse = ", ")
+      x <- paste0("list(", x, ")")
     }
     x
   }
