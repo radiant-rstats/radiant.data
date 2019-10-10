@@ -24,5 +24,5 @@ which.pmax(2, 10:1)
 which.pmax(mtcars)
 }
 \seealso{
-See also \code{\link{which.max}} and  \code{\link{which.pmin}}
+See also \code{\link{which.max}} and \code{\link{which.pmin}}
 }

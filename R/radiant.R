@@ -855,7 +855,7 @@ find_project <- function(mess = TRUE) {
 #' @details Determine the index of the maximum of the input vectors per row. Extension of \code{which.max}
 #' @param ... Numeric or character vectors of the same length
 #' @return Vector of rankings
-#' @seealso See also \code{\link{which.max}} and  \code{\link{which.pmin}}
+#' @seealso See also \code{\link{which.max}} and \code{\link{which.pmin}}
 #' @examples
 #' which.pmax(1:10, 10:1)
 #' which.pmax(2, 10:1)
