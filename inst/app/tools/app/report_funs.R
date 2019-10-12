@@ -748,7 +748,7 @@ update_report <- function(
       }
       if (inp_out[i] != "" && length(inp_out[[i]]) > 0) {
         if (sum(nchar(inp_out[[i]])) > 40L) {
-          cmd <- depr(inp_out[[i]], wrap = wrap) %>%
+          cmd <- depr(inp_out[[i]], wrap = TRUE) %>%
             sub("list\\(", paste0(outputs[i], "\\(\n  ", inp, ", "), .) %>%
             paste0(cmd, "\n", .)
         } else {
