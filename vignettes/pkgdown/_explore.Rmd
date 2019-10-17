@@ -14,16 +14,18 @@ You can select options from `Column header` dropdown to switch between different
 
 ## Functions
 
-Below you will find a brief description of several functions. Most functions, however, will be self-explanatory.
+Below you will find a brief description of several functions available from the `Apply function(s)` dropdown menu. Most functions, however, will be self-explanatory.
 
 * `n` calculates the number of observations, or rows, in the data or in a group if a `Group by` variable has been selected (`n` uses the `length` function in R)
 * `n_distinct` calculates the number of distinct values
 * `n_missing` calculates the number of missing values
 * `cv` is the coefficient of variation (i.e., mean(x) / sd(x))
 * `sd` and `var` calculate the sample standard deviation and variance for numeric data
-* `prop` calculates a proportion. For a variable with only values 0 or 1 this is equivalent to `mean`. For other numeric variables it captures the occurence of the maximum value.
-For a `factor` it captures the occurence of the first level. 
+* `me` calculates the margin of error for a numeric variable using a 95% confidence level
+* `prop` calculates a proportion. For a variable with only values 0 or 1 this is equivalent to `mean`. For other numeric variables it captures the occurrence of the maximum value.
+For a `factor` it captures the occurrence of the first level. 
 * `sdprop` and `varprop` calculate the sample standard deviation and variance for a proportion
+* `meprop` calculates the margin of error for a proportion using a 95% confidence level
 * `sdpop` and `varpop` calculate the population standard deviation and variance
 
 ### Filter data
