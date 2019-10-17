@@ -123,6 +123,8 @@ reference:
     - n_missing
     - n_obs
     - normalize
+    - me
+    - meprop
     - p025
     - p05
     - p10

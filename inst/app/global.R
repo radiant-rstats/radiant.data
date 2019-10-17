@@ -192,11 +192,12 @@ options(
   radiant.functions = list(
     "n_obs" = "n_obs", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
     "mean" = "mean", "median" = "median", "min" = "min", "max" = "max",
-    "sum" = "sum", "var" = "var", "sd" = "sd", "se" = "se", "cv" = "cv",
+    "sum" = "sum", "var" = "var", "sd" = "sd", "se" = "se", "me" = "me", "cv" = "cv",
     "prop" = "prop", "varprop" = "varprop", "sdprop" = "sdprop", "seprop" = "seprop",
-    "varpop" = "varpop", "sdpop" = "sdpop", "1%" = "p01", "2.5%" = "p025", "5%" = "p05",
-    "10%" = "p10", "25%" = "p25", "75%" = "p75", "90%" = "p90", "95%" = "p95",
-    "97.5%" = "p975", "99%" = "p99", "skew" = "skew", "kurtosis" = "kurtosi"
+    "meprop" = "meprop", "varpop" = "varpop", "sdpop" = "sdpop", "1%" = "p01", 
+    "2.5%" = "p025", "5%" = "p05", "10%" = "p10", "25%" = "p25", "75%" = "p75", 
+    "90%" = "p90", "95%" = "p95", "97.5%" = "p975", "99%" = "p99", "skew" = "skew", 
+    "kurtosis" = "kurtosi"
   )
 )
 

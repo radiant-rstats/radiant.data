@@ -1,3 +1,7 @@
+# radiant.data 1.1.7
+
+* Added `me` and `meprop` functions to calculate the margin of error for a mean and a proportion. Functions are accessible from _Data > Pivot_ and _Data > Explore_
+
 # radiant.data 1.1.6
 
 * Improvements for wrapping generated code to _Report > Rmd_ or _Report > R_

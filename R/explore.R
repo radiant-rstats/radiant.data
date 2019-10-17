@@ -466,6 +466,23 @@ se <- function(x, na.rm = TRUE) {
   sd(x) / sqrt(length(x))
 }
 
+#' Margin of error
+#' @param x Input variable
+#' @param conf_lev Confidence level. The default is 0.95
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return Margin of error
+#' 
+#' @importFrom stats qt
+#' 
+#' @examples
+#' me(rnorm(100))
+#'
+#' @export
+me <- function(x, conf_lev = 0.95, na.rm = TRUE) {
+  if (na.rm) x <- na.omit(x)
+  se(x) * qt(conf_lev / 2 + .5, length(x) - 1, lower.tail = TRUE)
+}
+
 #' Calculate proportion
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
@@ -524,6 +541,23 @@ sdprop <- function(x, na.rm = TRUE) sqrt(varprop(x, na.rm = na.rm))
 seprop <- function(x, na.rm = TRUE) {
   if (na.rm) x <- na.omit(x)
   sqrt(varprop(x, na.rm = FALSE) / length(x))
+}
+
+#' Margin of error for proportion
+#' @param x Input variable
+#' @param conf_lev Confidence level. The default is 0.95
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return Margin of error
+#' 
+#' @importFrom stats qnorm
+#' 
+#' @examples
+#' meprop(c(rep(1L, 10), rep(0L, 10)))
+#'
+#' @export
+meprop <- function(x, conf_lev = 0.95, na.rm = TRUE) {
+  if (na.rm) x <- na.omit(x)
+  seprop(x) * qnorm(conf_lev / 2 + .5, lower.tail = TRUE)
 }
 
 #' Variance for the population
