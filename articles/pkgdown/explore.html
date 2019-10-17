@@ -143,7 +143,7 @@
 <div id="functions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#functions" class="anchor"></a>Functions</h2>
-<p>Below you will find a brief description of several functions. Most functions, however, will be self-explanatory.</p>
+<p>Below you will find a brief description of several functions available from the <code>Apply function(s)</code> dropdown menu. Most functions, however, will be self-explanatory.</p>
 <ul>
 <li>
 <code>n</code> calculates the number of observations, or rows, in the data or in a group if a <code>Group by</code> variable has been selected (<code>n</code> uses the <code>length</code> function in R)</li>
@@ -156,9 +156,13 @@
 <li>
 <code>sd</code> and <code>var</code> calculate the sample standard deviation and variance for numeric data</li>
 <li>
-<code>prop</code> calculates a proportion. For a variable with only values 0 or 1 this is equivalent to <code>mean</code>. For other numeric variables it captures the occurence of the maximum value. For a <code>factor</code> it captures the occurence of the first level.</li>
+<code>me</code> calculates the margin of error for a numeric variable using a 95% confidence level</li>
+<li>
+<code>prop</code> calculates a proportion. For a variable with only values 0 or 1 this is equivalent to <code>mean</code>. For other numeric variables it captures the occurrence of the maximum value. For a <code>factor</code> it captures the occurrence of the first level.</li>
 <li>
 <code>sdprop</code> and <code>varprop</code> calculate the sample standard deviation and variance for a proportion</li>
+<li>
+<code>meprop</code> calculates the margin of error for a proportion using a 95% confidence level</li>
 <li>
 <code>sdpop</code> and <code>varpop</code> calculate the population standard deviation and variance</li>
 </ul>

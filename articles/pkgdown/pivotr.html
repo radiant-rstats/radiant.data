@@ -136,6 +136,29 @@
 <p>It is also possible to summarize numerical variables. Select <code>price</code> from the <code>Numeric variables</code> drop-down. This will create the table shown below. Just as in the <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank"><em>Data &gt; View</em></a> tab you can sort the table by clicking on the column headers. You can also use sliders (e.g., click in the input box below <code>I1</code>) to limit the view to values in a specified range. To view only information for diamonds with a <code>Very good</code>, <code>Premium</code> or <code>Ideal</code> cut click in the input box below the <code>cut</code> header.</p>
 <p align="center">
 <img src="https://radiant-rstats.github.io/docs/data/figures//pivotr.png"></p>
+<p>Below you will find a brief description of several functions available from the <code>Apply function</code> dropdown menu. Most functions, however, will be self-explanatory.</p>
+<ul>
+<li>
+<code>n</code> calculates the number of observations, or rows, in the data or in a group if a <code>Group by</code> variable has been selected (<code>n</code> uses the <code>length</code> function in R)</li>
+<li>
+<code>n_distinct</code> calculates the number of distinct values</li>
+<li>
+<code>n_missing</code> calculates the number of missing values</li>
+<li>
+<code>cv</code> is the coefficient of variation (i.e., mean(x) / sd(x))</li>
+<li>
+<code>sd</code> and <code>var</code> calculate the sample standard deviation and variance for numeric data</li>
+<li>
+<code>me</code> calculates the margin of error for a numeric variable using a 95% confidence level</li>
+<li>
+<code>prop</code> calculates a proportion. For a variable with only values 0 or 1 this is equivalent to <code>mean</code>. For other numeric variables it captures the occurrence of the maximum value. For a <code>factor</code> it captures the occurrence of the first level.</li>
+<li>
+<code>sdprop</code> and <code>varprop</code> calculate the sample standard deviation and variance for a proportion</li>
+<li>
+<code>meprop</code> calculates the margin of error for a proportion using a 95% confidence level</li>
+<li>
+<code>sdpop</code> and <code>varpop</code> calculate the population standard deviation and variance</li>
+</ul>
 <p>You can also create a bar chart based on the generated table (see image above). To download the table in <em>csv</em> format or the plot in <em>png</em> format click the appropriate download icon on the right.</p>
 <blockquote>
 <p>Note that when a categorical variable (<code>factor</code>) is selected from the <code>Numeric variable</code> dropdown it is converted to a 0-1 (binary) variable where the first level is coded as 1 and all other levels as 0.</p>
