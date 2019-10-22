@@ -1,5 +1,6 @@
-# radiant.data 1.1.7
+# radiant.data 1.1.8
 
+* Changed default `quantile` algorithm used in the `xtile` function from number 2 to 7. See the help for `stats::quantile` for details
 * Added `me` and `meprop` functions to calculate the margin of error for a mean and a proportion. Functions are accessible from _Data > Pivot_ and _Data > Explore_
 
 # radiant.data 1.1.6

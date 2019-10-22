@@ -358,32 +358,37 @@ mutate_ext <- function(.tbl, .funs, ..., .ext = "", .vars = c()) {
   }
 }
 
-#' Create quantiles
-#'
-#' @details Approach used produces results most similar to Stata
+#' Split a numeric variable into a number of bins and return a vector of bin numbers
 #'
 #' @param x Numeric variable
 #' @param n number of bins to create
-#' @param rev Reverse the order of the xtiles
+#' @param rev Reverse the order of the bin numbers
+#' @param type An integer between 1 and 9 to select one of the quantile algorithms described in the help for the stats::quantile function
+#'
+#' @seealso See \link[stats]{quantile} for a description of the different algorithm types
 #'
 #' @examples
-#' xtile(1:10,5)
-#' xtile(1:10,5, rev = TRUE)
+#' xtile(1:10, 5)
+#' xtile(1:10, 5, rev = TRUE)
+#' xtile(c(rep(1, 6), 7:10), 5)
 #'
 #' @export
-xtile <- function(x, n = 5, rev = FALSE) {
+xtile <- function(x, n = 5, rev = FALSE, type = 7) {
   if (!is.numeric(x)) {
     stop(paste0("The variable to bin must be of type {numeric} but is of type {", class(x)[1], "}"), call. = FALSE)
   } else if (n < 1) {
     stop(paste0("The number of bins must be > 1 but is ", n), call. = FALSE)
   } else if (length(x) < n) {
     stop(paste("The number of bins to create is larger than\nthe number of data points. Perhaps you grouped the data before\ncalling the xtile function and the number of observations per\ngroup is too small"), call. = FALSE)
+  } else if (type < 1 || type > 9) {
+    stop(paste("The value for type is", type, "but must be between 1 and 9"), call. = FALSE)
   }
 
-  breaks <- quantile(x, prob = seq(0, 1, length = n + 1), type = 2)
+  breaks <- quantile(x, prob = seq(0, 1, length = n + 1), na.rm = TRUE, type = type)
   if (length(breaks) < 2) stop(paste("Insufficient variation in x to construct", n, "breaks"), call. = FALSE)
-  .bincode(x, breaks, include.lowest = TRUE) %>%
-    {if (rev) as.integer((n + 1) - .) else .}
+  bins <- .bincode(x, breaks, include.lowest = TRUE)
+
+  if (rev) as.integer((n + 1) - bins) else bins
 }
 
 #' Show all rows with duplicated values (not just the first or last)

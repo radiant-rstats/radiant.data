@@ -2,25 +2,28 @@
 % Please edit documentation in R/transform.R
 \name{xtile}
 \alias{xtile}
-\title{Create quantiles}
+\title{Split a numeric variable into a number of bins and return a vector of bin numbers}
 \usage{
-xtile(x, n = 5, rev = FALSE)
+xtile(x, n = 5, rev = FALSE, type = 7)
 }
 \arguments{
 \item{x}{Numeric variable}
 
 \item{n}{number of bins to create}
 
-\item{rev}{Reverse the order of the xtiles}
+\item{rev}{Reverse the order of the bin numbers}
+
+\item{type}{An integer between 1 and 9 to select one of the quantile algorithms described in the help for the stats::quantile function}
 }
 \description{
-Create quantiles
-}
-\details{
-Approach used produces results most similar to Stata
+Split a numeric variable into a number of bins and return a vector of bin numbers
 }
 \examples{
-xtile(1:10,5)
-xtile(1:10,5, rev = TRUE)
+xtile(1:10, 5)
+xtile(1:10, 5, rev = TRUE)
+xtile(c(rep(1, 6), 7:10), 5)
 
+}
+\seealso{
+See \link[stats]{quantile} for a description of the different algorithm types
 }
