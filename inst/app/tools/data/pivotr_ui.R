@@ -160,22 +160,8 @@ output$ui_pvt_run <- renderUI({
   )
 })
 
-observe({
-  ## dep on most inputs
-  input$data_filter
-  input$show_filter
-  sapply(r_drop(names(pvt_args)), function(x) input[[paste0("pvt_", x)]])
-
-  ## notify user when the plot needed to be updated
-  ## based on https://stackoverflow.com/questions/45478521/listen-to-reactive-invalidation-in-shiny
-  if (pressed(input$pvt_run) && !is.null(input$pvt_cvars)) {
-    if (isTRUE(attr(pvt_inputs, "observable")$.invalidated)) {
-      updateActionButton(session, "pvt_run", "Update pivot table", icon = icon("refresh", class = "fa-spin"))
-    } else {
-      updateActionButton(session, "pvt_run", "Create pivot table", icon = icon("play"))
-    }
-  }
-})
+## add a spinning refresh icon if the tabel needs to be (re)calculated
+run_refresh(pvt_args, "pvt", init = "cvars", label = "Create pivot table", relabel = "Update pivot table")
 
 output$ui_Pivotr <- renderUI({
   tagList(

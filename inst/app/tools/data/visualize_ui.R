@@ -300,25 +300,11 @@ output$ui_viz_colors <- renderUI({
   )
 })
 
-observe({
-  ## dep on most inputs
-  input$data_filter
-  input$show_filter
-  sapply(r_drop(names(viz_args)), function(x) input[[paste0("viz_", x)]])
-
-  ## labs is a list so must specify explicitly
-  input$viz_labs_title; input$viz_labs_subtitle; input$viz_labs_caption; input$viz_labs_y; input$viz_labs_x
-
-  ## notify user when the plot needed to be updated
-  ## based on https://stackoverflow.com/questions/45478521/listen-to-reactive-invalidation-in-shiny
-  if (pressed(input$viz_run) && !is.null(input$viz_xvar)) {
-    if (isTRUE(attr(viz_inputs, "observable")$.invalidated)) {
-      updateActionButton(session, "viz_run", "Update plot", icon = icon("refresh", class = "fa-spin"))
-    } else {
-      updateActionButton(session, "viz_run", "Create plot", icon = icon("play"))
-    }
-  }
-})
+## add a spinning refresh icon if the tabel needs to be (re)calculated
+run_refresh(
+  viz_args, "viz", init = "xvar", label = "Create plot", relabel = "Update plot",
+  inputs = c("labs_title", "labs_subtitle", "labs_caption", "labs_y", "labs_x")
+)
 
 output$ui_Visualize <- renderUI({
   tagList(

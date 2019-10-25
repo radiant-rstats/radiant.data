@@ -77,24 +77,6 @@ output$ui_cmb_store <- renderUI({
   actionButton("cmb_store", "Combine", icon = icon("plus"), class = "btn-success")
 })
 
-observe({
-  input$data_filter
-  input$show_filter
-  # dep on most inputs
-  sapply(r_drop(names(cmb_args)), function(x) input[[paste0("cmb_", x)]])
-
-  ## notify user when the plot needed to be updated
-  ## based on https://stackoverflow.com/questions/45478521/listen-to-reactive-invalidation-in-shiny
-  if (pressed(input$cmb_store) && !is.null(input$cmb_vars)) {
-    if (isTRUE(attr(cmb_inputs, "observable")$.invalidated)) {
-      ## added fa-spin class based on https://stackoverflow.com/a/47165104/1974918
-      updateActionButton(session, "cmb_store", "Combine", icon = icon("refresh", class = "fa-spin"))
-    } else {
-      updateActionButton(session, "cmb_store", "Combine", icon = icon("plus"))
-    }
-  }
-})
-
 output$ui_Combine <- renderUI({
   tagList(
     wellPanel(

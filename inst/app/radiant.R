@@ -263,7 +263,7 @@ has_duplicates <- function(x) length(unique(x)) < length(x)
 is_date <- function(x) inherits(x, c("Date", "POSIXlt", "POSIXct"))
 
 ## drop elements from .._args variables obtained using formals
-r_drop <- function(x, drop = c("dataset", "data_filter", "envir")) x[-which(x %in% drop)]
+r_drop <- function(x, drop = c("dataset", "data_filter", "envir")) x[!x %in% drop]
 
 ## show a few rows of a dataframe
 show_data_snippet <- function(dataset = input$dataset, nshow = 7, title = "", filt = "") {
@@ -883,4 +883,41 @@ if (length(getOption("radiant.autosave", default = NULL)) > 0) {
       return()
     }
   )
+}
+
+## update "run" button when relevant inputs are changed
+run_refresh <- function(
+  args, pre, init = "evar", tabs = "", 
+  label = "Estimate model", relabel = label, 
+  inputs = NULL, data = TRUE
+) {
+  observe({
+    ## dep on most inputs
+    if (data) {
+      input$data_filter
+      input$show_filter
+    }
+    sapply(r_drop(names(args)), function(x) input[[paste0(pre, "_", x)]])
+
+    ## adding dependence in more inputs
+    if (length(inputs) > 0) {
+      sapply(inputs, function(x) input[[paste0(pre, "_", x)]])
+    }
+
+    run <- isolate(input[[paste0(pre, "_run")]]) %>% pressed()
+    if (is.null(input[[paste0(pre, "_", init)]])) {
+      if (!is_empty(tabs)) {
+        updateTabsetPanel(session, paste0(tabs, " "), selected = "Summary")
+      }
+      updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play"))
+    } else if (run) {
+      updateActionButton(session, paste0(pre, "_run"), relabel, icon = icon("refresh", class = "fa-spin"))
+    } else {
+      updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play"))
+    }
+  })
+
+  observeEvent(input[[paste0(pre, "_run")]], {
+    updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play"))
+  })
 }

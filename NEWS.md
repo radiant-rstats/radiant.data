@@ -1,3 +1,7 @@
+# radiant.data 1.2.0
+
+* Update action buttons that initiate a calculation when one or more relevant inputs are changed. For example, when a model should be re-estimated because the set of explanatory variables was changed by the user, a spinning "refresh" icon will be shown
+
 # radiant.data 1.1.8
 
 * Changed default `quantile` algorithm used in the `xtile` function from number 2 to 7. See the help for `stats::quantile` for details

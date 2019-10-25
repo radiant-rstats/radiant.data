@@ -122,24 +122,8 @@ output$ui_expl_run <- renderUI({
   actionButton("expl_run", "Create table", width = "100%", icon = icon("play"), class = "btn-success")
 })
 
-observe({
-  ## dep on most inputs
-  input$data_filter
-  input$show_filter
-  # dep on most inputs
-  sapply(r_drop(names(expl_args)), function(x) input[[paste0("expl_", x)]])
-
-  ## notify user when the plot needed to be updated
-  ## based on https://stackoverflow.com/questions/45478521/listen-to-reactive-invalidation-in-shiny
-  if (pressed(input$expl_run) && !is.null(input$expl_vars)) {
-    if (isTRUE(attr(expl_inputs, "observable")$.invalidated)) {
-      ## added fa-spin class based on https://stackoverflow.com/a/47165104/1974918
-      updateActionButton(session, "expl_run", "Update table", icon = icon("refresh", class = "fa-spin"))
-    } else {
-      updateActionButton(session, "expl_run", "Create table", icon = icon("play"))
-    }
-  }
-})
+## add a spinning refresh icon if the tabel needs to be (re)calculated
+run_refresh(expl_args, "expl", init = "vars", label = "Create table", relabel = "Update table")
 
 output$ui_Explore <- renderUI({
   tagList(
