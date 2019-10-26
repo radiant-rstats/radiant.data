@@ -709,7 +709,48 @@ refactor <- function(x, levs = levels(x), repl = NA) {
   factor(x, levels = levs)
 }
 
+#' Convert a string of numbers into a vector
+#'
+#' @param x A string of numbers that may include fractions
+#'
+#' @importFrom MASS fractions
+#'
+#' @examples
+#' make_vec("1 2 4")
+#' make_vec("1/2 2/3 4/5")
+#' make_vec(0.1)
+#' @export
+make_vec <- function(x) {
+  if (is_empty(x)) {
+    return(NULL)
+  } else if (!is.character(x)) {
+    return(x)
+  }
+
+  any_frac <- FALSE
+  check_frac <- function(x) {
+    if (length(x) == 2) {
+      any_frac <<- TRUE
+      as.numeric(x[1]) / as.numeric(x[2])
+    } else {
+      as.numeric(x)
+    }
+  }
+  x <- strsplit(x, "(\\s*,\\s*|\\s*;\\s*|\\s+)") %>%
+    unlist() %>%
+    strsplit("\\s*/\\s*") %>%
+    sapply(check_frac)
+
+  if (any_frac) {
+    MASS::fractions(x)
+  } else {
+    x
+  }
+}
+
 ###############################
 ## function below not exported
 ###############################
 .recode. <- function(x, cmd) car::Recode(x, cmd)
+
+

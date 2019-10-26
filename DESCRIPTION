@@ -41,6 +41,7 @@ Imports:
     shinyFiles (>= 0.7.3),
     stringi (>= 1.2.4),
     randomizr (>= 0.20.0),
+    MASS (>= 7.3.51.4),
     base64enc
 Suggests:
     svglite (>= 1.2.1),
