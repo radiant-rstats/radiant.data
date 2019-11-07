@@ -851,7 +851,7 @@ if (length(getOption("radiant.autosave", default = NULL)) > 0) {
   start_time <- Sys.time()
   interval <- getOption("radiant.autosave")[1] * 60000
   max_duration <- getOption("radiant.autosave")[2]
-  reactivePoll(
+  autosave_poll <- reactivePoll(
     interval,
     session,
     checkFunc = function() {
