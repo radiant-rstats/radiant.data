@@ -262,7 +262,8 @@ get_data <- function(
     {if (filt == "") . else filter_data(., filt)} %>%        ## apply data_filter
     {if (is.null(rows)) . else .[rows, , drop = FALSE]} %>%
     {if (is_empty(vars[1])) . else select(., !!! if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)} %>%
-    {if (na.rm) na.omit(.) else .}
+    {if (na.rm) na.omit(.) else .} %>%
+    droplevels()
 }
 
 #' Convert characters to factors
