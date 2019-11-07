@@ -194,9 +194,9 @@ options(
     "mean" = "mean", "median" = "median", "min" = "min", "max" = "max",
     "sum" = "sum", "var" = "var", "sd" = "sd", "se" = "se", "me" = "me", "cv" = "cv",
     "prop" = "prop", "varprop" = "varprop", "sdprop" = "sdprop", "seprop" = "seprop",
-    "meprop" = "meprop", "varpop" = "varpop", "sdpop" = "sdpop", "1%" = "p01", 
-    "2.5%" = "p025", "5%" = "p05", "10%" = "p10", "25%" = "p25", "75%" = "p75", 
-    "90%" = "p90", "95%" = "p95", "97.5%" = "p975", "99%" = "p99", "skew" = "skew", 
+    "meprop" = "meprop", "varpop" = "varpop", "sdpop" = "sdpop", "1%" = "p01",
+    "2.5%" = "p025", "5%" = "p05", "10%" = "p10", "25%" = "p25", "75%" = "p75",
+    "90%" = "p90", "95%" = "p95", "97.5%" = "p975", "99%" = "p99", "skew" = "skew",
     "kurtosis" = "kurtosi"
   )
 )
@@ -547,7 +547,7 @@ onStop(function() {
     clean_up_list <- c(
       "r_sessions", "help_menu", "make_url_patterns", "import_fs",
       "init_data", "navbar_proj", "knit_print.data.frame", "withMathJax",
-      "Dropbox", "s"
+      "Dropbox", "sf_volumes"
     )
     suppressWarnings(
       suppressMessages({

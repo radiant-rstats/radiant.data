@@ -1,3 +1,8 @@
+# radiant.data 1.2.1
+
+* Add `droplevel` to the `get_data` function to ensure levels with no observations do not cause issues in, e.g., regress of logistic
+* Clean up "sf_volumes" from the when radiant is stopped
+
 # radiant.data 1.2.0
 
 * Update action buttons that initiate a calculation when one or more relevant inputs are changed. For example, when a model should be re-estimated because the set of explanatory variables was changed by the user, a spinning "refresh" icon will be shown
