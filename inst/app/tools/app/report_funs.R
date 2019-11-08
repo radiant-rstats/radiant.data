@@ -127,11 +127,11 @@ setup_report <- function(
     if (save_type %in% c("PDF", "Word", "Powerpoint")) {
       yml <- ""
     } else if (save_type == "HTML") {
-      yml <- '---\noutput:\n  html_document:\n    highlight: textmate\n    theme: spacelab\n    df_print: paged\n    toc: yes\n---\n\n'
+      yml <- '---\noutput:\n  html_document:\n    highlight: zenburn\n    theme: united\n    df_print: paged\n    toc: yes\n---\n\n'
     } else if (save_type %in% c("Rmd", "Rmd + Data (zip)")) {
-      yml <- '---\noutput:\n  html_document:\n    highlight: textmate\n    theme: spacelab\n    df_print: paged\n    toc: yes\n    code_folding: hide\n    code_download: true\n---\n\n'
+      yml <- '---\noutput:\n  html_document:\n    highlight: zenburn\n    theme: united\n    df_print: paged\n    toc: yes\n    code_folding: hide\n    code_download: true\n---\n\n'
     } else {
-      yml <- '---\noutput:\n  html_notebook:\n    highlight: textmate\n    theme: spacelab\n    toc: yes\n    code_folding: hide\n---\n\n'
+      yml <- '---\noutput:\n  html_notebook:\n    highlight: zenburn\n    theme: united\n    toc: yes\n    code_folding: hide\n---\n\n'
     }
   } else {
     yml = ""
@@ -179,11 +179,16 @@ if (is.null(shiny::getDefaultReactiveDomain())) library(", lib, ")
 ul, ol {
   padding-left: 18px;
 }
-pre, code, pre code {
+pre {
   overflow: auto;
   white-space: pre;
   word-wrap: normal;
   background-color: #ffffff;
+}
+code, pre code {
+  overflow: auto;
+  white-space: pre;
+  word-wrap: normal;
 }
 </style>\n\n", report)
 }}
@@ -634,8 +639,8 @@ report_save_content <- function(file, type = "rmd") {
               tmp_fn,
               switch(
                 save_type,
-                Notebook = rmarkdown::html_notebook(highlight = "textmate", theme = "spacelab", code_folding = "hide"),
-                HTML = rmarkdown::html_document(highlight = "textmate", theme = "spacelab", code_download = TRUE, df_print = "paged"),
+                Notebook = rmarkdown::html_notebook(highlight = "zenburn", theme = "united", code_folding = "hide"),
+                HTML = rmarkdown::html_document(highlight = "zenburn", theme = "united", code_download = TRUE, df_print = "paged"),
                 PDF = rmarkdown::pdf_document(),
                 Word = rmarkdown::word_document(
                   reference_docx = getOption("radiant.word_style", default = file.path(system.file(package = "radiant.data"), "app/www/style.docx")),
@@ -689,7 +694,7 @@ update_report <- function(
 
   ## wrapping similar to styler
   depr <- function(x, wrap = FALSE) {
-    cutoff <- ifelse (wrap, 20L, 55L) 
+    cutoff <- ifelse (wrap, 20L, 55L)
     for (i in names(x)) {
       tmp <- x[[i]]
       wco <- ifelse(max(nchar(tmp)) > cutoff, cutoff, 55L)

@@ -1,6 +1,6 @@
-# radiant.data 1.2.1
+# radiant.data 1.2.2
 
-* Add `droplevel` to the `get_data` function to ensure levels with no observations do not cause issues in, e.g., regress of logistic
+* Use `zenburn` for code highlighting in Notebook and HTML report from _Report > Rmd_
 * Clean up "sf_volumes" from the when radiant is stopped
 
 # radiant.data 1.2.0
