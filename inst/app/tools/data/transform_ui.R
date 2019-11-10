@@ -124,6 +124,7 @@ output$ui_tr_log <- renderUI({
       mode = "r",
       theme = getOption("radiant.ace_theme", default = "tomorrow"),
       wordWrap = TRUE,
+      debounce = 0,
       value = state_init("tr_log", "") %>% fix_smart(),
       vimKeyBinding = getOption("radiant.ace_vim.keys", default = FALSE),
       tabSize = getOption("radiant.ace_tabSize", 2),
@@ -731,7 +732,7 @@ fix_ext <- function(ext) {
   } else {
     if (store_dat == "") store_dat <- dataset
     cmd <- ""
-    if (!vars[1] == "") {
+    if (!is_empty(vars)) {
       cmd <- paste0("## Select columns\n", store_dat, " <- select(", dataset, ", ", paste0(vars, collapse = ", "), ")\n")
       dataset <- store_dat
     }

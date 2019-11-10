@@ -23,13 +23,13 @@
 combine_data <- function(
   x, y, by = "", add = "",
   type = "inner_join",
-  data_filter = "", 
+  data_filter = "",
   envir = parent.frame(),
   ...
 ) {
 
   is_join <- grepl("_join", type)
-  if (is_join && by[1] == "") {
+  if (is_join && is_empty(by)) {
     return(cat("No variables selected to join datasets\n"))
   }
 

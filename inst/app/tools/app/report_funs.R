@@ -518,7 +518,7 @@ report_save_content <- function(file, type = "rmd") {
 
       zip_info <- getOption("radiant.zip")
       if (save_type %in% c("Rmd + Data (zip)", "R + Data (zip)")) {
-        if (zip_info[1] == "") {
+        if (is_empty(zip_info)) {
           ## No zip warning
           showModal(
             modalDialog(
