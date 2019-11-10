@@ -234,6 +234,7 @@ output$report_r <- renderUI({
       mode = "r",
       theme = getOption("radiant.ace_theme", default = "tomorrow"),
       wordWrap = TRUE,
+      debounce = 0,
       height = "auto",
       value = state_init("r_edit", r_example) %>% fix_smart(),
       placeholder = "Enter R-code for analysis here and press the Knit report button to run it.\nClick the ? icon on the top left of your screen for more information",

@@ -1,3 +1,7 @@
+# radiant.data 1.2.3
+
+* Fix for _Data > Transform > Spread_ when no variables are selected
+
 # radiant.data 1.2.2
 
 * Use `zenburn` for code highlighting in Notebook and HTML report from _Report > Rmd_

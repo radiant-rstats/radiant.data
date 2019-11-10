@@ -311,6 +311,7 @@ output$report_rmd <- renderUI({
       mode = "markdown",
       theme = getOption("radiant.ace_theme", default = "tomorrow"),
       wordWrap = TRUE,
+      debounce = 0,
       height = "auto",
       value = state_init("rmd_edit", rmd_example) %>% fix_smart(),
       placeholder = "Type text for your report using markdown to format it\n(http://commonmark.org/help/). Add R-code to include\nyour analysis results in the report as well. Click the ?\nicon on the top left of your screen for more information",
