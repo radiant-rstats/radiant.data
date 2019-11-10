@@ -1,6 +1,7 @@
 # radiant.data 1.2.3
 
 * Fix for _Data > Transform > Spread_ when no variables are selected
+* Set `debounce` to 0 for all shinyAce editors
 
 # radiant.data 1.2.2
 
