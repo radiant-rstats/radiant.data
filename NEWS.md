@@ -1,3 +1,7 @@
+# radiant.data 1.2.4
+
+* Avoid resetting the "Column header" to its default value in _Data > Explore_ when other settings are changed.
+
 # radiant.data 1.2.3
 
 * Fix for _Data > Transform > Spread_ when no variables are selected

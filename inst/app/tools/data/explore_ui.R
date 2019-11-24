@@ -106,7 +106,7 @@ output$ui_expl_top <- renderUI({
   selectizeInput(
     "expl_top", label = "Column header:",
     choices = top_var,
-    selected = state_single("expl_top", top_var, top_var[1]),
+    selected = state_single("expl_top", top_var, isolate(input$expl_top)),
     multiple = FALSE
   )
 })
