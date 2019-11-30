@@ -196,9 +196,14 @@ download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(i
 .viewcmd <- function(mess = "") {
   ## get the state of the dt table
   ts <- dt_state("dataviewer", vars = input$view_vars)
-  dataset <- fix_names(input$view_name)
-  if (input$view_name != dataset) {
-    updateTextInput(session, inputId = "view_name", value = dataset)
+
+  if (is_empty(input$view_name)) {
+    dataset <- NULL
+  } else {
+    dataset <- fix_names(input$view_name)
+    if (input$view_name != dataset) {
+      updateTextInput(session, inputId = "view_name", value = dataset)
+    }
   }
 
   cmd <- ""
@@ -218,17 +223,25 @@ download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(i
     vars <- paste0(vars, collapse = ", ")
   }
 
-  xcmd <- paste0("# dtab(", dataset)
+  if (is_empty(dataset)) {
+    xcmd <- paste0("  dtab(")
+  } else {
+    xcmd <- paste0("# dtab(", dataset)
+  }
   if (!is_empty(input$view_dec, 3)) {
-    xcmd <- paste0(xcmd, ", dec = ", input$view_dec)
+    xcmd <- paste0(xcmd, "dec = ", input$view_dec, ", ")
   }
   if (!is_empty(r_state$dataviewer_state$length, 10)) {
-    xcmd <- paste0(xcmd, ", pageLength = ", r_state$dataviewer_state$length)
+    xcmd <- paste0(xcmd, "pageLength = ", r_state$dataviewer_state$length, ", ")
   }
-  xcmd <- paste0(xcmd, ", nr = 100) %>% render()")
+  xcmd <- paste0(xcmd, "nr = 100) %>% render()")
 
   ## create the command to filter and sort the data
-  cmd <- paste0(cmd, "## filter and sort the dataset\n", dataset, " <- ", input$dataset)
+  if (is_empty(dataset)) {
+    cmd <- paste0(cmd, "## filter and sort the dataset\n", input$dataset)
+  } else {
+    cmd <- paste0(cmd, "## filter and sort the dataset\n", dataset, " <- ", input$dataset)
+  }
   if (input$show_filter && !is_empty(input$data_filter)) {
     cmd <- paste0(cmd, " %>%\n  filter(", input$data_filter, ")")
   }
@@ -243,8 +256,13 @@ download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(i
   }
   ## moved `select` to the end so filters can use variables
   ## not selected for the final dataset
-  paste0(cmd, " %>%\n  select(", vars, ")") %>%
-    paste0("\nregister(\"", dataset, "\", \"", input$dataset, "\")\n", xcmd)
+  if (is_empty(dataset)) {
+    paste0(cmd, " %>%\n  select(", vars, ") %>%") %>%
+      paste0("\n", xcmd)
+  } else {
+    paste0(cmd, " %>%\n  select(", vars, ")") %>%
+      paste0("\nregister(\"", dataset, "\", \"", input$dataset, "\")\n", xcmd)
+  }
 }
 
 observeEvent(input$view_report, {
