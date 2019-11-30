@@ -32,7 +32,7 @@ output$ui_View <- renderUI({
         min = 0
       ),
       tags$table(
-        tags$td(textInput("view_name", "Store filtered data as:", paste0(input$dataset, "_wrk"))),
+        tags$td(textInput("view_name", "Store filtered data as:", "", placeholder = "Provide data name")),
         tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success"), style = "padding-top:30px;")
       )
     ),
@@ -226,7 +226,7 @@ download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(i
   if (is_empty(dataset)) {
     xcmd <- paste0("  dtab(")
   } else {
-    xcmd <- paste0("# dtab(", dataset)
+    xcmd <- paste0("# dtab(", dataset, ", ")
   }
   if (!is_empty(input$view_dec, 3)) {
     xcmd <- paste0(xcmd, "dec = ", input$view_dec, ", ")
@@ -260,8 +260,11 @@ download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(i
     paste0(cmd, " %>%\n  select(", vars, ") %>%") %>%
       paste0("\n", xcmd)
   } else {
-    paste0(cmd, " %>%\n  select(", vars, ")") %>%
-      paste0("\nregister(\"", dataset, "\", \"", input$dataset, "\")\n", xcmd)
+    ret <- paste0(cmd, " %>%\n  select(", vars, ")")
+    if (dataset != input$dataset) {
+      ret <- paste0(ret, "\nregister(\"", dataset, "\", \"", input$dataset, "\")\n", xcmd)
+    }
+    ret
   }
 }
 
