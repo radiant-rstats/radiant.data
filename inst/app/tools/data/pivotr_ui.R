@@ -50,7 +50,6 @@ pvt_plot_inputs <- reactive({
   pvt_plot_args
 })
 
-
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
   withProgress(message = "Acquiring variable information", value = 1, {
@@ -84,8 +83,9 @@ output$ui_pvt_cvars <- renderUI({
 })
 
 output$ui_pvt_nvar <- renderUI({
-  isNum <- .get_class() %in% c("integer", "numeric", "ts", "factor", "logical")
-  vars <- c("None", varnames()[isNum])
+  # isNum <- .get_class() %in% c("integer", "numeric", "ts", "factor", "logical")
+  # vars <- c("None", varnames()[isNum])
+  vars <- c("None", varnames())
 
   if (any(vars %in% input$pvt_cvars)) {
     vars <- base::setdiff(vars, input$pvt_cvars)
@@ -102,19 +102,20 @@ output$ui_pvt_nvar <- renderUI({
 })
 
 output$ui_pvt_fun <- renderUI({
-  req(input$pvt_nvar)
   r_funs <- getOption("radiant.functions")
   selectizeInput(
     "pvt_fun",
     "Apply function:",
     choices = r_funs,
-    selected = state_single("pvt_fun", r_funs, "mean"),
+    selected = state_single("pvt_fun", r_funs, isolate(input$pvt_fun)),
     multiple = FALSE
   )
 })
 
-observeEvent(input$pvt_nvar == "None", {
-  updateSelectInput(session, "pvt_fun", selected = "mean")
+observeEvent(input$pvt_nvar, {
+  if (input$pvt_nvar == "None") {
+    updateSelectInput(session, "pvt_fun", selected = "mean")
+  }
 })
 
 output$ui_pvt_normalize <- renderUI({
@@ -127,7 +128,7 @@ output$ui_pvt_normalize <- renderUI({
 })
 
 observeEvent(input$pvt_cvars, {
- if (length(input$pvt_cvars) == 1) {
+  if (length(input$pvt_cvars) == 1) {
     sel <- ifelse(input$pvt_normalize %in% pvt_normalize[2:3], "None", input$pvt_normalize)
     pvt_normalize <- pvt_normalize[-(2:3)]
   } else {

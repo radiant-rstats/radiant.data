@@ -197,6 +197,8 @@ as_hm <- function(x) {
 #' as_integer(as.factor(5:10))
 #' as.integer(as.factor(5:10))
 #' as_integer(c("a","b"))
+#' as_integer(c("0","1"))
+#' as_integer(as.factor(c("0","1")))
 #'
 #' @export
 as_integer <- function(x) {
@@ -221,6 +223,7 @@ as_integer <- function(x) {
 #' as.numeric(as.factor(5:10))
 #' as_numeric(c("a","b"))
 #' as_numeric(c("3","4"))
+#' as_numeric(as.factor(c("3","4")))
 #'
 #' @export
 as_numeric <- function(x) {

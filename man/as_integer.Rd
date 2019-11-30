@@ -21,5 +21,7 @@ as_integer(letters)
 as_integer(as.factor(5:10))
 as.integer(as.factor(5:10))
 as_integer(c("a","b"))
+as_integer(c("0","1"))
+as_integer(as.factor(c("0","1")))
 
 }

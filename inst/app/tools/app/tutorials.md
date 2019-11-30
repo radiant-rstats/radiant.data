@@ -60,11 +60,26 @@ The state file used in the demo is available for download from [GitHub](https://
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/9fugq5dXNhk" frameborder="0" allowfullscreen></iframe>
 
+## Radiant Tutorial Series
+
+For additional video tutorials see the **Radiant Tutorial Series** playlist linked below that covers:
+
+* Decision Analysis (_Model > Decision analysis_)
+* Probability calculator (_Basics > Probability calculator_)
+* Hypothesis testing:
+    - _Basics > Single mean_
+    - _Basics > Single proportion_
+    - _Basics > Compare proportions_
+    - _Basics > Compare means_
+    - _Basics > Cross-tabs_
+* Linear regression (_Model > Linear regression_)
+* Simulation (_Model > Simulation_)
+
+<a href="https://www.youtube.com/playlist?list=PLNhtaetb48EdKRIY7MewCyvb_1x7dV3xw" target="_blank">https://www.youtube.com/playlist?list=PLNhtaetb48EdKRIY7MewCyvb_1x7dV3xw</a>
+
 <!--
 ## Visualizing data
-
 <iframe width="640" height="375" src="" frameborder="0" allowfullscreen></iframe>
-
 -->
 
 ## License

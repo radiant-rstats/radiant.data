@@ -32,7 +32,6 @@ explore <- function(
   tvars <- vars
   if (!is_empty(byvar)) tvars <- unique(c(tvars, byvar))
 
-
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   dataset <- get_data(dataset, tvars, filt = data_filter, na.rm = FALSE, envir = envir)
   rm(tvars)
@@ -40,15 +39,54 @@ explore <- function(
   ## in case : was used
   vars <- base::setdiff(colnames(dataset), byvar)
 
-  ## converting factors for integer (1st level)
-  ## see also R/visualize.R
+  ## converting data as needed for summarization
   dc <- get_class(dataset)
-  isFctNum <- "factor" == dc & names(dc) %in% base::setdiff(vars, byvar)
-  if (sum(isFctNum)) {
-    dataset[, isFctNum] <- select(dataset, which(isFctNum)) %>%
-      mutate_all(~ as.integer(. == levels(.)[1]))
-    dc[isFctNum] <- "integer"
+  fixer <- function(x, fun = as_integer) {
+    if (is.character(x) || is.Date(x)) {
+      x <- rep(NA, length(x))
+    } else if (is.factor(x)) {
+      x_num <- sshhr(as.integer(as.character(x)))
+      if (length(na.omit(x_num)) == 0) {
+        x <- fun(x)
+      } else {
+        x <- x_num
+      }
+    }
+    x
   }
+  fixer_first <- function(x) {
+    x <- fixer(x, function(x) as_integer(x == levels(x)[1]))
+  }
+  mean <- function(x, na.rm = TRUE) base::mean(fixer_first(x), na.rm = na.rm)
+  sum <- function(x, na.rm = TRUE) base::sum(fixer_first(x), na.rm = na.rm)
+  var <- function(x, na.rm = TRUE) stats::var(fixer_first(x), na.rm = na.rm)
+  sd <- function(x, na.rm = TRUE) stats::sd(fixer_first(x), na.rm = na.rm)
+  se <- function(x, na.rm = TRUE) radiant.data::se(fixer_first(x), na.rm = na.rm)
+  me <- function(x, na.rm = TRUE) radiant.data::me(fixer_first(x), na.rm = na.rm)
+  cv <- function(x, na.rm = TRUE) radiant.data::cv(fixer_first(x), na.rm = na.rm)
+  prop <- function(x, na.rm = TRUE) radiant.data::prop(fixer_first(x), na.rm = na.rm)
+  varprop <- function(x, na.rm = TRUE) radiant.data::varprop(fixer_first(x), na.rm = na.rm)
+  sdprop <- function(x, na.rm = TRUE) radiant.data::sdprop(fixer_first(x), na.rm = na.rm)
+  seprop <- function(x, na.rm = TRUE) radiant.data::seprop(fixer_first(x), na.rm = na.rm)
+  meprop <- function(x, na.rm = TRUE) radiant.data::meprop(fixer_first(x), na.rm = na.rm)
+  varpop <- function(x, na.rm = TRUE) radiant.data::varpop(fixer_first(x), na.rm = na.rm)
+  sdpop <- function(x, na.rm = TRUE) radiant.data::sdpop(fixer_first(x), na.rm = na.rm)
+
+  median <- function(x, na.rm = TRUE) stats::median(fixer(x), na.rm = na.rm)
+  min <- function(x, na.rm = TRUE) base::min(fixer(x), na.rm = na.rm)
+  max <- function(x, na.rm = TRUE) base::max(fixer(x), na.rm = na.rm)
+  p01 <- function(x, na.rm = TRUE) radiant.data::p01(fixer(x), na.rm = na.rm)
+  p025 <- function(x, na.rm = TRUE) radiant.data::p025(fixer(x), na.rm = na.rm)
+  p05 <- function(x, na.rm = TRUE) radiant.data::p05(fixer(x), na.rm = na.rm)
+  p10 <- function(x, na.rm = TRUE) radiant.data::p10(fixer(x), na.rm = na.rm)
+  p25 <- function(x, na.rm = TRUE) radiant.data::p25(fixer(x), na.rm = na.rm)
+  p75 <- function(x, na.rm = TRUE) radiant.data::p75(fixer(x), na.rm = na.rm)
+  p90 <- function(x, na.rm = TRUE) radiant.data::p90(fixer(x), na.rm = na.rm)
+  p95 <- function(x, na.rm = TRUE) radiant.data::p95(fixer(x), na.rm = na.rm)
+  p975 <- function(x, na.rm = TRUE) radiant.data::p975(fixer(x), na.rm = na.rm)
+  p99 <- function(x, na.rm = TRUE) radiant.data::p99(fixer(x), na.rm = na.rm)
+  skew <- function(x, na.rm = TRUE) radiant.data::skew(fixer(x), na.rm = na.rm)
+  kurtosi <- function(x, na.rm = TRUE) radiant.data::kurtosi(fixer(x), na.rm = na.rm)
 
   isLogNum <- "logical" == dc & names(dc) %in% base::setdiff(vars, byvar)
   if (sum(isLogNum)) {
@@ -58,21 +96,8 @@ explore <- function(
   }
 
   if (is_empty(byvar)) {
-    isNum <- dc %>%
-      {which("numeric" == . | "integer" == . | "ts" == .)}
-    tab <- dataset %>%
-      select_at(.vars = names(isNum)) %>%
-      gather("variable", "value", factor_key = TRUE) %>%
-      group_by_at("variable") %>%
-      summarise_all(fun, na.rm = TRUE)
-
-    ## order by the variable names selected
-    tab <- tab[match(vars, tab[[1]]), ]
-
-    if (ncol(tab) == 2) {
-      colnames(tab) <- c("variable", fun)
-    }
-    rm(isNum)
+    byvar <- c()
+    tab <- summarise_all(dataset, fun, na.rm = TRUE)
   } else {
 
     ## convert categorical variables to factors if needed
@@ -83,23 +108,23 @@ explore <- function(
     tab <- dataset %>%
       group_by_at(.vars = byvar) %>%
       summarise_all(fun, na.rm = TRUE)
-
-    ## adjust column names
-    if (length(vars) == 1 || length(fun) == 1) {
-      rng <- (length(byvar) + 1):ncol(tab)
-      colnames(tab)[rng] <- paste0(vars, "_", fun)
-      rm(rng)
-    }
-
-    ## setup regular expression to split variable/function column appropriately
-    rex <- paste0("(.*?)_", glue('({glue_collapse(fun, "$|")}$)'))
-
-    ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
-    tab <- gather(tab, "variable", "value", !! -(1:length(byvar))) %>%
-      extract(variable, into = c("variable", "fun"), regex = rex) %>%
-      mutate(fun = factor(fun, levels = !! fun), variable = factor(variable, levels = vars)) %>%
-      spread("fun", "value")
   }
+
+  ## adjust column names
+  if (length(vars) == 1 || length(fun) == 1) {
+    rng <- (length(byvar) + 1):ncol(tab)
+    colnames(tab)[rng] <- paste0(vars, "_", fun)
+    rm(rng)
+  }
+
+  ## setup regular expression to split variable/function column appropriately
+  rex <- paste0("(.*?)_", glue('({glue_collapse(fun, "$|")}$)'))
+
+  ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
+  tab <- gather(tab, "variable", "value", !! -(seq_along(byvar))) %>%
+    extract(variable, into = c("variable", "fun"), regex = rex) %>%
+    mutate(fun = factor(fun, levels = !! fun), variable = factor(variable, levels = vars)) %>%
+    spread("fun", "value")
 
   ## flip the table if needed
   if (top != "fun") {
@@ -148,9 +173,25 @@ explore <- function(
   }
 
   ## objects no longer needed
-  rm(dataset, check_int, isLogNum, isFctNum, dc, nrow_tab, envir)
+  # rm(dataset, check_int, isLogNum, dc, nrow_tab, rex, envir)
+  # rm(mean, sum, sd, var, sd, se, me, cv, prop, varprop, sdprop, seprop, meprop, varpop, sepop)
+  # rm(median, min, max, p01, p025, p05, p10, p25, p50, p75, p90, p95, p975, p99, skew, kurtosi)
+  # rm(fixer, fixer_first)
 
-  as.list(environment()) %>% add_class("explore")
+  # as.list(environment()) %>% add_class("explore")
+
+  list(
+    tab = tab,
+    df_name = df_name,
+    vars = vars,
+    byvar = byvar,
+    fun = fun,
+    top = top,
+    tabfilt = tabfilt,
+    tabsort = tabsort,
+    nr = nr,
+    data_filter = data_filter
+  ) %>% add_class("explore")
 }
 
 #' Summary method for the explore function
@@ -471,9 +512,9 @@ se <- function(x, na.rm = TRUE) {
 #' @param conf_lev Confidence level. The default is 0.95
 #' @param na.rm If TRUE missing values are removed before calculation
 #' @return Margin of error
-#' 
+#'
 #' @importFrom stats qt
-#' 
+#'
 #' @examples
 #' me(rnorm(100))
 #'
@@ -548,9 +589,9 @@ seprop <- function(x, na.rm = TRUE) {
 #' @param conf_lev Confidence level. The default is 0.95
 #' @param na.rm If TRUE missing values are removed before calculation
 #' @return Margin of error
-#' 
+#'
 #' @importFrom stats qnorm
-#' 
+#'
 #' @examples
 #' meprop(c(rep(1L, 10), rep(0L, 10)))
 #'

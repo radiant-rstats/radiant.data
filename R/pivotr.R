@@ -40,11 +40,29 @@ pivotr <- function(
   if (nvar == "None") {
     nvar <- "n_obs"
   } else {
-    ## converting factors for integer (1st level)
-    ## see also R/visualize.R
-    if ("factor" %in% class(dataset[[nvar]]) && fun[1] != "n_distinct") {
-      dataset[[nvar]] %<>% {as.integer(. == levels(.)[1])}
-    } else if ("logical" %in% class(dataset[[nvar]])) {
+    fixer <- function(x, fun = as_integer) {
+      if (is.character(x) || is.Date(x)) {
+        x <- rep(NA, length(x))
+      } else if (is.factor(x)) {
+        x_num <- sshhr(as.integer(as.character(x)))
+        if (length(na.omit(x_num)) == 0) {
+          x <- fun(x)
+        } else {
+          x <- x_num
+        }
+      }
+      x
+    }
+    fixer_first <- function(x) {
+      x <- fixer(x, function(x) as_integer(x == levels(x)[1]))
+    }
+    if (fun %in% c("mean", "sum", "sd", "var", "sd", "se", "me", "cv", "prop", "varprop", "sdprop", "seprop", "meprop", "varpop", "sepop")) {
+      dataset[[nvar]] <- fixer_first(dataset[[nvar]])
+    } else if (fun %in% c("median", "min", "max", "p01", "p025", "p05", "p10", "p25", "p50", "p75", "p90", "p95", "p975", "p99", "skew", "kurtosi")) {
+      dataset[[nvar]] <- fixer(dataset[[nvar]])
+    }
+    rm(fixer, fixer_first)
+    if ("logical" %in% class(dataset[[nvar]])) {
       dataset[[nvar]] %<>% as.integer()
     }
   }
@@ -84,8 +102,8 @@ pivotr <- function(
       bind_rows(
         mutate_at(ungroup(tab), .vars = cvars, .funs = as.character),
         bind_cols(
-          data.frame("Total", stringsAsFactors = FALSE) %>% 
-          setNames(cvars), total %>% 
+          data.frame("Total", stringsAsFactors = FALSE) %>%
+          setNames(cvars), total %>%
           set_colnames(nvar)
         )
       )
