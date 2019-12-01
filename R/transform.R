@@ -13,11 +13,17 @@ center <- function(x, na.rm = TRUE)
 #' Standardize
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
-#' @return If x is a numeric variable return center(x) / mean(x)
+#' @return If x is a numeric variable return (x - mean(x)) / sd(x)
 #' @export
 standardize <- function(x, na.rm = TRUE) {
   if (is.numeric(x)) {
-    center(x, na.rm = na.rm) / sd(x, na.rm = na.rm)
+    x_sd <- sd(x, na.rm = na.rm)
+    x <- x - mean(x, na.rm = na.rm)
+    if (isTRUE(x_sd > 0)) {
+      x / x_sd
+    } else {
+      x
+    }
   } else {
     x
   }

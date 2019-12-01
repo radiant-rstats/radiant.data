@@ -12,7 +12,7 @@ standardize(x, na.rm = TRUE)
 \item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \value{
-If x is a numeric variable return center(x) / mean(x)
+If x is a numeric variable return (x - mean(x)) / sd(x)
 }
 \description{
 Standardize
