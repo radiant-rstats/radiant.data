@@ -17,7 +17,6 @@ globalVariables(
 #' @importFrom magrittr %<>% %T>% %$% set_rownames set_colnames set_names divide_by add extract2
 #' @importFrom lubridate is.Date is.POSIXt now year month wday week hour minute second ymd mdy dmy ymd_hms hms hm as.duration parse_date_time
 #' @importFrom tidyr gather spread separate extract
-#' @importFrom gridExtra grid.arrange
 #' @importFrom shinyAce aceEditor updateAceEditor
 #' @importFrom readr read_delim read_csv write_csv read_rds write_rds locale problems
 #' @importFrom readxl read_excel
@@ -31,95 +30,57 @@ globalVariables(
 #'
 NULL
 
-#' Exporting glue from glue
-#' @details See \code{\link[glue]{glue}} in the \code{glue} package for more details
+#' @importFrom patchwork wrap_plots
+#' @export
+patchwork::wrap_plots
+
+#' @importFrom patchwork plot_annotation
+#' @export
+patchwork::plot_annotation
+
 #' @importFrom glue glue
-#' @name glue
-#' @rdname glue
 #' @export
-NULL
+glue::glue
 
-#' Exporting glue_data from glue
-#' @details See \code{\link[glue:glue]{glue::glue_data()}} in the \code{glue} package for more details
 #' @importFrom glue glue_data
-#' @name glue_data
-#' @rdname glue_data
 #' @export
-NULL
+glue::glue_data
 
-#' Exporting glue_collapse from glue
-#' @details See \code{\link[glue:glue]{glue::glue_collapse()}} in the \code{glue} package for more details
 #' @importFrom glue glue_collapse
-#' @name glue_collapse
-#' @rdname glue_collapse
 #' @export
-NULL
+glue::glue_collapse
 
-#' Exporting knit_print from knitr
-#' @details See \code{\link[knitr]{knit_print}} in the \code{knitr} package for more details
 #' @importFrom knitr knit_print
-#' @name knit_print
-#' @rdname knit_print
 #' @export
-NULL
+knitr::knit_print
 
-#' Exporting rownames_to_column from tibble
-#' @details See \code{\link[tibble]{rownames}} in the \code{tibble} package for more details
 #' @importFrom tibble rownames_to_column
-#' @name rownames_to_column
-#' @rdname rownames_to_column
 #' @export
-NULL
+tibble::rownames_to_column
 
-#' Exporting tibble from tibble
-#' @details See \code{\link[tibble]{tibble}} in the \code{tibble} package for more details
 #' @importFrom tibble tibble
-#' @name tibble
-#' @rdname tibble
 #' @export
-NULL
+tibble::tibble
 
-#' Exporting as_tibble from tibble
-#' @details See \code{\link[tibble]{as_tibble}} in the \code{tibble} package for more details
 #' @importFrom tibble as_tibble
-#' @name as_tibble
-#' @rdname as_tibble
 #' @export
-NULL
+tibble::as_tibble
 
-#' Exporting tidy from broom
-#' @details See \code{\link[broom]{tidy}} in the \code{broom} package for more details
 #' @importFrom broom tidy
-#' @name tidy
-#' @rdname tidy
 #' @export
-NULL
+broom::tidy
 
-#' Exporting glance from broom
-#' @details See \code{\link[broom]{glance}} in the \code{broom} package for more details
 #' @importFrom broom glance
-#' @name glance
-#' @rdname glance
 #' @export
-NULL
+broom::glance
 
-#' Exporting kurtosi from psych
-# @details See \code{\link[psych:mardia]{psych::kurtosi()}} in the \code{psych} package for more details
-#' @details See \code{\link{kurtosi}} in the \code{psych} package for more details
 #' @importFrom psych kurtosi
-#' @name kurtosi
-#' @rdname kurtosi.re
 #' @export
-NULL
+psych::kurtosi
 
-#' Exporting skew from psych
-#' @details See \code{\link{skew}} in the \code{psych} package for more details
-# @details See \code{\link[psych:mardia]{psych::skew()}} in the \code{psych} package for more details
 #' @importFrom psych skew
-#' @name skew
-#' @rdname skew.re
 #' @export
-NULL
+psych::skew
 
 #' Diamond prices
 #' @details A sample of 3,000 from the diamonds dataset bundled with ggplot2. Description provided in attr(diamonds,"description")

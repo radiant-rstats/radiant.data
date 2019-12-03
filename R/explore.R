@@ -89,11 +89,22 @@ explore <- function(
   kurtosi <- function(x, na.rm = TRUE) sshhr(radiant.data::kurtosi(fixer(x), na.rm = na.rm))
 
   isLogNum <- "logical" == dc & names(dc) %in% base::setdiff(vars, byvar)
-  if (sum(isLogNum)) {
+  if (sum(isLogNum) > 0) {
     dataset[, isLogNum] <- select(dataset, which(isLogNum)) %>%
       mutate_all(as.integer)
     dc[isLogNum] <- "integer"
   }
+
+  # isFctNum <- "factor" == dc & names(dc) %in% base::setdiff(vars, byvar)
+  # if (sum(isFctNum) > 0) {
+  #   fct_names <- names(dc[isFctNum])
+  #   for (n in fct_names) {
+  #     x_num <- sshhr(as.integer(as.character(na.omit(dataset[[n]]))))
+  #     if (!any(is.na(x_num))) {
+  #       dc[n] <- "integer"
+  #     }
+  #   }
+  # }
 
   if (is_empty(byvar)) {
     byvar <- c()
@@ -124,6 +135,7 @@ explore <- function(
   tab <- gather(tab, "variable", "value", !! -(seq_along(byvar))) %>%
     extract(variable, into = c("variable", "fun"), regex = rex) %>%
     mutate(fun = factor(fun, levels = !! fun), variable = factor(variable, levels = vars)) %>%
+    # mutate(variable = paste0(variable, " {", dc[variable], "}")) %>%
     spread("fun", "value")
 
   ## flip the table if needed

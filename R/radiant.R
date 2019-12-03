@@ -563,21 +563,6 @@ copy_all <- function(.from) {
   invisible(NULL)
 }
 
-#' Print/draw method for grobs produced by gridExtra
-#'
-#' @details Print method for grobs created using grid.arrange
-#'
-#' @param x a gtable object
-#' @param ... further arguments passed to or from other methods
-#'
-#' @return A plot
-#'
-#' @export
-print.gtable <- function(x, ...) {
-  if (is.ggplot(x)) x <- ggplotGrob(x)
-  grid::grid.draw(x)
-}
-
 #' Labels for confidence intervals
 #'
 #' @param alt Type of hypothesis ("two.sided","less","greater")

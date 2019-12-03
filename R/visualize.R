@@ -49,7 +49,7 @@
 #' visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
 #'   labs(title = "A scatterplot", x = "price in $")
 #' visualize(diamonds, xvar = "price:carat", custom = TRUE) %>%
-#'   gridExtra::grid.arrange(grobs = ., top = "Histograms", ncol = 2)
+#'   wrap_plots(ncol = 2) + plot_annotation(title = "Histograms")
 #' visualize(diamonds, xvar = "cut", yvar = "price", type = "bar",
 #'   facet_row = "cut", fill = "cut")
 #'
@@ -654,15 +654,11 @@ visualize <- function(
   }
 
   if (custom) {
-    if (length(plot_list) == 1) {
-      return(plot_list[[1]])
-    } else {
-      return(plot_list)
-    }
+    if (length(plot_list) == 1) plot_list[[1]] else plot_list
+  } else {
+    patchwork::wrap_plots(plot_list, ncol = min(length(plot_list), 2)) %>%
+      {if (shiny) . else print(.)}
   }
-
-  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = min(length(plot_list), 2))) %>%
-    {if (shiny) . else print(.)}
 }
 
 #' Create a qscatter plot similar to Stata

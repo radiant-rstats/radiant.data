@@ -4,7 +4,7 @@ Generate summary statistics for one or more variables in your data. The most pow
 
 For example, if we select `price` from the `diamonds` dataset and click the `Create table` button we can see the number of observations (n), the mean, the variance, etc. However, the mean price for each clarity level of the diamond can also be easily provided by choosing `clarity` as the `Group by` variable.
 
-> Note that when a categorical variable (`factor`) is selected from the `Numeric variable(s)` dropdown menu it will be converted to a numeric variable if required for the selected function. Since the mean, standard deviation, etc. are not relevant for a non-binary categorical variable it will be converted to a 0-1 (binary) variable where the first level is coded as 1 and all other levels as 0.
+> Note that when a categorical variable (`factor`) is selected from the `Numeric variable(s)` dropdown menu it will be converted to a numeric variable if required for the selected function. If the factor levels are numeric these will be used in all calculations. Since the mean, standard deviation, etc. are not relevant for non-binary categorical variables, these will be converted to 0-1 (binary) variables where the first level is coded as 1 and all other levels as 0.
 
 The created summary table can be stored in Radiant by clicking the `Store` button. This can be useful if you want to create plots of the summarized data in <a href="https://radiant-rstats.github.io/docs/data/visualize.html" target="_blank">_Data > Visualize_</a>. To download the table to _csv_ format click the download icon on the top-right.
 

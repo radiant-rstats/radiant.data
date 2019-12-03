@@ -99,7 +99,7 @@ visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter",
 visualize(diamonds, yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
   labs(title = "A scatterplot", x = "price in $")
 visualize(diamonds, xvar = "price:carat", custom = TRUE) \%>\%
-  gridExtra::grid.arrange(grobs = ., top = "Histograms", ncol = 2)
+  wrap_plots(ncol = 2) + plot_annotation(title = "Histograms")
 visualize(diamonds, xvar = "cut", yvar = "price", type = "bar",
   facet_row = "cut", fill = "cut")
 
