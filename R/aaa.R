@@ -18,6 +18,7 @@ globalVariables(
 #' @importFrom lubridate is.Date is.POSIXt now year month wday week hour minute second ymd mdy dmy ymd_hms hms hm as.duration parse_date_time
 #' @importFrom tidyr gather spread separate extract
 #' @importFrom shinyAce aceEditor updateAceEditor
+#' @importFrom gridExtra grid.arrange
 #' @importFrom readr read_delim read_csv write_csv read_rds write_rds locale problems
 #' @importFrom readxl read_excel
 #' @importFrom base64enc dataURI
