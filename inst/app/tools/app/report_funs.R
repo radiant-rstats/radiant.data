@@ -127,11 +127,11 @@ setup_report <- function(
     if (save_type %in% c("PDF", "Word", "Powerpoint")) {
       yml <- ""
     } else if (save_type == "HTML") {
-      yml <- '---\noutput:\n  html_document:\n    highlight: zenburn\n    theme: united\n    df_print: paged\n    toc: yes\n---\n\n'
+      yml <- '---\npagetitle: HTML report\noutput:\n  html_document:\n    highlight: zenburn\n    theme: united\n    df_print: paged\n    toc: yes\n---\n\n'
     } else if (save_type %in% c("Rmd", "Rmd + Data (zip)")) {
-      yml <- '---\noutput:\n  html_document:\n    highlight: zenburn\n    theme: united\n    df_print: paged\n    toc: yes\n    code_folding: hide\n    code_download: true\n---\n\n'
+      yml <- '---\npagetitle: Rmd report\noutput:\n  html_document:\n    highlight: zenburn\n    theme: united\n    df_print: paged\n    toc: yes\n    code_folding: hide\n    code_download: true\n---\n\n'
     } else {
-      yml <- '---\noutput:\n  html_notebook:\n    highlight: zenburn\n    theme: united\n    toc: yes\n    code_folding: hide\n---\n\n'
+      yml <- '---\npagetitle: Notebook report\noutput:\n  html_notebook:\n    highlight: zenburn\n    theme: united\n    toc: yes\n    code_folding: hide\n---\n\n'
     }
   } else {
     yml = ""
