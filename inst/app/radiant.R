@@ -553,7 +553,7 @@ register_plot_output <- function(
 
     ## when no analysis was conducted (e.g., no variables selected)
     p <- get(rfun_name)()
-    if (is_not(p) || p == "") p <- "Nothing to plot ...\nSelect plots to show or re-run the calculations"
+    if (is_not(p) || is_empty(p)) p <- "Nothing to plot ...\nSelect plots to show or re-run the calculations"
     if (is.character(p)) {
       plot(
         x = 1, type = "n", main = paste0("\n\n\n\n\n\n\n\n", p),
@@ -887,8 +887,8 @@ if (length(getOption("radiant.autosave", default = NULL)) > 0) {
 
 ## update "run" button when relevant inputs are changed
 run_refresh <- function(
-  args, pre, init = "evar", tabs = "", 
-  label = "Estimate model", relabel = label, 
+  args, pre, init = "evar", tabs = "",
+  label = "Estimate model", relabel = label,
   inputs = NULL, data = TRUE
 ) {
   observe({
