@@ -701,13 +701,11 @@ wday <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
 #'
 #' @export
 refactor <- function(x, levs = levels(x), repl = NA) {
-  if (is.character(x)) {
-    lv <- unique(x)
-    if (length(levs) == 0) levs <- lv
-  } else if (is.factor(x)) {
+  if (is.factor(x)) {
     lv <- levels(x)
   } else {
-    return(x)
+    lv <- unique(x)
+    if (length(levs) == 0) levs <- lv
   }
 
   if (length(levs) > 0 && length(lv) > length(levs)) {

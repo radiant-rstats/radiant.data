@@ -86,10 +86,6 @@ output$ui_tr_reorg_levs <- renderUI({
     need(available(input$tr_vars), "Select a single variable of type factor or character")
   )
   fctCol <- input$tr_vars[1]
-  isFct <- .get_class()[fctCol] %in% c("factor", "character")
-  validate(
-    need(isFct, "Selected variable is not of type factor or character")
-  )
   fct <- .get_data_transform()[[fctCol]]
   levs <- if (is.factor(fct)) levels(fct) else levels(as_factor(fct))
   validate(
@@ -1144,14 +1140,10 @@ transform_main <- reactive({
 
     if (input$tr_change_type == "reorg_levs") {
       fct <- input$tr_vars[1]
-      if (is.factor(dat[[fct]]) || is.character(dat[[fct]])) {
-        if (length(unique(dat[[fct]])) > 100) {
-          return("Interactive re-ordering is only supported up to 100 levels. See\n?radiant.data::refactor for information on how to re-order levels in R")
-        } else {
-          return(.reorg_levs(dat, fct, input$tr_reorg_levs, input$tr_rorepl, input$tr_roname, store = FALSE))
-        }
+      if (length(unique(dat[[fct]])) > 100) {
+        return("Interactive re-ordering is only supported up to 100 levels. See\n?radiant.data::refactor for information on how to re-order levels in R")
       } else {
-        return("Select a variable of type factor or character to change the ordering\nand/or number of levels")
+        return(.reorg_levs(dat, fct, input$tr_reorg_levs, input$tr_rorepl, input$tr_roname, store = FALSE))
       }
     }
 
