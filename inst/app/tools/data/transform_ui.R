@@ -630,7 +630,7 @@ fix_ext <- function(ext) {
     if (store_dat == "") store_dat <- dataset
     name_check <- fix_names(var) != var
     if (any(name_check)) var[name_check] <- paste0("`", var[name_check], "`")
-    paste0("## rename variable(s)\n", store_dat, " <- rename(", dataset, ", ", paste(rnm, var, sep = " = ", collapse = ", "), ")\n")
+    paste0("## rename variable(s)\n", store_dat, " <- dplyr::rename(", dataset, ", ", paste(rnm, var, sep = " = ", collapse = ", "), ")\n")
   }
 }
 
@@ -1319,7 +1319,7 @@ observeEvent(input$tr_store, {
     r_data[[df_name]][, colnames(dat)] <- dat
   } else if (input$tr_change_type == "rename") {
     cmd <- .rename(input$dataset, input$tr_vars, input$tr_rename, df_name)
-    r_data[[df_name]] %<>% rename(!!! setNames(input$tr_vars, colnames(dat)))
+    r_data[[df_name]] %<>% dplyr::rename(!!! setNames(input$tr_vars, colnames(dat)))
   } else if (input$tr_change_type == "create") {
     cmd <- .create(input$dataset, cmd = input$tr_create, byvar = input$tr_vars, df_name)
     r_data[[df_name]][, colnames(dat)] <- dat

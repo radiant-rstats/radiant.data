@@ -76,9 +76,9 @@ pivotr <- function(
   sfun <- function(x, nvar, cvars = "", fun = fun) {
     if (nvar == "n_obs") {
       if (is_empty(cvars)) {
-        count(x) %>% rename("n_obs" = "n")
+        count(x) %>% dplyr::rename("n_obs" = "n")
       } else {
-        count(select_at(x, .vars = cvars)) %>% rename("n_obs" = "n")
+        count(select_at(x, .vars = cvars)) %>% dplyr::rename("n_obs" = "n")
       }
     } else {
       dataset <- mutate_at(x, .vars = nvar, .funs = as.numeric) %>%
