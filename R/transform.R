@@ -439,8 +439,9 @@ show_duplicated <- function(.tbl, ...) {
 #' @export
 weighted.sd <- function(x, wt, na.rm = TRUE) {
   if (na.rm) {
-    x <- na.omit(x)
-    wt <- na.omit(wt)
+    ind <- is.na(x) | is.na(wt)
+    x <- x[!ind]
+    wt <- wt[!ind]
   }
   wt <- wt / sum(wt)
   wm <- weighted.mean(x, wt)
