@@ -40,9 +40,9 @@ MRB <- function(x, env = parent.frame(), init = FALSE) {
   }
 }
 
-saveSession <- function(session = session, timestamp = FALSE) {
+saveSession <- function(session = session, timestamp = FALSE, path = "~/.radiant.sessions") {
   if (!exists("r_sessions")) return()
-
+  if (!dir.exists(path)) dir.create(path)
   isolate({
 
     LiveInputs <- toList(input)
@@ -63,9 +63,9 @@ saveSession <- function(session = session, timestamp = FALSE) {
 
     ## saving session information to state file
     if (timestamp) {
-      fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, "-", gsub("( |:)", "-", Sys.time()), ".state.rda")
+      fn <- paste0(normalizePath(path), "/r_", r_ssuid, "-", gsub("( |:)", "-", Sys.time()), ".state.rda")
     } else {
-      fn <- paste0(normalizePath("~/.radiant.sessions"), "/r_", r_ssuid, ".state.rda")
+      fn <- paste0(normalizePath(path), "/r_", r_ssuid, ".state.rda")
     }
     save(r_data, r_info, r_state, file = fn)
   })
@@ -845,12 +845,16 @@ state_multiple <- function(var, vals, init = character(0)) {
 # }
 
 ## autosave option
-## provide a vector in minutes for (1) the save interval and (2) the total duration
-# options(radiant.autosave = c(1, 5))
+## provide a list with (1) the save interval in minutes, (2) the total duration in minutes, and (3) the path to use
+# options(radiant.autosave = list(1, 5, "~/.radiant.sessions"))
+# options(radiant.autosave = list(.1, 1, "~/Desktop/radiant.sessions"))
+# options(radiant.autosave = list(10, 180, "~/Desktop/radiant.sessions"))
 if (length(getOption("radiant.autosave", default = NULL)) > 0) {
   start_time <- Sys.time()
-  interval <- getOption("radiant.autosave")[1] * 60000
-  max_duration <- getOption("radiant.autosave")[2]
+  interval <- getOption("radiant.autosave")[[1]] * 60000
+  max_duration <- getOption("radiant.autosave")[[2]]
+  autosave_path <- getOption("radiant.autosave")[[3]]
+  autosave_path <- ifelse(length(autosave_path) == 0, "~/.radiant.sessions", autosave_path)
   autosave_poll <- reactivePoll(
     interval,
     session,
@@ -858,18 +862,18 @@ if (length(getOption("radiant.autosave", default = NULL)) > 0) {
       curr_time <- Sys.time()
       diff_time <- difftime(curr_time, start_time, units = "mins")
       if (diff_time < max_duration) {
-        saveSession(session, timestamp = TRUE)
-        options(radiant.autosave = c(interval, max_duration - diff_time))
+        saveSession(session, timestamp = TRUE, autosave_path)
+        options(radiant.autosave = list(interval, max_duration - diff_time, autosave_path))
         message("Radiant state was auto-saved at ", curr_time)
       } else {
         if (length(getOption("radiant.autosave", default = NULL)) > 0) {
           showModal(
             modalDialog(
               title = "Radiant state autosave",
-              span("The autosave feature has been turned off. Time to save and submit your work by clicking
+              span(glue("The autosave feature has been turned off. Time to save and submit your work by clicking
                 on the 'Save' icon in the navigation bar and then on 'Save radiant state file'. To clean the
                 state files that were auto-saved, run the following command from the R(studio) console:
-                unlink('~/.radiant.sessions/*.state.rda', force = TRUE)"),
+                unlink('{autosave_path}/*.state.rda', force = TRUE)")),
               footer = modalButton("OK"),
               size = "s",
               easyClose = TRUE
