@@ -127,11 +127,11 @@ setup_report <- function(
     if (save_type %in% c("PDF", "Word", "Powerpoint")) {
       yml <- ""
     } else if (save_type == "HTML") {
-      yml <- '---\npagetitle: HTML report\noutput:\n  html_document:\n    highlight: zenburn\n    theme: united\n    df_print: paged\n    toc: yes\n---\n\n'
+      yml <- '---\npagetitle: HTML report\noutput:\n  html_document:\n    highlight: zenburn\n    theme: cosmo\n    df_print: paged\n    toc: yes\n---\n\n'
     } else if (save_type %in% c("Rmd", "Rmd + Data (zip)")) {
-      yml <- '---\npagetitle: Rmd report\noutput:\n  html_document:\n    highlight: zenburn\n    theme: united\n    df_print: paged\n    toc: yes\n    code_folding: hide\n    code_download: true\n---\n\n'
+      yml <- '---\npagetitle: Rmd report\noutput:\n  html_document:\n    highlight: zenburn\n    theme: cosmo\n    df_print: paged\n    toc: yes\n    code_folding: hide\n    code_download: true\n---\n\n'
     } else {
-      yml <- '---\npagetitle: Notebook report\noutput:\n  html_notebook:\n    highlight: zenburn\n    theme: united\n    toc: yes\n    code_folding: hide\n---\n\n'
+      yml <- '---\npagetitle: Notebook report\noutput:\n  html_notebook:\n    highlight: zenburn\n    theme: cosmo\n    toc: yes\n    code_folding: hide\n---\n\n'
     }
   } else {
     yml = ""
@@ -173,22 +173,26 @@ if (is.null(shiny::getDefaultReactiveDomain())) library(", lib, ")
 ```
 
 <style>
+.btn, .form-control, pre, code, pre code {
+  border-radius: 4px;
+}
 .table {
   width: auto;
 }
 ul, ol {
   padding-left: 18px;
 }
-pre {
+code, pre, pre code {
   overflow: auto;
   white-space: pre;
   word-wrap: normal;
-  background-color: #ffffff;
 }
-code, pre code {
-  overflow: auto;
-  white-space: pre;
-  word-wrap: normal;
+code {
+  color: #c7254e;
+  background-color: #f9f2f4;
+}
+pre {
+  background-color: #ffffff;
 }
 </style>\n\n", report)
 }}
@@ -639,8 +643,8 @@ report_save_content <- function(file, type = "rmd") {
               tmp_fn,
               switch(
                 save_type,
-                Notebook = rmarkdown::html_notebook(highlight = "zenburn", theme = "united", code_folding = "hide"),
-                HTML = rmarkdown::html_document(highlight = "zenburn", theme = "united", code_download = TRUE, df_print = "paged"),
+                Notebook = rmarkdown::html_notebook(highlight = "zenburn", theme = "cosmo", code_folding = "hide"),
+                HTML = rmarkdown::html_document(highlight = "zenburn", theme = "cosmo", code_download = TRUE, df_print = "paged"),
                 PDF = rmarkdown::pdf_document(),
                 Word = rmarkdown::word_document(
                   reference_docx = getOption("radiant.word_style", default = file.path(system.file(package = "radiant.data"), "app/www/style.docx")),
