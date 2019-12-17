@@ -1,5 +1,10 @@
-# radiant.data 1.2.4
+# radiant.data 1.3.0
 
+* Updated styling of Notebook and HTML reports (cosmo + zenburn)
+* Documentation updates to link to new video tutorials
+* Use `patchwork` for grouping multiple plots together
+* Apply `refactor` to any type in the _Data > Transform_ UI
+* Fix for `weighted.sd` when missing values differ for `x` and weights 
 * Avoid resetting the "Column header" to its default value in _Data > Explore_ when other settings are changed.
 
 # radiant.data 1.2.3
