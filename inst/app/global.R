@@ -403,7 +403,17 @@ navbar_proj <- function(navbar) {
 
 if (getOption("radiant.shinyFiles", FALSE)) {
   if (!radiant.data::is_empty(getOption("radiant.sf_volumes", "")) && radiant.data::is_empty(getOption("radiant.project_dir"))) {
-    options(radiant.launch_dir = getOption("radiant.sf_volumes")[1])
+    launch_dir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
+    if (!launch_dir %in% getOption("radiant.sf_volumes", "")) {
+      sf_volumes <- c(setNames(launch_dir, basename(launch_dir)), getOption("radiant.sf_volumes", ""))
+      options(radiant.sf_volumes = sf_volumes)
+      rm(sf_volumes)
+    } else if (!launch_dir == getOption("radiant.sf_volumes", "")[1]) {
+      dir_ind <- which(getOption("radiant.sf_volumes") == launch_dir)[1]
+      options(radiant.sf_volumes = c(getOption("radiant.sf_volumes")[dir_ind], getOption("radiant.sf_volumes")[-dir_ind]))
+      rm(dir_ind)
+    }
+    rm(launch_dir)
   }
   if (radiant.data::is_empty(getOption("radiant.launch_dir"))) {
     if (radiant.data::is_empty(getOption("radiant.project_dir"))) {
