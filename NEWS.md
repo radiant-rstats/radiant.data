@@ -1,3 +1,7 @@
+# radiant.data 1.3.1
+
+* If radiant is not opened from an Rstudio project, use the working directory at launch as the base directory for the application
+
 # radiant.data 1.3.0
 
 * Updated styling of Notebook and HTML reports (cosmo + zenburn)
