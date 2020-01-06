@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Is input a double (and not a date type)? — is_double • radiant.data</title>
+<title>Start radiant.data app but do not open a browser — radiant.data_url • radiant.data</title>
 
 
 <!-- jquery -->
@@ -41,8 +41,8 @@
 
 
 
-<meta property="og:title" content="Is input a double (and not a date type)? — is_double" />
-<meta property="og:description" content="Is input a double (and not a date type)?" />
+<meta property="og:title" content="Start radiant.data app but do not open a browser — radiant.data_url" />
+<meta property="og:description" content="Start radiant.data app but do not open a browser" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -159,36 +159,41 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Is input a double (and not a date type)?</h1>
+    <h1>Start radiant.data app but do not open a browser</h1>
     <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
-    <div class="hidden name"><code>is_double.Rd</code></div>
+    <div class="hidden name"><code>radiant.data_url.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Is input a double (and not a date type)?</p>
+    <p>Start radiant.data app but do not open a browser</p>
     </div>
 
-    <pre class="usage"><span class='fu'>is_double</span>(<span class='no'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>radiant.data_url</span>(<span class='no'>state</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>Input</p></td>
+      <th>state</th>
+      <td><p>Path to statefile to load</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>additional arguments to pass to shiny::runApp (e.g, port = 8080)</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>TRUE if double and not a type of date, else FALSE</p>
-
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'>radiant.data_url</span>()
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
