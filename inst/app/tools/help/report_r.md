@@ -32,30 +32,31 @@ diamonds %>%
     geom_histogram()
 
 ## and a histogram of log-prices using radiant.data::visualize
-visualize(diamonds, xvar = \"log_price\", custom = TRUE)
+visualize(diamonds, xvar = "log_price", custom = TRUE)
 
 ## open help in the R-studio viewer from Radiant
-help(package = \"radiant.data\")
+help(package = "radiant.data")
 
 ## If you are familiar with Shiny you can call reactives when the code
 ## is evaluated inside a Shiny app. For example, if you transformed
 ## some variables in Data > Transform you can call the transform_main
 ## reacive to see the latest result. Very useful for debugging
 # transform_main() %>% head()
+head()
 ```
 
 ## Options
 
 The editor used in _Report > Rmd_ and _Report > R_ has several options that can be set in `.Rprofile`.
 
-<pre>
+```r
 options(radiant.ace_vim.keys = FALSE)
 options(radiant.ace_theme = "cobalt")
 options(radiant.ace_tabSize = 2)
 options(radiant.ace_useSoftTabs = TRUE)
 options(radiant.ace_showInvisibles = TRUE)
 options(radiant.ace_autoComplete = "live")
-</pre>
+```
 
 Notes:
 

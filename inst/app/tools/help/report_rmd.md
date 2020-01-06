@@ -12,7 +12,7 @@ If you started Radiant from Rstudio, you can also choose to have commands sent t
 
 By default, the app will switch to the _Report > Rmd_ tab after you click the <i title='Report results' class='fa fa-edit'></i> icon. However, if you don't want to switch tabs after clicking  a <i title='Report results' class='fa fa-edit'></i> icon, choose `Don't switch tab` from the appropriate drop-down in the _Report > Rmd_ tab. `Don't switch tab` is the default option when you choose `To Rmd`.
 
-You can add text or additional commands to create an Rmarkdown document. An Rmarkdown file (extension .Rmd) is a plain text file that can be opened in Notepad (Windows), TextEdit (Mac), Rstudio, Sublime Text, or any other text editor. Please do **not** use Word to edit rmarkdown files.
+You can add text or additional commands to create an Rmarkdown document. An Rmarkdown file (extension .Rmd) is a plain text file that can be opened in Notepad (Windows), TextEdit (Mac), Rstudio, Sublime Text, or any other text editor. Please do **not** use Word to edit Rmarkdown files.
 
 Using Rmarkdown is extremely powerful because you can replicate your entire analysis quickly without having to generate all the required R-code again. By clicking the `Knit report (Rmd)` button on the top-left of your screen, the output from the analysis will be (re)created and shown on the right of the _Report > Rmd_ page. To evaluate only a part of the report use the cursor to select a section and press `CTRL-enter` (`CMD-enter` on mac) to create the (partial) output.
 
@@ -32,7 +32,7 @@ If you are using Radiant for a class I suggest you use the _Report > Rmd_ featur
 
 The editor used in _Report > Rmd_ and _Report > R_ has several options that can be set in `.Rprofile`. You can use `usethis::edit_r_profile()` to alter the settings in .Rprofile
 
-<pre>
+```r
 options(radiant.ace_vim.keys = FALSE)
 options(radiant.ace_theme = "cobalt")
 options(radiant.ace_tabSize = 2)
@@ -41,7 +41,7 @@ options(radiant.ace_showInvisibles = TRUE)
 options(radiant.ace_autoComplete = "live")
 options(radiant.powerpoint_style = "~/Dropbox/rmd-styles/style.potx")
 options(radiant.word_style = "~/Dropbox/rmd-styles/style.docx")
-</pre>
+```
 
 Notes:
 

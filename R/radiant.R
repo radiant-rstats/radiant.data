@@ -36,7 +36,10 @@ launch <- function(package = "radiant.data", run = "viewer", state, ...) {
     dctrl = if (getRversion() > "3.4.4") c("keepNA", "niceNames") else "keepNA"
   )
   on.exit(base::options(oop), add = TRUE)
-  if (run == "browser" || run == "external") {
+  if (run == FALSE) {
+    message(sprintf("\nStarting %s at the url shown below ...\nClick on the link or copy-and-paste it into\nyour browser's url bar to start", package))
+    options(radiant.launch = "browser")
+  } else if (run == "browser" || run == "external") {
     message(sprintf("\nStarting %s in the default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer\nor %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
     options(radiant.launch = "browser")
     run <- TRUE
@@ -57,8 +60,6 @@ launch <- function(package = "radiant.data", run = "viewer", state, ...) {
     # run <- shiny::dialogViewer("Radiant", 1200, 800)
     ## using eval(parse(text = ...)) to avoid foreign function call warnings
     run <- eval(parse(text = "function(url) {invisible(.Call('rs_shinyviewer', url, getwd(), 3))}"))
-  } else if (run == FALSE) {
-    options(radiant.launch = "browser")
   } else {
     message(sprintf("\nStarting %s in the default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer or %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
     options(radiant.launch = "browser")
@@ -117,6 +118,18 @@ radiant.data_window <- function(state, ...) launch(package = "radiant.data", run
 #' }
 #' @export
 radiant.data_viewer <- function(state, ...) launch(package = "radiant.data", run = "viewer", state, ...)
+
+#' Start radiant.data app but do not open a browser
+#'
+#' @param state Path to statefile to load
+#' @param ... additional arguments to pass to shiny::runApp (e.g, port = 8080)
+#'
+#' @examples
+#' \dontrun{
+#' radiant.data_url()
+#' }
+#' @export
+radiant.data_url <- function(state, ...) launch(package = "radiant.data", run = FALSE, state, ...)
 
 #' Install webshot and phantomjs
 #' @export
@@ -1208,14 +1221,12 @@ describe <- function(dataset, envir = parent.frame()) {
     return(str(dataset))
   }
 
-  owd <- setwd(tempdir())
-  on.exit(setwd(owd))
-
+  tf <- file.path(tempdir(), "index.html")
   ## generate html and open in the Rstudio viewer or in the default browser
-  knitr::knit2html(text = description) %>% cat(file = "index.html")
+  cat(knitr::knit2html(text = description), file = tf)
   ## based on https://support.rstudio.com/hc/en-us/articles/202133558-Extending-RStudio-with-the-Viewer-Pane
   viewer <- getOption("viewer", default = browseURL)
-  viewer("index.html")
+  viewer(tf)
 }
 
 # #' Workaround to add description using feather::write_feather
