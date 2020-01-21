@@ -710,9 +710,6 @@ fix_ext <- function(ext) {
   vars = "", store_dat = "", store = TRUE
 ) {
 
-  key <- fix_names(key)
-  value <- fix_names(value)
-
   if (!store && !is.character(dataset)) {
     if (!vars[1] == "") dataset <- select_at(dataset, .vars = vars)
     cn <- colnames(dataset)
