@@ -4,8 +4,12 @@
 \alias{deregister}
 \title{Deregister a data.frame or list in Radiant}
 \usage{
-deregister(dataset, shiny = shiny::getDefaultReactiveDomain(),
-  envir = r_data, info = r_info)
+deregister(
+  dataset,
+  shiny = shiny::getDefaultReactiveDomain(),
+  envir = r_data,
+  info = r_info
+)
 }
 \arguments{
 \item{dataset}{String containing the name of the data.frame to deregister}

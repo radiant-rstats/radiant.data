@@ -4,8 +4,13 @@
 \alias{register}
 \title{Register a data.frame or list in Radiant}
 \usage{
-register(new, org = "", descr = "",
-  shiny = shiny::getDefaultReactiveDomain(), envir = r_data)
+register(
+  new,
+  org = "",
+  descr = "",
+  shiny = shiny::getDefaultReactiveDomain(),
+  envir = r_data
+)
 }
 \arguments{
 \item{new}{String containing the name of the data.frame to register}

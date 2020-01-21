@@ -11,6 +11,7 @@
 \alias{p95}
 \alias{p975}
 \alias{p99}
+\alias{mode}
 \title{Calculate percentiles}
 \usage{
 p01(x, na.rm = TRUE)
@@ -32,16 +33,25 @@ p95(x, na.rm = TRUE)
 p975(x, na.rm = TRUE)
 
 p99(x, na.rm = TRUE)
+
+mode(x, na.rm = TRUE)
 }
 \arguments{
-\item{x}{Numeric vector}
+\item{x}{A vector of numer}
 
 \item{na.rm}{If TRUE missing values are removed before calculation}
 }
 \description{
 Calculate percentiles
+
+Calculate the mode and return a label
 }
 \examples{
 p01(0:100)
+
+mode(c("a", "b", "b"))
+mode(c(1:10, 5))
+mode(as.factor(c(letters, "b")))
+mode(runif(100) > 0.5)
 
 }

@@ -4,8 +4,16 @@
 \alias{dtab.pivotr}
 \title{Make an interactive pivot table}
 \usage{
-\method{dtab}{pivotr}(object, format = "none", perc = FALSE, dec = 3,
-  searchCols = NULL, order = NULL, pageLength = NULL, ...)
+\method{dtab}{pivotr}(
+  object,
+  format = "none",
+  perc = FALSE,
+  dec = 3,
+  searchCols = NULL,
+  order = NULL,
+  pageLength = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{Return value from \code{\link{pivotr}}}

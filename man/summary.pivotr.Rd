@@ -4,8 +4,7 @@
 \alias{summary.pivotr}
 \title{Summary method for pivotr}
 \usage{
-\method{summary}{pivotr}(object, perc = FALSE, dec = 3, chi2 = FALSE,
-  shiny = FALSE, ...)
+\method{summary}{pivotr}(object, perc = FALSE, dec = 3, chi2 = FALSE, shiny = FALSE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{pivotr}}}

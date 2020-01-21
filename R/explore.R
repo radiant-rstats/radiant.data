@@ -95,17 +95,6 @@ explore <- function(
     dc[isLogNum] <- "integer"
   }
 
-  # isFctNum <- "factor" == dc & names(dc) %in% base::setdiff(vars, byvar)
-  # if (sum(isFctNum) > 0) {
-  #   fct_names <- names(dc[isFctNum])
-  #   for (n in fct_names) {
-  #     x_num <- sshhr(as.integer(as.character(na.omit(dataset[[n]]))))
-  #     if (!any(is.na(x_num))) {
-  #       dc[n] <- "integer"
-  #     }
-  #   }
-  # }
-
   if (is_empty(byvar)) {
     byvar <- c()
     tab <- summarise_all(dataset, fun, na.rm = TRUE)
@@ -183,14 +172,6 @@ explore <- function(
     tab <- tab[ind, , drop = FALSE]
     rm(ind)
   }
-
-  ## objects no longer needed
-  # rm(dataset, check_int, isLogNum, dc, nrow_tab, rex, envir)
-  # rm(mean, sum, sd, var, sd, se, me, cv, prop, varprop, sdprop, seprop, meprop, varpop, sepop)
-  # rm(median, min, max, p01, p025, p05, p10, p25, p50, p75, p90, p95, p975, p99, skew, kurtosi)
-  # rm(fixer, fixer_first)
-
-  # as.list(environment()) %>% add_class("explore")
 
   list(
     tab = tab,
@@ -686,4 +667,22 @@ empty_level <- function(x) {
     x[is.na(x)] <- "NA"
   }
   x
+}
+
+#' Calculate the mode and return a label
+#' 
+#' @param x A vector of numer
+#' @param na.rm If TRUE missing values are removed before calculation
+#' 
+#' @examples
+#' mode(c("a", "b", "b"))
+#' mode(c(1:10, 5))
+#' mode(as.factor(c(letters, "b")))
+#' mode(runif(100) > 0.5)
+#'
+#' @rdname percentiles
+#' @export
+mode <- function(x, na.rm = TRUE) {
+  if (na.rm) x <- na.omit(x)
+  names(which.max(table(x)))
 }

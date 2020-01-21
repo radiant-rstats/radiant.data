@@ -4,9 +4,18 @@
 \alias{pivotr}
 \title{Create a pivot table}
 \usage{
-pivotr(dataset, cvars = "", nvar = "None", fun = "mean",
-  normalize = "None", tabfilt = "", tabsort = "", nr = Inf,
-  data_filter = "", envir = parent.frame())
+pivotr(
+  dataset,
+  cvars = "",
+  nvar = "None",
+  fun = "mean",
+  normalize = "None",
+  tabfilt = "",
+  tabsort = "",
+  nr = Inf,
+  data_filter = "",
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{dataset}{Dataset to tabulate}

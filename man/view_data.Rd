@@ -4,8 +4,15 @@
 \alias{view_data}
 \title{View data in a shiny-app}
 \usage{
-view_data(dataset, vars = "", filt = "", rows = NULL,
-  na.rm = FALSE, dec = 3, envir = parent.frame())
+view_data(
+  dataset,
+  vars = "",
+  filt = "",
+  rows = NULL,
+  na.rm = FALSE,
+  dec = 3,
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{dataset}{Data.frame or name of the dataframe to view}

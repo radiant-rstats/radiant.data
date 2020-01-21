@@ -4,8 +4,7 @@
 \alias{get_data}
 \title{Select variables and filter data}
 \usage{
-get_data(dataset, vars = "", filt = "", rows = NULL, na.rm = TRUE,
-  envir = c())
+get_data(dataset, vars = "", filt = "", rows = NULL, na.rm = TRUE, envir = c())
 }
 \arguments{
 \item{dataset}{Dataset or name of the data.frame}

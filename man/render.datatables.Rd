@@ -4,8 +4,7 @@
 \alias{render.datatables}
 \title{Method to render DT tables}
 \usage{
-\method{render}{datatables}(object,
-  shiny = shiny::getDefaultReactiveDomain(), ...)
+\method{render}{datatables}(object, shiny = shiny::getDefaultReactiveDomain(), ...)
 }
 \arguments{
 \item{object}{DT table}

@@ -4,9 +4,18 @@
 \alias{explore}
 \title{Explore and summarize data}
 \usage{
-explore(dataset, vars = "", byvar = "", fun = c("mean", "sd"),
-  top = "fun", tabfilt = "", tabsort = "", nr = Inf,
-  data_filter = "", envir = parent.frame())
+explore(
+  dataset,
+  vars = "",
+  byvar = "",
+  fun = c("mean", "sd"),
+  top = "fun",
+  tabfilt = "",
+  tabsort = "",
+  nr = Inf,
+  data_filter = "",
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{dataset}{Dataset to explore}

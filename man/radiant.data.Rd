@@ -3,7 +3,6 @@
 \docType{package}
 \name{radiant.data}
 \alias{radiant.data}
-\alias{radiant.data-package}
 \title{radiant.data}
 \usage{
 radiant.data(state, ...)

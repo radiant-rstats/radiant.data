@@ -4,8 +4,16 @@
 \alias{combine_data}
 \title{Combine datasets using dplyr's bind and join functions}
 \usage{
-combine_data(x, y, by = "", add = "", type = "inner_join",
-  data_filter = "", envir = parent.frame(), ...)
+combine_data(
+  x,
+  y,
+  by = "",
+  add = "",
+  type = "inner_join",
+  data_filter = "",
+  envir = parent.frame(),
+  ...
+)
 }
 \arguments{
 \item{x}{Dataset}

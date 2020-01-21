@@ -4,8 +4,15 @@
 \alias{plot.pivotr}
 \title{Plot method for the pivotr function}
 \usage{
-\method{plot}{pivotr}(x, type = "dodge", perc = FALSE, flip = FALSE,
-  fillcol = "blue", opacity = 0.5, ...)
+\method{plot}{pivotr}(
+  x,
+  type = "dodge",
+  perc = FALSE,
+  flip = FALSE,
+  fillcol = "blue",
+  opacity = 0.5,
+  ...
+)
 }
 \arguments{
 \item{x}{Return value from \code{\link{pivotr}}}

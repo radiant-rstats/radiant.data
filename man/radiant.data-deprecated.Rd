@@ -23,7 +23,6 @@
 \alias{rounddf}
 \alias{getclass}
 \alias{is_numeric}
-\alias{radiant.data-deprecated-package}
 \title{Deprecated function(s) in the radiant.data package}
 \usage{
 mean_rm(...)

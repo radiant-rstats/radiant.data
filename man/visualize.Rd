@@ -4,15 +4,39 @@
 \alias{visualize}
 \title{Visualize data using ggplot2 \url{http://ggplot2.tidyverse.org}}
 \usage{
-visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
-  type = ifelse(is_empty(yvar), "dist", "scatter"), nrobs = -1,
-  facet_row = ".", facet_col = ".", color = "none", fill = "none",
-  size = "none", fillcol = "blue", linecol = "black",
-  pointcol = "black", bins = 10, smooth = 1, fun = "mean",
-  check = "", axes = "", alpha = 0.5, theme = "theme_gray",
-  base_size = 11, base_family = "", labs = list(), xlim = NULL,
-  ylim = NULL, data_filter = "", shiny = FALSE, custom = FALSE,
-  envir = parent.frame())
+visualize(
+  dataset,
+  xvar,
+  yvar = "",
+  comby = FALSE,
+  combx = FALSE,
+  type = ifelse(is_empty(yvar), "dist", "scatter"),
+  nrobs = -1,
+  facet_row = ".",
+  facet_col = ".",
+  color = "none",
+  fill = "none",
+  size = "none",
+  fillcol = "blue",
+  linecol = "black",
+  pointcol = "black",
+  bins = 10,
+  smooth = 1,
+  fun = "mean",
+  check = "",
+  axes = "",
+  alpha = 0.5,
+  theme = "theme_gray",
+  base_size = 11,
+  base_family = "",
+  labs = list(),
+  xlim = NULL,
+  ylim = NULL,
+  data_filter = "",
+  shiny = FALSE,
+  custom = FALSE,
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{dataset}{Data to plot (data.frame or tibble)}

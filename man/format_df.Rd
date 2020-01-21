@@ -4,8 +4,7 @@
 \alias{format_df}
 \title{Format a data.frame with a specified number of decimal places}
 \usage{
-format_df(tbl, dec = NULL, perc = FALSE, mark = "", na.rm = FALSE,
-  ...)
+format_df(tbl, dec = NULL, perc = FALSE, mark = "", na.rm = FALSE, ...)
 }
 \arguments{
 \item{tbl}{Data.frame}
