@@ -1,6 +1,7 @@
-# radiant.data 1.3.2
+# radiant.data 1.3.3
 
-*
+* Function to calculate "mode"
+* Fix for "spread" in Data > Transform with column name includes "."
 
 # radiant.data 1.3.1
 
