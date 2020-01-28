@@ -191,7 +191,7 @@ options(dctrl = if (getRversion() > "3.4.4") c("keepNA", "niceNames") else "keep
 options(
   radiant.functions = list(
     "n_obs" = "n_obs", "n_missing" = "n_missing", "n_distinct" = "n_distinct",
-    "mean" = "mean", "median" = "median", "mode" = "mode", "min" = "min", "max" = "max",
+    "mean" = "mean", "median" = "median", "modal" = "modal", "min" = "min", "max" = "max",
     "sum" = "sum", "var" = "var", "sd" = "sd", "se" = "se", "me" = "me", "cv" = "cv",
     "prop" = "prop", "varprop" = "varprop", "sdprop" = "sdprop", "seprop" = "seprop",
     "meprop" = "meprop", "varpop" = "varpop", "sdpop" = "sdpop", "1%" = "p01",

@@ -425,47 +425,38 @@ n_missing <- function(x, ...) sum(is.na(x))
 p01 <- function(x, na.rm = TRUE) quantile(x, .01, na.rm = na.rm)
 
 #' @rdname percentiles
-#' @inheritParams p01
 #' @export
 p025 <- function(x, na.rm = TRUE) quantile(x, .025, na.rm = na.rm)
 
 #' @rdname percentiles
-#' @inheritParams p01
 #' @export
 p05 <- function(x, na.rm = TRUE) quantile(x, .05, na.rm = na.rm)
 
 #' @rdname percentiles
-#' @inheritParams p01
 #' @export
 p10 <- function(x, na.rm = TRUE) quantile(x, .1, na.rm = na.rm)
 
 #' @rdname percentiles
-#' @inheritParams p01
 #' @export
 p25 <- function(x, na.rm = TRUE) quantile(x, .25, na.rm = na.rm)
 
 #' @rdname percentiles
-#' @inheritParams p01
 #' @export
 p75 <- function(x, na.rm = TRUE) quantile(x, .75, na.rm = na.rm)
 
 #' @rdname percentiles
-#' @inheritParams p01
 #' @export
 p90 <- function(x, na.rm = TRUE) quantile(x, .90, na.rm = na.rm)
 
 #' @rdname percentiles
-#' @inheritParams p01
 #' @export
 p95 <- function(x, na.rm = TRUE) quantile(x, .95, na.rm = na.rm)
 
 #' @rdname percentiles
-#' @inheritParams p01
 #' @export
 p975 <- function(x, na.rm = TRUE) quantile(x, .975, na.rm = na.rm)
 
 #' @rdname percentiles
-#' @inheritParams p01
 #' @export
 p99 <- function(x, na.rm = TRUE) quantile(x, .99, na.rm = na.rm)
 
@@ -669,20 +660,21 @@ empty_level <- function(x) {
   x
 }
 
-#' Calculate the mode and return a label
+#' Calculate the mode (modal value) and return a label
 #' 
-#' @param x A vector of numer
+#' @details From https://www.tutorialspoint.com/r/r_mean_median_mode.htm
+#' @param x A vector 
 #' @param na.rm If TRUE missing values are removed before calculation
 #' 
 #' @examples
-#' mode(c("a", "b", "b"))
-#' mode(c(1:10, 5))
-#' mode(as.factor(c(letters, "b")))
-#' mode(runif(100) > 0.5)
+#' modal(c("a", "b", "b"))
+#' modal(c(1:10, 5))
+#' modal(as.factor(c(letters, "b")))
+#' modal(runif(100) > 0.5)
 #'
-#' @rdname percentiles
 #' @export
-mode <- function(x, na.rm = TRUE) {
+modal <- function(x, na.rm = TRUE) {
   if (na.rm) x <- na.omit(x)
-  names(which.max(table(x)))
+  unv <- unique(x)
+  unv[which.max(tabulate(match(x, unv)))]
 }
