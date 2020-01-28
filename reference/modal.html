@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Standard deviation for the population — sdpop • radiant.data</title>
+<title>Calculate the mode (modal value) and return a label — modal • radiant.data</title>
 
 
 <!-- jquery -->
@@ -41,8 +41,8 @@
 
 
 
-<meta property="og:title" content="Standard deviation for the population — sdpop" />
-<meta property="og:description" content="Standard deviation for the population" />
+<meta property="og:title" content="Calculate the mode (modal value) and return a label — modal" />
+<meta property="og:description" content="Calculate the mode (modal value) and return a label" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -159,23 +159,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Standard deviation for the population</h1>
+    <h1>Calculate the mode (modal value) and return a label</h1>
     <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/R/explore.R'><code>R/explore.R</code></a></small>
-    <div class="hidden name"><code>sdpop.Rd</code></div>
+    <div class="hidden name"><code>modal.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Standard deviation for the population</p>
+    <p>Calculate the mode (modal value) and return a label</p>
     </div>
 
-    <pre class="usage"><span class='fu'>sdpop</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>modal</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Input variable</p></td>
+      <td><p>A vector</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
@@ -183,19 +183,20 @@
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Standard deviation for the population</p>
+    <p>From https://www.tutorialspoint.com/r/r_mean_median_mode.htm</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>sdpop</span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>))</div><div class='output co'>#&gt; [1] 0.9091776</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'>modal</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"b"</span>))</div><div class='output co'>#&gt; [1] "b"</div><div class='input'><span class='fu'>modal</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>:<span class='fl'>10</span>, <span class='fl'>5</span>))</div><div class='output co'>#&gt; [1] 5</div><div class='input'><span class='fu'>modal</span>(<span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>letters</span>, <span class='st'>"b"</span>)))</div><div class='output co'>#&gt; [1] b
+#&gt; Levels: a b c d e f g h i j k l m n o p q r s t u v w x y z</div><div class='input'><span class='fu'>modal</span>(<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='fl'>100</span>) <span class='kw'>&gt;</span> <span class='fl'>0.5</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
