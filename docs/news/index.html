@@ -70,7 +70,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
       </span>
     </div>
 
@@ -157,9 +157,66 @@
       <small>Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="radiant-data-1-1-8" class="section level1">
+    <div id="radiantdata-133" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-1-1-8" class="anchor"></a>radiant.data 1.1.8<small> Unreleased </small>
+<a href="#radiantdata-133" class="anchor"></a>radiant.data 1.3.3<small> Unreleased </small>
+</h1>
+<ul>
+<li>Function to calculate “mode”</li>
+<li>Fix for “spread” in Data &gt; Transform with column name includes “.”</li>
+</ul>
+</div>
+    <div id="radiantdata-131" class="section level1">
+<h1 class="page-header">
+<a href="#radiantdata-131" class="anchor"></a>radiant.data 1.3.1<small> Unreleased </small>
+</h1>
+<ul>
+<li>If radiant is not opened from an Rstudio project, use the working directory at launch as the base directory for the application</li>
+</ul>
+</div>
+    <div id="radiantdata-130" class="section level1">
+<h1 class="page-header">
+<a href="#radiantdata-130" class="anchor"></a>radiant.data 1.3.0<small> Unreleased </small>
+</h1>
+<ul>
+<li>Updated styling of Notebook and HTML reports (cosmo + zenburn)</li>
+<li>Documentation updates to link to new video tutorials</li>
+<li>Use <code>patchwork</code> for grouping multiple plots together</li>
+<li>Apply <code>refactor</code> to any type in the <em>Data &gt; Transform</em> UI</li>
+<li>Fix for <code>weighted.sd</code> when missing values differ for <code>x</code> and weights</li>
+<li>Avoid resetting the “Column header” to its default value in <em>Data &gt; Explore</em> when other settings are changed.</li>
+</ul>
+</div>
+    <div id="radiantdata-123" class="section level1">
+<h1 class="page-header">
+<a href="#radiantdata-123" class="anchor"></a>radiant.data 1.2.3<small> Unreleased </small>
+</h1>
+<ul>
+<li>Fix for <em>Data &gt; Transform &gt; Spread</em> when no variables are selected</li>
+<li>Set <code>debounce</code> to 0 for all shinyAce editors</li>
+</ul>
+</div>
+    <div id="radiantdata-122" class="section level1">
+<h1 class="page-header">
+<a href="#radiantdata-122" class="anchor"></a>radiant.data 1.2.2<small> Unreleased </small>
+</h1>
+<ul>
+<li>Use <code>zenburn</code> for code highlighting in Notebook and HTML report from <em>Report &gt; Rmd</em>
+</li>
+<li>Clean up “sf_volumes” from the when radiant is stopped</li>
+</ul>
+</div>
+    <div id="radiantdata-120" class="section level1">
+<h1 class="page-header">
+<a href="#radiantdata-120" class="anchor"></a>radiant.data 1.2.0<small> Unreleased </small>
+</h1>
+<ul>
+<li>Update action buttons that initiate a calculation when one or more relevant inputs are changed. For example, when a model should be re-estimated because the set of explanatory variables was changed by the user, a spinning “refresh” icon will be shown</li>
+</ul>
+</div>
+    <div id="radiantdata-118" class="section level1">
+<h1 class="page-header">
+<a href="#radiantdata-118" class="anchor"></a>radiant.data 1.1.8<small> Unreleased </small>
 </h1>
 <ul>
 <li>Changed default <code>quantile</code> algorithm used in the <code>xtile</code> function from number 2 to 7. See the help for <code><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">stats::quantile</a></code> for details</li>
@@ -167,9 +224,9 @@
 </li>
 </ul>
 </div>
-    <div id="radiant-data-1-1-6" class="section level1">
+    <div id="radiantdata-116" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-1-1-6" class="anchor"></a>radiant.data 1.1.6<small> Unreleased </small>
+<a href="#radiantdata-116" class="anchor"></a>radiant.data 1.1.6<small> Unreleased </small>
 </h1>
 <ul>
 <li>Improvements for wrapping generated code to <em>Report &gt; Rmd</em> or <em>Report &gt; R</em>
@@ -178,9 +235,9 @@
 <em>Data &gt; Transform &gt; Training</em> now uses the <code>randomizr</code> package to allow blocking variables when creating a training variables.</li>
 </ul>
 </div>
-    <div id="radiant-data-1-1-3" class="section level1">
+    <div id="radiantdata-113" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-1-1-3" class="anchor"></a>radiant.data 1.1.3<small> Unreleased </small>
+<a href="#radiantdata-113" class="anchor"></a>radiant.data 1.1.3<small> Unreleased </small>
 </h1>
 <ul>
 <li>Guard against <em>using Data &gt; Transform &gt; Reorder/remove levels</em> with too many levels (i.e., &gt; 100)</li>
@@ -192,9 +249,9 @@
 <li>Numerous small code changes to support enhanced auto-completion, tooltips, and annotations in shinyAce 0.4.1</li>
 </ul>
 </div>
-    <div id="radiant-data-1-0-6" class="section level1">
+    <div id="radiantdata-106" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-1-0-6" class="anchor"></a>radiant.data 1.0.6<small> 2019-08-22 </small>
+<a href="#radiantdata-106" class="anchor"></a>radiant.data 1.0.6<small> 2019-08-22 </small>
 </h1>
 <ul>
 <li>Fix for <code>Data &gt; Transform &gt; Change type</code>
@@ -217,9 +274,9 @@
 </li>
 </ul>
 </div>
-    <div id="radiant-data-1-0-0" class="section level1">
+    <div id="radiantdata-100" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-1-0-0" class="anchor"></a>radiant.data 1.0.0<small> 2019-07-18 </small>
+<a href="#radiantdata-100" class="anchor"></a>radiant.data 1.0.0<small> 2019-07-18 </small>
 </h1>
 <ul>
 <li>Support for series of class <code>ts</code> (e.g., Data &gt; Transform &gt; Change type &gt; Time series)</li>
@@ -227,9 +284,9 @@
 <li>Vertical jitter set to 0 by default</li>
 </ul>
 </div>
-    <div id="radiant-data-0-9-9-0" class="section level1">
+    <div id="radiantdata-0990" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-9-0" class="anchor"></a>radiant.data 0.9.9.0<small> Unreleased </small>
+<a href="#radiantdata-0990" class="anchor"></a>radiant.data 0.9.9.0<small> Unreleased </small>
 </h1>
 <ul>
 <li>Added option to save <em>Report &gt; Rmd</em> as a powerpoint file using <code>Rmarkdown</code>
@@ -242,9 +299,9 @@
 <li>Added <code>radiant_</code> prefix to all attributes, except <code>description</code>, to avoid conflicts with other packages (e.g., <code>vars</code> in dplyr)</li>
 </ul>
 </div>
-    <div id="radiant-data-0-9-8-6" class="section level1">
+    <div id="radiantdata-0986" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-8-6" class="anchor"></a>radiant.data 0.9.8.6<small> Unreleased </small>
+<a href="#radiantdata-0986" class="anchor"></a>radiant.data 0.9.8.6<small> Unreleased </small>
 </h1>
 <ul>
 <li>Use <code><a href="https://www.rdocumentation.org/packages/stringi/topics/stri_trans_general">stringi::stri_trans_general</a></code> to replace special symbols in Rmarkdown that may cause problems</li>
@@ -257,9 +314,9 @@
 </li>
 </ul>
 </div>
-    <div id="radiant-data-0-9-8-0" class="section level1">
+    <div id="radiantdata-0980" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-8-0" class="anchor"></a>radiant.data 0.9.8.0<small> Unreleased </small>
+<a href="#radiantdata-0980" class="anchor"></a>radiant.data 0.9.8.0<small> Unreleased </small>
 </h1>
 <ul>
 <li>Added an “autosave” options. Use <code><a href="https://www.rdocumentation.org/packages/base/topics/options">options(radiant.autosave = c(10, 180)); radiant::radiant()</a></code> to auto-save the application state to the <code>~/.radiant.session</code> folder every 10 minutes for the next 180 minutes. This can be useful if radiant is being used during an exam, for example.</li>
@@ -294,9 +351,9 @@
 </li>
 </ul>
 </div>
-    <div id="radiant-data-0-9-7-0" class="section level1">
+    <div id="radiantdata-0970" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-7-0" class="anchor"></a>radiant.data 0.9.7.0<small> Unreleased </small>
+<a href="#radiantdata-0970" class="anchor"></a>radiant.data 0.9.7.0<small> Unreleased </small>
 </h1>
 <ul>
 <li>Use <code>summarytools</code> to generate summary information for datasets in <em>Data &gt; Manage</em>
@@ -325,9 +382,9 @@
 <li>Fix for code generation related to DT filters</li>
 </ul>
 </div>
-    <div id="radiant-data-0-9-6-14" class="section level1">
+    <div id="radiantdata-09614" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-6-14" class="anchor"></a>radiant.data 0.9.6.14<small> Unreleased </small>
+<a href="#radiantdata-09614" class="anchor"></a>radiant.data 0.9.6.14<small> Unreleased </small>
 </h1>
 <div id="major-changes" class="section level2">
 <h2 class="hasAnchor">
@@ -357,9 +414,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-9-5-3" class="section level1">
+    <div id="radiantdata-0953" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-5-3" class="anchor"></a>radiant.data 0.9.5.3<small> Unreleased </small>
+<a href="#radiantdata-0953" class="anchor"></a>radiant.data 0.9.5.3<small> Unreleased </small>
 </h1>
 <ul>
 <li>Fix smart comma’s in data descriptions</li>
@@ -370,9 +427,9 @@
 <li>Used all declared imports (CRAN)</li>
 </ul>
 </div>
-    <div id="radiant-data-0-9-5-0" class="section level1">
+    <div id="radiantdata-0950" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-5-0" class="anchor"></a>radiant.data 0.9.5.0<small> Unreleased </small>
+<a href="#radiantdata-0950" class="anchor"></a>radiant.data 0.9.5.0<small> Unreleased </small>
 </h1>
 <ul>
 <li>Fix for <code><a href="../reference/explore.html">radiant.data::explore</a></code> when variable names contain an underscore</li>
@@ -380,9 +437,9 @@
 <li>Fixes in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> to accommodate for pandoc &gt; 2</li>
 </ul>
 </div>
-    <div id="radiant-data-0-9-4-6" class="section level1">
+    <div id="radiantdata-0946" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-4-6" class="anchor"></a>radiant.data 0.9.4.6<small> Unreleased </small>
+<a href="#radiantdata-0946" class="anchor"></a>radiant.data 0.9.4.6<small> Unreleased </small>
 </h1>
 <ul>
 <li>Don’t update a reactive binding for an object if the binding already exists. See issue <a href="https://github.com/rstudio/shiny/issues/2065" class="uri">https://github.com/rstudio/shiny/issues/2065</a>
@@ -391,9 +448,9 @@
 <li>Fix for saving data in <em>Data &gt; Manage</em> and generating the relevant R-code</li>
 </ul>
 </div>
-    <div id="radiant-data-0-9-3-5" class="section level1">
+    <div id="radiantdata-0935" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-3-5" class="anchor"></a>radiant.data 0.9.3.5<small> Unreleased </small>
+<a href="#radiantdata-0935" class="anchor"></a>radiant.data 0.9.3.5<small> Unreleased </small>
 </h1>
 <div id="minor-changes-1" class="section level2">
 <h2 class="hasAnchor">
@@ -404,9 +461,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-9-3-4" class="section level1">
+    <div id="radiantdata-0934" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-3-4" class="anchor"></a>radiant.data 0.9.3.4<small> Unreleased </small>
+<a href="#radiantdata-0934" class="anchor"></a>radiant.data 0.9.3.4<small> Unreleased </small>
 </h1>
 <div id="minor-changes-2" class="section level2">
 <h2 class="hasAnchor">
@@ -423,9 +480,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-9-3-3" class="section level1">
+    <div id="radiantdata-0933" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-3-3" class="anchor"></a>radiant.data 0.9.3.3<small> Unreleased </small>
+<a href="#radiantdata-0933" class="anchor"></a>radiant.data 0.9.3.3<small> Unreleased </small>
 </h1>
 <div id="major-changes-1" class="section level2">
 <h2 class="hasAnchor">
@@ -450,9 +507,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-9-2-3" class="section level1">
+    <div id="radiantdata-0923" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-2-3" class="anchor"></a>radiant.data 0.9.2.3<small> Unreleased </small>
+<a href="#radiantdata-0923" class="anchor"></a>radiant.data 0.9.2.3<small> Unreleased </small>
 </h1>
 <div id="major-changes-2" class="section level2">
 <h2 class="hasAnchor">
@@ -473,9 +530,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-9-2-2" class="section level1">
+    <div id="radiantdata-0922" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-2-2" class="anchor"></a>radiant.data 0.9.2.2<small> Unreleased </small>
+<a href="#radiantdata-0922" class="anchor"></a>radiant.data 0.9.2.2<small> Unreleased </small>
 </h1>
 <div id="minor-changes-5" class="section level2">
 <h2 class="hasAnchor">
@@ -486,9 +543,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-9-2-0" class="section level1">
+    <div id="radiantdata-0920" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-2-0" class="anchor"></a>radiant.data 0.9.2.0<small> Unreleased </small>
+<a href="#radiantdata-0920" class="anchor"></a>radiant.data 0.9.2.0<small> Unreleased </small>
 </h1>
 <div id="minor-changes-6" class="section level2">
 <h2 class="hasAnchor">
@@ -499,9 +556,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-9-0-17" class="section level1">
+    <div id="radiantdata-09017" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-0-17" class="anchor"></a>radiant.data 0.9.0.17<small> Unreleased </small>
+<a href="#radiantdata-09017" class="anchor"></a>radiant.data 0.9.0.17<small> Unreleased </small>
 </h1>
 <div id="minor-changes-8" class="section level2">
 <h2 class="hasAnchor">
@@ -514,9 +571,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-9-0-16" class="section level1">
+    <div id="radiantdata-09016" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-0-16" class="anchor"></a>radiant.data 0.9.0.16<small> Unreleased </small>
+<a href="#radiantdata-09016" class="anchor"></a>radiant.data 0.9.0.16<small> Unreleased </small>
 </h1>
 <div id="minor-changes-9" class="section level2">
 <h2 class="hasAnchor">
@@ -527,9 +584,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-9-0-15" class="section level1">
+    <div id="radiantdata-09015" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-0-15" class="anchor"></a>radiant.data 0.9.0.15<small> Unreleased </small>
+<a href="#radiantdata-09015" class="anchor"></a>radiant.data 0.9.0.15<small> Unreleased </small>
 </h1>
 <div id="minor-changes-10" class="section level2">
 <h2 class="hasAnchor">
@@ -550,9 +607,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-9-0-13" class="section level1">
+    <div id="radiantdata-09013" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-0-13" class="anchor"></a>radiant.data 0.9.0.13<small> Unreleased </small>
+<a href="#radiantdata-09013" class="anchor"></a>radiant.data 0.9.0.13<small> Unreleased </small>
 </h1>
 <div id="minor-changes-11" class="section level2">
 <h2 class="hasAnchor">
@@ -578,14 +635,14 @@
 <li>Fix for decimals to show in interactive tables <em>Report &gt; Rmd</em> and saved HTML reports</li>
 <li>Better error messages for <code>xtile</code> and when binning data with too many groups</li>
 <li>Fix for variable type warnings in <em>Data &gt; Pivot</em> when filtering the table</li>
-<li>Fix for \ in equations in <em>Report &gt; Rmd</em>
+<li>Fix for  in equations in <em>Report &gt; Rmd</em>
 </li>
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-9-0-7" class="section level1">
+    <div id="radiantdata-0907" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-0-7" class="anchor"></a>radiant.data 0.9.0.7<small> Unreleased </small>
+<a href="#radiantdata-0907" class="anchor"></a>radiant.data 0.9.0.7<small> Unreleased </small>
 </h1>
 <div id="minor-changes-12" class="section level2">
 <h2 class="hasAnchor">
@@ -616,9 +673,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-9-0-0" class="section level1">
+    <div id="radiantdata-0900" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-9-0-0" class="anchor"></a>radiant.data 0.9.0.0<small> Unreleased </small>
+<a href="#radiantdata-0900" class="anchor"></a>radiant.data 0.9.0.0<small> Unreleased </small>
 </h1>
 <div id="major-changes-3" class="section level2">
 <h2 class="hasAnchor">
@@ -659,9 +716,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-8-7-8" class="section level1">
+    <div id="radiantdata-0878" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-8-7-8" class="anchor"></a>radiant.data 0.8.7.8<small> Unreleased </small>
+<a href="#radiantdata-0878" class="anchor"></a>radiant.data 0.8.7.8<small> Unreleased </small>
 </h1>
 <div id="minor-changes-14" class="section level2">
 <h2 class="hasAnchor">
@@ -686,9 +743,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-8-6-0" class="section level1">
+    <div id="radiantdata-0860" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-8-6-0" class="anchor"></a>radiant.data 0.8.6.0<small> Unreleased </small>
+<a href="#radiantdata-0860" class="anchor"></a>radiant.data 0.8.6.0<small> Unreleased </small>
 </h1>
 <div id="minor-changes-15" class="section level2">
 <h2 class="hasAnchor">
@@ -720,9 +777,9 @@
 </ul>
 </div>
 </div>
-    <div id="radiant-data-0-8-1-0" class="section level1">
+    <div id="radiantdata-0810" class="section level1">
 <h1 class="page-header">
-<a href="#radiant-data-0-8-1-0" class="anchor"></a>radiant.data 0.8.1.0<small> Unreleased </small>
+<a href="#radiantdata-0810" class="anchor"></a>radiant.data 0.8.1.0<small> Unreleased </small>
 </h1>
 <div id="minor-changes-16" class="section level2">
 <h2 class="hasAnchor">
@@ -799,34 +856,40 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#radiant-data-1-1-8">1.1.8</a></li>
-        <li><a href="#radiant-data-1-1-6">1.1.6</a></li>
-        <li><a href="#radiant-data-1-1-3">1.1.3</a></li>
-        <li><a href="#radiant-data-1-0-6">1.0.6</a></li>
-        <li><a href="#radiant-data-1-0-0">1.0.0</a></li>
-        <li><a href="#radiant-data-0-9-9-0">0.9.9.0</a></li>
-        <li><a href="#radiant-data-0-9-8-6">0.9.8.6</a></li>
-        <li><a href="#radiant-data-0-9-8-0">0.9.8.0</a></li>
-        <li><a href="#radiant-data-0-9-7-0">0.9.7.0</a></li>
-        <li><a href="#radiant-data-0-9-6-14">0.9.6.14</a></li>
-        <li><a href="#radiant-data-0-9-5-3">0.9.5.3</a></li>
-        <li><a href="#radiant-data-0-9-5-0">0.9.5.0</a></li>
-        <li><a href="#radiant-data-0-9-4-6">0.9.4.6</a></li>
-        <li><a href="#radiant-data-0-9-3-5">0.9.3.5</a></li>
-        <li><a href="#radiant-data-0-9-3-4">0.9.3.4</a></li>
-        <li><a href="#radiant-data-0-9-3-3">0.9.3.3</a></li>
-        <li><a href="#radiant-data-0-9-2-3">0.9.2.3</a></li>
-        <li><a href="#radiant-data-0-9-2-2">0.9.2.2</a></li>
-        <li><a href="#radiant-data-0-9-2-0">0.9.2.0</a></li>
-        <li><a href="#radiant-data-0-9-0-17">0.9.0.17</a></li>
-        <li><a href="#radiant-data-0-9-0-16">0.9.0.16</a></li>
-        <li><a href="#radiant-data-0-9-0-15">0.9.0.15</a></li>
-        <li><a href="#radiant-data-0-9-0-13">0.9.0.13</a></li>
-        <li><a href="#radiant-data-0-9-0-7">0.9.0.7</a></li>
-        <li><a href="#radiant-data-0-9-0-0">0.9.0.0</a></li>
-        <li><a href="#radiant-data-0-8-7-8">0.8.7.8</a></li>
-        <li><a href="#radiant-data-0-8-6-0">0.8.6.0</a></li>
-        <li><a href="#radiant-data-0-8-1-0">0.8.1.0</a></li>
+        <li><a href="#radiantdata-133">1.3.3</a></li>
+        <li><a href="#radiantdata-131">1.3.1</a></li>
+        <li><a href="#radiantdata-130">1.3.0</a></li>
+        <li><a href="#radiantdata-123">1.2.3</a></li>
+        <li><a href="#radiantdata-122">1.2.2</a></li>
+        <li><a href="#radiantdata-120">1.2.0</a></li>
+        <li><a href="#radiantdata-118">1.1.8</a></li>
+        <li><a href="#radiantdata-116">1.1.6</a></li>
+        <li><a href="#radiantdata-113">1.1.3</a></li>
+        <li><a href="#radiantdata-106">1.0.6</a></li>
+        <li><a href="#radiantdata-100">1.0.0</a></li>
+        <li><a href="#radiantdata-0990">0.9.9.0</a></li>
+        <li><a href="#radiantdata-0986">0.9.8.6</a></li>
+        <li><a href="#radiantdata-0980">0.9.8.0</a></li>
+        <li><a href="#radiantdata-0970">0.9.7.0</a></li>
+        <li><a href="#radiantdata-09614">0.9.6.14</a></li>
+        <li><a href="#radiantdata-0953">0.9.5.3</a></li>
+        <li><a href="#radiantdata-0950">0.9.5.0</a></li>
+        <li><a href="#radiantdata-0946">0.9.4.6</a></li>
+        <li><a href="#radiantdata-0935">0.9.3.5</a></li>
+        <li><a href="#radiantdata-0934">0.9.3.4</a></li>
+        <li><a href="#radiantdata-0933">0.9.3.3</a></li>
+        <li><a href="#radiantdata-0923">0.9.2.3</a></li>
+        <li><a href="#radiantdata-0922">0.9.2.2</a></li>
+        <li><a href="#radiantdata-0920">0.9.2.0</a></li>
+        <li><a href="#radiantdata-09017">0.9.0.17</a></li>
+        <li><a href="#radiantdata-09016">0.9.0.16</a></li>
+        <li><a href="#radiantdata-09015">0.9.0.15</a></li>
+        <li><a href="#radiantdata-09013">0.9.0.13</a></li>
+        <li><a href="#radiantdata-0907">0.9.0.7</a></li>
+        <li><a href="#radiantdata-0900">0.9.0.0</a></li>
+        <li><a href="#radiantdata-0878">0.8.7.8</a></li>
+        <li><a href="#radiantdata-0860">0.8.6.0</a></li>
+        <li><a href="#radiantdata-0810">0.8.1.0</a></li>
       </ul>
     </div>
   </div>

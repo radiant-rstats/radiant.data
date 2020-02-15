@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
       </span>
     </div>
 
@@ -164,15 +164,39 @@
     <p>Visualize data using ggplot2 <a href='http://ggplot2.tidyverse.org'>http://ggplot2.tidyverse.org</a></p>
     </div>
 
-    <pre class="usage"><span class='fu'>visualize</span>(<span class='no'>dataset</span>, <span class='no'>xvar</span>, <span class='kw'>yvar</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>comby</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>combx</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/ifelse'>ifelse</a></span>(<span class='fu'><a href='is_empty.html'>is_empty</a></span>(<span class='no'>yvar</span>), <span class='st'>"dist"</span>, <span class='st'>"scatter"</span>), <span class='kw'>nrobs</span> <span class='kw'>=</span> -<span class='fl'>1</span>,
-  <span class='kw'>facet_row</span> <span class='kw'>=</span> <span class='st'>"."</span>, <span class='kw'>facet_col</span> <span class='kw'>=</span> <span class='st'>"."</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
-  <span class='kw'>size</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>fillcol</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>linecol</span> <span class='kw'>=</span> <span class='st'>"black"</span>,
-  <span class='kw'>pointcol</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>bins</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>smooth</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='st'>"mean"</span>,
-  <span class='kw'>check</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>theme</span> <span class='kw'>=</span> <span class='st'>"theme_gray"</span>,
-  <span class='kw'>base_size</span> <span class='kw'>=</span> <span class='fl'>11</span>, <span class='kw'>base_family</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>labs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data_filter</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>custom</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sys.parent'>parent.frame</a></span>())</pre>
+    <pre class="usage"><span class='fu'>visualize</span>(
+  <span class='no'>dataset</span>,
+  <span class='no'>xvar</span>,
+  <span class='kw'>yvar</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>comby</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>combx</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/ifelse'>ifelse</a></span>(<span class='fu'><a href='is_empty.html'>is_empty</a></span>(<span class='no'>yvar</span>), <span class='st'>"dist"</span>, <span class='st'>"scatter"</span>),
+  <span class='kw'>nrobs</span> <span class='kw'>=</span> -<span class='fl'>1</span>,
+  <span class='kw'>facet_row</span> <span class='kw'>=</span> <span class='st'>"."</span>,
+  <span class='kw'>facet_col</span> <span class='kw'>=</span> <span class='st'>"."</span>,
+  <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
+  <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
+  <span class='kw'>size</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
+  <span class='kw'>fillcol</span> <span class='kw'>=</span> <span class='st'>"blue"</span>,
+  <span class='kw'>linecol</span> <span class='kw'>=</span> <span class='st'>"black"</span>,
+  <span class='kw'>pointcol</span> <span class='kw'>=</span> <span class='st'>"black"</span>,
+  <span class='kw'>bins</span> <span class='kw'>=</span> <span class='fl'>10</span>,
+  <span class='kw'>smooth</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>fun</span> <span class='kw'>=</span> <span class='st'>"mean"</span>,
+  <span class='kw'>check</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>axes</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>theme</span> <span class='kw'>=</span> <span class='st'>"theme_gray"</span>,
+  <span class='kw'>base_size</span> <span class='kw'>=</span> <span class='fl'>11</span>,
+  <span class='kw'>base_family</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>labs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(),
+  <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data_filter</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>custom</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sys.parent'>parent.frame</a></span>()
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -317,7 +341,7 @@
   <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"line"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='img'><img src='visualize-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>visualize</span>(<span class='no'>diamonds</span>, <span class='kw'>yvar</span> <span class='kw'>=</span> <span class='st'>"price"</span>, <span class='kw'>xvar</span> <span class='kw'>=</span> <span class='st'>"carat"</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"scatter"</span>,
           <span class='kw'>size</span> <span class='kw'>=</span> <span class='st'>"table"</span>, <span class='kw'>custom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) + <span class='fu'>scale_size</span>(<span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>10</span>), <span class='kw'>guide</span> <span class='kw'>=</span> <span class='st'>"none"</span>)</div><div class='img'><img src='visualize-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>visualize</span>(<span class='no'>diamonds</span>, <span class='kw'>yvar</span> <span class='kw'>=</span> <span class='st'>"price"</span>, <span class='kw'>xvar</span> <span class='kw'>=</span> <span class='st'>"carat"</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"scatter"</span>, <span class='kw'>custom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) +
   <span class='fu'>labs</span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"A scatterplot"</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"price in $"</span>)</div><div class='img'><img src='visualize-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>visualize</span>(<span class='no'>diamonds</span>, <span class='kw'>xvar</span> <span class='kw'>=</span> <span class='st'>"price:carat"</span>, <span class='kw'>custom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>gridExtra</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/gridExtra/topics/arrangeGrob'>grid.arrange</a></span>(<span class='kw'>grobs</span> <span class='kw'>=</span> <span class='no'>.</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"Histograms"</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='img'><img src='visualize-7.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>visualize</span>(<span class='no'>diamonds</span>, <span class='kw'>xvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>yvar</span> <span class='kw'>=</span> <span class='st'>"price"</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"bar"</span>,
+  <span class='fu'><a href='https://patchwork.data-imaginist.com/reference/wrap_plots.html'>wrap_plots</a></span>(<span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>2</span>) + <span class='fu'><a href='https://patchwork.data-imaginist.com/reference/plot_annotation.html'>plot_annotation</a></span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Histograms"</span>)</div><div class='img'><img src='visualize-7.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>visualize</span>(<span class='no'>diamonds</span>, <span class='kw'>xvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>yvar</span> <span class='kw'>=</span> <span class='st'>"price"</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"bar"</span>,
   <span class='kw'>facet_row</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"cut"</span>)</div><div class='img'><img src='visualize-8.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>

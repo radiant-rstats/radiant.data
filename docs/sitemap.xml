@@ -49,9 +49,6 @@
     <loc>https://radiant-rstats.github.io/radiant.data/reference/as_numeric.html</loc>
   </url>
   <url>
-    <loc>https://radiant-rstats.github.io/radiant.data/reference/as_tibble.html</loc>
-  </url>
-  <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/as_ymd.html</loc>
   </url>
   <url>
@@ -166,18 +163,6 @@
     <loc>https://radiant-rstats.github.io/radiant.data/reference/ggplotly.html</loc>
   </url>
   <url>
-    <loc>https://radiant-rstats.github.io/radiant.data/reference/glance.html</loc>
-  </url>
-  <url>
-    <loc>https://radiant-rstats.github.io/radiant.data/reference/glue.html</loc>
-  </url>
-  <url>
-    <loc>https://radiant-rstats.github.io/radiant.data/reference/glue_collapse.html</loc>
-  </url>
-  <url>
-    <loc>https://radiant-rstats.github.io/radiant.data/reference/glue_data.html</loc>
-  </url>
-  <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/indexr.html</loc>
   </url>
   <url>
@@ -202,12 +187,6 @@
     <loc>https://radiant-rstats.github.io/radiant.data/reference/iterms.html</loc>
   </url>
   <url>
-    <loc>https://radiant-rstats.github.io/radiant.data/reference/knit_print.html</loc>
-  </url>
-  <url>
-    <loc>https://radiant-rstats.github.io/radiant.data/reference/kurtosi.re.html</loc>
-  </url>
-  <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/launch.html</loc>
   </url>
   <url>
@@ -223,10 +202,16 @@
     <loc>https://radiant-rstats.github.io/radiant.data/reference/make_train.html</loc>
   </url>
   <url>
+    <loc>https://radiant-rstats.github.io/radiant.data/reference/make_vec.html</loc>
+  </url>
+  <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/me.html</loc>
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/meprop.html</loc>
+  </url>
+  <url>
+    <loc>https://radiant-rstats.github.io/radiant.data/reference/modal.html</loc>
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/month.html</loc>
@@ -259,9 +244,6 @@
     <loc>https://radiant-rstats.github.io/radiant.data/reference/plot.pivotr.html</loc>
   </url>
   <url>
-    <loc>https://radiant-rstats.github.io/radiant.data/reference/print.gtable.html</loc>
-  </url>
-  <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/prop.html</loc>
   </url>
   <url>
@@ -280,6 +262,9 @@
     <loc>https://radiant-rstats.github.io/radiant.data/reference/radiant.data.html</loc>
   </url>
   <url>
+    <loc>https://radiant-rstats.github.io/radiant.data/reference/radiant.data_url.html</loc>
+  </url>
+  <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/radiant.data_viewer.html</loc>
   </url>
   <url>
@@ -287,6 +272,9 @@
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/read_files.html</loc>
+  </url>
+  <url>
+    <loc>https://radiant-rstats.github.io/radiant.data/reference/reexports.html</loc>
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/refactor.html</loc>
@@ -305,9 +293,6 @@
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/round_df.html</loc>
-  </url>
-  <url>
-    <loc>https://radiant-rstats.github.io/radiant.data/reference/rownames_to_column.html</loc>
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/save_clip.html</loc>
@@ -335,9 +320,6 @@
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/sig_stars.html</loc>
-  </url>
-  <url>
-    <loc>https://radiant-rstats.github.io/radiant.data/reference/skew.re.html</loc>
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/square.html</loc>
@@ -374,12 +356,6 @@
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/table2data.html</loc>
-  </url>
-  <url>
-    <loc>https://radiant-rstats.github.io/radiant.data/reference/tibble.html</loc>
-  </url>
-  <url>
-    <loc>https://radiant-rstats.github.io/radiant.data/reference/tidy.html</loc>
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/titanic.html</loc>

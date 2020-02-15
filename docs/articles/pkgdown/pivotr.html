@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
       </span>
     </div>
 
@@ -112,7 +112,7 @@
 <!--/.navbar -->
 
       
-      </header><div class="row">
+      </header><script src="pivotr_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Create pivot tables (Data &gt; Pivot)</h1>
@@ -159,7 +159,7 @@
 </ul>
 <p>You can also create a bar chart based on the generated table (see image above). To download the table in <em>csv</em> format or the plot in <em>png</em> format click the appropriate download icon on the right.</p>
 <blockquote>
-<p>Note that when a categorical variable (<code>factor</code>) is selected from the <code>Numeric variable</code> dropdown it is converted to a 0-1 (binary) variable where the first level is coded as 1 and all other levels as 0.</p>
+<p>Note that when a categorical variable (<code>factor</code>) is selected from the <code>Numeric variable(s)</code> dropdown menu it will be converted to a numeric variable if required for the selected function(s). If the factor levels are numeric these will be used in all calculations. Since the mean, standard deviation, etc. are not relevant for non-binary categorical variables, these will be converted to 0-1 (binary) variables where the first level is coded as 1 and all other levels as 0.</p>
 </blockquote>
 <div id="filter-data" class="section level3">
 <h3 class="hasAnchor">
@@ -181,7 +181,7 @@
 <h3 class="hasAnchor">
 <a href="#r-functions" class="anchor"></a>R-functions</h3>
 <p>For an overview of related R-functions used by Radiant to create pivot tables see <a href="https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-pivot" target="_blank"><em>Data &gt; Pivot</em></a></p>
-<p>© Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="./images/by-sa.png"></a></p>
+<p>© Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="images/by-sa.png"></a></p>
 </div>
   </div>
 
