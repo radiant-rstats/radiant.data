@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.4</span>
       </span>
     </div>
 
@@ -130,7 +130,7 @@
 <p>Combine two datasets</p>
 </blockquote>
 <p>There are six <em>join</em> (or <em>merge</em>) options available in Radiant from the <a href="http://www.rdocumentation.org/packages/dplyr" target="_blank">dplyr</a> package developed by Hadley Wickham et.al.</p>
-<p>The examples below are adapted from the <a href="http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html" target="_blank">Cheatsheet for dplyr join functions</a> by <a href="http://www.stat.ubc.ca/~jenny/" target="_blank">Jenny Bryan</a> and focus on three small datasets, <code>superheroes</code>, <code>publishers</code>, and <code>avengers</code>, to illustrate the different <em>join</em> types and other ways to combine datasets in R and Radiant. The data are also available in csv format through the links below:</p>
+<p>The examples below are adapted from the <a href="https://stat545.com/join-cheatsheet.html" target="_blank">Cheatsheet for dplyr join functions</a> by <a href="https://jennybryan.org/about/" target="_blank">Jenny Bryan</a> and focus on three small datasets, <code>superheroes</code>, <code>publishers</code>, and <code>avengers</code>, to illustrate the different <em>join</em> types and other ways to combine datasets in R and Radiant. The data are also available in csv format through the links below:</p>
 <ul>
 <li><a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/superheroes.csv" target="_blank">superheroes.csv</a></li>
 <li><a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/publishers.csv" target="_blank">publishers.csv</a></li>
@@ -623,57 +623,6 @@ yr_founded
 <tbody>
 <tr>
 <td style="text-align:left;">
-Batman
-</td>
-<td style="text-align:left;">
-good
-</td>
-<td style="text-align:left;">
-male
-</td>
-<td style="text-align:left;">
-DC
-</td>
-<td style="text-align:left;">
-1934
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Joker
-</td>
-<td style="text-align:left;">
-bad
-</td>
-<td style="text-align:left;">
-male
-</td>
-<td style="text-align:left;">
-DC
-</td>
-<td style="text-align:left;">
-1934
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Catwoman
-</td>
-<td style="text-align:left;">
-bad
-</td>
-<td style="text-align:left;">
-female
-</td>
-<td style="text-align:left;">
-DC
-</td>
-<td style="text-align:left;">
-1934
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 Magneto
 </td>
 <td style="text-align:left;">
@@ -721,6 +670,57 @@ Marvel
 </td>
 <td style="text-align:left;">
 1939
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Batman
+</td>
+<td style="text-align:left;">
+good
+</td>
+<td style="text-align:left;">
+male
+</td>
+<td style="text-align:left;">
+DC
+</td>
+<td style="text-align:left;">
+1934
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Joker
+</td>
+<td style="text-align:left;">
+bad
+</td>
+<td style="text-align:left;">
+male
+</td>
+<td style="text-align:left;">
+DC
+</td>
+<td style="text-align:left;">
+1934
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Catwoman
+</td>
+<td style="text-align:left;">
+bad
+</td>
+<td style="text-align:left;">
+female
+</td>
+<td style="text-align:left;">
+DC
+</td>
+<td style="text-align:left;">
+1934
 </td>
 </tr>
 <tr>
@@ -1528,31 +1528,38 @@ Dark Horse Comics
 <div id="bind-columns" class="section level3">
 <h3 class="hasAnchor">
 <a href="#bind-columns" class="anchor"></a>Bind columns</h3>
+<pre><code>## New names:
+## * name -&gt; name...1
+## * alignment -&gt; alignment...2
+## * gender -&gt; gender...3
+## * publisher -&gt; publisher...4
+## * name -&gt; name...5
+## * ...</code></pre>
 <table class="table table table-condensed table-hover">
 <thead><tr>
 <th style="text-align:left;">
-name
+name…1
 </th>
 <th style="text-align:left;">
-alignment
+alignment…2
 </th>
 <th style="text-align:left;">
-gender
+gender…3
 </th>
 <th style="text-align:left;">
-publisher
+publisher…4
 </th>
 <th style="text-align:left;">
-name1
+name…5
 </th>
 <th style="text-align:left;">
-alignment1
+alignment…6
 </th>
 <th style="text-align:left;">
-gender1
+gender…7
 </th>
 <th style="text-align:left;">
-publisher1
+publisher…8
 </th>
 </tr></thead>
 <tbody>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.4</span>
       </span>
     </div>
 
@@ -191,30 +191,30 @@
     <p>Filters can be used to view a sample from a selected dataset. For example, runif(nrow(.)) &gt; .9 could be used to sample approximately 10<!-- % of the rows in the data and 1:nrow(.) &lt; 101 would select only the first 100 rows in the data. Note: "." references the currently selected dataset. --></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>select</span>(<span class='no'>diamonds</span>, <span class='fl'>1</span>:<span class='fl'>3</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter_data</span>(<span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>"price &gt; max(.$price) - 100"</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 2 x 3</span><span>
+    <pre class="examples"><div class='input'><span class='fu'>select</span>(<span class='no'>diamonds</span>, <span class='fl'>1</span>:<span class='fl'>3</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter_data</span>(<span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>"price &gt; max(.$price) - 100"</span>)</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 2 x 3</span><span>
 #&gt;   price carat clarity
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span>  
-#&gt; </span><span style='color: #555555;'>1</span><span> </span><span style='text-decoration: underline;'>18</span><span>791  2.15 SI2    
-#&gt; </span><span style='color: #555555;'>2</span><span> </span><span style='text-decoration: underline;'>18</span><span>745  2.36 SI2    </div><div class='input'><span class='fu'>select</span>(<span class='no'>diamonds</span>, <span class='fl'>1</span>:<span class='fl'>3</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter_data</span>(<span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>"runif(nrow(.)) &gt; .995"</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 17 x 3</span><span>
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>  
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> </span><span style='text-decoration: underline;'>18</span><span>791  2.15 SI2    
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> </span><span style='text-decoration: underline;'>18</span><span>745  2.36 SI2    </div><div class='input'><span class='fu'>select</span>(<span class='no'>diamonds</span>, <span class='fl'>1</span>:<span class='fl'>3</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter_data</span>(<span class='kw'>filt</span> <span class='kw'>=</span> <span class='st'>"runif(nrow(.)) &gt; .995"</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 17 x 3</span><span>
 #&gt;    price carat clarity
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span>  
-#&gt; </span><span style='color: #555555;'> 1</span><span>   650  0.34 SI1    
-#&gt; </span><span style='color: #555555;'> 2</span><span>   743  0.33 SI1    
-#&gt; </span><span style='color: #555555;'> 3</span><span>  </span><span style='text-decoration: underline;'>3</span><span>774  0.83 VVS1   
-#&gt; </span><span style='color: #555555;'> 4</span><span>  </span><span style='text-decoration: underline;'>1</span><span>214  0.5  SI1    
-#&gt; </span><span style='color: #555555;'> 5</span><span>   589  0.32 SI1    
-#&gt; </span><span style='color: #555555;'> 6</span><span>   989  0.41 VS1    
-#&gt; </span><span style='color: #555555;'> 7</span><span>  </span><span style='text-decoration: underline;'>2</span><span>715  0.8  SI2    
-#&gt; </span><span style='color: #555555;'> 8</span><span> </span><span style='text-decoration: underline;'>11</span><span>826  1.51 VVS2   
-#&gt; </span><span style='color: #555555;'> 9</span><span>  </span><span style='text-decoration: underline;'>2</span><span>407  0.7  SI1    
-#&gt; </span><span style='color: #555555;'>10</span><span>   974  0.46 VVS1   
-#&gt; </span><span style='color: #555555;'>11</span><span>   969  0.41 SI1    
-#&gt; </span><span style='color: #555555;'>12</span><span> </span><span style='text-decoration: underline;'>13</span><span>827  2.24 SI2    
-#&gt; </span><span style='color: #555555;'>13</span><span>  </span><span style='text-decoration: underline;'>2</span><span>096  0.54 IF     
-#&gt; </span><span style='color: #555555;'>14</span><span>  </span><span style='text-decoration: underline;'>4</span><span>375  1.04 SI2    
-#&gt; </span><span style='color: #555555;'>15</span><span>   911  0.3  VS2    
-#&gt; </span><span style='color: #555555;'>16</span><span>  </span><span style='text-decoration: underline;'>1</span><span>320  0.55 SI1    
-#&gt; </span><span style='color: #555555;'>17</span><span>   687  0.31 VVS1   </div></span></pre>
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>  
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>   650  0.34 SI1    
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>   743  0.33 SI1    
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>  </span><span style='text-decoration: underline;'>3</span><span>774  0.83 VVS1   
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>  </span><span style='text-decoration: underline;'>1</span><span>214  0.5  SI1    
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>   589  0.32 SI1    
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>   989  0.41 VS1    
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>  </span><span style='text-decoration: underline;'>2</span><span>715  0.8  SI2    
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> </span><span style='text-decoration: underline;'>11</span><span>826  1.51 VVS2   
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>  </span><span style='text-decoration: underline;'>2</span><span>407  0.7  SI1    
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span>   974  0.46 VVS1   
+#&gt; </span><span style='color: #BCBCBC;'>11</span><span>   969  0.41 SI1    
+#&gt; </span><span style='color: #BCBCBC;'>12</span><span> </span><span style='text-decoration: underline;'>13</span><span>827  2.24 SI2    
+#&gt; </span><span style='color: #BCBCBC;'>13</span><span>  </span><span style='text-decoration: underline;'>2</span><span>096  0.54 IF     
+#&gt; </span><span style='color: #BCBCBC;'>14</span><span>  </span><span style='text-decoration: underline;'>4</span><span>375  1.04 SI2    
+#&gt; </span><span style='color: #BCBCBC;'>15</span><span>   911  0.3  VS2    
+#&gt; </span><span style='color: #BCBCBC;'>16</span><span>  </span><span style='text-decoration: underline;'>1</span><span>320  0.55 SI1    
+#&gt; </span><span style='color: #BCBCBC;'>17</span><span>   687  0.31 VVS1   </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

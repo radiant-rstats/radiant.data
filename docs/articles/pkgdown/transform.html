@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.4</span>
       </span>
     </div>
 
@@ -345,9 +345,9 @@
 </ol>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>rec_iq =<span class="st"> </span><span class="kw"><a href="../../reference/xtile.html">xtile</a></span>(recency, <span class="dv">5</span>, <span class="dt">rev =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <ol start="19" style="list-style-type: decimal">
-<li>To remove text from entries in a character or factor variable use <code>sub</code> to remove only the first instance or <code>gsub</code> to remove all instances. For example, suppose a each row for a variable <code>bk_score</code> has the letters “ltv” before a number (e.g., “ltv150”). We could replace each occurrence of “ltv” by "" as follows:</li>
+<li>To remove text from entries in a character or factor variable use <code>sub</code> to remove only the first instance or <code>gsub</code> to remove all instances. For example, suppose each row for a variable <code>bk_score</code> has the letters “clv” before a number (e.g., “clv150”). We could replace each occurrence of “clv” by "" as follows:</li>
 </ol>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>bk_score =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"ltv"</span>, <span class="st">""</span>, bk_score)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>bk_score =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"clv"</span>, <span class="st">""</span>, bk_score)</span></code></pre></div>
 <p>Note: For examples 7, 8, and 15 above you may need to change the new variable to type <code>factor</code> before using it for further analysis (see also <code>Change type</code> above)</p>
 </div>
 </div>
