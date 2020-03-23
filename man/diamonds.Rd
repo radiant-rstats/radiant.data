@@ -4,7 +4,9 @@
 \name{diamonds}
 \alias{diamonds}
 \title{Diamond prices}
-\format{A data frame with 3000 rows and 10 variables}
+\format{
+A data frame with 3000 rows and 10 variables
+}
 \usage{
 data(diamonds)
 }

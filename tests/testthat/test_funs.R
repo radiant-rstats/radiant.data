@@ -38,8 +38,11 @@ test_that("sshhr", {
 })
 
 test_that("get_data", {
-  get_data(mtcars, "mpg:disp", filt = "mpg > 20", rows = 1:5) %>%
-    expect_equal(., mtcars[mtcars$mpg > 20, c("mpg", "cyl", "disp")][1:5, 1:3] %>% set_rownames(1:5))
+  res1 <- get_data(mtcars, "mpg:disp", filt = "mpg > 20", rows = 1:5)
+  rownames(res1) <- seq_len(nrow(res1))
+  res2 <- mtcars[mtcars$mpg > 20, c("mpg", "cyl", "disp")][1:5, 1:3]
+  rownames(res2) <- seq_len(nrow(res2))
+  expect_equal(res1, res2)
 })
 
 test_that("get_class", {

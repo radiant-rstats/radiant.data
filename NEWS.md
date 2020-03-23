@@ -1,3 +1,7 @@
+# radiant.data 1.3.4
+
+* Minor adjustments in anticipation of dplyr 1.0.0
+
 # radiant.data 1.3.3
 
 * Function to calculate "mode"

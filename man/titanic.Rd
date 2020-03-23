@@ -4,7 +4,9 @@
 \name{titanic}
 \alias{titanic}
 \title{Survival data for the Titanic}
-\format{A data frame with 1043 rows and 10 variables}
+\format{
+A data frame with 1043 rows and 10 variables
+}
 \usage{
 data(titanic)
 }

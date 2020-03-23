@@ -2,7 +2,7 @@
 
 There are six _join_ (or _merge_) options available in Radiant from the <a href="http://www.rdocumentation.org/packages/dplyr" target="_blank">dplyr</a> package developed by Hadley Wickham et.al.
 
-The examples below are adapted from the <a href="http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html" target="_blank">Cheatsheet for dplyr join functions</a> by <a href="http://www.stat.ubc.ca/~jenny/" target="_blank">Jenny Bryan</a> and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and other ways to combine datasets in R and Radiant. The data are also available in csv format through the links below:
+The examples below are adapted from the <a href="https://stat545.com/join-cheatsheet.html" target="_blank">Cheatsheet for dplyr join functions</a> by <a href="https://jennybryan.org/about/" target="_blank">Jenny Bryan</a> and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and other ways to combine datasets in R and Radiant. The data are also available in csv format through the links below:
 
 * <a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/superheroes.csv" target = "_blank">superheroes.csv</a>
 * <a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/publishers.csv" target = "_blank">publishers.csv</a>
@@ -271,27 +271,6 @@ left_join(superheroes, publishers, by = "publisher")
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> Batman </td>
-   <td style="text-align:left;"> good </td>
-   <td style="text-align:left;"> male </td>
-   <td style="text-align:left;"> DC </td>
-   <td style="text-align:left;"> 1934 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Joker </td>
-   <td style="text-align:left;"> bad </td>
-   <td style="text-align:left;"> male </td>
-   <td style="text-align:left;"> DC </td>
-   <td style="text-align:left;"> 1934 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Catwoman </td>
-   <td style="text-align:left;"> bad </td>
-   <td style="text-align:left;"> female </td>
-   <td style="text-align:left;"> DC </td>
-   <td style="text-align:left;"> 1934 </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> Magneto </td>
    <td style="text-align:left;"> bad </td>
    <td style="text-align:left;"> male </td>
@@ -311,6 +290,27 @@ left_join(superheroes, publishers, by = "publisher")
    <td style="text-align:left;"> female </td>
    <td style="text-align:left;"> Marvel </td>
    <td style="text-align:left;"> 1939 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Batman </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> DC </td>
+   <td style="text-align:left;"> 1934 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Joker </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> DC </td>
+   <td style="text-align:left;"> 1934 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Catwoman </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> DC </td>
+   <td style="text-align:left;"> 1934 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> NA </td>
@@ -776,14 +776,14 @@ bind_rows(avengers, superheroes)
 <table class='table table-condensed table-hover' style='width:70%;'>
  <thead>
   <tr>
-   <th style="text-align:left;"> name </th>
-   <th style="text-align:left;"> alignment </th>
-   <th style="text-align:left;"> gender </th>
-   <th style="text-align:left;"> publisher </th>
-   <th style="text-align:left;"> name1 </th>
-   <th style="text-align:left;"> alignment1 </th>
-   <th style="text-align:left;"> gender1 </th>
-   <th style="text-align:left;"> publisher1 </th>
+   <th style="text-align:left;"> name...1 </th>
+   <th style="text-align:left;"> alignment...2 </th>
+   <th style="text-align:left;"> gender...3 </th>
+   <th style="text-align:left;"> publisher...4 </th>
+   <th style="text-align:left;"> name...5 </th>
+   <th style="text-align:left;"> alignment...6 </th>
+   <th style="text-align:left;"> gender...7 </th>
+   <th style="text-align:left;"> publisher...8 </th>
   </tr>
  </thead>
 <tbody>

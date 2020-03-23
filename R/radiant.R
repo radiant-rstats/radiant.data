@@ -83,6 +83,7 @@ launch <- function(package = "radiant.data", run = "viewer", state, ...) {
 
 #' Launch the radiant.data app in the default web browser
 #'
+#' @description Launch the radiant.data app in the default web browser
 #' @param state Path to statefile to load
 #' @param ... additional arguments to pass to shiny::runApp (e.g, port = 8080)
 #'

@@ -17,5 +17,5 @@ weighted.sd(x, wt, na.rm = TRUE)
 Weighted standard deviation
 }
 \details{
-Calculated a weighted standard deviation
+Calculate weighted standard deviation
 }

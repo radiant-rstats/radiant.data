@@ -2,7 +2,7 @@
 
 There are six _join_ (or _merge_) options available in Radiant from the <a href="http://www.rdocumentation.org/packages/dplyr" target="_blank">dplyr</a> package developed by Hadley Wickham et.al.
 
-The examples below are adapted from the <a href="http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html" target="_blank">Cheatsheet for dplyr join functions</a> by <a href="http://www.stat.ubc.ca/~jenny/" target="_blank">Jenny Bryan</a> and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and other ways to combine datasets in R and Radiant. The data are also available in csv format through the links below:
+The examples below are adapted from the <a href="https://stat545.com/join-cheatsheet.html" target="_blank">Cheatsheet for dplyr join functions</a> by <a href="https://jennybryan.org/about/" target="_blank">Jenny Bryan</a> and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and other ways to combine datasets in R and Radiant. The data are also available in csv format through the links below:
 
 * <a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/superheroes.csv" target = "_blank">superheroes.csv</a>
 * <a href="https://github.com/radiant-rstats/docs/blob/gh-pages/examples/publishers.csv" target = "_blank">publishers.csv</a>
@@ -13,7 +13,7 @@ tab_small <- "class='table table-condensed table-hover' style='width:30%;'"
 tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
 data(superheroes, package = "radiant.data", envir = environment())
 knitr::kable(
-  superheroes, align = 'l', format = 'html', 
+  superheroes, align = 'l', format = 'html',
   caption = "Superheroes", table.attr = tab_big
 )
 ```
@@ -21,7 +21,7 @@ knitr::kable(
 ```{r results = 'asis', echo = FALSE}
 data(publishers, package = "radiant.data", envir = environment())
 knitr::kable(
-  publishers, align = 'l', format = 'html', 
+  publishers, align = 'l', format = 'html',
   caption = "Publishers", table.attr = tab_small
 )
 ```

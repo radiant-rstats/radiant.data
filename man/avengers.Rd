@@ -4,7 +4,9 @@
 \name{avengers}
 \alias{avengers}
 \title{Avengers}
-\format{A data frame with 7 rows and 4 variables}
+\format{
+A data frame with 7 rows and 4 variables
+}
 \usage{
 data(avengers)
 }

@@ -4,7 +4,9 @@
 \name{publishers}
 \alias{publishers}
 \title{Comic publishers}
-\format{A data frame with 3 rows and 2 variables}
+\format{
+A data frame with 3 rows and 2 variables
+}
 \usage{
 data(publishers)
 }

@@ -430,7 +430,7 @@ show_duplicated <- function(.tbl, ...) {
 
 #' Weighted standard deviation
 #'
-#' @details Calculated a weighted standard deviation
+#' @details Calculate weighted standard deviation
 #'
 #' @param x Numeric vector
 #' @param wt Numeric vector of weights
