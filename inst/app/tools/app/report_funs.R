@@ -323,6 +323,11 @@ observeEvent(input$report_ignore, {
 ## Knit for report in Radiant
 knit_it <- function(report, type = "rmd") {
 
+  ## may be needed on windows when text has been copy-and-pasted
+  ## from a pdf
+  report <- gsub("\r\n", "\n", report) %>%
+    gsub("\r", "\n", .)
+
   if (type == "rmd") {
     report <- gsub("\\\\\\\\\\s*\n", "\\\\\\\\\\\\\\\\\n", report)
   }

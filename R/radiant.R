@@ -21,12 +21,12 @@
 launch <- function(package = "radiant.data", run = "viewer", state, ...) {
   ## check if package attached
   if (!paste0("package:", package) %in% search()) {
-    if (!suppressWarnings(suppressMessages(suppressPackageStartupMessages(require(package, character.only = TRUE)))))  {
+    if (!suppressWarnings(suppressMessages(suppressPackageStartupMessages(require(package, character.only = TRUE))))) {
       stop(sprintf("Calling %s start function but %s is not installed.", package, package))
     }
   }
 
- ## from Yihui's DT::datatable function
+  ## from Yihui's DT::datatable function
   oop <- base::options(
     width = max(getOption("width", 250), 250),
     scipen = max(getOption("scipen", 100), 100),
@@ -149,7 +149,6 @@ install_webshot <- function() {
 #
 #' @examples
 #' foo <- data.frame(price = 1:5) %>% set_attr("description", "price set in experiment ...")
-#'
 #' @export
 set_attr <- function(x, which, value) `attr<-`(x, which, value)
 
@@ -178,7 +177,6 @@ copy_attr <- function(to, from, attr) {
 #' @examples
 #' foo <- "some text" %>% add_class("text")
 #' foo <- "some text" %>% add_class(c("text", "another class"))
-#'
 #' @export
 add_class <- function(x, cl) `class<-`(x, c(cl, class(x)))
 
@@ -187,7 +185,6 @@ add_class <- function(x, cl) `class<-`(x, c(cl, class(x)))
 #' @return A vector of stars
 #' @examples
 #' sig_stars(c(.0009, .049, .009, .4, .09))
-#'
 #' @export
 sig_stars <- function(pval) {
   sapply(pval, function(x) x < c(.001, .01, .05, .1)) %>%
@@ -204,7 +201,6 @@ sig_stars <- function(pval) {
 #'
 #' @examples
 #' sshh(library(dplyr))
-#'
 #' @export
 sshh <- function(...) {
   suppressWarnings(suppressMessages(...))
@@ -219,7 +215,6 @@ sshh <- function(...) {
 #'
 #' @examples
 #' sshhr(library(dplyr))
-#'
 #' @export
 sshhr <- function(...) suppressWarnings(suppressMessages(...))
 
@@ -252,13 +247,12 @@ find_home <- function() {
 #'
 #' @examples
 #' get_data(mtcars, vars = "cyl:vs", filt = "mpg > 25")
-#' get_data(mtcars , vars = c("mpg", "cyl"), rows = 1:10)
-#'
+#' get_data(mtcars, vars = c("mpg", "cyl"), rows = 1:10)
 #' @export
 get_data <- function(
-  dataset, vars = "", filt = "",
-  rows = NULL, na.rm = TRUE,
-  envir = c()
+                     dataset, vars = "", filt = "",
+                     rows = NULL, na.rm = TRUE,
+                     envir = c()
 ) {
 
   filt <- gsub("\\n", "", filt) %>%
@@ -273,9 +267,9 @@ get_data <- function(
       stop(call. = FALSE)
   }} %>%
     {if ("grouped_df" %in% class(.)) ungroup(.) else .} %>% ## ungroup data if needed
-    {if (filt == "") . else filter_data(., filt)} %>%        ## apply data_filter
+    {if (filt == "") . else filter_data(., filt)} %>% ## apply data_filter
     {if (is.null(rows)) . else .[rows, , drop = FALSE]} %>%
-    {if (is_empty(vars[1])) . else select(., !!! if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)} %>%
+    {if (is_empty(vars[1])) . else select(., !!!if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)} %>%
     {if (na.rm) na.omit(.) else .}
 }
 
@@ -400,7 +394,6 @@ choose_dir <- function(...) {
 #'
 #' @examples
 #' get_class(mtcars)
-#'
 #' @export
 get_class <- function(dat) {
   sapply(dat, function(x) class(x)[1]) %>%
@@ -432,7 +425,6 @@ get_class <- function(dat) {
 #' is_empty(c("", "something"))
 #' is_empty(c(NA, 1:100))
 #' is_empty(mtcars)
-#'
 #' @export
 is_empty <- function(x, empty = "\\s*") {
   is_not(x) || (length(x) == 1 && grepl(paste0("^", empty, "$"), x))
@@ -450,7 +442,6 @@ is_empty <- function(x, empty = "\\s*") {
 #' is_string(c("data", ""))
 #' is_string(NULL)
 #' is_string(NA)
-#'
 #' @export
 is_string <- function(x) {
   length(x) == 1 && is.character(x) && !is_empty(x)
@@ -481,7 +472,6 @@ is_double <- function(x) {
 #' paste0("var", 1:3) %>% iterms(2)
 #' paste0("var", 1:3) %>% iterms(3)
 #' paste0("var", 1:3) %>% iterms(2, sep = ".")
-#'
 #' @export
 iterms <- function(vars, nway = 2, sep = ":") {
   sapply(2:min(as.integer(nway), length(vars)), function(x) apply(combn(vars, x), 2, paste, collapse = sep)) %>%
@@ -499,7 +489,6 @@ iterms <- function(vars, nway = 2, sep = ":") {
 #' @examples
 #' qterms(c("a", "b"), 3)
 #' qterms(c("a", "b"), 2)
-#'
 #' @export
 qterms <- function(vars, nway = 2) {
   sapply(2:as.integer(nway), function(x) glue("I({vars}^{x})")) %>%
@@ -516,7 +505,6 @@ qterms <- function(vars, nway = 2) {
 #' @examples
 #'
 #' copy_from(radiant.data, get_data)
-#'
 #' @export
 copy_from <- function(.from, ...) {
   ## copied from import:::symbol_list and import:::symbol_as_character by @smbache
@@ -554,7 +542,6 @@ copy_from <- function(.from, ...) {
 #'
 #' @examples
 #' copy_all(radiant.data)
-#'
 #' @export
 copy_all <- function(.from) {
   from <- as.character(substitute(.from))
@@ -586,10 +573,9 @@ copy_all <- function(.from) {
 #' @return A character vector with labels for a confidence interval
 #'
 #' @examples
-#' ci_label("less",.95)
-#' ci_label("two.sided",.95)
-#' ci_label("greater",.9)
-#'
+#' ci_label("less", .95)
+#' ci_label("two.sided", .95)
+#' ci_label("greater", .9)
 #' @export
 ci_label <- function(alt = "two.sided", cl = .95, dec = 3) {
   if (alt == "less") {
@@ -615,10 +601,9 @@ ci_label <- function(alt = "two.sided", cl = .95, dec = 3) {
 #' @return A vector with values at a confidence level
 #'
 #' @examples
-#' ci_perc(0:100, "less",.95)
-#' ci_perc(0:100, "greater",.95)
-#' ci_perc(0:100, "two.sided",.80)
-#'
+#' ci_perc(0:100, "less", .95)
+#' ci_perc(0:100, "greater", .95)
+#' ci_perc(0:100, "two.sided", .80)
 #' @export
 ci_perc <- function(dat, alt = "two.sided", cl = .95) {
   probs <- if (alt == "two.sided") {
@@ -649,7 +634,6 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #'   format_df(dec = 2, perc = TRUE)
 #' data.frame(x = c(1L, 2L, NA), y = c(NA, 1.008, 2.8)) %>%
 #'   format_df(dec = 2)
-#'
 #' @export
 format_df <- function(tbl, dec = NULL, perc = FALSE, mark = "", na.rm = FALSE, ...) {
   frm <- function(x, ...) {
@@ -687,11 +671,10 @@ format_df <- function(tbl, dec = NULL, perc = FALSE, mark = "", na.rm = FALSE, .
 #' format_nr(c(1, 1.9, 1.008, 1.00), drop0trailing = TRUE)
 #' format_nr(NA)
 #' format_nr(NULL)
-#'
 #' @export
 format_nr <- function(
-  x, sym = "", dec = 2, perc = FALSE,
-  mark = ",", na.rm = TRUE, ...
+                      x, sym = "", dec = 2, perc = FALSE,
+                      mark = ",", na.rm = TRUE, ...
 ) {
   if (is.data.frame(x)) x <- x[[1]]
   if (na.rm && length(x) > 0) x <- na.omit(x)
@@ -710,7 +693,6 @@ format_nr <- function(
 #' @examples
 #' data.frame(x = as.factor(c("a", "b")), y = c(1L, 2L), z = c(-0.0005, 3.1)) %>%
 #'   round_df(dec = 2)
-#'
 #' @export
 round_df <- function(tbl, dec = 3) {
   mutate_if(tbl, is_double, .funs = ~ round(., dec))
@@ -947,7 +929,7 @@ pp975 <- function(..., na.rm = TRUE) pfun(..., fun = p975, na.rm = na.rm)
 
 #' @rdname pfun
 #' @export
-pp99 <- function(..., na.rm = TRUE)  pfun(..., fun = p99, na.rm = na.rm)
+pp99 <- function(..., na.rm = TRUE) pfun(..., fun = p99, na.rm = na.rm)
 
 #' Method to store variables in a dataset in Radiant
 #'
@@ -1046,7 +1028,7 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
     dots <- rlang::parse_exprs(pred_cmd) %>%
       set_names(cmd_vars)
 
-    dataset <- try(dataset %>% mutate(!!! dots), silent = TRUE)
+    dataset <- try(dataset %>% mutate(!!!dots), silent = TRUE)
   }
 
   ind <- mutate(dataset, imf___ = seq_len(nrows)) %>%
@@ -1068,7 +1050,6 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
 #' is_not(c())
 #' is_not(list())
 #' is_not(data.frame())
-#'
 #' @export
 is_not <- function(x) {
   length(x) == 0 || (length(x) == 1 && is.na(x))
@@ -1162,7 +1143,7 @@ render.plotly <- function(object, shiny = shiny::getDefaultReactiveDomain(), ...
 
     ## see https://github.com/ropensci/plotly/issues/1171
     # if (is.null(object$height)) {
-      # message("\n\nThe height of (gg)plotly objects may not be correct in Preview. Height will be correctly set in saved reports however.\n\n")
+    # message("\n\nThe height of (gg)plotly objects may not be correct in Preview. Height will be correctly set in saved reports however.\n\n")
     # }
 
     plotly::renderPlotly(object)
@@ -1259,21 +1240,22 @@ fix_smart <- function(text, all = FALSE) {
 
   if (all) {
     ## to remove all non-ascii symbols use ...
-    gsub("[\x80-\xFF]", "", text)
+    text <- gsub("[\x80-\xFF]", "", text)
   } else {
     ## based on https://stackoverflow.com/a/1262210/1974918
     ## based on https://stackoverflow.com/a/54467895/1974918
-    gsub("\u2022", "*", text) %>%
+    text <- gsub("\u2022", "*", text) %>%
       gsub("\u2026", "...", .) %>%
       gsub("\u2013", "-", .) %>%
       gsub("\u2019", "'", .) %>%
       gsub("\u2018", "'", .) %>%
       gsub("\u201D", '"', .) %>%
-      gsub("\u201C", '"', .) %>%
+      gsub("\u201C", '"', .)
       # stringi::stri_trans_general(., "ascii") %>%
-      gsub("\r\n", "\n", .) %>%
-      gsub("\f", "\n", .)
   }
+  gsub("\r\n", "\n", text) %>%
+    gsub("\r", "\n", .) %>%
+    gsub("\f", "\n", .)
 }
 
 #' Register a data.frame or list in Radiant
@@ -1445,12 +1427,12 @@ parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
 #' @param radiant Should returned code be formatted for use with other code generated by Radiant?
 #' @examples
 #' if (interactive()) {
-#' read_files(clipboard = FALSE)
+#'   read_files(clipboard = FALSE)
 #' }
 #' @importFrom rstudioapi selectFile isAvailable
 #' @export
 read_files <- function(
-  path, pdir = "", type = "rmd", to = "", clipboard = TRUE, radiant = FALSE) {
+                       path, pdir = "", type = "rmd", to = "", clipboard = TRUE, radiant = FALSE) {
 
   ## if no path is provided, an interactive file browser will be opened
   if (missing(path) || is_empty(path)) {
@@ -1514,9 +1496,9 @@ read_files <- function(
   } else if (grepl("sqlite", pp$fext)) {
     obj <- glue('{pp$objname}_tab1')
     cmd <- "## see https://db.rstudio.com/dplyr/\n" %>%
-        glue('library(DBI)\ncon <- dbConnect(RSQLite::SQLite(), dbname = {pp$rpath})\n(tables <- dbListTables(con))\n{obj} <- dplyr::tbl(con, from = tables[1]) %>% collect()\ndbDisconnect(con)\nregister("{obj}")')
+      glue('library(DBI)\ncon <- dbConnect(RSQLite::SQLite(), dbname = {pp$rpath})\n(tables <- dbListTables(con))\n{obj} <- dplyr::tbl(con, from = tables[1]) %>% collect()\ndbDisconnect(con)\nregister("{obj}")')
   } else if (pp$fext == "sql") {
-    if (type == "rmd")  {
+    if (type == "rmd") {
       cmd <- "/* see http://rmarkdown.rstudio.com/authoring_knitr_engines.html */\n" %>%
         paste0(paste0(readLines(pp$path), collapse = "\n"))
       cmd <- glue('\n\n```{sql, connection = con, max.print = 20}\n<<cmd>>\n```\n\n', .open = "<<", .close = ">>")
@@ -1525,7 +1507,7 @@ read_files <- function(
       cmd <- glue('{to} <- readLines({pp$rpath})')
     }
   } else if (pp$fext %in% c("py", "css", "js")) {
-    if (type == "rmd")  {
+    if (type == "rmd") {
       cmd <- "## see http://rmarkdown.rstudio.com/authoring_knitr_engines.html\n" %>%
         paste0(paste0(readLines(pp$path), collapse = "\n"))
       cmd <- glue('\n\n```{<<sub("py", "python", pp$fext)>>}\n<<cmd>>\n```\n\n', .open = "<<", .close = ">>")
@@ -1534,7 +1516,7 @@ read_files <- function(
       cmd <- glue('{to} <- readLines({pp$rpath})')
     }
   } else if (pp$fext %in% c("md", "rmd")) {
-    if (type == "rmd")  {
+    if (type == "rmd") {
       cmd <- glue('\n```{r child = <<pp$rpath>>}\n```\n', .open = "<<", .close = ">>")
       type <- ""
     } else {
@@ -1543,7 +1525,7 @@ read_files <- function(
   } else if (pp$fext == "txt") {
     cmd <- glue('{to} <- readLines({pp$rpath})')
   } else if (pp$fext %in% c("jpg", "jpeg", "png", "pdf")) {
-    if (type == "rmd")  {
+    if (type == "rmd") {
       cmd <- glue('\n\n![](`r {pp$rpath}`)\n\n')
       if (!grepl("file.path", cmd)) cmd <- sub("`r \"", "", cmd) %>% sub("\"`", "", .)
       type <- ""
@@ -1581,4 +1563,3 @@ read_files <- function(
     return(invisible(cmd))
   }
 }
-
