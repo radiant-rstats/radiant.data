@@ -1,3 +1,7 @@
+# radiant.data 1.3.5
+
+* Fix for `\r` line-endings in _Report > Rmd_ on Windows. Issue was most likely to occur when copy-and-pasting text from PDF into _Report > Rmd_.
+
 # radiant.data 1.3.4
 
 * Minor adjustments in anticipation of dplyr 1.0.0

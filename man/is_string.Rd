@@ -21,5 +21,4 @@ is_string("data")
 is_string(c("data", ""))
 is_string(NULL)
 is_string(NA)
-
 }

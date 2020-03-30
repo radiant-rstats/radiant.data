@@ -20,5 +20,4 @@ Equivalent of source with local=TRUE for package functions. Written by smbache, 
 \examples{
 
 copy_from(radiant.data, get_data)
-
 }

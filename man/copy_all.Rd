@@ -17,5 +17,4 @@ Equivalent of source with local=TRUE for all package functions. Adapted from fun
 }
 \examples{
 copy_all(radiant.data)
-
 }

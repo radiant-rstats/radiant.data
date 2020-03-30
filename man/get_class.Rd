@@ -20,5 +20,4 @@ Get variable class information for each column in a data.frame
 }
 \examples{
 get_class(mtcars)
-
 }

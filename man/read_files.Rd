@@ -34,6 +34,6 @@ Return code to read a file at the specified path. Will open a file browser if no
 }
 \examples{
 if (interactive()) {
-read_files(clipboard = FALSE)
+  read_files(clipboard = FALSE)
 }
 }

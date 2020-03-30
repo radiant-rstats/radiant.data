@@ -20,8 +20,7 @@ A vector with values at a confidence level
 Values at confidence levels
 }
 \examples{
-ci_perc(0:100, "less",.95)
-ci_perc(0:100, "greater",.95)
-ci_perc(0:100, "two.sided",.80)
-
+ci_perc(0:100, "less", .95)
+ci_perc(0:100, "greater", .95)
+ci_perc(0:100, "two.sided", .80)
 }

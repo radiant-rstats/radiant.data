@@ -17,5 +17,4 @@ Add stars based on p.values
 }
 \examples{
 sig_stars(c(.0009, .049, .009, .4, .09))
-
 }

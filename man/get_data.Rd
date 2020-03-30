@@ -30,6 +30,5 @@ Function is used in radiant to select variables and filter data based on user in
 }
 \examples{
 get_data(mtcars, vars = "cyl:vs", filt = "mpg > 25")
-get_data(mtcars , vars = c("mpg", "cyl"), rows = 1:10)
-
+get_data(mtcars, vars = c("mpg", "cyl"), rows = 1:10)
 }

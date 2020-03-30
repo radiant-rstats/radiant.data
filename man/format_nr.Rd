@@ -38,5 +38,4 @@ format_nr(c(1, 1.9, 1.008, 1.00))
 format_nr(c(1, 1.9, 1.008, 1.00), drop0trailing = TRUE)
 format_nr(NA)
 format_nr(NULL)
-
 }

@@ -20,8 +20,7 @@ A character vector with labels for a confidence interval
 Labels for confidence intervals
 }
 \examples{
-ci_label("less",.95)
-ci_label("two.sided",.95)
-ci_label("greater",.9)
-
+ci_label("less", .95)
+ci_label("two.sided", .95)
+ci_label("greater", .9)
 }

@@ -20,5 +20,4 @@ Create a vector of quadratic and cubed terms for use in linear and logist regres
 \examples{
 qterms(c("a", "b"), 3)
 qterms(c("a", "b"), 2)
-
 }

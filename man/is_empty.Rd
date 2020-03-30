@@ -32,5 +32,4 @@ is_empty(" something  ")
 is_empty(c("", "something"))
 is_empty(c(NA, 1:100))
 is_empty(mtcars)
-
 }

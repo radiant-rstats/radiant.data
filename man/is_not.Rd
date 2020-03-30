@@ -18,5 +18,4 @@ is_not(NULL)
 is_not(c())
 is_not(list())
 is_not(data.frame())
-
 }

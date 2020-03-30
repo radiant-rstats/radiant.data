@@ -23,5 +23,4 @@ Create a vector of interaction terms for linear and logistic regression
 paste0("var", 1:3) \%>\% iterms(2)
 paste0("var", 1:3) \%>\% iterms(3)
 paste0("var", 1:3) \%>\% iterms(2, sep = ".")
-
 }
