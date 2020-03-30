@@ -489,7 +489,7 @@ observeEvent(input$url_rds_load, {
   if (radiant.data::is_empty(input$url_rds)) return()
   url_rds <- gsub("^\\s+|\\s+$", "", input$url_rds)
 
-  objname <- basename(url_rds) %>% sub("\\.rds","",.) %>% sub("\\?.*$","",.)
+  objname <- basename(url_rds) %>% sub("\\.rds", "", .) %>% sub("\\?.*$", "", .)
 
   if (!objname == radiant.data::fix_names(objname)) {
     objname <- "rds_url"
