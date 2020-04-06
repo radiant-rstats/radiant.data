@@ -600,13 +600,13 @@ help_modal <- function(
 
   sprintf(
     "<div class='modal fade' id='%s' tabindex='-1' role='dialog' aria-labelledby='%s_label' aria-hidden='true'>
-       <div class='modal-dialog modal-dialog-lg'>
+       <div class='help-modal-dialog modal-dialog modal-lg'>
          <div class='modal-content'>
            <div class='modal-header'>
              <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
              <h4 class='modal-title' id='%s_label'>%s</h4>
              </div>
-           <div class='modal-body'>%s<br>
+           <div class='help-modal-body modal-body'>%s<br>
              &copy; %s (%s) <a rel='license' href='http://creativecommons.org/licenses/%s/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/%s.png' /></a>
            </div>
          </div>
@@ -627,13 +627,13 @@ help_and_report <- function(
 ) {
   sprintf(
     "<div class='modal fade' id='%s_help' tabindex='-1' role='dialog' aria-labelledby='%s_help_label' aria-hidden='true'>
-       <div class='modal-dialog'>
+       <div class='help-modal-dialog modal-dialog modal-lg'>
          <div class='modal-content'>
            <div class='modal-header'>
              <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
              <h4 class='modal-title' id='%s_help_label'>%s</h4>
              </div>
-           <div class='modal-body'>%s<br>
+           <div class='help-modal-body modal-body'>%s<br>
              &copy; %s (%s) <a rel='license' href='http://creativecommons.org/licenses/%s/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/%s.png' /></a>
            </div>
          </div>

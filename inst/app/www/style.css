@@ -45,18 +45,17 @@ table.dataTable tfoot td, table.dataTable thead td {
   margin-right: 10px;
 }
 
-.modal-dialog {
+.help-modal-dialog {
   padding-top: 80px;
-  padding-left: 80px;
-  width: 850px;
-  overflow-y: initial !important
+  /* overflow-y: initial !important */
 }
 
 .modal-sm {
+  padding-top: 80px;
   width: 600px;
 }
 
-.modal-body {
+.help-modal-body {
   max-height: 600px;
   overflow-y: auto;
 }
