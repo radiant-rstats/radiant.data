@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.6</span>
       </span>
     </div>
 
@@ -165,11 +165,12 @@
       <small>Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="radiant-data-1-3-5" class="section level1">
-<h1 class="page-header" data-toc-text="1.3.5">
-<a href="#radiant-data-1-3-5" class="anchor"></a>radiant.data 1.3.5<small> Unreleased </small>
+    <div id="radiant-data-1-3-6" class="section level1">
+<h1 class="page-header" data-toc-text="1.3.6">
+<a href="#radiant-data-1-3-6" class="anchor"></a>radiant.data 1.3.6<small> Unreleased </small>
 </h1>
 <ul>
+<li>Updated styling for formatting for modals (e.g., help pages) that will also allow improved sizing of the (shinyFiles) file browser</li>
 <li>Fix for <code>\r</code> line-endings in <em>Report &gt; Rmd</em> on Windows. Issue was most likely to occur when copy-and-pasting text from PDF into <em>Report &gt; Rmd</em>.</li>
 </ul>
 </div>
@@ -186,8 +187,8 @@
 <a href="#radiant-data-1-3-3" class="anchor"></a>radiant.data 1.3.3<small> Unreleased </small>
 </h1>
 <ul>
-<li>Function to calculate âmodeâ</li>
-<li>Fix for âspreadâ in Data &gt; Transform with column name includes â.â</li>
+<li>Function to calculate “mode”</li>
+<li>Fix for “spread” in Data &gt; Transform with column name includes “.”</li>
 </ul>
 </div>
     <div id="radiant-data-1-3-1" class="section level1">
@@ -208,7 +209,7 @@
 <li>Use <code>patchwork</code> for grouping multiple plots together</li>
 <li>Apply <code>refactor</code> to any type in the <em>Data &gt; Transform</em> UI</li>
 <li>Fix for <code>weighted.sd</code> when missing values differ for <code>x</code> and weights</li>
-<li>Avoid resetting the âColumn headerâ to its default value in <em>Data &gt; Explore</em> when other settings are changed.</li>
+<li>Avoid resetting the “Column header” to its default value in <em>Data &gt; Explore</em> when other settings are changed.</li>
 </ul>
 </div>
     <div id="radiant-data-1-2-3" class="section level1">
@@ -227,7 +228,7 @@
 <ul>
 <li>Use <code>zenburn</code> for code highlighting in Notebook and HTML report from <em>Report &gt; Rmd</em>
 </li>
-<li>Clean up âsf_volumesâ from the when radiant is stopped</li>
+<li>Clean up “sf_volumes” from the when radiant is stopped</li>
 </ul>
 </div>
     <div id="radiant-data-1-2-0" class="section level1">
@@ -235,7 +236,7 @@
 <a href="#radiant-data-1-2-0" class="anchor"></a>radiant.data 1.2.0<small> Unreleased </small>
 </h1>
 <ul>
-<li>Update action buttons that initiate a calculation when one or more relevant inputs are changed. For example, when a model should be re-estimated because the set of explanatory variables was changed by the user, a spinning ârefreshâ icon will be shown</li>
+<li>Update action buttons that initiate a calculation when one or more relevant inputs are changed. For example, when a model should be re-estimated because the set of explanatory variables was changed by the user, a spinning “refresh” icon will be shown</li>
 </ul>
 </div>
     <div id="radiant-data-1-1-8" class="section level1">
@@ -343,17 +344,17 @@
 <a href="#radiant-data-0-9-8-0" class="anchor"></a>radiant.data 0.9.8.0<small> Unreleased </small>
 </h1>
 <ul>
-<li>Added an âautosaveâ options. Use <code><a href="https://rdrr.io/r/base/options.html">options(radiant.autosave = c(10, 180)); radiant::radiant()</a></code> to auto-save the application state to the <code>~/.radiant.session</code> folder every 10 minutes for the next 180 minutes. This can be useful if radiant is being used during an exam, for example.</li>
+<li>Added an “autosave” options. Use <code><a href="https://rdrr.io/r/base/options.html">options(radiant.autosave = c(10, 180)); radiant::radiant()</a></code> to auto-save the application state to the <code>~/.radiant.session</code> folder every 10 minutes for the next 180 minutes. This can be useful if radiant is being used during an exam, for example.</li>
 <li>Emergency backups are now saved to <code>~/.radiant.session/r_some_id.state.rda</code>. The files should be automatically loaded when needed but can also be loaded as a regular radiant state file</li>
 <li>Replace option to load an <code>.rda</code> from from a URL in <em>Data &gt; Manage</em> to load <code>.rds</code> files instead</li>
-<li>Ensure variable and dataset names are valid for R (i.e., no spaces or symbols), âfixingâ the input as needed</li>
+<li>Ensure variable and dataset names are valid for R (i.e., no spaces or symbols), “fixing” the input as needed</li>
 <li>Fix to visualize now <code>ggplot::labs</code> no longer accepts a list as input</li>
 <li>Add option to generate square and cubed terms for use in linear and logistic regression in <code>radiant.model</code>
 </li>
 <li>Fix for error when trying to save invalid predictions in <code>radiant.model</code>. This action now generates a pop-up in the browser interface</li>
 <li>Add a specified description to a data.frame immediately on <code>register</code>
 </li>
-<li>Option to pass additional arguments to <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html">shiny::runApp</a></code> when starting radiant such as the port to use. For example, radiant.data::radiant.data(â<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>â, port = 8080)</li>
+<li>Option to pass additional arguments to <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html">shiny::runApp</a></code> when starting radiant such as the port to use. For example, radiant.data::radiant.data(“<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>”, port = 8080)</li>
 <li>Option for automatic cleanup of deprecated code in both <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
 </li>
 <li>Avoid attempt to fix deprecated code in <em>Report &gt; Rmd</em> if <code>pred_data = ""</code>
@@ -365,9 +366,9 @@
 </li>
 <li>Fix for directory set when using <code>Knit report</code> in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> <strong>without</strong> an Rstudio project. Will now correctly default to the working directory used in R(studio)</li>
 <li>Added option to change <code>smooth</code> setting for histograms with a density plot</li>
-<li>Similar to <code>pmin</code> and <code>pmax</code>, <code>pfun</code> et al.Â calculate summary statistics elementwise across multiple vectors</li>
+<li>Similar to <code>pmin</code> and <code>pmax</code>, <code>pfun</code> et al. calculate summary statistics elementwise across multiple vectors</li>
 <li>Add <code>Desktop</code> as a default directory to show in the <code>shinyFiles</code> file browser</li>
-<li>Load a state file on startup by providing a (relative) file path or a url. For example, radiant.data::radiant.data(â<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>â) or radiant.data::radiant.data(âassignment.state.rdaâ)</li>
+<li>Load a state file on startup by providing a (relative) file path or a url. For example, radiant.data::radiant.data(“<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>”) or radiant.data::radiant.data(“assignment.state.rda”)</li>
 <li>Update example report in <em>Report &gt; Rmd</em>
 </li>
 <li>Add <code>deregister</code> function to remove data in radiant from memory and the <code>datasets</code> dropdown list</li>
@@ -387,7 +388,7 @@
 <li>Apply <code>radiant.data::fix_names</code> to files loaded into radiant to ensure valid R-object names</li>
 <li>Use the content of the <code>Store filtered data as</code> input to name the csv download in <em>Data &gt; View</em>
 </li>
-<li>Add âtxtâ as a recognized file type for <code>Read files</code> in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
+<li>Add “txt” as a recognized file type for <code>Read files</code> in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
 </li>
 <li>Allow multiple <code>lines</code> or <code>loess</code> curves based on a selected <code>color</code> variable for scatter plots in <em>Data &gt; Visualize</em>
 </li>
@@ -395,7 +396,7 @@
 <li>Fix for <a href="https://github.com/radiant-rstats/radiant/issues/81"><a href='https://github.com/radiant-rstats/radiant.data/issues/81'>#81</a></a> when variables used in <em>Data &gt; Pivot</em> contain dots</li>
 <li>Fix for <code>radiant.project_dir</code> when no Rstudio project is used which could cause incorrect relative paths to be used</li>
 <li>Fix code formatting for <em>Report &gt; Rmd</em> when arguments include a list (e.g., ggplot labels)</li>
-<li>On Linux use a modal to show code in Report &gt; Rmd and Report &gt; R when reporting is set to âmanualâ</li>
+<li>On Linux use a modal to show code in Report &gt; Rmd and Report &gt; R when reporting is set to “manual”</li>
 <li>Use <code>is_double</code> to ensure dates are not treated as numeric variables in <em>Data &gt; View</em>
 </li>
 <li>Make sort and filter state of tables in Data &gt; Explore and Data &gt; Pivot available in Report &gt; Rmd</li>
@@ -426,8 +427,8 @@
 <li>
 <code>file.rename</code> failed using docker on windows when saving a report. Using <code>file.copy</code> instead</li>
 <li>Fix for <code>sf_volumes</code> used to set the root directories to load and save files</li>
-<li>Set default locale to âen_US.UTF-8â when using shiny-server unless <code><a href="https://rdrr.io/r/base/locales.html">Sys.getlocale(category = "LC_ALL")</a></code> what set to something other than âCâ</li>
-<li>Modal shown if and Rmd (R) file is not available when using âTo Rstudio (Rmd)â in <em>Report &gt; Rmd</em> or âTo Rstudio (R)â in <em>Report &gt; R</em>
+<li>Set default locale to “en_US.UTF-8” when using shiny-server unless <code><a href="https://rdrr.io/r/base/locales.html">Sys.getlocale(category = "LC_ALL")</a></code> what set to something other than “C”</li>
+<li>Modal shown if and Rmd (R) file is not available when using “To Rstudio (Rmd)” in <em>Report &gt; Rmd</em> or “To Rstudio (R)” in <em>Report &gt; R</em>
 </li>
 <li>Track progress loading (state) files</li>
 <li>Fix for <code>radiant.sf_volumes</code> used for the <code>shinyFiles</code> file browser</li>
@@ -443,7 +444,7 @@
 <a href="#radiant-data-0-9-5-3" class="anchor"></a>radiant.data 0.9.5.3<small> Unreleased </small>
 </h1>
 <ul>
-<li>Fix smart commaâs in data descriptions</li>
+<li>Fix smart comma’s in data descriptions</li>
 <li>Search and replace <code>desc(n)</code> in reports and replace by <code>desc(n_obs)</code>
 </li>
 <li>Revert to storing the r_data environment as a list on stop to avoid reference problems (<a href='https://github.com/josh1400'>@josh1400</a>)</li>
@@ -466,7 +467,7 @@
 <a href="#radiant-data-0-9-4-6" class="anchor"></a>radiant.data 0.9.4.6<small> Unreleased </small>
 </h1>
 <ul>
-<li>Donât update a reactive binding for an object if the binding already exists. See issue <a href="https://github.com/rstudio/shiny/issues/2065" class="uri">https://github.com/rstudio/shiny/issues/2065</a>
+<li>Don’t update a reactive binding for an object if the binding already exists. See issue <a href="https://github.com/rstudio/shiny/issues/2065" class="uri">https://github.com/rstudio/shiny/issues/2065</a>
 </li>
 <li>Fix to accommodate changes in <code>deparse</code> in R 3.5</li>
 <li>Fix for saving data in <em>Data &gt; Manage</em> and generating the relevant R-code</li>
@@ -692,8 +693,8 @@
 </li>
 <li>Fix to allow selecting and copying text output from <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
 </li>
-<li>Remove âfancyâ quotes from filters</li>
-<li>Known issue: The Rstudio viewer may not always close the viewer window when trying to stop the application with the <code>Stop</code> link in the navbar. As a work-around, use Rstudioâs stop buttons instead.</li>
+<li>Remove “fancy” quotes from filters</li>
+<li>Known issue: The Rstudio viewer may not always close the viewer window when trying to stop the application with the <code>Stop</code> link in the navbar. As a work-around, use Rstudio’s stop buttons instead.</li>
 </ul>
 </div>
 </div>
@@ -717,7 +718,7 @@
 <li>
 <em>Report &gt; Rmd</em> Load Report button can be used to load Rmarkdown file in the editor. It will also extract the source code from Notebook and HTML files with embedded Rmarkdown</li>
 <li>
-<em>Report &gt; Rmd</em> will read Rmd directly from Rstudio when âTo Rstudio (Rmd)â is selected. This will make it possible to use Rstudio Server Proâs <em>Share project</em> option for realtime collaboration in Radiant</li>
+<em>Report &gt; Rmd</em> will read Rmd directly from Rstudio when “To Rstudio (Rmd)” is selected. This will make it possible to use Rstudio Server Pro’s <em>Share project</em> option for realtime collaboration in Radiant</li>
 <li>Long lines of code generated for <em>Report &gt; Rmd</em> will be wrapped to enhance readability</li>
 <li>
 <em>Report &gt; R</em> is now equivalent to <em>Report &gt; Rmd</em> but in R-code format</li>
@@ -752,7 +753,7 @@
 </li>
 <li>Add selected dataset name as default table download name in <em>Data &gt; View</em>, <em>Data &gt; Pivot</em>, and <em>Data &gt; Explore</em>
 </li>
-<li>Use âstackâ as the default for histograms and frequency charts in <em>Data &gt; Visualize</em>
+<li>Use “stack” as the default for histograms and frequency charts in <em>Data &gt; Visualize</em>
 </li>
 <li>Cleanup <code>Stop &amp; Report</code> option in navbar</li>
 <li>Upgraded tidyr dependency to 0.7</li>
@@ -785,7 +786,7 @@
 <li>Reverse legend ordering in <em>Data &gt; Visualize</em> when axes are flipped using <code>coor_flip()</code>
 </li>
 <li>Added functions to choose.files and choose.dir. Uses JavaScript on Mac, utils::choose.files and utils::choose.dir on Windows, and reverts to file.choose on Linux</li>
-<li>Added <code>find_gdrive</code> to determine the path to a userâs local Google Drive folder if available</li>
+<li>Added <code>find_gdrive</code> to determine the path to a user’s local Google Drive folder if available</li>
 <li>
 <code>fixMs</code> for encoding in reports on Windows</li>
 </ul>
@@ -853,10 +854,10 @@
 </li>
 <li>Correctly handle decimal indicators when loading csv files in <em>Data &gt; Manage</em>
 </li>
-<li>Donât overwrite a dataset to combine if combine generates an error when user sets the the name of the combined data to that of an already selected dataset</li>
+<li>Don’t overwrite a dataset to combine if combine generates an error when user sets the the name of the combined data to that of an already selected dataset</li>
 <li>When multiple variables were selected, data were not correctly summarized in Data &gt; Transform</li>
 <li>Add (function) label to bar plot when x-variable is an integer</li>
-<li>Maintain order of variables in Data &gt; Visualize when using âcolorâ, âfillâ, âcombyâ, or âcombxâ</li>
+<li>Maintain order of variables in Data &gt; Visualize when using “color”, “fill”, “comby”, or “combx”</li>
 <li>Avoid warning when switching datasets in Data &gt; Transform and variables being summarized do not exists in the new dataset</li>
 <li>which.pmax produced a list but needed to be integer</li>
 <li>To customized predictions in radiant.model indexr must be able to customize the prediction dataframe</li>
@@ -891,7 +892,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
