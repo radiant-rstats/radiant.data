@@ -1,5 +1,6 @@
-# radiant.data 1.3.5
+# radiant.data 1.3.6
 
+* Updated styling for formatting for modals (e.g., help pages) that will also allow improved sizing of the (shinyFiles) file browser
 * Fix for `\r` line-endings in _Report > Rmd_ on Windows. Issue was most likely to occur when copy-and-pasting text from PDF into _Report > Rmd_.
 
 # radiant.data 1.3.4
