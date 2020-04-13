@@ -303,6 +303,7 @@ help_menu <- function(hlp) {
       tags$script(src = "js/returnTextInputBinding.js"),
       tags$script(src = "js/video_reset.js"),
       tags$script(src = "js/run_return.js"),
+      tags$script(src = "https://togetherjs.com/togetherjs-min.js"),
       # tags$script(src = "js/message-handler.js"),
       # tags$script(src = "js/draggable_modal.js"),
       tags$link(rel = "stylesheet", type = "text/css", href = "www/style.css"),
@@ -521,6 +522,12 @@ options(
         tabPanel(actionLink("state_save_link", "Save radiant state file", icon = icon("download"))),
         tabPanel(actionLink("state_load_link", "Load radiant state file", icon = icon("upload"))),
         tabPanel(actionLink("state_share", "Share radiant state", icon = icon("share"))),
+        tabPanel(
+          actionLink(
+            "colab_radiant", "Collaborate", icon = icon("user-plus"),
+            onclick = "TogetherJS(this); return false;"
+          )
+        ),
         tabPanel("View radiant state", uiOutput("state_view"), icon = icon("user")),
         "----", "Local",
         tabPanel(downloadLink("state_download", tagList(icon("download"), "Download radiant state file"))),
