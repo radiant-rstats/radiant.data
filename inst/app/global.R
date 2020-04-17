@@ -304,7 +304,7 @@ help_menu <- function(hlp) {
       tags$script(src = "js/video_reset.js"),
       tags$script(src = "js/run_return.js"),
       # tags$script('TogetherJSConfig_hubBase = "https://inconclusive-stitch-raft.glitch.me";'),
-      tags$script('TogetherJSConfig_hubBase = "https://togetherjs-hub.glitch.me/";'),
+      tags$script('TogetherJSConfig_hubBase = "https://togetherjs-hub.glitch.me/"; TogetherJSConfig_cloneClicks = true;'),
       tags$script(src = "https://togetherjs.com/togetherjs-min.js"),
       # tags$script(src = "js/message-handler.js"),
       # tags$script(src = "js/draggable_modal.js"),
