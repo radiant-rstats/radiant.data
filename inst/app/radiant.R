@@ -925,3 +925,22 @@ run_refresh <- function(
     updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play"))
   })
 }
+
+observeEvent(input$screenshot_link, {
+  showModal(
+    modalDialog(
+      title = "Radiant screenshot",
+      span(snapper::snapper_div(id = "screenshot_link_preview")),
+      footer = tagList(
+        snapper::download_button(
+          ui = "#screenshot_link_preview",
+          label = "Download screenshot",
+          filename = "radiant-screenshot.png"
+        ),
+        modalButton("Cancel"),
+      ),
+      size = "l",
+      easyClose = TRUE
+    )
+  )
+})

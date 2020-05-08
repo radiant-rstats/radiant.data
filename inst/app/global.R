@@ -513,7 +513,16 @@ options(
           uiOutput("r_view"),
           uiOutput("report_r"),
           icon = icon("code")
-        )
+        ),
+        tabPanel(
+          snapper::preview_link(
+            "screenshot_link", ui = "body", previewId = "screenshot_link_preview", label = "Take a screenshot",
+            opts = snapper::config(
+              ignoreElements = "function (el) {return el.className === 'dropdown-menu';}",
+            )
+          )
+        ),
+        tabPanel(snapper::load_snapper())
       ),
       navbarMenu("",
         icon = icon("save"),
