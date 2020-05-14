@@ -101,6 +101,10 @@ textarea, select {
   float: right;
 }
 
+.aligncenter {
+  margin-left: 42%;
+}
+
 .color_bar {
   background-color: blue;
 }

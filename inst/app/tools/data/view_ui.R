@@ -268,6 +268,22 @@ download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(i
   }
 }
 
-observeEvent(input$view_report, {
+view_report <- function() {
   update_report(cmd = .viewcmd(), outputs = NULL, figs = FALSE)
+}
+
+observeEvent(input$view_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  view_report()
 })
+
+observeEvent(input$view_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_view_screenshot")
+})
+
+observeEvent(input$modal_view_screenshot, {
+  view_report()
+  removeModal() ## remove shiny modal after save
+})
+

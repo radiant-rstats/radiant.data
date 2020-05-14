@@ -928,10 +928,25 @@ man_show_log_modal <- function() {
   )
 }
 
-observeEvent(input$manage_report, {
+manage_report <- function() {
   if (getOption("radiant.shinyFiles", FALSE)) {
     update_report(cmd = man_show_log(), outputs = NULL, figs = FALSE)
   } else {
     man_show_log_modal()
   }
+}
+
+observeEvent(input$manage_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  manage_report()
+})
+
+observeEvent(input$manage_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_manage_screenshot")
+})
+
+observeEvent(input$modal_manage_screenshot, {
+  manage_report()
+  removeModal() ## remove shiny modal after save
 })

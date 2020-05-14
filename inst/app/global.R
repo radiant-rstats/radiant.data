@@ -515,8 +515,9 @@ options(
           icon = icon("code")
         ),
         tabPanel(
+          # uiOutput("screenshot_link")
           snapper::preview_link(
-            "screenshot_link", ui = "body", previewId = "screenshot_link_preview", label = "Take a screenshot",
+            "screenshot_link", ui = "body", previewId = "screenshot_preview", label = "Take a screenshot",
             opts = snapper::config(
               ignoreElements = "function (el) {return el.className === 'dropdown-menu';}",
             )

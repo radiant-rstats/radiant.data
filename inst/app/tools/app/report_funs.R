@@ -793,6 +793,9 @@ update_report <- function(
     } else {
       cmd <- paste0("\n```{r}\n", cmd, "\n```\n")
     }
+    if (!is_empty(r_info[["latest_screenshot"]])) {
+      cmd <- paste0(r_info[["latest_screenshot"]], "\n", cmd)
+    }
     update_report_fun(cmd, type = "rmd")
   }
 }

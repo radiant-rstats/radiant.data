@@ -519,7 +519,7 @@ output$visualize <- renderPlot({
   })
 })
 
-observeEvent(input$visualize_report, {
+visualize_report <- function() {
   ## resetting hidden elements to default values
   vi <- viz_inputs()
   if (input$viz_type != "dist") {
@@ -573,7 +573,7 @@ observeEvent(input$visualize_report, {
     fig.width = viz_plot_width(),
     fig.height = viz_plot_height()
   )
-})
+}
 
 download_handler(
   id = "dlp_visualize",
@@ -585,3 +585,26 @@ download_handler(
   width = viz_plot_width,
   height = viz_plot_height
 )
+
+observeEvent(input$visualize_report, {
+  visualize_report()
+})
+
+observeEvent(input$visualize_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  visualize_report()
+})
+
+observeEvent(input$visualize_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_visualize_screenshot")
+})
+
+observeEvent(input$modal_visualize_screenshot, {
+  visualize_report()
+  removeModal() ## remove shiny modal after save
+})
+
+
+
+

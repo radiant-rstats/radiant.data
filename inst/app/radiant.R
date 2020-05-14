@@ -445,7 +445,7 @@ if (getOption("radiant.shinyFiles", FALSE)) {
 
   download_handler <- function(
     id, label = "", fun = id, fn, type = "csv", caption = "Save to csv",
-    class = "", ic = "download", btn = "link", ...
+    class = "", ic = "download", btn = "link", onclick = "function() none;", ...
   ) {
     ## create observer
     shinyFiles::shinyFileSave(input, id, roots = sf_volumes, session = session)
@@ -457,7 +457,7 @@ if (getOption("radiant.shinyFiles", FALSE)) {
         if (is.function(type)) type <- type()
         shinyFiles::shinySaveLink(
           id, label, caption, filename = fn, filetype = type,
-          class = "alignright", icon = icon(ic)
+          class = "alignright", icon = icon(ic), onclick = onclick
         )
       })
     } else {
@@ -466,7 +466,7 @@ if (getOption("radiant.shinyFiles", FALSE)) {
         if (is.function(type)) type <- type()
         shinyFiles::shinySaveButton(
           id, label, caption, filename = fn, filetype = type,
-          class = class, icon = icon("download")
+          class = class, icon = icon("download"), onclick = onclick
         )
       })
     }
@@ -481,10 +481,10 @@ if (getOption("radiant.shinyFiles", FALSE)) {
   }
 } else {
   download_link <- function(id) {
-    downloadLink(id, "", class = "fa fa-download alignright")
+    downloadLink(id, "", class = "fa fa-download alignright", ...)
   }
   download_button <- function(id, label = "Save", ic = "download", class = "", ...) {
-    downloadButton(id, label, class = class)
+    downloadButton(id, label, class = class, ...)
   }
   download_handler <- function(
     id, label = "", fun = id, fn, type = "csv", caption = "Save to csv",
@@ -640,9 +640,10 @@ help_and_report <- function(
        </div>
      </div>
      <i title='Help' class='fa fa-question alignleft' data-toggle='modal' data-target='#%s_help'></i>
+     <i title='Report results & Screenshot' class='fa fa-camera action-button shiny-bound-input aligncenter' href='#%s_screenshot' id='%s_screenshot' onclick='generate_screenshot();'></i>
      <i title='Report results' class='fa fa-edit action-button shiny-bound-input alignright' href='#%s_report' id='%s_report'></i>
      <div style='clear: both;'></div>",
-    fun_name, fun_name, fun_name, modal_title, help_file, author, year, lic, lic, fun_name, fun_name, fun_name
+    fun_name, fun_name, fun_name, modal_title, help_file, author, year, lic, lic, fun_name, fun_name, fun_name, fun_name, fun_name
   ) %>%
     enc2utf8() %>%
     HTML() %>%
@@ -926,21 +927,75 @@ run_refresh <- function(
   })
 }
 
-observeEvent(input$screenshot_link, {
+# output$screenshot_link <- renderUI({
+#   snapper::preview_link(
+#     "screenshot_link", ui = "body", previewId = "screenshot_preview", label = "Take a screenshot",
+#     opts = snapper::config(
+#       ignoreElements = "function (el) {return el.className === 'dropdown-menu';}",
+#     )
+#   )
+# })
+
+# outputOptions(output, "screenshot_link", suspendWhenHidden = FALSE)
+
+radiant_screenshot_modal <- function(report_on = "") {
+  add_button <- function() {
+    if (is_empty(report_on)) {
+      ""
+    } else {
+      actionButton(report_on, "Report", icon = icon("edit"))
+    }
+  }
   showModal(
     modalDialog(
       title = "Radiant screenshot",
-      span(snapper::snapper_div(id = "screenshot_link_preview")),
+      span(snapper::snapper_div(id = "screenshot_preview")),
       footer = tagList(
-        snapper::download_button(
-          ui = "#screenshot_link_preview",
-          label = "Download screenshot",
-          filename = "radiant-screenshot.png"
-        ),
-        modalButton("Cancel"),
+        tags$table(
+          tags$td(add_button()),
+          tags$td(download_button("screenshot_save", "Save", ic = "download")),
+          tags$td(modalButton("Cancel")),
+          align = "right"
+        )
       ),
       size = "l",
       easyClose = TRUE
     )
   )
+}
+
+observeEvent(input$screenshot_link, {
+  radiant_screenshot_modal()
 })
+
+render_screenshot <- function() {
+  plt <- sub("data:.+base64,", "", input$img_src)
+  png::readPNG(base64enc::base64decode(what = plt))
+}
+
+download_handler_screenshot <- function(path, plot, ...) {
+  plot <- try(plot(), silent = TRUE)
+  if (inherits(plot, "try-error") || is.character(plot) || is.null(plot)) {
+    plot <- ggplot() + labs(title = "Plot not available")
+    png(file = path, width = 500, height = 100, res = 96)
+    print(plot)
+    dev.off()
+  } else {
+    ppath <- parse_path(path, pdir = getOption("radiant.launch_dir", find_home()), mess = FALSE)
+    r_info[["latest_screenshot"]] <- glue('![]({ppath$rpath})')
+    png::writePNG(plot, path, dpi = 144)
+  }
+}
+
+download_handler(
+  id = "screenshot_save",
+  fun = download_handler_screenshot,
+  fn = "radiant-screenshot",
+  type = "png",
+  caption = "Save radiant screenshot",
+  plot = render_screenshot,
+  btn = "button",
+  label = "Save",
+  class = "btn-primary",
+  onclick = "get_img_src();"
+)

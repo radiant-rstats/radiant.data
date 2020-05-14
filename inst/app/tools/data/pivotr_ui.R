@@ -420,7 +420,7 @@ observeEvent(input$pvt_store, {
   )
 })
 
-observeEvent(input$pivotr_report, {
+pivot_report <- function() {
   inp_out <- list("", "")
   inp_out[[1]] <- clean_args(pvt_sum_inputs(), pvt_sum_args[-1])
 
@@ -477,7 +477,7 @@ observeEvent(input$pivotr_report, {
     fig.height = pvt_plot_height(),
     xcmd = xcmd
   )
-})
+}
 
 download_handler(
   id = "dlp_pivot",
@@ -489,3 +489,18 @@ download_handler(
   width = pvt_plot_width,
   height = pvt_plot_height
 )
+
+observeEvent(input$pivotr_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  pivot_report()
+})
+
+observeEvent(input$pivotr_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_pivotr_screenshot")
+})
+
+observeEvent(input$modal_pivotr_screenshot, {
+  pivot_report()
+  removeModal() ## remove shiny modal after save
+})
