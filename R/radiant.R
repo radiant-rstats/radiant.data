@@ -762,8 +762,12 @@ find_dropbox <- function(account = 1) {
 #' @export
 find_gdrive <- function() {
   os_type <- Sys.info()["sysname"]
-  if (os_type == "Linux" && file.exists("~/Google Drive")) {
-    return(normalizePath("~/Google Drive", winslash = "/"))
+  if (os_type %in% c("Linux", "Darwin") && (dir.exists("~/Google Drive") || dir.exists("/Volumes/GoogleDrive"))) {
+    if (file.exists("~/Google Drive")) {
+      return(normalizePath("~/Google Drive", winslash = "/"))
+    } else if (file.exists("/Volumes/GoogleDrive")) {
+      return(normalizePath("~/Google Drive File Stream", winslash = "/"))
+    }
   } else if (os_type == "Windows") {
     fp <- file.path(Sys.getenv("LOCALAPPDATA"), "Google/Drive/sync_config.db") %>%
       gsub("\\\\", "/", .)
