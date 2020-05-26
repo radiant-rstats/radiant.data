@@ -762,14 +762,14 @@ find_dropbox <- function(account = 1) {
 #' @export
 find_gdrive <- function() {
   os_type <- Sys.info()["sysname"]
-  if (os_type %in% c("Linux", "Darwin") && (dir.exists("~/Google Drive") || dir.exists("/Volumes/GoogleDrive"))) {
-    if (file.exists("~/Google Drive")) {
-      return(normalizePath("~/Google Drive", winslash = "/"))
-    } else if (file.exists("/Volumes/GoogleDrive")) {
-      return(normalizePath("~/Google Drive File Stream", winslash = "/"))
-    }
+  home <- radiant.data::find_home()
+  home_gdrive <- paste0(home, "/Google Drive")
+  if (dir.exists(home_gdrive)) {
+    return(normalizePath(home_gdrive, winslash = "/"))
+  } else if (dir.exists("/Volumes/GoogleDrive")) {
+    return("/Volumes/GoogleDrive")
   } else if (os_type == "Windows") {
-    fp <- file.path(Sys.getenv("LOCALAPPDATA"), "Google/Drive/sync_config.db") %>%
+    fp <- file.path(Sys.getenv("LOCALAPPDATA"), "Google/Drive/user_default/sync_config.db") %>%
       gsub("\\\\", "/", .)
   } else if (os_type == "Darwin") {
     fp <- "~/Library/Application Support/Google/Drive/user_default/sync_config.db"
@@ -802,12 +802,6 @@ find_gdrive <- function() {
     if (length(ret) > 0) {
       return(normalizePath(ret, winslash = "/"))
     }
-  }
-
-  if (file.exists("~/Google Drive")) {
-    normalizePath("~/Google Drive", winslash = "/")
-  } else if (file.exists("~/../Google Drive")) {
-    normalizePath("~/../Google Drive", winslash = "/")
   } else {
     stop("Failed to uncover the path to a Google Drive folder")
   }
