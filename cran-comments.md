@@ -1,6 +1,6 @@
 ## Resubmission
 
-This is a resubmission. In this version I have fixed a bug and removed a feature that no-longer works with dplyr 1.0.0 (see NEWS.md for details).
+This is a resubmission. In this version I have fixed a bug and removed a feature that no-longer works with dplyr 1.0.0 (see NEWS.md for details). Also, update the link to the ggplot2 documentation
 
 ## Test environments
 

@@ -1,4 +1,4 @@
-# radiant.data 1.3.7
+# radiant.data 1.3.8
 
 * Fix for using the `date` function from the lubrdidate package in a filter
 * Removed functionality to convert a colum to type `ts` as this is not supported by dplyr 1.0.0 and vctrs 0.3.1
