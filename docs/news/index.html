@@ -10,21 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -33,7 +39,7 @@
 
 <!-- docsearch -->
 <script src="../docsearch.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
@@ -54,9 +60,10 @@
 <![endif]-->
 
 
+
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -70,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.7</span>
       </span>
     </div>
 
@@ -137,7 +144,7 @@
 </li>
       </ul>
       
-      <form class="navbar-form navbar-right" role="search">
+      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
         <div class="form-group">
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
         </div>
@@ -148,25 +155,44 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Changelog <small></small></h1>
+      <h1 data-toc-skip>Changelog <small></small></h1>
       <small>Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="radiantdata-137" class="section level1">
+<h1 class="page-header" data-toc-text="1.3.7">
+<a href="#radiantdata-137" class="anchor"></a>radiant.data 1.3.7<small> Unreleased </small>
+</h1>
+<ul>
+<li>Fix for using the <code>date</code> function from the lubrdidate package in a filter</li>
+<li>Removed functionality to convert a colum to type <code>ts</code> as this is not supported by dplyr 1.0.0 and vctrs 0.3.1</li>
+</ul>
+</div>
+    <div id="radiantdata-136" class="section level1">
+<h1 class="page-header" data-toc-text="1.3.6">
+<a href="#radiantdata-136" class="anchor"></a>radiant.data 1.3.6<small> Unreleased </small>
+</h1>
+<ul>
+<li>Updated styling for formatting for modals (e.g., help pages) that will also allow improved sizing of the (shinyFiles) file browser</li>
+<li>Fix for <code>\r</code> line-endings in <em>Report &gt; Rmd</em> on Windows. Issue was most likely to occur when copy-and-pasting text from PDF into <em>Report &gt; Rmd</em>.</li>
+</ul>
+</div>
     <div id="radiantdata-134" class="section level1">
-<h1 class="page-header">
-<a href="#radiantdata-134" class="anchor"></a>radiant.data 1.3.4<small> Unreleased </small>
+<h1 class="page-header" data-toc-text="1.3.4">
+<a href="#radiantdata-134" class="anchor"></a>radiant.data 1.3.4<small> 2020-03-23 </small>
 </h1>
 <ul>
 <li>Minor adjustments in anticipation of dplyr 1.0.0</li>
 </ul>
 </div>
     <div id="radiantdata-133" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.3.3">
 <a href="#radiantdata-133" class="anchor"></a>radiant.data 1.3.3<small> Unreleased </small>
 </h1>
 <ul>
@@ -175,7 +201,7 @@
 </ul>
 </div>
     <div id="radiantdata-131" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.3.1">
 <a href="#radiantdata-131" class="anchor"></a>radiant.data 1.3.1<small> Unreleased </small>
 </h1>
 <ul>
@@ -183,7 +209,7 @@
 </ul>
 </div>
     <div id="radiantdata-130" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.3.0">
 <a href="#radiantdata-130" class="anchor"></a>radiant.data 1.3.0<small> Unreleased </small>
 </h1>
 <ul>
@@ -196,7 +222,7 @@
 </ul>
 </div>
     <div id="radiantdata-123" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.2.3">
 <a href="#radiantdata-123" class="anchor"></a>radiant.data 1.2.3<small> Unreleased </small>
 </h1>
 <ul>
@@ -205,7 +231,7 @@
 </ul>
 </div>
     <div id="radiantdata-122" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.2.2">
 <a href="#radiantdata-122" class="anchor"></a>radiant.data 1.2.2<small> Unreleased </small>
 </h1>
 <ul>
@@ -215,7 +241,7 @@
 </ul>
 </div>
     <div id="radiantdata-120" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.2.0">
 <a href="#radiantdata-120" class="anchor"></a>radiant.data 1.2.0<small> Unreleased </small>
 </h1>
 <ul>
@@ -223,17 +249,17 @@
 </ul>
 </div>
     <div id="radiantdata-118" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.1.8">
 <a href="#radiantdata-118" class="anchor"></a>radiant.data 1.1.8<small> Unreleased </small>
 </h1>
 <ul>
-<li>Changed default <code>quantile</code> algorithm used in the <code>xtile</code> function from number 2 to 7. See the help for <code><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">stats::quantile</a></code> for details</li>
+<li>Changed default <code>quantile</code> algorithm used in the <code>xtile</code> function from number 2 to 7. See the help for <code><a href="https://rdrr.io/r/stats/quantile.html">stats::quantile</a></code> for details</li>
 <li>Added <code>me</code> and <code>meprop</code> functions to calculate the margin of error for a mean and a proportion. Functions are accessible from <em>Data &gt; Pivot</em> and <em>Data &gt; Explore</em>
 </li>
 </ul>
 </div>
     <div id="radiantdata-116" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.1.6">
 <a href="#radiantdata-116" class="anchor"></a>radiant.data 1.1.6<small> Unreleased </small>
 </h1>
 <ul>
@@ -244,7 +270,7 @@
 </ul>
 </div>
     <div id="radiantdata-113" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.1.3">
 <a href="#radiantdata-113" class="anchor"></a>radiant.data 1.1.3<small> Unreleased </small>
 </h1>
 <ul>
@@ -258,7 +284,7 @@
 </ul>
 </div>
     <div id="radiantdata-106" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.0.6">
 <a href="#radiantdata-106" class="anchor"></a>radiant.data 1.0.6<small> 2019-08-22 </small>
 </h1>
 <ul>
@@ -273,17 +299,17 @@
 <li>Fix for <code>radiant.init.data</code> with shiny-server</li>
 <li>Improvements to setup to allow access to server-side files by adding options to .Rprofile:
 <ul>
-<li>Add <code><a href="https://www.rdocumentation.org/packages/base/topics/options">options(radiant.report = TRUE)</a></code> to allow report generation in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
+<li>Add <code><a href="https://rdrr.io/r/base/options.html">options(radiant.report = TRUE)</a></code> to allow report generation in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
 </li>
-<li>Add <code><a href="https://www.rdocumentation.org/packages/base/topics/options">options(radiant.shinyFiles = TRUE)</a></code> to allow server-side access to files</li>
-<li>List specific directories you want to use with radiant using, for example, <code><a href="https://www.rdocumentation.org/packages/base/topics/options">options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))</a></code>
+<li>Add <code><a href="https://rdrr.io/r/base/options.html">options(radiant.shinyFiles = TRUE)</a></code> to allow server-side access to files</li>
+<li>List specific directories you want to use with radiant using, for example, <code><a href="https://rdrr.io/r/base/options.html">options(radiant.sf_volumes = c(Git = "/home/jovyan/git"))</a></code>
 </li>
 </ul>
 </li>
 </ul>
 </div>
     <div id="radiantdata-100" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.0.0">
 <a href="#radiantdata-100" class="anchor"></a>radiant.data 1.0.0<small> 2019-07-18 </small>
 </h1>
 <ul>
@@ -293,7 +319,7 @@
 </ul>
 </div>
     <div id="radiantdata-0990" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.9.0">
 <a href="#radiantdata-0990" class="anchor"></a>radiant.data 0.9.9.0<small> Unreleased </small>
 </h1>
 <ul>
@@ -308,11 +334,11 @@
 </ul>
 </div>
     <div id="radiantdata-0986" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.8.6">
 <a href="#radiantdata-0986" class="anchor"></a>radiant.data 0.9.8.6<small> Unreleased </small>
 </h1>
 <ul>
-<li>Use <code><a href="https://www.rdocumentation.org/packages/stringi/topics/stri_trans_general">stringi::stri_trans_general</a></code> to replace special symbols in Rmarkdown that may cause problems</li>
+<li>Use <code><a href="https://rdrr.io/pkg/stringi/man/stri_trans_general.html">stringi::stri_trans_general</a></code> to replace special symbols in Rmarkdown that may cause problems</li>
 <li>Add empty line before and after code chunks when saving reports to Rmarkdown</li>
 <li>Use <code>rio</code> to load <code>sav</code>, <code>dta</code>, or <code>sas7bdat</code> files through the <code>read files</code> button in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>.</li>
 <li>Create a <code>qscatter</code> plot similar to the function of the same name in Stata</li>
@@ -323,11 +349,11 @@
 </ul>
 </div>
     <div id="radiantdata-0980" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.8.0">
 <a href="#radiantdata-0980" class="anchor"></a>radiant.data 0.9.8.0<small> Unreleased </small>
 </h1>
 <ul>
-<li>Added an “autosave” options. Use <code><a href="https://www.rdocumentation.org/packages/base/topics/options">options(radiant.autosave = c(10, 180)); radiant::radiant()</a></code> to auto-save the application state to the <code>~/.radiant.session</code> folder every 10 minutes for the next 180 minutes. This can be useful if radiant is being used during an exam, for example.</li>
+<li>Added an “autosave” options. Use <code><a href="https://rdrr.io/r/base/options.html">options(radiant.autosave = c(10, 180)); radiant::radiant()</a></code> to auto-save the application state to the <code>~/.radiant.session</code> folder every 10 minutes for the next 180 minutes. This can be useful if radiant is being used during an exam, for example.</li>
 <li>Emergency backups are now saved to <code>~/.radiant.session/r_some_id.state.rda</code>. The files should be automatically loaded when needed but can also be loaded as a regular radiant state file</li>
 <li>Replace option to load an <code>.rda</code> from from a URL in <em>Data &gt; Manage</em> to load <code>.rds</code> files instead</li>
 <li>Ensure variable and dataset names are valid for R (i.e., no spaces or symbols), “fixing” the input as needed</li>
@@ -337,7 +363,7 @@
 <li>Fix for error when trying to save invalid predictions in <code>radiant.model</code>. This action now generates a pop-up in the browser interface</li>
 <li>Add a specified description to a data.frame immediately on <code>register</code>
 </li>
-<li>Option to pass additional arguments to <code><a href="https://www.rdocumentation.org/packages/shiny/topics/runApp">shiny::runApp</a></code> when starting radiant such as the port to use. For example, radiant.data::radiant.data(“<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>”, port = 8080)</li>
+<li>Option to pass additional arguments to <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html">shiny::runApp</a></code> when starting radiant such as the port to use. For example, radiant.data::radiant.data(“<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>”, port = 8080)</li>
 <li>Option for automatic cleanup of deprecated code in both <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
 </li>
 <li>Avoid attempt to fix deprecated code in <em>Report &gt; Rmd</em> if <code>pred_data = ""</code>
@@ -360,7 +386,7 @@
 </ul>
 </div>
     <div id="radiantdata-0970" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.7.0">
 <a href="#radiantdata-0970" class="anchor"></a>radiant.data 0.9.7.0<small> Unreleased </small>
 </h1>
 <ul>
@@ -391,7 +417,7 @@
 </ul>
 </div>
     <div id="radiantdata-09614" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.6.14">
 <a href="#radiantdata-09614" class="anchor"></a>radiant.data 0.9.6.14<small> Unreleased </small>
 </h1>
 <div id="major-changes" class="section level2">
@@ -406,11 +432,11 @@
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>Minor changes</h2>
 <ul>
-<li>Load <code><a href="https://www.rdocumentation.org/packages/utils/topics/data">data(...)</a></code> into the current environment rather than defaulting only to the global environment</li>
+<li>Load <code><a href="https://rdrr.io/r/utils/data.html">data(...)</a></code> into the current environment rather than defaulting only to the global environment</li>
 <li>
 <code>file.rename</code> failed using docker on windows when saving a report. Using <code>file.copy</code> instead</li>
 <li>Fix for <code>sf_volumes</code> used to set the root directories to load and save files</li>
-<li>Set default locale to “en_US.UTF-8” when using shiny-server unless <code><a href="https://www.rdocumentation.org/packages/base/topics/locales">Sys.getlocale(category = "LC_ALL")</a></code> what set to something other than “C”</li>
+<li>Set default locale to “en_US.UTF-8” when using shiny-server unless <code><a href="https://rdrr.io/r/base/locales.html">Sys.getlocale(category = "LC_ALL")</a></code> what set to something other than “C”</li>
 <li>Modal shown if and Rmd (R) file is not available when using “To Rstudio (Rmd)” in <em>Report &gt; Rmd</em> or “To Rstudio (R)” in <em>Report &gt; R</em>
 </li>
 <li>Track progress loading (state) files</li>
@@ -423,7 +449,7 @@
 </div>
 </div>
     <div id="radiantdata-0953" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.5.3">
 <a href="#radiantdata-0953" class="anchor"></a>radiant.data 0.9.5.3<small> Unreleased </small>
 </h1>
 <ul>
@@ -436,7 +462,7 @@
 </ul>
 </div>
     <div id="radiantdata-0950" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.5.0">
 <a href="#radiantdata-0950" class="anchor"></a>radiant.data 0.9.5.0<small> Unreleased </small>
 </h1>
 <ul>
@@ -446,7 +472,7 @@
 </ul>
 </div>
     <div id="radiantdata-0946" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.4.6">
 <a href="#radiantdata-0946" class="anchor"></a>radiant.data 0.9.4.6<small> Unreleased </small>
 </h1>
 <ul>
@@ -457,7 +483,7 @@
 </ul>
 </div>
     <div id="radiantdata-0935" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.3.5">
 <a href="#radiantdata-0935" class="anchor"></a>radiant.data 0.9.3.5<small> Unreleased </small>
 </h1>
 <div id="minor-changes-1" class="section level2">
@@ -470,7 +496,7 @@
 </div>
 </div>
     <div id="radiantdata-0934" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.3.4">
 <a href="#radiantdata-0934" class="anchor"></a>radiant.data 0.9.3.4<small> Unreleased </small>
 </h1>
 <div id="minor-changes-2" class="section level2">
@@ -489,7 +515,7 @@
 </div>
 </div>
     <div id="radiantdata-0933" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.3.3">
 <a href="#radiantdata-0933" class="anchor"></a>radiant.data 0.9.3.3<small> Unreleased </small>
 </h1>
 <div id="major-changes-1" class="section level2">
@@ -497,7 +523,7 @@
 <a href="#major-changes-1" class="anchor"></a>Major changes</h2>
 <ul>
 <li>When using radiant with Rstudio Viewer or in an Rstudio Window, loading and saving data through <em>Data &gt; Manage</em> generates R-code the user can add to <em>Report &gt; Rmd</em> or <em>Report &gt; R</em>. Clicking the <code>Show R-code</code> checkbox displays the R-code used to load or save the current dataset</li>
-<li>Various changes to the code to accommodate the use of <code><a href="https://www.rdocumentation.org/packages/shiny/topics/makeReactiveBinding">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
+<li>Various changes to the code to accommodate the use of <code><a href="https://rdrr.io/pkg/shiny/man/makeReactiveBinding.html">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
 <li>Removed <code>loadr</code>, <code>saver</code>, <code>load_csv</code>, <code>loadcsv_url</code>, <code>loadrds_url</code>, and <code>make_funs</code> functions as they are no longer needed</li>
 <li>Deprecated <code>mean_rm</code>, <code>median_rm</code>, <code>min_rm</code>, <code>max_rm,</code>sd_rm<code>,</code>var_rm, and <code>sum_rm</code> functions as they are no longer needed</li>
 </ul>
@@ -516,7 +542,7 @@
 </div>
 </div>
     <div id="radiantdata-0923" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.2.3">
 <a href="#radiantdata-0923" class="anchor"></a>radiant.data 0.9.2.3<small> Unreleased </small>
 </h1>
 <div id="major-changes-2" class="section level2">
@@ -524,7 +550,7 @@
 <a href="#major-changes-2" class="anchor"></a>Major changes</h2>
 <ul>
 <li>
-<em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will now be evaluated the <code>r_data</code> environment. This means that the return value from <code><a href="https://www.rdocumentation.org/packages/base/topics/ls">ls()</a></code> will be much cleaner</li>
+<em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will now be evaluated the <code>r_data</code> environment. This means that the return value from <code><a href="https://rdrr.io/r/base/ls.html">ls()</a></code> will be much cleaner</li>
 </ul>
 </div>
 <div id="minor-changes-4" class="section level2">
@@ -539,7 +565,7 @@
 </div>
 </div>
     <div id="radiantdata-0922" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.2.2">
 <a href="#radiantdata-0922" class="anchor"></a>radiant.data 0.9.2.2<small> Unreleased </small>
 </h1>
 <div id="minor-changes-5" class="section level2">
@@ -552,7 +578,7 @@
 </div>
 </div>
     <div id="radiantdata-0920" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.2.0">
 <a href="#radiantdata-0920" class="anchor"></a>radiant.data 0.9.2.0<small> Unreleased </small>
 </h1>
 <div id="minor-changes-6" class="section level2">
@@ -565,7 +591,7 @@
 </div>
 </div>
     <div id="radiantdata-09017" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.0.17">
 <a href="#radiantdata-09017" class="anchor"></a>radiant.data 0.9.0.17<small> Unreleased </small>
 </h1>
 <div id="minor-changes-8" class="section level2">
@@ -580,7 +606,7 @@
 </div>
 </div>
     <div id="radiantdata-09016" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.0.16">
 <a href="#radiantdata-09016" class="anchor"></a>radiant.data 0.9.0.16<small> Unreleased </small>
 </h1>
 <div id="minor-changes-9" class="section level2">
@@ -593,7 +619,7 @@
 </div>
 </div>
     <div id="radiantdata-09015" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.0.15">
 <a href="#radiantdata-09015" class="anchor"></a>radiant.data 0.9.0.15<small> Unreleased </small>
 </h1>
 <div id="minor-changes-10" class="section level2">
@@ -616,7 +642,7 @@
 </div>
 </div>
     <div id="radiantdata-09013" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.0.13">
 <a href="#radiantdata-09013" class="anchor"></a>radiant.data 0.9.0.13<small> Unreleased </small>
 </h1>
 <div id="minor-changes-11" class="section level2">
@@ -649,7 +675,7 @@
 </div>
 </div>
     <div id="radiantdata-0907" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.0.7">
 <a href="#radiantdata-0907" class="anchor"></a>radiant.data 0.9.0.7<small> Unreleased </small>
 </h1>
 <div id="minor-changes-12" class="section level2">
@@ -682,7 +708,7 @@
 </div>
 </div>
     <div id="radiantdata-0900" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.9.0.0">
 <a href="#radiantdata-0900" class="anchor"></a>radiant.data 0.9.0.0<small> Unreleased </small>
 </h1>
 <div id="major-changes-3" class="section level2">
@@ -725,7 +751,7 @@
 </div>
 </div>
     <div id="radiantdata-0878" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.8.7.8">
 <a href="#radiantdata-0878" class="anchor"></a>radiant.data 0.8.7.8<small> Unreleased </small>
 </h1>
 <div id="minor-changes-14" class="section level2">
@@ -752,7 +778,7 @@
 </div>
 </div>
     <div id="radiantdata-0860" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.8.6.0">
 <a href="#radiantdata-0860" class="anchor"></a>radiant.data 0.8.6.0<small> Unreleased </small>
 </h1>
 <div id="minor-changes-15" class="section level2">
@@ -763,7 +789,7 @@
 </li>
 <li>Export <code>subplot</code> from <code>plotly</code> for grids of interactive plots in <em>Report &gt; Rmd</em>
 </li>
-<li>Set default <code>res = 96</code> for <code>renderPlot</code> and <code>dpi = 96</code> for <code><a href="https://www.rdocumentation.org/packages/knitr/topics/opts_chunk">knitr::opts_chunk</a></code>
+<li>Set default <code>res = 96</code> for <code>renderPlot</code> and <code>dpi = 96</code> for <code><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html">knitr::opts_chunk</a></code>
 </li>
 <li>Add <code>fillcol</code>, <code>linecol</code>, and <code>pointcol</code> to <code>visualize</code> to set plot colors when no <code>fill</code> or <code>color</code> variable has been selected</li>
 <li>Reverse legend ordering in <em>Data &gt; Visualize</em> when axes are flipped using <code>coor_flip()</code>
@@ -786,7 +812,7 @@
 </div>
 </div>
     <div id="radiantdata-0810" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.8.1.0">
 <a href="#radiantdata-0810" class="anchor"></a>radiant.data 0.8.1.0<small> Unreleased </small>
 </h1>
 <div id="minor-changes-16" class="section level2">
@@ -860,50 +886,14 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="#radiantdata-134">1.3.4</a></li>
-        <li><a href="#radiantdata-133">1.3.3</a></li>
-        <li><a href="#radiantdata-131">1.3.1</a></li>
-        <li><a href="#radiantdata-130">1.3.0</a></li>
-        <li><a href="#radiantdata-123">1.2.3</a></li>
-        <li><a href="#radiantdata-122">1.2.2</a></li>
-        <li><a href="#radiantdata-120">1.2.0</a></li>
-        <li><a href="#radiantdata-118">1.1.8</a></li>
-        <li><a href="#radiantdata-116">1.1.6</a></li>
-        <li><a href="#radiantdata-113">1.1.3</a></li>
-        <li><a href="#radiantdata-106">1.0.6</a></li>
-        <li><a href="#radiantdata-100">1.0.0</a></li>
-        <li><a href="#radiantdata-0990">0.9.9.0</a></li>
-        <li><a href="#radiantdata-0986">0.9.8.6</a></li>
-        <li><a href="#radiantdata-0980">0.9.8.0</a></li>
-        <li><a href="#radiantdata-0970">0.9.7.0</a></li>
-        <li><a href="#radiantdata-09614">0.9.6.14</a></li>
-        <li><a href="#radiantdata-0953">0.9.5.3</a></li>
-        <li><a href="#radiantdata-0950">0.9.5.0</a></li>
-        <li><a href="#radiantdata-0946">0.9.4.6</a></li>
-        <li><a href="#radiantdata-0935">0.9.3.5</a></li>
-        <li><a href="#radiantdata-0934">0.9.3.4</a></li>
-        <li><a href="#radiantdata-0933">0.9.3.3</a></li>
-        <li><a href="#radiantdata-0923">0.9.2.3</a></li>
-        <li><a href="#radiantdata-0922">0.9.2.2</a></li>
-        <li><a href="#radiantdata-0920">0.9.2.0</a></li>
-        <li><a href="#radiantdata-09017">0.9.0.17</a></li>
-        <li><a href="#radiantdata-09016">0.9.0.16</a></li>
-        <li><a href="#radiantdata-09015">0.9.0.15</a></li>
-        <li><a href="#radiantdata-09013">0.9.0.13</a></li>
-        <li><a href="#radiantdata-0907">0.9.0.7</a></li>
-        <li><a href="#radiantdata-0900">0.9.0.0</a></li>
-        <li><a href="#radiantdata-0878">0.8.7.8</a></li>
-        <li><a href="#radiantdata-0860">0.8.6.0</a></li>
-        <li><a href="#radiantdata-0810">0.8.1.0</a></li>
-      </ul>
-    </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -911,8 +901,9 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
+
       </footer>
    </div>
 
@@ -935,6 +926,8 @@
 </script>
 
 
+
   </body>
 </html>
+
 

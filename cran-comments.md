@@ -1,5 +1,21 @@
 ## Resubmission
 
+This is a resubmission. In this version I have fixed a bug and removed a feature that no-longer works with dplyr 1.0.0 (see NEWS.md for details).
+
+## Test environments
+
+* local OS X install, R 4.0.1
+* local Windows install, R 4.0.0
+* win-builder
+
+## R CMD check results
+
+There were no ERRORs or WARNINGs. There is one NOTE about the number of imported non-default packages. 
+
+# Previous cran-comments
+
+## Resubmission
+
 This is a resubmission. In this version I have fixed several bugs and added several new features (see NEWS.md for details).
 
 ## Test environments
@@ -13,7 +29,6 @@ This is a resubmission. In this version I have fixed several bugs and added seve
 
 There were no ERRORs, WARNINGs, or NOTEs. 
 
-# Previous cran-comments
 
 ## Resubmission
 
