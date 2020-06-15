@@ -93,7 +93,7 @@ If you have the `svglite` package installed, the code-chunk header below will pr
 
 For more on how to customize plots for communication see <a href="http://r4ds.had.co.nz/graphics-for-communication.html" target="_blank">http://r4ds.had.co.nz/graphics-for-communication.html</a>.
 
-See also the ggplot2 documentation site <a href="http://docs.ggplot2.org" target="_blank">http://docs.ggplot2.org</a>.
+See also the ggplot2 documentation site <a href="https://ggplot2.tidyverse.org" target="_blank">https://ggplot2.tidyverse.org</a>.
 
 Suppose we create a set of three bar charts in _Data > Visualize_ using the `Diamond` data. To add a title above the group of plots and impose a one-column layout we could use `patchwork` as follows:
 
