@@ -82,6 +82,10 @@ psych::kurtosi
 #' @export
 psych::skew
 
+#' @importFrom lubridate date
+#' @export
+lubridate::date
+
 #' Diamond prices
 #' @details A sample of 3,000 from the diamonds dataset bundled with ggplot2. Description provided in attr(diamonds,"description")
 #' @docType data

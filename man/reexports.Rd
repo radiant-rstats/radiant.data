@@ -16,6 +16,7 @@
 \alias{glance}
 \alias{kurtosi}
 \alias{skew}
+\alias{date}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -28,6 +29,8 @@ below to see their documentation.
   \item{glue}{\code{\link[glue]{glue}}, \code{\link[glue]{glue_collapse}}, \code{\link[glue]{glue_data}}}
 
   \item{knitr}{\code{\link[knitr]{knit_print}}}
+
+  \item{lubridate}{\code{\link[lubridate]{date}}}
 
   \item{patchwork}{\code{\link[patchwork]{plot_annotation}}, \code{\link[patchwork]{wrap_plots}}}
 

@@ -1,3 +1,8 @@
+# radiant.data 1.3.7
+
+* Fix for using the `date` function from the lubrdidate package in a filter
+* Removed functionality to convert a colum to type `ts` as this is not supported by dplyr 1.0.0 and vctrs 0.3.1
+
 # radiant.data 1.3.6
 
 * Updated styling for formatting for modals (e.g., help pages) that will also allow improved sizing of the (shinyFiles) file browser

@@ -252,7 +252,7 @@ trans_options <- list(
 type_options <- list(
   "None" = "none", "As factor" = "as_factor",
   "As numeric" = "as_numeric", "As integer" = "as_integer",
-  "As character" = "as_character", "As time series" = "ts",
+  "As character" = "as_character",
   "As date (mdy)" = "as_mdy", "As date (dmy)" = "as_dmy",
   "As date (ymd)" = "as_ymd",
   "As date/time (mdy_hms)" = "as_mdy_hms",
