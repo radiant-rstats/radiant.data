@@ -24,9 +24,9 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{broom}{\code{\link[broom]{glance}}, \code{\link[broom]{tidy}}}
+  \item{broom}{\code{\link[broom:reexports]{glance}}, \code{\link[broom:reexports]{tidy}}}
 
-  \item{glue}{\code{\link[glue]{glue}}, \code{\link[glue]{glue_collapse}}, \code{\link[glue]{glue_data}}}
+  \item{glue}{\code{\link[glue]{glue}}, \code{\link[glue]{glue_collapse}}, \code{\link[glue:glue]{glue_data}}}
 
   \item{knitr}{\code{\link[knitr]{knit_print}}}
 
@@ -34,8 +34,8 @@ below to see their documentation.
 
   \item{patchwork}{\code{\link[patchwork]{plot_annotation}}, \code{\link[patchwork]{wrap_plots}}}
 
-  \item{psych}{\code{\link[psych]{kurtosi}}, \code{\link[psych]{skew}}}
+  \item{psych}{\code{\link[psych:skew]{kurtosi}}, \code{\link[psych]{skew}}}
 
-  \item{tibble}{\code{\link[tibble]{as_tibble}}, \code{\link[tibble]{rownames_to_column}}, \code{\link[tibble]{tibble}}}
+  \item{tibble}{\code{\link[tibble]{as_tibble}}, \code{\link[tibble:rownames]{rownames_to_column}}, \code{\link[tibble]{tibble}}}
 }}
 
