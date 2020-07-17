@@ -259,7 +259,7 @@ get_zip_info <- function() {
   zip_util <- Sys.getenv("R_ZIPCMD", "zip")
   if (Sys.info()["sysname"] == "Windows") {
     wz <- suppressWarnings(system("where zip", intern = TRUE))
-    if (!grepl("zip", wz)) {
+    if (!isTRUE(grepl("zip", wz))) {
       wz <- suppressWarnings(system("where 7z", intern = TRUE))
       if (isTRUE(grepl("7z", wz))) {
         zip_util <- "7z"
