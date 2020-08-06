@@ -1,6 +1,6 @@
 #' Launch radiant apps
 #'
-#' @details See \url{https://radiant-rstats.github.io/docs} for radiant documentation and tutorials
+#' @details See \url{https://radiant-rstats.github.io/docs/} for radiant documentation and tutorials
 #'
 #' @param package Radiant package to start. One of "radiant.data", "radiant.design", "radiant.basics", "radiant.model", "radiant.multivariate", or "radiant"
 #' @param run Run a radiant app in an external browser ("browser"), an Rstudio window ("window"), or in the Rstudio viewer ("viewer")

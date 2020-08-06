@@ -37,6 +37,10 @@ if (isTRUE(getOption("radiant.sf_volumes", "") != "") ||
     if (!inherits(Dropbox, "try-error")) {
       sf_volumes <- c(sf_volumes, Dropbox = Dropbox)
     }
+    GoogleDrive <- try(radiant.data::find_gdrive(), silent = TRUE)
+    if (!inherits(GoogleDrive, "try-error")) {
+      sf_volumes <- c(sf_volumes, `Google Drive` = GoogleDrive)
+    }
     sf_volumes <- c(sf_volumes, shinyFiles::getVolumes()())
     options(radiant.sf_volumes = sf_volumes)
   }
