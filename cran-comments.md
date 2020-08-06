@@ -1,5 +1,22 @@
 ## Resubmission
 
+This is a resubmission. In this version I have added back a feature that is now supported in dplyr 1.0.1 and made it easier to connect to Google Drive from the file-browser. I also, updated links that CRAN's automated checking listed. 
+
+## Test environments
+
+* local OS X install, R 4.0.2
+* local Windows install, R 4.0.2
+* win-builder (devel)
+* ubuntu "bionic" (on travis-ci), R release and devel
+
+## R CMD check results
+
+There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
+
+# Previous cran-comments
+
+## Resubmission
+
 This is a resubmission. In this version I have fixed a bug and removed a feature that no-longer works with dplyr 1.0.0 (see NEWS.md for details). Also, update the link to the ggplot2 documentation
 
 ## Test environments
@@ -11,8 +28,6 @@ This is a resubmission. In this version I have fixed a bug and removed a feature
 ## R CMD check results
 
 There were no ERRORs or WARNINGs. There is one NOTE about the number of imported non-default packages. 
-
-# Previous cran-comments
 
 ## Resubmission
 

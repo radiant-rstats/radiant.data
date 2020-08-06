@@ -6,6 +6,7 @@ r:
   - devel
 warnings_are_errors: true
 sudo: required
+dist: bionic
 
 r_packages:
   - devtools
