@@ -379,7 +379,7 @@ knit_it <- function(report, type = "rmd") {
   }
 
   ## fragment also available with rmarkdown
-  ## http://rmarkdown.rstudio.com/html_fragment_format.html
+  ## https://rmarkdown.rstudio.com/html_fragment_format.html
 
   ## setting the working directory to use
   ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())

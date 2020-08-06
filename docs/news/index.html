@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.10</span>
       </span>
     </div>
 
@@ -165,13 +165,24 @@
       <small>Source: <a href='https://github.com/radiant-rstats/radiant.data/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="radiantdata-137" class="section level1">
-<h1 class="page-header" data-toc-text="1.3.7">
-<a href="#radiantdata-137" class="anchor"></a>radiant.data 1.3.7<small> Unreleased </small>
+    <div id="radiantdata-1310" class="section level1">
+<h1 class="page-header" data-toc-text="1.3.10">
+<a href="#radiantdata-1310" class="anchor"></a>radiant.data 1.3.10<small> Unreleased </small>
+</h1>
+<ul>
+<li>Add Google Drive to the default set of directories to explore if available</li>
+<li>Add back functionality to convert a colum to type <code>ts</code> in <em>Data &gt; Transform</em> now that this is again supported by dplyr 1.0.1</li>
+</ul>
+</div>
+    <div id="radiantdata-139" class="section level1">
+<h1 class="page-header" data-toc-text="1.3.9">
+<a href="#radiantdata-139" class="anchor"></a>radiant.data 1.3.9<small> 2020-06-16 </small>
 </h1>
 <ul>
 <li>Fix for using the <code>date</code> function from the lubrdidate package in a filter</li>
 <li>Removed functionality to convert a colum to type <code>ts</code> as this is not supported by dplyr 1.0.0 and vctrs 0.3.1</li>
+<li>Updated documentation using <a href="https://github.com/r-lib/roxygen2/pull/1109" class="uri">https://github.com/r-lib/roxygen2/pull/1109</a>
+</li>
 </ul>
 </div>
     <div id="radiantdata-136" class="section level1">
@@ -363,7 +374,7 @@
 <li>Fix for error when trying to save invalid predictions in <code>radiant.model</code>. This action now generates a pop-up in the browser interface</li>
 <li>Add a specified description to a data.frame immediately on <code>register</code>
 </li>
-<li>Option to pass additional arguments to <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html">shiny::runApp</a></code> when starting radiant such as the port to use. For example, radiant.data::radiant.data(“<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>”, port = 8080)</li>
+<li>Option to pass additional arguments to <code><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html">shiny::runApp</a></code> when starting radiant such as the port to use. For example, radiant.data::radiant.data(“<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>”, port = 8080)</li>
 <li>Option for automatic cleanup of deprecated code in both <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
 </li>
 <li>Avoid attempt to fix deprecated code in <em>Report &gt; Rmd</em> if <code>pred_data = ""</code>
@@ -523,7 +534,7 @@
 <a href="#major-changes-1" class="anchor"></a>Major changes</h2>
 <ul>
 <li>When using radiant with Rstudio Viewer or in an Rstudio Window, loading and saving data through <em>Data &gt; Manage</em> generates R-code the user can add to <em>Report &gt; Rmd</em> or <em>Report &gt; R</em>. Clicking the <code>Show R-code</code> checkbox displays the R-code used to load or save the current dataset</li>
-<li>Various changes to the code to accommodate the use of <code><a href="https://rdrr.io/pkg/shiny/man/makeReactiveBinding.html">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
+<li>Various changes to the code to accommodate the use of <code><a href="https://shiny.rstudio.com/reference/shiny/latest/makeReactiveBinding.html">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
 <li>Removed <code>loadr</code>, <code>saver</code>, <code>load_csv</code>, <code>loadcsv_url</code>, <code>loadrds_url</code>, and <code>make_funs</code> functions as they are no longer needed</li>
 <li>Deprecated <code>mean_rm</code>, <code>median_rm</code>, <code>min_rm</code>, <code>max_rm,</code>sd_rm<code>,</code>var_rm, and <code>sum_rm</code> functions as they are no longer needed</li>
 </ul>

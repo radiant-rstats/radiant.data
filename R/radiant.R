@@ -1497,7 +1497,7 @@ read_files <- function(
       glue('library(DBI)\ncon <- dbConnect(RSQLite::SQLite(), dbname = {pp$rpath})\n(tables <- dbListTables(con))\n{obj} <- dplyr::tbl(con, from = tables[1]) %>% collect()\ndbDisconnect(con)\nregister("{obj}")')
   } else if (pp$fext == "sql") {
     if (type == "rmd") {
-      cmd <- "/* see http://rmarkdown.rstudio.com/authoring_knitr_engines.html */\n" %>%
+      cmd <- "/* see https://rmarkdown.rstudio.com/authoring_knitr_engines.html */\n" %>%
         paste0(paste0(readLines(pp$path), collapse = "\n"))
       cmd <- glue('\n\n```{sql, connection = con, max.print = 20}\n<<cmd>>\n```\n\n', .open = "<<", .close = ">>")
       type <- ""
@@ -1506,7 +1506,7 @@ read_files <- function(
     }
   } else if (pp$fext %in% c("py", "css", "js")) {
     if (type == "rmd") {
-      cmd <- "## see http://rmarkdown.rstudio.com/authoring_knitr_engines.html\n" %>%
+      cmd <- "## see https://rmarkdown.rstudio.com/authoring_knitr_engines.html\n" %>%
         paste0(paste0(readLines(pp$path), collapse = "\n"))
       cmd <- glue('\n\n```{<<sub("py", "python", pp$fext)>>}\n<<cmd>>\n```\n\n', .open = "<<", .close = ">>")
       type <- ""

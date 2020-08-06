@@ -16,7 +16,7 @@ You can add text or additional commands to create an Rmarkdown document. An Rmar
 
 Using Rmarkdown is extremely powerful because you can replicate your entire analysis quickly without having to generate all the required R-code again. By clicking the `Knit report (Rmd)` button on the top-left of your screen, the output from the analysis will be (re)created and shown on the right of the _Report > Rmd_ page. To evaluate only a part of the report use the cursor to select a section and press `CTRL-enter` (`CMD-enter` on mac) to create the (partial) output.
 
-You can add text, bullets, headers, etc. around the code chunks to describe and explain the results using <a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a>. For an interactive markdown tutorial visit <a href="http://commonmark.org/help/" target="_blank">commonmark.org</a>.
+You can add text, bullets, headers, etc. around the code chunks to describe and explain the results using <a href="https://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a>. For an interactive markdown tutorial visit <a href="http://commonmark.org/help/" target="_blank">commonmark.org</a>.
 
 If you started Radiant from Rstudio you can save the report in various formats (i.e., Notebook, HTML, Word, Powerpoint, or PDF). For  more on generating powerpoint presentation see <a href="https://bookdown.org/yihui/rmarkdown/powerpoint-presentation.html" target="_blank">https://bookdown.org/yihui/rmarkdown/powerpoint-presentation.html</a>. To save the Rmarkdown file open in the editor select `Rmd` (or `Rmd + Data (zip)`) and press `Save report`. Previously saved Rmarkdown files can be loaded into Radiant by using the `Load report` button. For more 
 

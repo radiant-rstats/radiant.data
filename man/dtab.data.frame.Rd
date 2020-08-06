@@ -60,7 +60,7 @@
 Create an interactive table to view, search, sort, and filter data
 }
 \details{
-View, search, sort, and filter a data.frame. For styling options see \url{http://rstudio.github.io/DT/functions.html}
+View, search, sort, and filter a data.frame. For styling options see \url{https://rstudio.github.io/DT/functions.html}
 }
 \examples{
 \dontrun{

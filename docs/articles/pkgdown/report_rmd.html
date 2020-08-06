@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.10</span>
       </span>
     </div>
 
@@ -114,7 +114,7 @@
 
       
 
-      </header><script src="report_rmd_files/header-attrs-2.2/header-attrs.js"></script><div class="row">
+      </header><script src="report_rmd_files/header-attrs-2.3/header-attrs.js"></script><script src="report_rmd_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Create a reproducible report using Rmarkdown (Report &gt; Rmd)</h1>
@@ -139,7 +139,7 @@
 <p>By default, the app will switch to the <em>Report &gt; Rmd</em> tab after you click the <i title="Report results" class="fa fa-edit"></i> icon. However, if you don’t want to switch tabs after clicking a <i title="Report results" class="fa fa-edit"></i> icon, choose <code>Don't switch tab</code> from the appropriate drop-down in the <em>Report &gt; Rmd</em> tab. <code>Don't switch tab</code> is the default option when you choose <code>To Rmd</code>.</p>
 <p>You can add text or additional commands to create an Rmarkdown document. An Rmarkdown file (extension .Rmd) is a plain text file that can be opened in Notepad (Windows), TextEdit (Mac), Rstudio, Sublime Text, or any other text editor. Please do <strong>not</strong> use Word to edit Rmarkdown files.</p>
 <p>Using Rmarkdown is extremely powerful because you can replicate your entire analysis quickly without having to generate all the required R-code again. By clicking the <code>Knit report (Rmd)</code> button on the top-left of your screen, the output from the analysis will be (re)created and shown on the right of the <em>Report &gt; Rmd</em> page. To evaluate only a part of the report use the cursor to select a section and press <code>CTRL-enter</code> (<code>CMD-enter</code> on mac) to create the (partial) output.</p>
-<p>You can add text, bullets, headers, etc. around the code chunks to describe and explain the results using <a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a>. For an interactive markdown tutorial visit <a href="http://commonmark.org/help/" target="_blank">commonmark.org</a>.</p>
+<p>You can add text, bullets, headers, etc. around the code chunks to describe and explain the results using <a href="https://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a>. For an interactive markdown tutorial visit <a href="http://commonmark.org/help/" target="_blank">commonmark.org</a>.</p>
 <p>If you started Radiant from Rstudio you can save the report in various formats (i.e., Notebook, HTML, Word, Powerpoint, or PDF). For more on generating powerpoint presentation see <a href="https://bookdown.org/yihui/rmarkdown/powerpoint-presentation.html" target="_blank">https://bookdown.org/yihui/rmarkdown/powerpoint-presentation.html</a>. To save the Rmarkdown file open in the editor select <code>Rmd</code> (or <code>Rmd + Data (zip)</code>) and press <code>Save report</code>. Previously saved Rmarkdown files can be loaded into Radiant by using the <code>Load report</code> button. For more</p>
 <p>You can also click the <code>Read files</code> button to browse for files and generate code to read it into Radiant. For example, read rda, rds, xls, yaml, and feather and add them to the <code>Datasets</code> dropdown. You can also read images, R-code, and text (e.g., Rmd or md) to include in your report. If the file type you want to load is not currently supported, the path to the file will be returned. If Radiant was started from an Rstudio project, the file paths used will be relative to the project root. Paths to files synced to local Dropbox or Google Drive folder will use the <code>find_dropbox</code> and <code>find_gdrive</code> functions to enhances reproducibility.</p>
 <div id="state" class="section level2">

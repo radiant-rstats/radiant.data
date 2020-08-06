@@ -19,7 +19,7 @@ launch(package = "radiant.data", run = "viewer", state, ...)
 Launch radiant apps
 }
 \details{
-See \url{https://radiant-rstats.github.io/docs} for radiant documentation and tutorials
+See \url{https://radiant-rstats.github.io/docs/} for radiant documentation and tutorials
 }
 \examples{
 \dontrun{

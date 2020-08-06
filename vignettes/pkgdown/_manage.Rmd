@@ -5,7 +5,7 @@
 When you first start Radiant a dataset (`diamonds`) with information on diamond prices is shown.
 
 It is good practice to add a description of the data and variables to each file you use. For the files that are bundled with Radiant you will see a brief overview of the variables etc. below a table of the first 10 rows of the data. To add a description for your own data click the `Add/edit data description` check-box. A text-input box will open below the table where you can add text in
-<a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format. The description provided for the `diamonds` data included with Radiant should serve as a good example. After adding or editing a description click the `Update description` button.
+<a href="https://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format. The description provided for the `diamonds` data included with Radiant should serve as a good example. After adding or editing a description click the `Update description` button.
 
 To rename a dataset loaded in Radiant click the `Rename data` check box, enter a new name, and click the `Rename` button
 
@@ -28,7 +28,7 @@ If `csv` data is available online choose `csv (url)` from the dropdown, paste th
 As mentioned above, the most convenient way to get data in and out of Radiant is to use the R-data format (rds or rda). Choose `rds` (or `rda`) from the `Save data to type` dropdown and click the `Save` button to save the selected dataset to file.
 
 Again, it is good practice to add a description of the data and variables to each file you use. To add a description for your own data click the 'Add/edit data description' check-box, add text to the text-input window shown in
-<a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format, and then click the `Update description` button. When you save the data as an rds (or rda) file the description you created (or edited) will automatically be added to the file as an `attribute`.
+<a href="https://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format, and then click the `Update description` button. When you save the data as an rds (or rda) file the description you created (or edited) will automatically be added to the file as an `attribute`.
 
 Getting data from Radiant into a spreadsheet can be achieved in two ways. First, you can save data in csv format and load the file into the spreadsheet (i.e., choose `csv` from the `Save data to type` dropdown and click the `Save` button). Alternatively, you can copy the data from Radiant into the clipboard by choosing `clipboard` from the dropdown and clicking the `Copy` button, open the spreadsheet, and paste the data from Radiant using CTRL-V (or CMD-V on mac).
 

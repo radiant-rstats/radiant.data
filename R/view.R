@@ -195,7 +195,7 @@ view_data <- function(
   envir = parent.frame()
 ) {
 
-  ## based on http://rstudio.github.io/DT/server.html
+  ## based on https://rstudio.github.io/DT/server.html
   dat <- get_data(dataset, vars, filt = filt, rows = rows, na.rm = na.rm, envir = envir)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")

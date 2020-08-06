@@ -399,7 +399,7 @@ observeEvent(input$r_load, {
 
   if (!inherits(path, "try-error") && !is_empty(path)) {
     if (pp$fext == "html") {
-      ## based on http://rmarkdown.rstudio.com/r_notebook_format.html
+      ## based on https://rmarkdown.rstudio.com/r_notebook_format.html
       rmd <- try(rmarkdown::parse_html_notebook(pp$path), silent = TRUE)
       if (!inherits(rmd, "try-error")) {
         rmd <- paste0(rmd$rmd, collapse = "\n")

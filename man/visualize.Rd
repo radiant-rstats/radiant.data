@@ -2,7 +2,7 @@
 % Please edit documentation in R/visualize.R
 \name{visualize}
 \alias{visualize}
-\title{Visualize data using ggplot2 \url{http://ggplot2.tidyverse.org}}
+\title{Visualize data using ggplot2 \url{https://ggplot2.tidyverse.org/}}
 \usage{
 visualize(
   dataset,
@@ -105,7 +105,7 @@ visualize(
 Generated plots
 }
 \description{
-Visualize data using ggplot2 \url{http://ggplot2.tidyverse.org}
+Visualize data using ggplot2 \url{https://ggplot2.tidyverse.org/}
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/data/visualize.html} for an example in Radiant
