@@ -1,3 +1,8 @@
+# radiant.data 1.3.10
+
+* Add Google Drive to the default set of directories to explore if available
+* Add back functionality to convert a colum to type `ts` in _Data > Transform_ now that this is again supported by dplyr 1.0.1
+
 # radiant.data 1.3.9
 
 * Fix for using the `date` function from the lubrdidate package in a filter

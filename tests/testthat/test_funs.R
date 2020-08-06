@@ -143,34 +143,34 @@ test_that("explore 2 x 2 x 2", {
   expect_equal(colnames(result$tab), c("color", "cut", "variable", "n_obs", "mean"))
 })
 
-# test_that("transform ts", {
-#   input = list(
-#     tr_ts_start_year = 1971,
-#     tr_ts_start_period = 1,
-#     tr_ts_end_year = NA,
-#     tr_ts_end_period = NA,
-#     tr_ts_frequency = 52
-#   )
-#   tr_ts <- list(
-#     start = c(input$tr_ts_start_year, input$tr_ts_start_period),
-#     end = c(input$tr_ts_end_year, input$tr_ts_end_period),
-#     frequency = input$tr_ts_frequency
-#   )
-#   tr_ts <- lapply(tr_ts, function(x) x[!is.na(x)]) %>% {.[sapply(., length) > 0]}
-#   dat <- do.call(mutate_at, c(list(.tbl = mtcars, .vars = c("mpg", "cyl")), .funs = ts, tr_ts))
-#
-#   expect_equal(dat$mpg, ts(mtcars$mpg, start = c(1971, 1), frequency = 52))
-#   expect_equal(dat$cyl, ts(mtcars$cyl, start = c(1971, 1), frequency = 52))
-#
-#   dctrl <- if (getRversion() > "3.4.4") c("keepNA", "niceNames") else "keepNA"
-#
-#   tr_ts <- deparse(tr_ts, control = dctrl, width.cutoff = 500L) %>%
-#     sub("list\\(", ", ", .) %>%
-#     sub("\\)$", "", .)
-#
-#   expect_equal(tr_ts, ", start = c(1971, 1), frequency = 52")
-#
-# })
+test_that("transform ts", {
+  input = list(
+    tr_ts_start_year = 1971,
+    tr_ts_start_period = 1,
+    tr_ts_end_year = NA,
+    tr_ts_end_period = NA,
+    tr_ts_frequency = 52
+  )
+  tr_ts <- list(
+    start = c(input$tr_ts_start_year, input$tr_ts_start_period),
+    end = c(input$tr_ts_end_year, input$tr_ts_end_period),
+    frequency = input$tr_ts_frequency
+  )
+  tr_ts <- lapply(tr_ts, function(x) x[!is.na(x)]) %>% {.[sapply(., length) > 0]}
+  dat <- do.call(mutate_at, c(list(.tbl = mtcars, .vars = c("mpg", "cyl")), .funs = ts, tr_ts))
+
+  expect_equal(dat$mpg, ts(mtcars$mpg, start = c(1971, 1), frequency = 52))
+  expect_equal(dat$cyl, ts(mtcars$cyl, start = c(1971, 1), frequency = 52))
+
+  dctrl <- if (getRversion() > "3.4.4") c("keepNA", "niceNames") else "keepNA"
+
+  tr_ts <- deparse(tr_ts, control = dctrl, width.cutoff = 500L) %>%
+    sub("list\\(", ", ", .) %>%
+    sub("\\)$", "", .)
+
+  expect_equal(tr_ts, ", start = c(1971, 1), frequency = 52")
+
+})
 
 ## 'manual' testing of read_files to avoid adding numerous dataset to package
 # files <- list.files("tests/testthat/data", full.names = TRUE)
