@@ -479,7 +479,7 @@ iterms <- function(vars, nway = 2, sep = ":") {
     as.vector()
 }
 
-#' Create a vector of quadratic and cubed terms for use in linear and logist regression
+#' Create a vector of quadratic and cubed terms for use in linear and logistic regression
 #'
 #' @param vars Variables labels to use
 #' @param nway quadratic (2) or cubic (3) term labels to create

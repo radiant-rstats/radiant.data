@@ -5,10 +5,10 @@
 ^build$
 ^docs$
 ^vignettes$
+^\.travis\.yml$
 _pkgdown.yml
 cran-comments.md
 coverage.R
 ^tests/testthat/data$
 .vscode
 radiant.data.code-workspace
-.travis.yml

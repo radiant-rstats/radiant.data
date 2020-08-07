@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{qterms}
 \alias{qterms}
-\title{Create a vector of quadratic and cubed terms for use in linear and logist regression}
+\title{Create a vector of quadratic and cubed terms for use in linear and logistic regression}
 \usage{
 qterms(vars, nway = 2)
 }
@@ -15,7 +15,7 @@ qterms(vars, nway = 2)
 Character vector of (regression) term labels
 }
 \description{
-Create a vector of quadratic and cubed terms for use in linear and logist regression
+Create a vector of quadratic and cubed terms for use in linear and logistic regression
 }
 \examples{
 qterms(c("a", "b"), 3)
