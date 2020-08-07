@@ -6,7 +6,6 @@ setwd(rstudioapi::getActiveProject())
 curr <- getwd()
 pkg <- basename(curr)
 
-
 ## see commit for an application
 ## https://github.com/hrbrmstr/hrbraddins/commit/9cbd162def065593d4850c387ce581b8f911cf03
 # fvec <- list.files(".", pattern = "(*.R$|*.r)", recursive = TRUE)
@@ -16,16 +15,16 @@ pkg <- basename(curr)
 
 ## building radiant packages for mac and windows
 rv <- R.Version()
-rv <- paste0(rv$major, ".", strsplit(rv$minor, ".", fixed = TRUE)[[1]][1])
+rv <- paste(rv$major, substr(rv$minor, 1, 1), sep = ".")
 
 rvprompt <- readline(prompt = paste0("Running for R version: ", rv, ". Is that what you wanted y/n: "))
 if (grepl("[nN]", rvprompt)) stop("Change R-version")
 
 dirsrc <- "../minicran/src/contrib"
 
-if (rv == "3.3") {
+if (rv < "3.4") {
   dirmac <- fs::path("../minicran/bin/macosx/mavericks/contrib", rv)
-} else if (as.numeric(substr(rv, 1, 1)) >= 4) {
+} else if (rv > "3.6") {
   dirmac <- fs::path("../minicran/bin/macosx/contrib", rv)
 } else {
   dirmac <- fs::path("../minicran/bin/macosx/el-capitan/contrib", rv)
