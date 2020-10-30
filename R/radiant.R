@@ -56,10 +56,8 @@ launch <- function(package = "radiant.data", run = "viewer", state, ...) {
       message(sprintf("\nUsing Radiant in an Rstudio Window works best in a newer version of Rstudio (i.e., version > 1.2). See https://dailies.rstudio.com/ for the latest version. Alternatively, use %s::%s_viewer()", package, package))
     }
     options(radiant.launch = "window")
-    ## Dialog doesn't seem a good option
-    # run <- shiny::dialogViewer("Radiant", 1200, 800)
-    ## using eval(parse(text = ...)) to avoid foreign function call warnings
-    run <- eval(parse(text = "function(url) {invisible(.Call('rs_shinyviewer', url, getwd(), 3))}"))
+    run <- .rs.invokeShinyWindowViewer
+
   } else {
     message(sprintf("\nStarting %s in the default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer or %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
     options(radiant.launch = "browser")
@@ -1249,7 +1247,7 @@ fix_smart <- function(text, all = FALSE) {
       gsub("\u2018", "'", .) %>%
       gsub("\u201D", '"', .) %>%
       gsub("\u201C", '"', .)
-      # stringi::stri_trans_general(., "ascii") %>%
+    # stringi::stri_trans_general(., "ascii") %>%
   }
   gsub("\r\n", "\n", text) %>%
     gsub("\r", "\n", .) %>%
