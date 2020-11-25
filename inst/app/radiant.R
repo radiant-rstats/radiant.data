@@ -526,16 +526,16 @@ download_handler_plot <- function(path, plot, width = plot_width, height = plot_
 ## fun_name is a string of the main function name
 ## rfun_name is a string of the reactive wrapper that calls the main function
 ## out_name is the name of the output, set to fun_name by default
-register_print_output <- function(
-  fun_name, rfun_name, out_name = fun_name
-) {
-
+register_print_output <- function(fun_name, rfun_name, out_name = fun_name) {
   ## Generate output for the summary tab
   output[[out_name]] <- renderPrint({
     ## when no analysis was conducted (e.g., no variables selected)
-    get(rfun_name)() %>%
-      {if (is.character(.)) cat(., "\n") else .} %>%
-      rm(.)
+    fun <- get(rfun_name)()
+    if (is.character(fun)) {
+      cat(fun, "\n")
+    } else {
+      rm(fun)
+    }
   })
   return(invisible())
 }
