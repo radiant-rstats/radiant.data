@@ -320,7 +320,7 @@ observeEvent(input$removeDataButton, {
   ## all files would be removed when the removeDataButton is pressed
   if (is.null(input$removeDataset)) return()
   datasets <- r_info[["datasetlist"]]
-  if (length(datasets) > 1) {   ## have to leave at least one dataset
+  if (length(datasets) > 1) { ## have to leave at least one dataset
     removeDataset <- input$removeDataset
     if (length(datasets) == length(removeDataset)) {
       removeDataset <- removeDataset[-1]
@@ -359,22 +359,22 @@ man_save_data <- function(file) {
 
   withProgress(message = "Saving ...", value = 1, {
     if (ext == "csv") {
-      readr::write_csv(r_data[[robj]], file)
-      r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_csv({robj}, path = {pp$rpath})')
+      readr::write_csv(r_data[[robj]], file = file)
+      r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_csv({robj}, file = {pp$rpath})')
     } else {
       if (!is_empty(input$man_data_descr)) {
         attr(r_data[[robj]], "description") <- fix_smart(r_info[[paste0(robj, "_descr")]])
       }
 
       if (ext == "rds") {
-        readr::write_rds(r_data[[robj]], path = file)
-        r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_rds({robj}, path = {pp$rpath})')
+        readr::write_rds(r_data[[robj]], file = file)
+        r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_rds({robj}, file = {pp$rpath})')
       } else if (ext == "feather") {
         ## temporary workaround until PR goes through https://stackoverflow.com/a/47898172/1974918
         # feather::write_feather(tmp[[robj]], file)
         # radiant.data::write_feather(tmp[[robj]], file, description = attr(tmp[[robj]], "description"))
         feather::write_feather(r_data[[robj]], file)
-        r_info[[paste0(robj, "_scmd")]] <- glue('feather::write_feather({robj}, path = {pp$rpath})')
+        r_info[[paste0(robj, "_scmd")]] <- glue('feather::write_feather({robj}, file = {pp$rpath})')
       } else {
         save(list = robj, file = file, envir = r_data)
         r_info[[paste0(robj, "_scmd")]] <- glue('save({robj}, file = {pp$rpath})')
@@ -524,7 +524,7 @@ observeEvent(input$url_csv_load, {
   if (radiant.data::is_empty(input$url_csv)) return()
   url_csv <- gsub("^\\s+|\\s+$", "", input$url_csv)
 
-  objname <- basename(url_csv) %>% sub("\\.csv","",.) %>% sub("\\?.*$","",.)
+  objname <- basename(url_csv) %>% sub("\\.csv", "", .) %>% sub("\\?.*$", "", .)
   if (!objname == radiant.data::fix_names(objname)) {
     objname <- "csv_url"
   }
@@ -868,8 +868,8 @@ output$man_str <- renderPrint({
 # })
 
 output$man_summary <- renderPrint({
- req(is.data.frame(r_data[[input$dataset]]))
- get_summary(r_data[[input$dataset]])
+  req(is.data.frame(r_data[[input$dataset]]))
+  get_summary(r_data[[input$dataset]])
 })
 
 man_show_log <- reactive({

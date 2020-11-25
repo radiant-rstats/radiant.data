@@ -1218,9 +1218,9 @@ describe <- function(dataset, envir = parent.frame()) {
 #   requireNamespace("feather")
 #   fw_args <- as.list(formals(feather::write_feather))
 #   if ("description" %in% names(fw_args)) {
-#     feather::write_feather(x, path, if (is.null(description)) "" else description)
+#     feather::write_feather(x, file, if (is.null(description)) "" else description)
 #   } else {
-#     feather::write_feather(x, path)
+#     feather::write_feather(x, file)
 #   }
 # }
 
@@ -1427,8 +1427,7 @@ parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
 #' }
 #' @importFrom rstudioapi selectFile isAvailable
 #' @export
-read_files <- function(
-                       path, pdir = "", type = "rmd", to = "", clipboard = TRUE, radiant = FALSE) {
+read_files <- function(path, pdir = "", type = "rmd", to = "", clipboard = TRUE, radiant = FALSE) {
 
   ## if no path is provided, an interactive file browser will be opened
   if (missing(path) || is_empty(path)) {
