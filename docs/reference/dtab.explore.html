@@ -78,7 +78,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.12</span>
       </span>
     </div>
 
@@ -172,7 +172,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for explore</span>
-<span class='fu'><a href='dtab.html'>dtab</a></span>(<span class='no'>object</span>, <span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>searchCols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>order</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pageLength</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='dtab.html'>dtab</a></span><span class='op'>(</span><span class='va'>object</span>, dec <span class='op'>=</span> <span class='fl'>3</span>, searchCols <span class='op'>=</span> <span class='cn'>NULL</span>, order <span class='op'>=</span> <span class='cn'>NULL</span>, pageLength <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -212,11 +212,13 @@
 <p><code><a href='summary.pivotr.html'>summary.pivotr</a></code> to show summaries</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price:x"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='dtab.html'>dtab</a></span>()
-<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='explore.html'>explore</a></span>(<span class='no'>diamonds</span>, <span class='st'>"price"</span>, <span class='kw'>byvar</span> <span class='kw'>=</span> <span class='st'>"cut"</span>, <span class='kw'>fun</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"n_obs"</span>, <span class='st'>"skew"</span>), <span class='kw'>top</span> <span class='kw'>=</span> <span class='st'>"byvar"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='dtab.html'>dtab</a></span>()
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>tab</span> <span class='op'>&lt;-</span> <span class='fu'><a href='explore.html'>explore</a></span><span class='op'>(</span><span class='va'>diamonds</span>, <span class='st'>"price:x"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dtab.html'>dtab</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>tab</span> <span class='op'>&lt;-</span> <span class='fu'><a href='explore.html'>explore</a></span><span class='op'>(</span><span class='va'>diamonds</span>, <span class='st'>"price"</span>, byvar <span class='op'>=</span> <span class='st'>"cut"</span>, fun <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"n_obs"</span>, <span class='st'>"skew"</span><span class='op'>)</span>, top <span class='op'>=</span> <span class='st'>"byvar"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='dtab.html'>dtab</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -232,7 +234,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

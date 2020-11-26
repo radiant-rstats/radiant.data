@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.12</span>
       </span>
     </div>
 
@@ -114,7 +114,8 @@
 
       
 
-      </header><script src="view_files/header-attrs-2.3/header-attrs.js"></script><script src="view_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="view_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="view_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="view_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>View data in an interactive table (Data &gt; View)</h1>
@@ -139,7 +140,7 @@
 <div id="filter-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#filter-data" class="anchor"></a>Filter data</h3>
-<p>There are several ways to select a subset of the data to view. The <code>Filter data</code> box on the left (click the check-box) can be used with <code><a href="https://rdrr.io/r/base/Comparison.html">&gt;</a></code> and <code><a href="https://rdrr.io/r/base/Comparison.html">&lt;</a></code> symbols. You can also combine subset commands, for example, <code>x &gt; 3 &amp; y == 2</code> would show only those rows for which the variable <code>x</code> has values larger than 3 <strong>AND</strong> for which <code>y</code> is equal to 2. Note that in R, and most other programming languages, <code>=</code> is used to <em>assign</em> a value and <code><a href="https://rdrr.io/r/base/Comparison.html">==</a></code> to determine if values are equal to each other. In contrast, <code><a href="https://rdrr.io/r/base/Comparison.html">!=</a></code> is used to determine if two values are <em>unequal</em>. You can also use expressions that have an <strong>OR</strong> condition. For example, to select rows where <code>Salary</code> is smaller than $100,000 <strong>OR</strong> larger than $20,000 use <code>Salary &gt; 20000 | Salary &lt; 100000</code>. <code><a href="https://rdrr.io/r/base/Logic.html">|</a></code> is the symbol for <strong>OR</strong> and <code><a href="https://rdrr.io/r/base/Logic.html">&amp;</a></code> is the symbol for <strong>AND</strong></p>
+<p>There are several ways to select a subset of the data to view. The <code>Filter data</code> box on the left (click the check-box) can be used with <code><a href="https://rdrr.io/r/base/Comparison.html">&gt;</a></code> and <code><a href="https://rdrr.io/r/base/Comparison.html">&lt;</a></code> symbols. You can also combine subset commands, for example, <code>x &gt; 3 &amp; y == 2</code> would show only those rows for which the variable <code>x</code> has values larger than 3 <strong>AND</strong> for which <code>y</code> is equal to 2. Note that in R, and most other programming languages, <code><a href="https://rdrr.io/r/base/assignOps.html">=</a></code> is used to <em>assign</em> a value and <code><a href="https://rdrr.io/r/base/Comparison.html">==</a></code> to determine if values are equal to each other. In contrast, <code><a href="https://rdrr.io/r/base/Comparison.html">!=</a></code> is used to determine if two values are <em>unequal</em>. You can also use expressions that have an <strong>OR</strong> condition. For example, to select rows where <code>Salary</code> is smaller than $100,000 <strong>OR</strong> larger than $20,000 use <code>Salary &gt; 20000 | Salary &lt; 100000</code>. <code><a href="https://rdrr.io/r/base/Logic.html">|</a></code> is the symbol for <strong>OR</strong> and <code><a href="https://rdrr.io/r/base/Logic.html">&amp;</a></code> is the symbol for <strong>AND</strong></p>
 <p>It is also possible to filter using dates. For example, to select rows with dates before June 1st, 2014 enter <code>date &lt; "2014-6-1"</code> into the filter box and press return.</p>
 <p>You can also use string matching to select rows. For example, type <code><a href="https://rdrr.io/r/base/grep.html">grepl('ood', cut)</a></code> to select rows with <code>Good</code> or <code>Very good</code> cut. This search is case sensitive by default. For case insensitive search use <code><a href="https://rdrr.io/r/base/grep.html">grepl("GOOD", cut, ignore.case = TRUE)</a></code>. Type your statement in the <code>Filter</code> box and press return to see the result on screen or an error below the box if the expression is invalid.</p>
 <p>It is important to note that these filters are <em>persistent</em> and will be applied to any analysis conducted through in Radiant. To deactivate a filter un-check the <code>Filter data</code> check-box. To remove a filter simply delete it.</p>
@@ -320,7 +321,7 @@ is missing
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

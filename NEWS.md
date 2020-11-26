@@ -1,3 +1,9 @@
+# radiant.data 1.3.12
+
+* Fixes related to breaking changes `magrittr`
+* Fixes related to changes in `readr` argument names
+* Fix to launch radiant in a "windows"
+
 # radiant.data 1.3.10
 
 * Add Google Drive to the default set of directories to explore if available

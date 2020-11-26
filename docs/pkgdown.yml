@@ -1,28 +1,18 @@
-pandoc: 2.9.2.1
-pkgdown: 1.5.1
+pandoc: 2.7.3
+pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  _combine: pkgdown/_combine.html
-  _explore: pkgdown/_explore.html
-  _manage: pkgdown/_manage.html
-  _pivotr: pkgdown/_pivotr.html
-  _report_r: pkgdown/_report_r.html
-  _report_rmd: pkgdown/_report_rmd.html
-  _state: pkgdown/_state.html
-  _transform: pkgdown/_transform.html
-  _view: pkgdown/_view.html
-  _visualize: pkgdown/_visualize.html
-  combine: pkgdown/combine.html
-  explore: pkgdown/explore.html
-  manage: pkgdown/manage.html
-  pivotr: pkgdown/pivotr.html
-  report_r: pkgdown/report_r.html
-  report_rmd: pkgdown/report_rmd.html
-  state: pkgdown/state.html
-  transform: pkgdown/transform.html
-  view: pkgdown/view.html
-  visualize: pkgdown/visualize.html
-last_built: 2020-08-07T00:13Z
+  pkgdown/combine: combine.html
+  pkgdown/explore: explore.html
+  pkgdown/manage: manage.html
+  pkgdown/pivotr: pivotr.html
+  pkgdown/report_r: report_r.html
+  pkgdown/report_rmd: report_rmd.html
+  pkgdown/state: state.html
+  pkgdown/transform: transform.html
+  pkgdown/view: view.html
+  pkgdown/visualize: visualize.html
+last_built: 2020-11-26T21:45Z
 urls:
   reference: https://radiant-rstats.github.io/radiant.data/reference
   article: https://radiant-rstats.github.io/radiant.data/articles

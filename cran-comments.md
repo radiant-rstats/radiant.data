@@ -1,5 +1,21 @@
 ## Resubmission
 
+This is a resubmission. In this version I have fixed issues related to updates in the `magrittr` and `readr` packages. I  
+
+## Test environments
+
+* Ubuntu 20.04, R 4.0.3
+* win-builder (devel)
+* ubuntu "bionic" (on travis-ci), R release and devel
+
+## R CMD check results
+
+There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
+
+# Previous cran-comments
+
+## Resubmission
+
 This is a resubmission. In this version I have added back a feature that is now supported in dplyr 1.0.1 and made it easier to connect to Google Drive from the file-browser. I also, updated links that CRAN's automated checking listed. 
 
 ## Test environments
@@ -13,7 +29,6 @@ This is a resubmission. In this version I have added back a feature that is now 
 
 There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
 
-# Previous cran-comments
 
 ## Resubmission
 

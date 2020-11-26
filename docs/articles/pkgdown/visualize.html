@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.12</span>
       </span>
     </div>
 
@@ -114,7 +114,8 @@
 
       
 
-      </header><script src="visualize_files/header-attrs-2.3/header-attrs.js"></script><script src="visualize_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="visualize_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="visualize_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="visualize_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Visualize data (Data &gt; Visualize)</h1>
@@ -191,46 +192,64 @@
 <a href="#customizing-plots-in-report-rmd" class="anchor"></a>Customizing plots in <em>Report &gt; Rmd</em>
 </h3>
 <p>To customize a plot first generate the <code>visualize</code> command by clicking the report (<i title="Report results" class="fa fa-edit"></i>) icon on the bottom left of your screen or by pressing <code>ALT-enter</code> on your keyboard. The example below illustrates how to customize a command in the <a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank"><em>Report &gt; Rmd</em></a> tab. Notice that <code>custom</code> is set to <code>TRUE</code>.</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="../../reference/visualize.html">visualize</a></span>(<span class="no">diamonds</span>, <span class="kw">yvar</span> <span class="kw">=</span> <span class="st">"price"</span>, <span class="kw">xvar</span> <span class="kw">=</span> <span class="st">"carat"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"scatter"</span>, <span class="kw">custom</span> <span class="kw">=</span> <span class="fl">TRUE</span>) +
-  <span class="fu">labs</span>(
-    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"A scatterplot"</span>,
-    <span class="kw">y</span> <span class="kw">=</span> <span class="st">"Price in $"</span>,
-    <span class="kw">x</span> <span class="kw">=</span> <span class="st">"Carats"</span>
-  )</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../../reference/visualize.html">visualize</a></span><span class="op">(</span><span class="va">diamonds</span>, yvar <span class="op">=</span> <span class="st">"price"</span>, xvar <span class="op">=</span> <span class="st">"carat"</span>, type <span class="op">=</span> <span class="st">"scatter"</span>, custom <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">labs</span><span class="op">(</span>
+    title <span class="op">=</span> <span class="st">"A scatterplot"</span>, 
+    y <span class="op">=</span> <span class="st">"Price in $"</span>,
+    x <span class="op">=</span> <span class="st">"Carats"</span>
+  <span class="op">)</span></code></pre></div>
 <p>The default resolution for plots is 144 dots per inch (dpi). You can change this setting up or down in <em>Report &gt; Rmd</em>. For example, the code-chunk header below ensures the plot will be 7" wide, 3.5" tall, with a resolution of 600 dpi.</p>
 <p><code>```{r fig.width = 7, fig.height = 3.5, dpi = 600}</code></p>
 <p>If you have the <code>svglite</code> package installed, the code-chunk header below will produce graphs in high quality <code>svg</code> format.</p>
 <p><code>```{r fig.width = 7, fig.height = 3.5, dev = "svglite"}</code></p>
 <p><strong>Some common customization commands:</strong></p>
 <ul>
-<li>Add a title: `+ labs(title = “my title”)`</li>
-<li>Add a sub-title: `+ labs(subtitle = “my sub-title”)`</li>
-<li>Add a caption below figure: `+ labs(caption = “Based on data from …”)`</li>
-<li>Change label: `+ labs(x = “my X-axis label”)<code>or</code>+ labs(y = “my Y-axis label”)`</li>
-<li>Remove all legends: `+ theme(legend.position = “none”)`</li>
-<li>Change legend title: `+ labs(color = “New legend title”)<code>or</code>+ labs(fill = “New legend title”)`</li>
-<li>Rotate tick labels: `+ theme(axis.text.x = element_text(angle = 90, hjust = 1))`</li>
-<li>Set plot limits: `+ ylim(5000, 8000)<code>or</code>+ xlim(“VS1”,“VS2”)`</li>
-<li>Remove size legend: `+ scale_size(guide = “none”)`</li>
-<li>Change size range: `+ scale_size(range=c(1,6))`</li>
-<li>Draw a horizontal line: `+ geom_hline(yintercept = 0.1)`</li>
-<li>Draw a vertical line: `+ geom_vline(xintercept = 8)`</li>
-<li>Scale the y-axis as a percentage: `+ scale_y_continuous(labels = scales::percent)`</li>
-<li>Scale the y-axis in millions: `+ scale_y_continuous(labels = scales::unit_format(unit = “M”, scale = 1e-6))`</li>
-<li>Display y-axis in $’s: `+ scale_y_continuous(labels = scales::dollar_format())`</li>
-<li>Use <code>,</code> as a thousand separator for the y-axis: `+ scale_y_continuous(labels = scales::comma)`</li>
+<li>Add a title: <code>+ labs(title = "my title")</code>
+</li>
+<li>Add a sub-title: <code>+ labs(subtitle = "my sub-title")</code>
+</li>
+<li>Add a caption below figure: <code>+ labs(caption = "Based on data from ...")</code>
+</li>
+<li>Change label: <code>+ labs(x = "my X-axis label")</code> or <code>+ labs(y = "my Y-axis label")</code>
+</li>
+<li>Remove all legends: <code>+ theme(legend.position = "none")</code>
+</li>
+<li>Change legend title: <code>+ labs(color = "New legend title")</code> or <code>+ labs(fill = "New legend title")</code>
+</li>
+<li>Rotate tick labels: <code>+ theme(axis.text.x = element_text(angle = 90, hjust = 1))</code>
+</li>
+<li>Set plot limits: <code>+ ylim(5000, 8000)</code> or <code>+ xlim("VS1","VS2")</code>
+</li>
+<li>Remove size legend: <code>+ scale_size(guide = "none")</code>
+</li>
+<li>Change size range: <code>+ scale_size(range=c(1,6))</code>
+</li>
+<li>Draw a horizontal line: <code>+ geom_hline(yintercept = 0.1)</code>
+</li>
+<li>Draw a vertical line: <code>+ geom_vline(xintercept = 8)</code>
+</li>
+<li>Scale the y-axis as a percentage: <code>+ scale_y_continuous(labels = scales::percent)</code>
+</li>
+<li>Scale the y-axis in millions: <code>+ scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))</code>
+</li>
+<li>Display y-axis in $’s: <code>+ scale_y_continuous(labels = scales::dollar_format())</code>
+</li>
+<li>Use <code>,</code> as a thousand separator for the y-axis: <code>+ scale_y_continuous(labels = scales::comma)</code>
+</li>
 </ul>
 <p>For more on how to customize plots for communication see <a href="http://r4ds.had.co.nz/graphics-for-communication.html" target="_blank">http://r4ds.had.co.nz/graphics-for-communication.html</a>.</p>
 <p>See also the ggplot2 documentation site <a href="https://ggplot2.tidyverse.org" target="_blank">https://ggplot2.tidyverse.org</a>.</p>
 <p>Suppose we create a set of three bar charts in <em>Data &gt; Visualize</em> using the <code>Diamond</code> data. To add a title above the group of plots and impose a one-column layout we could use <code>patchwork</code> as follows:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">plot_list</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/visualize.html">visualize</a></span>(
-  <span class="no">diamonds</span>,
-  <span class="kw">xvar</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"clarity"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span>),
-  <span class="kw">yvar</span> <span class="kw">=</span> <span class="st">"price"</span>,
-  <span class="kw">type</span> <span class="kw">=</span> <span class="st">"bar"</span>,
-  <span class="kw">custom</span> <span class="kw">=</span> <span class="fl">TRUE</span>
-)
-<span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html">wrap_plots</a></span>(<span class="no">plot_list</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">1</span>) + <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html">plot_annotation</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"Three bar plots"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/visualize.html">visualize</a></span><span class="op">(</span>
+  <span class="va">diamonds</span>, 
+  xvar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"clarity"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span><span class="op">)</span>, 
+  yvar <span class="op">=</span> <span class="st">"price"</span>, 
+  type <span class="op">=</span> <span class="st">"bar"</span>, 
+  custom <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span> 
+<span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html">wrap_plots</a></span><span class="op">(</span><span class="va">plot_list</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html">plot_annotation</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Three bar plots"</span><span class="op">)</span></code></pre></div>
 <p>See the <a href="https://patchwork.data-imaginist.com">patchwork documentation site</a> for additional information on how to customize groups of plots.</p>
 </div>
 <div id="making-plots-interactive-in-report-rmd" class="section level3">
@@ -238,13 +257,15 @@
 <a href="#making-plots-interactive-in-report-rmd" class="anchor"></a>Making plots interactive in <em>Report &gt; Rmd</em>
 </h3>
 <p>It is possible to transform (most) plots generated in Radiant into interactive graphics using the <code>plotly</code> library. After setting <code>custom = TRUE</code> you can use the <code>ggplotly</code> function to convert a single plot. See example below:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="../../reference/visualize.html">visualize</a></span>(<span class="no">diamonds</span>, <span class="kw">xvar</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"price"</span>, <span class="st">"carat"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span>), <span class="kw">custom</span> <span class="kw">=</span> <span class="fl">TRUE</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../../reference/ggplotly.html">ggplotly</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../../reference/render.html">render</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../../reference/visualize.html">visualize</a></span><span class="op">(</span><span class="va">diamonds</span>, xvar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"carat"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span><span class="op">)</span>, custom <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../../reference/ggplotly.html">ggplotly</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../../reference/render.html">render</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>If more than one plot is created, you can use the <code>subplot</code> function from the <code>plotly</code> package. Provide a value for the <code>nrows</code> argument to setup the plot layout grid. In the example below four plots are created. Because <code>nrow = 2</code> the plots will be displayed in a 2 X 2 grid.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="../../reference/visualize.html">visualize</a></span>(<span class="no">diamonds</span>, <span class="kw">xvar</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"carat"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span>), <span class="kw">custom</span> <span class="kw">=</span> <span class="fl">TRUE</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../../reference/subplot.html">subplot</a></span>(<span class="kw">nrows</span> <span class="kw">=</span> <span class="fl">2</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../../reference/render.html">render</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../../reference/visualize.html">visualize</a></span><span class="op">(</span><span class="va">diamonds</span>, xvar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"carat"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span><span class="op">)</span>, custom <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../../reference/subplot.html">subplot</a></span><span class="op">(</span>nrows <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../../reference/render.html">render</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>For additional information on the <code>plotly</code> library see the links below:</p>
 <ul>
 <li>Getting started: <a href="https://plot.ly/r/getting-started/" target="_blank">https://plot.ly/r/getting-started/</a>
@@ -278,7 +299,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
