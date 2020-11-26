@@ -13,7 +13,7 @@ copy_all(.from)
 Source all package functions
 }
 \details{
-Equivalent of source with local=TRUE for all package functions. Adapted from functions by smbache, author of the import package. See \url{https://github.com/rticulate/import/issues/4} for a discussion. This function will be deprecated when (if) it is included in \url{https://github.com/rticulate/import}
+Equivalent of source with local=TRUE for all package functions. Adapted from functions by smbache, author of the import package. See \url{https://github.com/rticulate/import/issues/4/} for a discussion. This function will be deprecated when (if) it is included in \url{https://github.com/rticulate/import/}
 }
 \examples{
 copy_all(radiant.data)

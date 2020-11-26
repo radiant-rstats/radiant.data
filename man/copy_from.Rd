@@ -15,7 +15,7 @@ copy_from(.from, ...)
 Source for package functions
 }
 \details{
-Equivalent of source with local=TRUE for package functions. Written by smbache, author of the import package. See \url{https://github.com/smbache/import/issues/4} for a discussion. This function will be deprecated when (if) it is included in \url{https://github.com/smbache/import}
+Equivalent of source with local=TRUE for package functions. Written by smbache, author of the import package. See \url{https://github.com/rticulate/import/issues/4/} for a discussion. This function will be deprecated when (if) it is included in \url{https://github.com/rticulate/import/}
 }
 \examples{
 
