@@ -56,8 +56,7 @@ launch <- function(package = "radiant.data", run = "viewer", state, ...) {
       message(sprintf("\nUsing Radiant in an Rstudio Window works best in a newer version of Rstudio (i.e., version > 1.2). See https://dailies.rstudio.com/ for the latest version. Alternatively, use %s::%s_viewer()", package, package))
     }
     options(radiant.launch = "window")
-    run <- .rs.invokeShinyWindowViewer
-
+    run <- get(".rs.invokeShinyWindowViewer")
   } else {
     message(sprintf("\nStarting %s in the default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer or %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
     options(radiant.launch = "browser")
