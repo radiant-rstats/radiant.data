@@ -12,7 +12,7 @@ articles:
   pkgdown/transform: transform.html
   pkgdown/view: view.html
   pkgdown/visualize: visualize.html
-last_built: 2020-11-26T21:45Z
+last_built: 2020-11-26T23:12Z
 urls:
   reference: https://radiant-rstats.github.io/radiant.data/reference
   article: https://radiant-rstats.github.io/radiant.data/articles
