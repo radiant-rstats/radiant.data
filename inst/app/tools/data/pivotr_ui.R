@@ -426,16 +426,16 @@ observeEvent(input$pivotr_report, {
 
   if (input$pvt_plot == TRUE) {
     inp_out[[2]] <- clean_args(pvt_plot_inputs(), pvt_plot_args[-1])
-    outputs <- c("summary", "plot")
+    outputs <- c("plot")
     figs <- TRUE
   } else {
-    outputs <- c("summary")
+    outputs <- c()
     figs <- FALSE
   }
 
   ## get the state of the dt table
   ts <- dt_state("pivotr")
-  xcmd <- paste0("# dtab(result")
+  xcmd <- paste0("# summary()\ndtab(result")
   if (!is_empty(input$pvt_format, "none")) {
     xcmd <- paste0(xcmd, ", format = \"", input$pvt_format, "\"")
   }

@@ -270,7 +270,7 @@ observeEvent(input$explore_report, {
 
   ## get the state of the dt table
   ts <- dt_state("explore")
-  xcmd <- "# dtab(result"
+  xcmd <- "# summary()\ndtab(result"
   if (!is_empty(input$expl_dec, 3)) {
     xcmd <- paste0(xcmd, ", dec = ", input$expl_dec)
   }
@@ -296,7 +296,7 @@ observeEvent(input$explore_report, {
     inp_main = inp_main,
     fun_name = "explore",
     inp_out = inp_out,
-    outputs = c("summary"),
+    outputs = c(),
     figs = FALSE,
     xcmd = xcmd
   )
