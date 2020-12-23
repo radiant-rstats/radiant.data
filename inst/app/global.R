@@ -498,6 +498,7 @@ options(
       windowTitle = "Radiant",
       id = "nav_radiant",
       inverse = TRUE,
+      theme = getOption("radiant.theme"),
       collapsible = TRUE,
       position = "fixed-top",
       tabPanel("Data", withMathJax(), uiOutput("ui_data"))
