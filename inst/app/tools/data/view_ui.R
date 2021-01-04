@@ -109,7 +109,7 @@ output$dataviewer <- DT::renderDataTable({
       # extension = "KeyTable",
       escape = FALSE,
       # editable = TRUE,
-      style = "bootstrap",
+      style = if ("4" %in% bslib_current_version()) "bootstrap4" else "bootstrap",
       options = list(
         stateSave = TRUE, ## maintains state
         searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
@@ -271,3 +271,7 @@ download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(i
 observeEvent(input$view_report, {
   update_report(cmd = .viewcmd(), outputs = NULL, figs = FALSE)
 })
+
+bslib_current_version <- function() {
+  if (rlang::is_installed("bslib")) bslib::theme_version(bslib::bs_current_theme())
+}
