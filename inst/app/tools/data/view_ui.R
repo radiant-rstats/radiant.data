@@ -273,5 +273,6 @@ observeEvent(input$view_report, {
 })
 
 bslib_current_version <- function() {
-  if (rlang::is_installed("bslib")) bslib::theme_version(bslib::bs_current_theme())
+  if (rlang::is_installed("bslib"))
+    bslib::theme_version(getOption("radiant.theme"))
 }
