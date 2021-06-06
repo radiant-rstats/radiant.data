@@ -356,7 +356,7 @@ dtab.explore <- function(
     ## see https://github.com/rstudio/DT/issues/367
     ## https://github.com/rstudio/DT/issues/379
     fillContainer = FALSE,
-    style = "bootstrap",
+    style = if ("4" %in% bslib_current_version()) "bootstrap4" else "bootstrap",
     options = list(
       dom = dom,
       stateSave = TRUE, ## store state
@@ -661,11 +661,11 @@ empty_level <- function(x) {
 }
 
 #' Calculate the mode (modal value) and return a label
-#' 
+#'
 #' @details From https://www.tutorialspoint.com/r/r_mean_median_mode.htm
-#' @param x A vector 
+#' @param x A vector
 #' @param na.rm If TRUE missing values are removed before calculation
-#' 
+#'
 #' @examples
 #' modal(c("a", "b", "b"))
 #' modal(c(1:10, 5))

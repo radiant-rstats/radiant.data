@@ -33,7 +33,7 @@ output$ui_View <- renderUI({
       ),
       tags$table(
         tags$td(textInput("view_name", "Store filtered data as:", "", placeholder = "Provide data name")),
-        tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success"), style = "padding-top:30px;")
+        tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success button-ellipsis"), style = "padding-top:30px;")
       )
     ),
     help_and_report(
@@ -109,7 +109,7 @@ output$dataviewer <- DT::renderDataTable({
       # extension = "KeyTable",
       escape = FALSE,
       # editable = TRUE,
-      style = "bootstrap",
+      style = if ("4" %in% bslib_current_version()) "bootstrap4" else "bootstrap",
       options = list(
         stateSave = TRUE, ## maintains state
         searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),

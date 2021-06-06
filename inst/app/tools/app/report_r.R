@@ -190,7 +190,7 @@ output$ui_r_load <- renderUI({
     accept = c(".R", ".r", ".html"),
     buttonLabel = "Load report",
     title = "Load report",
-    class = "btn-default"
+    class = "btn-default button-ellipsis"
 
   )
 })
@@ -199,7 +199,7 @@ if (getOption("radiant.shinyFiles", FALSE)) {
   output$ui_r_read_files <- renderUI({
     shinyFiles::shinyFilesButton(
       "r_read_files", "Read files", "Generate code to read selected file",
-      multiple = FALSE, icon = icon("book"), class = "btn-primary"
+      multiple = FALSE, icon = icon("book"), class = "btn-primary button-ellipsis"
     )
   })
   sf_r_read_files <- shinyFiles::shinyFileChoose(
@@ -217,7 +217,7 @@ output$report_r <- renderUI({
       table(
         td(help_modal("Report > R", "r_help", inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/report_r.md")), lic = "by-sa")),
         td(HTML("&nbsp;&nbsp;")),
-        td(actionButton("r_knit", " Knit report (R)", icon = icon("play"), class = "btn-success"), style = "padding-top:5px;"),
+        td(actionButton("r_knit", " Knit report (R)", icon = icon("play"), class = "btn-success button-ellipsis"), style = "padding-top:5px;"),
         td(uiOutput("ui_r_generate")),
         td(uiOutput("ui_r_view")),
         td(uiOutput("ui_r_switch")),
@@ -225,7 +225,7 @@ output$report_r <- renderUI({
         td(conditional_save_report("r_save"), style = "padding-top:5px;"),
         td(uiOutput("ui_r_load"), style = "padding-top:5px;"),
         td(conditional_read_files("r_read_files"), style = "padding-top:5px;"),
-        td(actionButton("r_clear", "Clear output", icon = icon("trash"), class = "btn-danger"), style = "padding-top:5px;")
+        td(actionButton("r_clear", "Clear output", icon = icon("trash"), class = "btn-danger button-ellipsis"), style = "padding-top:5px;")
       )
     ),
     shinyAce::aceEditor(
@@ -374,7 +374,7 @@ download_handler(
   btn = "button",
   label = "Save report",
   caption = "Save report",
-  class = "btn-primary"
+  class = "btn-primary button-ellipsis"
 )
 
 ## loading r-code from disk

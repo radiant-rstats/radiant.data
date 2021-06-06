@@ -370,7 +370,7 @@ dtab.pivotr <- function(
     ## see https://github.com/rstudio/DT/issues/367
     ## https://github.com/rstudio/DT/issues/379
     fillContainer = FALSE,
-    style = "bootstrap",
+    style = if ("4" %in% bslib_current_version()) "bootstrap4" else "bootstrap",
     options = list(
       dom = dom,
       stateSave = TRUE, ## store state

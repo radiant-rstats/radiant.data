@@ -10,6 +10,12 @@ ul, ol {
   width: auto;
 }
 
+.button-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .snippet th, .snippet td {
   text-align: center;
 }
@@ -113,6 +119,7 @@ textarea, select {
   left: 0;
   right: 50%;
   padding-right: 10px;
+  margin-top: 1rem;
 }
 
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
@@ -124,12 +131,13 @@ textarea, select {
   right: 0;
   padding-left: 10px;
   overflow-y: scroll;
+  margin-top: 1rem;
 }
 
 /* Needed in combination with navbarPage with fixed-top */
 /* based on https://stackoverflow.com/a/19231861/1974918 */
 body {
-  padding-top: 55px;
+  padding-top: 60px;
 }
 
 .navbar {

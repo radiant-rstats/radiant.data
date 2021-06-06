@@ -382,6 +382,16 @@ if (length(tmp) > 0) {
 options(radiant.versions = paste(radiant.versions, collapse = ", "))
 rm(tmp, radiant.versions)
 
+
+## bslib theme and version
+has_bslib_theme <- function() {
+  if (rlang::is_installed("bslib")) bslib::is_bs_theme(getOption("radiant.theme")) else FALSE
+}
+
+bslib_current_version <- function() {
+  if (rlang::is_installed("bslib")) bslib::theme_version(getOption("radiant.theme"))
+}
+
 navbar_proj <- function(navbar) {
   pdir <- radiant.data::find_project(mess = FALSE)
   if (radiant.data::is_empty(pdir)) {
@@ -398,11 +408,17 @@ navbar_proj <- function(navbar) {
     options(radiant.launch_dir = pdir)
   }
   proj <- tags$span(class = "nav navbar-brand navbar-right", proj)
+
   ## based on: https://stackoverflow.com/a/40755608/1974918
-  navbar[[3]][[1]]$children[[1]]$children[[2]] <- htmltools::tagAppendChild(
-    navbar[[3]][[1]]$children[[1]]$children[[2]],
-    proj
-  )
+  # Try to insert the project into the navbar
+  # https://stackoverflow.com/a/40755608/1974918
+  # The actual navbar content may be in a different location if {bslib} is used
+  # https://github.com/rstudio/shiny/pull/3236
+  idx <- if (has_bslib_theme()) 4 else 3
+  collapse <- navbar[[idx]][[1]]$children[[1]]$children[[2]]
+  if (isTRUE(grepl("navbar-collapse", collapse$attribs$class))) {
+    navbar[[idx]][[1]]$children[[1]]$children[[2]] <- htmltools::tagAppendChild(collapse, proj)
+  }
 
   navbar
 }
@@ -497,6 +513,7 @@ options(
     list(
       windowTitle = "Radiant",
       id = "nav_radiant",
+      theme = getOption("radiant.theme"),
       inverse = TRUE,
       collapsible = TRUE,
       position = "fixed-top",
