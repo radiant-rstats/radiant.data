@@ -110,7 +110,7 @@ r_info_legacy <- function() {
 }
 
 ## load for previous state if available but look in global memory first
-if (exists("r_data", envir = .GlobalEnv)) {
+if (isTRUE(getOption("radiant.local")) && exists("r_data", envir = .GlobalEnv)) {
   r_data <- if (is.list(r_data)) list2env(r_data, envir = new.env()) else r_data
   if (exists("r_info")) {
     r_info <- do.call(reactiveValues, r_info)
@@ -119,7 +119,7 @@ if (exists("r_data", envir = .GlobalEnv)) {
   }
   r_state <- if (exists("r_state")) r_state else list()
   suppressWarnings(rm(r_data, r_state, r_info, envir = .GlobalEnv))
-} else if (!is.null(r_sessions[[r_ssuid]]$r_data)) {
+} else if (isTRUE(getOption("radiant.local")) && !is.null(r_sessions[[r_ssuid]]$r_data)) {
   r_data <- r_sessions[[r_ssuid]]$r_data %>%
     {if (is.list(.)) list2env(., envir = new.env()) else .}
   if (is.null(r_sessions[[r_ssuid]]$r_info)) {
