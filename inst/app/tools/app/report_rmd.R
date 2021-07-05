@@ -169,7 +169,7 @@ observeEvent(input$rmd_generate, {
             'To Rstudio (Rmd)' to 'Auto paste' or 'Manual paste'."
           ),
           footer = modalButton("OK"),
-          size = "s",
+          size = "m",
           easyClose = TRUE
         )
       )
@@ -407,7 +407,7 @@ rmd_knitted <- eventReactive(report_rmd$report != 1, {
                 'To Rstudio (Rmd)' to 'Auto paste' or 'Manual paste'."
               ),
               footer = modalButton("OK"),
-              size = "s",
+              size = "m",
               easyClose = TRUE
             )
           )

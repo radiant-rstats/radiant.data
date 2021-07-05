@@ -125,7 +125,7 @@ observeEvent(input$help_keyboard, {
         )
       ),
       footer = modalButton("OK"),
-      size = "s",
+      size = "l",
       easyClose = TRUE
     )
   )

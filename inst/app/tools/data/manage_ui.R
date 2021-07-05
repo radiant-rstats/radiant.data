@@ -700,7 +700,7 @@ refreshOnLoad <- function(path, sname) {
           data of type' dropdown to load an R-data file and try again"
         ),
         footer = modalButton("OK"),
-        size = "s",
+        size = "m",
         easyClose = TRUE
       )
     )
@@ -922,7 +922,7 @@ man_show_log_modal <- function() {
          Rstudio."
       ),
       footer = modalButton("OK"),
-      size = "s",
+      size = "m",
       easyClose = TRUE
     )
   )

@@ -371,7 +371,7 @@ knit_it <- function(report, type = "rmd") {
           actionButton("report_ignore", "Ignore", title = "Ignore cleaning popup", class = "btn-primary"),
           actionButton(paste0("report_clean_", type), "Clean report", title = "Clean report", class = "btn-success")
         ),
-        size = "s",
+        size = "m",
         easyClose = TRUE
       )
     )
@@ -536,7 +536,7 @@ report_save_content <- function(file, type = "rmd") {
                 "There is no zip utility in the path on this system. Please install a zip utility (e.g., 7-zip) and try again"
               ),
               footer = modalButton("OK"),
-              size = "s",
+              size = "m",
               easyClose = TRUE
             )
           )
@@ -612,7 +612,7 @@ report_save_content <- function(file, type = "rmd") {
                 )
               ),
               footer = modalButton("OK"),
-              size = "s",
+              size = "m",
               easyClose = TRUE
             )
           )
@@ -821,7 +821,7 @@ update_report_fun <- function(cmd, type = "rmd", rfiles = FALSE) {
             title = "Copy-and-paste the code shown below",
             pre(cmd),
             footer = modalButton("Cancel"),
-            size = "s",
+            size = "m",
             easyClose = TRUE
           )
         )

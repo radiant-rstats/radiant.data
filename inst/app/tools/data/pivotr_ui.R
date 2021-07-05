@@ -211,7 +211,7 @@ output$ui_Pivotr <- renderUI({
     wellPanel(
       tags$table(
         tags$td(uiOutput("ui_pvt_name")),
-        tags$td(actionButton("pvt_store", "Store", icon = icon("plus")), class="shadow-non button-ellipsis", style = "padding-top:30px;")
+        tags$td(actionButton("pvt_store", "Store", icon = icon("plus"), class="shadow-non button-ellipsis"), style = "padding-top:30px;")
       )
     ),
     help_and_report(
@@ -414,7 +414,7 @@ observeEvent(input$pvt_store, {
                 report icon on the bottom left of your screen.")
       ),
       footer = modalButton("OK"),
-      size = "s",
+      size = "m",
       easyClose = TRUE
     )
   )

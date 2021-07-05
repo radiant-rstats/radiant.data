@@ -168,7 +168,7 @@ observeEvent(input$view_store, {
                   con on the bottom left of your screen.")
         ),
         footer = modalButton("OK"),
-        size = "s",
+        size = "m",
         easyClose = TRUE
       )
     )

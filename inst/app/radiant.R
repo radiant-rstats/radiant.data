@@ -603,9 +603,9 @@ help_modal <- function(
        <div class='help-modal-dialog modal-dialog modal-lg'>
          <div class='modal-content'>
            <div class='modal-header'>
-             <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
              <h4 class='modal-title' id='%s_label'>%s</h4>
-             </div>
+             <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+           </div>
            <div class='help-modal-body modal-body'>%s<br>
              &copy; %s (%s) <a rel='license' href='http://creativecommons.org/licenses/%s/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/%s.png' /></a>
            </div>
@@ -630,9 +630,9 @@ help_and_report <- function(
        <div class='help-modal-dialog modal-dialog modal-lg'>
          <div class='modal-content'>
            <div class='modal-header'>
-             <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
              <h4 class='modal-title' id='%s_help_label'>%s</h4>
-             </div>
+             <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+           </div>
            <div class='help-modal-body modal-body'>%s<br>
              &copy; %s (%s) <a rel='license' href='http://creativecommons.org/licenses/%s/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/%s.png' /></a>
            </div>
@@ -875,7 +875,7 @@ if (length(getOption("radiant.autosave", default = NULL)) > 0) {
                 state files that were auto-saved, run the following command from the R(studio) console:
                 unlink('{autosave_path}/*.state.rda', force = TRUE)")),
               footer = modalButton("OK"),
-              size = "s",
+              size = "m",
               easyClose = TRUE
             )
           )

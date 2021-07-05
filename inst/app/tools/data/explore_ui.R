@@ -142,7 +142,7 @@ output$ui_Explore <- renderUI({
     wellPanel(
       tags$table(
         tags$td(uiOutput("ui_expl_name")),
-        tags$td(actionButton("expl_store", "Store", icon = icon("plus")), style = "padding-top:30px;")
+        tags$td(actionButton("expl_store", "Store", icon = icon("plus"), class="shadow-non button-ellipsis"), style = "padding-top:30px;")
       )
     ),
     help_and_report(
@@ -260,7 +260,7 @@ observeEvent(input$expl_store, {
                 the report icon on the bottom left of your screen.")
       ),
       footer = modalButton("OK"),
-      size = "s",
+      size = "m",
       easyClose = TRUE
     )
   )

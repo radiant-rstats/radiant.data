@@ -3,7 +3,7 @@ ul, ol {
 }
 
 #viz_details_main + span, #viz_details_labels + span, #viz_details_style + span {
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .table {
@@ -14,6 +14,14 @@ ul, ol {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  padding: 6px 3px 6px 3px;
+  /* margin-right: 3px; */
+  /* margin-left: 3px; */
+}
+
+.btn {
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
 .snippet th, .snippet td {
@@ -25,7 +33,7 @@ table.dataTable tfoot td, table.dataTable thead td {
 }
 
 .well {
-  padding: 8px;
+  padding: 7px;
   margin-bottom: 5px;
 }
 
@@ -64,6 +72,13 @@ table.dataTable tfoot td, table.dataTable thead td {
 .help-modal-body {
   max-height: 600px;
   overflow-y: auto;
+}
+
+.modal-title {
+  display: inline-block;
+  line-height: 1;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 img {

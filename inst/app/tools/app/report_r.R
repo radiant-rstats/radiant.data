@@ -130,7 +130,7 @@ observeEvent(input$r_generate, {
                   'To Rstudio (R)' to 'Auto paste' or 'Manual paste'."
             ),
             footer = modalButton("OK"),
-            size = "s",
+            size = "m",
             easyClose = TRUE
           )
         )
@@ -331,7 +331,7 @@ output$r_knitted <- renderUI({
                   'To Rstudio (R)' to 'Auto paste' or 'Manual paste'."
                 ),
                 footer = modalButton("OK"),
-                size = "s",
+                size = "m",
                 easyClose = TRUE
               )
             )

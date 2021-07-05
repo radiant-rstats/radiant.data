@@ -990,7 +990,7 @@ store_character_popup <- function(mess) {
         title = "Data not stored",
         span(HTML(gsub("\n", "</br>", mess))),
         footer = modalButton("OK"),
-        size = "s",
+        size = "m",
         easyClose = TRUE
       )
     )
@@ -1305,7 +1305,7 @@ register <- function(new, org = "", descr = "", shiny = shiny::getDefaultReactiv
           title = "Data not registered",
           span("Only data.frames can be registered"),
           footer = modalButton("OK"),
-          size = "s",
+          size = "m",
           easyClose = TRUE
         )
       )
