@@ -421,7 +421,7 @@ rmd_knitted <- eventReactive(report_rmd$report != 1, {
           report <- cnt$content
         }
       } else if (!is_empty(input$rmd_edit)) {
-        if (!is_empty(input$rmd_edit_selection, "")) {
+        if (!radiant.data::is_empty(input$rmd_edit_selection, "")) {
           report <- input$rmd_edit_selection
         } else if (!is_empty(input$rmd_edit_hotkey$line, "") && report_rmd$knit_button == 0) {
           report <- input$rmd_edit_hotkey$line
