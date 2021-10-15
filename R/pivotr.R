@@ -75,7 +75,7 @@ pivotr <- function(
   }
   sfun <- function(x, nvar, cvars = "", fun = fun) {
     if (nvar == "n_obs") {
-      if (is_empty(cvars)) {
+      if (radiant.data::is_empty(cvars)) {
         count(x) %>% dplyr::rename("n_obs" = "n")
       } else {
         count(select_at(x, .vars = cvars)) %>% dplyr::rename("n_obs" = "n")
@@ -172,7 +172,7 @@ pivotr <- function(
   colnames(tab)[cni] <- fix_names(cn[cni])
 
   ## filtering the table if desired
-  if (!is_empty(tabfilt)) {
+  if (!radiant.data::is_empty(tabfilt)) {
     tab <- tab[-nrow(tab), ] %>%
       filter_data(tabfilt, drop = FALSE) %>%
       bind_rows(tab[nrow(tab), ]) %>%
@@ -180,7 +180,7 @@ pivotr <- function(
   }
 
   ## sorting the table if desired
-  if (!is_empty(tabsort, "")) {
+  if (!radiant.data::is_empty(tabsort, "")) {
     tabsort <- gsub(",", ";", tabsort)
     tab[-nrow(tab), ] %<>% arrange(!!! rlang::parse_exprs(tabsort))
 
@@ -231,13 +231,13 @@ summary.pivotr <- function(
   if (!shiny) {
     cat("Pivot table\n")
     cat("Data        :", object$df_name, "\n")
-    if (!is_empty(object$data_filter)) {
+    if (!radiant.data::is_empty(object$data_filter)) {
       cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
     }
-    if (!is_empty(object$tabfilt)) {
+    if (!radiant.data::is_empty(object$tabfilt)) {
       cat("Table filter:", object$tabfilt, "\n")
     }
-    if (!is_empty(object$tabsort[1])) {
+    if (!radiant.data::is_empty(object$tabsort[1])) {
       cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
     }
     nr <- attr(object$tab, "radiant_nrow")
@@ -328,7 +328,7 @@ dtab.pivotr <- function(
   ## for rounding
   isDbl <- sapply(tab, is_double)
   isInt <- sapply(tab, is.integer)
-  dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
+  dec <- ifelse(radiant.data::is_empty(dec) || dec < 0, 3, round(dec, 0))
 
   ## column names without total
   cn_nt <- if ("Total" %in% cn) cn[-which(cn == "Total")] else cn
@@ -502,7 +502,7 @@ plot.pivotr <- function(
   if (perc) p <- p + scale_y_continuous(labels = scales::percent)
 
   if (isTRUE(nvar == "n_obs")) {
-    if (!is_empty(x$normalize, "None")) {
+    if (!radiant.data::is_empty(x$normalize, "None")) {
       p <- p + labs(y = ifelse(perc, "Percentage", "Proportion"))
     }
   } else {

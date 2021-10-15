@@ -84,7 +84,7 @@ output$ui_expl_byvar <- renderUI({
 output$ui_expl_fun <- renderUI({
   r_funs <- getOption("radiant.functions")
   isolate({
-    sel <- if (is_empty(input$expl_fun)) {
+    sel <- if (radiant.data::is_empty(input$expl_fun)) {
       state_multiple("expl_fun", r_funs, default_funs)
     } else {
       input$expl_fun
@@ -101,9 +101,9 @@ output$ui_expl_fun <- renderUI({
 })
 
 output$ui_expl_top <- renderUI({
-  if (is_empty(input$expl_vars)) return()
+  if (radiant.data::is_empty(input$expl_vars)) return()
   top_var <- c("Function" = "fun", "Variables" = "var", "Group by" = "byvar")
-  if (is_empty(input$expl_byvar)) top_var <- top_var[1:2]
+  if (radiant.data::is_empty(input$expl_byvar)) top_var <- top_var[1:2]
   selectizeInput(
     "expl_top", label = "Column header:",
     choices = top_var,
@@ -155,7 +155,7 @@ output$ui_Explore <- renderUI({
 
 .explore <- eventReactive(input$expl_run, {
   if (not_available(input$expl_vars) || is.null(input$expl_top)) return()
-  if (!is_empty(input$expl_byvar) && not_available(input$expl_byvar)) return()
+  if (!radiant.data::is_empty(input$expl_byvar) && not_available(input$expl_byvar)) return()
   if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) return()
   expli <- expl_inputs()
   expli$envir <- r_data
@@ -271,14 +271,14 @@ observeEvent(input$explore_report, {
   ## get the state of the dt table
   ts <- dt_state("explore")
   xcmd <- "# summary()\ndtab(result"
-  if (!is_empty(input$expl_dec, 3)) {
+  if (!radiant.data::is_empty(input$expl_dec, 3)) {
     xcmd <- paste0(xcmd, ", dec = ", input$expl_dec)
   }
-  if (!is_empty(r_state$explore_state$length, 10)) {
+  if (!radiant.data::is_empty(r_state$explore_state$length, 10)) {
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$explore_state$length)
   }
   xcmd <- paste0(xcmd, ") %>% render()")
-  if (!is_empty(input$expl_name)) {
+  if (!radiant.data::is_empty(input$expl_name)) {
     dataset <- fix_names(input$expl_name)
     if (input$expl_name != dataset) {
       updateTextInput(session, inputId = "expl_name", value = dataset)

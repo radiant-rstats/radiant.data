@@ -159,7 +159,7 @@ output$cmb_data2 <- renderText({
 
 output$cmb_possible <- renderText({
   req(length(r_info[["datasetlist"]]) > 1)
-  if (is_empty(input$cmb_by) && !is_empty(input$cmb_type) && grepl("_join", input$cmb_type)) {
+  if (radiant.data::is_empty(input$cmb_by) && !radiant.data::is_empty(input$cmb_type) && grepl("_join", input$cmb_type)) {
     "<h3>No matching variables selected</h3>"
   }
 })
@@ -167,7 +167,7 @@ output$cmb_possible <- renderText({
 output$cmb_data <- renderText({
   req(length(r_info[["datasetlist"]]) > 1)
   req(input$cmb_store) ## dependence is needed to update cmb_type when result doesn't change
-  if (is_empty(input$cmb_name)) {
+  if (radiant.data::is_empty(input$cmb_name)) {
     dataset <- paste0("cmb_", isolate(input$dataset))
   } else {
     dataset <- fix_names(input$cmb_name)
@@ -176,7 +176,7 @@ output$cmb_data <- renderText({
     }
   }
 
-  if (!is_empty(r_info[["cmb_error"]])) {
+  if (!radiant.data::is_empty(r_info[["cmb_error"]])) {
     HTML(paste0("</br><h4>Combining data failed. The error message was:</br></br>\"", r_info[["cmb_error"]], "\"</h4>"))
   } else if (!is.null(r_data[[dataset]])) {
     show_data_snippet(dataset, nshow = 15, title = paste0(

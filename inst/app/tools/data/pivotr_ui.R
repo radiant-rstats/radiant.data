@@ -239,10 +239,10 @@ observeEvent(input$pvt_nvar, {
   req(!any(input$pvt_nvar %in% input$pvt_cvars))
 
   pvti <- pvt_inputs()
-  if (is_empty(input$pvt_fun)) pvti$fun <- "n_obs"
-  if (is_empty(input$pvt_nvar)) pvti$nvar <- "None"
+  if (radiant.data::is_empty(input$pvt_fun)) pvti$fun <- "n_obs"
+  if (radiant.data::is_empty(input$pvt_nvar)) pvti$nvar <- "None"
 
-  if (!is_empty(pvti$nvar, "None")) {
+  if (!radiant.data::is_empty(pvti$nvar, "None")) {
     req(available(pvti$nvar))
   }
   pvti$envir <- r_data
@@ -366,7 +366,7 @@ observeEvent(input$pivotr_rows_all, {
 }, {
   pvt <- .pivotr()
   req(pvt)
-  if (!is_empty(input$pvt_tab, FALSE)) {
+  if (!radiant.data::is_empty(input$pvt_tab, FALSE)) {
     pvt <- pvt_sorter(pvt, rows = r_info[["pvt_rows"]])
   }
   withProgress(message = "Making plot", value = 1, {
@@ -375,7 +375,7 @@ observeEvent(input$pivotr_rows_all, {
 })
 
 output$plot_pivot <- renderPlot({
-  if (is_empty(input$pvt_plot, FALSE)) return(invisible())
+  if (radiant.data::is_empty(input$pvt_plot, FALSE)) return(invisible())
   validate(
     need(length(input$pvt_cvars) < 4, "Plots created for at most 3 categorical variables")
   )
@@ -436,20 +436,20 @@ observeEvent(input$pivotr_report, {
   ## get the state of the dt table
   ts <- dt_state("pivotr")
   xcmd <- paste0("# summary()\ndtab(result")
-  if (!is_empty(input$pvt_format, "none")) {
+  if (!radiant.data::is_empty(input$pvt_format, "none")) {
     xcmd <- paste0(xcmd, ", format = \"", input$pvt_format, "\"")
   }
   if (isTRUE(input$pvt_perc)) {
     xcmd <- paste0(xcmd, ", perc = ", input$pvt_perc)
   }
-  if (!is_empty(input$pvt_dec, 3)) {
+  if (!radiant.data::is_empty(input$pvt_dec, 3)) {
     xcmd <- paste0(xcmd, ", dec = ", input$pvt_dec)
   }
-  if (!is_empty(r_state$pivotr_state$length, 10)) {
+  if (!radiant.data::is_empty(r_state$pivotr_state$length, 10)) {
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$pivotr_state$length)
   }
   xcmd <- paste0(xcmd, ") %>% render()")
-  if (!is_empty(input$pvt_name)) {
+  if (!radiant.data::is_empty(input$pvt_name)) {
     dataset <- fix_names(input$pvt_name)
     if (input$pvt_name != dataset) {
       updateTextInput(session, inputId = "pvt_name", value = dataset)

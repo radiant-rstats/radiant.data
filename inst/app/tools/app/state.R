@@ -47,11 +47,11 @@ state_name <- function(out = paste0("radiant-", Sys.Date(), ".state.rda"), full.
   ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
   pdir <- getOption("radiant.project_dir", default = ldir)
   ## legacy
-  if (is_empty(rsn)) rsn <- r_state$state_name 
-  if (!is_empty(rsn)) {
+  if (radiant.data::is_empty(rsn)) rsn <- r_state$state_name 
+  if (!radiant.data::is_empty(rsn)) {
     fn <- rsn 
   } else {
-    if (!is_empty(pdir)) {
+    if (!radiant.data::is_empty(pdir)) {
       fn <- paste0(basename(pdir), ".state.rda")
       r_state$radiant_state_name <<- fn
     } else {

@@ -30,7 +30,7 @@ explore <- function(
 ) {
 
   tvars <- vars
-  if (!is_empty(byvar)) tvars <- unique(c(tvars, byvar))
+  if (!radiant.data::is_empty(byvar)) tvars <- unique(c(tvars, byvar))
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   dataset <- get_data(dataset, tvars, filt = data_filter, na.rm = FALSE, envir = envir)
@@ -95,7 +95,7 @@ explore <- function(
     dc[isLogNum] <- "integer"
   }
 
-  if (is_empty(byvar)) {
+  if (radiant.data::is_empty(byvar)) {
     byvar <- c()
     tab <- summarise_all(dataset, fun, na.rm = TRUE)
   } else {
@@ -147,7 +147,7 @@ explore <- function(
   }
 
   ## ensure factors ordered as in the (sorted) table
-  if (!is_empty(byvar) && top != "byvar") {
+  if (!radiant.data::is_empty(byvar) && top != "byvar") {
     for (i in byvar) tab[[i]] %<>% factor(., levels = unique(.))
     rm(i)
   }
@@ -209,20 +209,20 @@ summary.explore <- function(object, dec = 3, ...) {
 
   cat("Explore\n")
   cat("Data        :", object$df_name, "\n")
-  if (!is_empty(object$data_filter)) {
+  if (!radiant.data::is_empty(object$data_filter)) {
     cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
   }
-  if (!is_empty(object$tabfilt)) {
+  if (!radiant.data::is_empty(object$tabfilt)) {
     cat("Table filter:", object$tabfilt, "\n")
   }
-  if (!is_empty(object$tabsort[1])) {
+  if (!radiant.data::is_empty(object$tabsort[1])) {
     cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
   }
   nr <- attr(object$tab, "radiant_nrow")
   if (!isTRUE(is.infinite(nr)) && !isTRUE(is.infinite(object$nr)) && object$nr < nr) {
     cat(paste0("Rows shown  : ", object$nr, " (out of ", nr, ")\n"))
   }
-  if (!is_empty(object$byvar[1])) {
+  if (!radiant.data::is_empty(object$byvar[1])) {
     cat("Grouped by  :", object$byvar, "\n")
   }
   cat("Functions   :", paste0(object$fun, collapse = ", "), "\n")
@@ -278,7 +278,7 @@ store.explore <- function(dataset, object, name, ...) {
 #'
 #' @export
 flip <- function(expl, top = "fun") {
-  cvars <- expl$byvar %>% {if (is_empty(.[1])) character(0) else .}
+  cvars <- expl$byvar %>% {if (radiant.data::is_empty(.[1])) character(0) else .}
   if (top[1] == "var") {
     expl$tab %<>% gather(".function", "value", !! -(1:(length(cvars) + 1))) %>%
       spread("variable", "value")
@@ -328,7 +328,7 @@ dtab.explore <- function(
   cn_cat <- cn_all[-which(cn_all %in% cn_num)]
   isInt <- sapply(tab, is.integer)
   isDbl <- sapply(tab, is_double)
-  dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
+  dec <- ifelse(radiant.data::is_empty(dec) || dec < 0, 3, round(dec, 0))
 
   top <- c("fun" = "Function", "var" = "Variables", "byvar" = paste0("Group by: ", object$byvar[1]))[object$top]
   sketch <- shiny::withTags(

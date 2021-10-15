@@ -4,7 +4,7 @@
 
 ## show error message from filter dialog
 output$ui_filter_error <- renderUI({
-  if (is_empty(r_info[["filter_error"]])) return()
+  if (radiant.data::is_empty(r_info[["filter_error"]])) return()
   helpText(r_info[["filter_error"]])
 })
 

@@ -56,7 +56,7 @@
 #' @export
 visualize <- function(
   dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
-  type = ifelse(is_empty(yvar), "dist", "scatter"), nrobs = -1,
+  type = ifelse(radiant.data::is_empty(yvar), "dist", "scatter"), nrobs = -1,
   facet_row = ".", facet_col = ".", color = "none", fill = "none",
   size = "none", fillcol = "blue", linecol = "black", pointcol = "black",
   bins = 10, smooth = 1, fun = "mean", check = "", axes = "",
@@ -91,7 +91,7 @@ visualize <- function(
     if (!type %in% c("dist", "density")) {
       return("No Y-variable provided for a plot that requires one")
     }
-  } else if (type == "surface" && is_empty(fill, "none")) {
+  } else if (type == "surface" && radiant.data::is_empty(fill, "none")) {
     return("No Fill variable provided for a plot that requires one")
   } else {
     if (type %in% c("dist", "density")) {
@@ -130,7 +130,7 @@ visualize <- function(
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   dataset <- get_data(dataset, vars, filt = data_filter, envir = envir)
 
-  if (type == "scatter" && !is_empty(nrobs)) {
+  if (type == "scatter" && !radiant.data::is_empty(nrobs)) {
     nrobs <- as.integer(nrobs)
     if (nrobs > 0 && nrobs < nrow(dataset)) {
       dataset <- sample_n(dataset, nrobs, replace = FALSE)
@@ -251,9 +251,9 @@ visualize <- function(
   ## combining Y-variables if needed
   if (comby && length(yvar) > 1) {
     if (any(xvar %in% yvar)) return("X-variables cannot be part of Y-variables when combining Y-variables")
-    if (!is_empty(color, "none")) return("Cannot use Color when combining Y-variables")
-    if (!is_empty(fill, "none")) return("Cannot use Fill when combining Y-variables")
-    if (!is_empty(size, "none")) return("Cannot use Size when combining Y-variables")
+    if (!radiant.data::is_empty(color, "none")) return("Cannot use Color when combining Y-variables")
+    if (!radiant.data::is_empty(fill, "none")) return("Cannot use Fill when combining Y-variables")
+    if (!radiant.data::is_empty(size, "none")) return("Cannot use Size when combining Y-variables")
     if (facet_row %in% yvar || facet_col %in% yvar) return("Facet row or column variables cannot be part of\nY-variables when combining Y-variables")
 
     dataset <- gather(dataset, "yvar", "values", !! yvar, factor_key = TRUE)
@@ -266,7 +266,7 @@ visualize <- function(
 
   ## combining X-variables if needed
   if (combx && length(xvar) > 1) {
-    if (!is_empty(fill, "none")) return("Cannot use Fill when combining X-variables")
+    if (!radiant.data::is_empty(fill, "none")) return("Cannot use Fill when combining X-variables")
     if (facet_row %in% xvar || facet_col %in% xvar) return("Facet row or column variables cannot be part of\nX-variables when combining Y-variables")
     if (any(!get_class(select_at(dataset, .vars = xvar)) %in% c("numeric", "integer"))) return("Cannot combine plots for non-numeric variables")
 
@@ -680,7 +680,7 @@ qscatter <- function(dataset, xvar, yvar, lev = "", fun = "mean", bins = 20) {
     dataset <- mutate_at(dataset, .vars = yvar, .funs = as.factor)
   }
   if (is.factor(dataset[[yvar]])) {
-    if (is_empty(lev)) lev <- levels(pull(dataset, !! yvar))[1]
+    if (radiant.data::is_empty(lev)) lev <- levels(pull(dataset, !! yvar))[1]
     dataset <- mutate_at(dataset, .vars = yvar, .funs = function(y) as.integer(y == lev))
     lev <- paste0(" {", lev, "}")
   } else {

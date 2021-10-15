@@ -12,17 +12,25 @@ viz_theme <- c(
   "Light" = "theme_light", "Dark" = "theme_dark",
   "Minimal" = "theme_minimal", "Classic" = "theme_classic"
 )
-viz_base_family = c(
-  "Theme default" = "", "Helvetica" = "Helvetica", "Serif" = "serif",
-  "Sans" = "sans", "Mono" = "mono", "Courier" = "Courier", "Times" = "Times"
-)
+
+os_type = Sys.info()["sysname"]
+if (os_type == "Windows") {
+  fnt <- names(windowsFonts())
+  names(fnt) <- tools::toTitleCase(fnt)
+  viz_base_family <- c("Theme default" = "", fnt)
+} else {
+  viz_base_family = c(
+    "Theme default" = "", "Helvetica" = "Helvetica", "Serif" = "serif",
+    "Sans" = "sans", "Mono" = "mono", "Courier" = "Courier", "Times" = "Times"
+  )
+}
 
 viz_labs <- c("title", "subtitle", "caption", "x", "y")
 viz_add_labs <- function() {
   lab_list <- list()
   for(l in viz_labs) {
     inp <- input[[paste0("viz_labs_", l)]]
-    if(!is_empty(inp)) lab_list[[l]] <- inp
+    if(!radiant.data::is_empty(inp)) lab_list[[l]] <- inp
   }
   lab_list
 }
@@ -208,7 +216,7 @@ output$ui_viz_axes <- renderUI({
   } else if (input$viz_type %in% c("bar", "box")) {
     ind <- c(1, 3)
   }
-  if (!is_empty(input$viz_facet_row, ".") || !is_empty(input$viz_facet_col, ".")) ind <- c(ind, 4)
+  if (!radiant.data::is_empty(input$viz_facet_row, ".") || !radiant.data::is_empty(input$viz_facet_col, ".")) ind <- c(ind, 4)
   if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
 
   checkboxGroupInput(
@@ -442,7 +450,7 @@ output$ui_Visualize <- renderUI({
 })
 
 viz_plot_width <- reactive({
-  if (is_empty(input$viz_plot_width)) r_info[["plot_width"]] else input$viz_plot_width
+  if (radiant.data::is_empty(input$viz_plot_width)) r_info[["plot_width"]] else input$viz_plot_width
 })
 
 ## based on https://stackoverflow.com/a/40182833/1974918
@@ -451,7 +459,7 @@ viz_plot_height <- eventReactive({
   input$viz_plot_height
   input$viz_plot_width
 }, {
-  if (is_empty(input$viz_plot_height)) {
+  if (radiant.data::is_empty(input$viz_plot_height)) {
     r_info[["plot_height"]]
   } else {
     lx <- ifelse(not_available(input$viz_xvar) || isTRUE(input$viz_combx), 1, length(input$viz_xvar))

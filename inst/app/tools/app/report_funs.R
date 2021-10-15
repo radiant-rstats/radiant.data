@@ -25,7 +25,7 @@ file_upload_button <- function(
       accept <- ""
     }
 
-    if (!is_empty(label)) {
+    if (!radiant.data::is_empty(label)) {
       label <-  paste0("</br><label>", label, "</label></br>")
     }
 
@@ -69,7 +69,7 @@ rstudio_context <- function(type = "rmd") {
   path <- rse$path
   ext <- tools::file_ext(path)
 
-  if (is_empty(path) || !file.exists(path) || tolower(ext) != type) {
+  if (radiant.data::is_empty(path) || !file.exists(path) || tolower(ext) != type) {
     ## path will be empty of new file hasn't been save yet
     list(path = "", rpath = "", base = "", base_name = "", ext = "", content = "")
   } else {
@@ -77,7 +77,7 @@ rstudio_context <- function(type = "rmd") {
     pdir <- getOption("radiant.project_dir", default = radiant.data::find_home())
 
     sel <- rse$selection[[1]][["text"]]
-    if (is_empty(sel)) {
+    if (radiant.data::is_empty(sel)) {
       content <- paste0(rse$content, collapse = "\n")
     } else {
       content <- paste0(sel, collapse = "\n")
@@ -86,7 +86,7 @@ rstudio_context <- function(type = "rmd") {
     base <- basename(path)
     base_name <- sub(paste0(".", ext), "", base)
 
-    rpath <- if (is_empty(pdir)) {
+    rpath <- if (radiant.data::is_empty(pdir)) {
       path
     } else {
       sub(paste0(pdir, "/"), "", path)
@@ -386,7 +386,7 @@ knit_it <- function(report, type = "rmd") {
   pdir <- getOption("radiant.project_dir", default = ldir)
 
   tdir <- tempdir()
-  owd <- ifelse(is_empty(pdir), setwd(tdir), setwd(pdir))
+  owd <- ifelse(radiant.data::is_empty(pdir), setwd(tdir), setwd(pdir))
   on.exit(setwd(owd))
 
   ## sizing issue with ggplotly and knitr
@@ -447,7 +447,7 @@ report_name <- function(type = "rmd", out = "report", full.name = FALSE) {
     fn <- ""
   }
 
-  if (is_empty(fn)) {
+  if (radiant.data::is_empty(fn)) {
     fn <- state_name()
     fn <- sans_ext(fn) %>%
       sub("-state", paste0("-", out), .)
@@ -475,7 +475,7 @@ report_save_filename <- function(type = "rmd", full.name = TRUE) {
 
   if (input[[paste0(type, "_generate")]] %in% c("To Rmd", "To R")) {
     cnt <- rstudio_context(type = type)
-    if (!is_empty(cnt$path)) {
+    if (!radiant.data::is_empty(cnt$path)) {
       if (cnt$path != cnt$rpath) {
         r_state[[paste0("radiant_", type, "_name")]] <<- cnt$rpath
       } else {
@@ -519,7 +519,7 @@ report_save_content <- function(file, type = "rmd") {
       pdir <- getOption("radiant.project_dir", default = ldir)
 
       tdir <- tempdir()
-      owd <- ifelse(is_empty(pdir), setwd(tdir), setwd(pdir))
+      owd <- ifelse(radiant.data::is_empty(pdir), setwd(tdir), setwd(pdir))
       on.exit(setwd(owd))
 
       save_type <- input[[paste0(type, "_save_type")]]
@@ -527,7 +527,7 @@ report_save_content <- function(file, type = "rmd") {
 
       zip_info <- getOption("radiant.zip")
       if (save_type %in% c("Rmd + Data (zip)", "R + Data (zip)")) {
-        if (is_empty(zip_info)) {
+        if (radiant.data::is_empty(zip_info)) {
           ## No zip warning
           showModal(
             modalDialog(
@@ -548,7 +548,7 @@ report_save_content <- function(file, type = "rmd") {
 
       if (generate %in% c("To Rmd", "To R")) {
         cnt <- rstudio_context(type)
-        if (is_empty(cnt$path) || !cnt$ext == type) {
+        if (radiant.data::is_empty(cnt$path) || !cnt$ext == type) {
           if (generate == "To Rmd") {
             report <- "#### Radiant is set to use an rmarkdown document in Rstudio ('To Rmd').\n#### Please check that you have an .Rmd file open in Rstudio and that the file has been saved to disk.\n#### If you want to use the editor in Radiant instead, change 'To Rmd' to 'Auto paste' or 'Manual paste'."
           } else {
@@ -691,7 +691,7 @@ update_report <- function(
   ## determine number of characters for main command for wrapping
   if (missing(wrap)) {
     lng <- nchar(pre_cmd) + nchar(fun_name) + nchar(post_cmd) + 2
-    if (!is_empty(inp_main)) {
+    if (!radiant.data::is_empty(inp_main)) {
       lng <- lng + sum(nchar(inp_main)) +
         sum(nchar(names(inp_main))) +
         length(inp_main) * 5 - 1
@@ -836,7 +836,7 @@ update_report_fun <- function(cmd, type = "rmd", rfiles = FALSE) {
           rstudioapi::insertText(Inf, .)
       })
     } else {
-      if (is_empty(r_state[[editor]])) {
+      if (radiant.data::is_empty(r_state[[editor]])) {
         r_state[[editor]] <<- paste0("## Your report title\n\n", cmd)
       } else {
         r_state[[editor]] <<- paste0(fix_smart(r_state[[editor]]), "\n", cmd)

@@ -362,7 +362,7 @@ man_save_data <- function(file) {
       readr::write_csv(r_data[[robj]], file = file)
       r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_csv({robj}, file = {pp$rpath})')
     } else {
-      if (!is_empty(input$man_data_descr)) {
+      if (!radiant.data::is_empty(input$man_data_descr)) {
         attr(r_data[[robj]], "description") <- fix_smart(r_info[[paste0(robj, "_descr")]])
       }
 
@@ -656,7 +656,7 @@ output$refreshOnLoad <- renderUI({
     if (getOption("radiant.shinyFiles", FALSE)) {
       if (is.integer(input$state_load)) return()
       path <- shinyFiles::parseFilePaths(sf_volumes, input$state_load)
-      if (inherits(path, "try-error") || is_empty(path$datapath)) return()
+      if (inherits(path, "try-error") || radiant.data::is_empty(path$datapath)) return()
       path <- path$datapath
       sname <- basename(path)
     } else {
@@ -668,7 +668,7 @@ output$refreshOnLoad <- renderUI({
     sname <- input$state_upload$name
   }
 
-  if (is_empty(path)) {
+  if (radiant.data::is_empty(path)) {
     invisible()
   } else {
     withProgress(message = "Loading state file", value = 1, {
@@ -774,7 +774,7 @@ saveState <- function(filename) {
 }
 
 observeEvent(input$renameButton, {
-  req(!is_empty(input$data_rename))
+  req(!radiant.data::is_empty(input$data_rename))
   req(!identical(input$dataset, input$data_rename))
   ## use lobstr::object_size to see that the size of the list doesn't change
   ## when you assign a list element another name
@@ -876,11 +876,11 @@ man_show_log <- reactive({
   if (getOption("radiant.shinyFiles", FALSE)) {
     lcmd <- r_info[[paste0(input$dataset, "_lcmd")]]
     cmd <- ""
-    if (!is_empty(lcmd)) {
+    if (!radiant.data::is_empty(lcmd)) {
       cmd <- paste0("## Load commands\n", lcmd)
     }
     scmd <- r_info[[paste0(input$dataset, "_scmd")]]
-    if (!is_empty(scmd)) {
+    if (!radiant.data::is_empty(scmd)) {
       cmd <- paste0(cmd, "\n\n## Save commands\n", scmd)
     }
     cmd
