@@ -393,7 +393,7 @@ rmd_knitted <- eventReactive(report_rmd$report != 1, {
       if (isTRUE(input$rmd_generate == "To Rmd")) {
 
         cnt <- rstudio_context(type = "rmd")
-        if (is_empty(cnt$path) || is_empty(cnt$ext, "r")) {
+        if (radiant.data::is_empty(cnt$path) || is_empty(cnt$ext, "r")) {
 
           ## popup to suggest user create an .Rmd file
           showModal(
@@ -420,10 +420,10 @@ rmd_knitted <- eventReactive(report_rmd$report != 1, {
           }
           report <- cnt$content
         }
-      } else if (!is_empty(input$rmd_edit)) {
+      } else if (!radiant.data::is_empty(input$rmd_edit)) {
         if (!radiant.data::is_empty(input$rmd_edit_selection, "")) {
           report <- input$rmd_edit_selection
-        } else if (!is_empty(input$rmd_edit_hotkey$line, "") && report_rmd$knit_button == 0) {
+        } else if (!radiant.data::is_empty(input$rmd_edit_hotkey$line, "") && report_rmd$knit_button == 0) {
           report <- input$rmd_edit_hotkey$line
         } else {
           report <- input$rmd_edit
