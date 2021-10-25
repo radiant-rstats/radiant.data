@@ -397,14 +397,9 @@ navbar_proj <- function(navbar) {
     options(radiant.project_dir = pdir)
     options(radiant.launch_dir = pdir)
   }
-  proj <- tags$span(class = "nav navbar-brand navbar-right", proj)
-  ## based on: https://stackoverflow.com/a/40755608/1974918
-  navbar[[3]][[1]]$children[[1]]$children[[2]] <- htmltools::tagAppendChild(
-    navbar[[3]][[1]]$children[[1]]$children[[2]],
-    proj
-  )
-
-  navbar
+  proj_brand <- tags$span(class = "nav navbar-brand navbar-right", proj)
+  navbar_ <- htmltools::tagQuery(navbar)$find(".navbar-collapse")$append(proj_brand)$allTags()
+  htmltools::attachDependencies(navbar_, htmltools::findDependencies(navbar))
 }
 
 if (getOption("radiant.shinyFiles", FALSE)) {

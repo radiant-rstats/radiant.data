@@ -22,7 +22,7 @@ Imports:
     knitr (>= 1.20),
     markdown (>= 1.0),
     rmarkdown(>= 1.14),
-    shiny (>= 1.4.0),
+    shiny (>= 1.6.0),
     jsonlite (>= 1.0),
     shinyAce (>= 0.4.1),
     psych (>= 1.8.4),
