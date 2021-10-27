@@ -285,7 +285,7 @@ help_menu <- function(hlp) {
     navbarMenu(
       "", icon = icon("question-circle"),
       tabPanel("Help", uiOutput(hlp), icon = icon("question")),
-      tabPanel(actionLink("help_keyboard", "Keyboard shortcuts", icon = icon("keyboard-o"))),
+      tabPanel(actionLink("help_keyboard", "Keyboard shortcuts", icon = icon("keyboard-o", verify_fa = FALSE))),
       # tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
       tabPanel(tags$a(
         "", href = "https://radiant-rstats.github.io/docs/tutorials.html", target = "_blank",
@@ -548,7 +548,7 @@ options(
           )
         ),
         tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
-          list(icon("refresh"), "Refresh"), onclick = "window.location.reload();"
+          list(icon("sync"), "Refresh"), onclick = "window.location.reload();"
         )),
         ## had to remove class = "action-button" to make this work
         tabPanel(tags$a(
