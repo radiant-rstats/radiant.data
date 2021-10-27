@@ -132,7 +132,7 @@ output$ui_Explore <- renderUI({
       uiOutput("ui_expl_run")
     ),
    wellPanel(
-      # actionLink("expl_clear", "Clear settings", icon = icon("refresh"), style="color:black"),
+      # actionLink("expl_clear", "Clear settings", icon = icon("sync"), style="color:black"),
       uiOutput("ui_expl_vars"),
       uiOutput("ui_expl_byvar"),
       uiOutput("ui_expl_fun"),

@@ -24,7 +24,7 @@ output$ui_view_vars <- renderUI({
 output$ui_View <- renderUI({
   tagList(
     wellPanel(
-      actionLink("view_clear", "Clear settings", icon = icon("refresh"), style = "color:black"),
+      actionLink("view_clear", "Clear settings", icon = icon("sync"), style = "color:black"),
       uiOutput("ui_view_vars"),
       numericInput(
         "view_dec", "Decimals:",

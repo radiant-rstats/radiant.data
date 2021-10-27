@@ -170,7 +170,7 @@ output$ui_Pivotr <- renderUI({
       uiOutput("ui_pvt_run")
     ),
     wellPanel(
-      # actionLink("pvt_clear", "Clear settings", icon = icon("refresh"), style="color:black"),
+      # actionLink("pvt_clear", "Clear settings", icon = icon("sync"), style="color:black"),
       uiOutput("ui_pvt_cvars"),
       uiOutput("ui_pvt_nvar"),
       conditionalPanel("input.pvt_nvar != 'None'", uiOutput("ui_pvt_fun")),

@@ -915,7 +915,7 @@ run_refresh <- function(
       }
       updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play"))
     } else if (run) {
-      updateActionButton(session, paste0(pre, "_run"), relabel, icon = icon("refresh", class = "fa-spin"))
+      updateActionButton(session, paste0(pre, "_run"), relabel, icon = icon("sync", class = "fa-spin"))
     } else {
       updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play"))
     }
