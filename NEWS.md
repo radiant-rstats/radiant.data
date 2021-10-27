@@ -1,6 +1,11 @@
+# radiant.data 1.4.1
+
+* Addressing `is_empty` function clash with `rlang`
+* Upgrading `shiny` dependency to 1.6.0 and fixing project text alignment issue (@cpsievert, https://github.com/radiant-rstats/radiant.data/pull/28)
+
 # radiant.data 1.3.12
 
-* Fixes related to breaking changes `magrittr`
+* Fixes related to breaking changes in `magrittr`
 * Fixes related to changes in `readr` argument names
 * Fix to launch radiant in a "windows"
 
