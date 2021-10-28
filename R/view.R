@@ -48,14 +48,14 @@ dtab.data.frame <- function(
 ) {
 
   dat <- get_data(object, vars, filt = filt, rows = rows, na.rm = na.rm, envir = envir)
-  if (!is_empty(nr) && nr < nrow(dat)) {
+  if (!radiant.data::is_empty(nr) && nr < nrow(dat)) {
     dat <- dat[seq_len(nr), , drop = FALSE]
   }
 
   ## for rounding
   isInt <- sapply(dat, is.integer)
   isDbl <- sapply(dat, is_double)
-  dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
+  dec <- ifelse(radiant.data::is_empty(dec) || dec < 0, 3, round(dec, 0))
 
   ## don't do normal rounding for perc variables
   isInt[intersect(names(isInt), perc)] <- FALSE
@@ -66,11 +66,11 @@ dtab.data.frame <- function(
   dat <- mutate_if(dat, isBigFct, as.character)
 
   ## for display options see https://datatables.net/reference/option/dom
-  if (is_empty(dom)) {
+  if (radiant.data::is_empty(dom)) {
     dom <- if (pageLength == -1 || nrow(dat) < pageLength) "t" else "lftip"
   }
 
-  if (!is_empty(caption)) {
+  if (!radiant.data::is_empty(caption)) {
     ## from https://github.com/rstudio/DT/issues/630#issuecomment-461191378
     caption <- shiny::tags$caption(style = 'caption-side: top; text-align: left; color:black; font-size:150%;', caption)
   }
@@ -106,7 +106,7 @@ dtab.data.frame <- function(
     dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isDbl], digits = dec)
   if (sum(isInt) > 0)
     dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isInt], digits = 0)
-  if (!is_empty(perc))
+  if (!radiant.data::is_empty(perc))
     dt_tab <- DT::formatPercentage(dt_tab, perc, digits = dec)
 
   ## see https://github.com/yihui/knitr/issues/1198
@@ -207,7 +207,7 @@ view_data <- function(
   ## for rounding
   isDbl <- sapply(dat, is_double)
   isInt <- sapply(dat, is.integer)
-  dec <- ifelse(is_empty(dec) || dec < 0, 3, round(dec, 0))
+  dec <- ifelse(radiant.data::is_empty(dec) || dec < 0, 3, round(dec, 0))
 
   shinyApp(
     ui = fluidPage(

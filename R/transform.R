@@ -310,9 +310,9 @@ as_distance <- function(
 #' @export
 make_train <- function(n = .7, nr = NULL, blocks = NULL, seed = 1234) {
   seed <- gsub("[^0-9]", "", seed)
-  if (!is_empty(seed)) set.seed(seed)
+  if (!radiant.data::is_empty(seed)) set.seed(seed)
 
-  if (is_empty(nr) && is_empty(blocks)) {
+  if (radiant.data::is_empty(nr) && radiant.data::is_empty(blocks)) {
     stop("Please provided the number of rows in the data (nr) or a vector with blocking information (blocks)")
   } else if (is.data.frame(blocks)) {
     blocks <- do.call(paste, c(blocks, sep = "-"))
@@ -356,7 +356,7 @@ mutate_ext <- function(.tbl, .funs, ..., .ext = "", .vars = c()) {
     }
   }
 
-  if (is_empty(.ext)) {
+  if (radiant.data::is_empty(.ext)) {
     dplyr::mutate_at(.tbl, .vars = .vars, .funs = .funs) %>%
       set_rownames(rownames(.tbl))
   } else {
@@ -710,7 +710,7 @@ refactor <- function(x, levs = levels(x), repl = NA) {
   }
 
   if (length(levs) > 0 && length(lv) > length(levs)) {
-    if (!is_empty(repl)) levs <- unique(c(repl, levs))
+    if (!radiant.data::is_empty(repl)) levs <- unique(c(repl, levs))
     x <- as_character(x) %>% ifelse(. %in% base::setdiff(lv, levs), repl, .)
   }
 
@@ -729,7 +729,7 @@ refactor <- function(x, levs = levels(x), repl = NA) {
 #' make_vec(0.1)
 #' @export
 make_vec <- function(x) {
-  if (is_empty(x)) {
+  if (radiant.data::is_empty(x)) {
     return(NULL)
   } else if (!is.character(x)) {
     return(x)

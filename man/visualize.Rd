@@ -10,7 +10,7 @@ visualize(
   yvar = "",
   comby = FALSE,
   combx = FALSE,
-  type = ifelse(is_empty(yvar), "dist", "scatter"),
+  type = ifelse(radiant.data::is_empty(yvar), "dist", "scatter"),
   nrobs = -1,
   facet_row = ".",
   facet_col = ".",

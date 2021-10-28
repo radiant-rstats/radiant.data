@@ -29,7 +29,7 @@ combine_data <- function(
 ) {
 
   is_join <- grepl("_join", type)
-  if (is_join && is_empty(by)) {
+  if (is_join && radiant.data::is_empty(by)) {
     return(cat("No variables selected to join datasets\n"))
   }
 

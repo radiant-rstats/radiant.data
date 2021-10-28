@@ -24,7 +24,7 @@ output$ui_view_vars <- renderUI({
 output$ui_View <- renderUI({
   tagList(
     wellPanel(
-      actionLink("view_clear", "Clear settings", icon = icon("refresh"), style = "color:black"),
+      actionLink("view_clear", "Clear settings", icon = icon("sync"), style = "color:black"),
       uiOutput("ui_view_vars"),
       numericInput(
         "view_dec", "Decimals:",
@@ -92,7 +92,7 @@ output$dataviewer <- DT::renderDataTable({
   ## for rounding
   isInt <- sapply(dat, function(x) is.integer(x))
   isDbl <- sapply(dat, is_double)
-  dec <- input$view_dec %>% {ifelse(is_empty(.) || . < 0, 3, round(., 0))}
+  dec <- input$view_dec %>% {ifelse(radiant.data::is_empty(.) || . < 0, 3, round(., 0))}
 
   withProgress(
     message = "Generating view table", value = 1,
@@ -197,7 +197,7 @@ download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(i
   ## get the state of the dt table
   ts <- dt_state("dataviewer", vars = input$view_vars)
 
-  if (is_empty(input$view_name)) {
+  if (radiant.data::is_empty(input$view_name)) {
     dataset <- NULL
   } else {
     dataset <- fix_names(input$view_name)
@@ -223,40 +223,40 @@ download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(i
     vars <- paste0(vars, collapse = ", ")
   }
 
-  if (is_empty(dataset)) {
+  if (radiant.data::is_empty(dataset)) {
     xcmd <- paste0("  dtab(")
   } else {
     xcmd <- paste0("# dtab(", dataset, ", ")
   }
-  if (!is_empty(input$view_dec, 3)) {
+  if (!radiant.data::is_empty(input$view_dec, 3)) {
     xcmd <- paste0(xcmd, "dec = ", input$view_dec, ", ")
   }
-  if (!is_empty(r_state$dataviewer_state$length, 10)) {
+  if (!radiant.data::is_empty(r_state$dataviewer_state$length, 10)) {
     xcmd <- paste0(xcmd, "pageLength = ", r_state$dataviewer_state$length, ", ")
   }
   xcmd <- paste0(xcmd, "nr = 100) %>% render()")
 
   ## create the command to filter and sort the data
-  if (is_empty(dataset)) {
+  if (radiant.data::is_empty(dataset)) {
     cmd <- paste0(cmd, "## filter and sort the dataset\n", input$dataset)
   } else {
     cmd <- paste0(cmd, "## filter and sort the dataset\n", dataset, " <- ", input$dataset)
   }
-  if (input$show_filter && !is_empty(input$data_filter)) {
+  if (input$show_filter && !radiant.data::is_empty(input$data_filter)) {
     cmd <- paste0(cmd, " %>%\n  filter(", input$data_filter, ")")
   }
-  if (!is_empty(ts$search)) {
+  if (!radiant.data::is_empty(ts$search)) {
     cmd <- paste0(cmd, " %>%\n  filter(search_data(., \"", ts$search, "\"))")
   }
-  if (!is_empty(ts$tabfilt)) {
+  if (!radiant.data::is_empty(ts$tabfilt)) {
     cmd <- paste0(cmd, " %>%\n  filter(", ts$tabfilt, ")")
   }
-  if (!is_empty(ts$tabsort)) {
+  if (!radiant.data::is_empty(ts$tabsort)) {
     cmd <- paste0(cmd, " %>%\n  arrange(", ts$tabsort, ")")
   }
   ## moved `select` to the end so filters can use variables
   ## not selected for the final dataset
-  if (is_empty(dataset)) {
+  if (radiant.data::is_empty(dataset)) {
     paste0(cmd, " %>%\n  select(", vars, ") %>%") %>%
       paste0("\n", xcmd)
   } else {

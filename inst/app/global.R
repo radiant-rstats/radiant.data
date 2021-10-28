@@ -285,7 +285,7 @@ help_menu <- function(hlp) {
     navbarMenu(
       "", icon = icon("question-circle"),
       tabPanel("Help", uiOutput(hlp), icon = icon("question")),
-      tabPanel(actionLink("help_keyboard", "Keyboard shortcuts", icon = icon("keyboard-o"))),
+      tabPanel(actionLink("help_keyboard", "Keyboard shortcuts", icon = icon("keyboard-o", verify_fa = FALSE))),
       # tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
       tabPanel(tags$a(
         "", href = "https://radiant-rstats.github.io/docs/tutorials.html", target = "_blank",
@@ -407,20 +407,10 @@ navbar_proj <- function(navbar) {
     options(radiant.project_dir = pdir)
     options(radiant.launch_dir = pdir)
   }
-  proj <- tags$span(class = "nav navbar-brand navbar-right", proj)
 
-  ## based on: https://stackoverflow.com/a/40755608/1974918
-  # Try to insert the project into the navbar
-  # https://stackoverflow.com/a/40755608/1974918
-  # The actual navbar content may be in a different location if {bslib} is used
-  # https://github.com/rstudio/shiny/pull/3236
-  idx <- if (has_bslib_theme()) 4 else 3
-  collapse <- navbar[[idx]][[1]]$children[[1]]$children[[2]]
-  if (isTRUE(grepl("navbar-collapse", collapse$attribs$class))) {
-    navbar[[idx]][[1]]$children[[1]]$children[[2]] <- htmltools::tagAppendChild(collapse, proj)
-  }
-
-  navbar
+  proj_brand <- tags$span(class = "nav navbar-brand navbar-right", proj)
+  navbar_ <- htmltools::tagQuery(navbar)$find(".navbar-collapse")$append(proj_brand)$allTags()
+  htmltools::attachDependencies(navbar_, htmltools::findDependencies(navbar))
 }
 
 if (getOption("radiant.shinyFiles", FALSE)) {
@@ -565,7 +555,7 @@ options(
           )
         ),
         tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
-          list(icon("refresh"), "Refresh"), onclick = "window.location.reload();"
+          list(icon("sync"), "Refresh"), onclick = "window.location.reload();"
         )),
         ## had to remove class = "action-button" to make this work
         tabPanel(tags$a(

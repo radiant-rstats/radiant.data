@@ -116,7 +116,7 @@ saveStateOnRefresh <- function(session = session) {
     gsub("\\n", "", .) %>%
     gsub("\"", "\'", .) %>%
     fix_smart()
-  if (is_empty(selcom) || input$show_filter == FALSE) {
+  if (radiant.data::is_empty(selcom) || input$show_filter == FALSE) {
     isolate(r_info[["filter_error"]] <- "")
   } else if (grepl("([^=!<>])=([^=])", selcom)) {
     isolate(r_info[["filter_error"]] <- "Invalid filter: Never use = in a filter! Use == instead (e.g., city == 'San Diego'). Update or remove the expression")
@@ -474,7 +474,7 @@ if (getOption("radiant.shinyFiles", FALSE)) {
     observeEvent(input[[id]], {
       if (is.integer(input[[id]])) return()
       path <-  shinyFiles::parseSavePath(sf_volumes, input[[id]])
-      if (!inherits(path, "try-error") && !is_empty(path$datapath)) {
+      if (!inherits(path, "try-error") && !radiant.data::is_empty(path$datapath)) {
         fun(path$datapath, ...)
       }
     })
@@ -553,7 +553,7 @@ register_plot_output <- function(
 
     ## when no analysis was conducted (e.g., no variables selected)
     p <- get(rfun_name)()
-    if (is_not(p) || is_empty(p)) p <- "Nothing to plot ...\nSelect plots to show or re-run the calculations"
+    if (is_not(p) || radiant.data::is_empty(p)) p <- "Nothing to plot ...\nSelect plots to show or re-run the calculations"
     if (is.character(p)) {
       plot(
         x = 1, type = "n", main = paste0("\n\n\n\n\n\n\n\n", p),
@@ -699,7 +699,7 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
   if (order != "NULL" || sc != "NULL") {
 
     ## get variable class and name
-    gc <- get_class(dat) %>% {if (is_empty(vars[1])) . else .[vars]}
+    gc <- get_class(dat) %>% {if (radiant.data::is_empty(vars[1])) . else .[vars]}
     cn <- names(gc)
 
     if (length(cn) > 0) {
@@ -753,7 +753,7 @@ state_init <- function(var, init = "", na.rm = TRUE) {
     ivar <- input[[var]]
     if (var %in% names(input) || length(ivar) > 0) {
       ivar <- input[[var]]
-      if ((na.rm && is_empty(ivar)) || length(ivar) == 0) {
+      if ((na.rm && radiant.data::is_empty(ivar)) || length(ivar) == 0) {
         r_state[[var]] <<- NULL
       }
     } else {
@@ -769,7 +769,7 @@ state_group <- function(var, init = "") {
     ivar <- input[[var]]
     if (var %in% names(input) || length(ivar) > 0) {
       ivar <- input[[var]]
-      if (is_empty(ivar)) r_state[[var]] <<- NULL
+      if (radiant.data::is_empty(ivar)) r_state[[var]] <<- NULL
     } else {
       ivar <- .state_init(var, init)
       r_state[[var]] <<- NULL ## line that differs for CBG inputs
@@ -780,7 +780,7 @@ state_group <- function(var, init = "") {
 
 .state_init <- function(var, init = "", na.rm = TRUE) {
   rs <- r_state[[var]]
-  if ((na.rm && is_empty(rs)) || length(rs) == 0) init else rs
+  if ((na.rm && radiant.data::is_empty(rs)) || length(rs) == 0) init else rs
 }
 
 state_single <- function(var, vals, init = character(0)) {
@@ -805,7 +805,7 @@ state_single <- function(var, vals, init = character(0)) {
 
 .state_single <- function(var, vals, init = character(0)) {
   rs <- r_state[[var]]
-  if (is_empty(rs)) init else vals[vals == rs]
+  if (radiant.data::is_empty(rs)) init else vals[vals == rs]
 }
 
 state_multiple <- function(var, vals, init = character(0)) {
@@ -833,7 +833,7 @@ state_multiple <- function(var, vals, init = character(0)) {
   r_state[[var]] <<- NULL
 
   ## "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)
-  if (is_empty(rs)) vals[vals %in% init] else vals[vals %in% rs]
+  if (radiant.data::is_empty(rs)) vals[vals %in% init] else vals[vals %in% rs]
 }
 
 ## cat to file
@@ -910,12 +910,12 @@ run_refresh <- function(
 
     run <- isolate(input[[paste0(pre, "_run")]]) %>% pressed()
     if (is.null(input[[paste0(pre, "_", init)]])) {
-      if (!is_empty(tabs)) {
+      if (!radiant.data::is_empty(tabs)) {
         updateTabsetPanel(session, paste0(tabs, " "), selected = "Summary")
       }
       updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play"))
     } else if (run) {
-      updateActionButton(session, paste0(pre, "_run"), relabel, icon = icon("refresh", class = "fa-spin"))
+      updateActionButton(session, paste0(pre, "_run"), relabel, icon = icon("sync", class = "fa-spin"))
     } else {
       updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play"))
     }

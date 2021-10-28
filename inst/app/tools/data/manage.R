@@ -1,6 +1,6 @@
 descr_out <- function(descr, ret_type = "html") {
   ## if there is no data description
-  if (is_empty(descr)) return("")
+  if (radiant.data::is_empty(descr)) return("")
 
   ## if there is a data description and we want html output
   if (ret_type == "html") {
@@ -176,7 +176,7 @@ load_user_data <- function(
   }
 
   r_info[[glue('{objname}_descr')]] <- attr(r_data[[objname]], "description")
-  if (!is_empty(cmd)) {
+  if (!radiant.data::is_empty(cmd)) {
     cn <- colnames(r_data[[objname]])
     fn <- radiant.data::fix_names(cn)
     if (!identical(cn, fn)) {

@@ -266,7 +266,7 @@ get_data <- function(
     {if ("grouped_df" %in% class(.)) ungroup(.) else .} %>% ## ungroup data if needed
     {if (filt == "") . else filter_data(., filt)} %>% ## apply data_filter
     {if (is.null(rows)) . else .[rows, , drop = FALSE]} %>%
-    {if (is_empty(vars[1])) . else select(., !!!if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)} %>%
+    {if (radiant.data::is_empty(vars[1])) . else select(., !!!if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)} %>%
     {if (na.rm) na.omit(.) else .}
 }
 
@@ -441,7 +441,7 @@ is_empty <- function(x, empty = "\\s*") {
 #' is_string(NA)
 #' @export
 is_string <- function(x) {
-  length(x) == 1 && is.character(x) && !is_empty(x)
+  length(x) == 1 && is.character(x) && !radiant.data::is_empty(x)
 }
 
 #' Is input a double (and not a date type)?
@@ -1006,13 +1006,13 @@ store_character_popup <- function(mess) {
 #'
 #' @export
 indexr <- function(dataset, vars = "", filt = "", cmd = "") {
-  if (is_empty(vars) || sum(vars %in% colnames(dataset)) != length(vars)) {
+  if (radiant.data::is_empty(vars) || sum(vars %in% colnames(dataset)) != length(vars)) {
     vars <- colnames(dataset)
   }
   nrows <- nrow(dataset)
 
   ## customizing data if a command was used
-  if (!is_empty(cmd)) {
+  if (!radiant.data::is_empty(cmd)) {
     pred_cmd <- gsub("\"", "\'", cmd) %>%
       gsub("\\s+", "", .)
     cmd_vars <- strsplit(pred_cmd, ";")[[1]] %>%
@@ -1194,7 +1194,7 @@ describe <- function(dataset, envir = parent.frame()) {
   }
 
   description <- attr(dataset, "description")
-  if (is_empty(description)) {
+  if (radiant.data::is_empty(description)) {
     return(str(dataset))
   }
 
@@ -1281,9 +1281,9 @@ register <- function(new, org = "", descr = "", shiny = shiny::getDefaultReactiv
 
     if (is.data.frame(envir[[new]])) {
       ## use data description from the original data.frame if available
-      if (!is_empty(descr)) {
+      if (!radiant.data::is_empty(descr)) {
         r_info[[paste0(new, "_descr")]] <- descr
-      } else if (is_empty(r_info[[paste0(new, "_descr")]]) && !is_empty(org)) {
+      } else if (radiant.data::is_empty(r_info[[paste0(new, "_descr")]]) && !radiant.data::is_empty(org)) {
         r_info[[paste0(new, "_descr")]] <- r_info[[paste0(org, "_descr")]]
       } else {
         r_info[[paste0(new, "_descr")]] <- attr(envir[[new]], "description")
@@ -1353,15 +1353,15 @@ deregister <- function(dataset, shiny = shiny::getDefaultReactiveDomain(), envir
 #' @export
 parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
 
-  if (inherits(path, "try-error") || is_empty(path)) {
+  if (inherits(path, "try-error") || radiant.data::is_empty(path)) {
     return(
       list(path = "", rpath = "", base = "", base_name = "", ext = "", content = "")
     )
   }
 
-  if (is_empty(pdir)) {
+  if (radiant.data::is_empty(pdir)) {
     pdir <- try(rstudioapi::getActiveProject(), silent = TRUE)
-    if (inherits(pdir, "try-error") || is_empty(pdir)) {
+    if (inherits(pdir, "try-error") || radiant.data::is_empty(pdir)) {
       pdir <- radiant.data::find_home()
     }
   }
@@ -1375,12 +1375,12 @@ parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
 
   fext <- tolower(fext)
 
-  if (!is_empty(pdir) && grepl(glue('^{pdir}'), path)) {
+  if (!radiant.data::is_empty(pdir) && grepl(glue('^{pdir}'), path)) {
     rpath <- sub(glue('^{pdir}'), "", path) %>% sub("^/", "", .)
     rpath <- glue('{chr}{rpath}{chr}')
   } else {
     dbdir <- getOption("radiant.dropbox_dir", "")
-    if (is_empty(dbdir)) {
+    if (radiant.data::is_empty(dbdir)) {
       dbdir <- try(radiant.data::find_dropbox(), silent = TRUE)
       if (inherits(dbdir, "try-error") && mess) {
         message("Not able to determine the location of a local the Dropbox folder")
@@ -1388,19 +1388,19 @@ parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
       }
     }
 
-    if (!is_empty(dbdir) && grepl(glue('^{dbdir}'), path)) {
+    if (!radiant.data::is_empty(dbdir) && grepl(glue('^{dbdir}'), path)) {
       rpath <- sub(glue('^{dbdir}'), "", path) %>% sub("^/", "", .)
       rpath <- glue('file.path(radiant.data::find_dropbox(), "{rpath}")')
     } else {
       gddir <- getOption("radiant.gdrive_dir", "")
-      if (is_empty(gddir)) {
+      if (radiant.data::is_empty(gddir)) {
         gddir <- try(radiant.data::find_gdrive(), silent = TRUE)
         if (inherits(gddir, "try-error") && mess) {
           message("Not able to determine the location of a local Google Drive folder")
           gddir <- ""
         }
       }
-      if (!is_empty(gddir) && grepl(glue('^{gddir}'), path)) {
+      if (!radiant.data::is_empty(gddir) && grepl(glue('^{gddir}'), path)) {
         rpath <- sub(glue('^{gddir}'), "", path) %>% sub("^/", "", .)
         rpath <- glue('file.path(radiant.data::find_gdrive(), "{rpath}")')
       } else {
@@ -1429,7 +1429,7 @@ parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
 read_files <- function(path, pdir = "", type = "rmd", to = "", clipboard = TRUE, radiant = FALSE) {
 
   ## if no path is provided, an interactive file browser will be opened
-  if (missing(path) || is_empty(path)) {
+  if (missing(path) || radiant.data::is_empty(path)) {
     if (rstudioapi::isAvailable()) {
       pdir <- getOption("radiant.project_dir", default = rstudioapi::getActiveProject())
       path <- rstudioapi::selectFile(
@@ -1441,13 +1441,13 @@ read_files <- function(path, pdir = "", type = "rmd", to = "", clipboard = TRUE,
       path <- try(choose_files(), silent = TRUE)
       pdir <- getwd()
     }
-    if (inherits(path, "try-error") || is_empty(path)) {
+    if (inherits(path, "try-error") || radiant.data::is_empty(path)) {
       return("")
     } else {
       pp <- parse_path(path, pdir = pdir, chr = "\"", mess = FALSE)
     }
   } else {
-    if (is_empty(pdir)) {
+    if (radiant.data::is_empty(pdir)) {
       pp <- parse_path(path, chr = "\"", mess = FALSE)
     } else {
       pp <- parse_path(path, pdir = pdir, chr = "\"", mess = FALSE)
