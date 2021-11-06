@@ -239,7 +239,7 @@ output$ui_tr_dataset <- renderUI({
   }
   tags$table(
     tags$td(textInput("tr_name", "Store changes in:", tr_dataset)),
-    tags$td(actionButton("tr_store", "Store", icon = icon("plus"), class = "btn-success shadow-non button-ellipsis"), style = "padding-top:30px;")
+    tags$td(actionButton("tr_store", "Store", icon = icon("plus"), class = "btn-success"), class="top")
   )
 })
 

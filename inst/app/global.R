@@ -234,10 +234,10 @@ r_sessions <- new.env(parent = emptyenv())
 "~/.radiant.sessions" %>% {if (!file.exists(.)) dir.create(.)}
 
 ## adding the figures path to avoid making a copy of all figures in www/figures
+addResourcePath("www", file.path(getOption("radiant.path.data"), "app/www/"))
 addResourcePath("figures", file.path(getOption("radiant.path.data"), "app/tools/help/figures/"))
 addResourcePath("imgs", file.path(getOption("radiant.path.data"), "app/www/imgs/"))
 addResourcePath("js", file.path(getOption("radiant.path.data"), "app/www/js/"))
-addResourcePath("www", file.path(getOption("radiant.path.data"), "app/www/"))
 
 ## cdn.mathjax.org has been retired
 ## use local MathJax if available
@@ -383,13 +383,17 @@ options(radiant.versions = paste(radiant.versions, collapse = ", "))
 rm(tmp, radiant.versions)
 
 
+if (is.null(getOption("radiant.theme", default = NULL))) {
+  options(radiant.theme = bslib::bs_theme(version = 4))
+}
+
 ## bslib theme and version
 has_bslib_theme <- function() {
   if (rlang::is_installed("bslib")) bslib::is_bs_theme(getOption("radiant.theme")) else FALSE
 }
 
 bslib_current_version <- function() {
-  if (rlang::is_installed("bslib")) bslib::theme_version(getOption("radiant.theme"))
+  if (rlang::is_installed("bslib")) bslib::theme_version(getOption("radiant.theme", default = bslib::bs_theme(version = 4)))
 }
 
 navbar_proj <- function(navbar) {

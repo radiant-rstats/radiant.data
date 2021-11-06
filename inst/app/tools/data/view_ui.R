@@ -33,7 +33,7 @@ output$ui_View <- renderUI({
       ),
       tags$table(
         tags$td(textInput("view_name", "Store filtered data as:", "", placeholder = "Provide data name")),
-        tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success button-ellipsis"), style = "padding-top:30px;")
+        tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success"), class="top")
       )
     ),
     help_and_report(

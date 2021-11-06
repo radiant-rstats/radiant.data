@@ -230,7 +230,7 @@ output$ui_rmd_save_type <- renderUI({
 
 conditional_save_report <- function(id) {
   if (isTRUE(getOption("radiant.report"))) {
-    download_button(id, "Save report", class = "btn-primary button-ellipsis")
+    download_button(id, "Save report", class = "btn-primary")
   } else {
     invisible()
   }
@@ -238,7 +238,7 @@ conditional_save_report <- function(id) {
 
 conditional_read_files <- function(id) {
   if (getOption("radiant.shinyFiles", FALSE)) {
-    download_button(id, "Read files", class = "btn-primary button-ellipsis")
+    download_button(id, "Read files", class = "btn-primary")
   } else {
     invisible()
   }
@@ -250,7 +250,7 @@ output$ui_rmd_load <- renderUI({
     accept = c(".Rmd", ".rmd", ".md", ".html"),
     buttonLabel = "Load report",
     title = "Load report",
-    class = "btn-default button-ellipsis"
+    class = "btn-default"
   )
 })
 
@@ -258,7 +258,7 @@ if (getOption("radiant.shinyFiles", FALSE)) {
   output$ui_rmd_read_files <- renderUI({
     shinyFiles::shinyFilesButton(
       "rmd_read_files", "Read files", "Generate code to read selected file",
-      multiple = FALSE, icon = icon("book"), class = "btn-primary button-ellipsis"
+      multiple = FALSE, icon = icon("book"), class = "btn-primary"
     )
   })
   sf_rmd_read_files <- shinyFiles::shinyFileChoose(
@@ -292,17 +292,17 @@ output$report_rmd <- renderUI({
         td(
           actionButton(
             "rmd_knit", " Knit report (Rmd)", icon = icon("play"),
-            class = "btn-success button-ellipsis"
-          ), style = "padding-top:5px;"
+            class = "btn-success"
+          ), class="top_small"
         ),
-        td(uiOutput("ui_rmd_generate")),
-        td(uiOutput("ui_rmd_view")),
-        td(uiOutput("ui_rmd_switch")),
-        td(uiOutput("ui_rmd_save_type")),
-        td(conditional_save_report("rmd_save"), style = "padding-top:5px;"),
-        td(uiOutput("ui_rmd_load"), style = "padding-top:5px;"),
-        td(conditional_read_files("rmd_read_files"), style = "padding-top:5px;"),
-        td(actionButton("rmd_clear", "Clear output", icon = icon("trash"), class = "btn-danger button-ellipsis"), style = "padding-top:5px;")
+        td(uiOutput("ui_rmd_generate"), class="top_small"),
+        td(uiOutput("ui_rmd_view"), class="top_small"),
+        td(uiOutput("ui_rmd_switch"), class="top_small"),
+        td(uiOutput("ui_rmd_save_type"), class="top_small"),
+        td(conditional_save_report("rmd_save"), class="top_small"),
+        td(uiOutput("ui_rmd_load"), class="top_small"),
+        td(conditional_read_files("rmd_read_files"), class="top_small"),
+        td(actionButton("rmd_clear", "Clear output", icon = icon("trash"), class = "btn-danger"), class="top_small")
       )
     ),
     shinyAce::aceEditor(
@@ -453,7 +453,7 @@ download_handler(
   type = function() report_save_filename_rmd() %>% {if (grepl("nb\\.html", .)) "nb.html" else tools::file_ext(.)},
   caption = "Save report",
   btn = "button",
-  class = "btn-primary button-ellipsis"
+  class = "btn-primary"
 )
 
 observeEvent(input$rmd_load, {

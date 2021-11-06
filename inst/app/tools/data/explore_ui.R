@@ -142,7 +142,7 @@ output$ui_Explore <- renderUI({
     wellPanel(
       tags$table(
         tags$td(uiOutput("ui_expl_name")),
-        tags$td(actionButton("expl_store", "Store", icon = icon("plus"), class="shadow-non button-ellipsis"), style = "padding-top:30px;")
+        tags$td(actionButton("expl_store", "Store", icon = icon("plus")), class="top")
       )
     ),
     help_and_report(

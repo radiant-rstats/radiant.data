@@ -10,18 +10,10 @@ ul, ol {
   width: auto;
 }
 
-.button-ellipsis {
+.btn {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  padding: 6px 3px 6px 3px;
-  /* margin-right: 3px; */
-  /* margin-left: 3px; */
-}
-
-.btn {
-  font-size: 0.9rem;
-  line-height: 1.6;
 }
 
 .snippet th, .snippet td {
@@ -32,13 +24,25 @@ table.dataTable tfoot td, table.dataTable thead td {
   padding: 0 0 0 0;
 }
 
+td.top {
+  padding-top:33px;
+}
+
+td.top_small {
+  padding-top:5px;
+}
+
+td.top_mini {
+  padding-top:1px;
+}
+
 .well {
   padding: 7px;
   margin-bottom: 5px;
 }
 
 .col-sm-4 {
-  max-width: 300px;
+  max-width: 310px;
 }
 
 .checkbox {
@@ -47,21 +51,21 @@ table.dataTable tfoot td, table.dataTable thead td {
 }
 
 .form-group {
-  margin-top: 5px;
+  margin-top: 0;
   margin-bottom: 0;
 }
 
 .radio-inline+.radio-inline, .checkbox-inline+.checkbox-inline {
   margin-left: 0;
+  margin-right: 5px;
 }
 
 .radio-inline, .checkbox-inline {
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .help-modal-dialog {
   padding-top: 80px;
-  /* overflow-y: initial !important */
 }
 
 .modal-sm {
@@ -112,6 +116,7 @@ code, pre code {
 textarea, select {
   resize: vertical;
   overflow: auto;
+  max-width: 100%;
 }
 
 .alignleft {

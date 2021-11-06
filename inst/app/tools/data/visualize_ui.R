@@ -424,18 +424,23 @@ output$ui_Visualize <- renderUI({
           min = 0, max = 1, step = .01
         ),
         tags$table(
-          tags$td(numericInput(
-            "viz_plot_height", label = "Plot height:", min = 100,
-            max = 2000, step = 50,
-            value = state_init("viz_plot_height", r_info[["plot_height"]]),
-            width = "117px"
-          )),
-          tags$td(numericInput(
-            "viz_plot_width", label = "Plot width:", min = 100,
-            max = 2000, step = 50,
-            value = state_init("viz_plot_width", r_info[["plot_width"]]),
-            width = "117px"
-          ))
+          tags$td(
+            numericInput(
+              "viz_plot_height", label = "Plot height:", min = 100,
+              max = 2000, step = 50,
+              value = state_init("viz_plot_height", r_info[["plot_height"]]),
+              width = "117px"
+            )
+          ),
+          tags$td(
+            numericInput(
+              "viz_plot_width", label = "Plot width:", min = 100,
+              max = 2000, step = 50,
+              value = state_init("viz_plot_width", r_info[["plot_width"]]),
+              width = "117px"
+            ),
+            width = "100%"
+          )
         )
       )
     ),

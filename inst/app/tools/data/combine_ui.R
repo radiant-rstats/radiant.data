@@ -74,7 +74,7 @@ cmb_type <- c(
 output$ui_cmb_store <- renderUI({
   ## updates when dataset changes
   req(input$dataset)
-  actionButton("cmb_store", "Combine", icon = icon("plus"), , class="shadow-non button-ellipsis", kclass = "btn-success")
+  actionButton("cmb_store", "Combine", icon = icon("plus"), class = "btn-success")
 })
 
 output$ui_Combine <- renderUI({
@@ -94,7 +94,7 @@ output$ui_Combine <- renderUI({
       ),
       tags$table(
         tags$td(textInput("cmb_name", "Combined dataset:", paste0(input$dataset, "_cmb"))),
-        tags$td(uiOutput("ui_cmb_store"), style = "padding-top:30px;")
+        tags$td(uiOutput("ui_cmb_store"), class="top")
       )
     ),
     help_and_report(

@@ -41,14 +41,14 @@ output$ui_fileUpload <- renderUI({
     with(tags, table(
       tr(
         td(textInput("url_rds", NULL, "")),
-        td(actionButton("url_rds_load", "Load", icon = icon("upload")), style = "padding-top:5px;")
+        td(actionButton("url_rds_load", "Load", icon = icon("upload")), class="top_small")
       )
     ))
   } else if (input$dataType == "url_csv") {
     with(tags, table(
       tr(
         td(textInput("url_csv", NULL, "")),
-        td(actionButton("url_csv_load", "Load", icon = icon("upload")), style = "padding-top:5px;")
+        td(actionButton("url_csv_load", "Load", icon = icon("upload")), class="top_small")
       )
     ))
   }
@@ -845,7 +845,7 @@ output$ui_datasets <- renderUI({
 output$uiRename <- renderUI({
   tags$table(
     tags$td(textInput("data_rename", NULL, placeholder = input$dataset)),
-    tags$td(actionButton("renameButton", "Rename"), style = "padding-top:5px;")
+    tags$td(actionButton("renameButton", "Rename"), class="top_small")
   )
 })
 
