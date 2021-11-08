@@ -65,6 +65,15 @@ visualize <- function(
   shiny = FALSE, custom = FALSE, envir = parent.frame()
 ) {
 
+  if (missing(xvar) && type == "box") {
+    xvar <- yvar
+    type = "box-single"
+    if (comby) {
+      comby <- FALSE
+      combx <- TRUE
+    }
+  }
+
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- xvar
 
@@ -82,7 +91,7 @@ visualize <- function(
     fun <- fun[1:3] ## only scatter can deal with multiple functions, max 3 for now
     message("No more than three functions (", paste(fun, collapse = ", "), ") can be used with scatter plots")
   }
-  if (!type %in% c("scatter", "box")) check %<>% sub("jitter", "", .)
+  if (!type %in% c("scatter", "box", "box-single")) check %<>% sub("jitter", "", .)
 
   ## variable to use if bar chart is specified
   byvar <- NULL
@@ -250,7 +259,7 @@ visualize <- function(
 
   ## combining Y-variables if needed
   if (comby && length(yvar) > 1) {
-    if (any(xvar %in% yvar)) return("X-variables cannot be part of Y-variables when combining Y-variables")
+    if (any(xvar %in% yvar) && type != "box-single") return("X-variables cannot be part of Y-variables when combining Y-variables")
     if (!radiant.data::is_empty(color, "none")) return("Cannot use Color when combining Y-variables")
     if (!radiant.data::is_empty(fill, "none")) return("Cannot use Fill when combining Y-variables")
     if (!radiant.data::is_empty(size, "none")) return("Cannot use Size when combining Y-variables")
@@ -567,7 +576,28 @@ visualize <- function(
         itt <- itt + 1
       }
     }
+  } else if (type == "box-single") {
+    itt <- 1
+    for (i in xvar) {
+        if (color == "none") {
+          plot_list[[itt]] <- dataset %>% ggplot(aes(x = "", y = .data[[i]])) +
+            geom_boxplot(alpha = alpha, fill = fillcol, outlier.color = pointcol, color = linecol) +
+            scale_x_discrete(labels = NULL, breaks = NULL) + labs(x = "")
+        } else {
+          plot_list[[itt]] <- dataset %>% ggplot(aes(x = "", y = .data[[i]], fill = color)) +
+            geom_boxplot(alpha = alpha)
+        }
+
+        if (!custom && (color == "none" || color == i)) {
+          plot_list[[itt]] <- plot_list[[itt]] + theme(legend.position = "none")
+        }
+
+        if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", i))
+
+        itt <- itt + 1
+    }
   }
+
 
   if (facet_row != "." || facet_col != ".") {
     facets <- if (facet_row == ".") {

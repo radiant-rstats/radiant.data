@@ -480,21 +480,22 @@ viz_plot_height <- eventReactive({
 })
 
 output$visualize <- renderPlot({
+  req(input$viz_type)
   if (not_available(input$viz_xvar)) {
-    return(
-      plot(
-        x = 1, type = "n",
-        main = "\nPlease select variables from the dropdown menus to create a plot",
-        axes = FALSE, xlab = "", ylab = "", cex.main = .9
+    if (input$viz_type != "box") {
+      return(
+        plot(
+          x = 1, type = "n",
+          main = "\nPlease select variables from the dropdown menus to create a plot",
+          axes = FALSE, xlab = "", ylab = "", cex.main = .9
+        )
       )
-    )
+    }
   }
   .visualize() %>% {
     if (is.character(.)) {
       plot(x = 1, type = "n", main = paste0("\n", .), axes = FALSE, xlab = "", ylab = "", cex.main = .9)
-    } else if (is.null(.)) {
-      return(invisible())
-    } else {
+    } else if (length(.) > 0) {
       print(.)
     }
   }
@@ -508,7 +509,7 @@ output$visualize <- renderPlot({
   ## need dependency on ..
   req(input$viz_plot_height && input$viz_plot_width)
 
-  if (not_available(input$viz_xvar)) return()
+  if (not_available(input$viz_xvar) && input$viz_type != "box") return()
   if (input$viz_type %in% c("scatter", "line", "box", "bar", "surface") && not_available(input$viz_yvar)) {
     return("No Y-variable provided for a plot that requires one")
   }
