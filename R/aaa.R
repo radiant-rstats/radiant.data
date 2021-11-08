@@ -1,6 +1,6 @@
 # to avoid 'no visible binding for global variable' NOTE
 globalVariables(
-  c(".", "..density..", "r_data", "tfoot", "th", "thead", "tr", "variable", "r_info")
+  c(".", "..density..", "r_data", "tfoot", "th", "thead", "tr", "variable", "r_info", "bslib_current_version")
 )
 
 #' radiant.data
