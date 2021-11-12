@@ -16,7 +16,7 @@
   filter = "top",
   pageLength = 10,
   dom = "",
-  style = "bootstrap",
+  style = "bootstrap4",
   rownames = FALSE,
   caption = NULL,
   envir = parent.frame(),

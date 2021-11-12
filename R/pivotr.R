@@ -318,6 +318,7 @@ dtab.pivotr <- function(
   ...
 ) {
 
+  style = if (exists("bslib_current_version") && "4" %in% bslib_current_version()) "bootstrap4" else "bootstrap"
   tab <- object$tab
   cvar <- object$cvars[1]
   cvars <- object$cvars %>%
@@ -370,7 +371,7 @@ dtab.pivotr <- function(
     ## see https://github.com/rstudio/DT/issues/367
     ## https://github.com/rstudio/DT/issues/379
     fillContainer = FALSE,
-    style = if ("4" %in% bslib_current_version()) "bootstrap4" else "bootstrap",
+    style = style,
     options = list(
       dom = dom,
       stateSave = TRUE, ## store state
@@ -423,7 +424,8 @@ dtab.pivotr <- function(
 
   ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(
-    list(rmarkdown::html_dependency_bootstrap("bootstrap")), dt_tab$dependencies
+    list(rmarkdown::html_dependency_bootstrap("bootstrap")),
+    dt_tab$dependencies
   )
 
   dt_tab

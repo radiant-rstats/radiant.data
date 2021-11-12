@@ -217,7 +217,8 @@ output$ui_viz_axes <- renderUI({
     ind <- c(1, 3)
   }
   if (!radiant.data::is_empty(input$viz_facet_row, ".") || !radiant.data::is_empty(input$viz_facet_col, ".")) ind <- c(ind, 4)
-  if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
+  # if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
+  if (input$viz_type == "bar") ind <- c(ind, 6)
 
   checkboxGroupInput(
     "viz_axes", NULL, viz_axes[ind],

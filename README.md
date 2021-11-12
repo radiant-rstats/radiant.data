@@ -22,8 +22,8 @@ Radiant is an open-source platform-independent browser-based interface for busin
 
 There are two youtube playlists with video tutorials. The first provides a general introduction to key features in Radiant. The second covers topics relevant in a course on business analytics (i.e., Probability, Decision Analysis, Hypothesis Testing, Linear Regression, and Simulation).
 
-* <a href="https://www.youtube.com/playlist?list=PLNhtaetb48EedDmWPUqytnQv-qxmCGtxi" target="_blank">Introduction to Radiant</a>
-* <a href="https://www.youtube.com/playlist?list=PLNhtaetb48EdKRIY7MewCyvb_1x7dV3xw" target="_blank">Radiant Tutorial Series</a>
+* <a href="https://www.youtube.com/watch?v=16B5SvtW8Ks&list=PLNhtaetb48EedDmWPUqytnQv-qxmCGtxi" target="_blank">Introduction to Radiant</a>
+* <a href="https://www.youtube.com/watch?v=plSeVJ7c-Iw&list=PLNhtaetb48EdKRIY7MewCyvb_1x7dV3xw"" target="_blank">Radiant Tutorial Series</a>
 
 #### Explore
 

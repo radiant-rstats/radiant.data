@@ -1,6 +1,6 @@
 ## Resubmission
 
-This is a resubmission. In this version I have address a problem linked to issue: https://github.com/yihui/knitr/issues/1864 There are also a number of changes that allow users to change the aesthetics of the app using `bslib` if available.
+This is a resubmission. In this version I have fixed several bugs and added several new features (see NEWS.md for details).
 
 ## Test environments
 

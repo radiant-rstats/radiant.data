@@ -80,6 +80,8 @@ output$dataviewer <- DT::renderDataTable({
   req(available(input$view_vars))
   dat <- select_at(.get_data(), .vars = input$view_vars)
 
+  style = if (exists("bslib_current_version") && "4" %in% bslib_current_version()) "bootstrap4" else "bootstrap"
+
   search <- r_state$dataviewer_state$search$search
   if (is.null(search)) search <- ""
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
@@ -109,7 +111,7 @@ output$dataviewer <- DT::renderDataTable({
       # extension = "KeyTable",
       escape = FALSE,
       # editable = TRUE,
-      style = if ("4" %in% bslib_current_version()) "bootstrap4" else "bootstrap",
+      style = style,
       options = list(
         stateSave = TRUE, ## maintains state
         searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),

@@ -42,7 +42,7 @@ dtab.data.frame <- function(
   object, vars = "", filt = "", rows = NULL,
   nr = NULL, na.rm = FALSE, dec = 3, perc = "",
   filter = "top", pageLength = 10, dom = "",
-  style = "bootstrap", rownames = FALSE,
+  style = "bootstrap4", rownames = FALSE,
   caption = NULL,
   envir = parent.frame(), ...
 ) {
@@ -221,7 +221,7 @@ view_data <- function(
         dat,
         selection = "none",
         rownames = FALSE,
-        style = "bootstrap",
+        style = "bootstrap4",
         filter = fbox,
         escape = FALSE,
         ## must use fillContainer = FALSE to address
