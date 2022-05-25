@@ -9,14 +9,7 @@
 
 For Windows, download and run the all-in-one installer for <a href="https://www.dropbox.com/s/0l6va4pz3s8wghq/Rady-Radiant-Installer-Latest.exe?dl=1" target="_blank">R, Rstudio, and Radiant</a>. For a video tutorial see the `Install Radiant on Windows` video below:
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/16B5SvtW8Ks" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-
-> Note: You may see the two messages below pop-up when installing `TinyTex`. This is expected and nothing to worry about. Just click "OK" and let the install process continue. 
-
-<p align="center">
-  <img src="images/mess1.png" style="width: 45%">
-  <img src="images/mess2.png" style="width: 45%">
-</p>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/ZNgwgosdNhM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 > Note: Some users have reported that the Malwarebytes software can inappropriately block R-packages from being installed or updated. If you use Malwarebytes and are experiencing problems you can try (temporarily) turning it off during the install process or when upgrading.
 
@@ -32,7 +25,7 @@ source("https://raw.githubusercontent.com/radiant-rstats/minicran/gh-pages/insta
 
 For a video tutorial see the `Installing R, Rstudio, and Radiant on macOS` video below:
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/CpjL8aa1dg4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/f5h2oDBsnJI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Starting, stopping, and updating
 

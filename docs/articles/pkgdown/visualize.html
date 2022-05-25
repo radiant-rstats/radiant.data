@@ -21,6 +21,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -33,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.2</span>
       </span>
     </div>
 
@@ -55,45 +57,45 @@
   <a href="../../news/index.html">Changelog</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Other Packages
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="https://radiant-rstats.github.io/radiant/">radiant</a>
+      <a href="https://radiant-rstats.github.io/radiant/" class="external-link">radiant</a>
     </li>
     <li>
       <a href="https://radiant-rstats.github.io/radiant.data/">radiant.data</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.design/">radiant.design</a>
+      <a href="https://radiant-rstats.github.io/radiant.design/" class="external-link">radiant.design</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.basics/">radiant.basics</a>
+      <a href="https://radiant-rstats.github.io/radiant.basics/" class="external-link">radiant.basics</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.model/">radiant.model</a>
+      <a href="https://radiant-rstats.github.io/radiant.model/" class="external-link">radiant.model</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.multivariate/">radiant.multivariate</a>
+      <a href="https://radiant-rstats.github.io/radiant.multivariate/" class="external-link">radiant.multivariate</a>
     </li>
     <li>
-      <a href="https://github.com/radiant-rstats/docker">docker</a>
+      <a href="https://github.com/radiant-rstats/docker" class="external-link">docker</a>
     </li>
   </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://twitter.com/vrnijs">
+  <a href="https://twitter.com/vrnijs" class="external-link">
     <span class="fa fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/radiant-rstats">
+  <a href="https://github.com/radiant-rstats" class="external-link">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -114,15 +116,15 @@
 
       
 
-      </header><script src="visualize_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="visualize_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="visualize_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Visualize data (Data &gt; Visualize)</h1>
-                        <h4 class="author">Vincent R. Nijs, Rady School of Management (UCSD)</h4>
+                        <h4 data-toc-skip class="author">Vincent R.
+Nijs, Rady School of Management (UCSD)</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/radiant-rstats/radiant.data/blob/master/vignettes/pkgdown/visualize.Rmd"><code>vignettes/pkgdown/visualize.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/radiant-rstats/radiant.data/blob/HEAD/vignettes/pkgdown/visualize.Rmd" class="external-link"><code>vignettes/pkgdown/visualize.Rmd</code></a></small>
       <div class="hidden name"><code>visualize.Rmd</code></div>
 
     </div>
@@ -132,66 +134,149 @@
 <blockquote>
 <p>Visualize data</p>
 </blockquote>
-<div id="filter-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#filter-data" class="anchor"></a>Filter data</h3>
-<p>Use the <code>Filter data</code> box to select (or omit) specific sets of rows from the data. See the help file for <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank"><em>Data &gt; View</em></a> for details.</p>
+<div class="section level3">
+<h3 id="filter-data">Filter data<a class="anchor" aria-label="anchor" href="#filter-data"></a>
+</h3>
+<p>Use the <code>Filter data</code> box to select (or omit) specific
+sets of rows from the data. See the help file for
+<a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank" class="external-link"><em>Data
+&gt; View</em></a> for details.</p>
 </div>
-<div id="plot-type" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plot-type" class="anchor"></a>Plot-type</h3>
-<p>Select the plot type you want. For example, with the <code>diamonds</code> data loaded select <code>Distribution</code> and all (X) variables (use CTRL-a or CMD-a). This will create a histogram for all numeric variables and a bar-plot for all categorical variables in the data set. Density plots can only be used with numeric variables. Scatter plots are used to visualize the relationship between two variables. Select one or more variables to plot on the Y-axis and one or more variables to plot on the X-axis. If one of the variables is categorical (i.e., a {factor}) it should be specified as an X-variable. Information about additional variables can be added through the <code>Color</code> or <code>Size</code> dropdown. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Surface plots are similar to <code>Heat maps</code> and require 3 input variables: X, Y, and Fill. Bar plots are used to show the relationship between a categorical (or integer) variable (X) and the (mean) value of a numeric variable (Y). Box-plots are also used when we have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.</p>
+<div class="section level3">
+<h3 id="plot-type">Plot-type<a class="anchor" aria-label="anchor" href="#plot-type"></a>
+</h3>
+<p>Select the plot type you want. For example, with the
+<code>diamonds</code> data loaded select <code>Distribution</code> and
+all (X) variables (use CTRL-a or CMD-a). This will create a histogram
+for all numeric variables and a bar-plot for all categorical variables
+in the data set. Density plots can only be used with numeric variables.
+Scatter plots are used to visualize the relationship between two
+variables. Select one or more variables to plot on the Y-axis and one or
+more variables to plot on the X-axis. If one of the variables is
+categorical (i.e., a {factor}) it should be specified as an X-variable.
+Information about additional variables can be added through the
+<code>Color</code> or <code>Size</code> dropdown. Line plots are similar
+to scatter plots but they connect-the-dots and are particularly useful
+for time-series data. Surface plots are similar to
+<code>Heat maps</code> and require 3 input variables: X, Y, and Fill.
+Bar plots are used to show the relationship between a categorical (or
+integer) variable (X) and the (mean) value of a numeric variable (Y).
+Box-plots are also used when we have a numeric Y-variable and a
+categorical X-variable. They are more informative than bar charts but
+also require a bit more effort to evaluate.</p>
 <blockquote>
-<p>Note that when a categorical variable (<code>factor</code>) is selected as the <code>Y-variable</code> in a Bar chart it will be converted to a numeric variable if required for the selected function. If the factor levels are numeric these will be used in all calculations. Since the mean, standard deviation, etc. are not relevant for non-binary categorical variables, these will be converted to 0-1 (binary) variables where the first level is coded as 1 and all other levels as 0. For example, if we select <code>color</code> from the <code>diamonds</code> data as the Y-variable, and <code>mean</code> as the function to apply, then each bar will represent the proportion of observations with the value <code>D</code>.</p>
+<p>Note that when a categorical variable (<code>factor</code>) is
+selected as the <code>Y-variable</code> in a Bar chart it will be
+converted to a numeric variable if required for the selected function.
+If the factor levels are numeric these will be used in all calculations.
+Since the mean, standard deviation, etc. are not relevant for non-binary
+categorical variables, these will be converted to 0-1 (binary) variables
+where the first level is coded as 1 and all other levels as 0. For
+example, if we select <code>color</code> from the <code>diamonds</code>
+data as the Y-variable, and <code>mean</code> as the function to apply,
+then each bar will represent the proportion of observations with the
+value <code>D</code>.</p>
 </blockquote>
 </div>
-<div id="box-plots" class="section level3">
-<h3 class="hasAnchor">
-<a href="#box-plots" class="anchor"></a>Box plots</h3>
-<p>The upper and lower “hinges” of the box correspond to the first and third quartiles (the 25th and 75th percentiles) in the data. The middle hinge is the median value of the data. The upper whisker extends from the upper hinge (i.e., the top of the box) to the highest value in the data that is within 1.5 x IQR of the upper hinge. IQR is the inter-quartile range, or distance, between the 25th and 75th percentile. The lower whisker extends from the lower hinge to the lowest value in the data within 1.5 x IQR of the lower hinge. Data beyond the end of the whiskers could be outliers and are plotted as points (as suggested by Tukey).</p>
-<p>In sum: 1. The lower whisker extends from Q1 to max(min(data), Q1 - 1.5 x IQR) 2. The upper whisker extends from Q3 to min(max(data), Q3 + 1.5 x IQR)</p>
-<p>where Q1 is the 25th percentile and Q3 is the 75th percentile. You may have to read the two bullets above a few times before it sinks in. The plot below should help to explain the structure of the box plot.</p>
+<div class="section level3">
+<h3 id="box-plots">Box plots<a class="anchor" aria-label="anchor" href="#box-plots"></a>
+</h3>
+<p>The upper and lower “hinges” of the box correspond to the first and
+third quartiles (the 25th and 75th percentiles) in the data. The middle
+hinge is the median value of the data. The upper whisker extends from
+the upper hinge (i.e., the top of the box) to the highest value in the
+data that is within 1.5 x IQR of the upper hinge. IQR is the
+inter-quartile range, or distance, between the 25th and 75th percentile.
+The lower whisker extends from the lower hinge to the lowest value in
+the data within 1.5 x IQR of the lower hinge. Data beyond the end of the
+whiskers could be outliers and are plotted as points (as suggested by
+Tukey).</p>
+<p>In sum: 1. The lower whisker extends from Q1 to max(min(data), Q1 -
+1.5 x IQR) 2. The upper whisker extends from Q3 to min(max(data), Q3 +
+1.5 x IQR)</p>
+<p>where Q1 is the 25th percentile and Q3 is the 75th percentile. You
+may have to read the two bullets above a few times before it sinks in.
+The plot below should help to explain the structure of the box plot.</p>
 <p align="center">
 <img src="https://radiant-rstats.github.io/docs/data/figures//boxplot.png"></p>
-<p><a href="http://en.wikipedia.org/wiki/File:Boxplot_vs_PDF.svg" target="_blank">Source</a></p>
+<p><a href="http://en.wikipedia.org/wiki/File:Boxplot_vs_PDF.svg" target="_blank" class="external-link">Source</a></p>
 </div>
-<div id="sub-plots-and-heat-maps" class="section level3">
-<h3 class="hasAnchor">
-<a href="#sub-plots-and-heat-maps" class="anchor"></a>Sub-plots and heat-maps</h3>
-<p><code>Facet row</code> and <code>Facet column</code> can be used to split the data into different groups and create separate plots for each group.</p>
-<p>If you select a scatter or line plot a <code>Color</code> drop-down will be shown. Selecting a <code>Color</code> variable will create a type of heat-map where the colors are linked to the values of the <code>Color</code> variable. Selecting a categorical variable from the <code>Color</code> dropdown for a line plot will split the data into groups and will show a line of a different color for each group.</p>
-</div>
-<div id="line-loess-and-jitter" class="section level3">
-<h3 class="hasAnchor">
-<a href="#line-loess-and-jitter" class="anchor"></a>Line, loess, and jitter</h3>
-<p>To add a linear or non-linear regression line to a scatter plot check the <code>Line</code> and/or <code>Loess</code> boxes. If your data take on a limited number of values, <code>Jitter</code> can be useful to get a better feel for where most of the data points are located. <code>Jitter</code>-ing simply adds a small random value to each data point so they do not overlap completely in the plot(s).</p>
-</div>
-<div id="axis-scale" class="section level3">
-<h3 class="hasAnchor">
-<a href="#axis-scale" class="anchor"></a>Axis scale</h3>
-<p>The relationship between variables depicted in a scatter plot may be non-linear. There are numerous transformations we might apply to the data so this relationship becomes (approximately) linear (see <em><a href="https://radiant-rstats.github.io/docs/data/transform.html" target="_blank">Data &gt; Transform</a></em>) and easier to estimate using, for example, <em><a href="https://radiant-rstats.github.io/docs/model/regress.html" target="_blank">Model &gt; Estimate &gt; Linear regression (OLS)</a></em>. Perhaps the most common data transformation applied to business data is the (natural) logarithm. To see if log transformation(s) may be appropriate for your data check the <code>Log X</code> and/or <code>Log Y</code> boxes (e.g., for a scatter or bar plot).</p>
-<p>By default the scale of the Y-axis is the same across sub-plots when using <code>Facet row</code>. To allow the Y-axis to be specific to each sub-plot click the <code>Scale-y</code> check-box.</p>
-</div>
-<div id="flip-axes" class="section level3">
-<h3 class="hasAnchor">
-<a href="#flip-axes" class="anchor"></a>Flip axes</h3>
-<p>To switch the variables on the X- and Y-axis check the <code>Flip</code> box.</p>
-</div>
-<div id="plot-height-and-width" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plot-height-and-width" class="anchor"></a>Plot height and width</h3>
-<p>To make plots bigger or smaller adjust the values in the height and width boxes on the bottom left of the screen.</p>
-</div>
-<div id="keep-plots" class="section level3">
-<h3 class="hasAnchor">
-<a href="#keep-plots" class="anchor"></a>Keep plots</h3>
-<p>The best way to keep/store plots is to generate a <code>visualize</code> command by clicking the report (<i title="Report results" class="fa fa-edit"></i>) icon on the bottom left of your screen or by pressing <code>ALT-enter</code> on your keyboard. Alternatively, click the <i title="Download" class="fa fa-download"></i> icon on the top right of your screen to save a png-file to disk.</p>
-</div>
-<div id="customizing-plots-in-report-rmd" class="section level3">
-<h3 class="hasAnchor">
-<a href="#customizing-plots-in-report-rmd" class="anchor"></a>Customizing plots in <em>Report &gt; Rmd</em>
+<div class="section level3">
+<h3 id="sub-plots-and-heat-maps">Sub-plots and heat-maps<a class="anchor" aria-label="anchor" href="#sub-plots-and-heat-maps"></a>
 </h3>
-<p>To customize a plot first generate the <code>visualize</code> command by clicking the report (<i title="Report results" class="fa fa-edit"></i>) icon on the bottom left of your screen or by pressing <code>ALT-enter</code> on your keyboard. The example below illustrates how to customize a command in the <a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank"><em>Report &gt; Rmd</em></a> tab. Notice that <code>custom</code> is set to <code>TRUE</code>.</p>
+<p><code>Facet row</code> and <code>Facet column</code> can be used to
+split the data into different groups and create separate plots for each
+group.</p>
+<p>If you select a scatter or line plot a <code>Color</code> drop-down
+will be shown. Selecting a <code>Color</code> variable will create a
+type of heat-map where the colors are linked to the values of the
+<code>Color</code> variable. Selecting a categorical variable from the
+<code>Color</code> dropdown for a line plot will split the data into
+groups and will show a line of a different color for each group.</p>
+</div>
+<div class="section level3">
+<h3 id="line-loess-and-jitter">Line, loess, and jitter<a class="anchor" aria-label="anchor" href="#line-loess-and-jitter"></a>
+</h3>
+<p>To add a linear or non-linear regression line to a scatter plot check
+the <code>Line</code> and/or <code>Loess</code> boxes. If your data take
+on a limited number of values, <code>Jitter</code> can be useful to get
+a better feel for where most of the data points are located.
+<code>Jitter</code>-ing simply adds a small random value to each data
+point so they do not overlap completely in the plot(s).</p>
+</div>
+<div class="section level3">
+<h3 id="axis-scale">Axis scale<a class="anchor" aria-label="anchor" href="#axis-scale"></a>
+</h3>
+<p>The relationship between variables depicted in a scatter plot may be
+non-linear. There are numerous transformations we might apply to the
+data so this relationship becomes (approximately) linear (see
+<em><a href="https://radiant-rstats.github.io/docs/data/transform.html" target="_blank" class="external-link">Data
+&gt; Transform</a></em>) and easier to estimate using, for example,
+<em><a href="https://radiant-rstats.github.io/docs/model/regress.html" target="_blank" class="external-link">Model
+&gt; Estimate &gt; Linear regression (OLS)</a></em>. Perhaps the most
+common data transformation applied to business data is the (natural)
+logarithm. To see if log transformation(s) may be appropriate for your
+data check the <code>Log X</code> and/or <code>Log Y</code> boxes (e.g.,
+for a scatter or bar plot).</p>
+<p>By default the scale of the Y-axis is the same across sub-plots when
+using <code>Facet row</code>. To allow the Y-axis to be specific to each
+sub-plot click the <code>Scale-y</code> check-box.</p>
+</div>
+<div class="section level3">
+<h3 id="flip-axes">Flip axes<a class="anchor" aria-label="anchor" href="#flip-axes"></a>
+</h3>
+<p>To switch the variables on the X- and Y-axis check the
+<code>Flip</code> box.</p>
+</div>
+<div class="section level3">
+<h3 id="plot-height-and-width">Plot height and width<a class="anchor" aria-label="anchor" href="#plot-height-and-width"></a>
+</h3>
+<p>To make plots bigger or smaller adjust the values in the height and
+width boxes on the bottom left of the screen.</p>
+</div>
+<div class="section level3">
+<h3 id="keep-plots">Keep plots<a class="anchor" aria-label="anchor" href="#keep-plots"></a>
+</h3>
+<p>The best way to keep/store plots is to generate a
+<code>visualize</code> command by clicking the report
+(<i title="Report results" class="fa fa-edit"></i>) icon on the bottom
+left of your screen or by pressing <code>ALT-enter</code> on your
+keyboard. Alternatively, click the
+<i title="Download" class="fa fa-download"></i> icon on the top right of
+your screen to save a png-file to disk.</p>
+</div>
+<div class="section level3">
+<h3 id="customizing-plots-in-report-rmd">Customizing plots in <em>Report &gt; Rmd</em><a class="anchor" aria-label="anchor" href="#customizing-plots-in-report-rmd"></a>
+</h3>
+<p>To customize a plot first generate the <code>visualize</code> command
+by clicking the report
+(<i title="Report results" class="fa fa-edit"></i>) icon on the bottom
+left of your screen or by pressing <code>ALT-enter</code> on your
+keyboard. The example below illustrates how to customize a command in
+the
+<a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank" class="external-link"><em>Report
+&gt; Rmd</em></a> tab. Notice that <code>custom</code> is set to
+<code>TRUE</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/visualize.html">visualize</a></span><span class="op">(</span><span class="va">diamonds</span>, yvar <span class="op">=</span> <span class="st">"price"</span>, xvar <span class="op">=</span> <span class="st">"carat"</span>, type <span class="op">=</span> <span class="st">"scatter"</span>, custom <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">labs</span><span class="op">(</span>
@@ -199,9 +284,14 @@
     y <span class="op">=</span> <span class="st">"Price in $"</span>,
     x <span class="op">=</span> <span class="st">"Carats"</span>
   <span class="op">)</span></code></pre></div>
-<p>The default resolution for plots is 144 dots per inch (dpi). You can change this setting up or down in <em>Report &gt; Rmd</em>. For example, the code-chunk header below ensures the plot will be 7" wide, 3.5" tall, with a resolution of 600 dpi.</p>
+<p>The default resolution for plots is 144 dots per inch (dpi). You can
+change this setting up or down in <em>Report &gt; Rmd</em>. For example,
+the code-chunk header below ensures the plot will be 7” wide, 3.5” tall,
+with a resolution of 600 dpi.</p>
 <p><code>```{r fig.width = 7, fig.height = 3.5, dpi = 600}</code></p>
-<p>If you have the <code>svglite</code> package installed, the code-chunk header below will produce graphs in high quality <code>svg</code> format.</p>
+<p>If you have the <code>svglite</code> package installed, the
+code-chunk header below will produce graphs in high quality
+<code>svg</code> format.</p>
 <p><code>```{r fig.width = 7, fig.height = 3.5, dev = "svglite"}</code></p>
 <p><strong>Some common customization commands:</strong></p>
 <ul>
@@ -209,80 +299,113 @@
 </li>
 <li>Add a sub-title: <code>+ labs(subtitle = "my sub-title")</code>
 </li>
-<li>Add a caption below figure: <code>+ labs(caption = "Based on data from ...")</code>
+<li>Add a caption below figure:
+<code>+ labs(caption = "Based on data from ...")</code>
 </li>
-<li>Change label: <code>+ labs(x = "my X-axis label")</code> or <code>+ labs(y = "my Y-axis label")</code>
+<li>Change label: <code>+ labs(x = "my X-axis label")</code> or
+<code>+ labs(y = "my Y-axis label")</code>
 </li>
-<li>Remove all legends: <code>+ theme(legend.position = "none")</code>
+<li>Remove all legends:
+<code>+ theme(legend.position = "none")</code>
 </li>
-<li>Change legend title: <code>+ labs(color = "New legend title")</code> or <code>+ labs(fill = "New legend title")</code>
+<li>Change legend title: <code>+ labs(color = "New legend title")</code>
+or <code>+ labs(fill = "New legend title")</code>
 </li>
-<li>Rotate tick labels: <code>+ theme(axis.text.x = element_text(angle = 90, hjust = 1))</code>
+<li>Rotate tick labels:
+<code>+ theme(axis.text.x = element_text(angle = 90, hjust = 1))</code>
 </li>
-<li>Set plot limits: <code>+ ylim(5000, 8000)</code> or <code>+ xlim("VS1","VS2")</code>
+<li>Set plot limits: <code>+ ylim(5000, 8000)</code> or
+<code>+ xlim("VS1","VS2")</code>
 </li>
 <li>Remove size legend: <code>+ scale_size(guide = "none")</code>
 </li>
 <li>Change size range: <code>+ scale_size(range=c(1,6))</code>
 </li>
-<li>Draw a horizontal line: <code>+ geom_hline(yintercept = 0.1)</code>
+<li>Draw a horizontal line:
+<code>+ geom_hline(yintercept = 0.1)</code>
 </li>
 <li>Draw a vertical line: <code>+ geom_vline(xintercept = 8)</code>
 </li>
-<li>Scale the y-axis as a percentage: <code>+ scale_y_continuous(labels = scales::percent)</code>
+<li>Scale the y-axis as a percentage:
+<code>+ scale_y_continuous(labels = scales::percent)</code>
 </li>
-<li>Scale the y-axis in millions: <code>+ scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))</code>
+<li>Scale the y-axis in millions:
+<code>+ scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))</code>
 </li>
-<li>Display y-axis in $’s: <code>+ scale_y_continuous(labels = scales::dollar_format())</code>
+<li>Display y-axis in $’s:
+<code>+ scale_y_continuous(labels = scales::dollar_format())</code>
 </li>
-<li>Use <code>,</code> as a thousand separator for the y-axis: <code>+ scale_y_continuous(labels = scales::comma)</code>
+<li>Use <code>,</code> as a thousand separator for the y-axis:
+<code>+ scale_y_continuous(labels = scales::comma)</code>
 </li>
 </ul>
-<p>For more on how to customize plots for communication see <a href="http://r4ds.had.co.nz/graphics-for-communication.html" target="_blank">http://r4ds.had.co.nz/graphics-for-communication.html</a>.</p>
-<p>See also the ggplot2 documentation site <a href="https://ggplot2.tidyverse.org" target="_blank">https://ggplot2.tidyverse.org</a>.</p>
-<p>Suppose we create a set of three bar charts in <em>Data &gt; Visualize</em> using the <code>Diamond</code> data. To add a title above the group of plots and impose a one-column layout we could use <code>patchwork</code> as follows:</p>
+<p>For more on how to customize plots for communication see
+<a href="http://r4ds.had.co.nz/graphics-for-communication.html" target="_blank" class="external-link">http://r4ds.had.co.nz/graphics-for-communication.html</a>.</p>
+<p>See also the ggplot2 documentation site
+<a href="https://ggplot2.tidyverse.org" target="_blank" class="external-link">https://ggplot2.tidyverse.org</a>.</p>
+<p>Suppose we create a set of three bar charts in <em>Data &gt;
+Visualize</em> using the <code>Diamond</code> data. To add a title above
+the group of plots and impose a one-column layout we could use
+<code>patchwork</code> as follows:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/visualize.html">visualize</a></span><span class="op">(</span>
   <span class="va">diamonds</span>, 
-  xvar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"clarity"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span><span class="op">)</span>, 
+  xvar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"clarity"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span><span class="op">)</span>, 
   yvar <span class="op">=</span> <span class="st">"price"</span>, 
   type <span class="op">=</span> <span class="st">"bar"</span>, 
   custom <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span> 
-<span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html">wrap_plots</a></span><span class="op">(</span><span class="va">plot_list</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html">plot_annotation</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Three bar plots"</span><span class="op">)</span></code></pre></div>
-<p>See the <a href="https://patchwork.data-imaginist.com">patchwork documentation site</a> for additional information on how to customize groups of plots.</p>
+<span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plot_list</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Three bar plots"</span><span class="op">)</span></code></pre></div>
+<p>See the <a href="https://patchwork.data-imaginist.com" class="external-link">patchwork
+documentation site</a> for additional information on how to customize
+groups of plots.</p>
 </div>
-<div id="making-plots-interactive-in-report-rmd" class="section level3">
-<h3 class="hasAnchor">
-<a href="#making-plots-interactive-in-report-rmd" class="anchor"></a>Making plots interactive in <em>Report &gt; Rmd</em>
+<div class="section level3">
+<h3 id="making-plots-interactive-in-report-rmd">Making plots interactive in <em>Report &gt; Rmd</em><a class="anchor" aria-label="anchor" href="#making-plots-interactive-in-report-rmd"></a>
 </h3>
-<p>It is possible to transform (most) plots generated in Radiant into interactive graphics using the <code>plotly</code> library. After setting <code>custom = TRUE</code> you can use the <code>ggplotly</code> function to convert a single plot. See example below:</p>
+<p>It is possible to transform (most) plots generated in Radiant into
+interactive graphics using the <code>plotly</code> library. After
+setting <code>custom = TRUE</code> you can use the <code>ggplotly</code>
+function to convert a single plot. See example below:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/visualize.html">visualize</a></span><span class="op">(</span><span class="va">diamonds</span>, xvar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"carat"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span><span class="op">)</span>, custom <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../../reference/ggplotly.html">ggplotly</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="fu"><a href="../../reference/visualize.html">visualize</a></span><span class="op">(</span><span class="va">diamonds</span>, xvar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"carat"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span><span class="op">)</span>, custom <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../../reference/ggplotly.html">ggplotly</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="../../reference/render.html">render</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>If more than one plot is created, you can use the <code>subplot</code> function from the <code>plotly</code> package. Provide a value for the <code>nrows</code> argument to setup the plot layout grid. In the example below four plots are created. Because <code>nrow = 2</code> the plots will be displayed in a 2 X 2 grid.</p>
+<p>If more than one plot is created, you can use the
+<code>subplot</code> function from the <code>plotly</code> package.
+Provide a value for the <code>nrows</code> argument to setup the plot
+layout grid. In the example below four plots are created. Because
+<code>nrow = 2</code> the plots will be displayed in a 2 X 2 grid.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/visualize.html">visualize</a></span><span class="op">(</span><span class="va">diamonds</span>, xvar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"carat"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span><span class="op">)</span>, custom <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../../reference/subplot.html">subplot</a></span><span class="op">(</span>nrows <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="fu"><a href="../../reference/visualize.html">visualize</a></span><span class="op">(</span><span class="va">diamonds</span>, xvar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"carat"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span><span class="op">)</span>, custom <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../../reference/subplot.html">subplot</a></span><span class="op">(</span>nrows <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="../../reference/render.html">render</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>For additional information on the <code>plotly</code> library see the links below:</p>
+<p>For additional information on the <code>plotly</code> library see the
+links below:</p>
 <ul>
-<li>Getting started: <a href="https://plot.ly/r/getting-started/" target="_blank">https://plot.ly/r/getting-started/</a>
+<li>Getting started:
+<a href="https://plot.ly/r/getting-started/" target="_blank" class="external-link">https://plot.ly/r/getting-started/</a>
 </li>
-<li>Reference: <a href="https://plot.ly/r/reference/" target="_blank">https://plot.ly/r/reference/</a>
+<li>Reference:
+<a href="https://plot.ly/r/reference/" target="_blank" class="external-link">https://plot.ly/r/reference/</a>
 </li>
-<li>Book: <a href="https://cpsievert.github.io/plotly_book" target="_blank">https://cpsievert.github.io/plotly_book</a>
+<li>Book:
+<a href="https://cpsievert.github.io/plotly_book" target="_blank" class="external-link">https://cpsievert.github.io/plotly_book</a>
 </li>
-<li>Code: <a href="https://github.com/ropensci/plotly" target="_blank">https://github.com/ropensci/plotly</a>
+<li>Code:
+<a href="https://github.com/ropensci/plotly" target="_blank" class="external-link">https://github.com/ropensci/plotly</a>
 </li>
 </ul>
 </div>
-<div id="r-functions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#r-functions" class="anchor"></a>R-functions</h3>
-<p>For an overview of related R-functions used by Radiant to visualize data see <a href="https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-visualize" target="_blank"><em>Data &gt; Visualize</em></a></p>
-<p>© Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="images/by-sa.png"></a></p>
+<div class="section level3">
+<h3 id="r-functions">R-functions<a class="anchor" aria-label="anchor" href="#r-functions"></a>
+</h3>
+<p>For an overview of related R-functions used by Radiant to visualize
+data see
+<a href="https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-visualize" target="_blank"><em>Data
+&gt; Visualize</em></a></p>
+<p>© Vincent Nijs (2018)
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" class="external-link"><img alt="Creative Commons License" style="border-width: 0" src="images/by-sa.png"></a></p>
 </div>
   </div>
 
@@ -295,11 +418,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Vincent Nijs.</p>
+  <p></p>
+<p>Developed by Vincent Nijs.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

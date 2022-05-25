@@ -21,6 +21,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -33,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.2</span>
       </span>
     </div>
 
@@ -55,45 +57,45 @@
   <a href="../../news/index.html">Changelog</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Other Packages
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="https://radiant-rstats.github.io/radiant/">radiant</a>
+      <a href="https://radiant-rstats.github.io/radiant/" class="external-link">radiant</a>
     </li>
     <li>
       <a href="https://radiant-rstats.github.io/radiant.data/">radiant.data</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.design/">radiant.design</a>
+      <a href="https://radiant-rstats.github.io/radiant.design/" class="external-link">radiant.design</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.basics/">radiant.basics</a>
+      <a href="https://radiant-rstats.github.io/radiant.basics/" class="external-link">radiant.basics</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.model/">radiant.model</a>
+      <a href="https://radiant-rstats.github.io/radiant.model/" class="external-link">radiant.model</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.multivariate/">radiant.multivariate</a>
+      <a href="https://radiant-rstats.github.io/radiant.multivariate/" class="external-link">radiant.multivariate</a>
     </li>
     <li>
-      <a href="https://github.com/radiant-rstats/docker">docker</a>
+      <a href="https://github.com/radiant-rstats/docker" class="external-link">docker</a>
     </li>
   </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://twitter.com/vrnijs">
+  <a href="https://twitter.com/vrnijs" class="external-link">
     <span class="fa fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/radiant-rstats">
+  <a href="https://github.com/radiant-rstats" class="external-link">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -114,15 +116,16 @@
 
       
 
-      </header><script src="state_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="state_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="state_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Loading and Saving the State of the application</h1>
-                        <h4 class="author">Vincent R. Nijs, Rady School of Management (UCSD)</h4>
+      <h1 data-toc-skip>Loading and Saving the State of the
+application</h1>
+                        <h4 data-toc-skip class="author">Vincent R.
+Nijs, Rady School of Management (UCSD)</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/radiant-rstats/radiant.data/blob/master/vignettes/pkgdown/state.Rmd"><code>vignettes/pkgdown/state.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/radiant-rstats/radiant.data/blob/HEAD/vignettes/pkgdown/state.Rmd" class="external-link"><code>vignettes/pkgdown/state.Rmd</code></a></small>
       <div class="hidden name"><code>state.Rmd</code></div>
 
     </div>
@@ -132,11 +135,45 @@
 <blockquote>
 <p>Save, load, share, or view state</p>
 </blockquote>
-<p>It is convenient to work with state files if you want complete your work at another time, perhaps on another computer, or to review previous work you completed using Radiant. You can save and load the state of the Radiant app just as you would a data file. The state file (extension <code>.rda</code>) will contain (1) the data loaded in Radiant, (2) settings for the analyses you were working on, (3) and any reports or code from the <em>Report</em> menu. To save the current state of the app to your hard-disk click the <i title="Save" class="fa fa-save"></i> icon in the navbar and then click <code>Save radiant state file</code>. To load load a previous state click the <i title="Save" class="fa fa-save"></i> icon in the navbar and the click <code>Load radiant state file</code>.</p>
-<p>You can also share a state file with others that would like to replicate your analyses. As an example, download and then load the state file <a href="https://radiant-rstats.github.io/docs/examples/radiant-example.state.rda" target="_blank">radiant-example.state.rda</a> as described above. You will navigate automatically to the <em>Data &gt; Visualize</em> tab and will see a plot. See also the <em>Data &gt; View</em> tab for some additional settings loaded from the state file. There is also a report in <em>Report &gt; Rmd</em> created using the Radiant interface. The html file <a href="https://radiant-rstats.github.io/docs/examples/radiant-example.nb.html" target="_blank">radiant-example.nb.html</a> contains the output created by clicking the <code>Knit report</code> button.</p>
-<p>Loading and saving state also works with Rstudio. If you start Radiant from Rstudio and use <i title="Power off" class="fa fa-power-off"></i> and then click <code>Stop</code>, the <code>r_data</code> environment and the <code>r_info</code> and <code>r_state</code> lists will be put into Rstudio’s global workspace. If you start radiant again from the <code>Addins</code> menu it will use <code>r_data</code>, <code>r_info</code>, and <code>r_state</code> to restore state. Also, if you load a state file directly into Rstudio it will be used when you start Radiant.</p>
-<p>Use <code>Refresh</code> in the <i title="Power off" class="fa fa-power-off"></i> menu in the navbar to return to a clean/new state.</p>
-<p>© Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="images/by-sa.png"></a></p>
+<p>It is convenient to work with state files if you want complete your
+work at another time, perhaps on another computer, or to review previous
+work you completed using Radiant. You can save and load the state of the
+Radiant app just as you would a data file. The state file (extension
+<code>.rda</code>) will contain (1) the data loaded in Radiant, (2)
+settings for the analyses you were working on, (3) and any reports or
+code from the <em>Report</em> menu. To save the current state of the app
+to your hard-disk click the <i title="Save" class="fa fa-save"></i> icon
+in the navbar and then click <code>Save radiant state file</code>. To
+load load a previous state click the
+<i title="Save" class="fa fa-save"></i> icon in the navbar and the click
+<code>Load radiant state file</code>.</p>
+<p>You can also share a state file with others that would like to
+replicate your analyses. As an example, download and then load the state
+file
+<a href="https://radiant-rstats.github.io/docs/examples/radiant-example.state.rda" target="_blank" class="external-link">radiant-example.state.rda</a>
+as described above. You will navigate automatically to the <em>Data &gt;
+Visualize</em> tab and will see a plot. See also the <em>Data &gt;
+View</em> tab for some additional settings loaded from the state file.
+There is also a report in <em>Report &gt; Rmd</em> created using the
+Radiant interface. The html file
+<a href="https://radiant-rstats.github.io/docs/examples/radiant-example.nb.html" target="_blank" class="external-link">radiant-example.nb.html</a>
+contains the output created by clicking the <code>Knit report</code>
+button.</p>
+<p>Loading and saving state also works with Rstudio. If you start
+Radiant from Rstudio and use
+<i title="Power off" class="fa fa-power-off"></i> and then click
+<code>Stop</code>, the <code>r_data</code> environment and the
+<code>r_info</code> and <code>r_state</code> lists will be put into
+Rstudio’s global workspace. If you start radiant again from the
+<code>Addins</code> menu it will use <code>r_data</code>,
+<code>r_info</code>, and <code>r_state</code> to restore state. Also, if
+you load a state file directly into Rstudio it will be used when you
+start Radiant.</p>
+<p>Use <code>Refresh</code> in the
+<i title="Power off" class="fa fa-power-off"></i> menu in the navbar to
+return to a clean/new state.</p>
+<p>© Vincent Nijs (2018)
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" class="external-link"><img alt="Creative Commons License" style="border-width: 0" src="images/by-sa.png"></a></p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -148,11 +185,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Vincent Nijs.</p>
+  <p></p>
+<p>Developed by Vincent Nijs.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

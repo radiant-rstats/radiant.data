@@ -21,6 +21,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -33,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.2</span>
       </span>
     </div>
 
@@ -55,45 +57,45 @@
   <a href="../../news/index.html">Changelog</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Other Packages
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="https://radiant-rstats.github.io/radiant/">radiant</a>
+      <a href="https://radiant-rstats.github.io/radiant/" class="external-link">radiant</a>
     </li>
     <li>
       <a href="https://radiant-rstats.github.io/radiant.data/">radiant.data</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.design/">radiant.design</a>
+      <a href="https://radiant-rstats.github.io/radiant.design/" class="external-link">radiant.design</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.basics/">radiant.basics</a>
+      <a href="https://radiant-rstats.github.io/radiant.basics/" class="external-link">radiant.basics</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.model/">radiant.model</a>
+      <a href="https://radiant-rstats.github.io/radiant.model/" class="external-link">radiant.model</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.multivariate/">radiant.multivariate</a>
+      <a href="https://radiant-rstats.github.io/radiant.multivariate/" class="external-link">radiant.multivariate</a>
     </li>
     <li>
-      <a href="https://github.com/radiant-rstats/docker">docker</a>
+      <a href="https://github.com/radiant-rstats/docker" class="external-link">docker</a>
     </li>
   </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://twitter.com/vrnijs">
+  <a href="https://twitter.com/vrnijs" class="external-link">
     <span class="fa fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/radiant-rstats">
+  <a href="https://github.com/radiant-rstats" class="external-link">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -114,15 +116,16 @@
 
       
 
-      </header><script src="report_r_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="report_r_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="report_r_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Create a reproducible report using R (Report &gt; R)</h1>
-                        <h4 class="author">Vincent R. Nijs, Rady School of Management (UCSD)</h4>
+      <h1 data-toc-skip>Create a reproducible report using R (Report
+&gt; R)</h1>
+                        <h4 data-toc-skip class="author">Vincent R.
+Nijs, Rady School of Management (UCSD)</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/radiant-rstats/radiant.data/blob/master/vignettes/pkgdown/report_r.Rmd"><code>vignettes/pkgdown/report_r.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/radiant-rstats/radiant.data/blob/HEAD/vignettes/pkgdown/report_r.Rmd" class="external-link"><code>vignettes/pkgdown/report_r.Rmd</code></a></small>
       <div class="hidden name"><code>report_r.Rmd</code></div>
 
     </div>
@@ -132,30 +135,50 @@
 <blockquote>
 <p>Create a (reproducible) report using R</p>
 </blockquote>
-<p>The <em>Report &gt; R</em> tab allows you to run R-code with access to all functions and data in Radiant. By clicking the <code>Knit report (R)</code> button, the code will be evaluated and the output will be shown on the right of the <em>Report &gt; R</em> page. To evaluate only a part of the code use the cursor to select a section and press <code>CTRL-enter</code> (<code>CMD-enter</code> on mac).</p>
-<p>You can load an R-code file into Radiant by clicking the <code>Load report</code> button and selecting an .r or .R file. If you started Radiant from Rstudio you can save a report in HTML, Word, or PDF format by selecting the desired format from the drop-down menu and clicking <code>Save report</code>. To save just the code choose <code>R</code> from the dropdown and press the <code>Save report</code> button.</p>
-<p>If you started Radiant from Rstudio, you can also click the <code>Read files</code> button to browse for files and generate code to read it into Radiant. For example, read rda, rds, xls, yaml, and feather and add them to the <code>Datasets</code> dropdown. If the file type you want to load is not currently supported, the path to the file will be returned. The file path used will be relative to the Rstudio-project root. Paths to files synced to a local Dropbox or Google Drive folder will use the <code>find_dropbox</code> and <code>find_gdrive</code> functions to enhances reproducibility.</p>
-<p>As an example you can copy-and-paste the code below into the editor and press <code>Knit report (R)</code> to generate results.</p>
+<p>The <em>Report &gt; R</em> tab allows you to run R-code with access
+to all functions and data in Radiant. By clicking the
+<code>Knit report (R)</code> button, the code will be evaluated and the
+output will be shown on the right of the <em>Report &gt; R</em> page. To
+evaluate only a part of the code use the cursor to select a section and
+press <code>CTRL-enter</code> (<code>CMD-enter</code> on mac).</p>
+<p>You can load an R-code file into Radiant by clicking the
+<code>Load report</code> button and selecting an .r or .R file. If you
+started Radiant from Rstudio you can save a report in HTML, Word, or PDF
+format by selecting the desired format from the drop-down menu and
+clicking <code>Save report</code>. To save just the code choose
+<code>R</code> from the dropdown and press the <code>Save report</code>
+button.</p>
+<p>If you started Radiant from Rstudio, you can also click the
+<code>Read files</code> button to browse for files and generate code to
+read it into Radiant. For example, read rda, rds, xls, yaml, and feather
+and add them to the <code>Datasets</code> dropdown. If the file type you
+want to load is not currently supported, the path to the file will be
+returned. The file path used will be relative to the Rstudio-project
+root. Paths to files synced to a local Dropbox or Google Drive folder
+will use the <code>find_dropbox</code> and <code>find_gdrive</code>
+functions to enhances reproducibility.</p>
+<p>As an example you can copy-and-paste the code below into the editor
+and press <code>Knit report (R)</code> to generate results.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## get the active dataset and show the first few observations</span>
-<span class="fu">.get_data</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu">.get_data</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co">## access a dataset</span>
-<span class="va">diamonds</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">price</span>, <span class="va">clarity</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">diamonds</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">price</span>, <span class="va">clarity</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co">## add a variable to the diamonds data</span>
-<span class="va">diamonds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">diamonds</span>, log_price <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span><span class="op">)</span>
+<span class="va">diamonds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">diamonds</span>, log_price <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co">## show the first observations in the price and log_price columns</span>
-<span class="va">diamonds</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">price</span>, <span class="va">log_price</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">diamonds</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">price</span>, <span class="va">log_price</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co">## create a histogram of prices</span>
-<span class="va">diamonds</span> <span class="op">%&gt;%</span>
+<span class="va">diamonds</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">price</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu">geom_histogram</span><span class="op">(</span><span class="op">)</span>
 
@@ -163,41 +186,49 @@
 <span class="fu"><a href="../../reference/visualize.html">visualize</a></span><span class="op">(</span><span class="va">diamonds</span>, xvar <span class="op">=</span> <span class="st">"log_price"</span>, custom <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="co">## open help in the R-studio viewer from Radiant</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/help.html">help</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"radiant.data"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/help.html" class="external-link">help</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"radiant.data"</span><span class="op">)</span>
 
 <span class="co">## If you are familiar with Shiny you can call reactives when the code</span>
 <span class="co">## is evaluated inside a Shiny app. For example, if you transformed</span>
 <span class="co">## some variables in Data &gt; Transform you can call the transform_main</span>
 <span class="co">## reacive to see the latest result. Very useful for debugging</span>
 <span class="co"># transform_main() %&gt;% head()</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div id="options" class="section level2">
-<h2 class="hasAnchor">
-<a href="#options" class="anchor"></a>Options</h2>
-<p>The editor used in <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> has several options that can be set in <code>.Rprofile</code>.</p>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="section level2">
+<h2 id="options">Options<a class="anchor" aria-label="anchor" href="#options"></a>
+</h2>
+<p>The editor used in <em>Report &gt; Rmd</em> and <em>Report &gt;
+R</em> has several options that can be set in
+<code>.Rprofile</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>radiant.ace_vim.keys <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>radiant.ace_theme <span class="op">=</span> <span class="st">"cobalt"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>radiant.ace_tabSize <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>radiant.ace_useSoftTabs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>radiant.ace_showInvisibles <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>radiant.ace_autoComplete <span class="op">=</span> <span class="st">"live"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>radiant.ace_vim.keys <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>radiant.ace_theme <span class="op">=</span> <span class="st">"cobalt"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>radiant.ace_tabSize <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>radiant.ace_useSoftTabs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>radiant.ace_showInvisibles <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>radiant.ace_autoComplete <span class="op">=</span> <span class="st">"live"</span><span class="op">)</span></code></pre></div>
 <p>Notes:</p>
 <ul>
 <li>
-<code>vim.keys</code> enables a set of special keyboard short-cuts. If you have never used VIM you probably don’t want this</li>
-<li>For an overview of available editor themes see: <code><a href="https://rdrr.io/pkg/shinyAce/man/getAceThemes.html">shinyAce::getAceThemes()</a></code>
+<code>vim.keys</code> enables a set of special keyboard short-cuts.
+If you have never used VIM you probably don’t want this</li>
+<li>For an overview of available editor themes see:
+<code><a href="https://rdrr.io/pkg/shinyAce/man/getAceThemes.html" class="external-link">shinyAce::getAceThemes()</a></code>
 </li>
-<li>Tabs are converted to 2 spaces by default (i.e., ‘soft’ tabs). You can change the number of spaces used from 2 to, for example, 4</li>
+<li>Tabs are converted to 2 spaces by default (i.e., ‘soft’ tabs). You
+can change the number of spaces used from 2 to, for example, 4</li>
 <li>
 <code>showInvisibles</code> shows tabs and spaces in the editor</li>
 <li>Autocomplete has options “live”, “enabled”, and “disabled”</li>
 </ul>
-<div id="r-functions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#r-functions" class="anchor"></a>R-functions</h3>
-<p>For an overview of related R-functions used by Radiant to generate reproducible reports see <a href="https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-report" target="_blank"><em>Report</em></a></p>
-<p>© Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="images/by-sa.png"></a></p>
+<div class="section level3">
+<h3 id="r-functions">R-functions<a class="anchor" aria-label="anchor" href="#r-functions"></a>
+</h3>
+<p>For an overview of related R-functions used by Radiant to generate
+reproducible reports see
+<a href="https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-report" target="_blank"><em>Report</em></a></p>
+<p>© Vincent Nijs (2018)
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" class="external-link"><img alt="Creative Commons License" style="border-width: 0" src="images/by-sa.png"></a></p>
 </div>
 </div>
   </div>
@@ -213,11 +244,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Vincent Nijs.</p>
+  <p></p>
+<p>Developed by Vincent Nijs.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

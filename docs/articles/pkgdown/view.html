@@ -21,6 +21,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -33,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.2</span>
       </span>
     </div>
 
@@ -55,45 +57,45 @@
   <a href="../../news/index.html">Changelog</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Other Packages
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="https://radiant-rstats.github.io/radiant/">radiant</a>
+      <a href="https://radiant-rstats.github.io/radiant/" class="external-link">radiant</a>
     </li>
     <li>
       <a href="https://radiant-rstats.github.io/radiant.data/">radiant.data</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.design/">radiant.design</a>
+      <a href="https://radiant-rstats.github.io/radiant.design/" class="external-link">radiant.design</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.basics/">radiant.basics</a>
+      <a href="https://radiant-rstats.github.io/radiant.basics/" class="external-link">radiant.basics</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.model/">radiant.model</a>
+      <a href="https://radiant-rstats.github.io/radiant.model/" class="external-link">radiant.model</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.multivariate/">radiant.multivariate</a>
+      <a href="https://radiant-rstats.github.io/radiant.multivariate/" class="external-link">radiant.multivariate</a>
     </li>
     <li>
-      <a href="https://github.com/radiant-rstats/docker">docker</a>
+      <a href="https://github.com/radiant-rstats/docker" class="external-link">docker</a>
     </li>
   </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://twitter.com/vrnijs">
+  <a href="https://twitter.com/vrnijs" class="external-link">
     <span class="fa fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/radiant-rstats">
+  <a href="https://github.com/radiant-rstats" class="external-link">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -114,15 +116,16 @@
 
       
 
-      </header><script src="view_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="view_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="view_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>View data in an interactive table (Data &gt; View)</h1>
-                        <h4 class="author">Vincent R. Nijs, Rady School of Management (UCSD)</h4>
+      <h1 data-toc-skip>View data in an interactive table (Data &gt;
+View)</h1>
+                        <h4 data-toc-skip class="author">Vincent R.
+Nijs, Rady School of Management (UCSD)</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/radiant-rstats/radiant.data/blob/master/vignettes/pkgdown/view.Rmd"><code>vignettes/pkgdown/view.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/radiant-rstats/radiant.data/blob/HEAD/vignettes/pkgdown/view.Rmd" class="external-link"><code>vignettes/pkgdown/view.Rmd</code></a></small>
       <div class="hidden name"><code>view.Rmd</code></div>
 
     </div>
@@ -132,19 +135,48 @@
 <blockquote>
 <p>Show data as an interactive table</p>
 </blockquote>
-<div id="datasets" class="section level3">
-<h3 class="hasAnchor">
-<a href="#datasets" class="anchor"></a>Datasets</h3>
-<p>Choose one of the datasets from the <code>Datasets</code> dropdown. Files are loaded into Radiant through the <em>Data &gt; Manage</em> tab.</p>
+<div class="section level3">
+<h3 id="datasets">Datasets<a class="anchor" aria-label="anchor" href="#datasets"></a>
+</h3>
+<p>Choose one of the datasets from the <code>Datasets</code> dropdown.
+Files are loaded into Radiant through the <em>Data &gt; Manage</em>
+tab.</p>
 </div>
-<div id="filter-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#filter-data" class="anchor"></a>Filter data</h3>
-<p>There are several ways to select a subset of the data to view. The <code>Filter data</code> box on the left (click the check-box) can be used with <code><a href="https://rdrr.io/r/base/Comparison.html">&gt;</a></code> and <code><a href="https://rdrr.io/r/base/Comparison.html">&lt;</a></code> symbols. You can also combine subset commands, for example, <code>x &gt; 3 &amp; y == 2</code> would show only those rows for which the variable <code>x</code> has values larger than 3 <strong>AND</strong> for which <code>y</code> is equal to 2. Note that in R, and most other programming languages, <code><a href="https://rdrr.io/r/base/assignOps.html">=</a></code> is used to <em>assign</em> a value and <code><a href="https://rdrr.io/r/base/Comparison.html">==</a></code> to determine if values are equal to each other. In contrast, <code><a href="https://rdrr.io/r/base/Comparison.html">!=</a></code> is used to determine if two values are <em>unequal</em>. You can also use expressions that have an <strong>OR</strong> condition. For example, to select rows where <code>Salary</code> is smaller than $100,000 <strong>OR</strong> larger than $20,000 use <code>Salary &gt; 20000 | Salary &lt; 100000</code>. <code><a href="https://rdrr.io/r/base/Logic.html">|</a></code> is the symbol for <strong>OR</strong> and <code><a href="https://rdrr.io/r/base/Logic.html">&amp;</a></code> is the symbol for <strong>AND</strong></p>
-<p>It is also possible to filter using dates. For example, to select rows with dates before June 1st, 2014 enter <code>date &lt; "2014-6-1"</code> into the filter box and press return.</p>
-<p>You can also use string matching to select rows. For example, type <code><a href="https://rdrr.io/r/base/grep.html">grepl('ood', cut)</a></code> to select rows with <code>Good</code> or <code>Very good</code> cut. This search is case sensitive by default. For case insensitive search use <code><a href="https://rdrr.io/r/base/grep.html">grepl("GOOD", cut, ignore.case = TRUE)</a></code>. Type your statement in the <code>Filter</code> box and press return to see the result on screen or an error below the box if the expression is invalid.</p>
-<p>It is important to note that these filters are <em>persistent</em> and will be applied to any analysis conducted through in Radiant. To deactivate a filter un-check the <code>Filter data</code> check-box. To remove a filter simply delete it.</p>
-<table class="table table table-condensed table-hover">
+<div class="section level3">
+<h3 id="filter-data">Filter data<a class="anchor" aria-label="anchor" href="#filter-data"></a>
+</h3>
+<p>There are several ways to select a subset of the data to view. The
+<code>Filter data</code> box on the left (click the check-box) can be
+used with <code>&gt;</code> and <code>&lt;</code> symbols. You can also
+combine subset commands, for example, <code>x &gt; 3 &amp; y == 2</code>
+would show only those rows for which the variable <code>x</code> has
+values larger than 3 <strong>AND</strong> for which <code>y</code> is
+equal to 2. Note that in R, and most other programming languages,
+<code>=</code> is used to <em>assign</em> a value and <code>==</code> to
+determine if values are equal to each other. In contrast,
+<code>!=</code> is used to determine if two values are <em>unequal</em>.
+You can also use expressions that have an <strong>OR</strong> condition.
+For example, to select rows where <code>Salary</code> is smaller than
+$100,000 <strong>OR</strong> larger than $20,000 use
+<code>Salary &gt; 20000 | Salary &lt; 100000</code>. <code>|</code> is
+the symbol for <strong>OR</strong> and <code>&amp;</code> is the symbol
+for <strong>AND</strong></p>
+<p>It is also possible to filter using dates. For example, to select
+rows with dates before June 1st, 2014 enter
+<code>date &lt; "2014-6-1"</code> into the filter box and press
+return.</p>
+<p>You can also use string matching to select rows. For example, type
+<code>grepl('ood', cut)</code> to select rows with <code>Good</code> or
+<code>Very good</code> cut. This search is case sensitive by default.
+For case insensitive search use
+<code>grepl("GOOD", cut, ignore.case = TRUE)</code>. Type your statement
+in the <code>Filter</code> box and press return to see the result on
+screen or an error below the box if the expression is invalid.</p>
+<p>It is important to note that these filters are <em>persistent</em>
+and will be applied to any analysis conducted through in Radiant. To
+deactivate a filter un-check the <code>Filter data</code> check-box. To
+remove a filter simply delete it.</p>
+<table class="table table table-condensed table-hover" style="width:60%;">
 <thead><tr>
 <th style="text-align:left;">
 Operator
@@ -159,7 +191,7 @@ Example
 <tbody>
 <tr>
 <td style="text-align:left;">
-<code><a href="https://rdrr.io/r/base/Comparison.html">&lt;</a></code>
+<code>&lt;</code>
 </td>
 <td style="text-align:left;">
 less than
@@ -170,7 +202,7 @@ less than
 </tr>
 <tr>
 <td style="text-align:left;">
-<code><a href="https://rdrr.io/r/base/Comparison.html">&lt;=</a></code>
+<code>&lt;=</code>
 </td>
 <td style="text-align:left;">
 less than or equal to
@@ -181,7 +213,7 @@ less than or equal to
 </tr>
 <tr>
 <td style="text-align:left;">
-<code><a href="https://rdrr.io/r/base/Comparison.html">&gt;</a></code>
+<code>&gt;</code>
 </td>
 <td style="text-align:left;">
 greater than
@@ -192,7 +224,7 @@ greater than
 </tr>
 <tr>
 <td style="text-align:left;">
-<code><a href="https://rdrr.io/r/base/Comparison.html">&gt;=</a></code>
+<code>&gt;=</code>
 </td>
 <td style="text-align:left;">
 greater than or equal to
@@ -203,7 +235,7 @@ greater than or equal to
 </tr>
 <tr>
 <td style="text-align:left;">
-<code><a href="https://rdrr.io/r/base/Comparison.html">==</a></code>
+<code>==</code>
 </td>
 <td style="text-align:left;">
 exactly equal to
@@ -214,7 +246,7 @@ exactly equal to
 </tr>
 <tr>
 <td style="text-align:left;">
-<code><a href="https://rdrr.io/r/base/Comparison.html">!=</a></code>
+<code>!=</code>
 </td>
 <td style="text-align:left;">
 not equal to
@@ -225,7 +257,7 @@ not equal to
 </tr>
 <tr>
 <td style="text-align:left;">
-<code><a href="https://rdrr.io/r/base/Logic.html">|</a></code>
+<code>|</code>
 </td>
 <td style="text-align:left;">
 x OR y
@@ -236,7 +268,7 @@ x OR y
 </tr>
 <tr>
 <td style="text-align:left;">
-<code><a href="https://rdrr.io/r/base/Logic.html">&amp;</a></code>
+<code>&amp;</code>
 </td>
 <td style="text-align:left;">
 x AND y
@@ -247,7 +279,7 @@ x AND y
 </tr>
 <tr>
 <td style="text-align:left;">
-<code><a href="https://rdrr.io/r/base/match.html">%in%</a></code>
+<code>%in%</code>
 </td>
 <td style="text-align:left;">
 x is one of y
@@ -264,47 +296,109 @@ is.na
 is missing
 </td>
 <td style="text-align:left;">
-<code><a href="https://rdrr.io/r/base/NA.html">is.na(price)</a></code>
+<code>is.na(price)</code>
 </td>
 </tr>
 </tbody>
 </table>
-<p>Filters can also be used with R-code to quickly view a sample from the selected dataset. For example, <code>runif(n()) &gt; .9</code> could be used to sample approximately 10% of the rows in the data and <code>1:n() &lt; 101</code> would select only the first 100 rows in the data.</p>
+<p>Filters can also be used with R-code to quickly view a sample from
+the selected dataset. For example, <code>runif(n()) &gt; .9</code> could
+be used to sample approximately 10% of the rows in the data and
+<code>1:n() &lt; 101</code> would select only the first 100 rows in the
+data.</p>
 </div>
-<div id="select-variables-to-show" class="section level3">
-<h3 class="hasAnchor">
-<a href="#select-variables-to-show" class="anchor"></a>Select variables to show</h3>
-<p>By default all columns in the data are shown. Click on any variable to focus on it alone. To select several variables use the SHIFT and ARROW keys on your keyboard. On a mac the CMD key can also be used to select multiple variables. The same effect is achieved on windows using the CTRL key. To select all variable use CTRL-A (or CMD-A on mac).</p>
+<div class="section level3">
+<h3 id="select-variables-to-show">Select variables to show<a class="anchor" aria-label="anchor" href="#select-variables-to-show"></a>
+</h3>
+<p>By default all columns in the data are shown. Click on any variable
+to focus on it alone. To select several variables use the SHIFT and
+ARROW keys on your keyboard. On a mac the CMD key can also be used to
+select multiple variables. The same effect is achieved on windows using
+the CTRL key. To select all variable use CTRL-A (or CMD-A on mac).</p>
 </div>
-<div id="browse-the-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#browse-the-data" class="anchor"></a>Browse the data</h3>
-<p>By default only 10 rows of data are shown at a time. You can change this setting through the <code>Show ... entries</code> dropdown. Press the <code>Next</code> and <code>Previous</code> buttons at the bottom-right of the screen to page through the data.</p>
+<div class="section level3">
+<h3 id="browse-the-data">Browse the data<a class="anchor" aria-label="anchor" href="#browse-the-data"></a>
+</h3>
+<p>By default only 10 rows of data are shown at a time. You can change
+this setting through the <code>Show ... entries</code> dropdown. Press
+the <code>Next</code> and <code>Previous</code> buttons at the
+bottom-right of the screen to page through the data.</p>
 </div>
-<div id="sort" class="section level3">
-<h3 class="hasAnchor">
-<a href="#sort" class="anchor"></a>Sort</h3>
-<p>Click on a column header in the table to sort the data. Clicking again will toggle between sorting in ascending and descending order. To sort on multiple columns at once press shift and then click on the 2nd, 3rd, etc. column to sort by.</p>
+<div class="section level3">
+<h3 id="sort">Sort<a class="anchor" aria-label="anchor" href="#sort"></a>
+</h3>
+<p>Click on a column header in the table to sort the data. Clicking
+again will toggle between sorting in ascending and descending order. To
+sort on multiple columns at once press shift and then click on the 2nd,
+3rd, etc. column to sort by.</p>
 </div>
-<div id="column-filters-and-search" class="section level3">
-<h3 class="hasAnchor">
-<a href="#column-filters-and-search" class="anchor"></a>Column filters and Search</h3>
-<p>For variables that have a limited number of different values (i.e., a factor) you can select the levels to keep from the column filter below the variable name. For example, to filter on rows with ideal cut click in the box below the <code>cut</code> column header and select <code>Ideal</code> from the dropdown menu shown. You can also type a string into these column filters and then press return. Note that matching is case-insensitive. In fact, typing <code>eal</code> would produce the same result because the search will match any part of a string. Similarly, you can type a string to select rows based on character variables (e.g., street names).</p>
-<p>For numeric variables the column filter boxes have some special features that make them almost as powerful as the <code>Filter data</code> box. For numeric and integer variables you can use <code>...</code> to indicate a range. For example, to select <code>price</code> values between $500 and $2000 type <code>500 ... 2000</code> and press return. The range is inclusive of the values typed. Furthermore, if we want to filter on <code>carat</code> <code>0.32 ...</code> will show only diamonds with carat values larger than or equal to 0.32. Numeric variables also have a slider that you can use to define the range of values to keep.</p>
-<p>If you want to get <em>really</em> fancy you can use the search box on the top right to search across all columns in the data using <strong>regular expressions</strong>. For example, to find all rows that have an entry in <em>any</em> column ending with the number 72 type <code>72$</code> (i.e., the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> sign is used to indicate the end of an entry). For all rows with entries that start with 60 use <code>^60</code> (i.e., the <code><a href="https://rdrr.io/r/base/Arithmetic.html">^</a></code> is used to indicate the first character in an entry). Regular expressions are incredibly powerful for search but this is a <em>big</em> topic area. To learn more about regular expressions see this <a href="http://www.regular-expressions.info/tutorial.html" target="_blank">tutorial</a>.</p>
+<div class="section level3">
+<h3 id="column-filters-and-search">Column filters and Search<a class="anchor" aria-label="anchor" href="#column-filters-and-search"></a>
+</h3>
+<p>For variables that have a limited number of different values (i.e., a
+factor) you can select the levels to keep from the column filter below
+the variable name. For example, to filter on rows with ideal cut click
+in the box below the <code>cut</code> column header and select
+<code>Ideal</code> from the dropdown menu shown. You can also type a
+string into these column filters and then press return. Note that
+matching is case-insensitive. In fact, typing <code>eal</code> would
+produce the same result because the search will match any part of a
+string. Similarly, you can type a string to select rows based on
+character variables (e.g., street names).</p>
+<p>For numeric variables the column filter boxes have some special
+features that make them almost as powerful as the
+<code>Filter data</code> box. For numeric and integer variables you can
+use <code>...</code> to indicate a range. For example, to select
+<code>price</code> values between $500 and $2000 type
+<code>500 ... 2000</code> and press return. The range is inclusive of
+the values typed. Furthermore, if we want to filter on
+<code>carat</code> <code>0.32 ...</code> will show only diamonds with
+carat values larger than or equal to 0.32. Numeric variables also have a
+slider that you can use to define the range of values to keep.</p>
+<p>If you want to get <em>really</em> fancy you can use the search box
+on the top right to search across all columns in the data using
+<strong>regular expressions</strong>. For example, to find all rows that
+have an entry in <em>any</em> column ending with the number 72 type
+<code>72$</code> (i.e., the <code>$</code> sign is used to indicate the
+end of an entry). For all rows with entries that start with 60 use
+<code>^60</code> (i.e., the <code>^</code> is used to indicate the first
+character in an entry). Regular expressions are incredibly powerful for
+search but this is a <em>big</em> topic area. To learn more about
+regular expressions see this
+<a href="http://www.regular-expressions.info/tutorial.html" target="_blank" class="external-link">tutorial</a>.</p>
 </div>
-<div id="store-filters" class="section level3">
-<h3 class="hasAnchor">
-<a href="#store-filters" class="anchor"></a>Store filters</h3>
-<p>It is important to note that column sorting, column filters, and search are <strong>not</strong> persistent. To store these settings for use in other parts of Radiant press the <code>Store</code> button. You can store the data and settings under a different dataset name by changing the value in the text input to the left of the <code>Store</code> button. This feature can also be used to select a subset of variables to keep. Just select the ones you want to keep and press the <code>Store</code> button. For more control over the variables you want to keep or remove and to specify their order in the dataset use the <em>Data &gt; Transform</em> tab.</p>
-<p>To download the data in <em>csv</em> format click the <i title="Download" class="fa fa-download"></i> icon on the top right of your screen.</p>
-<p>Click the report (<i title="Report results" class="fa fa-edit"></i>) icon on the bottom left of your screen or press <code>ALT-enter</code> on your keyboard to add the filter and sort commands used by Radiant to a (reproducible) report in <a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank"><em>Report &gt; Rmd</em></a>.</p>
+<div class="section level3">
+<h3 id="store-filters">Store filters<a class="anchor" aria-label="anchor" href="#store-filters"></a>
+</h3>
+<p>It is important to note that column sorting, column filters, and
+search are <strong>not</strong> persistent. To store these settings for
+use in other parts of Radiant press the <code>Store</code> button. You
+can store the data and settings under a different dataset name by
+changing the value in the text input to the left of the
+<code>Store</code> button. This feature can also be used to select a
+subset of variables to keep. Just select the ones you want to keep and
+press the <code>Store</code> button. For more control over the variables
+you want to keep or remove and to specify their order in the dataset use
+the <em>Data &gt; Transform</em> tab.</p>
+<p>To download the data in <em>csv</em> format click the
+<i title="Download" class="fa fa-download"></i> icon on the top right of
+your screen.</p>
+<p>Click the report (<i title="Report results" class="fa fa-edit"></i>)
+icon on the bottom left of your screen or press <code>ALT-enter</code>
+on your keyboard to add the filter and sort commands used by Radiant to
+a (reproducible) report in
+<a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank" class="external-link"><em>Report
+&gt; Rmd</em></a>.</p>
 </div>
-<div id="r-functions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#r-functions" class="anchor"></a>R-functions</h3>
-<p>For an overview of related R-functions used by Radiant to view, search, and filter data see <a href="https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-view" target="_blank"><em>Data &gt; View</em></a></p>
-<p>© Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="images/by-sa.png"></a></p>
+<div class="section level3">
+<h3 id="r-functions">R-functions<a class="anchor" aria-label="anchor" href="#r-functions"></a>
+</h3>
+<p>For an overview of related R-functions used by Radiant to view,
+search, and filter data see
+<a href="https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-view" target="_blank"><em>Data
+&gt; View</em></a></p>
+<p>© Vincent Nijs (2018)
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" class="external-link"><img alt="Creative Commons License" style="border-width: 0" src="images/by-sa.png"></a></p>
 </div>
   </div>
 
@@ -317,11 +411,13 @@ is missing
 
 
       <footer><div class="copyright">
-  <p>Developed by Vincent Nijs.</p>
+  <p></p>
+<p>Developed by Vincent Nijs.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

@@ -1,5 +1,10 @@
+# radiant.data 1.4.2
+
+* Use `all` if `is.null` and `is.na` if object length can be greater than 1 as required in R 4.2.0
+
 # radiant.data 1.4.1
 
+* Setup to allow formating of the shiny interface with bootstrap 4
 * Addressing `is_empty` function clash with `rlang`
 * Upgrading `shiny` dependency to 1.6.0 and fixing project text alignment issue (@cpsievert, https://github.com/radiant-rstats/radiant.data/pull/28)
 

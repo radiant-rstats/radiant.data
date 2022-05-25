@@ -219,7 +219,7 @@ sshhr <- function(...) suppressWarnings(suppressMessages(...))
 #' @details Returns /Users/x and not /Users/x/Documents
 #' @export
 find_home <- function() {
-  os_type = Sys.info()["sysname"]
+  os_type <- Sys.info()["sysname"]
   if (os_type == "Windows") {
     normalizePath(
       file.path(Sys.getenv("HOMEDRIVE"), Sys.getenv("HOMEPATH")),
@@ -246,28 +246,37 @@ find_home <- function() {
 #' get_data(mtcars, vars = "cyl:vs", filt = "mpg > 25")
 #' get_data(mtcars, vars = c("mpg", "cyl"), rows = 1:10)
 #' @export
-get_data <- function(
-                     dataset, vars = "", filt = "",
+get_data <- function(dataset, vars = "", filt = "",
                      rows = NULL, na.rm = TRUE,
-                     envir = c()
-) {
-
+                     envir = c()) {
   filt <- gsub("\\n", "", filt) %>%
     gsub("\"", "\'", .)
 
-  {if (is.data.frame(dataset)) {
-    dataset
-  } else if (is.environment(envir) && !is.null(envir[[dataset]])) {
-    envir[[dataset]]
-  } else {
-    paste0("Dataset ", dataset, " is not available. Please load the dataset") %>%
-      stop(call. = FALSE)
-  }} %>%
-    {if ("grouped_df" %in% class(.)) ungroup(.) else .} %>% ## ungroup data if needed
-    {if (filt == "") . else filter_data(., filt)} %>% ## apply data_filter
-    {if (is.null(rows)) . else .[rows, , drop = FALSE]} %>%
-    {if (radiant.data::is_empty(vars[1])) . else select(., !!!if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)} %>%
-    {if (na.rm) na.omit(.) else .}
+  {
+    if (is.data.frame(dataset)) {
+      dataset
+    } else if (is.environment(envir) && !is.null(envir[[dataset]])) {
+      envir[[dataset]]
+    } else {
+      paste0("Dataset ", dataset, " is not available. Please load the dataset") %>%
+        stop(call. = FALSE)
+    }
+  } %>%
+    {
+      if ("grouped_df" %in% class(.)) ungroup(.) else .
+    } %>% ## ungroup data if needed
+    {
+      if (filt == "") . else filter_data(., filt)
+    } %>% ## apply data_filter
+    {
+      if (is.null(rows)) . else .[rows, , drop = FALSE]
+    } %>%
+    {
+      if (radiant.data::is_empty(vars[1])) . else select(., !!!if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)
+    } %>%
+    {
+      if (na.rm) na.omit(.) else .
+    }
 }
 
 #' Convert characters to factors
@@ -281,7 +290,9 @@ get_data <- function(
 #' @export
 to_fct <- function(dataset, safx = 30, nuniq = 100, n = 100) {
   isChar <- sapply(dataset, is.character)
-  if (sum(isChar) == 0) return(dataset)
+  if (sum(isChar) == 0) {
+    return(dataset)
+  }
   nobs <- nrow(dataset)
   fab <- function(x) {
     nd <- length(unique(x))
@@ -579,14 +590,12 @@ ci_label <- function(alt = "two.sided", cl = .95, dec = 3) {
     c("0%", paste0(100 * cl, "%"))
   } else if (alt == "greater") {
     c(paste0(100 * (1 - cl), "%"), "100%")
-  } else {
-    {
-      100 * (1 - cl) / 2
-    } %>%
-      c(., 100 - .) %>%
-      round(dec) %>%
-      paste0(., "%")
-  }
+  } else {{
+    100 * (1 - cl) / 2
+  } %>%
+    c(., 100 - .) %>%
+    round(dec) %>%
+    paste0(., "%")  }
 }
 
 #' Values at confidence levels
@@ -669,10 +678,8 @@ format_df <- function(tbl, dec = NULL, perc = FALSE, mark = "", na.rm = FALSE, .
 #' format_nr(NA)
 #' format_nr(NULL)
 #' @export
-format_nr <- function(
-                      x, sym = "", dec = 2, perc = FALSE,
-                      mark = ",", na.rm = TRUE, ...
-) {
+format_nr <- function(x, sym = "", dec = 2, perc = FALSE,
+                      mark = ",", na.rm = TRUE, ...) {
   if (is.data.frame(x)) x <- x[[1]]
   if (na.rm && length(x) > 0) x <- na.omit(x)
   if (perc) {
@@ -1027,7 +1034,9 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
   }
 
   ind <- mutate(dataset, imf___ = seq_len(nrows)) %>%
-    {if (filt == "") . else filter_data(., filt)} %>%
+    {
+      if (filt == "") . else filter_data(., filt)
+    } %>%
     select_at(.vars = unique(c("imf___", vars))) %>%
     na.omit() %>%
     .[["imf___"]]
@@ -1057,7 +1066,9 @@ is_not <- function(x) {
 #'
 #' @noRd
 #' @export
-plot.character <- function(x, ...) return(invisible())
+plot.character <- function(x, ...) {
+  return(invisible())
+}
 
 #' Base method used to render htmlwidgets
 #'
@@ -1185,7 +1196,6 @@ render.shiny.render.function <- function(object, ...) object
 #'
 #' @export
 describe <- function(dataset, envir = parent.frame()) {
-
   dataset <- if (is.character(dataset)) {
     message(paste0("Using describe(\"", dataset, "\") is deprecated.\nUse desribe(", dataset, ") instead"))
     get_data(dataset, envir = envir)
@@ -1232,7 +1242,6 @@ describe <- function(dataset, envir = parent.frame()) {
 #'
 #' @export
 fix_smart <- function(text, all = FALSE) {
-
   if (all) {
     ## to remove all non-ascii symbols use ...
     text <- gsub("[\x80-\xFF]", "", text)
@@ -1352,7 +1361,6 @@ deregister <- function(dataset, shiny = shiny::getDefaultReactiveDomain(), envir
 #' list.files(".", full.names = TRUE)[1] %>% parse_path()
 #' @export
 parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
-
   if (inherits(path, "try-error") || radiant.data::is_empty(path)) {
     return(
       list(path = "", rpath = "", base = "", base_name = "", ext = "", content = "")
@@ -1371,13 +1379,13 @@ parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
   fext <- tools::file_ext(filename)
 
   ## objname is used as the name of the data.frame without any spaces, dashes, etc.
-  objname <- sub(glue('.{fext}$'), "", filename, ignore.case = TRUE) %>% fix_names()
+  objname <- sub(glue(".{fext}$"), "", filename, ignore.case = TRUE) %>% fix_names()
 
   fext <- tolower(fext)
 
-  if (!radiant.data::is_empty(pdir) && grepl(glue('^{pdir}'), path)) {
-    rpath <- sub(glue('^{pdir}'), "", path) %>% sub("^/", "", .)
-    rpath <- glue('{chr}{rpath}{chr}')
+  if (!radiant.data::is_empty(pdir) && grepl(glue("^{pdir}"), path)) {
+    rpath <- sub(glue("^{pdir}"), "", path) %>% sub("^/", "", .)
+    rpath <- glue("{chr}{rpath}{chr}")
   } else {
     dbdir <- getOption("radiant.dropbox_dir", "")
     if (radiant.data::is_empty(dbdir)) {
@@ -1388,8 +1396,8 @@ parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
       }
     }
 
-    if (!radiant.data::is_empty(dbdir) && grepl(glue('^{dbdir}'), path)) {
-      rpath <- sub(glue('^{dbdir}'), "", path) %>% sub("^/", "", .)
+    if (!radiant.data::is_empty(dbdir) && grepl(glue("^{dbdir}"), path)) {
+      rpath <- sub(glue("^{dbdir}"), "", path) %>% sub("^/", "", .)
       rpath <- glue('file.path(radiant.data::find_dropbox(), "{rpath}")')
     } else {
       gddir <- getOption("radiant.gdrive_dir", "")
@@ -1400,11 +1408,11 @@ parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
           gddir <- ""
         }
       }
-      if (!radiant.data::is_empty(gddir) && grepl(glue('^{gddir}'), path)) {
-        rpath <- sub(glue('^{gddir}'), "", path) %>% sub("^/", "", .)
+      if (!radiant.data::is_empty(gddir) && grepl(glue("^{gddir}"), path)) {
+        rpath <- sub(glue("^{gddir}"), "", path) %>% sub("^/", "", .)
         rpath <- glue('file.path(radiant.data::find_gdrive(), "{rpath}")')
       } else {
-        rpath <- glue('{chr}{path}{chr}')
+        rpath <- glue("{chr}{path}{chr}")
       }
     }
   }
@@ -1488,17 +1496,17 @@ read_files <- function(path, pdir = "", type = "rmd", to = "", clipboard = TRUE,
   } else if (pp$fext == "yaml") {
     cmd <- glue('{to} <- yaml::yaml.load_file({pp$rpath})\nregister("{pp$objname}")')
   } else if (grepl("sqlite", pp$fext)) {
-    obj <- glue('{pp$objname}_tab1')
+    obj <- glue("{pp$objname}_tab1")
     cmd <- "## see https://db.rstudio.com/dplyr/\n" %>%
       glue('library(DBI)\ncon <- dbConnect(RSQLite::SQLite(), dbname = {pp$rpath})\n(tables <- dbListTables(con))\n{obj} <- dplyr::tbl(con, from = tables[1]) %>% collect()\ndbDisconnect(con)\nregister("{obj}")')
   } else if (pp$fext == "sql") {
     if (type == "rmd") {
       cmd <- "/* see https://rmarkdown.rstudio.com/authoring_knitr_engines.html */\n" %>%
         paste0(paste0(readLines(pp$path), collapse = "\n"))
-      cmd <- glue('\n\n```{sql, connection = con, max.print = 20}\n<<cmd>>\n```\n\n', .open = "<<", .close = ">>")
+      cmd <- glue("\n\n```{sql, connection = con, max.print = 20}\n<<cmd>>\n```\n\n", .open = "<<", .close = ">>")
       type <- ""
     } else {
-      cmd <- glue('{to} <- readLines({pp$rpath})')
+      cmd <- glue("{to} <- readLines({pp$rpath})")
     }
   } else if (pp$fext %in% c("py", "css", "js")) {
     if (type == "rmd") {
@@ -1507,28 +1515,28 @@ read_files <- function(path, pdir = "", type = "rmd", to = "", clipboard = TRUE,
       cmd <- glue('\n\n```{<<sub("py", "python", pp$fext)>>}\n<<cmd>>\n```\n\n', .open = "<<", .close = ">>")
       type <- ""
     } else {
-      cmd <- glue('{to} <- readLines({pp$rpath})')
+      cmd <- glue("{to} <- readLines({pp$rpath})")
     }
   } else if (pp$fext %in% c("md", "rmd")) {
     if (type == "rmd") {
-      cmd <- glue('\n```{r child = <<pp$rpath>>}\n```\n', .open = "<<", .close = ">>")
+      cmd <- glue("\n```{r child = <<pp$rpath>>}\n```\n", .open = "<<", .close = ">>")
       type <- ""
     } else {
-      cmd <- glue('{to} <- readLines({pp$rpath})')
+      cmd <- glue("{to} <- readLines({pp$rpath})")
     }
   } else if (pp$fext == "txt") {
-    cmd <- glue('{to} <- readLines({pp$rpath})')
+    cmd <- glue("{to} <- readLines({pp$rpath})")
   } else if (pp$fext %in% c("jpg", "jpeg", "png", "pdf")) {
     if (type == "rmd") {
-      cmd <- glue('\n\n![](`r {pp$rpath}`)\n\n')
+      cmd <- glue("\n\n![](`r {pp$rpath}`)\n\n")
       if (!grepl("file.path", cmd)) cmd <- sub("`r \"", "", cmd) %>% sub("\"`", "", .)
       type <- ""
     } else {
       cmd <- "## see https://cran.r-project.org/web/packages/magick/vignettes/intro.html\n" %>%
-        glue('{to} <- magick::image_read({pp$rpath})')
+        glue("{to} <- magick::image_read({pp$rpath})")
     }
   } else if (pp$fext %in% c("r", "R")) {
-    cmd <- glue('source({pp$rpath}, local = TRUE, echo = TRUE)')
+    cmd <- glue("source({pp$rpath}, local = TRUE, echo = TRUE)")
   } else {
     cmd <- pp$rpath
   }

@@ -334,8 +334,8 @@ returnTextAreaInput <- function(
 
 ## from https://github.com/rstudio/shiny/blob/master/R/utils.R
 `%AND%` <- function(x, y) {
-  if (!is.null(x) && !is.na(x))
-    if (!is.null(y) && !is.na(y))
+  if (!all(is.null(x)) && !all(is.na(x)))
+    if (!all(is.null(y)) && !all(is.na(y)))
       return(y)
   return(NULL)
 }

@@ -21,6 +21,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -33,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.2</span>
       </span>
     </div>
 
@@ -55,45 +57,45 @@
   <a href="../../news/index.html">Changelog</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Other Packages
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="https://radiant-rstats.github.io/radiant/">radiant</a>
+      <a href="https://radiant-rstats.github.io/radiant/" class="external-link">radiant</a>
     </li>
     <li>
       <a href="https://radiant-rstats.github.io/radiant.data/">radiant.data</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.design/">radiant.design</a>
+      <a href="https://radiant-rstats.github.io/radiant.design/" class="external-link">radiant.design</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.basics/">radiant.basics</a>
+      <a href="https://radiant-rstats.github.io/radiant.basics/" class="external-link">radiant.basics</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.model/">radiant.model</a>
+      <a href="https://radiant-rstats.github.io/radiant.model/" class="external-link">radiant.model</a>
     </li>
     <li>
-      <a href="https://radiant-rstats.github.io/radiant.multivariate/">radiant.multivariate</a>
+      <a href="https://radiant-rstats.github.io/radiant.multivariate/" class="external-link">radiant.multivariate</a>
     </li>
     <li>
-      <a href="https://github.com/radiant-rstats/docker">docker</a>
+      <a href="https://github.com/radiant-rstats/docker" class="external-link">docker</a>
     </li>
   </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://twitter.com/vrnijs">
+  <a href="https://twitter.com/vrnijs" class="external-link">
     <span class="fa fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/radiant-rstats">
+  <a href="https://github.com/radiant-rstats" class="external-link">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -114,15 +116,16 @@
 
       
 
-      </header><script src="explore_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="explore_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="explore_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Summarize and explore your data (Data &gt; Explore)</h1>
-                        <h4 class="author">Vincent R. Nijs, Rady School of Management (UCSD)</h4>
+      <h1 data-toc-skip>Summarize and explore your data (Data &gt;
+Explore)</h1>
+                        <h4 data-toc-skip class="author">Vincent R.
+Nijs, Rady School of Management (UCSD)</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/radiant-rstats/radiant.data/blob/master/vignettes/pkgdown/explore.Rmd"><code>vignettes/pkgdown/explore.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/radiant-rstats/radiant.data/blob/HEAD/vignettes/pkgdown/explore.Rmd" class="external-link"><code>vignettes/pkgdown/explore.Rmd</code></a></small>
       <div class="hidden name"><code>explore.Rmd</code></div>
 
     </div>
@@ -132,56 +135,112 @@
 <blockquote>
 <p>Summarize and explore your data</p>
 </blockquote>
-<p>Generate summary statistics for one or more variables in your data. The most powerful feature in <em>Data &gt; Explore</em> is that you can easily describe the data <em>by</em> one or more other variables. Where the <a href="https://radiant-rstats.github.io/docs/data/pivotr.html" target="_blank"><em>Data &gt; Pivot</em></a> tab works best for frequency tables and to summarize a single numeric variable, the <em>Data &gt; Explore</em> tab allows you to summarize multiple variables at the same time using various statistics.</p>
-<p>For example, if we select <code>price</code> from the <code>diamonds</code> dataset and click the <code>Create table</code> button we can see the number of observations (n), the mean, the variance, etc. However, the mean price for each clarity level of the diamond can also be easily provided by choosing <code>clarity</code> as the <code>Group by</code> variable.</p>
+<p>Generate summary statistics for one or more variables in your data.
+The most powerful feature in <em>Data &gt; Explore</em> is that you can
+easily describe the data <em>by</em> one or more other variables. Where
+the
+<a href="https://radiant-rstats.github.io/docs/data/pivotr.html" target="_blank" class="external-link"><em>Data
+&gt; Pivot</em></a> tab works best for frequency tables and to summarize
+a single numeric variable, the <em>Data &gt; Explore</em> tab allows you
+to summarize multiple variables at the same time using various
+statistics.</p>
+<p>For example, if we select <code>price</code> from the
+<code>diamonds</code> dataset and click the <code>Create table</code>
+button we can see the number of observations (n), the mean, the
+variance, etc. However, the mean price for each clarity level of the
+diamond can also be easily provided by choosing <code>clarity</code> as
+the <code>Group by</code> variable.</p>
 <blockquote>
-<p>Note that when a categorical variable (<code>factor</code>) is selected from the <code>Numeric variable(s)</code> dropdown menu it will be converted to a numeric variable if required for the selected function. If the factor levels are numeric these will be used in all calculations. Since the mean, standard deviation, etc. are not relevant for non-binary categorical variables, these will be converted to 0-1 (binary) variables where the first level is coded as 1 and all other levels as 0.</p>
+<p>Note that when a categorical variable (<code>factor</code>) is
+selected from the <code>Numeric variable(s)</code> dropdown menu it will
+be converted to a numeric variable if required for the selected
+function. If the factor levels are numeric these will be used in all
+calculations. Since the mean, standard deviation, etc. are not relevant
+for non-binary categorical variables, these will be converted to 0-1
+(binary) variables where the first level is coded as 1 and all other
+levels as 0.</p>
 </blockquote>
-<p>The created summary table can be stored in Radiant by clicking the <code>Store</code> button. This can be useful if you want to create plots of the summarized data in <a href="https://radiant-rstats.github.io/docs/data/visualize.html" target="_blank"><em>Data &gt; Visualize</em></a>. To download the table to <em>csv</em> format click the download icon on the top-right.</p>
-<p>You can select options from <code>Column header</code> dropdown to switch between different column headers. Select either <code>Function</code> (e.g., mean, median, etc), <code>Variable</code> (e.g., price, carat, etc), or the levels of the (first) <code>Group by</code> variable (e.g., Fair-Ideal).</p>
+<p>The created summary table can be stored in Radiant by clicking the
+<code>Store</code> button. This can be useful if you want to create
+plots of the summarized data in
+<a href="https://radiant-rstats.github.io/docs/data/visualize.html" target="_blank" class="external-link"><em>Data
+&gt; Visualize</em></a>. To download the table to <em>csv</em> format
+click the download icon on the top-right.</p>
+<p>You can select options from <code>Column header</code> dropdown to
+switch between different column headers. Select either
+<code>Function</code> (e.g., mean, median, etc), <code>Variable</code>
+(e.g., price, carat, etc), or the levels of the (first)
+<code>Group by</code> variable (e.g., Fair-Ideal).</p>
 <p align="center">
 <img src="https://radiant-rstats.github.io/docs/data/figures//explore.png"></p>
-<div id="functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#functions" class="anchor"></a>Functions</h2>
-<p>Below you will find a brief description of several functions available from the <code>Apply function(s)</code> dropdown menu. Most functions, however, will be self-explanatory.</p>
+<div class="section level2">
+<h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a>
+</h2>
+<p>Below you will find a brief description of several functions
+available from the <code>Apply function(s)</code> dropdown menu. Most
+functions, however, will be self-explanatory.</p>
 <ul>
 <li>
-<code>n</code> calculates the number of observations, or rows, in the data or in a group if a <code>Group by</code> variable has been selected (<code>n</code> uses the <code>length</code> function in R)</li>
+<code>n</code> calculates the number of observations, or rows, in
+the data or in a group if a <code>Group by</code> variable has been
+selected (<code>n</code> uses the <code>length</code> function in
+R)</li>
 <li>
-<code>n_distinct</code> calculates the number of distinct values</li>
+<code>n_distinct</code> calculates the number of distinct
+values</li>
 <li>
 <code>n_missing</code> calculates the number of missing values</li>
 <li>
-<code>cv</code> is the coefficient of variation (i.e., mean(x) / sd(x))</li>
+<code>cv</code> is the coefficient of variation (i.e., mean(x) /
+sd(x))</li>
 <li>
-<code>sd</code> and <code>var</code> calculate the sample standard deviation and variance for numeric data</li>
+<code>sd</code> and <code>var</code> calculate the sample standard
+deviation and variance for numeric data</li>
 <li>
-<code>me</code> calculates the margin of error for a numeric variable using a 95% confidence level</li>
+<code>me</code> calculates the margin of error for a numeric
+variable using a 95% confidence level</li>
 <li>
-<code>prop</code> calculates a proportion. For a variable with only values 0 or 1 this is equivalent to <code>mean</code>. For other numeric variables it captures the occurrence of the maximum value. For a <code>factor</code> it captures the occurrence of the first level.</li>
+<code>prop</code> calculates a proportion. For a variable with only
+values 0 or 1 this is equivalent to <code>mean</code>. For other numeric
+variables it captures the occurrence of the maximum value. For a
+<code>factor</code> it captures the occurrence of the first level.</li>
 <li>
-<code>sdprop</code> and <code>varprop</code> calculate the sample standard deviation and variance for a proportion</li>
+<code>sdprop</code> and <code>varprop</code> calculate the sample
+standard deviation and variance for a proportion</li>
 <li>
-<code>meprop</code> calculates the margin of error for a proportion using a 95% confidence level</li>
+<code>meprop</code> calculates the margin of error for a proportion
+using a 95% confidence level</li>
 <li>
-<code>sdpop</code> and <code>varpop</code> calculate the population standard deviation and variance</li>
+<code>sdpop</code> and <code>varpop</code> calculate the population
+standard deviation and variance</li>
 </ul>
-<div id="filter-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#filter-data" class="anchor"></a>Filter data</h3>
-<p>Use the <code>Filter data</code> box to select (or omit) specific sets of rows from the data. See the helpfile for <a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank"><em>Data &gt; View</em></a> for details.</p>
+<div class="section level3">
+<h3 id="filter-data">Filter data<a class="anchor" aria-label="anchor" href="#filter-data"></a>
+</h3>
+<p>Use the <code>Filter data</code> box to select (or omit) specific
+sets of rows from the data. See the helpfile for
+<a href="https://radiant-rstats.github.io/docs/data/view.html" target="_blank" class="external-link"><em>Data
+&gt; View</em></a> for details.</p>
 </div>
-<div id="report-rmd" class="section level3">
-<h3 class="hasAnchor">
-<a href="#report-rmd" class="anchor"></a>Report &gt; Rmd</h3>
-<p>Add code to <a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank"><em>Report &gt; Rmd</em></a> to (re)create the summary table by clicking the <i title="report results" class="fa fa-edit"></i> icon on the bottom left of your screen or by pressing <code>ALT-enter</code> on your keyboard.</p>
+<div class="section level3">
+<h3 id="report-rmd">Report &gt; Rmd<a class="anchor" aria-label="anchor" href="#report-rmd"></a>
+</h3>
+<p>Add code to
+<a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank" class="external-link"><em>Report
+&gt; Rmd</em></a> to (re)create the summary table by clicking the
+<i title="report results" class="fa fa-edit"></i> icon on the bottom
+left of your screen or by pressing <code>ALT-enter</code> on your
+keyboard.</p>
 </div>
-<div id="r-functions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#r-functions" class="anchor"></a>R-functions</h3>
-<p>For an overview of related R-functions used by Radiant to summarize and explore data see <a href="https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-explore" target="_blank"><em>Data &gt; Explore</em></a></p>
-<p>© Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="images/by-sa.png"></a></p>
+<div class="section level3">
+<h3 id="r-functions">R-functions<a class="anchor" aria-label="anchor" href="#r-functions"></a>
+</h3>
+<p>For an overview of related R-functions used by Radiant to summarize
+and explore data see
+<a href="https://radiant-rstats.github.io/radiant.data/reference/index.html#section-data-explore" target="_blank"><em>Data
+&gt; Explore</em></a></p>
+<p>© Vincent Nijs (2018)
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" class="external-link"><img alt="Creative Commons License" style="border-width: 0" src="images/by-sa.png"></a></p>
 </div>
 </div>
   </div>
@@ -197,11 +256,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Vincent Nijs.</p>
+  <p></p>
+<p>Developed by Vincent Nijs.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

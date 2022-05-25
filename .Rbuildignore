@@ -12,3 +12,4 @@ coverage.R
 ^tests/testthat/data$
 .vscode
 radiant.data.code-workspace
+^CRAN-SUBMISSION$
