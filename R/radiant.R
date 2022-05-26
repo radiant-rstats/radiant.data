@@ -40,7 +40,7 @@ launch <- function(package = "radiant.data", run = "viewer", state, ...) {
     message(sprintf("\nStarting %s at the url shown below ...\nClick on the link or copy-and-paste it into\nyour browser's url bar to start", package))
     options(radiant.launch = "browser")
   } else if (run == "browser" || run == "external") {
-    message(sprintf("\nStarting %s in the default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer\nor %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
+    message(sprintf("\nStarting %s in the default browser", package))
     options(radiant.launch = "browser")
     run <- TRUE
   } else if (rstudioapi::getVersion() < "1.1") {
@@ -58,10 +58,12 @@ launch <- function(package = "radiant.data", run = "viewer", state, ...) {
     options(radiant.launch = "window")
     run <- get(".rs.invokeShinyWindowViewer")
   } else {
-    message(sprintf("\nStarting %s in the default browser ...\n\nUse %s::%s_viewer() in Rstudio to open %s in the Rstudio viewer or %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
+    message(sprintf("\nStarting %s in the default browser", package))
     options(radiant.launch = "browser")
     run <- TRUE
   }
+
+  message("\nRadiant is opensource and free to use. As a favor to the developer,\nif you are a student or instructor using radiant for a class, please\nsend an email to radiant@rady.ucsd.edu with information on the school\nand class")
 
   ## load radiant state file if specified
   if (!missing(state)) {
@@ -72,7 +74,7 @@ launch <- function(package = "radiant.data", run = "viewer", state, ...) {
     }
   }
 
-  ## cannot (yet) supress ERROR: [on_request_read] connection reset by peer in viewer
+  ## cannot (yet) suppress ERROR: [on_request_read] connection reset by peer in viewer
   suppressPackageStartupMessages(
     shiny::runApp(system.file("app", package = package), launch.browser = run, ...)
   )
@@ -192,7 +194,7 @@ sig_stars <- function(pval) {
 
 #' Hide warnings and messages and return invisible
 #'
-#' @details Adapted from \url{http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
+#' @details Adapted from \url{https://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
 #'
 #' @param ... Inputs to keep quite
 #'
@@ -206,7 +208,7 @@ sshh <- function(...) {
 
 #' Hide warnings and messages and return result
 #'
-#' @details Adapted from \url{http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
+#' @details Adapted from \url{https://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
 #'
 #' @param ... Inputs to keep quite
 #'
