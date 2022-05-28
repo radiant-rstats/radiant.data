@@ -1,6 +1,6 @@
 ## Resubmission
 
-This is a resubmission. In this version I have fixed bugs and updated documentation (see NEWS.md for details).
+This is a resubmission. In this version I have fixed bugs and updated documentation (see NEWS.md for details). I also fixed an link issue in the documentation for sshh and sshhr
 
 ## Test environments
 

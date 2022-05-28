@@ -63,7 +63,7 @@ launch <- function(package = "radiant.data", run = "viewer", state, ...) {
     run <- TRUE
   }
 
-  message("\nRadiant is opensource and free to use. As a favor to the developer,\nif you are a student or instructor using radiant for a class, please\nsend an email to radiant@rady.ucsd.edu with information on the school\nand class")
+  cat("\nRadiant is opensource and free to use. If you are a student or instructor using Radiant for a class, as a favor to the developer, please send an email to <radiant@rady.ucsd.edu> with the name of the school and class\n")
 
   ## load radiant state file if specified
   if (!missing(state)) {
