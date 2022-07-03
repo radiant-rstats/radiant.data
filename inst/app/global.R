@@ -140,16 +140,21 @@ init_data <- function(env = r_data) {
   r_info
 }
 
-## running local or on a server
-if (Sys.getenv("SHINY_PORT") == "") {
+## running local, on a server, or from JupyterLab
+if (getOption("radiant.jupyter", default = FALSE)) {
+  options(radiant.local = FALSE)
+  options(radiant.report = getOption("radiant.report", default = TRUE))
+  ## no limit to file size when launched through jupyter
+  options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = -1))
+} else if (Sys.getenv("SHINY_PORT") == "") {
   options(radiant.local = TRUE)
   options(radiant.report = getOption("radiant.report", default = TRUE))
-  ## no limit to filesize locally
+  ## no limit to file size locally
   options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = -1))
 } else {
   options(radiant.local = FALSE)
   options(radiant.report = getOption("radiant.report", default = FALSE))
-  ## limit upload filesize on server (10MB)
+  ## limit upload file size on server (10MB)
   options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = 10 * 1024 ^ 2))
   if (Sys.getlocale(category = "LC_ALL") == "C") {
     ret <- Sys.setlocale("LC_CTYPE", "en_US.UTF-8"); rm(ret)
