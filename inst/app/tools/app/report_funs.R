@@ -1,9 +1,6 @@
-file_upload_button <- function(
-  inputId, label = "", multiple = FALSE,
-  accept = NULL, buttonLabel = "Load", title = "Load data",
-  class = "", icn = "upload", progress = FALSE
-) {
-
+file_upload_button <- function(inputId, label = "", multiple = FALSE,
+                               accept = NULL, buttonLabel = "Load", title = "Load data",
+                               class = "", icn = "upload", progress = FALSE) {
   if (getOption("radiant.shinyFiles", FALSE)) {
     shinyFiles::shinyFileChoose(
       input = input,
@@ -15,8 +12,9 @@ file_upload_button <- function(
 
     # actionButton(inputId, buttonLabel, icon = icon(icn), class = class)
     shinyFiles::shinyFilesButton(
-      inputId, buttonLabel, label, title = title,
-      multiple = FALSE, class = class, icon = icon(icn)
+      inputId, buttonLabel, label,
+      title = title, multiple = FALSE,
+      class = class, icon = icon(icn)
     )
   } else {
     if (length(accept) > 0) {
@@ -26,7 +24,7 @@ file_upload_button <- function(
     }
 
     if (!radiant.data::is_empty(label)) {
-      label <-  paste0("</br><label>", label, "</label></br>")
+      label <- paste0("</br><label>", label, "</label></br>")
     }
 
     btn <- paste0(label, "
@@ -64,7 +62,6 @@ getdeps <- function() {
 
 ## get information from rstudio editor
 rstudio_context <- function(type = "rmd") {
-
   rse <- rstudioapi::getSourceEditorContext()
   path <- rse$path
   ext <- tools::file_ext(path)
@@ -109,11 +106,8 @@ scrub <- . %>%
   gsub("&lt;!&ndash;html_preserve&ndash;&gt;", "", .) %>%
   gsub("&lt;!&ndash;/html_preserve&ndash;&gt;", "", .) ## knitr adds this
 
-setup_report <- function(
-  report, ech, add_yml = TRUE, type = "rmd",
-  save_type = "Notebook", lib = "radiant"
-) {
-
+setup_report <- function(report, ech, add_yml = TRUE, type = "rmd",
+                         save_type = "Notebook", lib = "radiant") {
   report <- fix_smart(report) %>%
     gsub("^```\\s*\\{", "\n\n```{", .) %>%
     gsub("^```\\s*\n", "```\n\n", .) %>%
@@ -127,14 +121,14 @@ setup_report <- function(
     if (save_type %in% c("PDF", "Word", "Powerpoint")) {
       yml <- ""
     } else if (save_type == "HTML") {
-      yml <- '---\npagetitle: HTML report\noutput:\n  html_document:\n    highlight: zenburn\n    theme: cosmo\n    df_print: paged\n    toc: yes\n---\n\n'
+      yml <- "---\npagetitle: HTML report\noutput:\n  html_document:\n    highlight: zenburn\n    theme: cosmo\n    df_print: paged\n    toc: yes\n---\n\n"
     } else if (save_type %in% c("Rmd", "Rmd + Data (zip)")) {
-      yml <- '---\npagetitle: Rmd report\noutput:\n  html_document:\n    highlight: zenburn\n    theme: cosmo\n    df_print: paged\n    toc: yes\n    code_folding: hide\n    code_download: true\n---\n\n'
+      yml <- "---\npagetitle: Rmd report\noutput:\n  html_document:\n    highlight: zenburn\n    theme: cosmo\n    df_print: paged\n    toc: yes\n    code_folding: hide\n    code_download: true\n---\n\n"
     } else {
-      yml <- '---\npagetitle: Notebook report\noutput:\n  html_notebook:\n    highlight: zenburn\n    theme: cosmo\n    toc: yes\n    code_folding: hide\n---\n\n'
+      yml <- "---\npagetitle: Notebook report\noutput:\n  html_notebook:\n    highlight: zenburn\n    theme: cosmo\n    toc: yes\n    code_folding: hide\n---\n\n"
     }
   } else {
-    yml = ""
+    yml <- ""
   }
 
   if (missing(ech)) {
@@ -195,7 +189,8 @@ pre {
   background-color: #ffffff;
 }
 </style>\n\n", report)
-}}
+  }
+}
 
 ## Based on http://stackoverflow.com/a/31797947/1974918
 ## as of 12/30/2017 doesn't seem to work anymore
@@ -334,26 +329,27 @@ knit_it <- function(report, type = "rmd") {
 
   if (
     !isTRUE(r_info[["report_ignore"]]) &&
-    (grepl("\\s*r_data\\[\\[\".*?\"\\]\\]", report) ||
-     grepl("\\s*r_data\\$", report) ||
-     grepl("\n(\\#|\\s)*store\\(result,\\s*name", report) ||
-     grepl("store\\(pred,\\s*data\\s*=\\s*\"", report) ||
-     grepl("\\s+data\\s*=\\s*\".*?\",", report)  ||
-     grepl("\\s+dataset\\s*=\\s*\".*?\",", report)  ||
-     grepl("\\s+pred_data\\s*=\\s*\"[^\"]+?\",", report)  ||
-     grepl("result\\s*<-\\s*simulater\\(", report)  ||
-     grepl("result\\s*<-\\s*repeater\\(", report)  ||
-     grepl("combinedata\\(\\s*x\\s*=\\s*\"[^\"]+?\"", report) ||
-     grepl("formatnr\\(", report) ||
-     grepl("formatdf\\(", report) ||
-     grepl("rounddf\\(", report) ||
-     grepl("tabsort = \"desc\\(n\\)\"", report) ||
-     grepl("(mean_rm|median_rm|min_rm|max_rm|sd_rm|var_rm|sum_rm)", report))
+      (grepl("\\s*r_data\\[\\[\".*?\"\\]\\]", report) ||
+        grepl("\\s*r_data\\$", report) ||
+        grepl("\n(\\#|\\s)*store\\(result,\\s*name", report) ||
+        grepl("store\\(pred,\\s*data\\s*=\\s*\"", report) ||
+        grepl("\\s+data\\s*=\\s*\".*?\",", report) ||
+        grepl("\\s+dataset\\s*=\\s*\".*?\",", report) ||
+        grepl("\\s+pred_data\\s*=\\s*\"[^\"]+?\",", report) ||
+        grepl("result\\s*<-\\s*simulater\\(", report) ||
+        grepl("result\\s*<-\\s*repeater\\(", report) ||
+        grepl("combinedata\\(\\s*x\\s*=\\s*\"[^\"]+?\"", report) ||
+        grepl("formatnr\\(", report) ||
+        grepl("formatdf\\(", report) ||
+        grepl("rounddf\\(", report) ||
+        grepl("tabsort = \"desc\\(n\\)\"", report) ||
+        grepl("(mean_rm|median_rm|min_rm|max_rm|sd_rm|var_rm|sum_rm)", report))
   ) {
     showModal(
       modalDialog(
         title = "The report contains deprecated code",
-        span("The use of, e.g., r_data[[...]]], dataset = \"...\", etc. in your report is
+        span(
+          "The use of, e.g., r_data[[...]]], dataset = \"...\", etc. in your report is
            deprecated. Click the 'Clean report' button to remove references that are no
            longer needed.", br(), br(), "Warning: It may not be possible to update all code
            to the latest standard automatically. For example, the use of 'store(...)'
@@ -363,7 +359,7 @@ knit_it <- function(report, type = "rmd") {
            browser interface to recreate the code you need or use the help function in R or
            Rstudio for more information (e.g., ?radiant.model::store.model,
            ?radiant.model::store.model.predict, or ?radiant.model::simulater)", br(), br(),
-           "To avoid the code-cleaning step click 'Cancel' or, if you believe the code is
+          "To avoid the code-cleaning step click 'Cancel' or, if you believe the code is
            correct as-is, click the 'Ignore' button and continue to Knit your report"
         ),
         footer = tagList(
@@ -418,25 +414,26 @@ knit_it <- function(report, type = "rmd") {
   paste(
     markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
     paste0("<script type='text/javascript' src='", getOption("radiant.mathjax.path"), "/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
-    "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = "\n"
+    "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>",
+    sep = "\n"
   ) %>%
-  gsub("<table>", "<table class='table table-condensed table-hover'>", .) %>%
-  ## makes plots full height of screen (i.e., WAY too big)
-  # gsub("style=\"width:100%; height:400px; \" class=\"plotly html-widget",
-       # "style=\"width:100%; height:100%; \" class=\"plotly html-widget", ., fixed = TRUE) %>%
-  scrub() %>%
-  HTML()
+    gsub("<table>", "<table class='table table-condensed table-hover'>", .) %>%
+    ## makes plots full height of screen (i.e., WAY too big)
+    # gsub("style=\"width:100%; height:400px; \" class=\"plotly html-widget",
+    # "style=\"width:100%; height:100%; \" class=\"plotly html-widget", ., fixed = TRUE) %>%
+    scrub() %>%
+    HTML()
 }
 
 sans_ext <- function(path) {
   sub(
     "(\\.state\\.rda|\\.rda$|\\.rds$|\\.rmd$|\\.r$|\\.rdata$|\\.html|\\.nb\\.html|\\.pdf|\\.docx|\\.pptx|\\.rmd|\\.zip)", "",
-    tolower(path), ignore.case = TRUE
+    tolower(path),
+    ignore.case = TRUE
   )
 }
 
 report_name <- function(type = "rmd", out = "report", full.name = FALSE) {
-
   ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
   pdir <- getOption("radiant.project_dir", default = ldir)
 
@@ -453,8 +450,7 @@ report_name <- function(type = "rmd", out = "report", full.name = FALSE) {
       sub("-state", paste0("-", out), .)
 
     r_state[[paste0("radiant_", type, "_name")]] <<-
-      paste(fn, sep = ".", switch(
-        type,
+      paste(fn, sep = ".", switch(type,
         rmd = "Rmd",
         r = "R"
       ))
@@ -487,7 +483,6 @@ report_save_filename <- function(type = "rmd", full.name = TRUE) {
       } else {
         fn <- cnt$base_name
       }
-
     } else {
       fn <- report_name(type = type, full.name = full.name)
     }
@@ -497,8 +492,7 @@ report_save_filename <- function(type = "rmd", full.name = TRUE) {
 
   fn <- sans_ext(fn)
 
-  paste(fn, sep = ".", switch(
-    input[[paste0(type, "_save_type")]],
+  paste(fn, sep = ".", switch(input[[paste0(type, "_save_type")]],
     Notebook = "nb.html",
     HTML = "html",
     PDF = "pdf",
@@ -512,7 +506,6 @@ report_save_filename <- function(type = "rmd", full.name = TRUE) {
 }
 
 report_save_content <- function(file, type = "rmd") {
-
   if (isTRUE(getOption("radiant.report"))) {
     isolate({
       ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
@@ -646,8 +639,7 @@ report_save_content <- function(file, type = "rmd") {
 
             out <- rmarkdown::render(
               tmp_fn,
-              switch(
-                save_type,
+              switch(save_type,
                 Notebook = rmarkdown::html_notebook(highlight = "zenburn", theme = "cosmo", code_folding = "hide"),
                 HTML = rmarkdown::html_document(highlight = "zenburn", theme = "cosmo", code_download = TRUE, df_print = "paged"),
                 PDF = rmarkdown::pdf_document(),
@@ -681,12 +673,10 @@ report_save_content <- function(file, type = "rmd") {
 }
 
 ## updating the report when called
-update_report <- function(
-  inp_main = "", fun_name = "", inp_out = list("", ""),
-  cmd = "", pre_cmd = "result <- ", post_cmd = "",
-  xcmd = "", outputs = c("summary", "plot"), inp = "result",
-  wrap, figs = TRUE, fig.width = 7, fig.height = 7
-) {
+update_report <- function(inp_main = "", fun_name = "", inp_out = list("", ""),
+                          cmd = "", pre_cmd = "result <- ", post_cmd = "",
+                          xcmd = "", outputs = c("summary", "plot"), inp = "result",
+                          wrap, figs = TRUE, fig.width = 7, fig.height = 7) {
 
   ## determine number of characters for main command for wrapping
   if (missing(wrap)) {
@@ -703,7 +693,7 @@ update_report <- function(
 
   ## wrapping similar to styler
   depr <- function(x, wrap = FALSE) {
-    cutoff <- ifelse (wrap, 20L, 55L)
+    cutoff <- ifelse(wrap, 20L, 55L)
     for (i in names(x)) {
       tmp <- x[[i]]
       wco <- ifelse(max(nchar(tmp)) > cutoff, cutoff, 55L)
