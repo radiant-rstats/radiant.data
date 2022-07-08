@@ -12,10 +12,9 @@ suppressWarnings(
 ## set volumes if sf_volumes was preset (e.g., on a server) or
 ## we are running in Rstudio or if we are running locally
 if (isTRUE(getOption("radiant.sf_volumes", "") != "") ||
-    isTRUE(getOption("radiant.shinyFiles", FALSE)) ||
-    isTRUE(Sys.getenv("RSTUDIO") != "") ||
-    isTRUE(Sys.getenv("SHINY_PORT") == "")) {
-
+  isTRUE(getOption("radiant.shinyFiles", FALSE)) ||
+  isTRUE(Sys.getenv("RSTUDIO") != "") ||
+  isTRUE(Sys.getenv("SHINY_PORT") == "")) {
   if (isTRUE(getOption("radiant.sf_volumes", "") != "")) {
     sf_volumes <- getOption("radiant.sf_volumes")
     if (length(names(sf_volumes)) == 0) {
@@ -120,7 +119,7 @@ init_data <- function(env = r_data) {
   for (dn in df_names) {
     if (file.exists(dn)) {
       df <- load(dn) %>% get()
-      if (!inherits(df, "data.frame")) next  # only keep data.frames
+      if (!inherits(df, "data.frame")) next # only keep data.frames
       dn_path <- dn
       dn <- basename(dn) %>% strip_ext()
       r_info[[paste0(dn, "_lcmd")]] <- glue::glue('{dn} <- load("{dn_path}") %>% get()\nregister("{dn}")')
@@ -155,9 +154,10 @@ if (getOption("radiant.jupyter", default = FALSE)) {
   options(radiant.local = FALSE)
   options(radiant.report = getOption("radiant.report", default = FALSE))
   ## limit upload file size on server (10MB)
-  options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = 10 * 1024 ^ 2))
+  options(shiny.maxRequestSize = getOption("radiant.maxRequestSize", default = 10 * 1024^2))
   if (Sys.getlocale(category = "LC_ALL") == "C") {
-    ret <- Sys.setlocale("LC_CTYPE", "en_US.UTF-8"); rm(ret)
+    ret <- Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
+    rm(ret)
   }
 }
 
@@ -168,16 +168,17 @@ options(radiant.encoding = "UTF-8")
 options(radiant.rmarkdown = FALSE)
 
 ## path to use for local or server use
-options(radiant.path.data =
-  ifelse(grepl("radiant.data", getwd()) && file.exists("../../inst"), "..", system.file(package = "radiant.data"))
+options(
+  radiant.path.data =
+    ifelse(grepl("radiant.data", getwd()) && file.exists("../../inst"), "..", system.file(package = "radiant.data"))
 )
 
 ## import required functions and packages
 ## if radiant.data is not in search main function from dplyr etc. won't be available
 if (!"package:radiant.data" %in% search() &&
-    # isTRUE(Sys.getenv("SHINY_PORT") == "") &&
-    isTRUE(getOption("radiant.development")) &&
-    getOption("radiant.path.data") == "..") {
+  # isTRUE(Sys.getenv("SHINY_PORT") == "") &&
+  isTRUE(getOption("radiant.development")) &&
+  getOption("radiant.path.data") == "..") {
   import_fs("radiant.data", libs = c("magrittr", "ggplot2", "lubridate", "tidyr", "dplyr", "broom", "tibble", "glue"))
   options(radiant.from.package = FALSE)
 } else {
@@ -236,7 +237,10 @@ knitr::opts_chunk$set(
 r_sessions <- new.env(parent = emptyenv())
 
 ## create directory to hold session files
-"~/.radiant.sessions" %>% {if (!file.exists(.)) dir.create(.)}
+"~/.radiant.sessions" %>%
+  {
+    if (!file.exists(.)) dir.create(.)
+  }
 
 ## adding the figures path to avoid making a copy of all figures in www/figures
 addResourcePath("www", file.path(getOption("radiant.path.data"), "app/www/"))
@@ -253,10 +257,12 @@ if (Sys.info()["sysname"] != "Linux" && nzchar(local_mathjax)) {
   addResourcePath("latest", local_mathjax)
   options(radiant.mathjax.path = "latest")
   ## override shiny::withMathJax to use local MathJax
-  withMathJax <- function (...)  {
+  withMathJax <- function(...) {
     path <- "latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-    tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
-            ..., tags$script(HTML("if (window.MathJax) MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);")))
+    tagList(
+      tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
+      ..., tags$script(HTML("if (window.MathJax) MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);"))
+    )
   }
 } else {
   options(radiant.mathjax.path = "https://mathjax.rstudio.com/latest")
@@ -273,9 +279,16 @@ get_zip_info <- function() {
       if (isTRUE(grepl("7z", wz))) {
         zip_util <- "7z"
         flags <- "a"
+        if (Sys.getenv("R_ZIPCMD") == "") {
+          Sys.setenv(R_ZIPCMD = wz)
+        }
       } else {
         zip_util <- ""
         flags <- ""
+      }
+    } else {
+      if (Sys.getenv("R_ZIPCMD") == "") {
+        Sys.setenv(R_ZIPCMD = wz)
       }
     }
   }
@@ -288,21 +301,25 @@ rm(get_zip_info)
 help_menu <- function(hlp) {
   tagList(
     navbarMenu(
-      "", icon = icon("question-circle"),
+      "",
+      icon = icon("question-circle"),
       tabPanel("Help", uiOutput(hlp), icon = icon("question")),
       tabPanel(actionLink("help_keyboard", "Keyboard shortcuts", icon = icon("keyboard-o", verify_fa = FALSE))),
       # tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
       tabPanel(tags$a(
-        "", href = "https://radiant-rstats.github.io/docs/tutorials.html", target = "_blank",
+        "",
+        href = "https://radiant-rstats.github.io/docs/tutorials.html", target = "_blank",
         list(icon("film"), "Videos")
       )),
       tabPanel("About", uiOutput("help_about"), icon = icon("info")),
       tabPanel(tags$a(
-        "", href = "https://radiant-rstats.github.io/docs/", target = "_blank",
+        "",
+        href = "https://radiant-rstats.github.io/docs/", target = "_blank",
         list(icon("globe"), "Radiant docs")
       )),
       tabPanel(tags$a(
-        "", href = "https://github.com/radiant-rstats/radiant/issues", target = "_blank",
+        "",
+        href = "https://github.com/radiant-rstats/radiant/issues", target = "_blank",
         list(icon("github"), "Report issue")
       ))
     ),
@@ -351,10 +368,8 @@ options(
     )))
 )
 
-make_url_patterns <- function(
-  url_list = getOption("radiant.url.list"),
-  url_patterns = list()
-) {
+make_url_patterns <- function(url_list = getOption("radiant.url.list"),
+                              url_patterns = list()) {
   for (i in names(url_list)) {
     res <- url_list[[i]]
     if (!is.list(res)) {
@@ -412,7 +427,9 @@ navbar_proj <- function(navbar) {
     options(radiant.project_dir = NULL)
   } else {
     proj <- paste0("Project: ", basename(pdir)) %>%
-      {if(nchar(.) > 35) paste0(strtrim(., 31), " ...") else .}
+      {
+        if (nchar(.) > 35) paste0(strtrim(., 31), " ...") else .
+      }
     options(radiant.project_dir = pdir)
     options(radiant.launch_dir = pdir)
   }
@@ -523,7 +540,8 @@ options(
 options(
   radiant.shared_ui =
     tagList(
-      navbarMenu("Report",
+      navbarMenu(
+        "Report",
         tabPanel("Rmd",
           uiOutput("rmd_view"),
           uiOutput("report_rmd"),
@@ -556,14 +574,17 @@ options(
       ),
 
       ## stop app *and* close browser window
-      navbarMenu("", icon = icon("power-off"),
+      navbarMenu("",
+        icon = icon("power-off"),
         tabPanel(
           actionLink(
-            "stop_radiant", "Stop", icon = icon("stop"),
+            "stop_radiant", "Stop",
+            icon = icon("stop"),
             onclick = "setTimeout(function(){window.close();}, 100);"
           )
         ),
-        tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
+        tabPanel(tags$a(
+          id = "refresh_radiant", href = "#", class = "action-button",
           list(icon("sync"), "Refresh"), onclick = "window.location.reload();"
         )),
         ## had to remove class = "action-button" to make this work
