@@ -116,3 +116,20 @@ $(document).on("shiny:connected", function() {
 $(document).on('shiny:disconnected', function() {
   window.parent.postMessage('disconnected', '*');
 });
+
+// based on https://stackoverflow.com/questions/61690502/shiny-setinputvalue-only-works-on-the-2nd-try
+function get_img_src() {
+  var img_src = $("#screenshot_preview img").attr("src");
+  Shiny.setInputValue("img_src", img_src);
+}
+
+function generate_screenshot() {
+  html2canvas($("body")[0],{ignoreElements:function (el) {return el.className === 'dropdown-menu';}}).then(canvas=>{
+    var img = document.createElement("img");
+    img.src = canvas.toDataURL("png");
+    img.width = parseInt(canvas.style.width);
+    img.height = parseInt(canvas.style.height);
+    $("#screenshot_preview").empty();
+    $("#screenshot_preview").append(img);
+  });
+}

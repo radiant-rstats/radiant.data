@@ -19,7 +19,7 @@ rem_non_active <- function(env = r_data) {
 }
 
 active2list <- function(env = r_data) {
-  iact <- is_active(env = r_data) %>% {names(.)[.]}
+  iact <- is_active(env = r_data) %>% (function(x) names(x)[x])
   if (length(iact) > 0) {
     mget(iact, env)
   } else {
@@ -41,10 +41,11 @@ MRB <- function(x, env = parent.frame(), init = FALSE) {
 }
 
 saveSession <- function(session = session, timestamp = FALSE, path = "~/.radiant.sessions") {
-  if (!exists("r_sessions")) return()
+  if (!exists("r_sessions")) {
+    return()
+  }
   if (!dir.exists(path)) dir.create(path)
   isolate({
-
     LiveInputs <- toList(input)
     r_state[names(LiveInputs)] <- LiveInputs
 
@@ -88,10 +89,10 @@ saveStateOnRefresh <- function(session = session) {
     isolate({
       url_query <- parseQueryString(session$clientData$url_search)
       if (not_pressed(input$refresh_radiant) &&
-          not_pressed(input$stop_radiant) &&
-          not_pressed(input$state_load) &&
-          not_pressed(input$state_upload) &&
-          !"fixed" %in% names(url_query)) {
+        not_pressed(input$stop_radiant) &&
+        not_pressed(input$state_load) &&
+        not_pressed(input$state_upload) &&
+        !"fixed" %in% names(url_query)) {
         saveSession(session)
       } else {
         if (not_pressed(input$state_load) && not_pressed(input$state_upload)) {
@@ -123,7 +124,7 @@ saveStateOnRefresh <- function(session = session) {
   } else {
     ## %>% needed here so . will be available
     seldat <- try(
-      r_data[[input$dataset]] %>% filter(!! rlang::parse_expr(selcom)),
+      r_data[[input$dataset]] %>% filter(!!rlang::parse_expr(selcom)),
       silent = TRUE
     )
     if (inherits(seldat, "try-error")) {
@@ -146,7 +147,9 @@ saveStateOnRefresh <- function(session = session) {
 
 ## using a regular function to avoid a full data copy
 .get_data_transform <- function(dataset = input$dataset) {
-  if (is.null(dataset)) return()
+  if (is.null(dataset)) {
+    return()
+  }
   if ("grouped_df" %in% class(r_data[[dataset]])) {
     ungroup(r_data[[dataset]])
   } else {
@@ -163,11 +166,11 @@ groupable_vars <- reactive({
     summarise_all(
       list(
         ~ is.factor(.) || is.logical(.) || lubridate::is.Date(.) ||
-        is.integer(.) || is.character(.) ||
-        ((length(unique(.)) / n()) < .30)
+          is.integer(.) || is.character(.) ||
+          ((length(unique(.)) / n()) < 0.30)
       )
     ) %>%
-    {which(. == TRUE)} %>%
+    (function(x) which(x == TRUE)) %>%
     varnames()[.]
 })
 
@@ -176,11 +179,11 @@ groupable_vars_nonum <- reactive({
     summarise_all(
       list(
         ~ is.factor(.) || is.logical(.) ||
-        lubridate::is.Date(.) || is.integer(.) ||
-        is.character(.)
+          lubridate::is.Date(.) || is.integer(.) ||
+          is.character(.)
       )
     ) %>%
-    {which(. == TRUE)} %>%
+    (function(x) which(x == TRUE)) %>%
     varnames()[.]
 })
 
@@ -195,7 +198,7 @@ two_level_vars <- reactive({
   }
   .get_data() %>%
     summarise_all(two_levs) %>%
-    {. == 2} %>%
+    (function(x) x == 2) %>%
     which(.) %>%
     varnames()[.]
 })
@@ -281,12 +284,13 @@ show_data_snippet <- function(dataset = input$dataset, nshow = 7, title = "", fi
       html.table.attributes = "class='table table-condensed table-hover snippet'"
     ) %>%
     paste0(title, .) %>%
-    {if (nr <= nshow) . else paste0(., "\n<label>", nshow, " of ", format_nr(nr, dec = 0), " rows shown. See View-tab for details.</label>")} %>%
+    (function(x) if (nr <= nshow) x else paste0(x, "\n<label>", nshow, " of ", format_nr(nr, dec = 0), " rows shown. See View-tab for details.</label>")) %>%
     enc2utf8()
 }
 
-suggest_data <- function(text = "", df_name = "diamonds")
+suggest_data <- function(text = "", df_name = "diamonds") {
   paste0(text, "For an example dataset go to Data > Manage, select 'examples' from the\n'Load data of type' dropdown, and press the 'Load examples' button. Then\nselect the \'", df_name, "\' dataset.")
+}
 
 ## function written by @wch https://github.com/rstudio/shiny/issues/781#issuecomment-87135411
 capture_plot <- function(expr, env = parent.frame()) {
@@ -306,11 +310,9 @@ print.capture_plot <- function(x, ...) {
 ################################################################
 
 ## textarea where the return key submits the content
-returnTextAreaInput <- function(
-  inputId, label = NULL, rows = 2,
-  placeholder = NULL, resize = "vertical",
-  value = ""
-) {
+returnTextAreaInput <- function(inputId, label = NULL, rows = 2,
+                                placeholder = NULL, resize = "vertical",
+                                value = "") {
 
   ## avoid all sorts of 'helpful' behavior from your browser
   ## see https://stackoverflow.com/a/35514029/1974918
@@ -334,20 +336,19 @@ returnTextAreaInput <- function(
 
 ## from https://github.com/rstudio/shiny/blob/master/R/utils.R
 `%AND%` <- function(x, y) {
-  if (!all(is.null(x)) && !all(is.na(x)))
-    if (!all(is.null(y)) && !all(is.na(y)))
+  if (!all(is.null(x)) && !all(is.na(x))) {
+    if (!all(is.null(y)) && !all(is.na(y))) {
       return(y)
+    }
+  }
   return(NULL)
 }
 
 ## using a custom version of textInput to avoid browser "smartness"
-textInput <- function (
-  inputId, label, value = "", width = NULL,
-  placeholder = NULL, autocomplete = "off",
-  autocorrect = "off", autocapitalize = "off",
-  spellcheck = "false", ...
-) {
-
+textInput <- function(inputId, label, value = "", width = NULL,
+                      placeholder = NULL, autocomplete = "off",
+                      autocorrect = "off", autocapitalize = "off",
+                      spellcheck = "false", ...) {
   value <- restoreInput(id = inputId, default = value)
   div(
     class = "form-group shiny-input-container",
@@ -369,15 +370,12 @@ textInput <- function (
 }
 
 ## using a custom version of textAreaInput to avoid browser "smartness"
-textAreaInput <- function(
-  inputId, label, value = "", width = NULL,
-  height = NULL, cols = NULL, rows = NULL,
-  placeholder = NULL, resize = NULL,
-  autocomplete = "off", autocorrect = "off",
-  autocapitalize = "off", spellcheck = "true",
-  ...
-) {
-
+textAreaInput <- function(inputId, label, value = "", width = NULL,
+                          height = NULL, cols = NULL, rows = NULL,
+                          placeholder = NULL, resize = NULL,
+                          autocomplete = "off", autocorrect = "off",
+                          autocapitalize = "off", spellcheck = "true",
+                          ...) {
   value <- restoreInput(id = inputId, default = value)
   if (!is.null(resize)) {
     resize <- match.arg(
@@ -385,12 +383,16 @@ textAreaInput <- function(
       c("both", "none", "vertical", "horizontal")
     )
   }
-  style <- paste(if (!is.null(width))
-      paste0("width: ", validateCssUnit(width), ";"), if (!is.null(height))
-      paste0("height: ", validateCssUnit(height), ";"), if (!is.null(resize))
-      paste0("resize: ", resize, ";"))
-  if (length(style) == 0)
-      style <- NULL
+  style <- paste(if (!is.null(width)) {
+    paste0("width: ", validateCssUnit(width), ";")
+  }, if (!is.null(height)) {
+    paste0("height: ", validateCssUnit(height), ";")
+  }, if (!is.null(resize)) {
+    paste0("resize: ", resize, ";")
+  })
+  if (length(style) == 0) {
+    style <- NULL
+  }
   div(
     class = "form-group shiny-input-container",
     label %AND% tags$label(label, `for` = inputId),
@@ -413,11 +415,8 @@ textAreaInput <- function(
 
 ## avoid all sorts of 'helpful' behavior from your browser
 ## based on https://stackoverflow.com/a/35514029/1974918
-returnTextInput <- function(
-  inputId, label = NULL,
-  placeholder = NULL, value = ""
-) {
-
+returnTextInput <- function(inputId, label = NULL,
+                            placeholder = NULL, value = "") {
   tagList(
     tags$label(label, `for` = inputId),
     tags$input(
@@ -443,10 +442,8 @@ if (getOption("radiant.shinyFiles", FALSE)) {
     uiOutput(paste0("ui_", id))
   }
 
-  download_handler <- function(
-    id, label = "", fun = id, fn, type = "csv", caption = "Save to csv",
-    class = "", ic = "download", btn = "link", ...
-  ) {
+  download_handler <- function(id, label = "", fun = id, fn, type = "csv", caption = "Save to csv",
+                               class = "", ic = "download", btn = "link", onclick = "function() none;", ...) {
     ## create observer
     shinyFiles::shinyFileSave(input, id, roots = sf_volumes, session = session)
 
@@ -456,8 +453,9 @@ if (getOption("radiant.shinyFiles", FALSE)) {
         if (is.function(fn)) fn <- fn()
         if (is.function(type)) type <- type()
         shinyFiles::shinySaveLink(
-          id, label, caption, filename = fn, filetype = type,
-          class = "alignright", icon = icon(ic)
+          id, label, caption,
+          filename = fn, filetype = type,
+          class = "alignright", icon = icon(ic), onclick = onclick
         )
       })
     } else {
@@ -465,15 +463,18 @@ if (getOption("radiant.shinyFiles", FALSE)) {
         if (is.function(fn)) fn <- fn()
         if (is.function(type)) type <- type()
         shinyFiles::shinySaveButton(
-          id, label, caption, filename = fn, filetype = type,
-          class = class, icon = icon("download")
+          id, label, caption,
+          filename = fn, filetype = type,
+          class = class, icon = icon("download"), onclick = onclick
         )
       })
     }
 
     observeEvent(input[[id]], {
-      if (is.integer(input[[id]])) return()
-      path <-  shinyFiles::parseSavePath(sf_volumes, input[[id]])
+      if (is.integer(input[[id]])) {
+        return()
+      }
+      path <- shinyFiles::parseSavePath(sf_volumes, input[[id]])
       if (!inherits(path, "try-error") && !radiant.data::is_empty(path$datapath)) {
         fun(path$datapath, ...)
       }
@@ -481,22 +482,22 @@ if (getOption("radiant.shinyFiles", FALSE)) {
   }
 } else {
   download_link <- function(id) {
-    downloadLink(id, "", class = "fa fa-download alignright")
+    downloadLink(id, "", class = "fa fa-download alignright", ...)
   }
   download_button <- function(id, label = "Save", ic = "download", class = "", ...) {
-    downloadButton(id, label, class = class)
+    downloadButton(id, label, class = class, ...)
   }
-  download_handler <- function(
-    id, label = "", fun = id, fn, type = "csv", caption = "Save to csv",
-    class = "", ic = "download", btn = "link", ...
-  ) {
+  download_handler <- function(id, label = "", fun = id, fn, type = "csv", caption = "Save to csv",
+                               class = "", ic = "download", btn = "link", ...) {
     output[[id]] <- downloadHandler(
       filename = function() {
         if (is.function(fn)) fn <- fn()
         if (is.function(type)) type <- type()
         paste0(fn, ".", type)
       },
-      content = function(path) { fun(path, ...) }
+      content = function(path) {
+        fun(path, ...)
+      }
     )
   }
 }
@@ -512,7 +513,8 @@ plot_height <- function() {
 download_handler_plot <- function(path, plot, width = plot_width, height = plot_height) {
   plot <- try(plot(), silent = TRUE)
   if (inherits(plot, "try-error") || is.character(plot) || is.null(plot)) {
-    plot <- ggplot() + labs(title = "Plot not available")
+    plot <- ggplot() +
+      labs(title = "Plot not available")
     inp <- c(500, 100, 96)
   } else {
     inp <- 5 * c(width(), height(), 96)
@@ -543,34 +545,35 @@ register_print_output <- function(fun_name, rfun_name, out_name = fun_name) {
 ## fun_name is a string of the main function name
 ## rfun_name is a string of the reactive wrapper that calls the main function
 ## out_name is the name of the output, set to fun_name by default
-register_plot_output <- function(
-  fun_name, rfun_name, out_name = fun_name,
-  width_fun = "plot_width", height_fun = "plot_height"
-) {
+register_plot_output <- function(fun_name, rfun_name, out_name = fun_name,
+                                 width_fun = "plot_width", height_fun = "plot_height") {
 
   ## Generate output for the plots tab
-  output[[out_name]] <- renderPlot({
+  output[[out_name]] <- renderPlot(
+    {
 
-    ## when no analysis was conducted (e.g., no variables selected)
-    p <- get(rfun_name)()
-    if (is_not(p) || radiant.data::is_empty(p)) p <- "Nothing to plot ...\nSelect plots to show or re-run the calculations"
-    if (is.character(p)) {
-      plot(
-        x = 1, type = "n", main = paste0("\n\n\n\n\n\n\n\n", p),
-        axes = FALSE, xlab = "", ylab = "", cex.main = .9
-      )
-    } else {
-      print(p)
-    }
-  }, width = get(width_fun), height = get(height_fun), res = 96)
+      ## when no analysis was conducted (e.g., no variables selected)
+      p <- get(rfun_name)()
+      if (is_not(p) || radiant.data::is_empty(p)) p <- "Nothing to plot ...\nSelect plots to show or re-run the calculations"
+      if (is.character(p)) {
+        plot(
+          x = 1, type = "n", main = paste0("\n\n\n\n\n\n\n\n", p),
+          axes = FALSE, xlab = "", ylab = "", cex.main = .9
+        )
+      } else {
+        print(p)
+      }
+    },
+    width = get(width_fun),
+    height = get(height_fun),
+    res = 96
+  )
 
   return(invisible())
 }
 
-stat_tab_panel <- function(
-  menu, tool, tool_ui, output_panels,
-  data = input$dataset
-) {
+stat_tab_panel <- function(menu, tool, tool_ui, output_panels,
+                           data = input$dataset) {
   sidebarLayout(
     sidebarPanel(
       wellPanel(
@@ -591,13 +594,10 @@ stat_tab_panel <- function(
 ################################################################
 ## functions used for app help
 ################################################################
-help_modal <- function(
-  modal_title, link, help_file,
-  author = "Vincent Nijs",
-  year = lubridate::year(lubridate::now()),
-  lic = "by-nc-sa"
-) {
-
+help_modal <- function(modal_title, link, help_file,
+                       author = "Vincent Nijs",
+                       year = lubridate::year(lubridate::now()),
+                       lic = "by-nc-sa") {
   sprintf(
     "<div class='modal fade' id='%s' tabindex='-1' role='dialog' aria-labelledby='%s_label' aria-hidden='true'>
        <div class='help-modal-dialog modal-dialog modal-lg'>
@@ -619,12 +619,10 @@ help_modal <- function(
     HTML()
 }
 
-help_and_report <- function(
-  modal_title, fun_name, help_file,
-  author = "Vincent Nijs",
-  year = lubridate::year(lubridate::now()),
-  lic = "by-nc-sa"
-) {
+help_and_report <- function(modal_title, fun_name, help_file,
+                            author = "Vincent Nijs",
+                            year = lubridate::year(lubridate::now()),
+                            lic = "by-nc-sa") {
   sprintf(
     "<div class='modal fade' id='%s_help' tabindex='-1' role='dialog' aria-labelledby='%s_help_label' aria-hidden='true'>
        <div class='help-modal-dialog modal-dialog modal-lg'>
@@ -640,9 +638,10 @@ help_and_report <- function(
        </div>
      </div>
      <i title='Help' class='fa fa-question alignleft' data-toggle='modal' data-target='#%s_help'></i>
+     <i title='Report results & Screenshot' class='fa fa-camera action-button shiny-bound-input aligncenter' href='#%s_screenshot' id='%s_screenshot' onclick='generate_screenshot();'></i>
      <i title='Report results' class='fa fa-edit action-button shiny-bound-input alignright' href='#%s_report' id='%s_report'></i>
      <div style='clear: both;'></div>",
-    fun_name, fun_name, fun_name, modal_title, help_file, author, year, lic, lic, fun_name, fun_name, fun_name
+    fun_name, fun_name, fun_name, modal_title, help_file, author, year, lic, lic, fun_name, fun_name, fun_name, fun_name, fun_name
   ) %>%
     enc2utf8() %>%
     HTML() %>%
@@ -694,12 +693,14 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
     sc <- "NULL"
   }
 
-  dat <- get(paste0(".", fun))()$tab %>% {nr <<- nrow(.); .[1, , drop = FALSE]}
+  dat <- get(paste0(".", fun))()$tab %>%
+    (function(x) nr <<- nrow(x); x[1, , drop = FALSE])
 
   if (order != "NULL" || sc != "NULL") {
 
     ## get variable class and name
-    gc <- get_class(dat) %>% {if (radiant.data::is_empty(vars[1])) . else .[vars]}
+    gc <- get_class(dat) %>%
+      (function(x) if (radiant.data::is_empty(vars[1])) x else x[vars])
     cn <- names(gc)
 
     if (length(cn) > 0) {
@@ -890,11 +891,9 @@ if (length(getOption("radiant.autosave", default = NULL)) > 0) {
 }
 
 ## update "run" button when relevant inputs are changed
-run_refresh <- function(
-  args, pre, init = "evar", tabs = "",
-  label = "Estimate model", relabel = label,
-  inputs = NULL, data = TRUE
-) {
+run_refresh <- function(args, pre, init = "evar", tabs = "",
+                        label = "Estimate model", relabel = label,
+                        inputs = NULL, data = TRUE) {
   observe({
     ## dep on most inputs
     if (data) {
@@ -925,3 +924,82 @@ run_refresh <- function(
     updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play"))
   })
 }
+
+radiant_screenshot_modal <- function(report_on = "") {
+  add_button <- function() {
+    if (is_empty(report_on)) {
+      ""
+    } else {
+      actionButton(report_on, "Report", icon = icon("edit"), class = "btn-success")
+    }
+  }
+  showModal(
+    modalDialog(
+      title = "Radiant screenshot",
+      span(shiny::tags$div(id = "screenshot_preview")),
+      span(HTML("</br>To include a screenshot in a report first save it to disk by clicking on the <em>Save</em> button. Then click the <em>Report</em> button to insert a reference to the screenshot into <em>Report > Rmd</em>.")),
+      footer = tagList(
+        tags$table(
+          tags$td(download_button("screenshot_save", "Save", ic = "download")),
+          tags$td(add_button()),
+          tags$td(modalButton("Cancel")),
+          align = "right"
+        )
+      ),
+      size = "l",
+      easyClose = TRUE
+    )
+  )
+}
+
+observeEvent(input$screenshot_link, {
+  radiant_screenshot_modal()
+})
+
+render_screenshot <- function() {
+  plt <- sub("data:.+base64,", "", input$img_src)
+  png::readPNG(base64enc::base64decode(what = plt))
+}
+
+download_handler_screenshot <- function(path, plot, ...) {
+  plot <- try(plot(), silent = TRUE)
+  if (inherits(plot, "try-error") || is.character(plot) || is.null(plot)) {
+    plot <- ggplot() +
+      labs(title = "Plot not available")
+    png(file = path, width = 500, height = 100, res = 96)
+    print(plot)
+    dev.off()
+  } else {
+    ppath <- parse_path(path, pdir = getOption("radiant.launch_dir", find_home()), mess = FALSE)
+    r_info[["latest_screenshot"]] <- glue("![]({ppath$rpath})")
+    png::writePNG(plot, path, dpi = 144)
+  }
+}
+
+observe({
+  if (length(input$nav_radiant) > 0) {
+    tabset <- names(getOption("radiant.url.list")[[input$nav_radiant]])
+    rtn <- if (length(tabset) > 0) {
+      paste0(input$nav_radiant, " ", input[[tabset]])
+    } else {
+      input$nav_radiant
+    }
+    r_info[["radiant_tab_name"]] <- gsub("[ ]+", "-", rtn) %>%
+      gsub("(\\(|\\))", "", .) %>%
+      gsub("[-]{2,}", "-", .) %>%
+      tolower()
+  }
+})
+
+download_handler(
+  id = "screenshot_save",
+  fun = download_handler_screenshot,
+  fn = function() paste0(r_info[["radiant_tab_name"]], "-screenshot"),
+  type = "png",
+  caption = "Save radiant screenshot",
+  plot = render_screenshot,
+  btn = "button",
+  label = "Save",
+  class = "btn-primary",
+  onclick = "get_img_src();"
+)

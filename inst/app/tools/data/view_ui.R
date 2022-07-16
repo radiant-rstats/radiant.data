@@ -33,7 +33,7 @@ output$ui_View <- renderUI({
       ),
       tags$table(
         tags$td(textInput("view_name", "Store filtered data as:", "", placeholder = "Provide data name")),
-        tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success"), class="top")
+        tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success"), class = "top")
       )
     ),
     help_and_report(
@@ -80,7 +80,7 @@ output$dataviewer <- DT::renderDataTable({
   req(available(input$view_vars))
   dat <- select_at(.get_data(), .vars = input$view_vars)
 
-  style = if (exists("bslib_current_version") && "4" %in% bslib_current_version()) "bootstrap4" else "bootstrap"
+  style <- if (exists("bslib_current_version") && "4" %in% bslib_current_version()) "bootstrap4" else "bootstrap"
 
   search <- r_state$dataviewer_state$search$search
   if (is.null(search)) search <- ""
@@ -94,7 +94,8 @@ output$dataviewer <- DT::renderDataTable({
   ## for rounding
   isInt <- sapply(dat, function(x) is.integer(x))
   isDbl <- sapply(dat, is_double)
-  dec <- input$view_dec %>% {ifelse(radiant.data::is_empty(.) || . < 0, 3, round(., 0))}
+  dec <- input$view_dec %>%
+    (function(x) ifelse(radiant.data::is_empty(x) || x < 0, 3, round(x, 0)))
 
   withProgress(
     message = "Generating view table", value = 1,
@@ -137,8 +138,8 @@ output$dataviewer <- DT::renderDataTable({
       ## https://github.com/rstudio/DT/issues/146#issuecomment-534319155
       callback = DT::JS('$(window).on("unload", function() { table.state.clear(); })')
     ) %>%
-      {if (sum(isDbl) > 0) DT::formatRound(., names(isDbl)[isDbl], dec) else .} %>%
-      {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0) else .}
+      (function(x) if (sum(isDbl) > 0) DT::formatRound(x, names(isDbl)[isDbl], dec) else x) %>%
+      (function(x) if (sum(isInt) > 0) DT::formatRound(x, names(isInt)[isInt], 0) else x)
   )
 })
 
@@ -152,7 +153,8 @@ observeEvent(input$view_store, {
   }
 
   r_data[[dataset]] <- get_data(
-    input$dataset, vars = input$view_vars, filt = data_filter,
+    input$dataset,
+    vars = input$view_vars, filt = data_filter,
     rows = input$dataviewer_rows_all, na.rm = FALSE, envir = r_data
   )
   register(dataset)
@@ -270,6 +272,21 @@ download_handler(id = "dl_view_tab", fun = dl_view_tab, fn = function() paste0(i
   }
 }
 
-observeEvent(input$view_report, {
+view_report <- function() {
   update_report(cmd = .viewcmd(), outputs = NULL, figs = FALSE)
+}
+
+observeEvent(input$view_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  view_report()
+})
+
+observeEvent(input$view_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_view_screenshot")
+})
+
+observeEvent(input$modal_view_screenshot, {
+  view_report()
+  removeModal()
 })

@@ -35,7 +35,9 @@ output$ui_cmb_by <- renderUI({
   x <- varnames()
   y <- colnames(r_data[[input$cmb_y]])
   vars <- intersect(x, y)
-  if (length(vars) == 0) return()
+  if (length(vars) == 0) {
+    return()
+  }
   vars <- x[x %in% vars] ## need variable labels from varnames()
   selectInput(
     "cmb_by",
@@ -88,13 +90,14 @@ output$ui_Combine <- renderUI({
       uiOutput("ui_cmb_by"),
       uiOutput("ui_cmb_add"),
       selectInput(
-        "cmb_type", "Combine type:", choices = cmb_type,
+        "cmb_type", "Combine type:",
+        choices = cmb_type,
         selected = state_single("cmb_type", cmb_type, "inner_join"),
         multiple = FALSE
       ),
       tags$table(
         tags$td(textInput("cmb_name", "Combined dataset:", paste0(input$dataset, "_cmb"))),
-        tags$td(uiOutput("ui_cmb_store"), class="top")
+        tags$td(uiOutput("ui_cmb_store"), class = "top")
       )
     ),
     help_and_report(
@@ -125,7 +128,7 @@ observeEvent(input$cmb_store, {
   }
 })
 
-observeEvent(input$combine_report, {
+combine_report <- function() {
   req(input$cmb_y)
   inp <- clean_args(cmb_inputs(), cmb_args)
   if (identical(inp$add, colnames(r_data[[input$cmb_y]]))) {
@@ -144,7 +147,7 @@ observeEvent(input$combine_report, {
     xcmd = xcmd,
     figs = FALSE
   )
-})
+}
 
 output$cmb_data1 <- renderText({
   req(input$dataset)
@@ -184,4 +187,19 @@ output$cmb_data <- renderText({
       dataset, " [<font color='blue'>", isolate(input$cmb_type), "</font>]</h3>"
     ))
   }
+})
+
+observeEvent(input$combine_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  combine_report()
+})
+
+observeEvent(input$combine_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_combine_screenshot")
+})
+
+observeEvent(input$modal_combine_screenshot, {
+  combine_report()
+  removeModal()
 })

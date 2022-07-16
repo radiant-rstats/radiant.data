@@ -1,8 +1,11 @@
-ul, ol {
+ul,
+ol {
   padding-left: 18px;
 }
 
-#viz_details_main + span, #viz_details_labels + span, #viz_details_style + span {
+#viz_details_main+span,
+#viz_details_labels+span,
+#viz_details_style+span {
   font-weight: bold;
 }
 
@@ -16,24 +19,26 @@ ul, ol {
   text-overflow: ellipsis;
 }
 
-.snippet th, .snippet td {
+.snippet th,
+.snippet td {
   text-align: center;
 }
 
-table.dataTable tfoot td, table.dataTable thead td {
+table.dataTable tfoot td,
+table.dataTable thead td {
   padding: 0 0 0 0;
 }
 
 td.top {
-  padding-top:33px;
+  padding-top: 33px;
 }
 
 td.top_small {
-  padding-top:5px;
+  padding-top: 5px;
 }
 
 td.top_mini {
-  padding-top:1px;
+  padding-top: 1px;
 }
 
 .well {
@@ -42,7 +47,7 @@ td.top_mini {
 }
 
 .col-sm-4 {
-  max-width: 310px;
+  max-width: 315px;
 }
 
 .checkbox {
@@ -55,12 +60,14 @@ td.top_mini {
   margin-bottom: 0;
 }
 
-.radio-inline+.radio-inline, .checkbox-inline+.checkbox-inline {
+.radio-inline+.radio-inline,
+.checkbox-inline+.checkbox-inline {
   margin-left: 0;
   margin-right: 5px;
 }
 
-.radio-inline, .checkbox-inline {
+.radio-inline,
+.checkbox-inline {
   margin-right: 5px;
 }
 
@@ -98,7 +105,8 @@ pre {
   background-color: #ffffff;
 }
 
-code, pre code {
+code,
+pre code {
   overflow: auto;
   white-space: pre;
   word-wrap: normal;
@@ -113,7 +121,8 @@ code, pre code {
 /* allow all textareas and multiple-select inputs to resize vertically */
 /* have to set overfow to make resize work on Safari                   */
 /* based on https://css-tricks.com/almanac/properties/r/resize/         */
-textarea, select {
+textarea,
+select {
   resize: vertical;
   overflow: auto;
   max-width: 100%;
@@ -127,12 +136,17 @@ textarea, select {
   float: right;
 }
 
+.aligncenter {
+  margin-left: 42%;
+}
+
 .color_bar {
   background-color: blue;
 }
 
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
-#rmd_edit, #r_edit {
+#rmd_edit,
+#r_edit {
   position: absolute;
   top: 100px;
   bottom: 0;
@@ -143,7 +157,8 @@ textarea, select {
 }
 
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
-#rmd_knitted, #r_knitted {
+#rmd_knitted,
+#r_knitted {
   position: absolute;
   top: 100px;
   bottom: 0;
@@ -165,7 +180,7 @@ body {
   background-color: black;
 }
 
-.navbar .nav > li > a {
+.navbar .nav>li>a {
   padding-left: 7px;
   padding-right: 8px;
 }
@@ -178,36 +193,46 @@ body {
   .navbar-header {
     float: none;
   }
-  .navbar-left,.navbar-right {
+
+  .navbar-left,
+  .navbar-right {
     float: none !important;
   }
+
   .navbar-toggle {
     display: block;
   }
+
   .navbar-collapse {
     border-top: 1px solid transparent;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
+
   .navbar-fixed-top {
     top: 0;
     border-width: 0 0 1px;
   }
+
   .navbar-collapse.collapse {
-    display: none!important;
+    display: none !important;
   }
+
   .navbar-nav {
-    float: none!important;
+    float: none !important;
     margin-top: 7.5px;
   }
+
   .navbar-nav>li {
     float: none;
   }
+
   .navbar-nav>li>a {
     padding-top: 10px;
     padding-bottom: 10px;
   }
-  .collapse.in{
-    display:block !important;
+
+  .collapse.in {
+    display: block !important;
   }
 }
 
@@ -219,6 +244,9 @@ body {
 /* likely due to bootstrap css, font set to white */
 /* with dark themes against a white background    */
 /* see https://github.com/ajaxorg/ace/issues/3071 */
-.ace_replace_form, .ace_search_field, .ace_replacebtn, .ace_searchbtn {
+.ace_replace_form,
+.ace_search_field,
+.ace_replacebtn,
+.ace_searchbtn {
   color: black;
 }

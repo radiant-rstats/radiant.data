@@ -1,10 +1,16 @@
+# radiant.data 1.4.3
+
+* Added option to create screenshots of settings on a page. Approach is inspired by the snapper package by @yonicd
+* Added contact request for users on startup
+* Fix issue with R_ZIPCMD when 7zip is on the path but not being recognized by R
+
 # radiant.data 1.4.2
 
-* Use `all` if `is.null` and `is.na` if object length can be greater than 1 as required in R 4.2.0
+* Use `all` for `is.null` and `is.na` if object length can be greater than 1 as required in R 4.2.0
 
 # radiant.data 1.4.1
 
-* Setup to allow formating of the shiny interface with bootstrap 4
+* Setup to allow formatting of the shiny interface with bootstrap 4
 * Addressing `is_empty` function clash with `rlang`
 * Upgrading `shiny` dependency to 1.6.0 and fixing project text alignment issue (@cpsievert, https://github.com/radiant-rstats/radiant.data/pull/28)
 

@@ -524,6 +524,17 @@ knit_print.data.frame <- function(x, ...) {
 #   knitr::asis_output(res)
 # }
 
+load_html2canvas <- function() {
+  # adapted from https://github.com/yonicd/snapper/blob/master/R/load.R
+  html2canvas <- "https://html2canvas.hertzen.com/dist/html2canvas.min.js"
+  shiny::tagList(
+    htmltools::htmlDependency("html2canvas", "1.0.0",
+      src = c(href = dirname(html2canvas)),
+      script = basename(html2canvas)
+    )
+  )
+}
+
 options(
   radiant.nav_ui =
     list(
@@ -533,7 +544,7 @@ options(
       inverse = TRUE,
       collapsible = TRUE,
       position = "fixed-top",
-      tabPanel("Data", withMathJax(), uiOutput("ui_data"))
+      tabPanel("Data", withMathJax(), uiOutput("ui_data"), load_html2canvas())
     )
 )
 

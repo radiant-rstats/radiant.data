@@ -10,8 +10,9 @@ expl_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   expl_args$data_filter <- if (input$show_filter) input$data_filter else ""
   expl_args$dataset <- input$dataset
-  for (i in r_drop(names(expl_args)))
+  for (i in r_drop(names(expl_args))) {
     expl_args[[i]] <- input[[paste0("expl_", i)]]
+  }
 
   expl_args
 })
@@ -20,13 +21,14 @@ expl_sum_args <- as.list(if (exists("summary.explore")) {
   formals(summary.explore)
 } else {
   formals(radiant.data:::summary.explore)
-} )
+})
 
 ## list of function inputs selected by user
 expl_sum_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
-  for (i in names(expl_sum_args))
+  for (i in names(expl_sum_args)) {
     expl_sum_args[[i]] <- input[[paste0("expl_", i)]]
+  }
   expl_sum_args
 })
 
@@ -37,7 +39,8 @@ output$ui_expl_vars <- renderUI({
   vars <- varnames()
   req(available(vars))
   selectInput(
-    "expl_vars", label = "Numeric variable(s):", choices = vars,
+    "expl_vars",
+    label = "Numeric variable(s):", choices = vars,
     selected = state_multiple("expl_vars", vars, isolate(input$expl_vars)), multiple = TRUE,
     size = min(8, length(vars)), selectize = FALSE
   )
@@ -52,7 +55,7 @@ output$ui_expl_byvar <- renderUI({
   if (any(vars %in% input$expl_vars)) {
     vars <- base::setdiff(vars, input$expl_vars)
     names(vars) <- varnames() %>%
-      {.[match(vars, .)]} %>%
+      (function(x) x[match(vars, x)]) %>%
       names()
   }
 
@@ -64,14 +67,15 @@ output$ui_expl_byvar <- renderUI({
       if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
         vars <- unique(c(r_state$expl_byvar, vars))
         names(vars) <- varnames() %>%
-          {.[match(vars, .)]} %>%
+          (function(x) x[match(vars, x)]) %>%
           names()
       }
     }
   })
 
   selectizeInput(
-    "expl_byvar", label = "Group by:", choices = vars,
+    "expl_byvar",
+    label = "Group by:", choices = vars,
     selected = state_multiple("expl_byvar", vars, isolate(input$expl_byvar)),
     multiple = TRUE,
     options = list(
@@ -91,7 +95,8 @@ output$ui_expl_fun <- renderUI({
     }
   })
   selectizeInput(
-    "expl_fun", label = "Apply function(s):",
+    "expl_fun",
+    label = "Apply function(s):",
     choices = r_funs, selected = sel, multiple = TRUE,
     options = list(
       placeholder = "Select functions",
@@ -101,11 +106,14 @@ output$ui_expl_fun <- renderUI({
 })
 
 output$ui_expl_top <- renderUI({
-  if (radiant.data::is_empty(input$expl_vars)) return()
+  if (radiant.data::is_empty(input$expl_vars)) {
+    return()
+  }
   top_var <- c("Function" = "fun", "Variables" = "var", "Group by" = "byvar")
   if (radiant.data::is_empty(input$expl_byvar)) top_var <- top_var[1:2]
   selectizeInput(
-    "expl_top", label = "Column header:",
+    "expl_top",
+    label = "Column header:",
     choices = top_var,
     selected = state_single("expl_top", top_var, isolate(input$expl_top)),
     multiple = FALSE
@@ -131,7 +139,7 @@ output$ui_Explore <- renderUI({
     wellPanel(
       uiOutput("ui_expl_run")
     ),
-   wellPanel(
+    wellPanel(
       # actionLink("expl_clear", "Clear settings", icon = icon("sync"), style="color:black"),
       uiOutput("ui_expl_vars"),
       uiOutput("ui_expl_byvar"),
@@ -142,7 +150,7 @@ output$ui_Explore <- renderUI({
     wellPanel(
       tags$table(
         tags$td(uiOutput("ui_expl_name")),
-        tags$td(actionButton("expl_store", "Store", icon = icon("plus")), class="top")
+        tags$td(actionButton("expl_store", "Store", icon = icon("plus")), class = "top")
       )
     ),
     help_and_report(
@@ -154,9 +162,13 @@ output$ui_Explore <- renderUI({
 })
 
 .explore <- eventReactive(input$expl_run, {
-  if (not_available(input$expl_vars) || is.null(input$expl_top)) return()
-  if (!radiant.data::is_empty(input$expl_byvar) && not_available(input$expl_byvar)) return()
-  if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) return()
+  if (not_available(input$expl_vars) || is.null(input$expl_top)) {
+    return()
+  } else if (!radiant.data::is_empty(input$expl_byvar) && not_available(input$expl_byvar)) {
+    return()
+  } else if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) {
+    return()
+  }
   expli <- expl_inputs()
   expli$envir <- r_data
   sshhr(do.call(explore, expli))
@@ -192,8 +204,8 @@ output$explore <- DT::renderDataTable({
       expl_reset("expl_byvar", nc)
       expl_reset("expl_fun", nc)
       if (!is.null(r_state$expl_top) &&
-          !is.null(input$expl_top) &&
-          !identical(r_state$expl_top, input$expl_top)) {
+        !is.null(input$expl_top) &&
+        !identical(r_state$expl_top, input$expl_top)) {
         r_state$expl_top <<- input$expl_top
         r_state$explore_state <<- list()
         r_state$explore_search_columns <<- rep("", nc)
@@ -205,7 +217,8 @@ output$explore <- DT::renderDataTable({
     })
 
     dtab(
-      expl, dec = input$expl_dec, searchCols = searchCols, order = order,
+      expl,
+      dec = input$expl_dec, searchCols = searchCols, order = order,
       pageLength = pageLength
     )
   })
@@ -218,7 +231,7 @@ dl_explore_tab <- function(path) {
   } else {
     rows <- input$explore_rows_all
     dat$tab %>%
-      {if (is.null(rows)) . else .[rows, , drop = FALSE]} %>%
+      (function(x) if (is.null(rows)) x else x[rows, , drop = FALSE]) %>%
       write.csv(path, row.names = FALSE)
   }
 }
@@ -238,13 +251,15 @@ download_handler(
 observeEvent(input$expl_store, {
   req(input$expl_name)
   dat <- .explore()
-  if (is.null(dat)) return()
+  if (is.null(dat)) {
+    return()
+  }
   dataset <- fix_names(input$expl_name)
   if (input$expl_name != dataset) {
     updateTextInput(session, inputId = "expl_name", value = dataset)
   }
   rows <- input$explore_rows_all
-  dat$tab %<>% {if (is.null(rows)) . else .[rows, , drop = FALSE]}
+  dat$tab %<>% (function(x) if (is.null(rows)) x else x[rows, , drop = FALSE])
   r_data[[dataset]] <- dat$tab
   register(dataset)
   updateSelectInput(session, "dataset", selected = input$dataset)
@@ -266,8 +281,7 @@ observeEvent(input$expl_store, {
   )
 })
 
-observeEvent(input$explore_report, {
-
+explore_report <- function() {
   ## get the state of the dt table
   ts <- dt_state("explore")
   xcmd <- "# summary()\ndtab(result"
@@ -300,4 +314,19 @@ observeEvent(input$explore_report, {
     figs = FALSE,
     xcmd = xcmd
   )
+}
+
+observeEvent(input$explore_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  explore_report()
+})
+
+observeEvent(input$explore_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_explore_screenshot")
+})
+
+observeEvent(input$modal_explore_screenshot, {
+  explore_report()
+  removeModal()
 })

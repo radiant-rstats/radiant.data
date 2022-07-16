@@ -41,14 +41,14 @@ output$ui_fileUpload <- renderUI({
     with(tags, table(
       tr(
         td(textInput("url_rds", NULL, "")),
-        td(actionButton("url_rds_load", "Load", icon = icon("upload")), class="top_small")
+        td(actionButton("url_rds_load", "Load", icon = icon("upload")), class = "top_small")
       )
     ))
   } else if (input$dataType == "url_csv") {
     with(tags, table(
       tr(
         td(textInput("url_csv", NULL, "")),
-        td(actionButton("url_csv_load", "Load", icon = icon("upload")), class="top_small")
+        td(actionButton("url_csv_load", "Load", icon = icon("upload")), class = "top_small")
       )
     ))
   }
@@ -87,11 +87,14 @@ output$ui_clipboard_save <- renderUI({
 output$ui_from_global <- renderUI({
   req(input$dataType)
   df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>%
-    {names(.[.])}
+    {
+      names(.[.])
+    }
 
   tagList(
     selectInput(
-      "from_global", label = "Data.frames in Global Env:",
+      "from_global",
+      label = "Data.frames in Global Env:",
       df_list, selected = df_list, multiple = TRUE, selectize = FALSE,
       size = min(5, length(df_list))
     ),
@@ -124,11 +127,14 @@ observeEvent(input$from_global_load, {
       r_info[[paste0(df, "_lcmd")]] <- paste0("# ", r_info[[paste0(df, "_lcmd")]])
     }
     r_info[[paste0(df, "_descr")]] <- attr(r_data[[df]], "description") %>%
-      {if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\nCheck the 'Add/edit data description' box on the top-left of your screen" else .} %>%
+      {
+        if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\nCheck the 'Add/edit data description' box on the top-left of your screen" else .
+      } %>%
       fix_smart()
   }
   updateSelectInput(
-    session, "dataset", label = "Datasets:",
+    session, "dataset",
+    label = "Datasets:",
     choices = r_info[["datasetlist"]],
     selected = r_info[["datasetlist"]][1]
   )
@@ -145,11 +151,12 @@ observeEvent(input$to_global_save, {
     r_info[[paste0(df, "_scmd")]] <- NULL
   } else {
     ## only useful if dataset is still available in radiant
-    r_info[[paste0(df, "_scmd")]] <- glue('assign({df}, envir = .GlobalEnv)')
+    r_info[[paste0(df, "_scmd")]] <- glue("assign({df}, envir = .GlobalEnv)")
   }
 
   updateSelectInput(
-    session, "dataset", label = "Datasets:",
+    session, "dataset",
+    label = "Datasets:",
     choices = r_info[["datasetlist"]],
     selected = r_info[["datasetlist"]][1]
   )
@@ -196,7 +203,8 @@ output$ui_Manage <- renderUI({
             width = "100%"
           )),
           numericInput(
-            "man_n_max", label = "Maximum rows to read:",
+            "man_n_max",
+            label = "Maximum rows to read:",
             value = Inf, max = Inf, step = 1000
           )
         ),
@@ -318,7 +326,9 @@ output$uiRemoveDataset <- renderUI({
 observeEvent(input$removeDataButton, {
   ## only remove datasets if 1 or more were selected - without this line
   ## all files would be removed when the removeDataButton is pressed
-  if (is.null(input$removeDataset)) return()
+  if (is.null(input$removeDataset)) {
+    return()
+  }
   datasets <- r_info[["datasetlist"]]
   if (length(datasets) > 1) { ## have to leave at least one dataset
     removeDataset <- input$removeDataset
@@ -340,7 +350,7 @@ observeEvent(input$removeDataButton, {
 ## 'saving' data to clipboard
 observeEvent(input$man_save_clip, {
   radiant.data::save_clip(r_data[[input$dataset]])
-  r_info[[paste0(input$dataset, "_scmd")]] <- glue('save_clip({input$dataset})')
+  r_info[[paste0(input$dataset, "_scmd")]] <- glue("save_clip({input$dataset})")
 })
 
 man_save_data <- function(file) {
@@ -360,7 +370,7 @@ man_save_data <- function(file) {
   withProgress(message = "Saving ...", value = 1, {
     if (ext == "csv") {
       readr::write_csv(r_data[[robj]], file = file)
-      r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_csv({robj}, file = {pp$rpath})')
+      r_info[[paste0(robj, "_scmd")]] <- glue("readr::write_csv({robj}, file = {pp$rpath})")
     } else {
       if (!radiant.data::is_empty(input$man_data_descr)) {
         attr(r_data[[robj]], "description") <- fix_smart(r_info[[paste0(robj, "_descr")]])
@@ -368,16 +378,16 @@ man_save_data <- function(file) {
 
       if (ext == "rds") {
         readr::write_rds(r_data[[robj]], file = file)
-        r_info[[paste0(robj, "_scmd")]] <- glue('readr::write_rds({robj}, file = {pp$rpath})')
+        r_info[[paste0(robj, "_scmd")]] <- glue("readr::write_rds({robj}, file = {pp$rpath})")
       } else if (ext == "feather") {
         ## temporary workaround until PR goes through https://stackoverflow.com/a/47898172/1974918
         # feather::write_feather(tmp[[robj]], file)
         # radiant.data::write_feather(tmp[[robj]], file, description = attr(tmp[[robj]], "description"))
         feather::write_feather(r_data[[robj]], file)
-        r_info[[paste0(robj, "_scmd")]] <- glue('feather::write_feather({robj}, file = {pp$rpath})')
+        r_info[[paste0(robj, "_scmd")]] <- glue("feather::write_feather({robj}, file = {pp$rpath})")
       } else {
         save(list = robj, file = file, envir = r_data)
-        r_info[[paste0(robj, "_scmd")]] <- glue('save({robj}, file = {pp$rpath})')
+        r_info[[paste0(robj, "_scmd")]] <- glue("save({robj}, file = {pp$rpath})")
       }
     }
   })
@@ -426,7 +436,12 @@ download_handler(
   label = "Save",
   fun = saveState,
   fn = function() state_name_dlh() %>% sans_ext(),
-  type = function() state_name_dlh() %>% {if (grepl("\\.state\\.rda", .)) "state.rda" else tools::file_ext(.)},
+  type = function() {
+    state_name_dlh() %>%
+      {
+        if (grepl("\\.state\\.rda", .)) "state.rda" else tools::file_ext(.)
+      }
+  },
   btn = "button",
   caption = "Save radiant state file"
 )
@@ -450,9 +465,13 @@ download_handler(
 
 observeEvent(input$uploadfile, {
   if (getOption("radiant.shinyFiles", FALSE)) {
-    if (is.integer(input$uploadfile)) return()
+    if (is.integer(input$uploadfile)) {
+      return()
+    }
     inFile <- shinyFiles::parseFilePaths(sf_volumes, input$uploadfile)
-    if (nrow(inFile) == 0) return()
+    if (nrow(inFile) == 0) {
+      return()
+    }
   } else {
     inFile <- input$uploadfile
   }
@@ -486,10 +505,14 @@ observeEvent(input$url_rds_load, {
   # input <- list(url_rds = "https://raw.githubusercontent.com/radiant-rstats/docs/gh-pages/examples/sales.rds")
   # url_rds <- "https://www.dropbox.com/s/jetbhuconwn6mdb/price_sales.rds?raw=1"
   # url_rds <- "https://radiant-rstats.github.io/docs/examples/houseprices.rds"
-  if (radiant.data::is_empty(input$url_rds)) return()
+  if (radiant.data::is_empty(input$url_rds)) {
+    return()
+  }
   url_rds <- gsub("^\\s+|\\s+$", "", input$url_rds)
 
-  objname <- basename(url_rds) %>% sub("\\.rds", "", .) %>% sub("\\?.*$", "", .)
+  objname <- basename(url_rds) %>%
+    sub("\\.rds", "", .) %>%
+    sub("\\?.*$", "", .)
 
   if (!objname == radiant.data::fix_names(objname)) {
     objname <- "rds_url"
@@ -521,10 +544,14 @@ observeEvent(input$url_rds_load, {
 
 observeEvent(input$url_csv_load, {
   ## loading csv file from url, example https://radiant-rstats.github.io/docs/examples/houseprices.csv
-  if (radiant.data::is_empty(input$url_csv)) return()
+  if (radiant.data::is_empty(input$url_csv)) {
+    return()
+  }
   url_csv <- gsub("^\\s+|\\s+$", "", input$url_csv)
 
-  objname <- basename(url_csv) %>% sub("\\.csv", "", .) %>% sub("\\?.*$", "", .)
+  objname <- basename(url_csv) %>%
+    sub("\\.csv", "", .) %>%
+    sub("\\?.*$", "", .)
   if (!objname == radiant.data::fix_names(objname)) {
     objname <- "csv_url"
   }
@@ -607,7 +634,8 @@ observeEvent(input$loadExampleData, {
   r_info[["datasetlist"]] <- sort(r_info[["datasetlist"]])
 
   updateSelectInput(
-    session, "dataset", label = "Datasets:",
+    session, "dataset",
+    label = "Datasets:",
     choices = r_info[["datasetlist"]],
     selected = r_info[["datasetlist"]][1]
   )
@@ -621,8 +649,8 @@ observeEvent(input$loadClipData, {
     ret <- "#### Data in clipboard was not well formatted. Try exporting the data to csv format"
     upload_error_handler(objname, ret)
   } else {
-    cmd <- glue('{objname} <- load_clip()')
-    ret <- glue('#### Clipboard data\nData copied from clipboard on {lubridate::now()}')
+    cmd <- glue("{objname} <- load_clip()")
+    ret <- glue("#### Clipboard data\nData copied from clipboard on {lubridate::now()}")
     cn <- colnames(dataset)
     fn <- radiant.data::fix_names(cn)
     if (!identical(cn, fn)) {
@@ -654,9 +682,13 @@ output$refreshOnLoad <- renderUI({
 
   if (pressed(input$state_load)) {
     if (getOption("radiant.shinyFiles", FALSE)) {
-      if (is.integer(input$state_load)) return()
+      if (is.integer(input$state_load)) {
+        return()
+      }
       path <- shinyFiles::parseFilePaths(sf_volumes, input$state_load)
-      if (inherits(path, "try-error") || radiant.data::is_empty(path$datapath)) return()
+      if (inherits(path, "try-error") || radiant.data::is_empty(path$datapath)) {
+        return()
+      }
       path <- path$datapath
       sname <- basename(path)
     } else {
@@ -684,7 +716,6 @@ output$ui_state_upload <- renderUI({
 })
 
 refreshOnLoad <- function(path, sname) {
-
   tmpEnv <- new.env(parent = emptyenv())
   load(path, envir = tmpEnv)
 
@@ -786,7 +817,7 @@ observeEvent(input$renameButton, {
   r_info[[paste0(input$data_rename, "_descr")]] <- r_info[[paste0(input$dataset, "_descr")]]
   r_info[[paste0(input$dataset, "_descr")]] <- NULL
   lcmd <- r_info[[paste0(input$dataset, "_lcmd")]] %>%
-    sub(glue('^{input$dataset} <- '), glue('{input$data_rename} <- '), .) %>%
+    sub(glue("^{input$dataset} <- "), glue("{input$data_rename} <- "), .) %>%
     sub(
       glue('register\\("{input$dataset}"\\)'),
       glue('register\\("{input$data_rename}"\\)'),
@@ -845,7 +876,7 @@ output$ui_datasets <- renderUI({
 output$uiRename <- renderUI({
   tags$table(
     tags$td(textInput("data_rename", NULL, placeholder = input$dataset)),
-    tags$td(actionButton("renameButton", "Rename"), class="top_small")
+    tags$td(actionButton("renameButton", "Rename"), class = "top_small")
   )
 })
 
@@ -928,10 +959,25 @@ man_show_log_modal <- function() {
   )
 }
 
-observeEvent(input$manage_report, {
+manage_report <- function() {
   if (getOption("radiant.shinyFiles", FALSE)) {
     update_report(cmd = man_show_log(), outputs = NULL, figs = FALSE)
   } else {
     man_show_log_modal()
   }
+}
+
+observeEvent(input$manage_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  manage_report()
+})
+
+observeEvent(input$manage_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_manage_screenshot")
+})
+
+observeEvent(input$modal_manage_screenshot, {
+  manage_report()
+  removeModal()
 })

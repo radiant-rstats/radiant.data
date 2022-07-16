@@ -349,7 +349,7 @@ knit_it <- function(report, type = "rmd") {
       modalDialog(
         title = "The report contains deprecated code",
         span(
-          "The use of, e.g., r_data[[...]]], dataset = \"...\", etc. in your report is
+          "The use of, e.g., r_data[[...]], dataset = \"...\", etc. in your report is
            deprecated. Click the 'Clean report' button to remove references that are no
            longer needed.", br(), br(), "Warning: It may not be possible to update all code
            to the latest standard automatically. For example, the use of 'store(...)'
@@ -782,6 +782,9 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("", ""),
       cmd <- paste0("\n```{r fig.width = ", round(7 * fig.width / 650, 2), ", fig.height = ", round(7 * fig.height / 650, 2), ", dpi = 96}\n", cmd, "\n```\n")
     } else {
       cmd <- paste0("\n```{r}\n", cmd, "\n```\n")
+    }
+    if (!is_empty(r_info[["latest_screenshot"]])) {
+      cmd <- paste0(r_info[["latest_screenshot"]], "\n", cmd)
     }
     update_report_fun(cmd, type = "rmd")
   }
