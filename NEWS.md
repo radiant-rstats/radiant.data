@@ -1,7 +1,7 @@
 # radiant.data 1.4.3
 
 * Added option to create screenshots of settings on a page. Approach is inspired by the snapper package by @yonicd
-* Added contact request for users on startup
+* Added contact request for users on Radiant startup
 * Fix issue with R_ZIPCMD when 7zip is on the path but not being recognized by R
 
 # radiant.data 1.4.2
