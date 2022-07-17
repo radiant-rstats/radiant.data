@@ -694,7 +694,10 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
   }
 
   dat <- get(paste0(".", fun))()$tab %>%
-    (function(x) nr <<- nrow(x); x[1, , drop = FALSE])
+    (function(x) {
+      nr <<- nrow(x)
+      x[1, , drop = FALSE]
+    })
 
   if (order != "NULL" || sc != "NULL") {
 
