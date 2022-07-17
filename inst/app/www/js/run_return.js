@@ -5,15 +5,15 @@
 // https://github.com/rstudio/shiny/issues/928
 // https://stackoverflow.com/questions/32002170/r-shiny-enabling-keyboard-shortcuts
 // https://stackoverflow.com/questions/47569992/home-button-in-header-in-r-shiny-dashboard
-$(document).keydown(function(event) {
+$(document).keydown(function (event) {
 
   // console.log(document.activeElement)
   if ($(".btn-success:visible" || ".shiny-bound-input:visible").is(":visible") &&
-       (event.metaKey || event.ctrlKey || event.shiftKey) && event.keyCode == 13) {
-     $(".btn-success:visible" || ".shiny-bound-input:visible").click();
+    (event.metaKey || event.ctrlKey || event.shiftKey) && event.keyCode == 13) {
+    $(".btn-success:visible" || ".shiny-bound-input:visible").click();
   } else if ($(".fa-edit:visible" || ".shiny-bound-input:visible").is(":visible") &&
-       event.altKey && event.keyCode == 13) {
-     $(".fa-edit:visible" || ".shiny-bound-input:visible").click();
+    event.altKey && event.keyCode == 13) {
+    $(".fa-edit:visible" || ".shiny-bound-input:visible").click();
   } else if ($("#updateDescr").is(":visible") && (event.metaKey || event.ctrlKey) && event.keyCode == 13) {
     $("#updateDescr").click();
     event.preventDefault();
@@ -38,11 +38,11 @@ $(document).keydown(function(event) {
     document.getElementById("state_load").click();
     event.preventDefault();
   } else if ($("#uploadfile").is(":visible") && (event.metaKey || event.ctrlKey) &&
-      event.shiftKey === false && event.keyCode == 79) {
+    event.shiftKey === false && event.keyCode == 79) {
     $("#uploadfile").click();
     event.preventDefault();
   } else if ($("#man_save_data").is(":visible") && (event.metaKey || event.ctrlKey) &&
-     event.shiftKey === false && event.keyCode == 83) {
+    event.shiftKey === false && event.keyCode == 83) {
     $("#man_save_data").click();
     event.preventDefault();
   }
@@ -82,38 +82,38 @@ $(document).keydown(function(event) {
     } else if ($('#tr_change_type').selectize()[0].selectize.getValue() === "create") {
       $("#tr_create").focus();
     }
-  } else if($("#rmd_knit").is(":visible") && document.activeElement === document.body) {
+  } else if ($("#rmd_knit").is(":visible") && document.activeElement === document.body) {
     $(".ace_text-input").focus();
-  } else if($("#r_knit").is(":visible") && document.activeElement === document.body) {
+  } else if ($("#r_knit").is(":visible") && document.activeElement === document.body) {
     $(".ace_text-input").focus();
- }
+  }
 
   // needed to address https://github.com/rstudio/shiny/issues/1916
   $("input:text").attr("spellcheck", "false");
 });
 
-$(function(){
-  $("#state_save_link").on('click', function(e){
+$(function () {
+  $("#state_save_link").on('click', function (e) {
     e.preventDefault();
     $("#state_save").trigger('click');
   });
-  $("#state_load_link").on('click', function(e){
+  $("#state_load_link").on('click', function (e) {
     e.preventDefault();
     $("#state_load").trigger('click');
   });
-  $("#state_upload_link").on('click', function(e){
+  $("#state_upload_link").on('click', function (e) {
     e.preventDefault();
     $("#state_upload").trigger('click');
   });
 });
 
 // from https://stackoverflow.com/a/33251536/1974918 by Dean Attali
-$(document).on("shiny:connected", function() {
+$(document).on("shiny:connected", function () {
   Shiny.onInputChange("get_screen_width", $(window).width());
 });
 
 // from https://github.com/rstudio/shiny/issues/2033#issuecomment-386438821
-$(document).on('shiny:disconnected', function() {
+$(document).on('shiny:disconnected', function () {
   window.parent.postMessage('disconnected', '*');
 });
 
