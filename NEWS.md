@@ -1,4 +1,4 @@
-# radiant.data 1.4.3
+# radiant.data 1.4.4
 
 * Added option to create screenshots of settings on a page. Approach is inspired by the snapper package by @yonicd
 * Added contact request for users on Radiant startup
