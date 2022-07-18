@@ -3,8 +3,11 @@
 \docType{import}
 \name{reexports}
 \alias{reexports}
+\alias{theme_version}
+\alias{bs_theme}
 \alias{wrap_plots}
 \alias{plot_annotation}
+\alias{writePNG}
 \alias{glue}
 \alias{glue_data}
 \alias{glue_collapse}
@@ -26,6 +29,8 @@ below to see their documentation.
 \describe{
   \item{broom}{\code{\link[broom:reexports]{glance}}, \code{\link[broom:reexports]{tidy}}}
 
+  \item{bslib}{\code{\link[bslib]{bs_theme}}, \code{\link[bslib]{theme_version}}}
+
   \item{glue}{\code{\link[glue]{glue}}, \code{\link[glue]{glue_collapse}}, \code{\link[glue:glue]{glue_data}}}
 
   \item{knitr}{\code{\link[knitr]{knit_print}}}
@@ -33,6 +38,8 @@ below to see their documentation.
   \item{lubridate}{\code{\link[lubridate]{date}}}
 
   \item{patchwork}{\code{\link[patchwork]{plot_annotation}}, \code{\link[patchwork]{wrap_plots}}}
+
+  \item{png}{\code{\link[png]{writePNG}}}
 
   \item{psych}{\code{\link[psych:skew]{kurtosi}}, \code{\link[psych]{skew}}}
 

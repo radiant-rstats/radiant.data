@@ -40,6 +40,8 @@ Imports:
     stringi (>= 1.2.4),
     randomizr (>= 0.20.0),
     patchwork (>= 1.0.0),
+    bslib (>= 0.3.2),
+    png,
     MASS,
     base64enc
 Suggests:
@@ -59,4 +61,4 @@ License: AGPL-3 | file LICENSE
 LazyData: true
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0

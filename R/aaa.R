@@ -30,12 +30,23 @@ globalVariables(
 #'
 NULL
 
+#' @importFrom bslib theme_version bs_theme
+#' @export
+bslib::theme_version
+
+#' @export
+bslib::bs_theme
+
 #' @importFrom patchwork wrap_plots plot_annotation
 #' @export
 patchwork::wrap_plots
 
 #' @export
 patchwork::plot_annotation
+
+#' @importFrom png writePNG
+#' @export
+png::writePNG
 
 #' @importFrom glue glue glue_data glue_collapse
 #' @export
