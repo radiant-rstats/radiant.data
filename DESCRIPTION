@@ -40,7 +40,7 @@ Imports:
     stringi (>= 1.2.4),
     randomizr (>= 0.20.0),
     patchwork (>= 1.0.0),
-    bslib (>= 0.3.2),
+    bslib (>= 0.3.1),
     png,
     MASS,
     base64enc
