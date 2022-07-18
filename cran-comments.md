@@ -1,6 +1,6 @@
 ## Resubmission
 
-This is a resubmission. In this version I have fixed bugs and updated documentation (see NEWS.md for details). I also fixed an link issue in the documentation for sshh and sshhr
+This is a resubmission. In this version I have fixed a bug and added features (see NEWS.md for details).
 
 ## Test environments
 
@@ -12,6 +12,20 @@ This is a resubmission. In this version I have fixed bugs and updated documentat
 There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
 
 # Previous cran-comments
+
+## Resubmission
+
+This is a resubmission. In this version I have fixed bugs and updated documentation (see NEWS.md for details). I also fixed an link issue in the documentation for sshh and sshhr
+
+## Test environments
+
+* macOS, R 4.2.0
+* win-builder (devel)
+
+## R CMD check results
+
+There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
+
 
 ## Resubmission
 
