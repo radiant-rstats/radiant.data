@@ -194,7 +194,7 @@ sig_stars <- function(pval) {
 
 #' Hide warnings and messages and return invisible
 #'
-#' @details Adapted from \url{https://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
+#' @details Hide warnings and messages and return invisible
 #'
 #' @param ... Inputs to keep quite
 #'
@@ -208,7 +208,7 @@ sshh <- function(...) {
 
 #' Hide warnings and messages and return result
 #'
-#' @details Adapted from \url{https://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
+#' @details Hide warnings and messages and return result
 #'
 #' @param ... Inputs to keep quite
 #'

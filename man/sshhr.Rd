@@ -13,7 +13,7 @@ sshhr(...)
 Hide warnings and messages and return result
 }
 \details{
-Adapted from \url{https://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
+Hide warnings and messages and return result
 }
 \examples{
 sshhr(library(dplyr))
