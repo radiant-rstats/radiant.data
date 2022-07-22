@@ -81,7 +81,7 @@ report_r <- reactiveValues(report = 0, knit_button = 0, clear = 0)
 
 output$ui_r_generate <- renderUI({
   isolate({
-    init <- ifelse (state_init("rmd_generate", "Use R") != "Use R", "Use Rmd", "auto")
+    init <- ifelse(state_init("rmd_generate", "Use R") != "Use R", "Use Rmd", "auto")
   })
   selectInput(
     inputId = "r_generate",
@@ -97,7 +97,8 @@ output$ui_r_generate <- renderUI({
 output$ui_r_view <- renderUI({
   req(input$r_generate)
   selectInput(
-    "r_view", label = NULL, choices = r_view_options,
+    "r_view",
+    label = NULL, choices = r_view_options,
     selected = state_init("r_view", "dual"),
     multiple = FALSE, selectize = FALSE, width = "120px"
   )
@@ -112,7 +113,6 @@ observeEvent(input$r_generate, {
     updateSelectInput(session, "rmd_generate", selected = "Use R")
 
     if (state_init("r_generate", "Use Rmd") == "To R") {
-
       updateSelectInput(session, "r_switch", selected = "no_switch")
       updateSelectInput(session, "r_view", selected = "pr_only")
       ## popup to suggest user create an .Rmd file
@@ -191,7 +191,6 @@ output$ui_r_load <- renderUI({
     buttonLabel = "Load report",
     title = "Load report",
     class = "btn-default"
-
   )
 })
 
@@ -199,7 +198,7 @@ if (getOption("radiant.shinyFiles", FALSE)) {
   output$ui_r_read_files <- renderUI({
     shinyFiles::shinyFilesButton(
       "r_read_files", "Read files", "Generate code to read selected file",
-      multiple = FALSE, icon = icon("book"), class = "btn-primary"
+      multiple = FALSE, icon = icon("book", verify_fa = FALSE), class = "btn-primary"
     )
   })
   sf_r_read_files <- shinyFiles::shinyFileChoose(
@@ -217,15 +216,15 @@ output$report_r <- renderUI({
       table(
         td(help_modal("Report > R", "r_help", inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/report_r.md")), lic = "by-sa")),
         td(HTML("&nbsp;&nbsp;")),
-        td(actionButton("r_knit", " Knit report (R)", icon = icon("play"), class = "btn-success"), class="top_small"),
-        td(uiOutput("ui_r_generate"), class="top_small"),
-        td(uiOutput("ui_r_view"), class="top_small"),
-        td(uiOutput("ui_r_switch"), class="top_small"),
-        td(uiOutput("ui_r_save_type"), class="top_small"),
-        td(conditional_save_report("r_save"), class="top_small"),
-        td(uiOutput("ui_r_load"), class="top_small"),
-        td(conditional_read_files("r_read_files"), class="top_small"),
-        td(actionButton("r_clear", "Clear output", icon = icon("trash"), class = "btn-danger"), class="top_small")
+        td(actionButton("r_knit", " Knit report (R)", icon = icon("play", verify_fa = FALSE), class = "btn-success"), class = "top_small"),
+        td(uiOutput("ui_r_generate"), class = "top_small"),
+        td(uiOutput("ui_r_view"), class = "top_small"),
+        td(uiOutput("ui_r_switch"), class = "top_small"),
+        td(uiOutput("ui_r_save_type"), class = "top_small"),
+        td(conditional_save_report("r_save"), class = "top_small"),
+        td(uiOutput("ui_r_load"), class = "top_small"),
+        td(conditional_read_files("r_read_files"), class = "top_small"),
+        td(actionButton("r_clear", "Clear output", icon = icon("trash", verify_fa = FALSE), class = "btn-danger"), class = "top_small")
       )
     ),
     shinyAce::aceEditor(
@@ -315,7 +314,6 @@ output$r_knitted <- renderUI({
       report <- ""
       withProgress(message = "Knitting report", value = 1, {
         if (isTRUE(input$r_generate == "To R")) {
-
           cnt <- rstudio_context(type = "r")
           if (radiant.data::is_empty(cnt$path) || radiant.data::is_empty(cnt$ext, "rmd")) {
 
@@ -370,7 +368,12 @@ download_handler(
   id = "r_save",
   fun = function(x, type = "r") report_save_content(x, type),
   fn = function() report_save_filename_r() %>% sans_ext(),
-  type = function() report_save_filename_r() %>% {if (grepl("nb\\.html", .)) "nb.html" else tools::file_ext(.)},
+  type = function() {
+    report_save_filename_r() %>%
+      {
+        if (grepl("nb\\.html", .)) "nb.html" else tools::file_ext(.)
+      }
+  },
   btn = "button",
   label = "Save report",
   caption = "Save report",
@@ -382,9 +385,13 @@ observeEvent(input$r_load, {
 
   ## loading report from disk
   if (getOption("radiant.shinyFiles", FALSE)) {
-    if (is.integer(input$r_load)) return()
+    if (is.integer(input$r_load)) {
+      return()
+    }
     inFile <- shinyFiles::parseFilePaths(sf_volumes, input$r_load)
-    if (nrow(inFile) == 0) return()
+    if (nrow(inFile) == 0) {
+      return()
+    }
     path <- inFile$datapath
     pp <- parse_path(path, pdir = getOption("radiant.project_dir", radiant.data::find_home()), chr = "", mess = FALSE)
   } else {
@@ -425,9 +432,13 @@ observeEvent(input$r_load, {
 })
 
 observeEvent(input$r_read_files, {
-  if (is.integer(input$r_read_files)) return()
+  if (is.integer(input$r_read_files)) {
+    return()
+  }
   path <- shinyFiles::parseFilePaths(sf_volumes, input$r_read_files)
-  if (inherits(path, "try-error") || radiant.data::is_empty(path$datapath)) return()
+  if (inherits(path, "try-error") || radiant.data::is_empty(path$datapath)) {
+    return()
+  }
   ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
   pdir <- getOption("radiant.project_dir", default = ldir)
 

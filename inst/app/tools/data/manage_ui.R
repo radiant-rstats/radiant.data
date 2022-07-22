@@ -8,7 +8,7 @@ output$ui_state_load <- renderUI({
       HTML("<label>Load radiant state file:</label></br>"),
       shinyFiles::shinyFilesButton(
         "state_load", "Load", "Load radiant state file",
-        multiple = FALSE, icon = icon("upload")
+        multiple = FALSE, icon = icon("upload", verify_fa = FALSE)
       )
     )
   } else {
@@ -18,7 +18,7 @@ output$ui_state_load <- renderUI({
 
 make_uploadfile <- function(accept) {
   if (getOption("radiant.shinyFiles", FALSE)) {
-    shinyFiles::shinyFilesButton("uploadfile", "Load", "Load data", multiple = TRUE, icon = icon("upload"))
+    shinyFiles::shinyFilesButton("uploadfile", "Load", "Load data", multiple = TRUE, icon = icon("upload", verify_fa = FALSE))
   } else {
     fileInput("uploadfile", NULL, multiple = TRUE, accept = accept)
   }
@@ -41,14 +41,14 @@ output$ui_fileUpload <- renderUI({
     with(tags, table(
       tr(
         td(textInput("url_rds", NULL, "")),
-        td(actionButton("url_rds_load", "Load", icon = icon("upload")), class = "top_small")
+        td(actionButton("url_rds_load", "Load", icon = icon("upload", verify_fa = FALSE)), class = "top_small")
       )
     ))
   } else if (input$dataType == "url_csv") {
     with(tags, table(
       tr(
         td(textInput("url_csv", NULL, "")),
-        td(actionButton("url_csv_load", "Load", icon = icon("upload")), class = "top_small")
+        td(actionButton("url_csv_load", "Load", icon = icon("upload", verify_fa = FALSE)), class = "top_small")
       )
     ))
   }
@@ -56,7 +56,7 @@ output$ui_fileUpload <- renderUI({
 
 output$ui_clipboard_load <- renderUI({
   if (Sys.info()["sysname"] != "Linux") {
-    actionButton("loadClipData", "Paste", icon = icon("paste"))
+    actionButton("loadClipData", "Paste", icon = icon("paste", verify_fa = FALSE))
   } else {
     tagList(
       textAreaInput(
@@ -65,14 +65,14 @@ output$ui_clipboard_load <- renderUI({
         placeholder = "Copy-and-paste data with a header row from a spreadsheet"
       ),
       br(),
-      actionButton("loadClipData", "Paste", icon = icon("paste"))
+      actionButton("loadClipData", "Paste", icon = icon("paste", verify_fa = FALSE))
     )
   }
 })
 
 output$ui_clipboard_save <- renderUI({
   if (Sys.info()["sysname"] != "Linux") {
-    actionButton("man_save_clip", "Copy data", icon = icon("copy"))
+    actionButton("man_save_clip", "Copy data", icon = icon("copy", verify_fa = FALSE))
   } else {
     textAreaInput(
       "man_save_clip_text_area", "Copy-and-paste data shown below:",
@@ -100,7 +100,7 @@ output$ui_from_global <- renderUI({
     ),
     radioButtons("from_global_move", NULL, c("copy" = "copy", "move" = "move"), selected = "copy", inline = TRUE),
     br(),
-    actionButton("from_global_load", "Load", icon = icon("upload"))
+    actionButton("from_global_load", "Load", icon = icon("upload", verify_fa = FALSE))
   )
 })
 
@@ -108,7 +108,7 @@ output$ui_to_global <- renderUI({
   tagList(
     radioButtons("to_global_move", NULL, c("copy" = "copy", "move" = "move"), selected = "copy", inline = TRUE),
     br(),
-    actionButton("to_global_save", "Save", icon = icon("download"))
+    actionButton("to_global_save", "Save", icon = icon("download", verify_fa = FALSE))
   )
 })
 
@@ -220,7 +220,7 @@ output$ui_Manage <- renderUI({
       ),
       conditionalPanel(
         condition = "input.dataType == 'examples'",
-        actionButton("loadExampleData", "Load", icon = icon("upload"))
+        actionButton("loadExampleData", "Load", icon = icon("upload", verify_fa = FALSE))
       ),
       conditionalPanel(
         condition = "input.dataType == 'state'",
@@ -259,7 +259,7 @@ output$ui_Manage <- renderUI({
       conditionalPanel(
         condition = "input.man_show_remove == true",
         uiOutput("uiRemoveDataset"),
-        actionButton("removeDataButton", "Remove data", icon = icon("trash"), class = "btn-danger")
+        actionButton("removeDataButton", "Remove data", icon = icon("trash", verify_fa = FALSE), class = "btn-danger")
       )
     ),
     help_and_report(

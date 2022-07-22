@@ -128,7 +128,7 @@ output$ui_expl_name <- renderUI({
 output$ui_expl_run <- renderUI({
   ## updates when dataset changes
   req(input$dataset)
-  actionButton("expl_run", "Create table", width = "100%", icon = icon("play"), class = "btn-success")
+  actionButton("expl_run", "Create table", width = "100%", icon = icon("play", verify_fa = FALSE), class = "btn-success")
 })
 
 ## add a spinning refresh icon if the tabel needs to be (re)calculated
@@ -150,7 +150,7 @@ output$ui_Explore <- renderUI({
     wellPanel(
       tags$table(
         tags$td(uiOutput("ui_expl_name")),
-        tags$td(actionButton("expl_store", "Store", icon = icon("plus")), class = "top")
+        tags$td(actionButton("expl_store", "Store", icon = icon("plus", verify_fa = FALSE)), class = "top")
       )
     ),
     help_and_report(

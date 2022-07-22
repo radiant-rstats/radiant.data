@@ -169,7 +169,7 @@ output$ui_pvt_run <- renderUI({
   req(input$dataset)
   actionButton(
     "pvt_run", "Create pivot table",
-    width = "100%", icon = icon("play"),
+    width = "100%", icon = icon("play", verify_fa = FALSE),
     class = "btn-success"
   )
 })
@@ -183,7 +183,7 @@ output$ui_Pivotr <- renderUI({
       uiOutput("ui_pvt_run")
     ),
     wellPanel(
-      # actionLink("pvt_clear", "Clear settings", icon = icon("sync"), style="color:black"),
+      # actionLink("pvt_clear", "Clear settings", icon = icon("sync", verify_fa = FALSE), style="color:black"),
       uiOutput("ui_pvt_cvars"),
       uiOutput("ui_pvt_nvar"),
       conditionalPanel("input.pvt_nvar != 'None'", uiOutput("ui_pvt_fun")),
@@ -224,7 +224,7 @@ output$ui_Pivotr <- renderUI({
     wellPanel(
       tags$table(
         tags$td(uiOutput("ui_pvt_name")),
-        tags$td(actionButton("pvt_store", "Store", icon = icon("plus")), class = "top")
+        tags$td(actionButton("pvt_store", "Store", icon = icon("plus", verify_fa = FALSE)), class = "top")
       )
     ),
     help_and_report(

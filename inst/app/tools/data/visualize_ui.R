@@ -261,7 +261,7 @@ output$ui_viz_check <- renderUI({
 output$ui_viz_run <- renderUI({
   ## updates when dataset changes
   req(input$dataset)
-  actionButton("viz_run", "Create plot", width = "100%", icon = icon("play"), class = "btn-success")
+  actionButton("viz_run", "Create plot", width = "100%", icon = icon("play", verify_fa = FALSE), class = "btn-success")
   ## this didn't seem to work quite like the observe below
   ## https://stackoverflow.com/questions/43641103/change-color-actionbutton-shiny-r
 })

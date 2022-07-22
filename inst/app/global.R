@@ -302,25 +302,25 @@ help_menu <- function(hlp) {
   tagList(
     navbarMenu(
       "",
-      icon = icon("question-circle"),
-      tabPanel("Help", uiOutput(hlp), icon = icon("question")),
+      icon = icon("question-circle", verify_fa = FALSE),
+      tabPanel("Help", uiOutput(hlp), icon = icon("question", verify_fa = FALSE)),
       tabPanel(actionLink("help_keyboard", "Keyboard shortcuts", icon = icon("keyboard-o", verify_fa = FALSE))),
       # tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
       tabPanel(tags$a(
         "",
         href = "https://radiant-rstats.github.io/docs/tutorials.html", target = "_blank",
-        list(icon("film"), "Videos")
+        list(icon("film", verify_fa = FALSE), "Videos")
       )),
-      tabPanel("About", uiOutput("help_about"), icon = icon("info")),
+      tabPanel("About", uiOutput("help_about"), icon = icon("info", verify_fa = FALSE)),
       tabPanel(tags$a(
         "",
         href = "https://radiant-rstats.github.io/docs/", target = "_blank",
-        list(icon("globe"), "Radiant docs")
+        list(icon("globe", verify_fa = FALSE), "Radiant docs")
       )),
       tabPanel(tags$a(
         "",
         href = "https://github.com/radiant-rstats/radiant/issues", target = "_blank",
-        list(icon("github"), "Report issue")
+        list(icon("github", verify_fa = FALSE), "Report issue")
       ))
     ),
     tags$head(
@@ -556,52 +556,52 @@ options(
         tabPanel("Rmd",
           uiOutput("rmd_view"),
           uiOutput("report_rmd"),
-          icon = icon("edit")
+          icon = icon("edit", verify_fa = FALSE)
         ),
         tabPanel("R",
           uiOutput("r_view"),
           uiOutput("report_r"),
-          icon = icon("code")
+          icon = icon("code", verify_fa = FALSE)
         )
       ),
       navbarMenu("",
-        icon = icon("save"),
+        icon = icon("save", verify_fa = FALSE),
         ## inspiration for uploading state https://stackoverflow.com/a/11406690/1974918
         ## see also function in www/js/run_return.js
         "Server",
-        tabPanel(actionLink("state_save_link", "Save radiant state file", icon = icon("download"))),
-        tabPanel(actionLink("state_load_link", "Load radiant state file", icon = icon("upload"))),
-        tabPanel(actionLink("state_share", "Share radiant state", icon = icon("share"))),
+        tabPanel(actionLink("state_save_link", "Save radiant state file", icon = icon("download", verify_fa = FALSE))),
+        tabPanel(actionLink("state_load_link", "Load radiant state file", icon = icon("upload", verify_fa = FALSE))),
+        tabPanel(actionLink("state_share", "Share radiant state", icon = icon("share", verify_fa = FALSE))),
         # tabPanel(
         #   actionLink(
-        #     "colab_radiant", "Collaborate", icon = icon("user-plus"),
+        #     "colab_radiant", "Collaborate", icon = icon("user-plus", verify_fa = FALSE),
         #     onclick = "TogetherJS(this); return false;"
         #   )
         # ),
-        tabPanel("View radiant state", uiOutput("state_view"), icon = icon("user")),
+        tabPanel("View radiant state", uiOutput("state_view"), icon = icon("user", verify_fa = FALSE)),
         "----", "Local",
-        tabPanel(downloadLink("state_download", tagList(icon("download"), "Download radiant state file"))),
-        tabPanel(actionLink("state_upload_link", "Upload radiant state file", icon = icon("upload")))
+        tabPanel(downloadLink("state_download", tagList(icon("download", verify_fa = FALSE), "Download radiant state file"))),
+        tabPanel(actionLink("state_upload_link", "Upload radiant state file", icon = icon("upload", verify_fa = FALSE)))
       ),
 
       ## stop app *and* close browser window
       navbarMenu("",
-        icon = icon("power-off"),
+        icon = icon("power-off", verify_fa = FALSE),
         tabPanel(
           actionLink(
             "stop_radiant", "Stop",
-            icon = icon("stop"),
+            icon = icon("stop", verify_fa = FALSE),
             onclick = "setTimeout(function(){window.close();}, 100);"
           )
         ),
         tabPanel(tags$a(
           id = "refresh_radiant", href = "#", class = "action-button",
-          list(icon("sync"), "Refresh"), onclick = "window.location.reload();"
+          list(icon("sync", verify_fa = FALSE), "Refresh"), onclick = "window.location.reload();"
         )),
         ## had to remove class = "action-button" to make this work
         tabPanel(tags$a(
           id = "new_session", href = "./", target = "_blank",
-          list(icon("plus"), "New session")
+          list(icon("plus", verify_fa = FALSE), "New session")
         ))
       )
     )

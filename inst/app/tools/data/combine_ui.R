@@ -76,7 +76,7 @@ cmb_type <- c(
 output$ui_cmb_store <- renderUI({
   ## updates when dataset changes
   req(input$dataset)
-  actionButton("cmb_store", "Combine", icon = icon("plus"), class = "btn-success")
+  actionButton("cmb_store", "Combine", icon = icon("plus", verify_fa = FALSE), class = "btn-success")
 })
 
 output$ui_Combine <- renderUI({

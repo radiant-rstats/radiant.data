@@ -24,7 +24,7 @@ output$ui_view_vars <- renderUI({
 output$ui_View <- renderUI({
   tagList(
     wellPanel(
-      actionLink("view_clear", "Clear settings", icon = icon("sync"), style = "color:black"),
+      actionLink("view_clear", "Clear settings", icon = icon("sync", verify_fa = FALSE), style = "color:black"),
       uiOutput("ui_view_vars"),
       numericInput(
         "view_dec", "Decimals:",
@@ -33,7 +33,7 @@ output$ui_View <- renderUI({
       ),
       tags$table(
         tags$td(textInput("view_name", "Store filtered data as:", "", placeholder = "Provide data name")),
-        tags$td(actionButton("view_store", "Store", icon = icon("plus"), class = "btn-success"), class = "top")
+        tags$td(actionButton("view_store", "Store", icon = icon("plus", verify_fa = FALSE), class = "btn-success"), class = "top")
       )
     ),
     help_and_report(

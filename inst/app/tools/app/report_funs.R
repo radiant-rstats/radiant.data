@@ -14,7 +14,7 @@ file_upload_button <- function(inputId, label = "", multiple = FALSE,
     shinyFiles::shinyFilesButton(
       inputId, buttonLabel, label,
       title = title, multiple = FALSE,
-      class = class, icon = icon(icn)
+      class = class, icon = icon(icn, verify_fa = FALSE)
     )
   } else {
     if (length(accept) > 0) {
