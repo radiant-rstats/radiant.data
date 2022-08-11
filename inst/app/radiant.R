@@ -481,7 +481,7 @@ if (getOption("radiant.shinyFiles", FALSE)) {
     })
   }
 } else {
-  download_link <- function(id) {
+  download_link <- function(id, ...) {
     downloadLink(id, "", class = "fa fa-download alignright", ...)
   }
   download_button <- function(id, label = "Save", ic = "download", class = "", ...) {
