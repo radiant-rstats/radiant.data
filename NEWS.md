@@ -1,3 +1,7 @@
+# radiant.data 1.4.5
+
+* Add scrolling for dropdown menus that might extend past the edge of the screen
+
 # radiant.data 1.4.4
 
 * Added option to create screenshots of settings on a page. Approach is inspired by the snapper package by @yonicd
