@@ -1,6 +1,6 @@
 ## Resubmission
 
-This is a resubmission. In this version I fixed a dependency issue that is essential for correct functioning of the radiant.data shiny application. This feature is difficult to evaluate with automated testing and unfortunately I made a mistake in the submission earlier today. I uncovered the issue after upgrading to R 4.2.1. My apologies.
+This is a resubmission. In this update I have addressed three issues. See NEWS.md.
 
 ## Test environments
 
@@ -12,6 +12,20 @@ This is a resubmission. In this version I fixed a dependency issue that is essen
 There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
 
 # Previous cran-comments
+
+## Resubmission
+
+This is a resubmission. In this version I fixed a dependency issue that is essential for correct functioning of the radiant.data shiny application. This feature is difficult to evaluate with automated testing and unfortunately I made a mistake in the submission earlier today. I uncovered the issue after upgrading to R 4.2.1. My apologies.
+
+## Test environments
+
+* macOS, R 4.2.1
+* win-builder (devel)
+
+## R CMD check results
+
+There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
+
 
 ## Resubmission
 

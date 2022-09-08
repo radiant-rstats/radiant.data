@@ -1,6 +1,8 @@
 # radiant.data 1.4.5
 
 * Add scrolling for dropdown menus that might extend past the edge of the screen
+* Addressed warning messages about Font Awesome icons not existing
+* gsub("[\x80-\xFF]", "", text) is no longer valid in R 4.2.0 and above. Non-asci symbols will now be escaped using stringi when needed.
 
 # radiant.data 1.4.4
 
