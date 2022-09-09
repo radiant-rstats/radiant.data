@@ -1359,7 +1359,6 @@ transform_report <- function() {
       sub("^\n", "", .) %>%
       sub("\n$", "", .)
 
-    updateTextInput(session, "tr_log", value = "")
     shinyAce::updateAceEditor(session, "tr_log", value = "")
   }
   update_report(cmd = cmd, outputs = NULL, figs = FALSE)
