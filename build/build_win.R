@@ -10,3 +10,11 @@ if (grepl("[nN]", rvprompt))
 setwd(rstudioapi::getActiveProject())
 f <- devtools::build(binary = TRUE)
 devtools::install(upgrade = "never")
+
+fl <- list.files(pattern = "*.zip", path = "../", full.names = TRUE)
+
+for (f in fl) {
+  print(glue::glue("Copying: {f}"))
+  file.copy(f, "C:/Users/vnijs/Dropbox/r-packages/", overwrite = TRUE)
+  unlink(f)
+}
