@@ -323,6 +323,7 @@ help_menu <- function(hlp) {
         list(icon("github", verify_fa = FALSE), "Report issue")
       ))
     ),
+    # bslib::nav_item(checkboxInput("dark_mode", label = "Dark Mode", width="100px")),
     tags$head(
       tags$script(src = "js/session.js"),
       tags$script(src = "js/returnTextAreaBinding.js"),
@@ -572,12 +573,6 @@ options(
         tabPanel(actionLink("state_save_link", "Save radiant state file", icon = icon("download", verify_fa = FALSE))),
         tabPanel(actionLink("state_load_link", "Load radiant state file", icon = icon("upload", verify_fa = FALSE))),
         tabPanel(actionLink("state_share", "Share radiant state", icon = icon("share", verify_fa = FALSE))),
-        # tabPanel(
-        #   actionLink(
-        #     "colab_radiant", "Collaborate", icon = icon("user-plus", verify_fa = FALSE),
-        #     onclick = "TogetherJS(this); return false;"
-        #   )
-        # ),
         tabPanel("View radiant state", uiOutput("state_view"), icon = icon("user", verify_fa = FALSE)),
         "----", "Local",
         tabPanel(downloadLink("state_download", tagList(icon("download", verify_fa = FALSE), "Download radiant state file"))),

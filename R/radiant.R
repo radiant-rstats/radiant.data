@@ -1240,19 +1240,13 @@ describe <- function(dataset, envir = parent.frame()) {
 #' @param text Text to be parsed
 #' @param all Should all non-ascii characters be removed? Default is FALSE
 #'
-#' @importFrom stringi stri_escape_unicode
+#' @importFrom stringi stri_trans_general
 #'
 #' @export
 fix_smart <- function(text, all = FALSE) {
   if (all) {
     ## to remove all non-ascii symbols use ...
-    rv <- R.Version()
-    rv <- paste(rv$major, rv$minor, sep = ".")
-    if (rv >= "4.2.0") {
-      text <- stringi::stri_escape_unicode(text)
-    } else {
-      text <- gsub("[\x80-\xFF]", "", text)
-    }
+    text <- stringi::stri_trans_general(text, 'latin-ascii')
   } else {
     ## based on https://stackoverflow.com/a/1262210/1974918
     ## based on https://stackoverflow.com/a/54467895/1974918
