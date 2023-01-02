@@ -50,7 +50,7 @@ See \url{https://radiant-rstats.github.io/docs/data/explore.html} for an example
 \examples{
 explore(diamonds, c("price", "carat")) \%>\% str()
 explore(diamonds, "price:x")$tab
-explore(diamonds, c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))$tab
+explore(diamonds, c("price", "carat"), byvar = "cut", fun = c("n_missing", "skew"))$tab
 
 }
 \seealso{

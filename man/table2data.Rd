@@ -15,6 +15,6 @@ table2data(dataset, freq = tail(colnames(dataset), 1))
 Create data.frame from a table
 }
 \examples{
-data.frame(price = c("$200","$300"), sale = c(10, 2)) \%>\% table2data()
+data.frame(price = c("$200", "$300"), sale = c(10, 2)) \%>\% table2data()
 
 }

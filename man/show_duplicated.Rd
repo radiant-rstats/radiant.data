@@ -18,9 +18,9 @@ Show all rows with duplicated values (not just the first or last)
 If an entire row is duplicated use "duplicated" to show only one of the duplicated rows. When using a subset of variables to establish uniqueness it may be of interest to show all rows that have (some) duplicate elements
 }
 \examples{
-bind_rows(mtcars, mtcars[c(1,5,7),]) \%>\%
+bind_rows(mtcars, mtcars[c(1, 5, 7), ]) \%>\%
   show_duplicated(mpg, cyl)
-bind_rows(mtcars, mtcars[c(1,5,7),]) \%>\%
-  show_duplicated
+bind_rows(mtcars, mtcars[c(1, 5, 7), ]) \%>\%
+  show_duplicated()
 
 }

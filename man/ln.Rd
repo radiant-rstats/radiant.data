@@ -18,6 +18,6 @@ Natural log of vector
 Natural log
 }
 \examples{
-ln(runif(10,1,2))
+ln(runif(10, 1, 2))
 
 }

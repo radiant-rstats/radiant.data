@@ -18,8 +18,8 @@ Convert input in year-month-day-hour-minute-second format to date-time
 \examples{
 as_ymd_hms("2014-1-1 12:15:01")
 \dontrun{
-as_ymd_hms("2014-1-1 12:15:01") \%>\% as.Date
-as_ymd_hms("2014-1-1 12:15:01") \%>\% month
-as_ymd_hms("2014-1-1 12:15:01") \%>\% hour
+as_ymd_hms("2014-1-1 12:15:01") \%>\% as.Date()
+as_ymd_hms("2014-1-1 12:15:01") \%>\% month()
+as_ymd_hms("2014-1-1 12:15:01") \%>\% hour()
 }
 }

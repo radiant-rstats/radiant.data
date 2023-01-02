@@ -18,7 +18,7 @@ Convert input in hour-minute-second format to time
 \examples{
 as_hms("12:45:00")
 \dontrun{
-as_hms("12:45:00") \%>\% hour
-as_hms("12:45:00") \%>\% second
+as_hms("12:45:00") \%>\% hour()
+as_hms("12:45:00") \%>\% second()
 }
 }

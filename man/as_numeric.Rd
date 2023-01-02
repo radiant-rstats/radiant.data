@@ -20,8 +20,8 @@ as_numeric(rnorm(10))
 as_numeric(letters)
 as_numeric(as.factor(5:10))
 as.numeric(as.factor(5:10))
-as_numeric(c("a","b"))
-as_numeric(c("3","4"))
-as_numeric(as.factor(c("3","4")))
+as_numeric(c("a", "b"))
+as_numeric(c("3", "4"))
+as_numeric(as.factor(c("3", "4")))
 
 }
