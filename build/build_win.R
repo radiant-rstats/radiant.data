@@ -18,3 +18,9 @@ for (f in fl) {
   file.copy(f, "C:/Users/vnijs/Dropbox/r-packages/", overwrite = TRUE)
   unlink(f)
 }
+
+#options(repos = c(RSM = "https://radiant-rstats.github.io/minicran"))
+#install.packages("radiant.data", type = "binary")
+#remove.packages(c("radiant.data", "radiant.model"))
+#install.packages("radiant.update")
+#radiant.update::radiant.update()

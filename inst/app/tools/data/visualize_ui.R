@@ -87,7 +87,7 @@ output$ui_viz_yvar <- renderUI({
   if (input$viz_type %in% c("line", "bar", "scatter", "surface", "box")) {
     vars <- vars["character" != .get_class()[vars]]
   }
-  if (input$viz_type %in% c("line", "scatter", "box")) {
+  if (input$viz_type %in% c("box", "scatter")) {
     ## allow factors in yvars for bar plots
     vars <- vars["factor" != .get_class()[vars]]
   }

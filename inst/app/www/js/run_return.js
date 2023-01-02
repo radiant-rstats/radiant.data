@@ -14,6 +14,17 @@ $(document).keydown(function (event) {
   } else if ($(".fa-edit:visible" || ".shiny-bound-input:visible").is(":visible") &&
     event.altKey && event.keyCode == 13) {
     $(".fa-edit:visible" || ".shiny-bound-input:visible").click();
+  } else if ($(".fa-question:visible" || ".shiny-bound-input:visible").is(":visible") &&
+    event.altKey && event.keyCode == 72) {
+    $(".fa-question:visible" || ".shiny-bound-input:visible").click();
+  } else if ($(".fa-camera:visible" || ".shiny-bound-input:visible").is(":visible") &&
+    (event.metaKey || event.ctrlKey) && event.keyCode == 80) {
+    $(".fa-camera:visible" || ".shiny-bound-input:visible").click();
+    event.preventDefault();
+  } else if ($(".fa-download:visible" || ".shiny-bound-input:visible").is(":visible") &&
+    (event.metaKey || event.ctrlKey) && event.shiftKey === false && event.keyCode == 83) {
+    $(".fa-download:visible" || ".shiny-bound-input:visible").click();
+    event.preventDefault();
   } else if ($("#updateDescr").is(":visible") && (event.metaKey || event.ctrlKey) && event.keyCode == 13) {
     $("#updateDescr").click();
     event.preventDefault();
@@ -124,7 +135,14 @@ function get_img_src() {
 }
 
 function generate_screenshot() {
-  html2canvas($("body")[0],{ignoreElements:function (el) {return el.className === 'dropdown-menu';}}).then(canvas=>{
+  html2canvas($("body")[0], {
+    height: document.body.scrollHeight, // Set the height of the area to capture
+    // width: document.querySelector('.row').offsetWidth,
+    y: 55, // Set the starting point to 100 pixels from the top
+    ignoreElements: function(el) {
+      return el.classList.contains('navbar-inverse') || el.classList.contains('dropdown-menu');
+    }
+  }).then(canvas => {
     var img = document.createElement("img");
     img.src = canvas.toDataURL("png");
     img.width = parseInt(canvas.style.width);
@@ -133,3 +151,25 @@ function generate_screenshot() {
     $("#screenshot_preview").append(img);
   });
 }
+
+/*
+// caused an issue  with screenshots in Model > Linear regression > Summary
+function generate_screenshot() {
+  var element = document.querySelector('.row');
+  html2canvas(element, {
+    width: element.offsetWidth, // Set the width to the width of the element
+    height: element.offsetHeight, // Set the height of the area to capture
+    //y: element.offsetTop, // Set the starting point to the top of the element
+    ignoreElements: function(el) {
+      return el.classList.contains('navbar-inverse') | el.classList.contains('dropdown-menu');
+    }
+  }).then(canvas => {
+    var img = document.createElement("img");
+    img.src = canvas.toDataURL("png");
+    img.width = parseInt(canvas.style.width);
+    img.height = parseInt(canvas.style.height);
+    $("#screenshot_preview").empty();
+    $("#screenshot_preview").append(img);
+  });
+}
+*/

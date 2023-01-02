@@ -151,6 +151,26 @@ install_webshot <- function() {
 #' @export
 set_attr <- function(x, which, value) `attr<-`(x, which, value)
 
+#' Convenience function to add a markdown description to a data.frame
+#'
+#' @param df A data.frame or tibble
+#' @param md Data description in markdown format
+#' @param path Path to a text file with the data description in markdown format
+#'
+#' @examples
+#' mt <- mtcars |> add_description(md = "# MTCARS\n\nThis data.frame contains information on ...")
+#' describe(mt)
+#'
+#' @export
+add_description <- function(df, md="", path="") {
+  if (path != "") {
+    md <- readLines(path) %>% paste0(collapse = "\n")
+  } else if (md == "") {
+    md <- "No description available"
+  }
+  set_attr(df, "description", md)
+}
+
 #' Copy attributes from one object to another
 #'
 #' @param to Object to copy attributes to
@@ -1024,7 +1044,7 @@ indexr <- function(dataset, vars = "", filt = "", cmd = "") {
   if (!radiant.data::is_empty(cmd)) {
     pred_cmd <- gsub("\"", "\'", cmd) %>%
       gsub("\\s+", "", .)
-    cmd_vars <- strsplit(pred_cmd, ";")[[1]] %>%
+    cmd_vars <- strsplit(pred_cmd, ";\\s*")[[1]] %>%
       strsplit(., "=") %>%
       sapply("[", 1) %>%
       gsub("\\s+", "", .)

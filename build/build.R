@@ -80,3 +80,7 @@ if (grepl("[yY]", win)) {
 }
 
 setwd(curr)
+
+# remove.packages(c("radiant.model", "radiant.data"))
+# radiant.update::radiant.update()
+# install.packages("radiant.update")

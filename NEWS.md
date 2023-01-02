@@ -1,3 +1,15 @@
+# radiant.data 1.5.0
+
+* Improvements to screenshot feature. Navigation bar is omitted and the image is adjusted to the length of the UI.
+* Added a convenience function `add_description` to add an description attribute to a data.frame in markdown format
+* Line graphs treated more similarly to bar-graphs (i.e., can have a binary factor variable on the y-axis)
+* Removed all references to `aes_string` which is being depricated in ggplot soon
+* Improved cleanup after Radiant UI is closed
+
+# radiant.data 1.4.7
+
+* Code cleanup in different areas
+
 # radiant.data 1.4.6
 
 * gsub("[\x80-\xFF]", "", text) is no longer valid in R 4.2.0 and above. Non-asci symbols will now be escaped using stringi::stri_trans_general when needed

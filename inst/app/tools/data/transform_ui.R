@@ -547,7 +547,7 @@ fix_ext <- function(ext) {
 
     cmd <- gsub("\"", "\'", cmd) %>%
       gsub("<-", "=", .)
-    vars <- strsplit(cmd, ";")[[1]] %>%
+    vars <- strsplit(cmd, ";\\s*")[[1]] %>%
       strsplit("=") %>%
       sapply("[", 1) %>%
       gsub("\\s+", "", .)
@@ -1326,12 +1326,15 @@ observeEvent(input$tr_store, {
     r_data[[df_name]][, colnames(dat)] <- dat
   }
 
-  ## update the command log
+  ## uncomment if you want to revert to resetting the transform UI after Store
   # updateTextAreaInput(session, "tr_log", value = paste0(input$tr_log, paste0(cmd, ncmd), "\n"))
+
+  ## update the command log
   shinyAce::updateAceEditor(session, "tr_log", value = paste0(input$tr_log, paste0(cmd, ncmd), "\n"))
 
   ## reset input values once the changes have been applied
-  updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")
+  # updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")
+
   updateSelectInput(session = session, inputId = "dataset", selected = df_name)
 })
 

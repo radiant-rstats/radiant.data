@@ -23,9 +23,19 @@ stop_radiant <- function() {
       assign("r_data", env2list(r_data), envir = .GlobalEnv)
       assign("r_info", toList(r_info), envir = .GlobalEnv)
       ## removing r_sessions and functions defined in global.R
-      if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
       unlink("~/r_figures/", recursive = TRUE)
-      sshhr(try(rm(help_menu, make_url_patterns, import_fs, init_data, navbar_proj, knit_print.data.frame, withMathJax, Dropbox, sf_volumes, envir = .GlobalEnv), silent = TRUE))
+      clean_up_list <- c(
+        "r_sessions", "help_menu", "make_url_patterns", "import_fs",
+        "init_data", "navbar_proj", "knit_print.data.frame", "withMathJax",
+        "Dropbox", "sf_volumes", "GoogleDrive", "bslib_current_version",
+        "has_bslib_theme", "load_html2canvas"
+      )
+      suppressWarnings(
+        suppressMessages({
+          res <- try(sapply(clean_up_list, function(x) if (exists(x, envir = .GlobalEnv)) rm(list = x, envir = .GlobalEnv)), silent = TRUE)
+          rm(res)
+        })
+      )
       options(radiant.launch_dir = NULL)
       options(radiant.project_dir = NULL)
       options(radiant.autosave = NULL)

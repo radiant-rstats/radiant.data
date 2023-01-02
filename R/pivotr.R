@@ -16,18 +16,15 @@
 #' @examples
 #' pivotr(diamonds, cvars = "cut") %>% str()
 #' pivotr(diamonds, cvars = "cut")$tab
-#' pivotr(diamonds, cvars = c("cut","clarity","color"))$tab
+#' pivotr(diamonds, cvars = c("cut", "clarity", "color"))$tab
 #' pivotr(diamonds, cvars = "cut:clarity", nvar = "price")$tab
 #' pivotr(diamonds, cvars = "cut", nvar = "price")$tab
 #' pivotr(diamonds, cvars = "cut", normalize = "total")$tab
 #'
 #' @export
-pivotr <- function(
-  dataset, cvars = "", nvar = "None", fun = "mean",
-  normalize = "None", tabfilt = "", tabsort = "", nr = Inf,
-  data_filter = "", envir = parent.frame()
-) {
-
+pivotr <- function(dataset, cvars = "", nvar = "None", fun = "mean",
+                   normalize = "None", tabfilt = "", tabsort = "", nr = Inf,
+                   data_filter = "", envir = parent.frame()) {
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   fill <- if (nvar == "None") 0L else NA
 
@@ -94,7 +91,9 @@ pivotr <- function(
     sfun(nvar, cvars, fun)
 
   ## total
-  total <- dataset %>% sel(nvar) %>% sfun(nvar, fun = fun)
+  total <- dataset %>%
+    sel(nvar) %>%
+    sfun(nvar, fun = fun)
 
   ## row and colum totals
   if (length(cvars) == 1) {
@@ -103,8 +102,8 @@ pivotr <- function(
         mutate_at(ungroup(tab), .vars = cvars, .funs = as.character),
         bind_cols(
           data.frame("Total", stringsAsFactors = FALSE) %>%
-          setNames(cvars), total %>%
-          set_colnames(nvar)
+            setNames(cvars), total %>%
+            set_colnames(nvar)
         )
       )
   } else {
@@ -124,7 +123,7 @@ pivotr <- function(
       set_colnames("Total")
 
     ## creating cross tab
-    tab <- spread(tab, !! cvars[1], !! nvar, fill = fill) %>%
+    tab <- spread(tab, !!cvars[1], !!nvar, fill = fill) %>%
       ungroup() %>%
       mutate_at(.vars = cvars[-1], .funs = as.character)
 
@@ -146,18 +145,19 @@ pivotr <- function(
   ind <- ifelse(length(cvars) > 1, -1, 1)
   levs <- lapply(select_at(dataset, .vars = cvars[ind]), levels)
 
-  for (i in cvars[ind])
+  for (i in cvars[ind]) {
     tab[[i]] %<>% factor(levels = unique(c(levs[[i]], "Total")))
+  }
 
   ## frequency table for chi-square test
   tab_freq <- tab
 
   isNum <- if (length(cvars) == 1) -1 else -c(1:(length(cvars) - 1))
   if (normalize == "total") {
-    tab[, isNum] %<>% {. / total[[1]]}
+    tab[, isNum] %<>% (function(x) x / total[[1]])
   } else if (normalize == "row") {
     if (!is.null(tab[["Total"]])) {
-      tab[, isNum] %<>% {. / .[["Total"]]}
+      tab[, isNum] %<>% (function(x) x / x[["Total"]])
     }
   } else if (length(cvars) > 1 && normalize == "column") {
     tab[, isNum] %<>% apply(2, function(.) . / .[which(tab[, 1] == "Total")])
@@ -182,7 +182,7 @@ pivotr <- function(
   ## sorting the table if desired
   if (!radiant.data::is_empty(tabsort, "")) {
     tabsort <- gsub(",", ";", tabsort)
-    tab[-nrow(tab), ] %<>% arrange(!!! rlang::parse_exprs(tabsort))
+    tab[-nrow(tab), ] %<>% arrange(!!!rlang::parse_exprs(tabsort))
 
     ## order factors as set in the sorted table
     tc <- if (length(cvars) == 1) cvars else cvars[-1] ## don't change top cv
@@ -223,11 +223,8 @@ pivotr <- function(
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
 #'
 #' @export
-summary.pivotr <- function(
-  object, perc = FALSE, dec = 3,
-  chi2 = FALSE, shiny = FALSE, ...
-) {
-
+summary.pivotr <- function(object, perc = FALSE, dec = 3,
+                           chi2 = FALSE, shiny = FALSE, ...) {
   if (!shiny) {
     cat("Pivot table\n")
     cat("Data        :", object$df_name, "\n")
@@ -263,7 +260,9 @@ summary.pivotr <- function(
         filter(.[[1]] != "Total") %>%
         select(-which(names(.) %in% c(object$cvars, "Total"))) %>%
         mutate_all(~ ifelse(is.na(.), 0, .)) %>%
-        {sshhr(chisq.test(., correct = FALSE))}
+        {
+          sshhr(chisq.test(., correct = FALSE))
+        }
 
       res <- tidy(cst)
       if (dec < 4 && res$p.value < .001) {
@@ -303,8 +302,8 @@ summary.pivotr <- function(
 #' @examples
 #' \dontrun{
 #' pivotr(diamonds, cvars = "cut") %>% dtab()
-#' pivotr(diamonds, cvars = c("cut","clarity")) %>% dtab(format = "color_bar")
-#' pivotr(diamonds, cvars = c("cut","clarity"), normalize = "total") %>%
+#' pivotr(diamonds, cvars = c("cut", "clarity")) %>% dtab(format = "color_bar")
+#' pivotr(diamonds, cvars = c("cut", "clarity"), normalize = "total") %>%
 #'   dtab(format = "color_bar", perc = TRUE)
 #' }
 #'
@@ -312,19 +311,16 @@ summary.pivotr <- function(
 #' @seealso \code{\link{summary.pivotr}} to print the table
 #'
 #' @export
-dtab.pivotr <- function(
-  object, format = "none", perc = FALSE, dec = 3,
-  searchCols = NULL, order = NULL, pageLength = NULL,
-  ...
-) {
-
-  style = if (exists("bslib_current_version") && "4" %in% bslib_current_version()) "bootstrap4" else "bootstrap"
+dtab.pivotr <- function(object, format = "none", perc = FALSE, dec = 3,
+                        searchCols = NULL, order = NULL, pageLength = NULL,
+                        ...) {
+  style <- if (exists("bslib_current_version") && "4" %in% bslib_current_version()) "bootstrap4" else "bootstrap"
   tab <- object$tab
   cvar <- object$cvars[1]
   cvars <- object$cvars %>%
-    {if (length(.) > 1) .[-1] else .}
+    (function(x) if (length(x) > 1) x[-1] else x)
   cn <- colnames(tab) %>%
-    {.[-which(cvars %in% .)]}
+    (function(x) x[-which(cvars %in% x)])
 
   ## for rounding
   isDbl <- sapply(tab, is_double)
@@ -389,7 +385,7 @@ dtab.pivotr <- function(
     callback = DT::JS('$(window).on("unload", function() { table.state.clear(); })')
   ) %>%
     DT::formatStyle(., cvars, color = "white", backgroundColor = "grey") %>%
-    {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}
+    (function(x) if ("Total" %in% cn) DT::formatStyle(x, "Total", fontWeight = "bold") else x)
 
   ## heat map with red or color_bar
   if (format == "color_bar") {
@@ -406,7 +402,7 @@ dtab.pivotr <- function(
     brks <- quantile(tab[, cn_nt], probs = seq(.05, .95, .05), na.rm = TRUE) %>% round(5)
     clrs <- seq(255, 40, length.out = length(brks) + 1) %>%
       round(0) %>%
-      {paste0("rgb(255,", ., ",", ., ")")}
+      (function(x) paste0("rgb(255,", x, ",", x, ")"))
 
     dt_tab <- DT::formatStyle(dt_tab, cn_nt, backgroundColor = DT::styleInterval(brks, clrs))
   }
@@ -415,8 +411,9 @@ dtab.pivotr <- function(
     ## show percentages
     dt_tab <- DT::formatPercentage(dt_tab, cn, dec)
   } else {
-    if (sum(isDbl) > 0)
+    if (sum(isDbl) > 0) {
       dt_tab <- DT::formatRound(dt_tab, names(isDbl)[isDbl], dec)
+    }
     if (sum(isInt) > 0) {
       dt_tab <- DT::formatRound(dt_tab, names(isInt)[isInt], 0)
     }
@@ -451,20 +448,18 @@ dtab.pivotr <- function(
 #' @seealso \code{\link{pivotr}} to generate summaries
 #' @seealso \code{\link{summary.pivotr}} to show summaries
 #'
+#' @importFrom rlang .data
+#'
 #' @export
-plot.pivotr <- function(
-  x, type = "dodge", perc = FALSE, flip = FALSE,
-  fillcol = "blue", opacity = 0.5, ...
-) {
-
+plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE,
+                        fillcol = "blue", opacity = 0.5, ...) {
   cvars <- x$cvars
   nvar <- x$nvar
-  tab <- x$tab %>% {
-    filter(., .[[1]] != "Total")
-  }
+  tab <- x$tab %>%
+    (function(x) filter(x, x[[1]] != "Total"))
 
   if (length(cvars) == 1) {
-    p <- ggplot(na.omit(tab), aes_string(x = cvars, y = nvar)) +
+    p <- ggplot(na.omit(tab), aes(x = .data[[cvars]], y = .data[[nvar]])) +
       geom_bar(stat = "identity", position = "dodge", alpha = opacity, fill = fillcol)
   } else if (length(cvars) == 2) {
     ctot <- which(colnames(tab) == "Total")
@@ -475,10 +470,10 @@ plot.pivotr <- function(
       set_names(cvars[1])
 
     p <- tab %>%
-      gather(!! cvars[1], !! nvar, !! base::setdiff(colnames(.), cvars[2])) %>%
+      gather(!!cvars[1], !!nvar, !!base::setdiff(colnames(.), cvars[2])) %>%
       na.omit() %>%
-      mutate(!!! dots) %>%
-      ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
+      mutate(!!!dots) %>%
+      ggplot(aes(x = .data[[cvars[1]]], y = .data[[nvar]], fill = .data[[cvars[2]]])) +
       geom_bar(stat = "identity", position = type, alpha = opacity)
   } else if (length(cvars) == 3) {
     ctot <- which(colnames(tab) == "Total")
@@ -489,10 +484,10 @@ plot.pivotr <- function(
       set_names(cvars[1])
 
     p <- tab %>%
-      gather(!! cvars[1], !! nvar, !! base::setdiff(colnames(.), cvars[2:3])) %>%
+      gather(!!cvars[1], !!nvar, !!base::setdiff(colnames(.), cvars[2:3])) %>%
       na.omit() %>%
-      mutate(!!! dots) %>%
-      ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
+      mutate(!!!dots) %>%
+      ggplot(aes(x = .data[[cvars[1]]], y = .data[[nvar]], fill = .data[[cvars[2]]])) +
       geom_bar(stat = "identity", position = type, alpha = opacity) +
       facet_grid(paste(cvars[3], "~ ."))
   } else {

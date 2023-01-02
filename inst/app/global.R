@@ -304,7 +304,7 @@ help_menu <- function(hlp) {
       "",
       icon = icon("question-circle", verify_fa = FALSE),
       tabPanel("Help", uiOutput(hlp), icon = icon("question", verify_fa = FALSE)),
-      tabPanel(actionLink("help_keyboard", "Keyboard shortcuts", icon = icon("keyboard-o", verify_fa = FALSE))),
+      tabPanel(actionLink("help_keyboard", "Keyboard shortcuts", icon = icon("keyboard", verify_fa = FALSE))),
       # tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
       tabPanel(tags$a(
         "",
@@ -612,7 +612,8 @@ onStop(function() {
     clean_up_list <- c(
       "r_sessions", "help_menu", "make_url_patterns", "import_fs",
       "init_data", "navbar_proj", "knit_print.data.frame", "withMathJax",
-      "Dropbox", "sf_volumes"
+      "Dropbox", "sf_volumes", "GoogleDrive", "bslib_current_version",
+      "has_bslib_theme", "load_html2canvas"
     )
     suppressWarnings(
       suppressMessages({

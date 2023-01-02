@@ -113,13 +113,19 @@ observeEvent(input$help_keyboard, {
           tr(class = "padding_top",
              td("Open state"), td("Shift-CMD-o"), td("Shift-CTRL-o")),
           tr(class = "border_bottom padding_bottom",
+             td("Show help"), td("ALT-h"), td("ALT-h")),
+          tr(class = "border_bottom padding_bottom",
+             td("Generate screenshot"), td("CMD-p"), td("CTRL-p")),
+          tr(class = "border_bottom padding_bottom",
              td("Generate code"), td("ALT-return"), td("ALT-return")),
           tr(class = "border_bottom padding_bottom",
-             td("Estimate/Run (green)"), td("CMD-enter"), td("CTRL-enter")),
+             td("Estimate/Run (green button)"), td("CMD-enter"), td("CTRL-enter")),
           tr(class = "border_bottom padding_bottom",
-             td("Save (blue)"), td("CMD-s"), td("CTRL-s")),
+             td("Save (blue button)"), td("CMD-s"), td("CTRL-s")),
           tr(class = "border_bottom padding_bottom",
-             td("Load (blue)"), td("CMD-o"), td("CTRL-o"))
+             td("Download (blue icon)"), td("CMD-s"), td("CTRL-s")),
+          tr(class = "border_bottom padding_bottom",
+             td("Load (blue button)"), td("CMD-o"), td("CTRL-o"))
           # tr(class = "border_bottom padding_bottom",
              # td("Viewer pane full screen"), td("Shift-CTRL-9"), td("Shift-CTRL-9"))
         )
