@@ -162,7 +162,7 @@ set_attr <- function(x, which, value) `attr<-`(x, which, value)
 #' describe(mt)
 #'
 #' @export
-add_description <- function(df, md="", path="") {
+add_description <- function(df, md = "", path = "") {
   if (path != "") {
     md <- readLines(path) %>% paste0(collapse = "\n")
   } else if (md == "") {
@@ -1266,7 +1266,7 @@ describe <- function(dataset, envir = parent.frame()) {
 fix_smart <- function(text, all = FALSE) {
   if (all) {
     ## to remove all non-ascii symbols use ...
-    text <- stringi::stri_trans_general(text, 'latin-ascii')
+    text <- stringi::stri_trans_general(text, "latin-ascii")
   } else {
     ## based on https://stackoverflow.com/a/1262210/1974918
     ## based on https://stackoverflow.com/a/54467895/1974918

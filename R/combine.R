@@ -20,14 +20,11 @@
 #' avengers %>% combine_data(superheroes, add = "publisher", type = "bind_rows")
 #'
 #' @export
-combine_data <- function(
-  x, y, by = "", add = "",
-  type = "inner_join",
-  data_filter = "",
-  envir = parent.frame(),
-  ...
-) {
-
+combine_data <- function(x, y, by = "", add = "",
+                         type = "inner_join",
+                         data_filter = "",
+                         envir = parent.frame(),
+                         ...) {
   is_join <- grepl("_join", type)
   if (is_join && radiant.data::is_empty(by)) {
     return(cat("No variables selected to join datasets\n"))
@@ -63,7 +60,9 @@ combine_data <- function(
   }
 
   ## return error message as needed
-  if (is.character(x)) return(x)
+  if (is.character(x)) {
+    return(x)
+  }
 
   mess <- paste0(
     "## Combined\n\nDatasets: ", x_name, " and ", y_name,

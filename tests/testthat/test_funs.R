@@ -17,7 +17,9 @@ test_that("set_attr", {
 })
 
 test_that("add_class", {
-  foo <- . %>% . ^ 2 %>% add_class("foo")
+  foo <- . %>%
+    .^2 %>%
+    add_class("foo")
   expect_equal(3 %>% foo() %>% class(), c("foo", "numeric"))
 })
 
@@ -91,30 +93,48 @@ test_that("explore 8 x 2", {
   result <- explore(diamonds, "price:x")
   expect_equal(colnames(result$tab), c("variable", "mean", "sd"))
   # dput(result)
-  expect_equal(result, structure(list(tab = structure(list(variable = structure(1:8,
-    .Label = c("price",  "carat", "clarity", "cut", "color", "depth", "table", "x"), class = "factor"),
-    mean = c(3907.186, 0.794283333333333, 0.0133333333333333,
-    0.0336666666666667, 0.127333333333333, 61.7526666666667,
-    57.4653333333333, 5.72182333333333), sd = c(3956.91540005997,
-    0.473826329139292, 0.114716791286006, 0.180399751234967,
-    0.333401571319236, 1.44602785395269, 2.24110219949434, 1.12405453974662
-    )), class = "data.frame", row.names = c(NA, -8L), radiant_nrow = 8L),
-    df_name = "diamonds", vars = c("price", "carat", "clarity",
-    "cut", "color", "depth", "table", "x"), byvar = NULL, fun = c("mean",
-    "sd"), top = "fun", tabfilt = "", tabsort = "", nr = Inf,
-    data_filter = ""), class = c("explore", "list"
-  )))
+  expect_equal(result, structure(list(
+    tab = structure(list(
+      variable = structure(1:8,
+        .Label = c("price", "carat", "clarity", "cut", "color", "depth", "table", "x"), class = "factor"
+      ),
+      mean = c(
+        3907.186, 0.794283333333333, 0.0133333333333333,
+        0.0336666666666667, 0.127333333333333, 61.7526666666667,
+        57.4653333333333, 5.72182333333333
+      ), sd = c(
+        3956.91540005997,
+        0.473826329139292, 0.114716791286006, 0.180399751234967,
+        0.333401571319236, 1.44602785395269, 2.24110219949434, 1.12405453974662
+      )
+    ), class = "data.frame", row.names = c(NA, -8L), radiant_nrow = 8L),
+    df_name = "diamonds", vars = c(
+      "price", "carat", "clarity",
+      "cut", "color", "depth", "table", "x"
+    ), byvar = NULL, fun = c(
+      "mean",
+      "sd"
+    ), top = "fun", tabfilt = "", tabsort = "", nr = Inf,
+    data_filter = ""
+  ), class = c("explore", "list")))
 })
 
 test_that("explore 1 x 2", {
   result <- explore(diamonds, "price")
-  expect_equal(result, structure(list(tab = structure(list(variable = structure(1L, .Label = "price", class = "factor"),
-    mean = 3907.186, sd = 3956.91540005997), class = "data.frame", row.names = c(NA,
-    -1L), radiant_nrow = 1L), df_name = "diamonds", vars = "price", byvar = NULL,
+  expect_equal(result, structure(list(
+    tab = structure(list(
+      variable = structure(1L, .Label = "price", class = "factor"),
+      mean = 3907.186, sd = 3956.91540005997
+    ), class = "data.frame", row.names = c(
+      NA,
+      -1L
+    ), radiant_nrow = 1L), df_name = "diamonds", vars = "price", byvar = NULL,
     fun = c("mean", "sd"), top = "fun", tabfilt = "", tabsort = "",
-    nr = Inf, data_filter = ""), class = c("explore",
-    "list")
-  ))
+    nr = Inf, data_filter = ""
+  ), class = c(
+    "explore",
+    "list"
+  )))
 })
 
 test_that("explore 1 x 1", {
@@ -130,12 +150,17 @@ test_that("explore 1 x 1 x 1", {
 test_that("explore 1 x 1 x 2", {
   result <- explore(diamonds, "price", byvar = c("color", "cut"), fun = "n_obs")
   expect_equal(colnames(result$tab), c("color", "cut", "variable", "n_obs"))
-  expect_equal(result$tab[1,], structure(list(color = structure(1L, .Label = c("D", "E", "F",
-    "G", "H", "I", "J"), class = "factor"), cut = structure(1L, .Label = c("Fair",
-    "Good", "Very Good", "Premium", "Ideal"), class = "factor"),
+  expect_equal(result$tab[1, ], structure(list(
+    color = structure(1L, .Label = c(
+      "D", "E", "F",
+      "G", "H", "I", "J"
+    ), class = "factor"), cut = structure(1L, .Label = c(
+      "Fair",
+      "Good", "Very Good", "Premium", "Ideal"
+    ), class = "factor"),
     variable = structure(1L, .Label = "price", class = "factor"),
-    n_obs = 15L), radiant_nrow = 35L, row.names = 1L, class = "data.frame"
-  ))
+    n_obs = 15L
+  ), radiant_nrow = 35L, row.names = 1L, class = "data.frame"))
 })
 
 test_that("explore 2 x 2 x 2", {
@@ -144,7 +169,7 @@ test_that("explore 2 x 2 x 2", {
 })
 
 test_that("transform ts", {
-  input = list(
+  input <- list(
     tr_ts_start_year = 1971,
     tr_ts_start_period = 1,
     tr_ts_end_year = NA,
@@ -156,7 +181,10 @@ test_that("transform ts", {
     end = c(input$tr_ts_end_year, input$tr_ts_end_period),
     frequency = input$tr_ts_frequency
   )
-  tr_ts <- lapply(tr_ts, function(x) x[!is.na(x)]) %>% {.[sapply(., length) > 0]}
+  tr_ts <- lapply(tr_ts, function(x) x[!is.na(x)]) %>%
+    {
+      .[sapply(., length) > 0]
+    }
   dat <- do.call(mutate_at, c(list(.tbl = mtcars, .vars = c("mpg", "cyl")), .funs = ts, tr_ts))
 
   expect_equal(dat$mpg, ts(mtcars$mpg, start = c(1971, 1), frequency = 52))
@@ -169,7 +197,6 @@ test_that("transform ts", {
     sub("\\)$", "", .)
 
   expect_equal(tr_ts, ", start = c(1971, 1), frequency = 52")
-
 })
 
 ## 'manual' testing of read_files to avoid adding numerous dataset to package

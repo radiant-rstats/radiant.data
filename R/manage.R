@@ -9,35 +9,40 @@
 load_clip <- function(delim = "\t", text, suppress = TRUE) {
   sw <- if (suppress) suppressWarnings else function(x) x
   sw(
-    try({
-      os_type <- Sys.info()["sysname"]
-      if (os_type == "Windows") {
-        dataset <- read.table(
-          "clipboard", header = TRUE, sep = delim,
-          comment.char = "", fill = TRUE, as.is = TRUE,
-          check.names = FALSE
-        )
-      } else if (os_type == "Darwin") {
-        dataset <- read.table(
-          pipe("pbpaste"), header = TRUE, sep = delim,
-          comment.char = "", fill = TRUE, as.is = TRUE,
-          check.names = FALSE
-        )
-      } else if (os_type == "Linux") {
-        if (missing(text) || radiant.data::is_empty(text)) {
-          message("Loading data through clipboard is currently only supported on Windows and macOS")
-          return(invisible())
-        } else {
+    try(
+      {
+        os_type <- Sys.info()["sysname"]
+        if (os_type == "Windows") {
           dataset <- read.table(
-            text = text, header = TRUE, sep = delim,
+            "clipboard",
+            header = TRUE, sep = delim,
             comment.char = "", fill = TRUE, as.is = TRUE,
             check.names = FALSE
           )
+        } else if (os_type == "Darwin") {
+          dataset <- read.table(
+            pipe("pbpaste"),
+            header = TRUE, sep = delim,
+            comment.char = "", fill = TRUE, as.is = TRUE,
+            check.names = FALSE
+          )
+        } else if (os_type == "Linux") {
+          if (missing(text) || radiant.data::is_empty(text)) {
+            message("Loading data through clipboard is currently only supported on Windows and macOS")
+            return(invisible())
+          } else {
+            dataset <- read.table(
+              text = text, header = TRUE, sep = delim,
+              comment.char = "", fill = TRUE, as.is = TRUE,
+              check.names = FALSE
+            )
+          }
         }
-      }
-      as.data.frame(dataset, check.names = FALSE, stringsAsFactors = FALSE) %>%
-        radiant.data::to_fct()
-    }, silent = TRUE)
+        as.data.frame(dataset, check.names = FALSE, stringsAsFactors = FALSE) %>%
+          radiant.data::to_fct()
+      },
+      silent = TRUE
+    )
   )
 }
 
@@ -78,6 +83,6 @@ fix_names <- function(x, lower = FALSE) {
     gsub("\\.{2,}", ".", .) %>%
     gsub("_{2,}", "_", .) %>%
     make.names(unique = TRUE) %>% ## used twice to make sure names are still unique
-    {if (lower) tolower(.) else .}
+    (function(x) if (lower) tolower(x) else x)
   if (isdf) stats::setNames(x, cn) else cn
 }

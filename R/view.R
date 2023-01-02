@@ -38,15 +38,12 @@ dtab <- function(object, ...) UseMethod("dtab", object)
 #' }
 #'
 #' @export
-dtab.data.frame <- function(
-  object, vars = "", filt = "", rows = NULL,
-  nr = NULL, na.rm = FALSE, dec = 3, perc = "",
-  filter = "top", pageLength = 10, dom = "",
-  style = "bootstrap4", rownames = FALSE,
-  caption = NULL,
-  envir = parent.frame(), ...
-) {
-
+dtab.data.frame <- function(object, vars = "", filt = "", rows = NULL,
+                            nr = NULL, na.rm = FALSE, dec = 3, perc = "",
+                            filter = "top", pageLength = 10, dom = "",
+                            style = "bootstrap4", rownames = FALSE,
+                            caption = NULL,
+                            envir = parent.frame(), ...) {
   dat <- get_data(object, vars, filt = filt, rows = rows, na.rm = na.rm, envir = envir)
   if (!radiant.data::is_empty(nr) && nr < nrow(dat)) {
     dat <- dat[seq_len(nr), , drop = FALSE]
@@ -72,7 +69,7 @@ dtab.data.frame <- function(
 
   if (!radiant.data::is_empty(caption)) {
     ## from https://github.com/rstudio/DT/issues/630#issuecomment-461191378
-    caption <- shiny::tags$caption(style = 'caption-side: top; text-align: left; color:black; font-size:150%;', caption)
+    caption <- shiny::tags$caption(style = "caption-side: top; text-align: left; color:black; font-size:150%;", caption)
   }
 
   dt_tab <- DT::datatable(
@@ -102,12 +99,15 @@ dtab.data.frame <- function(
   )
 
   ## rounding as needed
-  if (sum(isDbl) > 0)
+  if (sum(isDbl) > 0) {
     dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isDbl], digits = dec)
-  if (sum(isInt) > 0)
+  }
+  if (sum(isInt) > 0) {
     dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isInt], digits = 0)
-  if (!radiant.data::is_empty(perc))
+  }
+  if (!radiant.data::is_empty(perc)) {
     dt_tab <- DT::formatPercentage(dt_tab, perc, digits = dec)
+  }
 
   ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(
@@ -134,7 +134,7 @@ filter_data <- function(dataset, filt = "", drop = TRUE) {
   } else {
     seldat <- try(
       ## use %>% so . will be available to represent the available data in filters
-      dataset %>% filter(!! rlang::parse_expr(fix_smart(filt))),
+      dataset %>% filter(!!rlang::parse_expr(fix_smart(filt))),
       silent = TRUE
     )
     if (inherits(seldat, "try-error")) {
@@ -189,11 +189,9 @@ search_data <- function(dataset, pattern, ignore.case = TRUE, fixed = FALSE) {
 #' }
 #'
 #' @export
-view_data <- function(
-  dataset, vars = "", filt = "",
-  rows = NULL, na.rm = FALSE, dec = 3,
-  envir = parent.frame()
-) {
+view_data <- function(dataset, vars = "", filt = "",
+                      rows = NULL, na.rm = FALSE, dec = 3,
+                      envir = parent.frame()) {
 
   ## based on https://rstudio.github.io/DT/server.html
   dat <- get_data(dataset, vars, filt = filt, rows = rows, na.rm = na.rm, envir = envir)
@@ -243,8 +241,9 @@ view_data <- function(
           lengthMenu = list(c(5, 10, 25, 50, -1), c("5", "10", "25", "50", "All"))
         )
       ) %>%
-        {if (sum(isDbl) > 0) DT::formatRound(., names(isDbl)[isDbl], dec) else .} %>%
-        {if (sum(isInt) > 0) DT::formatRound(., names(isInt)[isInt], 0) else .}
+        (function(x) if (sum(isDbl) > 0) DT::formatRound(x, names(isDbl)[isDbl], dec) else x) %>%
+        (function(x) if (sum(isInt) > 0) DT::formatRound(x, names(isInt)[isInt], 0) else x)
+
       output$tbl <- DT::renderDataTable(widget)
       observeEvent(input$stop, {
         stopApp(cat("Stopped view_data"))

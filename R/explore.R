@@ -18,17 +18,14 @@
 #' @examples
 #' explore(diamonds, c("price", "carat")) %>% str()
 #' explore(diamonds, "price:x")$tab
-#' explore(diamonds, c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))$tab
+#' explore(diamonds, c("price", "carat"), byvar = "cut", fun = c("n_missing", "skew"))$tab
 #'
 #' @seealso See \code{\link{summary.explore}} to show summaries
 #'
 #' @export
-explore <- function(
-  dataset, vars = "", byvar = "", fun = c("mean", "sd"),
-  top = "fun", tabfilt = "", tabsort = "", nr = Inf,
-  data_filter = "", envir = parent.frame()
-) {
-
+explore <- function(dataset, vars = "", byvar = "", fun = c("mean", "sd"),
+                    top = "fun", tabfilt = "", tabsort = "", nr = Inf,
+                    data_filter = "", envir = parent.frame()) {
   tvars <- vars
   if (!radiant.data::is_empty(byvar)) tvars <- unique(c(tvars, byvar))
 
@@ -121,9 +118,9 @@ explore <- function(
   rex <- paste0("(.*?)_", glue('({glue_collapse(fun, "$|")}$)'))
 
   ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
-  tab <- gather(tab, "variable", "value", !! -(seq_along(byvar))) %>%
+  tab <- gather(tab, "variable", "value", !!-(seq_along(byvar))) %>%
     extract(variable, into = c("variable", "fun"), regex = rex) %>%
-    mutate(fun = factor(fun, levels = !! fun), variable = factor(variable, levels = vars)) %>%
+    mutate(fun = factor(fun, levels = !!fun), variable = factor(variable, levels = vars)) %>%
     # mutate(variable = paste0(variable, " {", dc[variable], "}")) %>%
     spread("fun", "value")
 
@@ -143,7 +140,7 @@ explore <- function(
   ## sorting the table if desired from Report > Rmd
   if (!identical(tabsort, "")) {
     tabsort <- gsub(",", ";", tabsort)
-    tab <- tab %>% arrange(!!! rlang::parse_exprs(tabsort))
+    tab <- tab %>% arrange(!!!rlang::parse_exprs(tabsort))
   }
 
   ## ensure factors ordered as in the (sorted) table
@@ -206,7 +203,6 @@ explore <- function(
 #'
 #' @export
 summary.explore <- function(object, dec = 3, ...) {
-
   cat("Explore\n")
   cat("Data        :", object$df_name, "\n")
   if (!radiant.data::is_empty(object$data_filter)) {
@@ -278,14 +274,15 @@ store.explore <- function(dataset, object, name, ...) {
 #'
 #' @export
 flip <- function(expl, top = "fun") {
-  cvars <- expl$byvar %>% {if (radiant.data::is_empty(.[1])) character(0) else .}
+  cvars <- expl$byvar %>%
+    (function(x) if (radiant.data::is_empty(x[1])) character(0) else x)
   if (top[1] == "var") {
-    expl$tab %<>% gather(".function", "value", !! -(1:(length(cvars) + 1))) %>%
+    expl$tab %<>% gather(".function", "value", !!-(1:(length(cvars) + 1))) %>%
       spread("variable", "value")
     expl$tab[[".function"]] %<>% factor(., levels = expl$fun)
   } else if (top[1] == "byvar" && length(cvars) > 0) {
-    expl$tab %<>% gather(".function", "value", !! -(1:(length(cvars) + 1))) %>%
-      spread(!! cvars[1], "value")
+    expl$tab %<>% gather(".function", "value", !!-(1:(length(cvars) + 1))) %>%
+      spread(!!cvars[1], "value")
     expl$tab[[".function"]] %<>% factor(., levels = expl$fun)
 
     ## ensure we don't have invalid column names
@@ -317,12 +314,9 @@ flip <- function(expl, top = "fun") {
 #' @seealso \code{\link{summary.pivotr}} to show summaries
 #'
 #' @export
-dtab.explore <- function(
-  object, dec = 3, searchCols = NULL,
-  order = NULL, pageLength = NULL, ...
-) {
-
-  style = if (exists("bslib_current_version") && "4" %in% bslib_current_version()) "bootstrap4" else "bootstrap"
+dtab.explore <- function(object, dec = 3, searchCols = NULL,
+                         order = NULL, pageLength = NULL, ...) {
+  style <- if (exists("bslib_current_version") && "4" %in% bslib_current_version()) "bootstrap4" else "bootstrap"
   tab <- object$tab
   cn_all <- colnames(tab)
   cn_num <- cn_all[sapply(tab, is.numeric)]
@@ -377,10 +371,12 @@ dtab.explore <- function(
     DT::formatStyle(., cn_cat, color = "white", backgroundColor = "grey")
 
   ## rounding as needed
-  if (sum(isDbl) > 0)
+  if (sum(isDbl) > 0) {
     dt_tab <- DT::formatRound(dt_tab, names(isDbl)[isDbl], dec)
-  if (sum(isInt) > 0)
+  }
+  if (sum(isInt) > 0) {
     dt_tab <- DT::formatRound(dt_tab, names(isInt)[isInt], 0)
+  }
 
   ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(
@@ -466,7 +462,7 @@ p99 <- function(x, na.rm = TRUE) quantile(x, .99, na.rm = na.rm)
 #' @param na.rm If TRUE missing values are removed before calculation
 #' @return Coefficient of variation
 #' @examples
-#' cv(runif (100))
+#' cv(runif(100))
 #'
 #' @export
 cv <- function(x, na.rm = TRUE) {
@@ -523,7 +519,7 @@ me <- function(x, conf_lev = 0.95, na.rm = TRUE) {
 prop <- function(x, na.rm = TRUE) {
   if (na.rm) x <- na.omit(x)
   if (is.numeric(x)) {
-    mean(x == max(x, 1))    ## gives proportion of max value in x
+    mean(x == max(x, 1)) ## gives proportion of max value in x
   } else if (is.factor(x)) {
     mean(x == levels(x)[1]) ## gives proportion of first level in x
   } else if (is.logical(x)) {
@@ -615,7 +611,7 @@ sdpop <- function(x, na.rm = TRUE) sqrt(varpop(x, na.rm = na.rm))
 #' @param na.rm Remove missing values (default is TRUE)
 #' @return Natural log of vector
 #' @examples
-#' ln(runif(10,1,2))
+#' ln(runif(10, 1, 2))
 #'
 #' @export
 ln <- function(x, na.rm = TRUE) {
@@ -638,7 +634,7 @@ does_vary <- function(x, na.rm = TRUE) {
     if (is.factor(x) || is.character(x)) {
       length(unique(x)) > 1
     } else {
-      abs(max(x, na.rm = na.rm) - min(x, na.rm = na.rm)) > .Machine$double.eps ^ 0.5
+      abs(max(x, na.rm = na.rm) - min(x, na.rm = na.rm)) > .Machine$double.eps^0.5
     }
   }
 }

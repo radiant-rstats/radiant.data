@@ -3,12 +3,13 @@
 #' @param na.rm If TRUE missing values are removed before calculation
 #' @return If x is a numeric variable return x - mean(x)
 #' @export
-center <- function(x, na.rm = TRUE)
+center <- function(x, na.rm = TRUE) {
   if (is.numeric(x)) {
     x - mean(x, na.rm = na.rm)
   } else {
     x
   }
+}
 
 #' Standardize
 #' @param x Input variable
@@ -33,7 +34,7 @@ standardize <- function(x, na.rm = TRUE) {
 #' @param x Input variable
 #' @return x^2
 #' @export
-square <- function(x) x ^ 2
+square <- function(x) x^2
 
 #' Calculate inverse of a variable
 #' @param x Input variable
@@ -100,9 +101,9 @@ as_ymd <- function(x) {
 #' @examples
 #' as_ymd_hms("2014-1-1 12:15:01")
 #' \dontrun{
-#' as_ymd_hms("2014-1-1 12:15:01") %>% as.Date
-#' as_ymd_hms("2014-1-1 12:15:01") %>% month
-#' as_ymd_hms("2014-1-1 12:15:01") %>% hour
+#' as_ymd_hms("2014-1-1 12:15:01") %>% as.Date()
+#' as_ymd_hms("2014-1-1 12:15:01") %>% month()
+#' as_ymd_hms("2014-1-1 12:15:01") %>% hour()
 #' }
 #' @export
 as_ymd_hms <- function(x) {
@@ -171,8 +172,8 @@ as_dmy_hm <- function(x) {
 #' @examples
 #' as_hms("12:45:00")
 #' \dontrun{
-#' as_hms("12:45:00") %>% hour
-#' as_hms("12:45:00") %>% second
+#' as_hms("12:45:00") %>% hour()
+#' as_hms("12:45:00") %>% second()
 #' }
 #' @export
 as_hms <- function(x) {
@@ -202,9 +203,9 @@ as_hm <- function(x) {
 #' as_integer(letters)
 #' as_integer(as.factor(5:10))
 #' as.integer(as.factor(5:10))
-#' as_integer(c("a","b"))
-#' as_integer(c("0","1"))
-#' as_integer(as.factor(c("0","1")))
+#' as_integer(c("a", "b"))
+#' as_integer(c("0", "1"))
+#' as_integer(as.factor(c("0", "1")))
 #'
 #' @export
 as_integer <- function(x) {
@@ -227,9 +228,9 @@ as_integer <- function(x) {
 #' as_numeric(letters)
 #' as_numeric(as.factor(5:10))
 #' as.numeric(as.factor(5:10))
-#' as_numeric(c("a","b"))
-#' as_numeric(c("3","4"))
-#' as_numeric(as.factor(c("3","4")))
+#' as_numeric(c("a", "b"))
+#' as_numeric(c("3", "4"))
+#' as_numeric(as.factor(c("3", "4")))
 #'
 #' @export
 as_numeric <- function(x) {
@@ -270,21 +271,18 @@ as_duration <- function(x) as.numeric(lubridate::as.duration(x))
 #' @param R Radius of the earth
 #' @return Distance between two points
 #' @examples
-#' as_distance(32.8245525,-117.0951632, 40.7033127,-73.979681, unit = "km")
-#' as_distance(32.8245525,-117.0951632, 40.7033127,-73.979681, unit = "miles")
+#' as_distance(32.8245525, -117.0951632, 40.7033127, -73.979681, unit = "km")
+#' as_distance(32.8245525, -117.0951632, 40.7033127, -73.979681, unit = "miles")
 #'
 #' @export
-as_distance <- function(
-  lat1, long1, lat2, long2,
-  unit = "km", R = c("km" = 6371, "miles" = 3959)[[unit]]
-) {
-
+as_distance <- function(lat1, long1, lat2, long2,
+                        unit = "km", R = c("km" = 6371, "miles" = 3959)[[unit]]) {
   rad <- pi / 180
   d1 <- lat1 * rad
   d2 <- lat2 * rad
   dlat <- (lat2 - lat1) * rad
   dlong <- (long2 - long1) * rad
-  a <- sin(dlat / 2) ^ 2 + cos(d1) * cos(d2) * sin(dlong / 2) ^ 2
+  a <- sin(dlat / 2)^2 + cos(d1) * cos(d2) * sin(dlong / 2)^2
   c <- 2 * atan2(sqrt(a), sqrt(1 - a))
   R * c
 }
@@ -408,10 +406,10 @@ xtile <- function(x, n = 5, rev = FALSE, type = 7) {
 #' @param ... Variables used to evaluate row uniqueness
 #'
 #' @examples
-#' bind_rows(mtcars, mtcars[c(1,5,7),]) %>%
+#' bind_rows(mtcars, mtcars[c(1, 5, 7), ]) %>%
 #'   show_duplicated(mpg, cyl)
-#' bind_rows(mtcars, mtcars[c(1,5,7),]) %>%
-#'   show_duplicated
+#' bind_rows(mtcars, mtcars[c(1, 5, 7), ]) %>%
+#'   show_duplicated()
 #'
 #' @export
 show_duplicated <- function(.tbl, ...) {
@@ -445,7 +443,7 @@ weighted.sd <- function(x, wt, na.rm = TRUE) {
   }
   wt <- wt / sum(wt)
   wm <- weighted.mean(x, wt)
-  sqrt(sum(wt * (x - wm) ^ 2))
+  sqrt(sum(wt * (x - wm)^2))
 }
 
 #' Create data.frame summary
@@ -471,7 +469,7 @@ get_summary <- function(dataset, dc = get_class(dataset), dec = 3) {
 
     cat("Summarize numeric variables:\n")
     select(dataset, which(isNum)) %>%
-      gather("variable", "values", !! cn, factor_key = TRUE) %>%
+      gather("variable", "values", !!cn, factor_key = TRUE) %>%
       group_by_at(.vars = "variable") %>%
       summarise_all(
         list(
@@ -532,7 +530,9 @@ get_summary <- function(dataset, dc = get_class(dataset), dec = 3) {
 
   if (sum(isFct) > 0) {
     cat("Summarize factors:\n")
-    select(dataset, which(isFct)) %>% summary(maxsum = 20) %>% print()
+    select(dataset, which(isFct)) %>%
+      summary(maxsum = 20) %>%
+      print()
     cat("\n")
   }
 
@@ -572,18 +572,21 @@ get_summary <- function(dataset, dc = get_class(dataset), dec = 3) {
     ## finding unique elements can be slow for large files
     if (nrow(dataset) < 10^5) {
       cat("Summarize character variables (< 20 unique values shown):\n")
-      select(dataset, which(isChar)) %>% lapply(unique) %>% {
-        for (i in names(.)) {
-          cat(i, paste0("(n_distinct ", length(.[[i]]), "): "), .[[i]][1:min(20, length(.[[i]]))], "\n")
-        }
-      }
+      select(dataset, which(isChar)) %>%
+        lapply(unique) %>%
+        (function(x) {
+          for (i in names(x)) {
+            cat(i, paste0("(n_distinct ", length(x[[i]]), "): "), x[[i]][1:min(20, length(x[[i]]))], "\n")
+          }
+        })
     } else {
       cat("Summarize character variables (< 20 values shown):\n")
-      select(dataset, which(isChar)) %>% {
-        for (i in names(.)) {
-          cat(i, ":", .[[i]][1:min(20, length(.[[i]]))], "\n")
-        }
-      }
+      select(dataset, which(isChar)) %>%
+        (function(x) {
+          for (i in names(x)) {
+            cat(i, ":", x[[i]][1:min(20, length(x[[i]]))], "\n")
+          }
+        })
     }
     cat("\n")
   }
@@ -608,11 +611,10 @@ get_summary <- function(dataset, dc = get_class(dataset), dec = 3) {
 #' @param freq Column name with frequency information
 #'
 #' @examples
-#' data.frame(price = c("$200","$300"), sale = c(10, 2)) %>% table2data()
+#' data.frame(price = c("$200", "$300"), sale = c(10, 2)) %>% table2data()
 #'
 #' @export
 table2data <- function(dataset, freq = tail(colnames(dataset), 1)) {
-
   if (!is.numeric(dataset[[freq]])) stop("The frequency variable must be numeric", call = FALSE)
   blowup <- function(i) {
     if (!is.na(dataset[[freq]][i])) dataset[rep(i, each = dataset[[freq]][i]), ]
@@ -630,7 +632,7 @@ table2data <- function(dataset, freq = tail(colnames(dataset), 1)) {
 #' @param ... Unquoted variable names to evaluate
 #'
 #' @examples
-#' data.frame(a = c(rep("a",5),rep("b",5)), b = c(rep(1,5),6:10)) %>% level_list
+#' data.frame(a = c(rep("a", 5), rep("b", 5)), b = c(rep(1, 5), 6:10)) %>% level_list()
 #' level_list(mtcars, mpg, cyl)
 #'
 #' @export
@@ -697,8 +699,8 @@ wday <- function(x, label = FALSE, abbr = TRUE, ordered = FALSE) {
 #' @param repl String (or NA) used to replace missing levels
 #'
 #' @examples
-#' refactor(diamonds$cut, c("Premium","Ideal")) %>% head()
-#' refactor(diamonds$cut, c("Premium","Ideal"), "Other") %>% head()
+#' refactor(diamonds$cut, c("Premium", "Ideal")) %>% head()
+#' refactor(diamonds$cut, c("Premium", "Ideal"), "Other") %>% head()
 #'
 #' @export
 refactor <- function(x, levs = levels(x), repl = NA) {
@@ -760,5 +762,3 @@ make_vec <- function(x) {
 ## function below not exported
 ###############################
 .recode. <- function(x, cmd) car::Recode(x, cmd)
-
-

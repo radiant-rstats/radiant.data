@@ -3,7 +3,7 @@
 * Improvements to screenshot feature. Navigation bar is omitted and the image is adjusted to the length of the UI.
 * Added a convenience function `add_description` to add an description attribute to a data.frame in markdown format
 * Line graphs treated more similarly to bar-graphs (i.e., can have a binary factor variable on the y-axis)
-* Removed all references to `aes_string` which is being depricated in ggplot soon
+* Removed all references to `aes_string` which is being deprecated in ggplot soon
 * Improved cleanup after Radiant UI is closed
 
 # radiant.data 1.4.7
