@@ -15,7 +15,7 @@ $(document).keydown(function (event) {
     event.altKey && event.keyCode == 13) {
     $(".fa-edit:visible" || ".shiny-bound-input:visible").click();
   } else if ($(".fa-question:visible" || ".shiny-bound-input:visible").is(":visible") &&
-    event.altKey && event.keyCode == 72) {
+    event.keyCode == 112) {
     $(".fa-question:visible" || ".shiny-bound-input:visible").click();
   } else if ($(".fa-camera:visible" || ".shiny-bound-input:visible").is(":visible") &&
     (event.metaKey || event.ctrlKey) && event.keyCode == 80) {

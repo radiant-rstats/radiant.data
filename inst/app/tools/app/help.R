@@ -113,7 +113,7 @@ observeEvent(input$help_keyboard, {
           tr(class = "padding_top",
              td("Open state"), td("Shift-CMD-o"), td("Shift-CTRL-o")),
           tr(class = "border_bottom padding_bottom",
-             td("Show help"), td("ALT-h"), td("ALT-h")),
+             td("Show help"), td("F1"), td("F1")),
           tr(class = "border_bottom padding_bottom",
              td("Generate screenshot"), td("CMD-p"), td("CTRL-p")),
           tr(class = "border_bottom padding_bottom",
