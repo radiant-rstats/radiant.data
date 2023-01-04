@@ -12,8 +12,10 @@ pivotr(
   normalize = "None",
   tabfilt = "",
   tabsort = "",
+  tabslice = "",
   nr = Inf,
   data_filter = "",
+  rows = NULL,
   envir = parent.frame()
 )
 }
@@ -32,9 +34,13 @@ pivotr(
 
 \item{tabsort}{Expression used to sort the table (e.g., "desc(Total)")}
 
+\item{tabslice}{Expression used to filter table (e.g., "1:5")}
+
 \item{nr}{Number of rows to display}
 
 \item{data_filter}{Expression used to filter the dataset before creating the table (e.g., "price > 10000")}
+
+\item{rows}{Rows to select from the specified dataset}
 
 \item{envir}{Environment to extract data from}
 }

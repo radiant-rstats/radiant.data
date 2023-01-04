@@ -419,8 +419,8 @@ bslib_current_version <- function() {
 
 navbar_proj <- function(navbar) {
   pdir <- radiant.data::find_project(mess = FALSE)
-  if (radiant.data::is_empty(pdir)) {
-    if (getOption("radiant.shinyFiles", FALSE) && !radiant.data::is_empty(getOption("radiant.sf_volumes", ""))) {
+  if (radiant.data::is.empty(pdir)) {
+    if (getOption("radiant.shinyFiles", FALSE) && !radiant.data::is.empty(getOption("radiant.sf_volumes", ""))) {
       proj <- paste0("Base dir: ", names(getOption("radiant.sf_volumes"))[1])
     } else {
       proj <- "Project: (None)"
@@ -441,7 +441,7 @@ navbar_proj <- function(navbar) {
 }
 
 if (getOption("radiant.shinyFiles", FALSE)) {
-  if (!radiant.data::is_empty(getOption("radiant.sf_volumes", "")) && radiant.data::is_empty(getOption("radiant.project_dir"))) {
+  if (!radiant.data::is.empty(getOption("radiant.sf_volumes", "")) && radiant.data::is.empty(getOption("radiant.project_dir"))) {
     launch_dir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
     if (!launch_dir %in% getOption("radiant.sf_volumes", "")) {
       sf_volumes <- c(setNames(launch_dir, basename(launch_dir)), getOption("radiant.sf_volumes", ""))
@@ -454,8 +454,8 @@ if (getOption("radiant.shinyFiles", FALSE)) {
     }
     rm(launch_dir)
   }
-  if (radiant.data::is_empty(getOption("radiant.launch_dir"))) {
-    if (radiant.data::is_empty(getOption("radiant.project_dir"))) {
+  if (radiant.data::is.empty(getOption("radiant.launch_dir"))) {
+    if (radiant.data::is.empty(getOption("radiant.project_dir"))) {
       options(radiant.launch_dir = radiant.data::find_home())
       options(radiant.project_dir = getOption("radiant.launch_dir"))
     } else {
@@ -463,7 +463,7 @@ if (getOption("radiant.shinyFiles", FALSE)) {
     }
   }
 
-  if (radiant.data::is_empty(getOption("radiant.project_dir"))) {
+  if (radiant.data::is.empty(getOption("radiant.project_dir"))) {
     options(radiant.project_dir = getOption("radiant.launch_dir"))
   } else {
     options(radiant.launch_dir = getOption("radiant.project_dir"))

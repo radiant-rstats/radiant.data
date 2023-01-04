@@ -30,6 +30,7 @@
 #' @param xlim Set limit for x-axis (e.g., c(0, 1))
 #' @param ylim Set limit for y-axis (e.g., c(0, 1))
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
+#' @param rows Rows to select from the specified dataset
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This option can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{https://ggplot2.tidyverse.org} for options.
 #' @param envir Environment to extract data from
@@ -68,13 +69,13 @@
 #'
 #' @export
 visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
-                      type = ifelse(radiant.data::is_empty(yvar), "dist", "scatter"), nrobs = -1,
+                      type = ifelse(is.empty(yvar), "dist", "scatter"), nrobs = -1,
                       facet_row = ".", facet_col = ".", color = "none", fill = "none",
                       size = "none", fillcol = "blue", linecol = "black", pointcol = "black",
                       bins = 10, smooth = 1, fun = "mean", check = "", axes = "",
                       alpha = 0.5, theme = "theme_gray", base_size = 11, base_family = "",
                       labs = list(), xlim = NULL, ylim = NULL, data_filter = "",
-                      shiny = FALSE, custom = FALSE, envir = parent.frame()) {
+                      rows = NULL, shiny = FALSE, custom = FALSE, envir = parent.frame()) {
   if (missing(xvar) && type == "box") {
     xvar <- yvar
     type <- "box-single"
@@ -110,7 +111,7 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
     if (!type %in% c("dist", "density")) {
       return("No Y-variable provided for a plot that requires one")
     }
-  } else if (type == "surface" && radiant.data::is_empty(fill, "none")) {
+  } else if (type == "surface" && is.empty(fill, "none")) {
     return("No Fill variable provided for a plot that requires one")
   } else {
     if (type %in% c("dist", "density")) {
@@ -147,9 +148,9 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 
   ## so you can also pass-in a data.frame
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- get_data(dataset, vars, filt = data_filter, envir = envir)
+  dataset <- get_data(dataset, vars, filt = data_filter, rows = rows, envir = envir)
 
-  if (type == "scatter" && !radiant.data::is_empty(nrobs)) {
+  if (type == "scatter" && !is.empty(nrobs)) {
     nrobs <- as.integer(nrobs)
     if (nrobs > 0 && nrobs < nrow(dataset)) {
       dataset <- sample_n(dataset, nrobs, replace = FALSE)
@@ -275,13 +276,13 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
     if (any(xvar %in% yvar) && type != "box-single") {
       return("X-variables cannot be part of Y-variables when combining Y-variables")
     }
-    if (!radiant.data::is_empty(color, "none")) {
+    if (!is.empty(color, "none")) {
       return("Cannot use Color when combining Y-variables")
     }
-    if (!radiant.data::is_empty(fill, "none")) {
+    if (!is.empty(fill, "none")) {
       return("Cannot use Fill when combining Y-variables")
     }
-    if (!radiant.data::is_empty(size, "none")) {
+    if (!is.empty(size, "none")) {
       return("Cannot use Size when combining Y-variables")
     }
     if (facet_row %in% yvar || facet_col %in% yvar) {
@@ -298,7 +299,7 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 
   ## combining X-variables if needed
   if (combx && length(xvar) > 1) {
-    if (!radiant.data::is_empty(fill, "none")) {
+    if (!is.empty(fill, "none")) {
       return("Cannot use Fill when combining X-variables")
     }
     if (facet_row %in% xvar || facet_col %in% xvar) {
@@ -763,7 +764,7 @@ qscatter <- function(dataset, xvar, yvar, lev = "", fun = "mean", bins = 20) {
     dataset <- mutate_at(dataset, .vars = yvar, .funs = as.factor)
   }
   if (is.factor(dataset[[yvar]])) {
-    if (radiant.data::is_empty(lev)) lev <- levels(pull(dataset, !!yvar))[1]
+    if (is.empty(lev)) lev <- levels(pull(dataset, !!yvar))[1]
     dataset <- mutate_at(dataset, .vars = yvar, .funs = function(y) as.integer(y == lev))
     lev <- paste0(" {", lev, "}")
   } else {

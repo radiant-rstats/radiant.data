@@ -162,7 +162,7 @@ ext_options <- list(
 
 output$ui_tr_ext <- renderUI({
   trfun <- input$tr_transfunction
-  if (radiant.data::is_empty(trfun)) trfun <- "none"
+  if (is.empty(trfun)) trfun <- "none"
   returnTextInput(
     "tr_ext", "Variable name extension:",
     value = ext_options[[trfun]]
@@ -170,7 +170,7 @@ output$ui_tr_ext <- renderUI({
 })
 
 output$ui_tr_ext_nz <- renderUI({
-  if (radiant.data::is_empty(input$tr_normalizer, "none")) {
+  if (is.empty(input$tr_normalizer, "none")) {
     return()
   }
   returnTextInput(
@@ -180,7 +180,7 @@ output$ui_tr_ext_nz <- renderUI({
 })
 
 output$ui_tr_rcname <- renderUI({
-  if (radiant.data::is_empty(input$tr_vars)) {
+  if (is.empty(input$tr_vars)) {
     return()
   }
   returnTextInput(
@@ -190,7 +190,7 @@ output$ui_tr_rcname <- renderUI({
 })
 
 output$ui_tr_ext_bin <- renderUI({
-  if (radiant.data::is_empty(input$tr_vars)) {
+  if (is.empty(input$tr_vars)) {
     return()
   }
   returnTextInput(
@@ -200,7 +200,7 @@ output$ui_tr_ext_bin <- renderUI({
 })
 
 output$ui_tr_roname <- renderUI({
-  if (radiant.data::is_empty(input$tr_vars)) {
+  if (is.empty(input$tr_vars)) {
     return()
   }
   returnTextInput(
@@ -210,7 +210,7 @@ output$ui_tr_roname <- renderUI({
 })
 
 output$ui_tr_typename <- renderUI({
-  if (radiant.data::is_empty(input$tr_vars)) {
+  if (is.empty(input$tr_vars)) {
     return()
   }
   returnTextInput(
@@ -381,7 +381,7 @@ output$ui_Transform <- renderUI({
       ),
       conditionalPanel(
         condition = "input.tr_change_type == 'holdout'",
-        checkboxInput("tr_holdout_rev", "Reverse filter", value = TRUE)
+        checkboxInput("tr_holdout_rev", "Reverse filter and slice", value = TRUE)
       ),
       conditionalPanel(
         condition = "input.tr_change_type == 'clip'",
@@ -477,14 +477,14 @@ fix_ext <- function(ext) {
                          store_dat = "", store = TRUE) {
   .ext <- fix_ext(.ext)
 
-  if (!radiant.data::is_empty(tr_ts)) {
+  if (!is.empty(tr_ts)) {
     tr_ts <- lapply(tr_ts, function(x) x[!is.na(x)]) %>%
       (function(x) x[sapply(x, length) > 0])
   }
 
   if (!store || !is.character(dataset)) {
     fun <- get(fun)
-    if (radiant.data::is_empty(.ext)) {
+    if (is.empty(.ext)) {
       do.call(mutate_at, c(list(.tbl = dataset, .vars = vars), .funs = fun, tr_ts))
     } else {
       do.call(mutate_at, c(list(.tbl = dataset, .vars = vars), .funs = fun, tr_ts)) %>%
@@ -492,7 +492,7 @@ fix_ext <- function(ext) {
     }
   } else {
     if (store_dat == "") store_dat <- dataset
-    if (radiant.data::is_empty(tr_ts)) {
+    if (is.empty(tr_ts)) {
       tr_ts <- ""
     } else {
       tr_ts <- deparse(tr_ts, control = getOption("dctrl"), width.cutoff = 500L) %>%
@@ -500,7 +500,7 @@ fix_ext <- function(ext) {
         sub("\\)$", "", .)
     }
 
-    if (radiant.data::is_empty(.ext)) {
+    if (is.empty(.ext)) {
       paste0("## change variable type\n", store_dat, " <- mutate_at(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ", fun, tr_ts, ")\n")
     } else {
       paste0("## change variable type\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ", fun, tr_ts, ", .ext = \"", .ext, "\")\n")
@@ -514,7 +514,7 @@ fix_ext <- function(ext) {
 
   if (!store && !is.character(dataset)) {
     fun <- get(fun)
-    if (radiant.data::is_empty(.ext)) {
+    if (is.empty(.ext)) {
       result <- try(mutate_at(dataset, .vars = vars, .funs = fun), silent = TRUE)
     } else {
       result <- try(mutate_at(dataset, .vars = vars, .funs = fun) %>% set_colnames(paste0(vars, .ext)), silent = TRUE)
@@ -526,7 +526,7 @@ fix_ext <- function(ext) {
     }
   } else {
     if (store_dat == "") store_dat <- dataset
-    if (radiant.data::is_empty(.ext)) {
+    if (is.empty(.ext)) {
       paste0("## transform variable\n", store_dat, " <- mutate_at(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ", fun, ")\n")
     } else {
       paste0("## transform variable\n", store_dat, " <- mutate_ext(", dataset, ", .vars = vars(", paste0(vars, collapse = ", "), "), .funs = ", fun, ", .ext = \"", .ext, "\")\n")
@@ -541,7 +541,7 @@ fix_ext <- function(ext) {
   cmd <- fix_smart(cmd)
 
   if (!store || !is.character(dataset)) {
-    if (radiant.data::is_empty(cmd)) {
+    if (is.empty(cmd)) {
       return(dataset)
     }
 
@@ -565,7 +565,7 @@ fix_ext <- function(ext) {
     attach(r_data)
     on.exit(detach(r_data))
 
-    if (radiant.data::is_empty(byvar)) {
+    if (is.empty(byvar)) {
       ## using within and do.call because it provides better err messages
       nvar <- try(do.call(within, list(dataset, parse(text = cmd))), silent = TRUE)
     } else {
@@ -591,7 +591,7 @@ fix_ext <- function(ext) {
       gsub("<-", "=", .) %>%
       gsub("\\s{2,}", " ", .)
 
-    if (radiant.data::is_empty(byvar)) {
+    if (is.empty(byvar)) {
       paste0("## create new variable(s)\n", store_dat, " <- mutate(", dataset, ", ", cmd, ")\n")
     } else {
       paste0("## create new variable(s)\n", store_dat, " <- group_by(", dataset, ", ", paste0(byvar, collapse = ", "), ") %>%\n  mutate(", cmd, ") %>%\n  ungroup()\n")
@@ -604,7 +604,7 @@ fix_ext <- function(ext) {
   cmd <- cmd %>%
     gsub("\\n", "", .) %>%
     gsub("\"", "\'", .)
-  if (radiant.data::is_empty(rcname)) rcname <- paste0(var, "_rc")
+  if (is.empty(rcname)) rcname <- paste0(var, "_rc")
 
   if (!store || !is.character(dataset)) {
     if (cmd == "") {
@@ -684,12 +684,12 @@ fix_ext <- function(ext) {
 .tab2dat <- function(dataset, freq, vars = "",
                      store_dat = "", store = TRUE) {
   if (!store && !is.character(dataset)) {
-    if (radiant.data::is_empty(vars)) vars <- base::setdiff(colnames(dataset), freq)
+    if (is.empty(vars)) vars <- base::setdiff(colnames(dataset), freq)
     select_at(dataset, .vars = unique(c(vars, freq))) %>%
       table2data(freq)
   } else {
     if (store_dat == "") store_dat <- dataset
-    if (radiant.data::is_empty(vars)) vars <- base::setdiff(colnames(r_data[[dataset]]), freq)
+    if (is.empty(vars)) vars <- base::setdiff(colnames(r_data[[dataset]]), freq)
     vars <- unique(c(vars, freq))
     paste0("## Create data from a table\n", store_dat, " <- select(", dataset, ", ", paste0(vars, collapse = ", "), ") %>%\n  table2data(\"", freq, "\")\n")
   }
@@ -729,7 +729,7 @@ fix_ext <- function(ext) {
   } else {
     if (store_dat == "") store_dat <- dataset
     cmd <- ""
-    if (!radiant.data::is_empty(vars)) {
+    if (!is.empty(vars)) {
       cmd <- paste0("## Select columns\n", store_dat, " <- select(", dataset, ", ", paste0(vars, collapse = ", "), ")\n")
       dataset <- store_dat
     }
@@ -785,7 +785,7 @@ fix_ext <- function(ext) {
 .training <- function(dataset, vars = "", n = .7, nr = 100,
                       name = "training", seed = 1234,
                       store_dat = "", store = TRUE) {
-  if (radiant.data::is_empty(name)) {
+  if (is.empty(name)) {
     name <- "training"
   } else {
     name <- fix_names(name)
@@ -793,7 +793,7 @@ fix_ext <- function(ext) {
   if (!store && !is.character(dataset)) {
     n <- n %>%
       (function(x) ifelse(x < 0 || is.na(x) || x > nr, 0.7, x))
-    if (radiant.data::is_empty(vars)) {
+    if (is.empty(vars)) {
       blocks <- NULL
     } else {
       blocks <- dataset[, vars]
@@ -804,7 +804,7 @@ fix_ext <- function(ext) {
       setNames(name)
   } else {
     if (store_dat == "") store_dat <- dataset
-    if (radiant.data::is_empty(vars)) {
+    if (is.empty(vars)) {
       paste0("## created variable to select training sample\n", store_dat, " <- mutate(", dataset, ", ", name, " = make_train(", n, ", n(), seed = ", seed, "))\n")
     } else {
       paste0("## created variable to select training sample\n", store_dat, " <- mutate(", dataset, ", ", name, " = make_train(", n, ", blocks = select(", dataset, ", ", paste0(vars, collapse = ", "), "), seed = ", seed, "))\n")
@@ -818,7 +818,7 @@ fix_ext <- function(ext) {
 
 .reorg_levs <- function(dataset, fct, levs, repl = NA, name = fct,
                         store_dat = "", store = TRUE) {
-  if (radiant.data::is_empty(name)) name <- fct
+  if (is.empty(name)) name <- fct
   if (!store || !is.character(dataset)) {
     data.frame(refactor(dataset[[fct]], levs = levs, repl = repl), stringsAsFactors = FALSE) %>%
       setNames(name)
@@ -909,28 +909,37 @@ fix_ext <- function(ext) {
   }
 }
 
-.holdout <- function(dataset, vars = "", filt = "", rev = "",
+.holdout <- function(dataset, vars = "", filt = "", rows = NULL, rev = "",
                      store_dat = "", store = TRUE) {
-  if (radiant.data::is_empty(filt)) {
-    return(paste0("No filter found (n = ", nrow(dataset), ")"))
+  if (is.empty(filt) & is.empty(rows)) {
+    return(paste0("No filter or slice found (n = ", nrow(dataset), ")"))
   } else if (rev) {
-    filt <- paste0("!(", filt, ")")
+    filt <- ifelse(is.empty(filt), filt, paste0("!(", filt, ")"))
+    rows <- ifelse(is.empty(rows), rows, paste0("-(", rows, ")"))
   }
 
   if (!store || !is.character(dataset)) {
-    get_data(dataset, vars = vars, filt = filt, na.rm = FALSE, envir = r_data)
+    get_data(dataset, vars = vars, filt = filt, rows = rows, na.rm = FALSE, envir = r_data)
   } else {
-    filt <- gsub("\"", "'", filt)
+    cmd <- glue("## create holdout sample\n{store_dat} <- {dataset}")
+    if (!is.empty(filt)) {
+      filt <- gsub("\"", "'", filt)
+      cmd <- paste0(cmd, " %>%\n  filter(", filt, ")")
+    }
+    if (!is.empty(rows)) {
+      cmd <- paste0(cmd, " %>%\n  slice(", rows, ")")
+    }
+
     if (all(vars == "")) {
-      paste0("## create holdout sample\n", store_dat, " <- filter(", dataset, ", ", filt, ")\n")
+      paste0(cmd, "\n")
     } else {
-      paste0("## create holdout sample\n", store_dat, " <- filter(", dataset, ", ", filt, ") %>% select(", paste0(vars, collapse = ", "), ")\n")
+      paste0(cmd, "%>%\n  select(", paste0(vars, collapse = ", "), ")\n")
     }
   }
 }
 
 inp_vars <- function(inp, rval = "") {
-  if (radiant.data::is_empty(input[[inp]]) || !available(input[[inp]])) rval else input[[inp]]
+  if (is.empty(input[[inp]]) || !available(input[[inp]])) rval else input[[inp]]
 }
 
 transform_main <- reactive({
@@ -996,7 +1005,7 @@ transform_main <- reactive({
   if (input$tr_change_type == "tab2dat") {
     if (is.null(input$tr_tab2dat) || input$tr_tab2dat == "none") {
       return("Select a frequency variable")
-    } else if (!radiant.data::is_empty(input$tr_vars) && all(input$tr_vars == input$tr_tab2dat)) {
+    } else if (!is.empty(input$tr_vars) && all(input$tr_vars == input$tr_tab2dat)) {
       return("Select at least one variable that is not the frequency variable")
     } else {
       req(available(input$tr_tab2dat))
@@ -1022,22 +1031,22 @@ transform_main <- reactive({
   ## filter data for holdout
   if (input$tr_change_type == "holdout") {
     if (!input$show_filter) {
-      return("No filter active. Click the 'Filter' checkbox and enter a filter")
+      return("\nNo filter or slice set. Click the 'Filter' checkbox and enter a\nfilter and/or a slice of rows to keep as the main data. The holdout\nwill have have all rows not selected by the filter and slice")
     }
-    return(.holdout(dat, inp_vars("tr_vars"), filt = input$data_filter, rev = input$tr_holdout_rev, store = FALSE))
+    return(.holdout(dat, inp_vars("tr_vars"), filt = input$data_filter, rows = input$data_rows, rev = input$tr_holdout_rev, store = FALSE))
   }
 
   ## spread a variable
   if (input$tr_change_type == "spread") {
-    if (radiant.data::is_empty(input$tr_spread_key, "none") ||
-      radiant.data::is_empty(input$tr_spread_value, "none")) {
+    if (is.empty(input$tr_spread_key, "none") ||
+      is.empty(input$tr_spread_value, "none")) {
       return("Select a Key and Value pair to spread")
     }
     return(.spread(dat, key = input$tr_spread_key, value = input$tr_spread_value, fill = input$tr_spread_fill, vars = inp_vars("tr_vars"), store = FALSE))
   }
 
   ## only use the functions below if variables have been selected
-  if (!radiant.data::is_empty(input$tr_vars)) {
+  if (!is.empty(input$tr_vars)) {
     if (not_available(input$tr_vars)) {
       return()
     }
@@ -1054,7 +1063,7 @@ transform_main <- reactive({
 
     ## gather variables
     if (input$tr_change_type == "gather") {
-      if (radiant.data::is_empty(input$tr_gather_key) || radiant.data::is_empty(input$tr_gather_value)) {
+      if (is.empty(input$tr_gather_key) || is.empty(input$tr_gather_value)) {
         return("Provide a name for the Key and Value variables")
       }
       return(.gather(dat, inp_vars("tr_vars"), key = input$tr_gather_key, value = input$tr_gather_value, store = FALSE))
@@ -1076,7 +1085,7 @@ transform_main <- reactive({
     }
 
     if (input$tr_change_type == "normalize") {
-      if (radiant.data::is_empty(input$tr_normalizer, "none")) {
+      if (is.empty(input$tr_normalizer, "none")) {
         return("Select a normalizing variable")
       } else {
         return(.normalize(dat, inp_vars("tr_vars"), input$tr_normalizer, .ext = input$tr_ext_nz, store = FALSE))
@@ -1137,7 +1146,7 @@ transform_main <- reactive({
     }
 
     if (input$tr_change_type == "recode") {
-      if (radiant.data::is_empty(input$tr_recode)) {
+      if (is.empty(input$tr_recode)) {
         return("Specify a recode statement, assign a name to the recoded variable, and press 'return'. **\n** See the help file for examples")
       } else {
         return(.recode(dat, inp_vars("tr_vars")[1], input$tr_recode, input$tr_rcname, store = FALSE))
@@ -1145,7 +1154,7 @@ transform_main <- reactive({
     }
 
     if (input$tr_change_type == "rename") {
-      if (radiant.data::is_empty(input$tr_rename)) {
+      if (is.empty(input$tr_rename)) {
         return("Specify new names for the selected variables (separated by a ',') and press 'return'")
       } else {
         if (any(input$tr_rename %in% varnames())) {
@@ -1194,9 +1203,9 @@ output$transform_summary <- renderPrint({
         cat("** Select a transformation type or select variables to summarize **\n\n")
       } else {
         cat("** Press the 'Store' button to add your changes to the data **\n\n")
-        if (!radiant.data::is_empty(input$tr_vars) && input$tr_change_type == "create") {
+        if (!is.empty(input$tr_vars) && input$tr_change_type == "create") {
           cat("** Results are grouped by", paste(input$tr_vars, collapse = ", "), "**\n\n")
-        } else if (!radiant.data::is_empty(input$tr_vars) && input$tr_change_type == "training") {
+        } else if (!is.empty(input$tr_vars) && input$tr_change_type == "training") {
           cat("** Results are blocked by", paste(input$tr_vars, collapse = ", "), "**\n\n")
         }
       }
@@ -1264,7 +1273,7 @@ observeEvent(input$tr_store, {
     cmd <- .show_dup(input$dataset, vars = input$tr_vars, df_name, nr_col = ncol(dat))
     r_data[[df_name]] <- dat
   } else if (input$tr_change_type == "holdout") {
-    cmd <- .holdout(input$dataset, vars = input$tr_vars, filt = input$data_filter, rev = input$tr_holdout_rev, df_name)
+    cmd <- .holdout(input$dataset, vars = input$tr_vars, filt = input$data_filter, rows = input$data_rows, rev = input$tr_holdout_rev, df_name)
     r_data[[df_name]] <- dat
   } else if (input$tr_change_type == "tab2dat") {
     cmd <- .tab2dat(input$dataset, input$tr_tab2dat, vars = input$tr_vars, df_name)
@@ -1335,7 +1344,24 @@ observeEvent(input$tr_store, {
   ## reset input values once the changes have been applied
   # updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")
 
-  updateSelectInput(session = session, inputId = "dataset", selected = df_name)
+  ## jumps straight to the new dataset
+  # updateSelectInput(session = session, inputId = "dataset", selected = df_name)
+  if (input$dataset != df_name) {
+    showModal(
+      modalDialog(
+        title = "Data Stored",
+        span(
+          paste0("Dataset '", df_name, "' was successfully added to
+                  the datasets dropdown. Add code to Report > Rmd or
+                  Report > R to (re)create the results by clicking the
+                  report icon on the bottom left of your screen.")
+        ),
+        footer = modalButton("OK"),
+        size = "m",
+        easyClose = TRUE
+      )
+    )
+  }
 })
 
 observeEvent(input$tr_change_type, {
@@ -1357,7 +1383,7 @@ observeEvent(input$tr_change_type, {
 
 transform_report <- function() {
   cmd <- NULL
-  if (!radiant.data::is_empty(input$tr_log)) {
+  if (!is.empty(input$tr_log)) {
     cmd <- gsub("\n{2,}", "\n", input$tr_log) %>%
       sub("^\n", "", .) %>%
       sub("\n$", "", .)

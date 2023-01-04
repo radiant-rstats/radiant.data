@@ -12,6 +12,7 @@
   searchCols = NULL,
   order = NULL,
   pageLength = NULL,
+  caption = NULL,
   ...
 )
 }
@@ -29,6 +30,8 @@
 \item{order}{Column sorting}
 
 \item{pageLength}{Page length}
+
+\item{caption}{Table caption}
 
 \item{...}{further arguments passed to or from other methods}
 }

@@ -4,7 +4,15 @@
 \alias{dtab.explore}
 \title{Make an interactive table of summary statistics}
 \usage{
-\method{dtab}{explore}(object, dec = 3, searchCols = NULL, order = NULL, pageLength = NULL, ...)
+\method{dtab}{explore}(
+  object,
+  dec = 3,
+  searchCols = NULL,
+  order = NULL,
+  pageLength = NULL,
+  caption = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{Return value from \code{\link{explore}}}
@@ -16,6 +24,8 @@
 \item{order}{Column sorting}
 
 \item{pageLength}{Page length}
+
+\item{caption}{Table caption}
 
 \item{...}{further arguments passed to or from other methods}
 }

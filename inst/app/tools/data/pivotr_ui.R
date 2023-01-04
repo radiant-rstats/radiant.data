@@ -14,6 +14,7 @@ pvt_args <- as.list(formals(pivotr))
 pvt_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   pvt_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  pvt_args$rows <- if (isTRUE(input$show_filter)) input$data_rows else ""
   pvt_args$dataset <- input$dataset
   for (i in r_drop(names(pvt_args))) {
     pvt_args[[i]] <- input[[paste0("pvt_", i)]]
@@ -96,12 +97,8 @@ output$ui_pvt_nvar <- renderUI({
   if (any(vars %in% input$pvt_cvars)) {
     vars <- base::setdiff(vars, input$pvt_cvars)
     names(vars) <- varnames() %>%
-      {
-        .[which(. %in% vars)]
-      } %>%
-      {
-        c("None", names(.))
-      }
+      (function(x) x[which(x %in% vars)]) %>%
+      (function(x) c("None", names(x)))
   }
 
   selectizeInput(
@@ -189,6 +186,12 @@ output$ui_Pivotr <- renderUI({
       conditionalPanel("input.pvt_nvar != 'None'", uiOutput("ui_pvt_fun")),
       uiOutput("ui_pvt_normalize"),
       uiOutput("ui_pvt_format"),
+      returnTextAreaInput("pvt_tab_slice",
+        label = "Table slice (rows):",
+        rows = 1,
+        value = state_init("pvt_tab_slice"),
+        placeholder = "e.g., 1:5 and press return"
+      ),
       numericInput(
         "pvt_dec", "Decimals:",
         value = state_init("pvt_dec", 3),
@@ -252,10 +255,10 @@ observeEvent(input$pvt_nvar, {
   req(!any(input$pvt_nvar %in% input$pvt_cvars))
 
   pvti <- pvt_inputs()
-  if (radiant.data::is_empty(input$pvt_fun)) pvti$fun <- "n_obs"
-  if (radiant.data::is_empty(input$pvt_nvar)) pvti$nvar <- "None"
+  if (is.empty(input$pvt_fun)) pvti$fun <- "n_obs"
+  if (is.empty(input$pvt_nvar)) pvti$nvar <- "None"
 
-  if (!radiant.data::is_empty(pvti$nvar, "None")) {
+  if (!is.empty(pvti$nvar, "None")) {
     req(available(pvti$nvar))
   }
   pvti$envir <- r_data
@@ -285,6 +288,8 @@ output$pivotr <- DT::renderDataTable({
       order <- r_state$pivotr_state$order
       pageLength <- r_state$pivotr_state$length
     })
+    #caption <- if (is.empty(input$pvt_tab_slice)) NULL else htmltools::tags$caption(glue("Table slice {input$pvt_tab_slice} will be applied on Download, Store, or Report"))
+    caption <- if (is.empty(input$pvt_tab_slice)) NULL else glue("Table slice {input$pvt_tab_slice} will be applied on Download, Store, or Report")
     dtab(
       pvt,
       format = input$pvt_format,
@@ -292,7 +297,8 @@ output$pivotr <- DT::renderDataTable({
       dec = input$pvt_dec,
       searchCols = searchCols,
       order = order,
-      pageLength = pageLength
+      pageLength = pageLength,
+      caption = caption
     )
   })
 })
@@ -315,10 +321,10 @@ dl_pivot_tab <- function(file) {
     write.csv(tibble::tibble("Data" = "[Empty]"), file, row.names = FALSE)
   } else {
     rows <- isolate(r_info[["pvt_rows"]])
-    dat$tab %>%
-      {
-        if (is.null(rows)) . else .[c(rows, nrow(.)), , drop = FALSE]
-      } %>%
+    dat$tab[-nrow(dat$tab)] %>%
+      (function(x) if (is.null(rows)) x else x[rows, , drop = FALSE]) %>%
+      (function(x) if (is.empty(input$pvt_tab_slice)) x else slice_data(x, input$pvt_tab_slice)) %>%
+      bind_rows(dat$tab[nrow(dat$tab),, drop = FALSE]) %>%
       write.csv(file, row.names = FALSE)
   }
 }
@@ -344,9 +350,7 @@ pvt_plot_height <- eventReactive(
         as.factor() %>%
         levels() %>%
         length() %>%
-        {
-          . * 200
-        }
+        (function(x) x * 200)
     } else if (input$pvt_flip) {
       if (length(input$pvt_cvars) == 2) {
         max(400, ncol(pvt$tab) * 15)
@@ -365,9 +369,7 @@ pvt_sorter <- function(pvt, rows = NULL) {
   }
   cvars <- pvt$cvars
   tab <- pvt$tab %>%
-    {
-      filter(., .[[1]] != "Total")
-    }
+    (function(x) filter(x, x[[1]] != "Total"))
 
   if (length(cvars) > 1) {
     tab %<>% select(-which(colnames(.) == "Total"))
@@ -397,21 +399,19 @@ observeEvent(input$pivotr_rows_all, {
   {
     pvt <- .pivotr()
     req(pvt)
-    if (!radiant.data::is_empty(input$pvt_tab, FALSE)) {
+    if (!is.empty(input$pvt_tab, FALSE)) {
       pvt <- pvt_sorter(pvt, rows = r_info[["pvt_rows"]])
     }
     withProgress(message = "Making plot", value = 1, {
       pvt_plot_inputs() %>%
-        {
-          do.call(plot, c(list(x = pvt), .))
-        }
+        (function(x) do.call(plot, c(list(x = pvt), x)))
     })
   }
 )
 
 output$plot_pivot <- renderPlot(
   {
-    if (radiant.data::is_empty(input$pvt_plot, FALSE)) {
+    if (is.empty(input$pvt_plot, FALSE)) {
       return(invisible())
     }
     validate(
@@ -442,9 +442,10 @@ observeEvent(input$pvt_store, {
   }
 
   rows <- input$pivotr_rows_all
-  dat$tab %<>% {
-    if (is.null(rows)) . else .[rows, , drop = FALSE]
-  }
+  dat$tab <- dat$tab %>%
+    (function(x) if (is.null(rows)) x else x[rows, , drop = FALSE]) %>%
+    (function(x) if (is.empty(input$pvt_tab_slice)) x else slice_data(x, input$pvt_tab_slice)) %>%
+    droplevels()
   r_data[[dataset]] <- dat$tab
   register(dataset)
   updateSelectInput(session, "dataset", selected = input$dataset)
@@ -481,21 +482,21 @@ pivot_report <- function() {
 
   ## get the state of the dt table
   ts <- dt_state("pivotr")
-  xcmd <- paste0("# summary()\ndtab(result")
-  if (!radiant.data::is_empty(input$pvt_format, "none")) {
+  xcmd <- paste0("# summary(result)\ndtab(result")
+  if (!is.empty(input$pvt_format, "none")) {
     xcmd <- paste0(xcmd, ", format = \"", input$pvt_format, "\"")
   }
   if (isTRUE(input$pvt_perc)) {
     xcmd <- paste0(xcmd, ", perc = ", input$pvt_perc)
   }
-  if (!radiant.data::is_empty(input$pvt_dec, 3)) {
+  if (!is.empty(input$pvt_dec, 3)) {
     xcmd <- paste0(xcmd, ", dec = ", input$pvt_dec)
   }
-  if (!radiant.data::is_empty(r_state$pivotr_state$length, 10)) {
+  if (!is.empty(r_state$pivotr_state$length, 10)) {
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$pivotr_state$length)
   }
-  xcmd <- paste0(xcmd, ") %>% render()")
-  if (!radiant.data::is_empty(input$pvt_name)) {
+  xcmd <- paste0(xcmd, ", caption = \"\") %>% render()")
+  if (!is.empty(input$pvt_name)) {
     dataset <- fix_names(input$pvt_name)
     if (input$pvt_name != dataset) {
       updateTextInput(session, inputId = "pvt_name", value = dataset)
@@ -510,7 +511,14 @@ pivot_report <- function() {
   if (ts$tabfilt != "") {
     inp_main <- c(inp_main, tabfilt = ts$tabfilt)
   }
-  inp_main <- c(inp_main, nr = Inf)
+ if (is.empty(inp_main$rows)) {
+    inp_main$rows <- NULL
+ }
+ if (is.empty(input$pvt_tab_slice)) {
+   inp_main <- c(inp_main, nr = Inf)
+ } else {
+   inp_main$tabslice <- input$pvt_tab_slice
+ }
 
   ## update Report > Rmd or Report > R
   update_report(

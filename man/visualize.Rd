@@ -10,7 +10,7 @@ visualize(
   yvar = "",
   comby = FALSE,
   combx = FALSE,
-  type = ifelse(radiant.data::is_empty(yvar), "dist", "scatter"),
+  type = ifelse(is.empty(yvar), "dist", "scatter"),
   nrobs = -1,
   facet_row = ".",
   facet_col = ".",
@@ -33,6 +33,7 @@ visualize(
   xlim = NULL,
   ylim = NULL,
   data_filter = "",
+  rows = NULL,
   shiny = FALSE,
   custom = FALSE,
   envir = parent.frame()
@@ -94,6 +95,8 @@ visualize(
 \item{ylim}{Set limit for y-axis (e.g., c(0, 1))}
 
 \item{data_filter}{Expression used to filter the dataset. This should be a string (e.g., "price > 10000")}
+
+\item{rows}{Rows to select from the specified dataset}
 
 \item{shiny}{Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app}
 

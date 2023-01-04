@@ -12,8 +12,8 @@ output$state_view <- renderUI({
         # checkboxInput("show_session", "Show session", FALSE)
       ),
       help_modal(
-        "View state", "state_help", 
-        inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/state.md")), 
+        "View state", "state_help",
+        inclMD(file.path(getOption("radiant.path.data"), "app/tools/help/state.md")),
         lic = "by-sa"
       )
     ),
@@ -47,11 +47,11 @@ state_name <- function(out = paste0("radiant-", Sys.Date(), ".state.rda"), full.
   ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
   pdir <- getOption("radiant.project_dir", default = ldir)
   ## legacy
-  if (radiant.data::is_empty(rsn)) rsn <- r_state$state_name 
-  if (!radiant.data::is_empty(rsn)) {
-    fn <- rsn 
+  if (is.empty(rsn)) rsn <- r_state$state_name
+  if (!is.empty(rsn)) {
+    fn <- rsn
   } else {
-    if (!radiant.data::is_empty(pdir)) {
+    if (!is.empty(pdir)) {
       fn <- paste0(basename(pdir), ".state.rda")
       r_state$radiant_state_name <<- fn
     } else {
@@ -59,14 +59,14 @@ state_name <- function(out = paste0("radiant-", Sys.Date(), ".state.rda"), full.
     }
   }
 
-  ## legacy 
+  ## legacy
   # if (tools::file_ext(fn) != "rda") {
   #   fn <- paste0(fn, ".rda")
-  # } 
-  # ## legacy 
+  # }
+  # ## legacy
   # if (!grepl("state", fn)) {
   #   fn <- sub("\\.rda$", ".state.rda", fn)
-  # } 
+  # }
 
   if (full.name) {
     file.path(pdir, fn)
@@ -84,11 +84,15 @@ observeEvent(input$state_share, {
 output$state_download <- downloadHandler(
   filename = function() {
     fn <- state_name_dlh() %>% sans_ext()
-    type <- state_name_dlh() %>% 
-      {if (grepl("\\.state\\.rda", .)) "state.rda" else tools::file_ext(.)}
+    type <- state_name_dlh() %>%
+      {
+        if (grepl("\\.state\\.rda", .)) "state.rda" else tools::file_ext(.)
+      }
     paste0(fn, ".", type)
   },
-  content = function(path) { saveState(path) }
+  content = function(path) {
+    saveState(path)
+  }
 )
 
 output$show_session <- renderPrint({
@@ -121,7 +125,10 @@ output$show_info <- renderPrint({
   input$show_info ## only update when you toggle the checkbox
   isolate({
     cat("r_info list:\n")
-    toList(r_info) %>% {str(.[sort(names(.))])}
+    toList(r_info) %>%
+      {
+        str(.[sort(names(.))])
+      }
   })
 })
 

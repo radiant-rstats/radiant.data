@@ -18,7 +18,7 @@ dtab <- function(object, ...) UseMethod("dtab", object)
 #' @param vars Variables to show (default is all)
 #' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
 #' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
-#' @param nr Number of rows of data to include in the table
+#' @param nr Number of rows of data to include in the table. This function will be mainly used in reports so it is best to keep this number small
 #' @param na.rm Remove rows with missing values (default is FALSE)
 #' @param dec Number of decimal places to show. Default is no rounding (NULL)
 #' @param perc Vector of column names to be displayed as a percentage
@@ -44,15 +44,16 @@ dtab.data.frame <- function(object, vars = "", filt = "", rows = NULL,
                             style = "bootstrap4", rownames = FALSE,
                             caption = NULL,
                             envir = parent.frame(), ...) {
+  ## does this need a data_view_rows argument?
   dat <- get_data(object, vars, filt = filt, rows = rows, na.rm = na.rm, envir = envir)
-  if (!radiant.data::is_empty(nr) && nr < nrow(dat)) {
+  if (!is.empty(nr) && nr < nrow(dat)) {
     dat <- dat[seq_len(nr), , drop = FALSE]
   }
 
   ## for rounding
   isInt <- sapply(dat, is.integer)
   isDbl <- sapply(dat, is_double)
-  dec <- ifelse(radiant.data::is_empty(dec) || dec < 0, 3, round(dec, 0))
+  dec <- ifelse(is.empty(dec) || dec < 0, 3, round(dec, 0))
 
   ## don't do normal rounding for perc variables
   isInt[intersect(names(isInt), perc)] <- FALSE
@@ -63,13 +64,13 @@ dtab.data.frame <- function(object, vars = "", filt = "", rows = NULL,
   dat <- mutate_if(dat, isBigFct, as.character)
 
   ## for display options see https://datatables.net/reference/option/dom
-  if (radiant.data::is_empty(dom)) {
+  if (is.empty(dom)) {
     dom <- if (pageLength == -1 || nrow(dat) < pageLength) "t" else "lftip"
   }
 
-  if (!radiant.data::is_empty(caption)) {
+  if (!is.empty(caption)) {
     ## from https://github.com/rstudio/DT/issues/630#issuecomment-461191378
-    caption <- shiny::tags$caption(style = "caption-side: top; text-align: left; color:black; font-size:150%;", caption)
+    caption <- shiny::tags$caption(style = "caption-side: bottom; text-align: left; font-size:100%;", caption)
   }
 
   dt_tab <- DT::datatable(
@@ -105,7 +106,7 @@ dtab.data.frame <- function(object, vars = "", filt = "", rows = NULL,
   if (sum(isInt) > 0) {
     dt_tab <- DT::formatRound(dt_tab, colnames(dat)[isInt], digits = 0)
   }
-  if (!radiant.data::is_empty(perc)) {
+  if (!is.empty(perc)) {
     dt_tab <- DT::formatPercentage(dt_tab, perc, digits = dec)
   }
 
@@ -132,19 +133,40 @@ filter_data <- function(dataset, filt = "", drop = TRUE) {
   if (grepl("([^=!<>])=([^=])", filt)) {
     message("Invalid filter: Never use = in a filter. Use == instead (e.g., year == 2014). Update or remove the expression")
   } else {
-    seldat <- try(
-      ## use %>% so . will be available to represent the available data in filters
-      dataset %>% filter(!!rlang::parse_expr(fix_smart(filt))),
-      silent = TRUE
-    )
-    if (inherits(seldat, "try-error")) {
-      message(paste0("Invalid filter: \"", attr(seldat, "condition")$message, "\". Update or remove the expression"))
+    filter_dat <- try(dataset %>% filter(!!rlang::parse_expr(filt)), silent = TRUE)
+    if (inherits(filter_dat, "try-error")) {
+      message(paste0("Invalid filter: \"", attr(filter_dat, "condition")$message, "\". Update or remove the expression"))
     } else {
       if (drop) {
-        return(droplevels(seldat))
+        return(droplevels(filter_dat))
       } else {
-        return(seldat)
+        return(filter_dat)
       }
+    }
+  }
+  dataset
+}
+
+#' Slice data with user-specified expression
+#' @details Select only a slice of the data to work with
+#' @param dataset Data frame to filter
+#' @param rows Rows to select from the specified dataset
+#' @param drop Drop unused factor levels after filtering (default is TRUE)
+#' @return Sliced data frame
+#' @export
+slice_data <- function(dataset, rows = NULL, drop = TRUE) {
+  if (is.numeric(rows)) {
+    slice_dat <- try(dataset %>% slice(rows), silent = TRUE)
+  } else {
+    slice_dat <- try(dataset %>% slice(!!rlang::parse_expr(rows)), silent = TRUE)
+  }
+  if (inherits(slice_dat, "try-error")) {
+    message(paste0("Invalid slice: \"", attr(slice_dat, "condition")$message, "\". Update or remove the expression"))
+  } else {
+    if (drop) {
+      return(droplevels(slice_dat))
+    } else {
+      return(slice_dat)
     }
   }
   dataset
@@ -205,7 +227,7 @@ view_data <- function(dataset, vars = "", filt = "",
   ## for rounding
   isDbl <- sapply(dat, is_double)
   isInt <- sapply(dat, is.integer)
-  dec <- ifelse(radiant.data::is_empty(dec) || dec < 0, 3, round(dec, 0))
+  dec <- ifelse(is.empty(dec) || dec < 0, 3, round(dec, 0))
 
   shinyApp(
     ui = fluidPage(

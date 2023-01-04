@@ -30,7 +30,7 @@ viz_add_labs <- function() {
   lab_list <- list()
   for (l in viz_labs) {
     inp <- input[[paste0("viz_labs_", l)]]
-    if (!radiant.data::is_empty(inp)) lab_list[[l]] <- inp
+    if (!is.empty(inp)) lab_list[[l]] <- inp
   }
   lab_list
 }
@@ -42,10 +42,11 @@ viz_args <- as.list(formals(visualize))
 viz_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   viz_args$data_filter <- if (isTRUE(input$show_filter)) input$data_filter else ""
+  viz_args$rows <- if (isTRUE(input$show_filter)) input$data_rows else ""
   viz_args$dataset <- input$dataset
   viz_args$shiny <- input$shiny
   viz_args$labs <- viz_add_labs()
-  for (i in r_drop(names(viz_args), drop = c("dataset", "data_filter", "labs"))) {
+  for (i in r_drop(names(viz_args), drop = c("dataset", "data_filter", "rows", "labs"))) {
     viz_args[[i]] <- input[[paste0("viz_", i)]]
   }
   # isolate({
@@ -220,7 +221,7 @@ output$ui_viz_axes <- renderUI({
   } else if (input$viz_type %in% c("bar", "box")) {
     ind <- c(1, 3)
   }
-  if (!radiant.data::is_empty(input$viz_facet_row, ".") || !radiant.data::is_empty(input$viz_facet_col, ".")) ind <- c(ind, 4)
+  if (!is.empty(input$viz_facet_row, ".") || !is.empty(input$viz_facet_col, ".")) ind <- c(ind, 4)
   # if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
   if (input$viz_type == "bar") ind <- c(ind, 6)
 
@@ -476,7 +477,7 @@ output$ui_Visualize <- renderUI({
 })
 
 viz_plot_width <- reactive({
-  if (radiant.data::is_empty(input$viz_plot_width)) r_info[["plot_width"]] else input$viz_plot_width
+  if (is.empty(input$viz_plot_width)) r_info[["plot_width"]] else input$viz_plot_width
 })
 
 ## based on https://stackoverflow.com/a/40182833/1974918
@@ -487,7 +488,7 @@ viz_plot_height <- eventReactive(
     input$viz_plot_width
   },
   {
-    if (radiant.data::is_empty(input$viz_plot_height)) {
+    if (is.empty(input$viz_plot_height)) {
       r_info[["plot_height"]]
     } else {
       lx <- ifelse(not_available(input$viz_xvar) || isTRUE(input$viz_combx), 1, length(input$viz_xvar))

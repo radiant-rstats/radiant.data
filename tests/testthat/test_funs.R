@@ -51,13 +51,13 @@ test_that("get_class", {
   expect_equal(get_class(diamonds), sapply(diamonds, class) %>% tolower())
 })
 
-test_that("is_empty", {
-  expect_true(is_empty(""))
-  expect_true(is_empty(NULL))
-  expect_true(is_empty(NA))
-  expect_false(is_empty(3))
-  expect_true(is_empty(c()))
-  expect_true(is_empty("nothing", empty = "nothing"))
+test_that("is.empty(", {
+  expect_true(is.empty(""))
+  expect_true(is.empty(NULL))
+  expect_true(is.empty(NA))
+  expect_false(is.empty(3))
+  expect_true(is.empty(c()))
+  expect_true(is.empty("nothing", empty = "nothing"))
 })
 
 test_that("select column", {
@@ -114,8 +114,8 @@ test_that("explore 8 x 2", {
     ), byvar = NULL, fun = c(
       "mean",
       "sd"
-    ), top = "fun", tabfilt = "", tabsort = "", nr = Inf,
-    data_filter = ""
+    ), top = "fun", tabfilt = "", tabsort = "", tabslice = "",
+    nr = Inf, data_filter = "", rows = NULL
   ), class = c("explore", "list")))
 })
 
@@ -129,8 +129,8 @@ test_that("explore 1 x 2", {
       NA,
       -1L
     ), radiant_nrow = 1L), df_name = "diamonds", vars = "price", byvar = NULL,
-    fun = c("mean", "sd"), top = "fun", tabfilt = "", tabsort = "",
-    nr = Inf, data_filter = ""
+    fun = c("mean", "sd"), top = "fun", tabfilt = "", tabsort = "", tabslice = "",
+    nr = Inf, data_filter = "", rows = NULL
   ), class = c(
     "explore",
     "list"

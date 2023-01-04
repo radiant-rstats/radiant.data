@@ -9,8 +9,10 @@
 #' @param normalize Normalize the table by row total, column totals, or overall total
 #' @param tabfilt Expression used to filter the table (e.g., "Total > 10000")
 #' @param tabsort Expression used to sort the table (e.g., "desc(Total)")
+#' @param tabslice Expression used to filter table (e.g., "1:5")
 #' @param nr Number of rows to display
 #' @param data_filter Expression used to filter the dataset before creating the table (e.g., "price > 10000")
+#' @param rows Rows to select from the specified dataset
 #' @param envir Environment to extract data from
 #'
 #' @examples
@@ -23,13 +25,13 @@
 #'
 #' @export
 pivotr <- function(dataset, cvars = "", nvar = "None", fun = "mean",
-                   normalize = "None", tabfilt = "", tabsort = "", nr = Inf,
-                   data_filter = "", envir = parent.frame()) {
+                   normalize = "None", tabfilt = "", tabsort = "", tabslice = "",
+                   nr = Inf, data_filter = "", rows = NULL, envir = parent.frame()) {
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   fill <- if (nvar == "None") 0L else NA
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- get_data(dataset, vars, filt = data_filter, na.rm = FALSE, envir = envir)
+  dataset <- get_data(dataset, vars, filt = data_filter, rows = rows, na.rm = FALSE, envir = envir)
 
   ## in case : was used for cvars
   cvars <- base::setdiff(colnames(dataset), nvar)
@@ -72,7 +74,7 @@ pivotr <- function(dataset, cvars = "", nvar = "None", fun = "mean",
   }
   sfun <- function(x, nvar, cvars = "", fun = fun) {
     if (nvar == "n_obs") {
-      if (radiant.data::is_empty(cvars)) {
+      if (is.empty(cvars)) {
         count(x) %>% dplyr::rename("n_obs" = "n")
       } else {
         count(select_at(x, .vars = cvars)) %>% dplyr::rename("n_obs" = "n")
@@ -172,7 +174,7 @@ pivotr <- function(dataset, cvars = "", nvar = "None", fun = "mean",
   colnames(tab)[cni] <- fix_names(cn[cni])
 
   ## filtering the table if desired
-  if (!radiant.data::is_empty(tabfilt)) {
+  if (!is.empty(tabfilt)) {
     tab <- tab[-nrow(tab), ] %>%
       filter_data(tabfilt, drop = FALSE) %>%
       bind_rows(tab[nrow(tab), ]) %>%
@@ -180,7 +182,7 @@ pivotr <- function(dataset, cvars = "", nvar = "None", fun = "mean",
   }
 
   ## sorting the table if desired
-  if (!radiant.data::is_empty(tabsort, "")) {
+  if (!is.empty(tabsort, "")) {
     tabsort <- gsub(",", ";", tabsort)
     tab[-nrow(tab), ] %<>% arrange(!!!rlang::parse_exprs(tabsort))
 
@@ -189,6 +191,13 @@ pivotr <- function(dataset, cvars = "", nvar = "None", fun = "mean",
     for (i in tc) {
       tab[[i]] %<>% factor(., levels = unique(.))
     }
+  }
+
+  ## slicing the table if desired
+  if (!is.empty(tabslice)) {
+    tab <- tab %>% slice_data(tabslice) %>%
+      bind_rows(tab[nrow(tab), , drop=FALSE]) %>%
+      droplevels()
   }
 
   tab <- as.data.frame(tab, stringsAsFactors = FALSE)
@@ -228,14 +237,20 @@ summary.pivotr <- function(object, perc = FALSE, dec = 3,
   if (!shiny) {
     cat("Pivot table\n")
     cat("Data        :", object$df_name, "\n")
-    if (!radiant.data::is_empty(object$data_filter)) {
+    if (!is.empty(object$data_filter)) {
       cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
     }
-    if (!radiant.data::is_empty(object$tabfilt)) {
+    if (!is.empty(object$rows)) {
+      cat("Slice       :", gsub("\\n", "", object$rows), "\n")
+    }
+    if (!is.empty(object$tabfilt)) {
       cat("Table filter:", object$tabfilt, "\n")
     }
-    if (!radiant.data::is_empty(object$tabsort[1])) {
+    if (!is.empty(object$tabsort[1])) {
       cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
+    }
+    if (!is.empty(object$tabslice)) {
+      cat("Table slice :", object$tabslice, "\n")
     }
     nr <- attr(object$tab, "radiant_nrow")
     if (!isTRUE(is.infinite(nr)) && !isTRUE(is.infinite(object$nr)) && object$nr < nr) {
@@ -297,6 +312,7 @@ summary.pivotr <- function(object, perc = FALSE, dec = 3,
 #' @param searchCols Column search and filter
 #' @param order Column sorting
 #' @param pageLength Page length
+#' @param caption Table caption
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -313,7 +329,7 @@ summary.pivotr <- function(object, perc = FALSE, dec = 3,
 #' @export
 dtab.pivotr <- function(object, format = "none", perc = FALSE, dec = 3,
                         searchCols = NULL, order = NULL, pageLength = NULL,
-                        ...) {
+                        caption = NULL, ...) {
   style <- if (exists("bslib_current_version") && "4" %in% bslib_current_version()) "bootstrap4" else "bootstrap"
   tab <- object$tab
   cvar <- object$cvars[1]
@@ -325,7 +341,7 @@ dtab.pivotr <- function(object, format = "none", perc = FALSE, dec = 3,
   ## for rounding
   isDbl <- sapply(tab, is_double)
   isInt <- sapply(tab, is.integer)
-  dec <- ifelse(radiant.data::is_empty(dec) || dec < 0, 3, round(dec, 0))
+  dec <- ifelse(is.empty(dec) || dec < 0, 3, round(dec, 0))
 
   ## column names without total
   cn_nt <- if ("Total" %in% cn) cn[-which(cn == "Total")] else cn
@@ -350,6 +366,12 @@ dtab.pivotr <- function(object, format = "none", perc = FALSE, dec = 3,
     ))
   }
 
+  if (!is.empty(caption)) {
+    ## from https://github.com/rstudio/DT/issues/630#issuecomment-461191378
+    caption <- shiny::tags$caption(style = "caption-side: bottom; text-align: left; font-size:100%;", caption)
+  }
+
+
   ## remove row with column totals
   ## should perhaps be part of pivotr but convenient for now in tfoot
   ## and for external calls to pivotr
@@ -360,6 +382,7 @@ dtab.pivotr <- function(object, format = "none", perc = FALSE, dec = 3,
   dt_tab <- DT::datatable(
     tab,
     container = sketch,
+    caption = caption,
     selection = "none",
     rownames = FALSE,
     filter = fbox,
@@ -499,7 +522,7 @@ plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE,
   if (perc) p <- p + scale_y_continuous(labels = scales::percent)
 
   if (isTRUE(nvar == "n_obs")) {
-    if (!radiant.data::is_empty(x$normalize, "None")) {
+    if (!is.empty(x$normalize, "None")) {
       p <- p + labs(y = ifelse(perc, "Percentage", "Proportion"))
     }
   } else {

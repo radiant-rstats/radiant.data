@@ -1,6 +1,8 @@
 descr_out <- function(descr, ret_type = "html") {
   ## if there is no data description
-  if (radiant.data::is_empty(descr)) return("")
+  if (is.empty(descr)) {
+    return("")
+  }
 
   ## if there is a data description and we want html output
   if (ret_type == "html") {
@@ -16,20 +18,17 @@ upload_error_handler <- function(objname, ret) {
     set_attr("description", ret)
 }
 
-load_csv <- function(
-  file, delim = ",", col_names = TRUE, dec = ".",
-  n_max = Inf, saf = TRUE, safx = 30
-) {
-
+load_csv <- function(file, delim = ",", col_names = TRUE, dec = ".",
+                     n_max = Inf, saf = TRUE, safx = 30) {
   n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
   dataset <- sshhr(try(
-      readr::read_delim(
-        file, delim = delim, locale = readr::locale(decimal_mark = dec, grouping_mark = delim),
-        col_names = col_names, n_max = n_max, trim_ws = TRUE
-      ),
-      silent = TRUE
-    )
-  )
+    readr::read_delim(
+      file,
+      delim = delim, locale = readr::locale(decimal_mark = dec, grouping_mark = delim),
+      col_names = col_names, n_max = n_max, trim_ws = TRUE
+    ),
+    silent = TRUE
+  ))
   if (inherits(dataset, "try-error")) {
     "#### There was an error loading the data. Please make sure the data are in csv format"
   } else {
@@ -49,17 +48,16 @@ load_csv <- function(
 
     if (saf) dataset <- to_fct(dataset, safx)
     as.data.frame(dataset, stringsAsFactors = FALSE) %>%
-      {set_colnames(., fix_names(colnames(.)))} %>%
+      {
+        set_colnames(., fix_names(colnames(.)))
+      } %>%
       set_attr("description", rprob)
   }
 }
 
-load_user_data <- function(
-  fname, uFile, ext, header = TRUE,
-  man_str_as_factor = TRUE, sep = ",",
-  dec = ".", n_max = Inf
-) {
-
+load_user_data <- function(fname, uFile, ext, header = TRUE,
+                           man_str_as_factor = TRUE, sep = ",",
+                           dec = ".", n_max = Inf) {
   filename <- basename(fname)
   fext <- tools::file_ext(filename) %>% tolower()
 
@@ -75,7 +73,7 @@ load_user_data <- function(
   )
 
   ## objname is used as the name of the data.frame, make case insensitive
-  objname <- sub(glue('\\.{ext}$'), "", filename, ignore.case = TRUE)
+  objname <- sub(glue("\\.{ext}$"), "", filename, ignore.case = TRUE)
 
   ## if ext isn't in the filename nothing was replaced and so ...
   if (objname == filename) {
@@ -121,7 +119,7 @@ load_user_data <- function(
       }
     } else {
       r_data[[objname]] <- as.data.frame(get(robjname), stringsAsFactors = FALSE)
-      cmd <- glue('{objname} <- load({pp$rpath}) %>% get()')
+      cmd <- glue("{objname} <- load({pp$rpath}) %>% get()")
     }
   } else if (ext == "rds") {
     ## objname will hold the name of the object(s) inside the R datafile
@@ -130,7 +128,7 @@ load_user_data <- function(
       upload_error_handler(objname, "#### There was an error loading the data. Please make sure the data are in rds format.")
     } else {
       r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE)
-      cmd <- glue('{objname} <- readr::read_rds({pp$rpath})')
+      cmd <- glue("{objname} <- readr::read_rds({pp$rpath})")
     }
   } else if (ext == "feather") {
     if (!"feather" %in% rownames(utils::installed.packages())) {
@@ -143,18 +141,21 @@ load_user_data <- function(
         r_data[[objname]] <- robj
         ## waiting for https://github.com/wesm/feather/pull/326
         # cmd <- paste0(objname, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", objname, "\", desc = feather::feather_metadata(\"", pp$rpath, "\")$description)")
-        cmd <- glue('{objname} <- feather::read_feather({pp$rpath}, columns = c())')
+        cmd <- glue("{objname} <- feather::read_feather({pp$rpath}, columns = c())")
       }
     }
   } else if (ext %in% c("tsv", "csv", "txt")) {
     r_data[[objname]] <- load_csv(
-        uFile, delim = sep, col_names = header, n_max = n_max,
-        dec = dec, saf = man_str_as_factor
+      uFile,
+      delim = sep, col_names = header, n_max = n_max,
+      dec = dec, saf = man_str_as_factor
     ) %>%
-      {if (is.character(.)) upload_error_handler(objname, "#### There was an error loading the data") else .}
+      {
+        if (is.character(.)) upload_error_handler(objname, "#### There was an error loading the data") else .
+      }
     n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
     if (ext == "csv" && sep == "," && dec == "." && header) {
-      cmd <- glue('{objname} <- readr::read_csv({pp$rpath}, n_max = {n_max})')
+      cmd <- glue("{objname} <- readr::read_csv({pp$rpath}, n_max = {n_max})")
     } else {
       cmd <- glue('
         {objname} <- readr::read_delim(
@@ -167,7 +168,7 @@ load_user_data <- function(
     cmd <- paste0(cmd, " %>%\n  fix_names()")
     if (man_str_as_factor) cmd <- paste0(cmd, " %>%\n  to_fct()")
   } else if (ext != "---") {
-    ret <- glue('#### The selected filetype is not currently supported ({fext})')
+    ret <- glue("#### The selected filetype is not currently supported ({fext})")
     upload_error_handler(objname, ret)
   }
 
@@ -175,8 +176,8 @@ load_user_data <- function(
     shiny::makeReactiveBinding(objname, env = r_data)
   }
 
-  r_info[[glue('{objname}_descr')]] <- attr(r_data[[objname]], "description")
-  if (!radiant.data::is_empty(cmd)) {
+  r_info[[glue("{objname}_descr")]] <- attr(r_data[[objname]], "description")
+  if (!is.empty(cmd)) {
     cn <- colnames(r_data[[objname]])
     fn <- radiant.data::fix_names(cn)
     if (!identical(cn, fn)) {
@@ -185,6 +186,6 @@ load_user_data <- function(
     }
     cmd <- glue('{cmd}\nregister("{objname}")')
   }
-  r_info[[glue('{objname}_lcmd')]] <- cmd
+  r_info[[glue("{objname}_lcmd")]] <- cmd
   r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
 }

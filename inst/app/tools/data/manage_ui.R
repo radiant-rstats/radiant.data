@@ -372,7 +372,7 @@ man_save_data <- function(file) {
       readr::write_csv(r_data[[robj]], file = file)
       r_info[[paste0(robj, "_scmd")]] <- glue("readr::write_csv({robj}, file = {pp$rpath})")
     } else {
-      if (!radiant.data::is_empty(input$man_data_descr)) {
+      if (!is.empty(input$man_data_descr)) {
         attr(r_data[[robj]], "description") <- fix_smart(r_info[[paste0(robj, "_descr")]])
       }
 
@@ -505,7 +505,7 @@ observeEvent(input$url_rds_load, {
   # input <- list(url_rds = "https://raw.githubusercontent.com/radiant-rstats/docs/gh-pages/examples/sales.rds")
   # url_rds <- "https://www.dropbox.com/s/jetbhuconwn6mdb/price_sales.rds?raw=1"
   # url_rds <- "https://radiant-rstats.github.io/docs/examples/houseprices.rds"
-  if (radiant.data::is_empty(input$url_rds)) {
+  if (is.empty(input$url_rds)) {
     return()
   }
   url_rds <- gsub("^\\s+|\\s+$", "", input$url_rds)
@@ -544,7 +544,7 @@ observeEvent(input$url_rds_load, {
 
 observeEvent(input$url_csv_load, {
   ## loading csv file from url, example https://radiant-rstats.github.io/docs/examples/houseprices.csv
-  if (radiant.data::is_empty(input$url_csv)) {
+  if (is.empty(input$url_csv)) {
     return()
   }
   url_csv <- gsub("^\\s+|\\s+$", "", input$url_csv)
@@ -686,7 +686,7 @@ output$refreshOnLoad <- renderUI({
         return()
       }
       path <- shinyFiles::parseFilePaths(sf_volumes, input$state_load)
-      if (inherits(path, "try-error") || radiant.data::is_empty(path$datapath)) {
+      if (inherits(path, "try-error") || is.empty(path$datapath)) {
         return()
       }
       path <- path$datapath
@@ -700,7 +700,7 @@ output$refreshOnLoad <- renderUI({
     sname <- input$state_upload$name
   }
 
-  if (radiant.data::is_empty(path)) {
+  if (is.empty(path)) {
     invisible()
   } else {
     withProgress(message = "Loading state file", value = 1, {
@@ -805,7 +805,7 @@ saveState <- function(filename) {
 }
 
 observeEvent(input$renameButton, {
-  req(!radiant.data::is_empty(input$data_rename))
+  req(!is.empty(input$data_rename))
   req(!identical(input$dataset, input$data_rename))
   ## use lobstr::object_size to see that the size of the list doesn't change
   ## when you assign a list element another name
@@ -907,11 +907,11 @@ man_show_log <- reactive({
   if (getOption("radiant.shinyFiles", FALSE)) {
     lcmd <- r_info[[paste0(input$dataset, "_lcmd")]]
     cmd <- ""
-    if (!radiant.data::is_empty(lcmd)) {
+    if (!is.empty(lcmd)) {
       cmd <- paste0("## Load commands\n", lcmd)
     }
     scmd <- r_info[[paste0(input$dataset, "_scmd")]]
-    if (!radiant.data::is_empty(scmd)) {
+    if (!is.empty(scmd)) {
       cmd <- paste0(cmd, "\n\n## Save commands\n", scmd)
     }
     cmd

@@ -27,7 +27,7 @@ load_clip <- function(delim = "\t", text, suppress = TRUE) {
             check.names = FALSE
           )
         } else if (os_type == "Linux") {
-          if (missing(text) || radiant.data::is_empty(text)) {
+          if (missing(text) || is.empty(text)) {
             message("Loading data through clipboard is currently only supported on Windows and macOS")
             return(invisible())
           } else {

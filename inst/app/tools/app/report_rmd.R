@@ -177,9 +177,9 @@ observeEvent(input$rmd_generate, {
 
     ## get info from rstudio editor
     cnt <- rstudio_context(type = "rmd")
-    if (radiant.data::is_empty(cnt$path) || cnt$ext != "rmd") {
+    if (is.empty(cnt$path) || cnt$ext != "rmd") {
       rmd <- r_state$radiant_rmd_name
-      if (!radiant.data::is_empty(rmd)) {
+      if (!is.empty(rmd)) {
         if (file.exists(rmd)) {
           ## useful if you are not using an Rstudio project
           rstudioapi::navigateToFile(rmd)
@@ -394,7 +394,7 @@ rmd_knitted <- eventReactive(report_rmd$report != 1, {
     withProgress(message = "Knitting report", value = 1, {
       if (isTRUE(input$rmd_generate == "To Rmd")) {
         cnt <- rstudio_context(type = "rmd")
-        if (radiant.data::is_empty(cnt$path) || radiant.data::is_empty(cnt$ext, "r")) {
+        if (is.empty(cnt$path) || is.empty(cnt$ext, "r")) {
 
           ## popup to suggest user create an .Rmd file
           showModal(
@@ -421,10 +421,10 @@ rmd_knitted <- eventReactive(report_rmd$report != 1, {
           }
           report <- cnt$content
         }
-      } else if (!radiant.data::is_empty(input$rmd_edit)) {
-        if (!radiant.data::is_empty(input$rmd_edit_selection, "")) {
+      } else if (!is.empty(input$rmd_edit)) {
+        if (!is.empty(input$rmd_edit_selection, "")) {
           report <- input$rmd_edit_selection
-        } else if (!radiant.data::is_empty(input$rmd_edit_hotkey$line, "") && report_rmd$knit_button == 0) {
+        } else if (!is.empty(input$rmd_edit_hotkey$line, "") && report_rmd$knit_button == 0) {
           report <- input$rmd_edit_hotkey$line
         } else {
           report <- input$rmd_edit
@@ -484,7 +484,7 @@ observeEvent(input$rmd_load, {
     )
   }
 
-  if (!inherits(path, "try-error") && !radiant.data::is_empty(path)) {
+  if (!inherits(path, "try-error") && !is.empty(path)) {
     if (pp$fext == "html") {
       ## based on https://rmarkdown.rstudio.com/r_notebook_format.html
       rmd <- try(rmarkdown::parse_html_notebook(pp$path), silent = TRUE)
@@ -518,14 +518,14 @@ observeEvent(input$rmd_read_files, {
     return()
   }
   path <- shinyFiles::parseFilePaths(sf_volumes, input$rmd_read_files)
-  if (inherits(path, "try-error") || radiant.data::is_empty(path$datapath)) {
+  if (inherits(path, "try-error") || is.empty(path$datapath)) {
     return()
   }
   ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
   pdir <- getOption("radiant.project_dir", default = ldir)
 
   cmd <- read_files(path$datapath, pdir = pdir, type = "rmd", clipboard = FALSE, radiant = TRUE)
-  if (!radiant.data::is_empty(cmd)) {
+  if (!is.empty(cmd)) {
     update_report_fun(cmd, type = "rmd", rfiles = TRUE)
   }
 })

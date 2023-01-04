@@ -9,8 +9,10 @@
 #' @param top Use functions ("fun"), variables ("vars"), or group-by variables as column headers
 #' @param tabfilt Expression used to filter the table (e.g., "Total > 10000")
 #' @param tabsort Expression used to sort the table (e.g., "desc(Total)")
+#' @param tabslice Expression used to filter table (e.g., "1:5")
 #' @param nr Number of rows to display
 #' @param data_filter Expression used to filter the dataset before creating the table (e.g., "price > 10000")
+#' @param rows Rows to select from the specified dataset
 #' @param envir Environment to extract data from
 #'
 #' @return A list of all variables defined in the function as an object of class explore
@@ -24,13 +26,14 @@
 #'
 #' @export
 explore <- function(dataset, vars = "", byvar = "", fun = c("mean", "sd"),
-                    top = "fun", tabfilt = "", tabsort = "", nr = Inf,
-                    data_filter = "", envir = parent.frame()) {
+                    top = "fun", tabfilt = "", tabsort = "", tabslice = "",
+                    nr = Inf, data_filter = "", rows = NULL,
+                    envir = parent.frame()) {
   tvars <- vars
-  if (!radiant.data::is_empty(byvar)) tvars <- unique(c(tvars, byvar))
+  if (!is.empty(byvar)) tvars <- unique(c(tvars, byvar))
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- get_data(dataset, tvars, filt = data_filter, na.rm = FALSE, envir = envir)
+  dataset <- get_data(dataset, tvars, filt = data_filter, rows = rows, na.rm = FALSE, envir = envir)
   rm(tvars)
 
   ## in case : was used
@@ -92,7 +95,7 @@ explore <- function(dataset, vars = "", byvar = "", fun = c("mean", "sd"),
     dc[isLogNum] <- "integer"
   }
 
-  if (radiant.data::is_empty(byvar)) {
+  if (is.empty(byvar)) {
     byvar <- c()
     tab <- summarise_all(dataset, fun, na.rm = TRUE)
   } else {
@@ -133,7 +136,7 @@ explore <- function(dataset, vars = "", byvar = "", fun = c("mean", "sd"),
   nrow_tab <- nrow(tab)
 
   ## filtering the table if desired from Report > Rmd
-  if (tabfilt != "") {
+  if (!is.empty(tabfilt)) {
     tab <- filter_data(tab, tabfilt)
   }
 
@@ -144,7 +147,7 @@ explore <- function(dataset, vars = "", byvar = "", fun = c("mean", "sd"),
   }
 
   ## ensure factors ordered as in the (sorted) table
-  if (!radiant.data::is_empty(byvar) && top != "byvar") {
+  if (!is.empty(byvar) && top != "byvar") {
     for (i in byvar) tab[[i]] %<>% factor(., levels = unique(.))
     rm(i)
   }
@@ -160,6 +163,12 @@ explore <- function(dataset, vars = "", byvar = "", fun = c("mean", "sd"),
   }
 
   tab <- ungroup(tab) %>% mutate_all(check_int)
+
+  ## slicing the table if desired
+  if (!is.empty(tabslice)) {
+    tab <- tab %>% slice_data(tabslice) %>%
+      droplevels()
+  }
 
   ## convert to data.frame to maintain attributes
   tab <- as.data.frame(tab, stringsAsFactors = FALSE)
@@ -179,8 +188,10 @@ explore <- function(dataset, vars = "", byvar = "", fun = c("mean", "sd"),
     top = top,
     tabfilt = tabfilt,
     tabsort = tabsort,
+    tabslice = tabslice,
     nr = nr,
-    data_filter = data_filter
+    data_filter = data_filter,
+    rows = rows
   ) %>% add_class("explore")
 }
 
@@ -205,20 +216,26 @@ explore <- function(dataset, vars = "", byvar = "", fun = c("mean", "sd"),
 summary.explore <- function(object, dec = 3, ...) {
   cat("Explore\n")
   cat("Data        :", object$df_name, "\n")
-  if (!radiant.data::is_empty(object$data_filter)) {
+  if (!is.empty(object$data_filter)) {
     cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
   }
-  if (!radiant.data::is_empty(object$tabfilt)) {
+  if (!is.empty(object$rows)) {
+    cat("Slice       :", gsub("\\n", "", object$rows), "\n")
+  }
+  if (!is.empty(object$tabfilt)) {
     cat("Table filter:", object$tabfilt, "\n")
   }
-  if (!radiant.data::is_empty(object$tabsort[1])) {
+  if (!is.empty(object$tabsort[1])) {
     cat("Table sorted:", paste0(object$tabsort, collapse = ", "), "\n")
+  }
+  if (!is.empty(object$tabslice)) {
+    cat("Table slice :", object$tabslice, "\n")
   }
   nr <- attr(object$tab, "radiant_nrow")
   if (!isTRUE(is.infinite(nr)) && !isTRUE(is.infinite(object$nr)) && object$nr < nr) {
     cat(paste0("Rows shown  : ", object$nr, " (out of ", nr, ")\n"))
   }
-  if (!radiant.data::is_empty(object$byvar[1])) {
+  if (!is.empty(object$byvar[1])) {
     cat("Grouped by  :", object$byvar, "\n")
   }
   cat("Functions   :", paste0(object$fun, collapse = ", "), "\n")
@@ -275,7 +292,7 @@ store.explore <- function(dataset, object, name, ...) {
 #' @export
 flip <- function(expl, top = "fun") {
   cvars <- expl$byvar %>%
-    (function(x) if (radiant.data::is_empty(x[1])) character(0) else x)
+    (function(x) if (is.empty(x[1])) character(0) else x)
   if (top[1] == "var") {
     expl$tab %<>% gather(".function", "value", !!-(1:(length(cvars) + 1))) %>%
       spread("variable", "value")
@@ -301,6 +318,7 @@ flip <- function(expl, top = "fun") {
 #' @param searchCols Column search and filter
 #' @param order Column sorting
 #' @param pageLength Page length
+#' @param caption Table caption
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -315,7 +333,8 @@ flip <- function(expl, top = "fun") {
 #'
 #' @export
 dtab.explore <- function(object, dec = 3, searchCols = NULL,
-                         order = NULL, pageLength = NULL, ...) {
+                         order = NULL, pageLength = NULL,
+                         caption = NULL, ...) {
   style <- if (exists("bslib_current_version") && "4" %in% bslib_current_version()) "bootstrap4" else "bootstrap"
   tab <- object$tab
   cn_all <- colnames(tab)
@@ -323,7 +342,7 @@ dtab.explore <- function(object, dec = 3, searchCols = NULL,
   cn_cat <- cn_all[-which(cn_all %in% cn_num)]
   isInt <- sapply(tab, is.integer)
   isDbl <- sapply(tab, is_double)
-  dec <- ifelse(radiant.data::is_empty(dec) || dec < 0, 3, round(dec, 0))
+  dec <- ifelse(is.empty(dec) || dec < 0, 3, round(dec, 0))
 
   top <- c("fun" = "Function", "var" = "Variables", "byvar" = paste0("Group by: ", object$byvar[1]))[object$top]
   sketch <- shiny::withTags(
@@ -338,12 +357,18 @@ dtab.explore <- function(object, dec = 3, searchCols = NULL,
     )
   )
 
+  if (!is.empty(caption)) {
+    ## from https://github.com/rstudio/DT/issues/630#issuecomment-461191378
+    caption <- shiny::tags$caption(style = "caption-side: bottom; text-align: left; font-size:100%;", caption)
+  }
+
   ## for display options see https://datatables.net/reference/option/dom
   dom <- if (nrow(tab) < 11) "t" else "ltip"
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
   dt_tab <- DT::datatable(
     tab,
     container = sketch,
+    caption = caption,
     selection = "none",
     rownames = FALSE,
     filter = fbox,

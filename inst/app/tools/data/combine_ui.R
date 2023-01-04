@@ -7,11 +7,12 @@ cmb_args <- as.list(formals(combine_data))
 ## list of function inputs selected by user
 cmb_inputs <- reactive({
   cmb_args$data_filter <- ifelse(input$show_filter, input$data_filter, "")
+  cmb_args$rows <- ifelse(input$show_filter, input$data_rows, "")
   cmb_args$x <- as.name(input$dataset)
   cmb_args$y <- as.name(input$cmb_y)
 
   ## loop needed because reactive values don't allow single bracket indexing
-  for (i in r_drop(names(cmb_args), drop = c("x", "y", "data_filter"))) {
+  for (i in r_drop(names(cmb_args), drop = c("x", "y", "data_filter", "rows"))) {
     cmb_args[[i]] <- input[[paste0("cmb_", i)]]
   }
 
@@ -152,7 +153,8 @@ combine_report <- function() {
 output$cmb_data1 <- renderText({
   req(input$dataset)
   filt <- if (input$show_filter) input$data_filter else ""
-  show_data_snippet(title = paste("<h3>Dataset 1:", input$dataset, "</h3>"), filt = filt)
+  rows <- if (input$show_filter) input$data_rows else ""
+  show_data_snippet(title = paste("<h3>Dataset 1:", input$dataset, "</h3>"), filt = filt, rows = rows)
 })
 
 output$cmb_data2 <- renderText({
@@ -162,7 +164,7 @@ output$cmb_data2 <- renderText({
 
 output$cmb_possible <- renderText({
   req(length(r_info[["datasetlist"]]) > 1)
-  if (radiant.data::is_empty(input$cmb_by) && !radiant.data::is_empty(input$cmb_type) && grepl("_join", input$cmb_type)) {
+  if (is.empty(input$cmb_by) && !is.empty(input$cmb_type) && grepl("_join", input$cmb_type)) {
     "<h3>No matching variables selected</h3>"
   }
 })
@@ -170,7 +172,7 @@ output$cmb_possible <- renderText({
 output$cmb_data <- renderText({
   req(length(r_info[["datasetlist"]]) > 1)
   req(input$cmb_store) ## dependence is needed to update cmb_type when result doesn't change
-  if (radiant.data::is_empty(input$cmb_name)) {
+  if (is.empty(input$cmb_name)) {
     dataset <- paste0("cmb_", isolate(input$dataset))
   } else {
     dataset <- fix_names(input$cmb_name)
@@ -179,7 +181,7 @@ output$cmb_data <- renderText({
     }
   }
 
-  if (!radiant.data::is_empty(r_info[["cmb_error"]])) {
+  if (!is.empty(r_info[["cmb_error"]])) {
     HTML(paste0("</br><h4>Combining data failed. The error message was:</br></br>\"", r_info[["cmb_error"]], "\"</h4>"))
   } else if (!is.null(r_data[[dataset]])) {
     show_data_snippet(dataset, nshow = 15, title = paste0(

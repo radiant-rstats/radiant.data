@@ -52,6 +52,9 @@
     <loc>https://radiant-rstats.github.io/radiant.data/reference/add_class.html</loc>
   </url>
   <url>
+    <loc>https://radiant-rstats.github.io/radiant.data/reference/add_description.html</loc>
+  </url>
+  <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/as_character.html</loc>
   </url>
   <url>
@@ -235,6 +238,9 @@
     <loc>https://radiant-rstats.github.io/radiant.data/reference/inverse.html</loc>
   </url>
   <url>
+    <loc>https://radiant-rstats.github.io/radiant.data/reference/is.empty.html</loc>
+  </url>
+  <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/is_double.html</loc>
   </url>
   <url>
@@ -398,6 +404,9 @@
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/skew.re.html</loc>
+  </url>
+  <url>
+    <loc>https://radiant-rstats.github.io/radiant.data/reference/slice_data.html</loc>
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/square.html</loc>

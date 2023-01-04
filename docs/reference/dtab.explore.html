@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.0</span>
       </span>
     </div>
 
@@ -102,7 +102,15 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for explore</span>
-<span class="fu"><a href="dtab.html">dtab</a></span><span class="op">(</span><span class="va">object</span>, dec <span class="op">=</span> <span class="fl">3</span>, searchCols <span class="op">=</span> <span class="cn">NULL</span>, order <span class="op">=</span> <span class="cn">NULL</span>, pageLength <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="dtab.html">dtab</a></span><span class="op">(</span>
+  <span class="va">object</span>,
+  dec <span class="op">=</span> <span class="fl">3</span>,
+  searchCols <span class="op">=</span> <span class="cn">NULL</span>,
+  order <span class="op">=</span> <span class="cn">NULL</span>,
+  pageLength <span class="op">=</span> <span class="cn">NULL</span>,
+  caption <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">...</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -117,6 +125,8 @@
 <dd><p>Column sorting</p></dd>
 <dt>pageLength</dt>
 <dd><p>Page length</p></dd>
+<dt>caption</dt>
+<dd><p>Table caption</p></dd>
 <dt>...</dt>
 <dd><p>further arguments passed to or from other methods</p></dd>
 </dl></div>

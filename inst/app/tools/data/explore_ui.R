@@ -9,6 +9,7 @@ expl_args <- as.list(formals(explore))
 expl_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   expl_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  expl_args$rows <- if (input$show_filter) input$data_rows else ""
   expl_args$dataset <- input$dataset
   for (i in r_drop(names(expl_args))) {
     expl_args[[i]] <- input[[paste0("expl_", i)]]
@@ -88,7 +89,7 @@ output$ui_expl_byvar <- renderUI({
 output$ui_expl_fun <- renderUI({
   r_funs <- getOption("radiant.functions")
   isolate({
-    sel <- if (radiant.data::is_empty(input$expl_fun)) {
+    sel <- if (is.empty(input$expl_fun)) {
       state_multiple("expl_fun", r_funs, default_funs)
     } else {
       input$expl_fun
@@ -106,11 +107,11 @@ output$ui_expl_fun <- renderUI({
 })
 
 output$ui_expl_top <- renderUI({
-  if (radiant.data::is_empty(input$expl_vars)) {
+  if (is.empty(input$expl_vars)) {
     return()
   }
   top_var <- c("Function" = "fun", "Variables" = "var", "Group by" = "byvar")
-  if (radiant.data::is_empty(input$expl_byvar)) top_var <- top_var[1:2]
+  if (is.empty(input$expl_byvar)) top_var <- top_var[1:2]
   selectizeInput(
     "expl_top",
     label = "Column header:",
@@ -145,6 +146,12 @@ output$ui_Explore <- renderUI({
       uiOutput("ui_expl_byvar"),
       uiOutput("ui_expl_fun"),
       uiOutput("ui_expl_top"),
+      returnTextAreaInput("expl_tab_slice",
+        label = "Table slice (rows):",
+        rows = 1,
+        value = state_init("expl_tab_slice"),
+        placeholder = "e.g., 1:5 and press return"
+      ),
       numericInput("expl_dec", label = "Decimals:", value = state_init("expl_dec", 3), min = 0)
     ),
     wellPanel(
@@ -164,7 +171,7 @@ output$ui_Explore <- renderUI({
 .explore <- eventReactive(input$expl_run, {
   if (not_available(input$expl_vars) || is.null(input$expl_top)) {
     return()
-  } else if (!radiant.data::is_empty(input$expl_byvar) && not_available(input$expl_byvar)) {
+  } else if (!is.empty(input$expl_byvar) && not_available(input$expl_byvar)) {
     return()
   } else if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) {
     return()
@@ -216,10 +223,12 @@ output$explore <- DT::renderDataTable({
       pageLength <- r_state$explore_state$length
     })
 
+    caption <- if (is.empty(input$expl_tab_slice)) NULL else glue("Table slice {input$expl_tab_slice} will be applied on Download, Store, or Report")
     dtab(
       expl,
       dec = input$expl_dec, searchCols = searchCols, order = order,
-      pageLength = pageLength
+      pageLength = pageLength,
+      caption = caption
     )
   })
 })
@@ -232,6 +241,7 @@ dl_explore_tab <- function(path) {
     rows <- input$explore_rows_all
     dat$tab %>%
       (function(x) if (is.null(rows)) x else x[rows, , drop = FALSE]) %>%
+      (function(x) if (is.empty(input$expl_tab_slice)) x else slice_data(x, input$expl_tab_slice)) %>%
       write.csv(path, row.names = FALSE)
   }
 }
@@ -259,7 +269,10 @@ observeEvent(input$expl_store, {
     updateTextInput(session, inputId = "expl_name", value = dataset)
   }
   rows <- input$explore_rows_all
-  dat$tab %<>% (function(x) if (is.null(rows)) x else x[rows, , drop = FALSE])
+  dat$tab <- dat$tab %>%
+    (function(x) if (is.null(rows)) x else x[rows, , drop = FALSE]) %>%
+    (function(x) if (is.empty(input$expl_tab_slice)) x else slice_data(x, input$expl_tab_slice)) %>%
+    droplevels()
   r_data[[dataset]] <- dat$tab
   register(dataset)
   updateSelectInput(session, "dataset", selected = input$dataset)
@@ -284,15 +297,15 @@ observeEvent(input$expl_store, {
 explore_report <- function() {
   ## get the state of the dt table
   ts <- dt_state("explore")
-  xcmd <- "# summary()\ndtab(result"
-  if (!radiant.data::is_empty(input$expl_dec, 3)) {
+  xcmd <- "# summary(result)\ndtab(result"
+  if (!is.empty(input$expl_dec, 3)) {
     xcmd <- paste0(xcmd, ", dec = ", input$expl_dec)
   }
-  if (!radiant.data::is_empty(r_state$explore_state$length, 10)) {
+  if (!is.empty(r_state$explore_state$length, 10)) {
     xcmd <- paste0(xcmd, ", pageLength = ", r_state$explore_state$length)
   }
-  xcmd <- paste0(xcmd, ") %>% render()")
-  if (!radiant.data::is_empty(input$expl_name)) {
+  xcmd <- paste0(xcmd, ", caption = \"\") %>% render()")
+  if (!is.empty(input$expl_name)) {
     dataset <- fix_names(input$expl_name)
     if (input$expl_name != dataset) {
       updateTextInput(session, inputId = "expl_name", value = dataset)
@@ -303,7 +316,15 @@ explore_report <- function() {
   inp_main <- clean_args(expl_inputs(), expl_args)
   if (ts$tabsort != "") inp_main <- c(inp_main, tabsort = ts$tabsort)
   if (ts$tabfilt != "") inp_main <- c(inp_main, tabfilt = ts$tabfilt)
-  inp_main <- c(inp_main, nr = Inf)
+  if (is.empty(inp_main$rows)) {
+    inp_main$rows <- NULL
+  }
+  if (is.empty(input$expl_tab_slice)) {
+    inp_main <- c(inp_main, nr = Inf)
+  } else {
+    inp_main$tabslice <- input$expl_tab_slice
+  }
+
   inp_out <- list(clean_args(expl_sum_inputs(), expl_sum_args[-1]))
 
   update_report(

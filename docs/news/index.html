@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.0</span>
       </span>
     </div>
 
@@ -96,7 +96,29 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.4.3" id="radiantdata-143">radiant.data 1.4.3<a class="anchor" aria-label="anchor" href="#radiantdata-143"></a></h2>
+<h2 class="page-header" data-toc-text="1.5.0" id="radiantdata-150">radiant.data 1.5.0<a class="anchor" aria-label="anchor" href="#radiantdata-150"></a></h2>
+<ul><li>Improvements to screenshot feature. Navigation bar is omitted and the image is adjusted to the length of the UI.</li>
+<li>Added a convenience function <code>add_description</code> to add an description attribute to a data.frame in markdown format</li>
+<li>Line graphs treated more similarly to bar-graphs (i.e., can have a binary factor variable on the y-axis)</li>
+<li>Removed all references to <code>aes_string</code> which is being deprecated in ggplot soon</li>
+<li>Improved cleanup after Radiant UI is closed</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.4.7" id="radiantdata-147">radiant.data 1.4.7<a class="anchor" aria-label="anchor" href="#radiantdata-147"></a></h2>
+<ul><li>Code cleanup in different areas</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.4.6" id="radiantdata-146">radiant.data 1.4.6<a class="anchor" aria-label="anchor" href="#radiantdata-146"></a></h2>
+<ul><li>gsub(“[-]”, ““, text) is no longer valid in R 4.2.0 and above. Non-asci symbols will now be escaped using stringi::stri_trans_general when needed</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.4.5" id="radiantdata-145">radiant.data 1.4.5<small>2022-09-08</small><a class="anchor" aria-label="anchor" href="#radiantdata-145"></a></h2>
+<ul><li>Add scrolling for dropdown menus that might extend past the edge of the screen</li>
+<li>Addressed warning messages about Font Awesome icons not existing</li>
+<li>gsub(“[-]”, ““, text) is no longer valid in R 4.2.0 and above. Non-asci symbols will now be escaped using stringi when needed</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.4.4" id="radiantdata-144">radiant.data 1.4.4<small>2022-07-19</small><a class="anchor" aria-label="anchor" href="#radiantdata-144"></a></h2>
 <ul><li>Added option to create screenshots of settings on a page. Approach is inspired by the snapper package by <a href="https://github.com/yonicd" class="external-link">@yonicd</a></li>
 <li>Added contact request for users on Radiant startup</li>
 <li>Fix issue with R_ZIPCMD when 7zip is on the path but not being recognized by R</li>
@@ -255,7 +277,7 @@
 <li>Fix for error when trying to save invalid predictions in <code>radiant.model</code>. This action now generates a pop-up in the browser interface</li>
 <li>Add a specified description to a data.frame immediately on <code>register</code>
 </li>
-<li>Option to pass additional arguments to <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">shiny::runApp</a></code> when starting radiant such as the port to use. For example, radiant.data::radiant.data(“<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="external-link uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>”, port = 8080)</li>
+<li>Option to pass additional arguments to <code><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html" class="external-link">shiny::runApp</a></code> when starting radiant such as the port to use. For example, radiant.data::radiant.data(“<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="external-link uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>”, port = 8080)</li>
 <li>Option for automatic cleanup of deprecated code in both <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
 </li>
 <li>Avoid attempt to fix deprecated code in <em>Report &gt; Rmd</em> if <code>pred_data = ""</code>
@@ -373,7 +395,7 @@
 <div class="section level3">
 <h3 id="major-changes-0-9-3-3">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-9-3-3"></a></h3>
 <ul><li>When using radiant with Rstudio Viewer or in an Rstudio Window, loading and saving data through <em>Data &gt; Manage</em> generates R-code the user can add to <em>Report &gt; Rmd</em> or <em>Report &gt; R</em>. Clicking the <code>Show R-code</code> checkbox displays the R-code used to load or save the current dataset</li>
-<li>Various changes to the code to accommodate the use of <code><a href="https://rdrr.io/pkg/shiny/man/makeReactiveBinding.html" class="external-link">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
+<li>Various changes to the code to accommodate the use of <code><a href="https://shiny.rstudio.com/reference/shiny/latest/makeReactiveBinding.html" class="external-link">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
 <li>Removed <code>loadr</code>, <code>saver</code>, <code>load_csv</code>, <code>loadcsv_url</code>, <code>loadrds_url</code>, and <code>make_funs</code> functions as they are no longer needed</li>
 <li>Deprecated <code>mean_rm</code>, <code>median_rm</code>, <code>min_rm</code>, <code>max_rm,</code>sd_rm<code>,</code>var_rm, and <code>sum_rm</code> functions as they are no longer needed</li>
 </ul></div>

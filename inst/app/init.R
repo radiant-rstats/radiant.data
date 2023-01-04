@@ -14,9 +14,15 @@ if (isTRUE(getOption("radiant.shinyFiles", FALSE))) {
     sf_volumes <- getOption("radiant.sf_volumes", "")
   } else {
     if (getOption("radiant.project_dir", "") == "") {
-      sf_volumes <- getOption("radiant.launch_dir") %>% {set_names(., basename(.))}
+      sf_volumes <- getOption("radiant.launch_dir") %>%
+        {
+          set_names(., basename(.))
+        }
     } else {
-      sf_volumes <- getOption("radiant.project_dir") %>% {set_names(., basename(.))}
+      sf_volumes <- getOption("radiant.project_dir") %>%
+        {
+          set_names(., basename(.))
+        }
     }
     home <- radiant.data::find_home()
     if (home != sf_volumes) {
@@ -25,7 +31,10 @@ if (isTRUE(getOption("radiant.shinyFiles", FALSE))) {
       sf_volumes <- c(Home = home)
     }
     if (sum(nzchar(getOption("radiant.sf_volumes", ""))) > 0) {
-      sf_volumes <- getOption("radiant.sf_volumes") %>% {c(sf_volumes, .[!. %in% sf_volumes])}
+      sf_volumes <- getOption("radiant.sf_volumes") %>%
+        {
+          c(sf_volumes, .[!. %in% sf_volumes])
+        }
     }
     missing_names <- is.na(names(sf_volumes))
     if (sum(missing_names) > 0) {
@@ -121,7 +130,9 @@ if (isTRUE(getOption("radiant.local")) && exists("r_data", envir = .GlobalEnv)) 
   suppressWarnings(rm(r_data, r_state, r_info, envir = .GlobalEnv))
 } else if (isTRUE(getOption("radiant.local")) && !is.null(r_sessions[[r_ssuid]]$r_data)) {
   r_data <- r_sessions[[r_ssuid]]$r_data %>%
-    {if (is.list(.)) list2env(., envir = new.env()) else .}
+    {
+      if (is.list(.)) list2env(., envir = new.env()) else .
+    }
   if (is.null(r_sessions[[r_ssuid]]$r_info)) {
     r_info <- r_info_legacy()
   } else {
@@ -142,8 +153,10 @@ if (isTRUE(getOption("radiant.local")) && exists("r_data", envir = .GlobalEnv)) 
       r_data <- new.env()
       r_info <- init_data(env = r_data)
     } else {
-      r_data <- rs$r_data  %>%
-        {if (is.list(.)) list2env(., envir = new.env()) else .}
+      r_data <- rs$r_data %>%
+        {
+          if (is.list(.)) list2env(., envir = new.env()) else .
+        }
       if (is.null(rs$r_info)) {
         r_info <- r_info_legacy()
       } else {
@@ -174,7 +187,9 @@ if (isTRUE(getOption("radiant.local")) && exists("r_data", envir = .GlobalEnv)) 
       r_info <- init_data(env = r_data)
     } else {
       r_data <- rs$r_data %>%
-        {if (is.list(.)) list2env(., envir = new.env()) else .}
+        {
+          if (is.list(.)) list2env(., envir = new.env()) else .
+        }
       r_info <- if (length(rs$r_info) == 0) {
         r_info <- r_info_legacy()
       } else {
@@ -251,13 +266,15 @@ observeEvent(session$clientData$url_search, {
   url_query <- parseQueryString(session$clientData$url_search)
   if ("url" %in% names(url_query)) {
     r_info[["url"]] <- url_query$url
-  } else if (radiant.data::is_empty(r_info[["url"]])) {
+  } else if (is.empty(r_info[["url"]])) {
     return()
   }
 
   ## create an observer and suspend when done
   url_observe <- observe({
-    if (is.null(input$dataset)) return()
+    if (is.null(input$dataset)) {
+      return()
+    }
     url <- getOption("radiant.url.patterns")[[r_info[["url"]]]]
     if (is.null(url)) {
       ## if pattern not found suspend observer
@@ -266,7 +283,9 @@ observeEvent(session$clientData$url_search, {
     }
     ## move through the url
     for (u in names(url)) {
-      if (is.null(input[[u]])) return()
+      if (is.null(input[[u]])) {
+        return()
+      }
       if (input[[u]] != url[[u]]) {
         updateTabsetPanel(session, u, selected = url[[u]])
       }
@@ -287,17 +306,25 @@ observeEvent(input$nav_radiant, {
 if (!is.null(r_state$nav_radiant)) {
 
   ## don't return-to-the-spot if that was quit or stop
-  if (r_state$nav_radiant %in% c("Refresh", "Stop")) return()
+  if (r_state$nav_radiant %in% c("Refresh", "Stop")) {
+    return()
+  }
 
   ## naming the observer so we can suspend it when done
   nav_observe <- observe({
     ## needed to avoid errors when no data is available yet
-    if (is.null(input$dataset)) return()
+    if (is.null(input$dataset)) {
+      return()
+    }
     updateTabsetPanel(session, "nav_radiant", selected = r_state$nav_radiant)
 
     ## check if shiny set the main tab to the desired value
-    if (is.null(input$nav_radiant)) return()
-    if (input$nav_radiant != r_state$nav_radiant) return()
+    if (is.null(input$nav_radiant)) {
+      return()
+    }
+    if (input$nav_radiant != r_state$nav_radiant) {
+      return()
+    }
     nav_radiant_tab <- getOption("radiant.url.list")[[r_state$nav_radiant]] %>%
       names()
 

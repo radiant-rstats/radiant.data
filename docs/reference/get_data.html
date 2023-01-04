@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.0</span>
       </span>
     </div>
 
@@ -101,7 +101,15 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_data</span><span class="op">(</span><span class="va">dataset</span>, vars <span class="op">=</span> <span class="st">""</span>, filt <span class="op">=</span> <span class="st">""</span>, rows <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_data</span><span class="op">(</span>
+  <span class="va">dataset</span>,
+  vars <span class="op">=</span> <span class="st">""</span>,
+  filt <span class="op">=</span> <span class="st">""</span>,
+  rows <span class="op">=</span> <span class="cn">NULL</span>,
+  data_view_rows <span class="op">=</span> <span class="cn">NULL</span>,
+  na.rm <span class="op">=</span> <span class="cn">TRUE</span>,
+  envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -114,6 +122,8 @@
 <dd><p>Filter to apply to the specified dataset</p></dd>
 <dt>rows</dt>
 <dd><p>Select rows in the specified dataset</p></dd>
+<dt>data_view_rows</dt>
+<dd><p>Vector of rows to select. Only used by Data &gt; View in Radiant. Users should use "rows" instead</p></dd>
 <dt>na.rm</dt>
 <dd><p>Remove rows with missing values (default is TRUE)</p></dd>
 <dt>envir</dt>
