@@ -33,6 +33,7 @@ visualize(
   xlim = NULL,
   ylim = NULL,
   data_filter = "",
+  arr = "",
   rows = NULL,
   shiny = FALSE,
   custom = FALSE,
@@ -95,6 +96,8 @@ visualize(
 \item{ylim}{Set limit for y-axis (e.g., c(0, 1))}
 
 \item{data_filter}{Expression used to filter the dataset. This should be a string (e.g., "price > 10000")}
+
+\item{arr}{Expression used to sort the data. Likely used in combination for `rows`}
 
 \item{rows}{Rows to select from the specified dataset}
 

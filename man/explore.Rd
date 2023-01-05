@@ -15,6 +15,7 @@ explore(
   tabslice = "",
   nr = Inf,
   data_filter = "",
+  arr = "",
   rows = NULL,
   envir = parent.frame()
 )
@@ -39,6 +40,8 @@ explore(
 \item{nr}{Number of rows to display}
 
 \item{data_filter}{Expression used to filter the dataset before creating the table (e.g., "price > 10000")}
+
+\item{arr}{Expression to arrange (sort) the data on (e.g., "color, desc(price)")}
 
 \item{rows}{Rows to select from the specified dataset}
 

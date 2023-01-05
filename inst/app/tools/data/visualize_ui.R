@@ -42,11 +42,12 @@ viz_args <- as.list(formals(visualize))
 viz_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   viz_args$data_filter <- if (isTRUE(input$show_filter)) input$data_filter else ""
+  viz_args$arr <- if (isTRUE(input$show_filter)) input$data_arrange else ""
   viz_args$rows <- if (isTRUE(input$show_filter)) input$data_rows else ""
   viz_args$dataset <- input$dataset
   viz_args$shiny <- input$shiny
   viz_args$labs <- viz_add_labs()
-  for (i in r_drop(names(viz_args), drop = c("dataset", "data_filter", "rows", "labs"))) {
+  for (i in r_drop(names(viz_args), drop = c("dataset", "data_filter", "arr", "rows", "labs"))) {
     viz_args[[i]] <- input[[paste0("viz_", i)]]
   }
   # isolate({

@@ -158,6 +158,7 @@ output$dataviewer <- DT::renderDataTable(
 observeEvent(input$view_store, {
   req(input$view_name)
   data_filter <- if (input$show_filter) input$data_filter else ""
+  data_arrange <- if (input$show_filter) input$data_arrange else ""
   data_rows <- if (input$show_filter) input$data_rows else ""
 
   dataset <- fix_names(input$view_name)
@@ -167,7 +168,7 @@ observeEvent(input$view_store, {
 
   r_data[[dataset]] <- get_data(
     input$dataset,
-    vars = input$view_vars, filt = data_filter,
+    vars = input$view_vars, filt = data_filter, arr = data_arrange,
     rows = data_rows, data_view_rows = input$dataviewer_rows_all,
     na.rm = FALSE, envir = r_data
   ) %>%
@@ -196,11 +197,13 @@ observeEvent(input$view_store, {
 
 dl_view_tab <- function(file) {
   data_filter <- if (input$show_filter) input$data_filter else ""
+  data_arrange <- if (input$show_filter) input$data_arrange else ""
   data_rows <- if (input$show_filter) input$data_rows else ""
   get_data(
     input$dataset,
     vars = input$view_vars,
     filt = data_filter,
+    arr = data_arrange,
     rows = data_rows,
     data_view_rows = input$dataviewer_rows_all,
     na.rm = FALSE,
@@ -273,6 +276,9 @@ download_handler(
   if (input$show_filter && !is.empty(input$data_filter)) {
     cmd <- paste0(cmd, " %>%\n  filter(", input$data_filter, ")")
   }
+  if (input$show_filter && !is.empty(input$data_arrange)) {
+    cmd <- paste0(cmd, " %>%\n  ", make_arrange_cmd(input$data_arrange))
+  }
   if (input$show_filter && !is.empty(input$data_rows)) {
     cmd <- paste0(cmd, " %>%\n  slice(", input$data_rows, ")")
   }
@@ -294,7 +300,7 @@ download_handler(
   ## moved `select` to the end so filters can use variables
   ## not selected for the final dataset
   if (is.empty(dataset)) {
-    paste0(cmd, " %>%\n  select(", vars, ") %>%\n  droplevels()") %>%
+    paste0(cmd, " %>%\n  select(", vars, ") %>%\n  droplevels() %>%") %>%
       paste0("\n", xcmd)
   } else {
     ret <- paste0(cmd, " %>%\n  select(", vars, ") %>%  droplevels()")

@@ -7,12 +7,13 @@ cmb_args <- as.list(formals(combine_data))
 ## list of function inputs selected by user
 cmb_inputs <- reactive({
   cmb_args$data_filter <- ifelse(input$show_filter, input$data_filter, "")
+  cmb_args$arr <- ifelse(input$show_filter, input$data_arrange, "")
   cmb_args$rows <- ifelse(input$show_filter, input$data_rows, "")
   cmb_args$x <- as.name(input$dataset)
   cmb_args$y <- as.name(input$cmb_y)
 
   ## loop needed because reactive values don't allow single bracket indexing
-  for (i in r_drop(names(cmb_args), drop = c("x", "y", "data_filter", "rows"))) {
+  for (i in r_drop(names(cmb_args), drop = c("x", "y", "data_filter", "arr", "rows"))) {
     cmb_args[[i]] <- input[[paste0("cmb_", i)]]
   }
 
@@ -153,8 +154,9 @@ combine_report <- function() {
 output$cmb_data1 <- renderText({
   req(input$dataset)
   filt <- if (input$show_filter) input$data_filter else ""
+  arr <- if (input$show_filter) input$data_arrange else ""
   rows <- if (input$show_filter) input$data_rows else ""
-  show_data_snippet(title = paste("<h3>Dataset 1:", input$dataset, "</h3>"), filt = filt, rows = rows)
+  show_data_snippet(title = paste("<h3>Dataset 1:", input$dataset, "</h3>"), filt = filt, arr = arr, rows = rows)
 })
 
 output$cmb_data2 <- renderText({

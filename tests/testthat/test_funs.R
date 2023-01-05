@@ -115,7 +115,7 @@ test_that("explore 8 x 2", {
       "mean",
       "sd"
     ), top = "fun", tabfilt = "", tabsort = "", tabslice = "",
-    nr = Inf, data_filter = "", rows = NULL
+    nr = Inf, data_filter = "", arr = "", rows = NULL
   ), class = c("explore", "list")))
 })
 
@@ -130,7 +130,7 @@ test_that("explore 1 x 2", {
       -1L
     ), radiant_nrow = 1L), df_name = "diamonds", vars = "price", byvar = NULL,
     fun = c("mean", "sd"), top = "fun", tabfilt = "", tabsort = "", tabslice = "",
-    nr = Inf, data_filter = "", rows = NULL
+    nr = Inf, data_filter = "", arr = "", rows = NULL
   ), class = c(
     "explore",
     "list"

@@ -12,6 +12,7 @@
 #' @param tabslice Expression used to filter table (e.g., "1:5")
 #' @param nr Number of rows to display
 #' @param data_filter Expression used to filter the dataset before creating the table (e.g., "price > 10000")
+#' @param arr Expression to arrange (sort) the data on (e.g., "color, desc(price)")
 #' @param rows Rows to select from the specified dataset
 #' @param envir Environment to extract data from
 #'
@@ -26,12 +27,12 @@
 #' @export
 pivotr <- function(dataset, cvars = "", nvar = "None", fun = "mean",
                    normalize = "None", tabfilt = "", tabsort = "", tabslice = "",
-                   nr = Inf, data_filter = "", rows = NULL, envir = parent.frame()) {
+                   nr = Inf, data_filter = "", arr = "", rows = NULL, envir = parent.frame()) {
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   fill <- if (nvar == "None") 0L else NA
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- get_data(dataset, vars, filt = data_filter, rows = rows, na.rm = FALSE, envir = envir)
+  dataset <- get_data(dataset, vars, filt = data_filter, arr = arr, rows = rows, na.rm = FALSE, envir = envir)
 
   ## in case : was used for cvars
   cvars <- base::setdiff(colnames(dataset), nvar)
@@ -195,8 +196,9 @@ pivotr <- function(dataset, cvars = "", nvar = "None", fun = "mean",
 
   ## slicing the table if desired
   if (!is.empty(tabslice)) {
-    tab <- tab %>% slice_data(tabslice) %>%
-      bind_rows(tab[nrow(tab), , drop=FALSE]) %>%
+    tab <- tab %>%
+      slice_data(tabslice) %>%
+      bind_rows(tab[nrow(tab), , drop = FALSE]) %>%
       droplevels()
   }
 
@@ -239,6 +241,9 @@ summary.pivotr <- function(object, perc = FALSE, dec = 3,
     cat("Data        :", object$df_name, "\n")
     if (!is.empty(object$data_filter)) {
       cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
+    }
+    if (!is.empty(object$arr)) {
+      cat("Arrange     :", gsub("\\n", "", object$arr), "\n")
     }
     if (!is.empty(object$rows)) {
       cat("Slice       :", gsub("\\n", "", object$rows), "\n")

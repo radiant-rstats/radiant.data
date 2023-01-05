@@ -8,6 +8,7 @@ view_data(
   dataset,
   vars = "",
   filt = "",
+  arr = "",
   rows = NULL,
   na.rm = FALSE,
   dec = 3,
@@ -20,6 +21,8 @@ view_data(
 \item{vars}{Variables to show (default is all)}
 
 \item{filt}{Filter to apply to the specified dataset}
+
+\item{arr}{Expression to arrange (sort) data}
 
 \item{rows}{Select rows in the specified dataset}
 

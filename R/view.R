@@ -17,6 +17,7 @@ dtab <- function(object, ...) UseMethod("dtab", object)
 #' @param object Data.frame to display
 #' @param vars Variables to show (default is all)
 #' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
+#' @param arr Expression to arrange (sort) the data on (e.g., "color, desc(price)")
 #' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
 #' @param nr Number of rows of data to include in the table. This function will be mainly used in reports so it is best to keep this number small
 #' @param na.rm Remove rows with missing values (default is FALSE)
@@ -38,14 +39,14 @@ dtab <- function(object, ...) UseMethod("dtab", object)
 #' }
 #'
 #' @export
-dtab.data.frame <- function(object, vars = "", filt = "", rows = NULL,
+dtab.data.frame <- function(object, vars = "", filt = "", arr = "", rows = NULL,
                             nr = NULL, na.rm = FALSE, dec = 3, perc = "",
                             filter = "top", pageLength = 10, dom = "",
                             style = "bootstrap4", rownames = FALSE,
                             caption = NULL,
                             envir = parent.frame(), ...) {
   ## does this need a data_view_rows argument?
-  dat <- get_data(object, vars, filt = filt, rows = rows, na.rm = na.rm, envir = envir)
+  dat <- get_data(object, vars, filt = filt, arr = arr, rows = rows, na.rm = na.rm, envir = envir)
   if (!is.empty(nr) && nr < nrow(dat)) {
     dat <- dat[seq_len(nr), , drop = FALSE]
   }
@@ -147,18 +148,58 @@ filter_data <- function(dataset, filt = "", drop = TRUE) {
   dataset
 }
 
+#' Generate arrange commands from user input
+#' @details Form arrange command from user input
+#' @param expr Expression to use arrange rows from the specified dataset
+#' @param dataset String with dataset name
+#' @return Arrange command
+#' @importFrom glue glue
+#' @export
+make_arrange_cmd <- function(expr, dataset = "") {
+  expr %>%
+    strsplit(., split = "(\\s*&\\s*|\\s*,\\s*|\\s+)") %>%
+    unlist() %>%
+    .[!. == ""] %>%
+    paste0(collapse = ", ") %>%
+    (function(x) ifelse(is.empty(dataset), glue("arrange({x})"), glue("arrange({dataset}, {x})")))
+}
+
+# dataset <- mtcars
+# expr <- "desc(mpg)     &    vs , am"
+# make_arrange_cmd("dataset", expr)
+
+#' Arrange data with user-specified expression
+#' @details Arrange data, likely in combination with slicing
+#' @param dataset Data frame to arrange
+#' @param expr Expression to use arrange rows from the specified dataset
+#' @return Arranged data frame
+#' @export
+arrange_data <- function(dataset, expr = NULL) {
+  if (!is.empty(expr)) {
+    arrange_cmd <- make_arrange_cmd(expr, "dataset")
+    arrange_dat <- try(eval(parse(text = arrange_cmd)), silent = TRUE)
+    if (inherits(arrange_dat, "try-error")) {
+      message(paste0("Invalid arrange expression: \"", attr(arrange_dat, "condition")$message, "\". Update or remove the expression"))
+    } else {
+      return(arrange_dat)
+    }
+  }
+
+  dataset
+}
+
 #' Slice data with user-specified expression
 #' @details Select only a slice of the data to work with
-#' @param dataset Data frame to filter
-#' @param rows Rows to select from the specified dataset
+#' @param dataset Data frame to slice
+#' @param expr Expression to use select rows from the specified dataset
 #' @param drop Drop unused factor levels after filtering (default is TRUE)
 #' @return Sliced data frame
 #' @export
-slice_data <- function(dataset, rows = NULL, drop = TRUE) {
-  if (is.numeric(rows)) {
-    slice_dat <- try(dataset %>% slice(rows), silent = TRUE)
+slice_data <- function(dataset, expr = NULL, drop = TRUE) {
+  if (is.numeric(expr)) {
+    slice_dat <- try(dataset %>% slice(expr), silent = TRUE)
   } else {
-    slice_dat <- try(dataset %>% slice(!!rlang::parse_expr(rows)), silent = TRUE)
+    slice_dat <- try(dataset %>% slice(!!rlang::parse_expr(expr)), silent = TRUE)
   }
   if (inherits(slice_dat, "try-error")) {
     message(paste0("Invalid slice: \"", attr(slice_dat, "condition")$message, "\". Update or remove the expression"))
@@ -198,6 +239,7 @@ search_data <- function(dataset, pattern, ignore.case = TRUE, fixed = FALSE) {
 #' @param dataset Data.frame or name of the dataframe to view
 #' @param vars Variables to show (default is all)
 #' @param filt Filter to apply to the specified dataset
+#' @param arr Expression to arrange (sort) data
 #' @param rows Select rows in the specified dataset
 #' @param na.rm Remove rows with missing values (default is FALSE)
 #' @param dec Number of decimals to show
@@ -212,11 +254,11 @@ search_data <- function(dataset, pattern, ignore.case = TRUE, fixed = FALSE) {
 #'
 #' @export
 view_data <- function(dataset, vars = "", filt = "",
-                      rows = NULL, na.rm = FALSE, dec = 3,
+                      arr = "", rows = NULL, na.rm = FALSE, dec = 3,
                       envir = parent.frame()) {
 
   ## based on https://rstudio.github.io/DT/server.html
-  dat <- get_data(dataset, vars, filt = filt, rows = rows, na.rm = na.rm, envir = envir)
+  dat <- get_data(dataset, vars, filt = filt, arr = arr, rows = rows, na.rm = na.rm, envir = envir)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
   fbox <- if (nrow(dat) > 5e6) "none" else list(position = "top")
 

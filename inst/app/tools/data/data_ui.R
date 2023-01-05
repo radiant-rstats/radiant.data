@@ -29,6 +29,11 @@ output$ui_data <- renderUI({
                 value = state_init("data_filter"),
                 placeholder = "Provide a filter (e.g., price >  5000) and press return"
               ),
+              returnTextAreaInput("data_arrange",
+                label = "Data arrange (sort):",
+                value = state_init("data_arrange"),
+                placeholder = "Arrange (e.g., color, desc(price)) and press return"
+              ),
               returnTextAreaInput("data_rows",
                 label = "Data slice (rows):",
                 rows = 1,

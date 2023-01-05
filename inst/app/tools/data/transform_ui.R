@@ -909,7 +909,7 @@ fix_ext <- function(ext) {
   }
 }
 
-.holdout <- function(dataset, vars = "", filt = "", rows = NULL, rev = "",
+.holdout <- function(dataset, vars = "", filt = "", arr = "", rows = NULL, rev = "",
                      store_dat = "", store = TRUE) {
   if (is.empty(filt) & is.empty(rows)) {
     return(paste0("No filter or slice found (n = ", nrow(dataset), ")"))
@@ -919,12 +919,15 @@ fix_ext <- function(ext) {
   }
 
   if (!store || !is.character(dataset)) {
-    get_data(dataset, vars = vars, filt = filt, rows = rows, na.rm = FALSE, envir = r_data)
+    get_data(dataset, vars = vars, filt = filt, arr = arr, rows = rows, na.rm = FALSE, envir = r_data)
   } else {
     cmd <- glue("## create holdout sample\n{store_dat} <- {dataset}")
     if (!is.empty(filt)) {
       filt <- gsub("\"", "'", filt)
       cmd <- paste0(cmd, " %>%\n  filter(", filt, ")")
+    }
+    if (!is.empty(arr)) {
+      cmd <- paste0(cmd, " %>%\n  ", make_arrange_cmd(arr))
     }
     if (!is.empty(rows)) {
       cmd <- paste0(cmd, " %>%\n  slice(", rows, ")")
@@ -1031,9 +1034,9 @@ transform_main <- reactive({
   ## filter data for holdout
   if (input$tr_change_type == "holdout") {
     if (!input$show_filter) {
-      return("\nNo filter or slice set. Click the 'Filter' checkbox and enter a\nfilter and/or a slice of rows to keep as the main data. The holdout\nwill have have all rows not selected by the filter and slice")
+      return("\nNo filter, arrange, or slice set. Click the 'Filter' checkbox and enter a\nfilter, arrange, and/or a slice of rows to keep as the main data. The holdout\nwill have have all rows not selected by the filter, arrange, and slice")
     }
-    return(.holdout(dat, inp_vars("tr_vars"), filt = input$data_filter, rows = input$data_rows, rev = input$tr_holdout_rev, store = FALSE))
+    return(.holdout(dat, inp_vars("tr_vars"), filt = input$data_filter, arr = input$data_arrange, rows = input$data_rows, rev = input$tr_holdout_rev, store = FALSE))
   }
 
   ## spread a variable
@@ -1273,7 +1276,7 @@ observeEvent(input$tr_store, {
     cmd <- .show_dup(input$dataset, vars = input$tr_vars, df_name, nr_col = ncol(dat))
     r_data[[df_name]] <- dat
   } else if (input$tr_change_type == "holdout") {
-    cmd <- .holdout(input$dataset, vars = input$tr_vars, filt = input$data_filter, rows = input$data_rows, rev = input$tr_holdout_rev, df_name)
+    cmd <- .holdout(input$dataset, vars = input$tr_vars, filt = input$data_filter, arr = input$data_arrange, rows = input$data_rows, rev = input$tr_holdout_rev, df_name)
     r_data[[df_name]] <- dat
   } else if (input$tr_change_type == "tab2dat") {
     cmd <- .tab2dat(input$dataset, input$tr_tab2dat, vars = input$tr_vars, df_name)

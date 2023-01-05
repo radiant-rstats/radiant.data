@@ -8,6 +8,7 @@ get_data(
   dataset,
   vars = "",
   filt = "",
+  arr = "",
   rows = NULL,
   data_view_rows = NULL,
   na.rm = TRUE,
@@ -20,6 +21,8 @@ get_data(
 \item{vars}{Variables to extract from the data.frame}
 
 \item{filt}{Filter to apply to the specified dataset}
+
+\item{arr}{Expression to use to arrange (sort) the specified dataset}
 
 \item{rows}{Select rows in the specified dataset}
 

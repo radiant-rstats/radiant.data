@@ -14,6 +14,7 @@ pvt_args <- as.list(formals(pivotr))
 pvt_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   pvt_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  pvt_args$arr <- if (isTRUE(input$show_filter)) input$data_arrange else ""
   pvt_args$rows <- if (isTRUE(input$show_filter)) input$data_rows else ""
   pvt_args$dataset <- input$dataset
   for (i in r_drop(names(pvt_args))) {
@@ -288,7 +289,7 @@ output$pivotr <- DT::renderDataTable({
       order <- r_state$pivotr_state$order
       pageLength <- r_state$pivotr_state$length
     })
-    #caption <- if (is.empty(input$pvt_tab_slice)) NULL else htmltools::tags$caption(glue("Table slice {input$pvt_tab_slice} will be applied on Download, Store, or Report"))
+    # caption <- if (is.empty(input$pvt_tab_slice)) NULL else htmltools::tags$caption(glue("Table slice {input$pvt_tab_slice} will be applied on Download, Store, or Report"))
     caption <- if (is.empty(input$pvt_tab_slice)) NULL else glue("Table slice {input$pvt_tab_slice} will be applied on Download, Store, or Report")
     dtab(
       pvt,
@@ -324,7 +325,7 @@ dl_pivot_tab <- function(file) {
     dat$tab[-nrow(dat$tab)] %>%
       (function(x) if (is.null(rows)) x else x[rows, , drop = FALSE]) %>%
       (function(x) if (is.empty(input$pvt_tab_slice)) x else slice_data(x, input$pvt_tab_slice)) %>%
-      bind_rows(dat$tab[nrow(dat$tab),, drop = FALSE]) %>%
+      bind_rows(dat$tab[nrow(dat$tab), , drop = FALSE]) %>%
       write.csv(file, row.names = FALSE)
   }
 }
@@ -511,14 +512,14 @@ pivot_report <- function() {
   if (ts$tabfilt != "") {
     inp_main <- c(inp_main, tabfilt = ts$tabfilt)
   }
- if (is.empty(inp_main$rows)) {
+  if (is.empty(inp_main$rows)) {
     inp_main$rows <- NULL
- }
- if (is.empty(input$pvt_tab_slice)) {
-   inp_main <- c(inp_main, nr = Inf)
- } else {
-   inp_main$tabslice <- input$pvt_tab_slice
- }
+  }
+  if (is.empty(input$pvt_tab_slice)) {
+    inp_main <- c(inp_main, nr = Inf)
+  } else {
+    inp_main$tabslice <- input$pvt_tab_slice
+  }
 
   ## update Report > Rmd or Report > R
   update_report(

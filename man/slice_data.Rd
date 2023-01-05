@@ -4,12 +4,12 @@
 \alias{slice_data}
 \title{Slice data with user-specified expression}
 \usage{
-slice_data(dataset, rows = NULL, drop = TRUE)
+slice_data(dataset, expr = NULL, drop = TRUE)
 }
 \arguments{
-\item{dataset}{Data frame to filter}
+\item{dataset}{Data frame to slice}
 
-\item{rows}{Rows to select from the specified dataset}
+\item{expr}{Expression to use select rows from the specified dataset}
 
 \item{drop}{Drop unused factor levels after filtering (default is TRUE)}
 }

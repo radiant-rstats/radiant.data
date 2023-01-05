@@ -9,6 +9,7 @@ expl_args <- as.list(formals(explore))
 expl_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   expl_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  expl_args$arr <- if (input$show_filter) input$data_arrange else ""
   expl_args$rows <- if (input$show_filter) input$data_rows else ""
   expl_args$dataset <- input$dataset
   for (i in r_drop(names(expl_args))) {
@@ -271,8 +272,7 @@ observeEvent(input$expl_store, {
   rows <- input$explore_rows_all
   dat$tab <- dat$tab %>%
     (function(x) if (is.null(rows)) x else x[rows, , drop = FALSE]) %>%
-    (function(x) if (is.empty(input$expl_tab_slice)) x else slice_data(x, input$expl_tab_slice)) %>%
-    droplevels()
+    (function(x) if (is.empty(input$expl_tab_slice)) x else slice_data(x, input$expl_tab_slice))
   r_data[[dataset]] <- dat$tab
   register(dataset)
   updateSelectInput(session, "dataset", selected = input$dataset)

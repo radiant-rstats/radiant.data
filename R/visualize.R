@@ -30,6 +30,7 @@
 #' @param xlim Set limit for x-axis (e.g., c(0, 1))
 #' @param ylim Set limit for y-axis (e.g., c(0, 1))
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
+#' @param arr Expression used to sort the data. Likely used in combination for `rows`
 #' @param rows Rows to select from the specified dataset
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This option can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{https://ggplot2.tidyverse.org} for options.
@@ -75,7 +76,8 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
                       bins = 10, smooth = 1, fun = "mean", check = "", axes = "",
                       alpha = 0.5, theme = "theme_gray", base_size = 11, base_family = "",
                       labs = list(), xlim = NULL, ylim = NULL, data_filter = "",
-                      rows = NULL, shiny = FALSE, custom = FALSE, envir = parent.frame()) {
+                      arr = "", rows = NULL, shiny = FALSE, custom = FALSE,
+                      envir = parent.frame()) {
   if (missing(xvar) && type == "box") {
     xvar <- yvar
     type <- "box-single"
@@ -148,7 +150,7 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 
   ## so you can also pass-in a data.frame
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- get_data(dataset, vars, filt = data_filter, rows = rows, envir = envir)
+  dataset <- get_data(dataset, vars, filt = data_filter, arr = arr, rows = rows, envir = envir)
 
   if (type == "scatter" && !is.empty(nrobs)) {
     nrobs <- as.integer(nrobs)

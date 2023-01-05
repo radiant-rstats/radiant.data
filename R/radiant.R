@@ -258,6 +258,7 @@ find_home <- function() {
 #' @param dataset Dataset or name of the data.frame
 #' @param vars Variables to extract from the data.frame
 #' @param filt Filter to apply to the specified dataset
+#' @param arr Expression to use to arrange (sort) the specified dataset
 #' @param rows Select rows in the specified dataset
 #' @param data_view_rows Vector of rows to select. Only used by Data > View in Radiant. Users should use "rows" instead
 #' @param na.rm Remove rows with missing values (default is TRUE)
@@ -269,10 +270,15 @@ find_home <- function() {
 #' get_data(mtcars, vars = "cyl:vs", filt = "mpg > 25")
 #' get_data(mtcars, vars = c("mpg", "cyl"), rows = 1:10)
 #' @export
-get_data <- function(dataset, vars = "", filt = "", rows = NULL,
+get_data <- function(dataset, vars = "", filt = "", arr = "", rows = NULL,
                      data_view_rows = NULL, na.rm = TRUE, envir = c()) {
-  filt <- gsub("\\n", "", filt) %>%
+  filter_cmd <- gsub("\\n", "", filt) %>%
     gsub("\"", "\'", .)
+
+  arrange_cmd <- gsub("\\n", "", arr) %>%
+    gsub("\"", "\'", .)
+
+  slice_cmd <- rows
 
   dataset <- if (is.data.frame(dataset)) {
     dataset
@@ -285,11 +291,12 @@ get_data <- function(dataset, vars = "", filt = "", rows = NULL,
 
   dataset %>%
     (function(x) if ("grouped_df" %in% class(x)) ungroup(x) else x) %>% ## ungroup data if needed
-    (function(x) if (is.empty(filt)) x else filter_data(x, filt)) %>% ## apply data_filter
-    (function(x) if (is.empty(rows)) x else slice_data(x, rows)) %>%
+    (function(x) if (is.empty(filter_cmd)) x else filter_data(x, filter_cmd)) %>% ## apply data_filter
+    (function(x) if (is.empty(arrange_cmd)) x else arrange_data(x, arrange_cmd)) %>%
+    (function(x) if (is.empty(slice_cmd)) x else slice_data(x, slice_cmd)) %>%
     (function(x) if (is.empty(data_view_rows)) x else x[data_view_rows, , drop = FALSE]) %>%
     (function(x) if (is.empty(vars[1])) x else select(x, !!!if (any(grepl(":", vars))) rlang::parse_exprs(paste0(vars, collapse = ";")) else vars)) %>%
-    (function(x) if (na.rm) na.omit(x) else x)
+    (function(x) if (na.rm) droplevels(na.omit(x)) else x)
 }
 
 #' Convert characters to factors

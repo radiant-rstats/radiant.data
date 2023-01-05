@@ -119,9 +119,19 @@ saveStateOnRefresh <- function(session = session) {
     gsub("\"", "\'", .) %>%
     fix_smart()
 
-  rows <- input$data_rows
+  arrange_cmd <- input$data_arrange
+  if (!is.empty(arrange_cmd)) {
+    arrange_cmd <- arrange_cmd %>%
+      strsplit(., split = "(&|,|\\s+)") %>%
+      unlist() %>%
+      .[!. == ""] %>%
+      paste0(collapse = ", ") %>%
+      (function(x) glue("arrange(x, {x})"))
+  }
 
-  if ((is.empty(filter_cmd) && is.empty(rows)) || input$show_filter == FALSE) {
+  slice_cmd <- input$data_rows
+
+  if ((is.empty(filter_cmd) && is.empty(arrange_cmd) && is.empty(slice_cmd)) || input$show_filter == FALSE) {
     isolate(r_info[["filter_error"]] <- "")
   } else if (grepl("([^=!<>])=([^=])", filter_cmd)) {
     isolate(r_info[["filter_error"]] <- "Invalid filter: Never use = in a filter! Use == instead (e.g., city == 'San Diego'). Update or remove the expression")
@@ -130,11 +140,12 @@ saveStateOnRefresh <- function(session = session) {
     seldat <- try(
       r_data[[input$dataset]] %>%
         (function(x) if (!is.empty(filter_cmd)) x %>% filter(!!rlang::parse_expr(filter_cmd)) else x) %>%
-        (function(x) if (!is.empty(rows)) x %>% slice(!!rlang::parse_expr(rows)) else x),
+        (function(x) if (!is.empty(arrange_cmd)) eval(parse(text = arrange_cmd)) else x) %>%
+        (function(x) if (!is.empty(slice_cmd)) x %>% slice(!!rlang::parse_expr(slice_cmd)) else x),
       silent = TRUE
     )
     if (inherits(seldat, "try-error")) {
-      isolate(r_info[["filter_error"]] <- paste0("Invalid input: \"", attr(seldat, "condition")$message, "\". Update or remove the expression"))
+      isolate(r_info[["filter_error"]] <- paste0("Invalid input: \"", attr(seldat, "condition")$message, "\". Update or remove the expression(x)"))
     } else {
       isolate(r_info[["filter_error"]] <- "")
       if ("grouped_df" %in% class(seldat)) {
@@ -272,11 +283,11 @@ has_duplicates <- function(x) length(unique(x)) < length(x)
 is_date <- function(x) inherits(x, c("Date", "POSIXlt", "POSIXct"))
 
 ## drop elements from .._args variables obtained using formals
-r_drop <- function(x, drop = c("dataset", "data_filter", "rows", "envir")) x[!x %in% drop]
+r_drop <- function(x, drop = c("dataset", "data_filter", "arr", "rows", "envir")) x[!x %in% drop]
 
 ## show a few rows of a dataframe
-show_data_snippet <- function(dataset = input$dataset, nshow = 7, title = "", filt = "", rows = "") {
-  if (is.character(dataset) && length(dataset) == 1) dataset <- get_data(dataset, filt = filt, rows = rows, na.rm = FALSE, envir = r_data)
+show_data_snippet <- function(dataset = input$dataset, nshow = 7, title = "", filt = "", arr = "", rows = "") {
+  if (is.character(dataset) && length(dataset) == 1) dataset <- get_data(dataset, filt = filt, arr = arr, rows = rows, na.rm = FALSE, envir = r_data)
   nr <- nrow(dataset)
   ## avoid slice with variables outside of the df in case a column with the same
   ## name exists
