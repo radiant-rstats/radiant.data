@@ -44,13 +44,13 @@ sapply(pkg, rem_old)
 ## avoid 'loaded namespace' stuff when building for mac
 system(paste0(Sys.which("R"), " -e \"setwd('", getwd(), "'); app <- '", pkg, "'; source('build/build_mac.R')\""))
 
-fl <- list.files(pattern = "*.zip", path = "~/Dropbox/r-packages/", full.names = TRUE)
-for (f in fl) {
-  file.copy(f, "~/gh/")
-}
-
 win <- readline(prompt = "Did you build on Windows? y/n: ")
 if (grepl("[yY]", win)) {
+
+  fl <- list.files(pattern = "*.zip", path = "~/Dropbox/r-packages/", full.names = TRUE)
+  for (f in fl) {
+    file.copy(f, "~/gh/")
+  }
 
   ## move packages to radiant_miniCRAN. must package in Windows first
   # path <- normalizePath("../")
