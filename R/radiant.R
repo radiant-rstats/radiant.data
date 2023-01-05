@@ -1029,11 +1029,12 @@ store_character_popup <- function(mess) {
 #' @param dataset Dataset
 #' @param vars Variables to select
 #' @param filt Data filter
+#' @param arr Expression to arrange (sort) the data on (e.g., "color, desc(price)")
 #' @param rows Selected rows
 #' @param cmd A command used to customize the data
 #'
 #' @export
-indexr <- function(dataset, vars = "", filt = "", rows = NULL, cmd = "") {
+indexr <- function(dataset, vars = "", filt = "", arr = "", rows = NULL, cmd = "") {
   if (is.empty(vars) || sum(vars %in% colnames(dataset)) != length(vars)) {
     vars <- colnames(dataset)
   }
@@ -1056,6 +1057,7 @@ indexr <- function(dataset, vars = "", filt = "", rows = NULL, cmd = "") {
 
   ind <- mutate(dataset, imf___ = seq_len(nrows)) %>%
     (function(x) if (is.empty(filt)) x else filter_data(x, filt)) %>%
+    (function(x) if (is.empty(arr)) x else arrange_data(x, arr)) %>%
     (function(x) if (is.empty(rows)) x else slice_data(x, rows)) %>%
     select_at(.vars = unique(c("imf___", vars))) %>%
     na.omit() %>%
