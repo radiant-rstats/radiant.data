@@ -1,6 +1,6 @@
 ## Resubmission
 
-This is a resubmission. In this update I have added features and cleaned up code to avoid issues with ggplot deprecation warnings. See NEWS.md.
+This is a resubmission. In this update I have added features and cleaned up code to avoid issues with ggplot deprecation warnings. See NEWS.md. Also, URLs have been updated from Rstudio to Posit.
 
 ## Test environments
 

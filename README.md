@@ -50,7 +50,7 @@ Radiant focuses on business data and decisions. It offers tools, examples, and d
 ## How to install Radiant
 
 - Required: [R](https://cran.r-project.org/) version 4.0.0 or later
-- Required: [Rstudio](https://www.rstudio.com/products/rstudio/download/)
+- Required: [Rstudio](https://posit.co/download/rstudio-server/)
 
 In Rstudio you can start and update Radiant through the `Addins` menu at the top of the screen. To install the latest version of Radiant for Windows or Mac, with complete documentation for off-line access, open R(studio) and copy-and-paste the command below:
 

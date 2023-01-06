@@ -1,5 +1,6 @@
 # radiant.data 1.5.0
 
+* Added features in the UI to facilitate persistent filters in filtered, sorted, and sliced data
 * Improvements to screenshot feature. Navigation bar is omitted and the image is adjusted to the length of the UI.
 * Added a convenience function `add_description` to add an description attribute to a data.frame in markdown format
 * Line graphs treated more similarly to bar-graphs (i.e., can have a binary factor variable on the y-axis)
