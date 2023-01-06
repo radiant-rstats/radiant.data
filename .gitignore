@@ -9,3 +9,4 @@ revdep/
 .vscode
 radiant-data.dcf
 radiant-data.Rproj
+R/app.R

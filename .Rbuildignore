@@ -13,3 +13,4 @@ coverage.R
 .vscode
 radiant.data.code-workspace
 ^CRAN-SUBMISSION$
+R/app.R
