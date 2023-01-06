@@ -17,7 +17,12 @@ add_description(df, md = "", path = "")
 Convenience function to add a markdown description to a data.frame
 }
 \examples{
+if (interactive()) {
 mt <- mtcars |> add_description(md = "# MTCARS\n\nThis data.frame contains information on ...")
 describe(mt)
+}
 
+}
+\seealso{
+See also \code{\link{register}}
 }

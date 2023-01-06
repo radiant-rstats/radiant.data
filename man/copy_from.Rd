@@ -18,6 +18,5 @@ Source for package functions
 Equivalent of source with local=TRUE for package functions. Written by smbache, author of the import package. See \url{https://github.com/rticulate/import/issues/4/} for a discussion. This function will be deprecated when (if) it is included in \url{https://github.com/rticulate/import/}
 }
 \examples{
-
 copy_from(radiant.data, get_data)
 }

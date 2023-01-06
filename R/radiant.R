@@ -158,8 +158,12 @@ set_attr <- function(x, which, value) `attr<-`(x, which, value)
 #' @param path Path to a text file with the data description in markdown format
 #'
 #' @examples
+#' if (interactive()) {
 #' mt <- mtcars |> add_description(md = "# MTCARS\n\nThis data.frame contains information on ...")
 #' describe(mt)
+#' }
+#'
+#' @seealso See also \code{\link{register}}
 #'
 #' @export
 add_description <- function(df, md = "", path = "") {
@@ -269,6 +273,7 @@ find_home <- function() {
 #' @examples
 #' get_data(mtcars, vars = "cyl:vs", filt = "mpg > 25")
 #' get_data(mtcars, vars = c("mpg", "cyl"), rows = 1:10)
+#' get_data(mtcars, vars = c("mpg", "cyl"), arr = "desc(mpg)", rows = 1:5)
 #' @export
 get_data <- function(dataset, vars = "", filt = "", arr = "", rows = NULL,
                      data_view_rows = NULL, na.rm = TRUE, envir = c()) {
@@ -531,7 +536,6 @@ qterms <- function(vars, nway = 2) {
 #' @param ... Functions to pull
 #'
 #' @examples
-#'
 #' copy_from(radiant.data, get_data)
 #' @export
 copy_from <- function(.from, ...) {
@@ -1292,6 +1296,9 @@ fix_smart <- function(text, all = FALSE) {
 #' @param envir Environment to assign data to
 #'
 #' @importFrom shiny makeReactiveBinding getDefaultReactiveDomain
+#'
+#' @seealso See also \code{\link{add_description}} to add a description in markdown format
+#'   to a data.frame
 #'
 #' @export
 register <- function(new, org = "", descr = "", shiny = shiny::getDefaultReactiveDomain(), envir = r_data) {

@@ -26,3 +26,7 @@ register(
 \description{
 Register a data.frame or list in Radiant
 }
+\seealso{
+See also \code{\link{add_description}} to add a description in markdown format
+  to a data.frame
+}
