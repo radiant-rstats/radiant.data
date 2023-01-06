@@ -55,6 +55,7 @@ radiant but will be removed
   \item Replace \code{formatnr} by \code{\link{format_nr}}
   \item Replace \code{getclass} by \code{\link{get_class}}
   \item Replace \code{is_numeric} by \code{\link{is_double}}
+  \item Replace \code{is_empty} by \code{\link{is.empty}}
 }
 }
 
