@@ -101,32 +101,43 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">qscatter</span><span class="op">(</span><span class="va">dataset</span>, <span class="va">xvar</span>, <span class="va">yvar</span>, lev <span class="op">=</span> <span class="st">""</span>, fun <span class="op">=</span> <span class="st">"mean"</span>, bins <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">qscatter</span><span class="op">(</span><span class="va">dataset</span>, <span class="va">xvar</span>, <span class="va">yvar</span>, lev <span class="op">=</span> <span class="st">""</span>, fun <span class="op">=</span> <span class="st">"mean"</span>, bins <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dataset</dt>
 <dd><p>Data to plot (data.frame or tibble)</p></dd>
+
+
 <dt>xvar</dt>
 <dd><p>Character indicating the variable to display along the X-axis of the plot</p></dd>
+
+
 <dt>yvar</dt>
 <dd><p>Character indicating the variable to display along the Y-axis of the plot</p></dd>
+
+
 <dt>lev</dt>
 <dd><p>Level in yvar to use if yvar is of type character of factor. If lev is empty then the first level is used</p></dd>
+
+
 <dt>fun</dt>
 <dd><p>Summary measure to apply to both the x and y variable</p></dd>
+
+
 <dt>bins</dt>
 <dd><p>Number of bins to use</p></dd>
+
 </dl></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">qscatter</span><span class="op">(</span><span class="va">diamonds</span>, <span class="st">"price"</span>, <span class="st">"carat"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">qscatter</span><span class="op">(</span><span class="va">diamonds</span>, <span class="st">"price"</span>, <span class="st">"carat"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="qscatter-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu">qscatter</span><span class="op">(</span><span class="va">titanic</span>, <span class="st">"age"</span>, <span class="st">"survived"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">qscatter</span><span class="op">(</span><span class="va">titanic</span>, <span class="st">"age"</span>, <span class="st">"survived"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="qscatter-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -141,7 +152,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

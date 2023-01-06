@@ -101,61 +101,97 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for data.frame</span>
-<span class="fu"><a href="dtab.html">dtab</a></span><span class="op">(</span>
-  <span class="va">object</span>,
-  vars <span class="op">=</span> <span class="st">""</span>,
-  filt <span class="op">=</span> <span class="st">""</span>,
-  rows <span class="op">=</span> <span class="cn">NULL</span>,
-  nr <span class="op">=</span> <span class="cn">NULL</span>,
-  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,
-  dec <span class="op">=</span> <span class="fl">3</span>,
-  perc <span class="op">=</span> <span class="st">""</span>,
-  filter <span class="op">=</span> <span class="st">"top"</span>,
-  pageLength <span class="op">=</span> <span class="fl">10</span>,
-  dom <span class="op">=</span> <span class="st">""</span>,
-  style <span class="op">=</span> <span class="st">"bootstrap4"</span>,
-  rownames <span class="op">=</span> <span class="cn">FALSE</span>,
-  caption <span class="op">=</span> <span class="cn">NULL</span>,
-  envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu"><a href="dtab.html">dtab</a></span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  vars <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  filt <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  arr <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nr <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  dec <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  perc <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  filter <span class="op">=</span> <span class="st">"top"</span>,</span>
+<span>  pageLength <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  dom <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  style <span class="op">=</span> <span class="st">"bootstrap4"</span>,</span>
+<span>  rownames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  caption <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
 <dd><p>Data.frame to display</p></dd>
+
+
 <dt>vars</dt>
 <dd><p>Variables to show (default is all)</p></dd>
+
+
 <dt>filt</dt>
 <dd><p>Filter to apply to the specified dataset. For example "price &gt; 10000" if dataset is "diamonds" (default is "")</p></dd>
+
+
+<dt>arr</dt>
+<dd><p>Expression to arrange (sort) the data on (e.g., "color, desc(price)")</p></dd>
+
+
 <dt>rows</dt>
 <dd><p>Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)</p></dd>
+
+
 <dt>nr</dt>
 <dd><p>Number of rows of data to include in the table. This function will be mainly used in reports so it is best to keep this number small</p></dd>
+
+
 <dt>na.rm</dt>
 <dd><p>Remove rows with missing values (default is FALSE)</p></dd>
+
+
 <dt>dec</dt>
 <dd><p>Number of decimal places to show. Default is no rounding (NULL)</p></dd>
+
+
 <dt>perc</dt>
 <dd><p>Vector of column names to be displayed as a percentage</p></dd>
+
+
 <dt>filter</dt>
 <dd><p>Show column filters in DT table. Options are "none", "top", "bottom"</p></dd>
+
+
 <dt>pageLength</dt>
 <dd><p>Number of rows to show in table</p></dd>
+
+
 <dt>dom</dt>
 <dd><p>Table control elements to show on the page. See <a href="https://datatables.net/reference/option/dom" class="external-link">https://datatables.net/reference/option/dom</a></p></dd>
+
+
 <dt>style</dt>
 <dd><p>Table formatting style ("bootstrap" or "default")</p></dd>
+
+
 <dt>rownames</dt>
 <dd><p>Show data.frame rownames. Default is FALSE</p></dd>
+
+
 <dt>caption</dt>
 <dd><p>Table caption</p></dd>
+
+
 <dt>envir</dt>
 <dd><p>Environment to extract data from</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -164,10 +200,10 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu"><a href="dtab.html">dtab</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="dtab.html">dtab</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -182,7 +218,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

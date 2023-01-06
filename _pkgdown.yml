@@ -63,6 +63,8 @@ reference:
       - dtab
       - dtab.data.frame
       - filter_data
+      - make_arrange_cmd
+      - arrange_data
       - slice_data
       - search_data
       - view_data

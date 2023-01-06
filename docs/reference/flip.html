@@ -101,15 +101,18 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">flip</span><span class="op">(</span><span class="va">expl</span>, top <span class="op">=</span> <span class="st">"fun"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">flip</span><span class="op">(</span><span class="va">expl</span>, top <span class="op">=</span> <span class="st">"fun"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>expl</dt>
 <dd><p>Return value from <code><a href="explore.html">explore</a></code></p></dd>
+
+
 <dt>top</dt>
 <dd><p>The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by. "fun" is the default</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -124,7 +127,7 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="explore.html">explore</a></span><span class="op">(</span><span class="va">diamonds</span>, <span class="st">"price:x"</span>, top <span class="op">=</span> <span class="st">"var"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="explore.html">explore</a></span><span class="op">(</span><span class="va">diamonds</span>, <span class="st">"price:x"</span>, top <span class="op">=</span> <span class="st">"var"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Explore</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data        : diamonds </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Functions   : mean, sd </span>
@@ -133,7 +136,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  .function     price carat clarity   cut color  depth  table     x</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       mean 3,907.186 0.794   0.013 0.034 0.127 61.753 57.465 5.722</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         sd 3,956.915 0.474   0.115 0.180 0.333  1.446  2.241 1.124</span>
-<span class="r-in"><span class="fu"><a href="explore.html">explore</a></span><span class="op">(</span><span class="va">diamonds</span>, <span class="st">"price"</span>, byvar <span class="op">=</span> <span class="st">"cut"</span>, fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"n_obs"</span>, <span class="st">"skew"</span><span class="op">)</span>, top <span class="op">=</span> <span class="st">"byvar"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="explore.html">explore</a></span><span class="op">(</span><span class="va">diamonds</span>, <span class="st">"price"</span>, byvar <span class="op">=</span> <span class="st">"cut"</span>, fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"n_obs"</span>, <span class="st">"skew"</span><span class="op">)</span>, top <span class="op">=</span> <span class="st">"byvar"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Explore</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data        : diamonds </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by  : cut </span>
@@ -143,7 +146,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  variable function.    Fair    Good Very_Good Premium     Ideal</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     price     n_obs 101.000 275.000   677.000 771.000 1,176.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     price      skew   1.574   1.489     1.601   1.413     1.799</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -158,7 +161,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

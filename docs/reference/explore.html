@@ -101,52 +101,82 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">explore</span><span class="op">(</span>
-  <span class="va">dataset</span>,
-  vars <span class="op">=</span> <span class="st">""</span>,
-  byvar <span class="op">=</span> <span class="st">""</span>,
-  fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sd"</span><span class="op">)</span>,
-  top <span class="op">=</span> <span class="st">"fun"</span>,
-  tabfilt <span class="op">=</span> <span class="st">""</span>,
-  tabsort <span class="op">=</span> <span class="st">""</span>,
-  tabslice <span class="op">=</span> <span class="st">""</span>,
-  nr <span class="op">=</span> <span class="cn">Inf</span>,
-  data_filter <span class="op">=</span> <span class="st">""</span>,
-  rows <span class="op">=</span> <span class="cn">NULL</span>,
-  envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">explore</span><span class="op">(</span></span>
+<span>  <span class="va">dataset</span>,</span>
+<span>  vars <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  byvar <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sd"</span><span class="op">)</span>,</span>
+<span>  top <span class="op">=</span> <span class="st">"fun"</span>,</span>
+<span>  tabfilt <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  tabsort <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  tabslice <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  nr <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  data_filter <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  arr <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dataset</dt>
 <dd><p>Dataset to explore</p></dd>
+
+
 <dt>vars</dt>
 <dd><p>(Numeric) variables to summarize</p></dd>
+
+
 <dt>byvar</dt>
 <dd><p>Variable(s) to group data by</p></dd>
+
+
 <dt>fun</dt>
 <dd><p>Functions to use for summarizing</p></dd>
+
+
 <dt>top</dt>
 <dd><p>Use functions ("fun"), variables ("vars"), or group-by variables as column headers</p></dd>
+
+
 <dt>tabfilt</dt>
 <dd><p>Expression used to filter the table (e.g., "Total &gt; 10000")</p></dd>
+
+
 <dt>tabsort</dt>
 <dd><p>Expression used to sort the table (e.g., "desc(Total)")</p></dd>
+
+
 <dt>tabslice</dt>
 <dd><p>Expression used to filter table (e.g., "1:5")</p></dd>
+
+
 <dt>nr</dt>
 <dd><p>Number of rows to display</p></dd>
+
+
 <dt>data_filter</dt>
 <dd><p>Expression used to filter the dataset before creating the table (e.g., "price &gt; 10000")</p></dd>
+
+
+<dt>arr</dt>
+<dd><p>Expression to arrange (sort) the data on (e.g., "color, desc(price)")</p></dd>
+
+
 <dt>rows</dt>
 <dd><p>Rows to select from the specified dataset</p></dd>
+
+
 <dt>envir</dt>
 <dd><p>Environment to extract data from</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of all variables defined in the function as an object of class explore</p>
+    
+
+<p>A list of all variables defined in the function as an object of class explore</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -159,8 +189,8 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">explore</span><span class="op">(</span><span class="va">diamonds</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"carat"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> List of 12</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">explore</span><span class="op">(</span><span class="va">diamonds</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"carat"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> List of 13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ tab        :'data.frame':	2 obs. of  3 variables:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ variable: Factor w/ 2 levels "price","carat": 1 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ mean    : num [1:2] 3907.186 0.794</span>
@@ -176,9 +206,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ tabslice   : chr ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ nr         : num Inf</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ data_filter: chr ""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ arr        : chr ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ rows       : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "class")= chr [1:2] "explore" "list"</span>
-<span class="r-in"><span class="fu">explore</span><span class="op">(</span><span class="va">diamonds</span>, <span class="st">"price:x"</span><span class="op">)</span><span class="op">$</span><span class="va">tab</span></span>
+<span class="r-in"><span><span class="fu">explore</span><span class="op">(</span><span class="va">diamonds</span>, <span class="st">"price:x"</span><span class="op">)</span><span class="op">$</span><span class="va">tab</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   variable         mean           sd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    price 3.907186e+03 3956.9154001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    carat 7.942833e-01    0.4738263</span>
@@ -188,7 +219,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    depth 6.175267e+01    1.4460279</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7    table 5.746533e+01    2.2411022</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8        x 5.721823e+00    1.1240545</span>
-<span class="r-in"><span class="fu">explore</span><span class="op">(</span><span class="va">diamonds</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"carat"</span><span class="op">)</span>, byvar <span class="op">=</span> <span class="st">"cut"</span>, fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"n_missing"</span>, <span class="st">"skew"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">tab</span></span>
+<span class="r-in"><span><span class="fu">explore</span><span class="op">(</span><span class="va">diamonds</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"price"</span>, <span class="st">"carat"</span><span class="op">)</span>, byvar <span class="op">=</span> <span class="st">"cut"</span>, fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"n_missing"</span>, <span class="st">"skew"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">tab</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          cut variable n_missing      skew</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       Fair    price         0 1.5741334</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       Fair    carat         0 0.9285670</span>
@@ -200,7 +231,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    Premium    carat         0 0.9299567</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9      Ideal    price         0 1.7986601</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10     Ideal    carat         0 1.3654745</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -215,7 +246,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

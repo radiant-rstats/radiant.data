@@ -101,21 +101,28 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">slice_data</span><span class="op">(</span><span class="va">dataset</span>, rows <span class="op">=</span> <span class="cn">NULL</span>, drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">slice_data</span><span class="op">(</span><span class="va">dataset</span>, expr <span class="op">=</span> <span class="cn">NULL</span>, drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dataset</dt>
-<dd><p>Data frame to filter</p></dd>
-<dt>rows</dt>
-<dd><p>Rows to select from the specified dataset</p></dd>
+<dd><p>Data frame to slice</p></dd>
+
+
+<dt>expr</dt>
+<dd><p>Expression to use select rows from the specified dataset</p></dd>
+
+
 <dt>drop</dt>
 <dd><p>Drop unused factor levels after filtering (default is TRUE)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Sliced data frame</p>
+    
+
+<p>Sliced data frame</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -134,7 +141,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

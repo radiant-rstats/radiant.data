@@ -101,24 +101,31 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">deregister</span><span class="op">(</span>
-  <span class="va">dataset</span>,
-  shiny <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span>,
-  envir <span class="op">=</span> <span class="va">r_data</span>,
-  info <span class="op">=</span> <span class="va">r_info</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">deregister</span><span class="op">(</span></span>
+<span>  <span class="va">dataset</span>,</span>
+<span>  shiny <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  envir <span class="op">=</span> <span class="va">r_data</span>,</span>
+<span>  info <span class="op">=</span> <span class="va">r_info</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dataset</dt>
 <dd><p>String containing the name of the data.frame to deregister</p></dd>
+
+
 <dt>shiny</dt>
 <dd><p>Check if function is called from a shiny application</p></dd>
+
+
 <dt>envir</dt>
 <dd><p>Environment to remove data from</p></dd>
+
+
 <dt>info</dt>
 <dd><p>Reactive list with information about available data in radiant</p></dd>
+
 </dl></div>
 
   </div>
@@ -133,7 +140,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

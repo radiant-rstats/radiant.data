@@ -110,4 +110,9 @@ is_numeric <- function(...) {
   .Deprecated("is_double")
   is_double(...)
 }
+is_empty <- function(...) {
+  .Deprecated("is.empty")
+  is.empty(...)
+}
+
 NULL

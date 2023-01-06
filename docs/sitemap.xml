@@ -55,6 +55,9 @@
     <loc>https://radiant-rstats.github.io/radiant.data/reference/add_description.html</loc>
   </url>
   <url>
+    <loc>https://radiant-rstats.github.io/radiant.data/reference/arrange_data.html</loc>
+  </url>
+  <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/as_character.html</loc>
   </url>
   <url>
@@ -272,6 +275,9 @@
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/load_clip.html</loc>
+  </url>
+  <url>
+    <loc>https://radiant-rstats.github.io/radiant.data/reference/make_arrange_cmd.html</loc>
   </url>
   <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/make_train.html</loc>

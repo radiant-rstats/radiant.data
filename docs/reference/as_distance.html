@@ -106,43 +106,56 @@ Function based on <a href="http://www.movable-type.co.uk/scripts/latlong.html" c
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">as_distance</span><span class="op">(</span>
-  <span class="va">lat1</span>,
-  <span class="va">long1</span>,
-  <span class="va">lat2</span>,
-  <span class="va">long2</span>,
-  unit <span class="op">=</span> <span class="st">"km"</span>,
-  R <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>km <span class="op">=</span> <span class="fl">6371</span>, miles <span class="op">=</span> <span class="fl">3959</span><span class="op">)</span><span class="op">[[</span><span class="va">unit</span><span class="op">]</span><span class="op">]</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">as_distance</span><span class="op">(</span></span>
+<span>  <span class="va">lat1</span>,</span>
+<span>  <span class="va">long1</span>,</span>
+<span>  <span class="va">lat2</span>,</span>
+<span>  <span class="va">long2</span>,</span>
+<span>  unit <span class="op">=</span> <span class="st">"km"</span>,</span>
+<span>  R <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>km <span class="op">=</span> <span class="fl">6371</span>, miles <span class="op">=</span> <span class="fl">3959</span><span class="op">)</span><span class="op">[[</span><span class="va">unit</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>lat1</dt>
 <dd><p>Latitude of location 1</p></dd>
+
+
 <dt>long1</dt>
 <dd><p>Longitude of location 1</p></dd>
+
+
 <dt>lat2</dt>
 <dd><p>Latitude of location 2</p></dd>
+
+
 <dt>long2</dt>
 <dd><p>Longitude of location 2</p></dd>
+
+
 <dt>unit</dt>
 <dd><p>Measure kilometers ("km", default) or miles ("miles")</p></dd>
+
+
 <dt>R</dt>
 <dd><p>Radius of the earth</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Distance between two points</p>
+    
+
+<p>Distance between two points</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">as_distance</span><span class="op">(</span><span class="fl">32.8245525</span>, <span class="op">-</span><span class="fl">117.0951632</span>, <span class="fl">40.7033127</span>, <span class="op">-</span><span class="fl">73.979681</span>, unit <span class="op">=</span> <span class="st">"km"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">as_distance</span><span class="op">(</span><span class="fl">32.8245525</span>, <span class="op">-</span><span class="fl">117.0951632</span>, <span class="fl">40.7033127</span>, <span class="op">-</span><span class="fl">73.979681</span>, unit <span class="op">=</span> <span class="st">"km"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3898.601</span>
-<span class="r-in"><span class="fu">as_distance</span><span class="op">(</span><span class="fl">32.8245525</span>, <span class="op">-</span><span class="fl">117.0951632</span>, <span class="fl">40.7033127</span>, <span class="op">-</span><span class="fl">73.979681</span>, unit <span class="op">=</span> <span class="st">"miles"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">as_distance</span><span class="op">(</span><span class="fl">32.8245525</span>, <span class="op">-</span><span class="fl">117.0951632</span>, <span class="fl">40.7033127</span>, <span class="op">-</span><span class="fl">73.979681</span>, unit <span class="op">=</span> <span class="st">"miles"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2422.628</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -157,7 +170,7 @@ Function based on <a href="http://www.movable-type.co.uk/scripts/latlong.html" c
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

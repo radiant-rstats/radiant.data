@@ -101,24 +101,35 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for pivotr</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, perc <span class="op">=</span> <span class="cn">FALSE</span>, dec <span class="op">=</span> <span class="fl">3</span>, chi2 <span class="op">=</span> <span class="cn">FALSE</span>, shiny <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for pivotr</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, perc <span class="op">=</span> <span class="cn">FALSE</span>, dec <span class="op">=</span> <span class="fl">3</span>, chi2 <span class="op">=</span> <span class="cn">FALSE</span>, shiny <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
 <dd><p>Return value from <code><a href="pivotr.html">pivotr</a></code></p></dd>
+
+
 <dt>perc</dt>
 <dd><p>Display numbers as percentages (TRUE or FALSE)</p></dd>
+
+
 <dt>dec</dt>
 <dd><p>Number of decimals to show</p></dd>
+
+
 <dt>chi2</dt>
 <dd><p>If TRUE calculate the chi-square statistic for the (pivot) table</p></dd>
+
+
 <dt>shiny</dt>
 <dd><p>Did the function call originate inside a shiny app</p></dd>
+
+
 <dt>...</dt>
 <dd><p>further arguments passed to or from other methods</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -131,7 +142,7 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="pivotr.html">pivotr</a></span><span class="op">(</span><span class="va">diamonds</span>, cvars <span class="op">=</span> <span class="st">"cut"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span>chi2 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="pivotr.html">pivotr</a></span><span class="op">(</span><span class="va">diamonds</span>, cvars <span class="op">=</span> <span class="st">"cut"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span>chi2 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Pivot table</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data        : diamonds </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Categorical : cut </span>
@@ -146,7 +157,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chi-squared: 1202.62 df(4), p.value &lt; .001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.0% of cells have expected values below 5</span>
-<span class="r-in"><span class="fu"><a href="pivotr.html">pivotr</a></span><span class="op">(</span><span class="va">diamonds</span>, cvars <span class="op">=</span> <span class="st">"cut"</span>, tabsort <span class="op">=</span> <span class="st">"desc(n_obs)"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="pivotr.html">pivotr</a></span><span class="op">(</span><span class="va">diamonds</span>, cvars <span class="op">=</span> <span class="st">"cut"</span>, tabsort <span class="op">=</span> <span class="st">"desc(n_obs)"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Pivot table</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data        : diamonds </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table sorted: desc(n_obs) </span>
@@ -160,7 +171,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Fair   101</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Total 3,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="pivotr.html">pivotr</a></span><span class="op">(</span><span class="va">diamonds</span>, cvars <span class="op">=</span> <span class="st">"cut"</span>, tabfilt <span class="op">=</span> <span class="st">"n_obs &gt; 700"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="pivotr.html">pivotr</a></span><span class="op">(</span><span class="va">diamonds</span>, cvars <span class="op">=</span> <span class="st">"cut"</span>, tabfilt <span class="op">=</span> <span class="st">"n_obs &gt; 700"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Pivot table</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data        : diamonds </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table filter: n_obs &gt; 700 </span>
@@ -171,7 +182,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Ideal 1,176</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Total 3,000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="pivotr.html">pivotr</a></span><span class="op">(</span><span class="va">diamonds</span>, cvars <span class="op">=</span> <span class="st">"cut:clarity"</span>, nvar <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="pivotr.html">pivotr</a></span><span class="op">(</span><span class="va">diamonds</span>, cvars <span class="op">=</span> <span class="st">"cut:clarity"</span>, nvar <span class="op">=</span> <span class="st">"price"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Pivot table</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data        : diamonds </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Categorical : cut clarity </span>
@@ -189,7 +200,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>       IF 3,205.000   817.250 4,675.867 2,361.333 1,961.344 2,411.697</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Total 4,505.238 4,130.433 3,959.916 4,369.409 3,470.224 3,907.186</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -204,7 +215,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

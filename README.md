@@ -131,7 +131,7 @@ To run your own instance of Radiant on shinyapps.io first <a href = "https://rad
 
 ## Running Radiant on shiny-server
 
-You can also host Radiant using [shiny-server](https://www.rstudio.com/products/rstudio/download-server/). First, install radiant on the server using the command below:
+You can also host Radiant using [shiny-server](https://posit.co/download/shiny-server/). First, install radiant on the server using the command below:
 
 ```r
 options(repos = c(RSM = "https://radiant-rstats.github.io/minicran", CRAN = "https://cloud.r-project.org"))
