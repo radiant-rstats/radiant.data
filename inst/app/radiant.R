@@ -918,6 +918,7 @@ run_refresh <- function(args, pre, init = "evar", tabs = "",
     ## dep on most inputs
     if (data) {
       input$data_filter
+      input$data_arrange
       input$data_rows
       input$show_filter
     }
