@@ -18,8 +18,8 @@ Convenience function to add a markdown description to a data.frame
 }
 \examples{
 if (interactive()) {
-mt <- mtcars |> add_description(md = "# MTCARS\n\nThis data.frame contains information on ...")
-describe(mt)
+  mt <- mtcars |> add_description(md = "# MTCARS\n\nThis data.frame contains information on ...")
+  describe(mt)
 }
 
 }
