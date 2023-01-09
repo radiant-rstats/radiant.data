@@ -330,7 +330,6 @@ print.capture_plot <- function(x, ...) {
 returnTextAreaInput <- function(inputId, label = NULL, rows = 2,
                                 placeholder = NULL, resize = "vertical",
                                 value = "") {
-
   ## avoid all sorts of 'helpful' behavior from your browser
   ## see https://stackoverflow.com/a/35514029/1974918
   tagList(
@@ -564,11 +563,9 @@ register_print_output <- function(fun_name, rfun_name, out_name = fun_name) {
 ## out_name is the name of the output, set to fun_name by default
 register_plot_output <- function(fun_name, rfun_name, out_name = fun_name,
                                  width_fun = "plot_width", height_fun = "plot_height") {
-
   ## Generate output for the plots tab
   output[[out_name]] <- renderPlot(
     {
-
       ## when no analysis was conducted (e.g., no variables selected)
       p <- get(rfun_name)()
       if (is_not(p) || is.empty(p)) p <- "Nothing to plot ...\nSelect plots to show or re-run the calculations"
@@ -687,7 +684,6 @@ inclRmd <- function(path) {
 
 ## capture the state of a dt table
 dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
-
   ## global search
   search <- input[[paste0(fun, "_state")]]$search$search
   if (is.null(search)) search <- ""
@@ -717,7 +713,6 @@ dt_state <- function(fun, vars = "", tabfilt = "", tabsort = "", nr = 0) {
     })
 
   if (order != "NULL" || sc != "NULL") {
-
     ## get variable class and name
     gc <- get_class(dat) %>%
       (function(x) if (is.empty(vars[1])) x else x[vars])
@@ -930,7 +925,10 @@ run_refresh <- function(args, pre, init = "evar", tabs = "",
     }
 
     run <- isolate(input[[paste0(pre, "_run")]]) %>% pressed()
-    if (is.null(input[[paste0(pre, "_", init)]])) {
+    check_null <- function(init) {
+      all(sapply(init, function(x) is.null(input[[paste0(pre, "_", x)]])))
+    }
+    if (isTRUE(check_null(init))) {
       if (!is.empty(tabs)) {
         updateTabsetPanel(session, paste0(tabs, " "), selected = "Summary")
       }

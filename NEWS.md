@@ -1,9 +1,13 @@
-# radiant.data 1.5.0
+# radiant.data 1.5.1
 
-* Added features in the UI to facilitate persistent filters in filtered, sorted, and sliced data
-* Improvements to screenshot feature. Navigation bar is omitted and the image is adjusted to the length of the UI.
-* Added a convenience function `add_description` to add an description attribute to a data.frame in markdown format
-* Line graphs treated more similarly to bar-graphs (i.e., can have a binary factor variable on the y-axis)
+* Added features in the UI to facilitate persistent filters for filtered, sorted, and sliced data
+* Improvements to screenshot feature: 
+   - Navigation bar is omitted and the image is adjusted to the length of the UI.
+   - html2canvas.js is now included so users can take screenshot when offline
+* Added a convenience function `add_description` to add a description attribute to a data.frame in markdown format
+* Line graphs treated more similarly to bar-graphs: 
+   - Can have a binary factor variable on the y-axis
+   - Y-variable only line are now also possible
 * Removed all references to `aes_string` which is being deprecated in ggplot soon
 * Improved cleanup after Radiant UI is closed
 

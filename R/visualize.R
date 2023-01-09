@@ -78,19 +78,23 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
                       labs = list(), xlim = NULL, ylim = NULL, data_filter = "",
                       arr = "", rows = NULL, shiny = FALSE, custom = FALSE,
                       envir = parent.frame()) {
-  if (missing(xvar) && type == "box") {
+  if (missing(xvar) && type %in% c("box", "line")) {
     xvar <- yvar
-    type <- "box-single"
-    if (comby) {
-      comby <- FALSE
-      combx <- TRUE
+    if (type == "box") {
+      type <- "box-single"
+      if (comby) {
+        comby <- FALSE
+        combx <- TRUE
+      }
+    } else {
+      type <- "line-single"
     }
   }
 
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- xvar
 
-  if (!type %in% c("scatter", "line", "box")) color <- "none"
+  if (!type %in% c("scatter", "line", "line-single", "box")) color <- "none"
   if (!type %in% c("bar", "dist", "density", "surface")) fill <- "none"
   if (type != "scatter") {
     check %<>% sub("line", "", .) %>% sub("loess", "", .)
@@ -275,7 +279,7 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 
   ## combining Y-variables if needed
   if (comby && length(yvar) > 1) {
-    if (any(xvar %in% yvar) && type != "box-single") {
+    if (any(xvar %in% yvar) && !type %in% c("box-single", "line-single")) {
       return("X-variables cannot be part of Y-variables when combining Y-variables")
     }
     if (!is.empty(color, "none")) {
@@ -322,7 +326,6 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   plot_list <- list()
   if (type == "dist") {
     for (i in xvar) {
-
       ## can't create a distribution plot for a logical
       if (dc[i] == "logical") {
         dataset[[i]] <- as_factor(dataset[[i]])
@@ -356,9 +359,9 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
     for (i in xvar) {
       plot_list[[i]] <- ggplot(dataset, aes(x = .data[[i]])) +
         if (fill == "none") {
-          geom_density(adjust = smooth, color = linecol, fill = fillcol, alpha = alpha, size = 1)
+          geom_density(adjust = smooth, color = linecol, fill = fillcol, alpha = alpha, linewidth = 1)
         } else {
-          geom_density(adjust = smooth, alpha = alpha, size = 1)
+          geom_density(adjust = smooth, alpha = alpha, linewidth = 1)
         }
 
       if ("log_x" %in% axes) plot_list[[i]] <- plot_list[[i]] + xlab(paste("log", i))
@@ -390,7 +393,6 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
 
         if (dc[i] == "factor") {
-
           ## make range comparable to bar plot
           ymax <- max(0, max(dataset[[j]]))
           ymin <- min(0, min(dataset[[j]]))
@@ -402,7 +404,6 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
           }
 
           if (length(fun) == 1) {
-
             ## need some contrast in this case
             if (pointcol[1] == "black" && linecol[1] == "black") {
               linecol[1] <- "blue"
@@ -546,6 +547,20 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
         }
         itt <- itt + 1
       }
+    }
+  } else if (type == "line-single") {
+    itt <- 1
+    for (i in yvar) {
+      if (color == "none") {
+        plot_list[[itt]] <- ggplot(dataset, aes(x = seq_along(.data[[i]]), y = .data[[i]])) +
+          geom_line(color = linecol) +
+          labs(x = "")
+      } else {
+        plot_list[[itt]] <- ggplot(dataset, aes(x = seq_along(.data[[i]]), y = .data[[i]], color = .data[[color]], group = .data[[color]])) +
+          geom_line() +
+          labs(x = "")
+      }
+      itt <- itt + 1
     }
   } else if (type == "bar") {
     itt <- 1
@@ -701,14 +716,14 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   if ("line" %in% check) {
     for (i in 1:length(plot_list)) {
       plot_list[[i]] <- plot_list[[i]] +
-        sshhr(geom_smooth(method = "lm", alpha = 0.2, size = .75, linetype = "dashed"))
+        sshhr(geom_smooth(method = "lm", alpha = 0.2, linewidth = .75, linetype = "dashed"))
     }
   }
 
   if ("loess" %in% check) {
     for (i in 1:length(plot_list)) {
       plot_list[[i]] <- plot_list[[i]] +
-        sshhr(geom_smooth(span = smooth, method = "loess", alpha = 0.2, size = .75, linetype = "dotdash"))
+        sshhr(geom_smooth(span = smooth, method = "loess", alpha = 0.2, linewidth = .75, linetype = "dotdash"))
     }
   }
 

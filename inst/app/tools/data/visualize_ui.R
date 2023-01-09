@@ -318,10 +318,10 @@ output$ui_viz_colors <- renderUI({
   )
 })
 
-## add a spinning refresh icon if the tabel needs to be (re)calculated
+## add a spinning refresh icon if the graph needs to be (re)recreated
 run_refresh(
   viz_args, "viz",
-  init = "xvar", label = "Create plot", relabel = "Update plot",
+  init = c("xvar", "yvar"), label = "Create plot", relabel = "Update plot",
   inputs = c("labs_title", "labs_subtitle", "labs_caption", "labs_y", "labs_x")
 )
 
@@ -467,7 +467,6 @@ output$ui_Visualize <- renderUI({
         )
       )
     ),
-    # HTML("</details>"),
     help_and_report(
       modal_title = "Visualize",
       fun_name = "visualize",
@@ -509,7 +508,7 @@ output$visualize <- renderPlot(
   {
     req(input$viz_type)
     if (not_available(input$viz_xvar)) {
-      if (input$viz_type != "box") {
+      if (!input$viz_type %in% c("box", "line")) {
         return(
           plot(
             x = 1, type = "n",
@@ -520,13 +519,13 @@ output$visualize <- renderPlot(
       }
     }
     .visualize() %>%
-      {
-        if (is.character(.)) {
-          plot(x = 1, type = "n", main = paste0("\n", .), axes = FALSE, xlab = "", ylab = "", cex.main = .9)
-        } else if (length(.) > 0) {
-          print(.)
+      (function(x) {
+        if (is.character(x)) {
+          plot(x = 1, type = "n", main = paste0("\n", x), axes = FALSE, xlab = "", ylab = "", cex.main = .9)
+        } else if (length(x) > 0) {
+          print(x)
         }
-      }
+      })
   },
   width = viz_plot_width,
   height = viz_plot_height,
@@ -540,13 +539,11 @@ output$visualize <- renderPlot(
   ## need dependency on ..
   req(input$viz_plot_height && input$viz_plot_width)
 
-  if (not_available(input$viz_xvar) && input$viz_type != "box") {
+  if (not_available(input$viz_xvar) && !input$viz_type %in% c("box", "line")) {
     return()
-  }
-  if (input$viz_type %in% c("scatter", "line", "box", "bar", "surface") && not_available(input$viz_yvar)) {
+  } else if (input$viz_type %in% c("scatter", "line", "box", "bar", "surface") && not_available(input$viz_yvar)) {
     return("No Y-variable provided for a plot that requires one")
-  }
-  if (input$viz_type == "box" && !all(input$viz_xvar %in% groupable_vars())) {
+  } else if (input$viz_type == "box" && !all(input$viz_xvar %in% groupable_vars())) {
     return()
   }
 
@@ -617,6 +614,9 @@ visualize_report <- function() {
 
   if (!input$viz_type %in% c("bar", "line", "scatter")) {
     vi$fun <- "mean"
+  }
+  if (is.empty(input$data_rows)) {
+    vi$rows <- NULL
   }
 
   inp_main <- c(clean_args(vi, viz_args), custom = FALSE)
