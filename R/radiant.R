@@ -159,8 +159,8 @@ set_attr <- function(x, which, value) `attr<-`(x, which, value)
 #'
 #' @examples
 #' if (interactive()) {
-#' mt <- mtcars |> add_description(md = "# MTCARS\n\nThis data.frame contains information on ...")
-#' describe(mt)
+#'   mt <- mtcars |> add_description(md = "# MTCARS\n\nThis data.frame contains information on ...")
+#'   describe(mt)
 #' }
 #'
 #' @seealso See also \code{\link{register}}
@@ -1463,7 +1463,6 @@ parse_path <- function(path, chr = "", pdir = getwd(), mess = TRUE) {
 #' @importFrom rstudioapi selectFile isAvailable
 #' @export
 read_files <- function(path, pdir = "", type = "rmd", to = "", clipboard = TRUE, radiant = FALSE) {
-
   ## if no path is provided, an interactive file browser will be opened
   if (missing(path) || is.empty(path)) {
     if (rstudioapi::isAvailable()) {

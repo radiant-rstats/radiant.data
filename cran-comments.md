@@ -2,6 +2,19 @@
 
 This is a resubmission. In this update I have added features and cleaned up code to avoid issues with ggplot deprecation warnings. See NEWS.md. Also, URLs have been updated from Rstudio to Posit and the Radiant Documentation site is now back online and accessible.
 
+I have also tried to address the build issue connected to calibre. See note below.
+
+"This suggests you open a web browser in non interactive mode. Please use
+such calls only conditionally via
+
+if(interactive())
+
+Please fix and resubmit.
+
+Best,
+Uwe Ligges
+"
+
 ## Test environments
 
 * macOS, R 4.2.2
