@@ -527,11 +527,17 @@ knit_print.data.frame <- function(x, ...) {
 
 load_html2canvas <- function() {
   # adapted from https://github.com/yonicd/snapper/blob/master/R/load.R
-  html2canvas <- "https://html2canvas.hertzen.com/dist/html2canvas.min.js"
+  # SRC URL "https://html2canvas.hertzen.com/dist/html2canvas.min.js"
+  asset_src <- "assets/html2canvas/"
+  asset_script <- "html2canvas.min.js"
+  dir.exists(asset_src)
   shiny::tagList(
-    htmltools::htmlDependency("html2canvas", "1.0.0",
-      src = c(href = dirname(html2canvas)),
-      script = basename(html2canvas)
+    htmltools::htmlDependency(
+      name = "html2canvas-js",
+      version = "1.4.1",
+      src = asset_src,
+      script = asset_script,
+      package = "radiant.data"
     )
   )
 }
