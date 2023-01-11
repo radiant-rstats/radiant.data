@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.1</span>
       </span>
     </div>
 
@@ -96,11 +96,17 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.5.0" id="radiantdata-150">radiant.data 1.5.0<a class="anchor" aria-label="anchor" href="#radiantdata-150"></a></h2>
-<ul><li>Added features in the UI to facilitate persistent filters in filtered, sorted, and sliced data</li>
-<li>Improvements to screenshot feature. Navigation bar is omitted and the image is adjusted to the length of the UI.</li>
-<li>Added a convenience function <code>add_description</code> to add an description attribute to a data.frame in markdown format</li>
-<li>Line graphs treated more similarly to bar-graphs (i.e., can have a binary factor variable on the y-axis)</li>
+<h2 class="page-header" data-toc-text="1.5.1" id="radiantdata-151">radiant.data 1.5.1<a class="anchor" aria-label="anchor" href="#radiantdata-151"></a></h2>
+<ul><li>Added features in the UI to facilitate persistent filters for filtered, sorted, and sliced data</li>
+<li>Improvements to screenshot feature:
+<ul><li>Navigation bar is omitted and the image is adjusted to the length of the UI.</li>
+<li>html2canvas.js is now included so users can take screenshot when offline</li>
+</ul></li>
+<li>Added a convenience function <code>add_description</code> to add a description attribute to a data.frame in markdown format</li>
+<li>Line graphs treated more similarly to bar-graphs:
+<ul><li>Can have a binary factor variable on the y-axis</li>
+<li>Y-variable only line are now also possible</li>
+</ul></li>
 <li>Removed all references to <code>aes_string</code> which is being deprecated in ggplot soon</li>
 <li>Improved cleanup after Radiant UI is closed</li>
 </ul></div>
@@ -689,7 +695,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Vincent Nijs.</p>
+  <p></p><p>Developed by Vincent Nijs, Niklas von Hertzen.</p>
 </div>
 
 <div class="pkgdown">
