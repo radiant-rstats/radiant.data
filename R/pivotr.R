@@ -486,6 +486,12 @@ plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE,
   tab <- x$tab %>%
     (function(x) filter(x, x[[1]] != "Total"))
 
+  if (flip) {
+    # need reverse order here because of how coord_flip works
+    tab <- lapply(tab, function(x) if (inherits(x, "factor")) factor(x, levels = rev(levels(x))) else x) %>%
+        as_tibble()
+  }
+
   if (length(cvars) == 1) {
     p <- ggplot(na.omit(tab), aes(x = .data[[cvars]], y = .data[[nvar]])) +
       geom_bar(stat = "identity", position = "dodge", alpha = opacity, fill = fillcol)

@@ -195,7 +195,6 @@ pre {
 ## Based on http://stackoverflow.com/a/31797947/1974918
 ## as of 12/30/2017 doesn't seem to work anymore
 knit_it_save <- function(report) {
-
   ## Read input and convert to Markdown
   md <- knitr::knit(text = report, envir = r_data)
 
@@ -317,7 +316,6 @@ observeEvent(input$report_ignore, {
 
 ## Knit for report in Radiant
 knit_it <- function(report, type = "rmd") {
-
   ## may be needed on windows when text has been copy-and-pasted
   ## from a pdf
   report <- gsub("\r\n", "\n", report) %>%
@@ -677,7 +675,6 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("", ""),
                           cmd = "", pre_cmd = "result <- ", post_cmd = "",
                           xcmd = "", outputs = c("summary", "plot"), inp = "result",
                           wrap, figs = TRUE, fig.width = 7, fig.height = 7) {
-
   ## determine number of characters for main command for wrapping
   if (missing(wrap)) {
     lng <- nchar(pre_cmd) + nchar(fun_name) + nchar(post_cmd) + 2
@@ -750,18 +747,20 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("", ""),
         inp <- inp_out[[i]][[inp]]
         inp_out[[i]][inp_rep] <- NULL
       }
-      if (inp_out[i] != "" && length(inp_out[[i]]) > 0) {
-        if (sum(nchar(inp_out[[i]])) > 40L) {
-          cmd <- depr(inp_out[[i]], wrap = TRUE) %>%
-            sub("list\\(", paste0(outputs[i], "\\(\n  ", inp, ", "), .) %>%
-            paste0(cmd, "\n", .)
+      if (!is.empty(outputs[i])) {
+        if (inp_out[i] != "" && length(inp_out[[i]]) > 0) {
+          if (sum(nchar(inp_out[[i]])) > 40L) {
+            cmd <- depr(inp_out[[i]], wrap = TRUE) %>%
+              sub("list\\(", paste0(outputs[i], "\\(\n  ", inp, ", "), .) %>%
+              paste0(cmd, "\n", .)
+          } else {
+            cmd <- deparse(inp_out[[i]], control = dctrl, width.cutoff = 500L) %>%
+              sub("list\\(", paste0(outputs[i], "\\(", inp, ", "), .) %>%
+              paste0(cmd, "\n", .)
+          }
         } else {
-          cmd <- deparse(inp_out[[i]], control = dctrl, width.cutoff = 500L) %>%
-            sub("list\\(", paste0(outputs[i], "\\(", inp, ", "), .) %>%
-            paste0(cmd, "\n", .)
+          cmd <- paste0(cmd, "\n", outputs[i], "(", inp, ")")
         }
-      } else {
-        cmd <- paste0(cmd, "\n", outputs[i], "(", inp, ")")
       }
     }
   }

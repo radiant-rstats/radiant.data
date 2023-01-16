@@ -70,9 +70,7 @@ output$ui_pvt_cvars <- renderUI({
       if (available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars)) {
         vars <- unique(c(r_state$pvt_cvars, vars))
         names(vars) <- varnames() %>%
-          {
-            .[match(vars, .)]
-          } %>%
+          (function(x) x[match(vars, x)]) %>%
           names()
       }
     }
@@ -335,34 +333,30 @@ download_handler(id = "dl_pivot_tab", fun = dl_pivot_tab, fn = function() paste0
 pvt_plot_width <- function() 750
 
 ## based on https://stackoverflow.com/a/40182833/1974918
-pvt_plot_height <- eventReactive(
-  {
-    c(input$pvt_run, input$pvt_flip)
-  },
-  {
-    pvt <- .pivotr()
-    if (is.null(pvt)) {
-      return(400)
-    }
-    pvt <- pvt_sorter(pvt, rows = r_info[["pvt_rows"]])
-    if (length(input$pvt_cvars) > 2) {
-      pvt$tab %>%
-        .[[input$pvt_cvars[3]]] %>%
-        as.factor() %>%
-        levels() %>%
-        length() %>%
-        (function(x) x * 200)
-    } else if (input$pvt_flip) {
-      if (length(input$pvt_cvars) == 2) {
-        max(400, ncol(pvt$tab) * 15)
-      } else {
-        max(400, nrow(pvt$tab) * 15)
-      }
-    } else {
-      400
-    }
+pvt_plot_height <- reactive({
+  req(available(input$pvt_cvars))
+  pvt <- .pivotr()
+  if (is.null(pvt)) {
+    return(400)
   }
-)
+  pvt <- pvt_sorter(pvt, rows = r_info[["pvt_rows"]])
+  if (length(input$pvt_cvars) > 2) {
+    pvt$tab %>%
+      .[[input$pvt_cvars[3]]] %>%
+      as.factor() %>%
+      levels() %>%
+      length() %>%
+      (function(x) x * 200)
+  } else if (input$pvt_flip) {
+    if (length(input$pvt_cvars) == 2) {
+      max(400, ncol(pvt$tab) * 15)
+    } else {
+      max(400, nrow(pvt$tab) * 15)
+    }
+  } else {
+    400
+  }
+})
 
 pvt_sorter <- function(pvt, rows = NULL) {
   if (is.null(rows)) {
@@ -474,7 +468,7 @@ pivot_report <- function() {
 
   if (input$pvt_plot == TRUE) {
     inp_out[[2]] <- clean_args(pvt_plot_inputs(), pvt_plot_args[-1])
-    outputs <- c("plot")
+    outputs <- c("", "plot")
     figs <- TRUE
   } else {
     outputs <- c()
