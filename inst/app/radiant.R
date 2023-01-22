@@ -246,6 +246,12 @@ clean_args <- function(rep_args, rep_default = list()) {
       rep_args$data_filter %<>% gsub("\\n", "", .) %>% gsub("\"", "\'", .)
     }
   }
+  if (is.empty(rep_args$rows)) {
+    rep_args$rows <- NULL
+  }
+  if (is.empty(rep_args$arr)) {
+    rep_args$arr <- NULL
+  }
 
   if (length(rep_default) == 0) rep_default[names(rep_args)] <- ""
 
