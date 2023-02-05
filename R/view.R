@@ -164,10 +164,6 @@ make_arrange_cmd <- function(expr, dataset = "") {
     (function(x) ifelse(is.empty(dataset), glue("arrange({x})"), glue("arrange({dataset}, {x})")))
 }
 
-# dataset <- mtcars
-# expr <- "desc(mpg)     &    vs , am"
-# make_arrange_cmd("dataset", expr)
-
 #' Arrange data with user-specified expression
 #' @details Arrange data, likely in combination with slicing
 #' @param dataset Data frame to arrange
@@ -256,7 +252,6 @@ search_data <- function(dataset, pattern, ignore.case = TRUE, fixed = FALSE) {
 view_data <- function(dataset, vars = "", filt = "",
                       arr = "", rows = NULL, na.rm = FALSE, dec = 3,
                       envir = parent.frame()) {
-
   ## based on https://rstudio.github.io/DT/server.html
   dat <- get_data(dataset, vars, filt = filt, arr = arr, rows = rows, na.rm = na.rm, envir = envir)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"

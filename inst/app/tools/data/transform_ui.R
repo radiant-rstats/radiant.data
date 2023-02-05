@@ -536,7 +536,6 @@ fix_ext <- function(ext) {
 
 .create <- function(dataset, cmd, byvar = "",
                     store_dat = "", store = TRUE) {
-
   ## replacing problem symbols (e.g., em dash, and curly quotes)
   cmd <- fix_smart(cmd)
 
@@ -909,35 +908,31 @@ fix_ext <- function(ext) {
   }
 }
 
-.holdout <- function(dataset, vars = "", filt = "", arr = "", rows = NULL, rev = "",
+.holdout <- function(dataset, vars = "", filt = "", arr = "", rows = NULL, rev = FALSE,
                      store_dat = "", store = TRUE) {
-  if (is.empty(filt) & is.empty(rows)) {
+  if (is.empty(filt) && is.empty(rows)) {
     return(paste0("No filter or slice found (n = ", nrow(dataset), ")"))
-  } else if (rev) {
-    filt <- ifelse(is.empty(filt), filt, paste0("!(", filt, ")"))
-    rows <- ifelse(is.empty(rows), rows, paste0("-(", rows, ")"))
   }
 
   if (!store || !is.character(dataset)) {
-    get_data(dataset, vars = vars, filt = filt, arr = arr, rows = rows, na.rm = FALSE, envir = r_data)
+    get_data(dataset, vars = vars, filt = filt, arr = arr, rows = rows, na.rm = FALSE, rev = rev, envir = r_data)
   } else {
-    cmd <- glue("## create holdout sample\n{store_dat} <- {dataset}")
+    cmd <- glue("## create holdout sample\n{store_dat} <- get_data(\n  {dataset}") # ", vars = {vars}, filt = {filt}, arr = {arr}, rows = {rows}, rev = {rev})\n")
+
+    if (!all(vars == "")) {
+      cmd <- glue('{cmd},\n  vars = c("{paste0(vars, collapse = ", ")}")', .trim = FALSE)
+    }
     if (!is.empty(filt)) {
       filt <- gsub("\"", "'", filt)
-      cmd <- paste0(cmd, " %>%\n  filter(", filt, ")")
+      cmd <- glue('{cmd},\n  filt = "{filt}"', .trim = FALSE)
     }
     if (!is.empty(arr)) {
-      cmd <- paste0(cmd, " %>%\n  ", make_arrange_cmd(arr))
+      cmd <- glue('{cmd},\n  arr = "{arr}"', .trim = FALSE)
     }
     if (!is.empty(rows)) {
-      cmd <- paste0(cmd, " %>%\n  slice(", rows, ")")
+      cmd <- glue('{cmd},\n  rows = "{rows}"', .trim = FALSE)
     }
-
-    if (all(vars == "")) {
-      paste0(cmd, "\n")
-    } else {
-      paste0(cmd, "%>%\n  select(", paste0(vars, collapse = ", "), ")\n")
-    }
+    glue("{cmd},\n  rev = {rev}\n)", .trim = FALSE)
   }
 }
 

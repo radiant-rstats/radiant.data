@@ -12,6 +12,7 @@ get_data(
   rows = NULL,
   data_view_rows = NULL,
   na.rm = TRUE,
+  rev = FALSE,
   envir = c()
 )
 }
@@ -29,6 +30,8 @@ get_data(
 \item{data_view_rows}{Vector of rows to select. Only used by Data > View in Radiant. Users should use "rows" instead}
 
 \item{na.rm}{Remove rows with missing values (default is TRUE)}
+
+\item{rev}{Reverse filter and row selection (i.e., get the remainder)}
 
 \item{envir}{Environment to extract data from}
 }
