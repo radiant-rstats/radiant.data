@@ -258,7 +258,7 @@ download_handler(
   if (is.empty(dataset)) {
     xcmd <- paste0("  dtab(")
   } else {
-    xcmd <- paste0("# dtab(", dataset, ", ")
+    xcmd <- paste0("dtab(", dataset, ", ")
   }
   if (!is.empty(input$view_dec, 3)) {
     xcmd <- paste0(xcmd, "dec = ", input$view_dec, ", ")

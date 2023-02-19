@@ -115,7 +115,7 @@ output$ui_to_global <- renderUI({
 observeEvent(input$from_global_load, {
   dfs <- input$from_global
   req(dfs)
-  r_info[["datasetlist"]] %<>% c(dfs, .) %>% unique()
+  r_info[["datasetlist"]] <- c(dfs, r_info[["datasetlist"]]) %>% unique()
   for (df in dfs) {
     r_data[[df]] <- get(df, envir = .GlobalEnv)
     if (!bindingIsActive(as.symbol(df), env = r_data)) {
@@ -127,9 +127,7 @@ observeEvent(input$from_global_load, {
       r_info[[paste0(df, "_lcmd")]] <- paste0("# ", r_info[[paste0(df, "_lcmd")]])
     }
     r_info[[paste0(df, "_descr")]] <- attr(r_data[[df]], "description") %>%
-      {
-        if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\nCheck the 'Add/edit data description' box on the top-left of your screen" else .
-      } %>%
+      (function(x) if (is.null(x)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\nCheck the 'Add/edit data description' box on the top-left of your screen" else x) %>%
       fix_smart()
   }
   updateSelectInput(

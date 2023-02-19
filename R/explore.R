@@ -149,7 +149,7 @@ explore <- function(dataset, vars = "", byvar = "", fun = c("mean", "sd"),
 
   ## ensure factors ordered as in the (sorted) table
   if (!is.empty(byvar) && top != "byvar") {
-    for (i in byvar) tab[[i]] %<>% factor(., levels = unique(.))
+    for (i in byvar) tab[[i]] <- tab[[i]] %>% (function(x) factor(x, levels = unique(x)))
     rm(i)
   }
 
