@@ -143,6 +143,22 @@ function generate_screenshot() {
       return el.classList.contains('navbar-inverse') || el.classList.contains('dropdown-menu');
     }
   }).then(canvas => {
+
+    // Convert textareas to divs
+    // https://github.com/niklasvh/html2canvas/issues/2008
+    /*
+    Array.from(canvas.querySelectorAll('textarea')).forEach((textArea) => {
+      console.log('Converting textarea to div:', textArea);
+      const div = document.createElement('div')
+      div.innerText = textArea.value
+      div.style.border = '1px solid #9b9b9b'
+      div.style.padding = '0 10px'
+      textArea.style.display = 'none'
+      textArea.parentElement.append(div)
+      console.log('Div added to parent:', div.parentElement);
+    });
+    */
+
     var img = document.createElement("img");
     img.src = canvas.toDataURL("png");
     img.width = parseInt(canvas.style.width);
