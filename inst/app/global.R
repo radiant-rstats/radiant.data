@@ -32,6 +32,9 @@ if (isTRUE(getOption("radiant.sf_volumes", "") != "") ||
     if (dir.exists(paste0(sf_volumes["Home"], "/Desktop"))) {
       sf_volumes <- c(sf_volumes, Desktop = paste0(sf_volumes["Home"], "/Desktop"))
     }
+    if (dir.exists(paste0(sf_volumes["Home"], "/Downloads"))) {
+      sf_volumes <- c(sf_volumes, Downloads = paste0(sf_volumes["Home"], "/Downloads"))
+    }
     Dropbox <- try(radiant.data::find_dropbox(), silent = TRUE)
     if (!inherits(Dropbox, "try-error")) {
       sf_volumes <- c(sf_volumes, Dropbox = Dropbox)
