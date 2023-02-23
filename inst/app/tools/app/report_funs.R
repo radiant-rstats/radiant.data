@@ -385,7 +385,7 @@ knit_it <- function(report, type = "rmd") {
 
   ## sizing issue with ggplotly and knitr
   ## see https://github.com/ropensci/plotly/issues/1171
-  ## see also below unsuccesful fix setting height to 100%
+  ## see also below unsuccessful fix setting height to 100%
   # if (grepl("ggplotly\\(\\)", report)) {
   #   message("\n\nHeight of ggplotly objects may not be correct in Preview. The height will be correctly displayed in saved reports however.\n\n")
   # }
