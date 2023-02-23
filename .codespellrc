@@ -1,4 +1,5 @@
 [codespell]
 skip = .git,*.pdf,*.svg,*.min.js,*.csv,*.html
 # rady - server/domain name
-ignore-words-list = rady
+# nd, isTs - variable names
+ignore-words-list = rady,nd,ists

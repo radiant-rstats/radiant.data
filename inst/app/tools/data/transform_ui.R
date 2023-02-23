@@ -399,7 +399,7 @@ output$ui_Transform <- renderUI({
           "tr_recode", "Recode:",
           value = "",
           rows = 3,
-          placeholder = "Select a variable, specificy how it should be recoded (e.g., lo:20 = 0; else = 1), and press return"
+          placeholder = "Select a variable, specify how it should be recoded (e.g., lo:20 = 0; else = 1), and press return"
         )
       ),
       conditionalPanel(
