@@ -133,7 +133,7 @@ output$ui_expl_run <- renderUI({
   actionButton("expl_run", "Create table", width = "100%", icon = icon("play", verify_fa = FALSE), class = "btn-success")
 })
 
-## add a spinning refresh icon if the tabel needs to be (re)calculated
+## add a spinning refresh icon if the table needs to be (re)calculated
 run_refresh(expl_args, "expl", init = "vars", label = "Create table", relabel = "Update table")
 
 output$ui_Explore <- renderUI({

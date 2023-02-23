@@ -1239,7 +1239,7 @@ render.shiny.render.function <- function(object, ...) object
 #' @export
 describe <- function(dataset, envir = parent.frame()) {
   dataset <- if (is.character(dataset)) {
-    message(paste0("Using describe(\"", dataset, "\") is deprecated.\nUse desribe(", dataset, ") instead"))
+    message(paste0("Using describe(\"", dataset, "\") is deprecated.\nUse describe(", dataset, ") instead"))
     get_data(dataset, envir = envir)
   } else {
     dataset
@@ -1534,7 +1534,7 @@ read_files <- function(path, pdir = "", type = "rmd", to = "", clipboard = TRUE,
     ## waiting for https://github.com/wesm/feather/pull/326
     # cmd <- paste0(to, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", pp$objname, "\", desc = feather::feather_metadata(\"", pp$rpath, "\")$description)")
     cmd <- glue('{to} <- feather::read_feather({pp$rpath}, columns = c())\nregister("{pp$objname}")')
-  } else if (pp$fext %in% c("dta", "sav", "sas7bdat")) {
+  } else if (pp$fext %in% c("dta", "save", "sas7bdat")) {
     cmd <- glue('{to} <- rio::import({pp$rpath})\nregister("{pp$objname}")')
   } else if (pp$fext == "yaml") {
     cmd <- glue('{to} <- yaml::yaml.load_file({pp$rpath})\nregister("{pp$objname}")')

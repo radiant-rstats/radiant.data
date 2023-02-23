@@ -58,7 +58,7 @@ viz_inputs <- reactive({
 })
 
 #######################################
-# Vizualize data
+# Visualize data
 #######################################
 output$ui_viz_type <- renderUI({
   selectInput(
