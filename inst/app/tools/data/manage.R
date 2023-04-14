@@ -6,7 +6,8 @@ descr_out <- function(descr, ret_type = "html") {
 
   ## if there is a data description and we want html output
   if (ret_type == "html") {
-    markdown::markdownToHTML(text = descr, stylesheet = "", fragment.only = TRUE)
+    # markdown::markdownToHTML(text = descr, stylesheet = "", fragment.only = TRUE)
+    markdown::mark_html(text = descr, template = FALSE, meta = list(css = ""))
   } else {
     descr
   }

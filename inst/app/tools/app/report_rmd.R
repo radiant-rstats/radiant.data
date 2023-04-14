@@ -391,47 +391,53 @@ rmd_knitted <- eventReactive(report_rmd$report != 1, {
     HTML("<h2>Report was not evaluated. If you have sudo access to the server set options(radiant.report = TRUE) in .Rprofile for the shiny user </h2>")
   } else {
     report <- ""
-    withProgress(message = "Knitting report", value = 1, {
-      if (isTRUE(input$rmd_generate == "To Rmd")) {
-        cnt <- rstudio_context(type = "rmd")
-        if (is.empty(cnt$path) || is.empty(cnt$ext, "r")) {
-
-          ## popup to suggest user create an .Rmd file
-          showModal(
-            modalDialog(
-              title = "Report Rstudio (Rmd)",
-              span(
-                "Report is set to use an rmarkdown document in Rstudio
-                ('To Rstudio (Rmd)'). Please check that you have an .Rmd file
-                open in Rstudio and that the file has been saved to disk.
-                If you want to use the editor in Radiant instead, change
-                'To Rstudio (Rmd)' to 'Auto paste' or 'Manual paste'."
-              ),
-              footer = modalButton("OK"),
-              size = "m",
-              easyClose = TRUE
-            )
+    report_type <- "full report"
+    if (isTRUE(input$rmd_generate == "To Rmd")) {
+      cnt <- rstudio_context(type = "rmd")
+      if (is.empty(cnt$path) || is.empty(cnt$ext, "r")) {
+        ## popup to suggest user create an .Rmd file
+        showModal(
+          modalDialog(
+            title = "Report Rstudio (Rmd)",
+            span(
+              "Report is set to use an rmarkdown document in Rstudio
+              ('To Rstudio (Rmd)'). Please check that you have an .Rmd file
+              open in Rstudio and that the file has been saved to disk.
+              If you want to use the editor in Radiant instead, change
+              'To Rstudio (Rmd)' to 'Auto paste' or 'Manual paste'."
+            ),
+            footer = modalButton("OK"),
+            size = "m",
+            easyClose = TRUE
           )
-          report <- ""
+        )
+        report_type <- "nothing"
+        report <- ""
+      } else {
+        if (cnt$path != cnt$rpath) {
+          r_state$radiant_rmd_name <<- cnt$rpath
         } else {
-          if (cnt$path != cnt$rpath) {
-            r_state$radiant_rmd_name <<- cnt$rpath
-          } else {
-            r_state$radiant_rmd_name <<- cnt$path
-          }
-          report <- cnt$content
+          r_state$radiant_rmd_name <<- cnt$path
         }
-      } else if (!is.empty(input$rmd_edit)) {
-        if (!is.empty(input$rmd_edit_selection, "")) {
-          report <- input$rmd_edit_selection
-        } else if (!is.empty(input$rmd_edit_hotkey$line, "") && report_rmd$knit_button == 0) {
-          report <- input$rmd_edit_hotkey$line
-        } else {
-          report <- input$rmd_edit
-          ## hack to allow processing current line
-          report_rmd$knit_button <- 0
-        }
+
+        report_type <- "Rmarkdown file in Rstudio"
+        report <- cnt$content
       }
+    } else if (!is.empty(input$rmd_edit)) {
+      if (!is.empty(input$rmd_edit_selection, "")) {
+        report <- input$rmd_edit_selection
+        report_type <- "report selection"
+      } else if (!is.empty(input$rmd_edit_hotkey$line, "") && report_rmd$knit_button == 0) {
+        report <- input$rmd_edit_hotkey$line
+        report_type <- "report selection"
+      } else {
+        report <- input$rmd_edit
+        ## hack to allow processing current line
+        report_rmd$knit_button <- 0
+      }
+    }
+
+    withProgress(message = glue("Knitting {report_type}"), value = 1, {
       knit_it(report, type = "rmd")
     })
   }

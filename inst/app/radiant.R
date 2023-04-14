@@ -339,19 +339,23 @@ returnTextAreaInput <- function(inputId, label = NULL, rows = 2,
   ## avoid all sorts of 'helpful' behavior from your browser
   ## see https://stackoverflow.com/a/35514029/1974918
   tagList(
-    tags$label(label, `for` = inputId), br(),
-    tags$textarea(
-      value,
-      id = inputId,
-      type = "text",
-      rows = rows,
-      placeholder = placeholder,
-      resize = resize,
-      autocomplete = "off",
-      autocorrect = "off",
-      autocapitalize = "off",
-      spellcheck = "false",
-      class = "returnTextArea form-control"
+    tags$div(
+      # using containing element based on
+      # https://github.com/niklasvh/html2canvas/issues/2008#issuecomment-1445503369
+      tags$label(label, `for` = inputId), br(),
+      tags$textarea(
+        value,
+        id = inputId,
+        type = "text",
+        rows = rows,
+        placeholder = placeholder,
+        resize = resize,
+        autocomplete = "off",
+        autocorrect = "off",
+        autocapitalize = "off",
+        spellcheck = "false",
+        class = "returnTextArea form-control"
+      )
     )
   )
 }
@@ -671,18 +675,19 @@ help_and_report <- function(modal_title, fun_name, help_file,
 ## function to render .md files to html
 inclMD <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = "\n") %>%
-    markdown::markdownToHTML(
-      text = ., fragment.only = TRUE, options = "",
-      stylesheet = ""
-    )
+    # markdown::markdownToHTML(
+    #   text = ., fragment.only = TRUE, options = "",
+    #   stylesheet = ""
+    # markdown::markdownToHTML(
+    markdown::mark_html(text = ., template = FALSE, options = "", meta = list(css = ""))
 }
 
 ## function to render .Rmd files to html
 inclRmd <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = "\n") %>%
     knitr::knit2html(
-      text = ., fragment.only = TRUE, quiet = TRUE,
-      envir = r_data, options = "", stylesheet = ""
+      text = ., template = FALSE, quiet = TRUE,
+      envir = r_data, options = "", meta = list(css = "")
     ) %>%
     HTML() %>%
     withMathJax()
@@ -997,7 +1002,9 @@ download_handler_screenshot <- function(path, plot, ...) {
     dev.off()
   } else {
     ppath <- parse_path(path, pdir = getOption("radiant.launch_dir", find_home()), mess = FALSE)
-    r_info[["latest_screenshot"]] <- glue("![]({ppath$rpath})")
+    # r_info[["latest_screenshot"]] <- glue("![]({ppath$rpath})")
+    # r_info[["latest_screenshot"]] <- glue("<details>\n<summary>Click to show screenshot</summary>\n<img src='{ppath$rpath}' alt='Radiant screenshot'>\n</details>")
+    r_info[["latest_screenshot"]] <- glue("\n<details>\n<summary>Click to show screenshot with Radiant settings to generate output shown below</summary>\n\n![]({ppath$rpath})\n</details></br>\n")
     png::writePNG(plot, path, dpi = 144)
   }
 }

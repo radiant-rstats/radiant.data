@@ -410,7 +410,9 @@ knit_it <- function(report, type = "rmd") {
 
   ## add basic styling to tables
   paste(
-    markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
+    # markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
+    # markdown::markdownToHTML(text = md, template = FALSE, meta = list(css = "")),
+    markdown::mark_html(text = md, template = FALSE, meta = list(css = "")),
     paste0("<script type='text/javascript' src='", getOption("radiant.mathjax.path"), "/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
     "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>",
     sep = "\n"
