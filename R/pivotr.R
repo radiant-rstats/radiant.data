@@ -98,7 +98,7 @@ pivotr <- function(dataset, cvars = "", nvar = "None", fun = "mean",
     sel(nvar) %>%
     sfun(nvar, fun = fun)
 
-  ## row and colum totals
+  ## row and column totals
   if (length(cvars) == 1) {
     tab <-
       bind_rows(

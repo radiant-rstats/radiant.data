@@ -50,12 +50,12 @@
 # radiant.data 1.3.10
 
 * Add Google Drive to the default set of directories to explore if available
-* Add back functionality to convert a colum to type `ts` in _Data > Transform_ now that this is again supported by dplyr 1.0.1
+* Add back functionality to convert a column to type `ts` in _Data > Transform_ now that this is again supported by dplyr 1.0.1
 
 # radiant.data 1.3.9
 
 * Fix for using the `date` function from the lubridate package in a filter
-* Removed functionality to convert a colum to type `ts` as this is not supported by dplyr 1.0.0 and vctrs 0.3.1
+* Removed functionality to convert a column to type `ts` as this is not supported by dplyr 1.0.0 and vctrs 0.3.1
 * Updated documentation using https://github.com/r-lib/roxygen2/pull/1109
 
 # radiant.data 1.3.6

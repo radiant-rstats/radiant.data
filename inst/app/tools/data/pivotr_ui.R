@@ -170,7 +170,7 @@ output$ui_pvt_run <- renderUI({
   )
 })
 
-## add a spinning refresh icon if the tabel needs to be (re)calculated
+## add a spinning refresh icon if the table needs to be (re)calculated
 run_refresh(pvt_args, "pvt", init = "cvars", label = "Create pivot table", relabel = "Update pivot table")
 
 output$ui_Pivotr <- renderUI({
