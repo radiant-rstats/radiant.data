@@ -516,7 +516,7 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
               geom_line(color = linecol)
           }
         } else {
-          if (dc[i] %in% c("factor", "date") || dc_org[j] == "factor") {
+        if (dc[i] %in% c("factor", "date") || (!is.empty(dc_org[j]) && dc_org[j] == "factor")) {
             tbv <- if (is.null(byvar)) i else unique(c(i, byvar))
             tmp <- dataset %>%
               group_by_at(.vars = tbv) %>%
@@ -534,7 +534,7 @@ visualize <- function(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
         }
         if ("log_x" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + xlab(paste("log", i))
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
-        if ((dc[i] %in% c("factor", "date") || dc_org[j] == "factor") && nrow(tmp) < nrow(dataset)) {
+        if ((dc[i] %in% c("factor", "date") || (!is.empty(dc_org[j]) && dc_org[j] == "factor")) && nrow(tmp) < nrow(dataset)) {
           if (exists("levs")) {
             if (j %in% names(levs) && !is.na(levs[j])) {
               plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, " {", levs[j], "})")
