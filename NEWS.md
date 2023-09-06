@@ -1,3 +1,10 @@
+# radiant.data 1.6.0
+
+* Added a dependency on the arrow package to allow loading and saving parquet files
+* Added option to load and save parquet files and data description files (see Data > Manage)
+* Renamed Radiant to "Radiant for R" to destinguish from "Radiant for Python" 
+* Addressed a bug that can occur when combining line graphs in Data > Visualize
+
 # radiant.data 1.5.6
 
 * Address deprecation issues in markdown >= 1.5
