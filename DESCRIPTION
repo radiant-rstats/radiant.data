@@ -1,7 +1,7 @@
 Package: radiant.data
 Title: Data Menu for Radiant: Business Analytics using R and Shiny
-Version: 1.5.6
-Date: 2023-4-13
+Version: 1.6.0
+Date: 2023-9-6
 Authors@R: c(
     person("Vincent", "Nijs", email = "radiant@rady.ucsd.edu", role = c("aut", "cre")),
     person("Niklas", "von Hertzen", email = "niklasvh@gmail.com", role = c("aut"), comment = "html2canvas library")
@@ -13,23 +13,24 @@ Description: The Radiant Data menu includes interfaces for loading, saving,
 Depends:
     R (>= 4.0.0),
     magrittr (>= 1.5),
-    ggplot2 (>= 2.2.1),
+    ggplot2 (>= 3.4.2),
     lubridate (>= 1.7.4),
     tidyr (>= 0.8.2),
-    dplyr (>= 1.0.7)
+    dplyr (>= 1.1.2)
 Imports:
     tibble (>= 1.4.2),
     rlang (>= 0.4.10),
+    arrow (>= 12.0.1),
     broom (>= 0.5.2),
     car (>= 3.0-0),
     knitr (>= 1.20),
-    markdown (>= 1.5),
-    rmarkdown(>= 1.14),
-    shiny (>= 1.7.1),
+    markdown (>= 1.7),
+    rmarkdown(>= 2.22),
+    shiny (>= 1.7.4),
     jsonlite (>= 1.0),
     shinyAce (>= 0.4.1),
     psych (>= 1.8.4),
-    DT (>= 0.9),
+    DT (>= 0.28),
     readr (>= 1.1.1),
     readxl (>= 1.0.0),
     writexl (>= 0.2),
@@ -43,7 +44,7 @@ Imports:
     stringi (>= 1.2.4),
     randomizr (>= 0.20.0),
     patchwork (>= 1.0.0),
-    bslib (>= 0.3.1),
+    bslib (>= 0.5.0),
     png,
     MASS,
     base64enc

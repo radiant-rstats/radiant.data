@@ -177,7 +177,7 @@ observeEvent(input$view_store, {
   updateSelectInput(session = session, inputId = "dataset", selected = input$dataset)
 
   if (input$dataset != dataset) {
-    ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+    ## See https://shiny.posit.co/reference/shiny/latest/modalDialog.html
     showModal(
       modalDialog(
         title = "Data Stored",

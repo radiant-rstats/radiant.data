@@ -44,7 +44,7 @@ launch <- function(package = "radiant.data", run = "viewer", state, ...) {
     options(radiant.launch = "browser")
     run <- TRUE
   } else if (rstudioapi::getVersion() < "1.1") {
-    stop(sprintf("Rstudio version 1.1 or later required. Use %s::%s() to open %s in your default browser or download the latest version of Rstudio from https://www.rstudio.com/products/rstudio/download/", package, package, package))
+    stop(sprintf("Rstudio version 1.1 or later required. Use %s::%s() to open %s in your default browser or download the latest version of Rstudio from https://posit.co/products/open-source/rstudio/", package, package, package))
   } else if (run == "viewer") {
     message(sprintf("\nStarting %s in the Rstudio viewer ...\n\nUse %s::%s() to open %s in the default browser or %s::%s_window() in Rstudio to open %s in an Rstudio window", package, package, package, package, package, package, package))
     options(radiant.launch = "viewer")
@@ -63,7 +63,7 @@ launch <- function(package = "radiant.data", run = "viewer", state, ...) {
     run <- TRUE
   }
 
-  cat("\nRadiant is opensource and free to use. If you are a student or instructor using Radiant for a class, as a favor to the developer, please send an email to <radiant@rady.ucsd.edu> with the name of the school and class\n")
+  cat("\nRadiant is opensource and free to use. If you are a student or instructor using Radiant for a class, as a favor to the developer, please send an email to <radiant@rady.ucsd.edu> with the name of the school and class. If you are using Radiant in your company, as a favor to the developer, please share the name of your company and what types of activites you are supporting with the tool.\n")
 
   ## load radiant state file if specified
   if (!missing(state)) {
@@ -1031,7 +1031,7 @@ store_character_popup <- function(mess) {
   if (is.null(shiny::getDefaultReactiveDomain())) {
     stop(mess, call. = FALSE)
   } else {
-    ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+    ## See https://shiny.posit.co/reference/shiny/latest/modalDialog.html
     showModal(
       modalDialog(
         title = "Data not stored",
@@ -1252,28 +1252,29 @@ describe <- function(dataset, envir = parent.frame()) {
 
   tf <- file.path(tempdir(), "index.html")
   ## generate html and open in the Rstudio viewer or in the default browser
-  cat(knitr::knit2html(text = description), file = tf)
-  ## based on https://support.rstudio.com/hc/en-us/articles/202133558-Extending-RStudio-with-the-Viewer-Pane
+  cat(knitr::knit2html(text = description), file = tf, output = FALSE)
+  ## based on https://support.posit.co/hc/en-us/articles/202133558-Extending-RStudio-with-the-Viewer-Pane
   viewer <- getOption("viewer", default = browseURL)
   viewer(tf)
 }
 
-# #' Workaround to add description using feather::write_feather
-# #'
-# #' @param x A data frame to write to disk
-# #' @param path Path to feather file
-# #' @param description Data description
-# #'
-# #' @export
-# write_feather <- function(x, path, description = attr(x, "description")) {
-#   requireNamespace("feather")
-#   fw_args <- as.list(formals(feather::write_feather))
-#   if ("description" %in% names(fw_args)) {
-#     feather::write_feather(x, file, if (is.null(description)) "" else description)
-#   } else {
-#     feather::write_feather(x, file)
-#   }
-# }
+#' Workaround to store description file together with a parquet data file
+#'
+#' @param x A data frame to write to disk
+#' @param file Path to store parquet file
+#' @param description Data description
+#'
+#' @export
+write_parquet <- function(x, file, description = attr(x, "description")) {
+  if (requireNamespace("arrow", quietly = TRUE)) {
+    arrow::write_parquet(x, file)
+    if (!is.empty(description)) {
+      cat(description, file = sub(".parquet", "_description.md", file))
+    }
+  } else {
+    stop("The arrow package is required to work with data in parquet format is not installed. Please use install.packages('arrow')")
+  }
+}
 
 #' Replace smart quotes etc.
 #'
@@ -1352,7 +1353,7 @@ register <- function(new, org = "", descr = "", shiny = shiny::getDefaultReactiv
     } else if (is.list(envir[[new]])) {
       r_info[["dtree_list"]] <- c(new, r_info[["dtree_list"]]) %>% unique()
     } else {
-      ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+      ## See https://shiny.posit.co/reference/shiny/latest/modalDialog.html
       showModal(
         modalDialog(
           title = "Data not registered",
@@ -1540,11 +1541,11 @@ read_files <- function(path, pdir = "", type = "rmd", to = "", clipboard = TRUE,
     cmd <- glue('{to} <- yaml::yaml.load_file({pp$rpath})\nregister("{pp$objname}")')
   } else if (grepl("sqlite", pp$fext)) {
     obj <- glue("{pp$objname}_tab1")
-    cmd <- "## see https://db.rstudio.com/dplyr/\n" %>%
+    cmd <- "## see https://solutions.posit.co/connections/db/r-packages/dplyr/\n" %>%
       glue('library(DBI)\ncon <- dbConnect(RSQLite::SQLite(), dbname = {pp$rpath})\n(tables <- dbListTables(con))\n{obj} <- dplyr::tbl(con, from = tables[1]) %>% collect()\ndbDisconnect(con)\nregister("{obj}")')
   } else if (pp$fext == "sql") {
     if (type == "rmd") {
-      cmd <- "/* see https://rmarkdown.rstudio.com/authoring_knitr_engines.html */\n" %>%
+      cmd <- "/* see https://bookdown.org/yihui/rmarkdown/language-engines.html */\n" %>%
         paste0(paste0(readLines(pp$path), collapse = "\n"))
       cmd <- glue("\n\n```{sql, connection = con, max.print = 20}\n<<cmd>>\n```\n\n", .open = "<<", .close = ">>")
       type <- ""
@@ -1553,7 +1554,7 @@ read_files <- function(path, pdir = "", type = "rmd", to = "", clipboard = TRUE,
     }
   } else if (pp$fext %in% c("py", "css", "js")) {
     if (type == "rmd") {
-      cmd <- "## see https://rmarkdown.rstudio.com/authoring_knitr_engines.html\n" %>%
+      cmd <- "## see https://bookdown.org/yihui/rmarkdown/language-engines.html\n" %>%
         paste0(paste0(readLines(pp$path), collapse = "\n"))
       cmd <- glue('\n\n```{<<sub("py", "python", pp$fext)>>}\n<<cmd>>\n```\n\n', .open = "<<", .close = ">>")
       type <- ""

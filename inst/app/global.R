@@ -241,9 +241,7 @@ r_sessions <- new.env(parent = emptyenv())
 
 ## create directory to hold session files
 "~/.radiant.sessions" %>%
-  {
-    if (!file.exists(.)) dir.create(.)
-  }
+  (function(x) if (!file.exists(x)) dir.create(x))
 
 ## adding the figures path to avoid making a copy of all figures in www/figures
 addResourcePath("www", file.path(getOption("radiant.path.data"), "app/www/"))
@@ -344,8 +342,8 @@ help_menu <- function(hlp) {
 }
 
 ## copy-right text
-options(radiant.help.cc = "&copy; Vincent Nijs (2019) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/by-nc-sa.png' /></a></br>")
-options(radiant.help.cc.sa = "&copy; Vincent Nijs (2019) <a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/by-sa.png' /></a></br>")
+options(radiant.help.cc = "&copy; Vincent Nijs (2023) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/by-nc-sa.png' /></a></br>")
+options(radiant.help.cc.sa = "&copy; Vincent Nijs (2023) <a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/by-sa.png' /></a></br>")
 
 #####################################
 ## url processing to share results
@@ -548,7 +546,7 @@ load_html2canvas <- function() {
 options(
   radiant.nav_ui =
     list(
-      windowTitle = "Radiant",
+      windowTitle = "Radiant for R",
       id = "nav_radiant",
       theme = getOption("radiant.theme"),
       inverse = TRUE,

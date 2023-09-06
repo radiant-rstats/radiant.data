@@ -1,5 +1,20 @@
 ## Resubmission
 
+This is a resubmission. In this update I have added features and cleaned up code to avoid issues with markdown deprecation warnings. See NEWS.md. 
+
+## Test environments
+
+* macOS, R 4.2.2
+* win-builder (devel)
+
+## R CMD check results
+
+There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
+
+# Previous cran-comments
+
+## Resubmission
+
 This is a resubmission. In this update I have added features and cleaned up code to avoid issues with ggplot deprecation warnings. See NEWS.md. Also, URLs have been updated from Rstudio to Posit and the Radiant Documentation site is now back online and accessible.
 
 I have also tried to address the build issue connected to calibre. See note below.
@@ -24,7 +39,6 @@ Uwe Ligges
 
 There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
 
-# Previous cran-comments
 
 ## Resubmission
 

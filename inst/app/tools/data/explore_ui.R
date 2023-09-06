@@ -277,7 +277,7 @@ observeEvent(input$expl_store, {
   register(dataset)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
-  ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+  ## See https://shiny.posit.co/reference/shiny/latest/modalDialog.html
   showModal(
     modalDialog(
       title = "Data Stored",

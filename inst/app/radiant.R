@@ -675,11 +675,7 @@ help_and_report <- function(modal_title, fun_name, help_file,
 ## function to render .md files to html
 inclMD <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = "\n") %>%
-    # markdown::markdownToHTML(
-    #   text = ., fragment.only = TRUE, options = "",
-    #   stylesheet = ""
-    # markdown::markdownToHTML(
-    markdown::mark_html(text = ., template = FALSE, options = "", meta = list(css = ""))
+    markdown::mark_html(text = ., template = FALSE, meta = list(css = ""), output = FALSE)
 }
 
 ## function to render .Rmd files to html
@@ -687,7 +683,7 @@ inclRmd <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = "\n") %>%
     knitr::knit2html(
       text = ., template = FALSE, quiet = TRUE,
-      envir = r_data, options = "", meta = list(css = "")
+      envir = r_data, meta = list(css = ""), output = FALSE
     ) %>%
     HTML() %>%
     withMathJax()

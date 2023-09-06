@@ -520,7 +520,7 @@ output$visualize <- renderPlot(
     }
     .visualize() %>%
       (function(x) {
-        if (is.character(x)) {
+        if (is.empty(x) || is.character(x)) {
           plot(x = 1, type = "n", main = paste0("\n", x), axes = FALSE, xlab = "", ylab = "", cex.main = .9)
         } else if (length(x) > 0) {
           print(x)

@@ -284,7 +284,7 @@
 <li>Fix for error when trying to save invalid predictions in <code>radiant.model</code>. This action now generates a pop-up in the browser interface</li>
 <li>Add a specified description to a data.frame immediately on <code>register</code>
 </li>
-<li>Option to pass additional arguments to <code><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html" class="external-link">shiny::runApp</a></code> when starting radiant such as the port to use. For example, radiant.data::radiant.data(“<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="external-link uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>”, port = 8080)</li>
+<li>Option to pass additional arguments to <code><a href="https://shiny.posit.co/reference/shiny/latest/runApp.html" class="external-link">shiny::runApp</a></code> when starting radiant such as the port to use. For example, radiant.data::radiant.data(“<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="external-link uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>”, port = 8080)</li>
 <li>Option for automatic cleanup of deprecated code in both <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
 </li>
 <li>Avoid attempt to fix deprecated code in <em>Report &gt; Rmd</em> if <code>pred_data = ""</code>
@@ -402,7 +402,7 @@
 <div class="section level3">
 <h3 id="major-changes-0-9-3-3">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-9-3-3"></a></h3>
 <ul><li>When using radiant with Rstudio Viewer or in an Rstudio Window, loading and saving data through <em>Data &gt; Manage</em> generates R-code the user can add to <em>Report &gt; Rmd</em> or <em>Report &gt; R</em>. Clicking the <code>Show R-code</code> checkbox displays the R-code used to load or save the current dataset</li>
-<li>Various changes to the code to accommodate the use of <code><a href="https://shiny.rstudio.com/reference/shiny/latest/makeReactiveBinding.html" class="external-link">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
+<li>Various changes to the code to accommodate the use of <code><a href="https://shiny.posit.co/reference/shiny/latest/makeReactiveBinding.html" class="external-link">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
 <li>Removed <code>loadr</code>, <code>saver</code>, <code>load_csv</code>, <code>loadcsv_url</code>, <code>loadrds_url</code>, and <code>make_funs</code> functions as they are no longer needed</li>
 <li>Deprecated <code>mean_rm</code>, <code>median_rm</code>, <code>min_rm</code>, <code>max_rm,</code>sd_rm<code>,</code>var_rm, and <code>sum_rm</code> functions as they are no longer needed</li>
 </ul></div>

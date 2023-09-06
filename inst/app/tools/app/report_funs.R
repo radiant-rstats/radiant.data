@@ -234,11 +234,11 @@ knit_it_save <- function(report) {
   preserved <- htmltools::extractPreserveChunks(md)
 
   ## Render the HTML, and then restore the preserved chunks
-  markdown::markdownToHTML(
+  markdown::mark_html(
     text = preserved$value,
     header = dep_html,
     options = c("mathjax", "base64_images"),
-    stylesheet = file.path(getOption("radiant.path.data"), "app/www/bootstrap.min.css")
+    meta = list(css = file.path(getOption("radiant.path.data"), "app/www/bootstrap.min.css"))
   ) %>%
     htmltools::restorePreserveChunks(preserved$chunks) %>%
     gsub("<table>", "<table class='table table-condensed table-hover'>", .)
@@ -410,9 +410,7 @@ knit_it <- function(report, type = "rmd") {
 
   ## add basic styling to tables
   paste(
-    # markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
-    # markdown::markdownToHTML(text = md, template = FALSE, meta = list(css = "")),
-    markdown::mark_html(text = md, template = FALSE, meta = list(css = "")),
+    markdown::mark_html(text = md, template = FALSE, meta = list(css = ""), output = FALSE),
     paste0("<script type='text/javascript' src='", getOption("radiant.mathjax.path"), "/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
     "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>",
     sep = "\n"
@@ -599,8 +597,8 @@ report_save_content <- function(file, type = "rmd") {
                   "<span>
                     The working directory used by radiant (\"", getwd(), "\") is not writable. This is required to save a report.
                     To save reports, restart radiant from a writable directory. Preferaby by setting up an Rstudio
-                    project folder. See <a href='https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects' target='_blank'>
-                    https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects</a> for more information
+                    project folder. See <a href='https://support.posit.co/hc/en-us/articles/200526207-Using-Projects' target='_blank'>
+                    https://support.posit.co/hc/en-us/articles/200526207-Using-Projects</a> for more information
                   </span>"
                 )
               ),

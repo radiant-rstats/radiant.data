@@ -172,7 +172,7 @@ select {
 /* Needed in combination with navbarPage with fixed-top */
 /* based on https://stackoverflow.com/a/19231861/1974918 */
 body {
-  padding-top: 60px;
+  padding-top: 42px;
 }
 
 .navbar {

@@ -1,3 +1,7 @@
+# radiant.data 1.5.6
+
+* Address deprecation issues in markdown >= 1.5
+
 # radiant.data 1.5.1
 
 * Added features in the UI to facilitate persistent filters for filtered, sorted, and sliced data

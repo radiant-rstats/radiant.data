@@ -6,8 +6,7 @@ descr_out <- function(descr, ret_type = "html") {
 
   ## if there is a data description and we want html output
   if (ret_type == "html") {
-    # markdown::markdownToHTML(text = descr, stylesheet = "", fragment.only = TRUE)
-    markdown::mark_html(text = descr, template = FALSE, meta = list(css = ""))
+    markdown::mark_html(text = descr, template = FALSE, meta = list(css = ""), output = FALSE)
   } else {
     descr
   }
@@ -131,18 +130,19 @@ load_user_data <- function(fname, uFile, ext, header = TRUE,
       r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE)
       cmd <- glue("{objname} <- readr::read_rds({pp$rpath})")
     }
-  } else if (ext == "feather") {
-    if (!"feather" %in% rownames(utils::installed.packages())) {
-      upload_error_handler(objname, "#### The feather package is not installed. Please use install.packages('feather')")
+  } else if (ext == "parquet") {
+    if (!requireNamespace("arrow", quietly = TRUE)) {
+      stop("The 'arrow' package is not installed. Please install it and try again.")
+      upload_error_handler(objname, "#### The arrow package required to work with data in parquet format is not installed. Please use install.packages('arrow')")
     } else {
-      robj <- feather::read_feather(uFile) # %>% set_attr("description", feather::feather_metadata(uFile)$description)
+      robj <- arrow::read_parquet(uFile) # %>% set_attr("description", feather::feather_metadata(uFile)$description)
       if (inherits(robj, "try-error")) {
-        upload_error_handler(objname, "#### There was an error loading the data. Please make sure the data are in feather format.")
+        upload_error_handler(objname, "#### There was an error loading the data. Please make sure the data are in parquet format.")
       } else {
-        r_data[[objname]] <- robj
+        r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE)
         ## waiting for https://github.com/wesm/feather/pull/326
         # cmd <- paste0(objname, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", objname, "\", desc = feather::feather_metadata(\"", pp$rpath, "\")$description)")
-        cmd <- glue("{objname} <- feather::read_feather({pp$rpath}, columns = c())")
+        cmd <- glue("{objname} <- arrow::read_parquet({pp$rpath})")
       }
     }
   } else if (ext %in% c("tsv", "csv", "txt")) {
@@ -151,9 +151,7 @@ load_user_data <- function(fname, uFile, ext, header = TRUE,
       delim = sep, col_names = header, n_max = n_max,
       dec = dec, saf = man_str_as_factor
     ) %>%
-      {
-        if (is.character(.)) upload_error_handler(objname, "#### There was an error loading the data") else .
-      }
+      (function(x) if (is.character(x)) upload_error_handler(objname, "#### There was an error loading the data") else x)
     n_max <- if (is_not(n_max) || n_max < 0) Inf else n_max
     if (ext == "csv" && sep == "," && dec == "." && header) {
       cmd <- glue("{objname} <- readr::read_csv({pp$rpath}, n_max = {n_max})")
@@ -189,4 +187,25 @@ load_user_data <- function(fname, uFile, ext, header = TRUE,
   }
   r_info[[glue("{objname}_lcmd")]] <- cmd
   r_info[["datasetlist"]] <- c(objname, r_info[["datasetlist"]]) %>% unique()
+}
+
+load_description <- function(fname, uFile, objname) {
+  ldir <- getOption("radiant.launch_dir", default = radiant.data::find_home())
+  pdir <- getOption("radiant.project_dir", default = ldir)
+  cmd <- NULL
+
+  pp <- suppressMessages(
+    radiant.data::parse_path(
+      uFile,
+      pdir = pdir,
+      chr = "\"",
+      mess = FALSE
+    )
+  )
+
+  descr <- readLines(pp$path, warn = FALSE) %>% paste0(collapse = "\n")
+  cmd <- glue("register(\"{objname}\", descr = paste0(readLines({pp$rpath}, warn = FALSE), collapse = \"\\n\"))")
+  attr(r_data[[objname]], "description") <- descr
+  r_info[[glue("{objname}_descr")]] <- descr
+  r_info[[glue("{objname}_lcmd")]] <- sub(glue('register("{objname}")'), cmd, r_info[[glue("{objname}_lcmd")]], fixed = TRUE)
 }

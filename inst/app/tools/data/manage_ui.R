@@ -24,6 +24,14 @@ make_uploadfile <- function(accept) {
   }
 }
 
+make_description_uploadfile <- function(accept) {
+  if (getOption("radiant.shinyFiles", FALSE)) {
+    shinyFiles::shinyFilesButton("upload_description", "Description", "Load description", multiple = FALSE, icon = icon("upload", verify_fa = FALSE))
+  } else {
+    fileInput("upload_description", "Description", multiple = False, accept = accept)
+  }
+}
+
 output$ui_fileUpload <- renderUI({
   req(input$dataType)
   if (input$dataType == "csv") {
@@ -35,8 +43,11 @@ output$ui_fileUpload <- renderUI({
     )
   } else if (input$dataType %in% c("rda", "rds")) {
     make_uploadfile(accept = c(".rda", ".rds", ".rdata"))
-  } else if (input$dataType == "feather") {
-    make_uploadfile(accept = ".feather")
+  } else if (input$dataType == "parquet") {
+    tagList(
+      make_uploadfile(accept = ".parquet"),
+      make_description_uploadfile(accept = c(".md", ".txt"))
+    )
   } else if (input$dataType == "url_rds") {
     with(tags, table(
       tr(
@@ -87,9 +98,7 @@ output$ui_clipboard_save <- renderUI({
 output$ui_from_global <- renderUI({
   req(input$dataType)
   df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>%
-    {
-      names(.[.])
-    }
+    (function(x) names(x[x]))
 
   tagList(
     selectInput(
@@ -162,24 +171,26 @@ observeEvent(input$to_global_save, {
 
 output$ui_Manage <- renderUI({
   data_types_in <- c(
-    "rds | rda | rdata" = "rds", "csv" = "csv",
-    "clipboard" = "clipboard", "examples" = "examples",
-    "rds (url)" = "url_rds", "csv (url)" = "url_csv",
-    "feather" = "feather", "from global workspace" = "from_global",
+    "rds | rda | rdata" = "rds", "parquet" = "parquet",
+    "csv" = "csv", "clipboard" = "clipboard",
+    "examples" = "examples", "rds (url)" = "url_rds",
+    "csv (url)" = "url_csv",
+    "from global workspace" = "from_global",
     "radiant state file" = "state"
   )
   data_types_out <- c(
-    "rds" = "rds", "rda" = "rda", "csv" = "csv",
-    "clipboard" = "clipboard", "feather" = "feather",
-    "to global workspace" = "to_global", "radiant state file" = "state"
+    "rds" = "rds", "rda" = "rda", "parquet" = "parquet",
+    "csv" = "csv", "clipboard" = "clipboard",
+    "to global workspace" = "to_global",
+    "radiant state file" = "state"
   )
   if (!isTRUE(getOption("radiant.local"))) {
     data_types_in <- data_types_in[-which(data_types_in == "from_global")]
     data_types_out <- data_types_out[-which(data_types_out == "to_global")]
   }
-  if (!("feather" %in% rownames(utils::installed.packages()))) {
-    data_types_in <- data_types_in[-which(data_types_in == "feather")]
-    data_types_out <- data_types_out[-which(data_types_out == "feather")]
+  if (!requireNamespace("arrow", quietly = TRUE)) {
+    data_types_in <- data_types_in[-which(data_types_in == "parquet")]
+    data_types_out <- data_types_out[-which(data_types_out == "parquet")]
   }
 
   tagList(
@@ -208,6 +219,10 @@ output$ui_Manage <- renderUI({
         ),
         uiOutput("ui_fileUpload")
       ),
+      # conditionalPanel(
+      #   "input.dataType == 'parquet'",
+      #   actionButton("loadPaquet_descr", "Description", icon = icon("upload", verify_fa = FALSE))
+      # ),
       conditionalPanel(
         condition = "input.dataType == 'clipboard'",
         uiOutput("ui_clipboard_load")
@@ -295,7 +310,7 @@ output$man_descr_md <- renderUI({
       theme = getOption("radiant.ace_theme", default = "tomorrow"),
       wordWrap = TRUE,
       debounce = 0,
-      value =  descr_out(r_info[[paste0(input$dataset, "_descr")]], "md"),
+      value = descr_out(r_info[[paste0(input$dataset, "_descr")]], "md"),
       placeholder = "Type text to describe the data using markdown to format it.\nSee http://commonmark.org/help/ for more information",
       vimKeyBinding = getOption("radiant.ace_vim.keys", default = FALSE),
       tabSize = getOption("radiant.ace_tabSize", 2),
@@ -377,12 +392,9 @@ man_save_data <- function(file) {
       if (ext == "rds") {
         readr::write_rds(r_data[[robj]], file = file)
         r_info[[paste0(robj, "_scmd")]] <- glue("readr::write_rds({robj}, file = {pp$rpath})")
-      } else if (ext == "feather") {
-        ## temporary workaround until PR goes through https://stackoverflow.com/a/47898172/1974918
-        # feather::write_feather(tmp[[robj]], file)
-        # radiant.data::write_feather(tmp[[robj]], file, description = attr(tmp[[robj]], "description"))
-        feather::write_feather(r_data[[robj]], file)
-        r_info[[paste0(robj, "_scmd")]] <- glue("feather::write_feather({robj}, file = {pp$rpath})")
+      } else if (ext == "parquet") {
+        radiant.data::write_parquet(r_data[[robj]], file = file)
+        r_info[[paste0(robj, "_scmd")]] <- glue("radiant.data::write_parquet({robj}, file = {pp$rpath})")
       } else {
         save(list = robj, file = file, envir = r_data)
         r_info[[paste0(robj, "_scmd")]] <- glue("save({robj}, file = {pp$rpath})")
@@ -399,8 +411,8 @@ if (getOption("radiant.shinyFiles", FALSE)) {
       c("csv", "tsv")
     } else if (input$dataType %in% c("rda", "rds")) {
       c("rda", "rds", "rdata")
-    } else if (input$dataType == "feather") {
-      "feather"
+    } else if (input$dataType == "parquet") {
+      "parquet"
     } else {
       ""
     }
@@ -412,6 +424,14 @@ if (getOption("radiant.shinyFiles", FALSE)) {
     session = session,
     roots = sf_volumes,
     filetype = sf_filetypes
+  )
+
+  sf_descr_uploadfile <- shinyFiles::shinyFileChoose(
+    input = input,
+    id = "upload_description",
+    session = session,
+    roots = sf_volumes,
+    filetype = c("md", "txt")
   )
 
   sf_state_load <- shinyFiles::shinyFileChoose(
@@ -446,7 +466,7 @@ download_handler(
 
 ## need to set suspendWhenHidden to FALSE so that the href for the
 ## download handler is set and keyboard shortcuts will work
-## see https://shiny.rstudio.com/reference/shiny/0.11/outputOptions.html
+## see https://shiny.posit.co/reference/shiny/0.11/outputOptions.html
 ## see https://stackoverflow.com/questions/48117501/click-link-in-navbar-menu
 ## https://stackoverflow.com/questions/3871358/get-all-the-href-attributes-of-a-web-site
 outputOptions(output, "ui_state_save", suspendWhenHidden = FALSE)
@@ -496,6 +516,29 @@ observeEvent(input$uploadfile, {
     choices = r_info[["datasetlist"]],
     selected = r_info[["datasetlist"]][1]
   )
+})
+
+observeEvent(input$upload_description, {
+  if (getOption("radiant.shinyFiles", FALSE)) {
+    if (is.integer(input$uploadfile)) {
+      return()
+    }
+    inFile <- shinyFiles::parseFilePaths(sf_volumes, input$upload_description)
+    if (nrow(inFile) == 0) {
+      return()
+    }
+  } else {
+    inFile <- input$upload_description
+  }
+
+  ## iterating through the files to upload
+  withProgress(message = "Loading ...", value = 1, {
+    load_description(
+      as.character(inFile["name"]),
+      as.character(inFile["datapath"]),
+      input$dataset
+    )
+  })
 })
 
 observeEvent(input$url_rds_load, {
@@ -779,7 +822,7 @@ refreshOnLoad <- function(path, sname) {
 
 ## need to set suspendWhenHidden to FALSE so that the href for the
 ## these outputs is available on startup and keyboard shortcuts will work
-## see https://shiny.rstudio.com/reference/shiny/0.11/outputOptions.html
+## see https://shiny.posit.co/reference/shiny/0.11/outputOptions.html
 ## see https://stackoverflow.com/questions/48117501/click-link-in-navbar-menu
 ## https://stackoverflow.com/questions/3871358/get-all-the-href-attributes-of-a-web-site
 outputOptions(output, "refreshOnLoad", suspendWhenHidden = FALSE)

@@ -6,13 +6,12 @@ globalVariables(
 #' radiant.data
 #'
 #' @name radiant.data
-#' @docType package
 #' @import ggplot2 shiny dplyr
 #' @importFrom rlang parse_exprs
 #' @importFrom car Recode
 #' @importFrom rstudioapi insertText isAvailable
 #' @importFrom knitr knit2html knit
-#' @importFrom markdown markdownToHTML
+#' @importFrom markdown mark_html
 #' @importFrom rmarkdown render html_dependency_bootstrap pdf_document html_document word_document
 #' @importFrom magrittr %<>% %T>% %$% set_rownames set_colnames set_names divide_by add extract2
 #' @importFrom lubridate is.Date is.POSIXt now year month wday week hour minute second ymd mdy dmy ymd_hms hms hm as.duration parse_date_time

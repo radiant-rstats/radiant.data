@@ -246,7 +246,6 @@ observeEvent(input$pvt_nvar, {
 })
 
 .pivotr <- eventReactive(input$pvt_run, {
-
   ## reset r_state value as needed
   if (!available(input$pvt_cvars)) r_state$pvt_cvars <<- input$pvt_cvars
 
@@ -445,7 +444,7 @@ observeEvent(input$pvt_store, {
   register(dataset)
   updateSelectInput(session, "dataset", selected = input$dataset)
 
-  ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+  ## See https://shiny.posit.co/reference/shiny/latest/modalDialog.html
   showModal(
     modalDialog(
       title = "Data Stored",
