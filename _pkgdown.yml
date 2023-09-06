@@ -56,6 +56,7 @@ reference:
       - parse_path
       - read_files
       - save_clip
+      - write_parquet
       - to_fct
   - title: Data > View
     desc: Functions used with Data > View

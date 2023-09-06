@@ -487,6 +487,9 @@
     <loc>https://radiant-rstats.github.io/radiant.data/reference/which.pmin.html</loc>
   </url>
   <url>
+    <loc>https://radiant-rstats.github.io/radiant.data/reference/write_parquet.html</loc>
+  </url>
+  <url>
     <loc>https://radiant-rstats.github.io/radiant.data/reference/xtile.html</loc>
   </url>
 </urlset>

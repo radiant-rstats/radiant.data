@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.data</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.0</span>
       </span>
     </div>
 
@@ -96,7 +96,11 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.5.1" id="radiantdata-151">radiant.data 1.5.1<a class="anchor" aria-label="anchor" href="#radiantdata-151"></a></h2>
+<h2 class="page-header" data-toc-text="1.5.6" id="radiantdata-156">radiant.data 1.5.6<small>2023-04-23</small><a class="anchor" aria-label="anchor" href="#radiantdata-156"></a></h2>
+<ul><li>Address deprecation issues in markdown &gt;= 1.5</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.5.1" id="radiantdata-151">radiant.data 1.5.1<small>2023-01-09</small><a class="anchor" aria-label="anchor" href="#radiantdata-151"></a></h2>
 <ul><li>Added features in the UI to facilitate persistent filters for filtered, sorted, and sliced data</li>
 <li>Improvements to screenshot feature:
 <ul><li>Navigation bar is omitted and the image is adjusted to the length of the UI.</li>
@@ -151,12 +155,12 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.3.10" id="radiantdata-1310">radiant.data 1.3.10<small>2020-08-07</small><a class="anchor" aria-label="anchor" href="#radiantdata-1310"></a></h2>
 <ul><li>Add Google Drive to the default set of directories to explore if available</li>
-<li>Add back functionality to convert a colum to type <code>ts</code> in <em>Data &gt; Transform</em> now that this is again supported by dplyr 1.0.1</li>
+<li>Add back functionality to convert a column to type <code>ts</code> in <em>Data &gt; Transform</em> now that this is again supported by dplyr 1.0.1</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.3.9" id="radiantdata-139">radiant.data 1.3.9<small>2020-06-16</small><a class="anchor" aria-label="anchor" href="#radiantdata-139"></a></h2>
 <ul><li>Fix for using the <code>date</code> function from the lubridate package in a filter</li>
-<li>Removed functionality to convert a colum to type <code>ts</code> as this is not supported by dplyr 1.0.0 and vctrs 0.3.1</li>
+<li>Removed functionality to convert a column to type <code>ts</code> as this is not supported by dplyr 1.0.0 and vctrs 0.3.1</li>
 <li>Updated documentation using <a href="https://github.com/r-lib/roxygen2/pull/1109" class="external-link uri">https://github.com/r-lib/roxygen2/pull/1109</a>
 </li>
 </ul></div>
@@ -284,7 +288,7 @@
 <li>Fix for error when trying to save invalid predictions in <code>radiant.model</code>. This action now generates a pop-up in the browser interface</li>
 <li>Add a specified description to a data.frame immediately on <code>register</code>
 </li>
-<li>Option to pass additional arguments to <code><a href="https://shiny.posit.co/reference/shiny/latest/runApp.html" class="external-link">shiny::runApp</a></code> when starting radiant such as the port to use. For example, radiant.data::radiant.data(“<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="external-link uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>”, port = 8080)</li>
+<li>Option to pass additional arguments to <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">shiny::runApp</a></code> when starting radiant such as the port to use. For example, radiant.data::radiant.data(“<a href="https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda" class="external-link uri">https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda</a>”, port = 8080)</li>
 <li>Option for automatic cleanup of deprecated code in both <em>Report &gt; Rmd</em> and <em>Report &gt; R</em>
 </li>
 <li>Avoid attempt to fix deprecated code in <em>Report &gt; Rmd</em> if <code>pred_data = ""</code>
@@ -402,7 +406,7 @@
 <div class="section level3">
 <h3 id="major-changes-0-9-3-3">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-9-3-3"></a></h3>
 <ul><li>When using radiant with Rstudio Viewer or in an Rstudio Window, loading and saving data through <em>Data &gt; Manage</em> generates R-code the user can add to <em>Report &gt; Rmd</em> or <em>Report &gt; R</em>. Clicking the <code>Show R-code</code> checkbox displays the R-code used to load or save the current dataset</li>
-<li>Various changes to the code to accommodate the use of <code><a href="https://shiny.posit.co/reference/shiny/latest/makeReactiveBinding.html" class="external-link">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
+<li>Various changes to the code to accommodate the use of <code><a href="https://rdrr.io/pkg/shiny/man/makeReactiveBinding.html" class="external-link">shiny::makeReactiveBinding</a></code>. The advantage is that the code generated for <em>Report &gt; Rmd</em> and <em>Report &gt; R</em> will no longer have to use a list (<code>r_data</code>) to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well</li>
 <li>Removed <code>loadr</code>, <code>saver</code>, <code>load_csv</code>, <code>loadcsv_url</code>, <code>loadrds_url</code>, and <code>make_funs</code> functions as they are no longer needed</li>
 <li>Deprecated <code>mean_rm</code>, <code>median_rm</code>, <code>min_rm</code>, <code>max_rm,</code>sd_rm<code>,</code>var_rm, and <code>sum_rm</code> functions as they are no longer needed</li>
 </ul></div>
