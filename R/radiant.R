@@ -476,7 +476,9 @@ get_class <- function(dat) {
 #' is.empty(mtcars)
 #' @export
 is.empty <- function(x, empty = "\\s*") {
-  is_not(x) || (length(x) == 1 && grepl(paste0("^", empty, "$"), x))
+  # any should not be needed here but patchwork objects can have length == 1
+  # and yet still return a vector of logicals
+  is_not(x) || (length(x) == 1 && any(grepl(paste0("^", empty, "$"), x)))
 }
 
 #' Is input a string?
@@ -493,7 +495,9 @@ is.empty <- function(x, empty = "\\s*") {
 #' is_string(NA)
 #' @export
 is_string <- function(x) {
-  length(x) == 1 && is.character(x) && !is.empty(x)
+  # any should not be needed here but patchwork objects can have length == 1
+  # and yet still return a vector of logicals
+  length(x) == 1 && any(is.character(x)) && !is.empty(x)
 }
 
 #' Is input a double (and not a date type)?
@@ -1098,7 +1102,9 @@ indexr <- function(dataset, vars = "", filt = "", arr = "", rows = NULL, cmd = "
 #' is_not(data.frame())
 #' @export
 is_not <- function(x) {
-  length(x) == 0 || (length(x) == 1 && is.na(x))
+  # any should not be needed here but patchwork objects can have length == 1
+  # and yet still return a vector of logicals
+  length(x) == 0 || (length(x) == 1 && any(is.na(x)))
 }
 
 #' Don't try to plot strings

@@ -1,6 +1,6 @@
 Package: radiant.data
 Title: Data Menu for Radiant: Business Analytics using R and Shiny
-Version: 1.6.0
+Version: 1.6.1
 Date: 2023-9-6
 Authors@R: c(
     person("Vincent", "Nijs", email = "radiant@rady.ucsd.edu", role = c("aut", "cre")),
