@@ -137,7 +137,7 @@ function get_img_src() {
 function generate_screenshot() {
   var clonedHeight = document.querySelector('body').scrollHeight;
   html2canvas($("body")[0], {
-    y: 55, // Set the starting point to 100 pixels from the top
+    y: 42, // Set the starting point to 100 pixels from the top
     // width: document.body.scrollWidth,
     height: document.body.scrollHeight, // set this on the cloned document
     onclone: (clonedDocument) => {
