@@ -47,10 +47,11 @@ system(paste0(Sys.which("R"), " -e \"setwd('", getwd(), "'); app <- '", pkg, "';
 win <- readline(prompt = "Did you build on Windows? y/n: ")
 if (grepl("[yY]", win)) {
 
-  fl <- list.files(pattern = "*.zip", path = "~/Dropbox/r-packages/", full.names = TRUE)
+  fl <- list.files(pattern = "*.zip", path = "~/Dropbox/r-packages", full.names = TRUE)
   for (f in fl) {
     file.copy(f, "~/gh/")
   }
+  unlink(fl)
 
   ## move packages to radiant_miniCRAN. must package in Windows first
   # path <- normalizePath("../")
