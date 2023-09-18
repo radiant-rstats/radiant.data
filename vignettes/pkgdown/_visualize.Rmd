@@ -98,13 +98,14 @@ See also the ggplot2 documentation site <a href="https://ggplot2.tidyverse.org" 
 Suppose we create a set of three bar charts in _Data > Visualize_ using the `Diamond` data. To add a title above the group of plots and impose a one-column layout we could use `patchwork` as follows:
 
 ```r
+library(patchwork)
 plot_list <- visualize(
-  diamonds, 
-  xvar = c("clarity", "cut", "color"), 
-  yvar = "price", 
-  type = "bar", 
+  diamonds,
+  xvar = c("clarity", "cut", "color"),
+  yvar = "price",
+  type = "bar",
   custom = TRUE
-) 
+)
 wrap_plots(plot_list, ncol = 1) + plot_annotation(title = "Three bar plots")
 ```
 
@@ -115,12 +116,12 @@ See the <a href="https://patchwork.data-imaginist.com">patchwork documentation s
 It is possible to transform (most) plots generated in Radiant into interactive graphics using the `plotly` library. After setting `custom = TRUE` you can use the `ggplotly` function to convert a single plot. See example below:
 
 ```r
-visualize(diamonds, xvar = c("price", "carat", "clarity", "cut"), custom = TRUE) %>%
+visualize(diamonds, xvar = "price", custom = TRUE) %>%
   ggplotly() %>%
   render()
 ```
 
-If more than one plot is created, you can use the `subplot` function from the `plotly` package. Provide a value for the `nrows` argument to setup the plot layout grid. In the example below four plots are created. Because `nrow = 2` the plots will be displayed in a 2 X 2 grid. 
+If more than one plot is created, you can use the `subplot` function from the `plotly` package. Provide a value for the `nrows` argument to setup the plot layout grid. In the example below four plots are created. Because `nrow = 2` the plots will be displayed in a 2 X 2 grid.
 
 ```r
 visualize(diamonds, xvar = c("carat", "clarity", "cut", "color"), custom = TRUE) %>%
