@@ -1,3 +1,7 @@
+# radiant.data 1.6.2
+
+* Changed knitr option so that usernames with a space are allowed on windows
+
 # radiant.data 1.6.0
 
 * Added a dependency on the arrow package to allow loading and saving parquet files
