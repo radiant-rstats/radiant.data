@@ -230,7 +230,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,
   error = TRUE,
-  fig.path = normalizePath(tempdir(), winslash = "/"),
+  # fig.path = normalizePath(tempdir(), winslash = "/"),
   dpi = 144,
   screenshot.force = FALSE
   # dev = "svg" ## too slow with big scatter plots on server-side

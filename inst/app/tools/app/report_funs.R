@@ -405,7 +405,7 @@ knit_it <- function(report, type = "rmd") {
     quiet = TRUE
   )
 
-  ## removing annoying fig.caps for unnamed chunks
+  ## removing fig.caps for unnamed chunks
   md <- gsub("<p class=\"caption\">plot of chunk unnamed-chunk-[0-9]+</p>", "", md)
 
   ## add basic styling to tables
