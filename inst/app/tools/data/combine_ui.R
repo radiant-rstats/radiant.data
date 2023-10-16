@@ -152,7 +152,7 @@ combine_report <- function() {
 }
 
 output$cmb_data1 <- renderText({
-  req(input$dataset)
+  # req(input$dataset)
   filt <- if (input$show_filter) input$data_filter else ""
   arr <- if (input$show_filter) input$data_arrange else ""
   rows <- if (input$show_filter) input$data_rows else ""
