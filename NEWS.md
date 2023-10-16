@@ -1,6 +1,6 @@
 # radiant.data 1.6.2
 
-* Changed knitr option so that usernames with a space are allowed on windows
+* Fixed a bug in Radiant by changing knitr options. Usernames with a space should no longer cause issues on Windows
 
 # radiant.data 1.6.0
 

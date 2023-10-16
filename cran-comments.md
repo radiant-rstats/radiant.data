@@ -1,5 +1,20 @@
 ## Resubmission
 
+This is a resubmission. In this version I have fixed a bug that caused problems for users on Windows with a space in their username. See NEWS.md for details.
+
+## Test environments
+
+* macOS, R 4.3.1
+* win-builder (devel)
+
+## R CMD check results
+
+There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
+
+# Previous cran-comments
+
+## Resubmission
+
 This is a resubmission. In this update I fixed a strange issue related the patchwork package. At least it was strange to me. In the code below `any` should not be needed. However, it seems that a patchwork object can have length == 1 and still have is.na return a vector of length > 1. Perhaps there are other libraries that have objects like this but I have never seen this before.
 
 My apologies for submitting a new version so soon after the previous version. 
@@ -17,7 +32,6 @@ length(x) == 0 || (length(x) == 1 && any(is.na(x)))
 
 There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
 
-# Previous cran-comments
 
 ## Resubmission
 
