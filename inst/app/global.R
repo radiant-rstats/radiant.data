@@ -391,19 +391,24 @@ make_url_patterns <- function(url_list = getOption("radiant.url.list"),
 options(radiant.url.patterns = make_url_patterns())
 
 ## installed packages versions
-tmp <- grep("radiant.", installed.packages()[, "Package"], value = TRUE)
+tmp <- grep("radiant\\.", installed.packages()[, "Package"], value = TRUE)
 if ("radiant" %in% installed.packages()) {
   tmp <- c("radiant" = "radiant", tmp)
 }
 
-radiant.versions <- "Unknown"
 if (length(tmp) > 0) {
-  radiant.versions <- sapply(names(tmp), function(x) paste(x, paste(packageVersion(x), sep = ".")))
+  radiant.versions <- sapply(names(tmp), function(x) paste(x, paste(packageVersion(x), sep = "."))) %>% unique()
+  print(radiant.versions)
+  if ("shiny" %in% installed.packages()) {
+    radiant.versions <- c(radiant.versions, paste("shiny ", packageVersion("shiny")))
+  }
+  print(radiant.versions)
+} else {
+  radiant.versions <- "Unknown"
 }
 
 options(radiant.versions = paste(radiant.versions, collapse = ", "))
 rm(tmp, radiant.versions)
-
 
 if (is.null(getOption("radiant.theme", default = NULL))) {
   options(radiant.theme = bslib::bs_theme(version = 4))
