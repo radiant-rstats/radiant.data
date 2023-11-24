@@ -398,11 +398,9 @@ if ("radiant" %in% installed.packages()) {
 
 if (length(tmp) > 0) {
   radiant.versions <- sapply(names(tmp), function(x) paste(x, paste(packageVersion(x), sep = "."))) %>% unique()
-  print(radiant.versions)
   if ("shiny" %in% installed.packages()) {
     radiant.versions <- c(radiant.versions, paste("shiny ", packageVersion("shiny")))
   }
-  print(radiant.versions)
 } else {
   radiant.versions <- "Unknown"
 }
