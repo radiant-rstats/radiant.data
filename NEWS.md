@@ -1,3 +1,7 @@
+# radiant.data 1.6.3
+
+* Require shiny 1.8.0. This fixes a bug in the shiny 1.7 versions that caused issues with all radiant packages.
+
 # radiant.data 1.6.2
 
 * Fixed a bug in Radiant by changing knitr options. Usernames with a space should no longer cause issues on Windows
