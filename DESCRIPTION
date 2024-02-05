@@ -20,7 +20,6 @@ Depends:
 Imports:
     tibble (>= 1.4.2),
     rlang (>= 0.4.10),
-    arrow (>= 12.0.1),
     broom (>= 0.5.2),
     car (>= 3.0-0),
     knitr (>= 1.20),
@@ -53,6 +52,7 @@ Suggests:
     DBI (>= 0.7),
     RSQLite (>= 2.0),
     RPostgres (>= 1.4.4),
+    arrow (>= 12.0.1),
     webshot (>= 0.5.0), 
     testthat (>= 2.0.0),
     pkgdown (>= 1.1.0)
