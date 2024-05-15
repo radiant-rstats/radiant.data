@@ -82,7 +82,6 @@ observeEvent(input$view_clear, {
 
 output$dataviewer <- DT::renderDataTable(
   {
-    ## next line causes strange bootstrap issue https://github.com/ramnathv/htmlwidgets/issues/281
     input$view_clear
     req(available(input$view_vars))
     dat <- select_at(.get_data(), .vars = input$view_vars)

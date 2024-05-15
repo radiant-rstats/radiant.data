@@ -5,7 +5,6 @@
 #' @rdname radiant.data-deprecated
 #' @name radiant.data-deprecated
 #' @param ... Parameters to be passed to the updated functions
-#' @docType package
 #' @export  mean_rm median_rm min_rm max_rm sd_rm var_rm sum_rm getdata filterdata combinedata viewdata toFct fixMS getsummary Search formatnr formatdf rounddf getclass is_numeric
 #' @aliases mean_rm median_rm min_rm max_rm sd_rm var_rm sum_rm getdata filterdata combinedata viewdata toFct fixMS getsummary Search formatnr formatdf rounddf getclass is_numeric
 #' @section Details:

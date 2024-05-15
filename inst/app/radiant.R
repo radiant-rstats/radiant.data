@@ -662,8 +662,8 @@ help_and_report <- function(modal_title, fun_name, help_file,
        </div>
      </div>
      <i title='Help' class='fa fa-question alignleft' data-toggle='modal' data-target='#%s_help'></i>
-     <i title='Report results & Screenshot' class='fa fa-camera action-button shiny-bound-input aligncenter' href='#%s_screenshot' id='%s_screenshot' onclick='generate_screenshot();'></i>
-     <i title='Report results' class='fa fa-edit action-button shiny-bound-input alignright' href='#%s_report' id='%s_report'></i>
+     <i title='Report results & Screenshot' class='fa fa-camera action-button aligncenter' href='#%s_screenshot' id='%s_screenshot' onclick='generate_screenshot();'></i>
+     <i title='Report results' class='fa fa-edit action-button alignright' href='#%s_report' id='%s_report'></i>
      <div style='clear: both;'></div>",
     fun_name, fun_name, fun_name, modal_title, help_file, author, year, lic, lic, fun_name, fun_name, fun_name, fun_name, fun_name
   ) %>%

@@ -1,7 +1,7 @@
 Package: radiant.data
 Title: Data Menu for Radiant: Business Analytics using R and Shiny
-Version: 1.6.3
-Date: 2023-12-16
+Version: 1.6.6
+Date: 2024-5-14
 Authors@R: c(
     person("Vincent", "Nijs", email = "radiant@rady.ucsd.edu", role = c("aut", "cre")),
     person("Niklas", "von Hertzen", email = "niklasvh@gmail.com", role = c("aut"), comment = "html2canvas library")
@@ -11,7 +11,7 @@ Description: The Radiant Data menu includes interfaces for loading, saving,
     contains functionality to generate reproducible reports of the analyses
     conducted in the application.
 Depends:
-    R (>= 4.0.0),
+    R (>= 4.3.0),
     magrittr (>= 1.5),
     ggplot2 (>= 3.4.2),
     lubridate (>= 1.7.4),
@@ -26,7 +26,7 @@ Imports:
     knitr (>= 1.20),
     markdown (>= 1.7),
     rmarkdown(>= 2.22),
-    shiny (>= 1.8.0),
+    shiny (>= 1.8.1),
     jsonlite (>= 1.0),
     shinyAce (>= 0.4.1),
     psych (>= 1.8.4),
@@ -65,4 +65,4 @@ License: AGPL-3 | file LICENSE
 LazyData: true
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1

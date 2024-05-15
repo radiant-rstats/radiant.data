@@ -189,9 +189,9 @@ body {
   margin-bottom: 10px;
 }
 
-.dropdown-menu{
-  max-height:90vh;
-  overflow-y:auto;
+.dropdown-menu {
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 @media (max-width: 1000px) {

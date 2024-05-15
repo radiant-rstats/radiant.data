@@ -304,7 +304,6 @@ observeEvent(input$nav_radiant, {
 ## Jump to the page you were on
 ## only goes two layers deep at this point
 if (!is.null(r_state$nav_radiant)) {
-
   ## don't return-to-the-spot if that was quit or stop
   if (r_state$nav_radiant %in% c("Refresh", "Stop")) {
     return()
@@ -345,7 +344,7 @@ isolate({
 if (getOption("radiant.from.package", default = TRUE)) {
   ## launch using installed radiant.data package
   # radiant.data::copy_all("radiant.data")
-  # cat("\nGetting radiant.data from package ...\n")
+  cat("\nGetting radiant.data from package ...\n")
 } else {
   ## for shiny-server and development
   for (file in list.files("../../R", pattern = "\\.(r|R)$", full.names = TRUE)) {

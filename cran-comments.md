@@ -1,5 +1,21 @@
 ## Resubmission
 
+This is a resubmission. In this version I require shiny version 1.8.1 or newer and have addressed a breaking change introduced in that version of shiny. See NEWS.md for details.
+
+## Test environments
+
+* macOS, R 4.4.0
+* macOS, R 4.3.2
+* win-builder (devel)
+
+## R CMD check results
+
+There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
+
+# Previous cran-comments
+
+## Resubmission
+
 This is a resubmission. In this version I require shiny version 1.8.0 which fixed a bug that caused issues in the radiant apps. See NEWS.md for details.
 
 ## Test environments
@@ -11,7 +27,6 @@ This is a resubmission. In this version I require shiny version 1.8.0 which fixe
 
 There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
 
-# Previous cran-comments
 
 ## Resubmission
 
