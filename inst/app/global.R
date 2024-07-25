@@ -646,3 +646,5 @@ onStop(function() {
 # options("DT.TOJSON_ARGS" = list(na = "string"))
 ## Sorting on client-side would be as a string, not a numeric
 ## https://github.com/rstudio/DT/pull/536#issuecomment-385223433
+
+if (getRversion() < "4.4.0") `%||%` <- function(x, y) if (is.null(x)) y else x
