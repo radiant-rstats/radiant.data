@@ -41,6 +41,7 @@ options(radiant.ace_showInvisibles = TRUE)
 options(radiant.ace_autoComplete = "live")
 options(radiant.powerpoint_style = "~/Dropbox/rmd-styles/style.potx")
 options(radiant.word_style = "~/Dropbox/rmd-styles/style.docx")
+options(radiant.theme = bslib::bs_theme(version = 4, bootswatch = "darkly"))
 ```
 
 Notes:
@@ -53,6 +54,7 @@ Notes:
 * Radiant has default styles for Word and Powerpoint files. These can be replaced with styles files you created however. Click the links below to download the style files used in Radiant to your computer. Edit the files and use `options` as shown above to tell Radiant where to find the style files you want to use.
     * <a href="https://github.com/radiant-rstats/radiant.data/raw/master/inst/app/www/style.docx" target="_blank">Word style file</a>
     * <a href="https://github.com/radiant-rstats/radiant.data/raw/master/inst/app/www/style.potx" target="_blank">Powerpoint style file</a>
+* The `theme` option can be used to change the appearance of the Radiant interface. For an overview of available themes see: <a href="https://rstudio.github.io/bslib/articles/theming/index.html#bootswatch" target="_blank">https://rstudio.github.io/bslib/articles/theming/index.html#bootswatch</a>
 
 ### R-functions
 

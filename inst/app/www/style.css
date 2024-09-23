@@ -102,7 +102,7 @@ pre {
   overflow: auto;
   white-space: pre;
   word-wrap: normal;
-  background-color: #ffffff;
+  /*background-color: #ffffff;*/
 }
 
 code,
