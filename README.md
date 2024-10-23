@@ -2,10 +2,10 @@
 
 <!-- [![Build Status](https://travis-ci.org/radiant-rstats/radiant.data.png?branch=master)](https://travis-ci.org/radiant-rstats/radiant.data) -->
 <!-- [![Coverage Status](https://img.shields.io/coveralls/vnijs/radiant.svg)](https://coveralls.io/r/vnijs/radiant?branch=master) -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/radiant.data)](https://CRAN.R-project.org/package=radiant.data)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/radiant.data)](https://CRAN.R-project.org/package=radiant.data)
 
 
-Radiant is an open-source platform-independent browser-based interface for business analytics in [R](https://www.r-project.org/). The application is based on the [Shiny](https://shiny.posit.co/) package and can be run locally or on a server. Radiant was developed by <a href="https://rady.ucsd.edu/faculty-research/faculty/vincent-nijs.html" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: https://github.com/radiant-rstats/radiant.data/issues. For other questions and comments please use radiant@rady.ucsd.edu.
+Radiant is an open-source platform-independent browser-based interface for business analytics in [R](https://www.r-project.org/). The application is based on the [Shiny](https://shiny.posit.co/) package and can be run locally or on a server. Radiant was developed by <a href="https://rady.ucsd.edu/faculty-research/faculty/vincent-nijs.html" target="_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: https://github.com/radiant-rstats/radiant.data/issues. For other questions and comments please use radiant@rady.ucsd.edu.
 
 ## Key features
 
@@ -15,8 +15,7 @@ Radiant is an open-source platform-independent browser-based interface for busin
 - Programming: Integrate Radiant's analysis functions with your own R-code
 - Context: Data and examples focus on business applications
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/7L3hDpLw53I" frameborder="0" allowfullscreen></iframe>
-
+<iframe width="640" height="375" src="https://www.youtube.com/embed/7L3hDpLw53I" frameborder="0"data-external="1"  allowfullscreen></iframe>
 
 #### Playlists
 

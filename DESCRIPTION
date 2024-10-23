@@ -1,7 +1,7 @@
 Package: radiant.data
 Title: Data Menu for Radiant: Business Analytics using R and Shiny
-Version: 1.6.6
-Date: 2024-5-14
+Version: 1.6.7
+Date: 2024-10-22
 Authors@R: c(
     person("Vincent", "Nijs", email = "radiant@rady.ucsd.edu", role = c("aut", "cre")),
     person("Niklas", "von Hertzen", email = "niklasvh@gmail.com", role = c("aut"), comment = "html2canvas library")
@@ -20,7 +20,6 @@ Depends:
 Imports:
     tibble (>= 1.4.2),
     rlang (>= 0.4.10),
-    arrow (>= 12.0.1),
     broom (>= 0.5.2),
     car (>= 3.0-0),
     knitr (>= 1.20),
@@ -49,6 +48,7 @@ Imports:
     MASS,
     base64enc
 Suggests:
+    arrow (>= 12.0.1),
     dbplyr (>= 2.1.1),
     DBI (>= 0.7),
     RSQLite (>= 2.0),
@@ -65,4 +65,4 @@ License: AGPL-3 | file LICENSE
 LazyData: true
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2

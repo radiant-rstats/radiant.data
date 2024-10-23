@@ -1,3 +1,7 @@
+# radiant.data 1.6.7
+
+* Moving arrow package to 'recommended' because of its size on macOS (> 100MB)
+
 # radiant.data 1.6.6
 
 * Require Shiny 1.8.1. Adjustments related to icon-buttons were made to address a breaking change in Shiny 1.8.1

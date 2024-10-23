@@ -140,8 +140,6 @@ load_user_data <- function(fname, uFile, ext, header = TRUE,
         upload_error_handler(objname, "#### There was an error loading the data. Please make sure the data are in parquet format.")
       } else {
         r_data[[objname]] <- as.data.frame(robj, stringsAsFactors = FALSE)
-        ## waiting for https://github.com/wesm/feather/pull/326
-        # cmd <- paste0(objname, " <- feather::read_feather(", pp$rpath, ", columns = c())\nregister(\"", objname, "\", desc = feather::feather_metadata(\"", pp$rpath, "\")$description)")
         cmd <- glue("{objname} <- arrow::read_parquet({pp$rpath})")
       }
     }
