@@ -939,16 +939,16 @@ run_refresh <- function(args, pre, init = "evar", tabs = "",
       if (!is.empty(tabs)) {
         updateTabsetPanel(session, paste0(tabs, " "), selected = "Summary")
       }
-      updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play", verify_fa = FALSE))
+      updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play"))
     } else if (run) {
-      updateActionButton(session, paste0(pre, "_run"), relabel, icon = icon("sync", class = "fa-spin", verify_fa = FALSE))
+      updateActionButton(session, paste0(pre, "_run"), relabel, icon = icon("sync", class = "fa-spin"))
     } else {
-      updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play", verify_fa = FALSE))
+      updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play"))
     }
   })
 
   observeEvent(input[[paste0(pre, "_run")]], {
-    updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play", verify_fa = FALSE))
+    updateActionButton(session, paste0(pre, "_run"), label, icon = icon("play"))
   })
 }
 

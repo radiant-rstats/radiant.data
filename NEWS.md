@@ -1,3 +1,7 @@
+# radiant.data 1.6.8
+
+* Fixed problems in `is_not` and `is.empty` caused by https://github.com/tidyverse/ggplot2/issues/6352.
+
 # radiant.data 1.6.7
 
 * Moving arrow package to 'recommended' because of its size on macOS (> 100MB)

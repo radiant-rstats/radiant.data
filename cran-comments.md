@@ -1,5 +1,20 @@
 ## Resubmission
 
+This is a resubmission. In this version I have addressed a breaking change caused by https://github.com/tidyverse/ggplot2/issues/6352.
+
+## Test environments
+
+* macOS, R 4.5.1
+* win-builder (devel)
+
+## R CMD check results
+
+There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
+
+# Previous cran-comments
+
+## Resubmission
+
 This is a resubmission. In this version I moved the arrow package to 'recommended' because of its size on macOS (>100MB)
 
 ## Test environments
@@ -11,7 +26,6 @@ This is a resubmission. In this version I moved the arrow package to 'recommende
 
 There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
 
-# Previous cran-comments
 
 ## Resubmission
 

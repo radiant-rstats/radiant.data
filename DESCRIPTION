@@ -1,7 +1,7 @@
 Package: radiant.data
 Title: Data Menu for Radiant: Business Analytics using R and Shiny
-Version: 1.6.7
-Date: 2024-10-22
+Version: 1.6.8
+Date: 2025-9-15
 Authors@R: c(
     person("Vincent", "Nijs", email = "radiant@rady.ucsd.edu", role = c("aut", "cre")),
     person("Niklas", "von Hertzen", email = "niklasvh@gmail.com", role = c("aut"), comment = "html2canvas library")
@@ -65,4 +65,4 @@ License: AGPL-3 | file LICENSE
 LazyData: true
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3

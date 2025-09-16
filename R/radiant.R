@@ -476,9 +476,11 @@ get_class <- function(dat) {
 #' is.empty(mtcars)
 #' @export
 is.empty <- function(x, empty = "\\s*") {
-  # any should not be needed here but patchwork objects can have length == 1
-  # and yet still return a vector of logicals
-  is_not(x) || (length(x) == 1 && any(grepl(paste0("^", empty, "$"), x)))
+  if (inherits(x, "ggplot")) {
+    return(FALSE)
+  } else {
+    return(is_not(x) || (length(x) == 1 && any(grepl(paste0("^", empty, "$"), x))))
+  }
 }
 
 #' Is input a string?
@@ -1104,7 +1106,11 @@ indexr <- function(dataset, vars = "", filt = "", arr = "", rows = NULL, cmd = "
 is_not <- function(x) {
   # any should not be needed here but patchwork objects can have length == 1
   # and yet still return a vector of logicals
-  length(x) == 0 || (length(x) == 1 && any(is.na(x)))
+  if (inherits(x, "ggplot")) {
+    return(FALSE)
+  } else {
+    length(x) == 0 || (length(x) == 1 && any(is.na(x)))
+  }
 }
 
 #' Don't try to plot strings
