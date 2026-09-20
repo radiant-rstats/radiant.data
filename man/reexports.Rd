@@ -27,22 +27,22 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{broom}{\code{\link[broom:reexports]{glance}}, \code{\link[broom:reexports]{tidy}}}
+  \item{broom}{\code{\link[broom:glance]{glance}}, \code{\link[broom:tidy]{tidy}}}
 
-  \item{bslib}{\code{\link[bslib]{bs_theme}}, \code{\link[bslib]{theme_version}}}
+  \item{bslib}{\code{\link[bslib:bs_theme]{bs_theme()}}, \code{\link[bslib:theme_version]{theme_version()}}}
 
-  \item{glue}{\code{\link[glue]{glue}}, \code{\link[glue]{glue_collapse}}, \code{\link[glue:glue]{glue_data}}}
+  \item{glue}{\code{\link[glue:glue]{glue()}}, \code{\link[glue:glue_collapse]{glue_collapse()}}, \code{\link[glue:glue_data]{glue_data()}}}
 
-  \item{knitr}{\code{\link[knitr]{knit_print}}}
+  \item{knitr}{\code{\link[knitr:knit_print]{knit_print()}}}
 
-  \item{lubridate}{\code{\link[lubridate]{date}}}
+  \item{lubridate}{\code{\link[lubridate:date]{date()}}}
 
-  \item{patchwork}{\code{\link[patchwork]{plot_annotation}}, \code{\link[patchwork]{wrap_plots}}}
+  \item{patchwork}{\code{\link[patchwork:plot_annotation]{plot_annotation()}}, \code{\link[patchwork:wrap_plots]{wrap_plots()}}}
 
-  \item{png}{\code{\link[png]{writePNG}}}
+  \item{png}{\code{\link[png:writePNG]{writePNG()}}}
 
-  \item{psych}{\code{\link[psych:skew]{kurtosi}}, \code{\link[psych]{skew}}}
+  \item{psych}{\code{\link[psych:kurtosi]{kurtosi()}}, \code{\link[psych:skew]{skew()}}}
 
-  \item{tibble}{\code{\link[tibble]{as_tibble}}, \code{\link[tibble:rownames]{rownames_to_column}}, \code{\link[tibble]{tibble}}}
+  \item{tibble}{\code{\link[tibble:as_tibble]{as_tibble()}}, \code{\link[tibble:rownames_to_column]{rownames_to_column()}}, \code{\link[tibble:tibble]{tibble()}}}
 }}
 

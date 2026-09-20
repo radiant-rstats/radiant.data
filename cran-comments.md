@@ -1,5 +1,20 @@
 ## Resubmission
 
+This is a resubmission. In this version I have addressed an issue that would cause warnings to be shown. See NEWS.md for details
+
+## Test environments
+
+* macOS, R 4.6.1
+* win-builder (devel)
+
+## R CMD check results
+
+There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
+
+# Previous cran-comments
+
+## Resubmission
+
 This is a resubmission. In this version I have addressed a breaking change caused by https://github.com/tidyverse/ggplot2/issues/6352.
 
 ## Test environments
@@ -11,7 +26,6 @@ This is a resubmission. In this version I have addressed a breaking change cause
 
 There were no ERRORs or WARNINGs. There was one NOTE related to the number of non-standard dependencies. However, this note is not easily addressed without substantially inconveniencing users that rely on the web (shiny) interface available for radiant.data.
 
-# Previous cran-comments
 
 ## Resubmission
 

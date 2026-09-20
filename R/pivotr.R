@@ -381,7 +381,7 @@ dtab.pivotr <- function(object, format = "none", perc = FALSE, dec = 3,
   ## should perhaps be part of pivotr but convenient for now in tfoot
   ## and for external calls to pivotr
   tab <- filter(tab, tab[[1]] != "Total")
-  ## for display options see https://datatables.net/reference/option/dom
+  ## for display options see https://datatables.net/ref/core/option/dom
   dom <- if (nrow(tab) < 11) "t" else "ltip"
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
   dt_tab <- DT::datatable(

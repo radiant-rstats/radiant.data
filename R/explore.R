@@ -368,7 +368,7 @@ dtab.explore <- function(object, dec = 3, searchCols = NULL,
     caption <- shiny::tags$caption(style = "caption-side: bottom; text-align: left; font-size:100%;", caption)
   }
 
-  ## for display options see https://datatables.net/reference/option/dom
+  ## for display options see https://datatables.net/ref/core/option/dom
   dom <- if (nrow(tab) < 11) "t" else "ltip"
   fbox <- if (nrow(tab) > 5e6) "none" else list(position = "top")
   dt_tab <- DT::datatable(

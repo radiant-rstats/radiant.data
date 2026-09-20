@@ -25,7 +25,7 @@ dtab <- function(object, ...) UseMethod("dtab", object)
 #' @param perc Vector of column names to be displayed as a percentage
 #' @param filter Show column filters in DT table. Options are "none", "top", "bottom"
 #' @param pageLength Number of rows to show in table
-#' @param dom Table control elements to show on the page. See \url{https://datatables.net/reference/option/dom}
+#' @param dom Table control elements to show on the page. See \url{https://datatables.net/ref/core/option/dom}
 #' @param style Table formatting style ("bootstrap" or "default")
 #' @param rownames Show data.frame rownames. Default is FALSE
 #' @param caption Table caption
@@ -64,7 +64,7 @@ dtab.data.frame <- function(object, vars = "", filt = "", arr = "", rows = NULL,
   isBigFct <- function(x) is.factor(x) && length(levels(x)) > 1000
   dat <- mutate_if(dat, isBigFct, as.character)
 
-  ## for display options see https://datatables.net/reference/option/dom
+  ## for display options see https://datatables.net/ref/core/option/dom
   if (is.empty(dom)) {
     dom <- if (pageLength == -1 || nrow(dat) < pageLength) "t" else "lftip"
   }

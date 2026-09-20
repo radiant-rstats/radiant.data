@@ -96,7 +96,7 @@ test_that("explore 8 x 2", {
   expect_equal(result, structure(list(
     tab = structure(list(
       variable = structure(1:8,
-        .Label = c("price", "carat", "clarity", "cut", "color", "depth", "table", "x"), class = "factor"
+        levels = c("price", "carat", "clarity", "cut", "color", "depth", "table", "x"), class = "factor"
       ),
       mean = c(
         3907.186, 0.794283333333333, 0.0133333333333333,
@@ -123,7 +123,7 @@ test_that("explore 1 x 2", {
   result <- explore(diamonds, "price")
   expect_equal(result, structure(list(
     tab = structure(list(
-      variable = structure(1L, .Label = "price", class = "factor"),
+      variable = structure(1L, levels = "price", class = "factor"),
       mean = 3907.186, sd = 3956.91540005997
     ), class = "data.frame", row.names = c(
       NA,
@@ -151,14 +151,14 @@ test_that("explore 1 x 1 x 2", {
   result <- explore(diamonds, "price", byvar = c("color", "cut"), fun = "n_obs")
   expect_equal(colnames(result$tab), c("color", "cut", "variable", "n_obs"))
   expect_equal(result$tab[1, ], structure(list(
-    color = structure(1L, .Label = c(
+    color = structure(1L, levels = c(
       "D", "E", "F",
       "G", "H", "I", "J"
-    ), class = "factor"), cut = structure(1L, .Label = c(
+    ), class = "factor"), cut = structure(1L, levels = c(
       "Fair",
       "Good", "Very Good", "Premium", "Ideal"
     ), class = "factor"),
-    variable = structure(1L, .Label = "price", class = "factor"),
+    variable = structure(1L, levels = "price", class = "factor"),
     n_obs = 15L
   ), radiant_nrow = 35L, row.names = 1L, class = "data.frame"))
 })

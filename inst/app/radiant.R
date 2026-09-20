@@ -673,9 +673,16 @@ help_and_report <- function(modal_title, fun_name, help_file,
 }
 
 ## function to render .md files to html
+## embedding of local resources is turned off because figures in the help
+## files are served through addResourcePath (e.g., "figures_model") and do
+## not exist relative to the working directory of the app. Leaving it on
+## generates "File ... not found (hence cannot be embedded)" warnings
 inclMD <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = "\n") %>%
-    markdown::mark_html(text = ., template = FALSE, meta = list(css = ""), output = FALSE)
+    markdown::mark_html(
+      text = ., template = FALSE, meta = list(css = ""), output = FALSE,
+      options = list(embed_resources = FALSE)
+    )
 }
 
 ## function to render .Rmd files to html

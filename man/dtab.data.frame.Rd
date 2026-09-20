@@ -47,7 +47,7 @@
 
 \item{pageLength}{Number of rows to show in table}
 
-\item{dom}{Table control elements to show on the page. See \url{https://datatables.net/reference/option/dom}}
+\item{dom}{Table control elements to show on the page. See \url{https://datatables.net/ref/core/option/dom}}
 
 \item{style}{Table formatting style ("bootstrap" or "default")}
 
